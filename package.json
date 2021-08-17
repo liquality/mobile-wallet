@@ -37,6 +37,7 @@
     "react-native-level-fs": "^3.0.1",
     "react-native-os": "^1.2.6",
     "react-native-randombytes": "^3.6.1",
+    "react-native-splash-screen": "^3.2.0",
     "readable-stream": "^1.0.33",
     "stream-browserify": "^1.0.0",
     "string_decoder": "^0.10.31",

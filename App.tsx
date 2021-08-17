@@ -1,13 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React, {useEffect} from 'react';
 import {
   SafeAreaView,
@@ -31,6 +21,7 @@ import { Client } from "@liquality/client";
 import { EthereumNetworks } from "@liquality/ethereum-networks";
 import { EthereumJsWalletProvider } from "@liquality/ethereum-js-wallet-provider";
 import { EthereumRpcProvider } from "@liquality/ethereum-rpc-provider";
+import SplashScreen from 'react-native-splash-screen';
 
 
 const Section: React.FC<{
@@ -68,7 +59,7 @@ const Section: React.FC<{
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const initWallet = async (): void => {
+  const initWallet = async (): Promise<void> => {
       console.log('initting wallet...1');
       const client = new Client();
 
@@ -104,7 +95,8 @@ const Section: React.FC<{
   }
 
   useEffect(() => {
-      initWallet();
+      // SplashScreen.hide()
+      initWallet()
   });
 
      return (

@@ -1,4 +1,4 @@
-# Liquality Mobile App <img align="right" src="https://raw.githubusercontent.com/liquality/chainabstractionlayer/master/liquality-logo.png" height="80px" />
+# Liquality Mobile Wallet <img align="right" src="https://raw.githubusercontent.com/liquality/chainabstractionlayer/master/liquality-logo.png" height="80px" />
 
 ## Project Setup
 - Install [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)
@@ -47,9 +47,17 @@ npm i --save-dev rn-nodeify
 ```
 
 ## Linting
-## Running Tests
-## Deploying to Testflight
-## Deploying to production
-## License
 
+## Running Tests
+
+## Deploying to Testflight
+
+## Deploying to production
+
+## Error Tracking and Performance Monitoring
+- Sentry.io
+
+## Analytics
+
+## License
 [MIT](./LICENSE.md)
