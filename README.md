@@ -54,7 +54,13 @@ npm i --save-dev rn-nodeify
 
 ## Deploying to production
 
-## Error Tracking and Performance Monitoring
+## Standards
+
+## Theming
+
+## Localization
+
+## Error Tracking
 - Sentry.io
 
 ## Analytics
