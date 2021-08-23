@@ -10,7 +10,6 @@ import splashScreen from 'react-native-splash-screen'
 
 it('renders correctly', async () => {
   const { getByTestId } = render(<App />)
-  expect(getByTestId('main-view')).toBeTruthy()
-  // await waitFor(async () => expect(getByTestId('main-view')))
+  expect(getByTestId('header-view')).toBeTruthy()
   await waitFor(() => expect(splashScreen.hide).toHaveBeenCalled())
 })
