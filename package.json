@@ -1,5 +1,5 @@
 {
-  "name": "liquality-wallet",
+  "name": "liquality",
   "description": "",
   "version": "0.0.1",
   "private": true,
@@ -29,7 +29,6 @@
     "@liquality/ethereum-ledger-provider": "^1.4.5",
     "@liquality/ethereum-networks": "^1.4.5",
     "@liquality/ethereum-rpc-provider": "^1.4.5",
-    "@react-navigation/native": "^6.0.2",
     "@tradle/react-native-http": "^2.0.1",
     "assert": "^1.5.0",
     "browserify-zlib": "^0.1.4",
