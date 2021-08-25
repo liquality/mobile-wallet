@@ -2,6 +2,7 @@
  * @format
  */
 import './shim.js'
+import 'react-native-gesture-handler'
 import { AppRegistry } from 'react-native'
 // require('node-libs-react-native/globals');
 import App from './App'
