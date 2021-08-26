@@ -43,6 +43,11 @@ Build a version of the app
 fastlane android alpha
 ```
 Build and push a new alpha build to the Play Store
+### android beta
+```
+fastlane android beta
+```
+promote the current alpha build to the beta track
 ### android generate_icons
 ```
 fastlane android generate_icons

@@ -146,19 +146,19 @@ platform :android do
     supply(supply_params)
   end
 
-#   desc "promote the current alpha build to the beta track"
-#   lane :beta do
-#     version_codes = google_play_track_version_codes(track: "alpha")
-#
-#     version_code = version_codes.first
-#
-#     supply_params = {
-#       track: "alpha",
-#       track_promote_to: "beta",
-#       version_code: version_code,
-#     }
-#     supply(supply_params)
-#   end
+  desc "promote the current alpha build to the beta track"
+  lane :beta do
+    version_codes = google_play_track_version_codes(track: "alpha")
+
+    version_code = version_codes.first
+
+    supply_params = {
+      track: "alpha",
+      track_promote_to: "beta",
+      version_code: version_code,
+    }
+    supply(supply_params)
+  end
 #
 #   desc "promote the current beta build to the production track"
 #   lane :production do

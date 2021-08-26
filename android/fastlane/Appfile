@@ -1,2 +1,2 @@
 json_key_file("/Users/adilmezghouti/development/Liquality/pc-api-6580993421363873297-652-10db6378cfe3.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
-package_name("io.liquality.app") # e.g. com.krausefx.app
+package_name("io.liquality") # e.g. com.krausefx.app
