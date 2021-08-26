@@ -53,7 +53,7 @@ platform :android do
     ensure_git_status_clean if should_commit
 
     params = {
-      :app_project_dir => './android/app'
+      :app_project_dir => './app'
     }
     if options[:build_number]
       params[:version_code] = options[:build_number].to_i
@@ -85,7 +85,7 @@ platform :android do
     new_version_params = options[:version]
 
     params = {
-      app_project_dir: './android/app',
+      app_project_dir: './app',
       increment_type: increment_type,
     }
 
@@ -114,7 +114,7 @@ platform :android do
     gradle_params = {
       task: build_task,
       build_type: build_type,
-      project_dir: './android',
+      project_dir: './',
     }
     gradle(gradle_params)
   end
@@ -134,7 +134,7 @@ platform :android do
       build_task: "bundle",
     }
     generate_icons()
-    add_badge(glob: "/**/mipmap-*/ic_launcher.png")
+    add_badge(glob: "/**/mipmap-*/ic_launcher*.png")
     build(build_params)
 
     supply_params = {
@@ -174,24 +174,12 @@ platform :android do
 #     supply(supply_params)
 #   end
 #
-#   lane :generate_icons do
-#     android_appicon(
-#       appicon_image_file: './fastlane/metadata/app_icon.png',
-#       appicon_icon_types: [:launcher],
-#       appicon_path: './android/app/src/main/res/mipmap'
-#     )
-#     android_appicon(
-#       appicon_image_file: './fastlane/metadata/app_icon.png',
-#       appicon_icon_types: [:notification],
-#       appicon_path: './android/app/src/main/res/drawable',
-#       appicon_filename: 'ic_notification',
-#       generate_rounded: true
-#     )
-#     android_appicon(
-#       appicon_image_file: './fastlane/metadata/splash.jpg',
-#       appicon_icon_types: [:splash_port, :splash_land],
-#       appicon_path: './android/app/src/main/res/drawable',
-#       appicon_filename: 'splash'
-#     )
-#   end
+  lane :generate_icons do
+    android_appicon(
+      appicon_image_file: './fastlane/metadata/app_icon.png',
+      appicon_icon_types: [:launcher],
+      appicon_path: './app/src/main/res/mipmap',
+      generate_rounded: true
+    )
+  end
 end

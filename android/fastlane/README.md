@@ -21,6 +21,33 @@ or alternatively using `brew install fastlane`
 fastlane android badgeIt
 ```
 
+### android ibn
+```
+fastlane android ibn
+```
+Increment build number and push to repository - Build number in this case is the android version code
+        Check out this link: https://jonathancardoso.com/en/blog/automated-release-publish-deployment-react-native-android-apps-using-fastlane-part-1-play-store/
+  
+### android ivn
+```
+fastlane android ivn
+```
+Increment version number and push to repository - Version number in this case is the android version name
+### android build
+```
+fastlane android build
+```
+Build a version of the app
+### android alpha
+```
+fastlane android alpha
+```
+Build and push a new alpha build to the Play Store
+### android generate_icons
+```
+fastlane android generate_icons
+```
+
 
 ----
 
