@@ -184,6 +184,7 @@ android {
             }
         }
     }
+    buildToolsVersion '30.0.2'
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
@@ -245,9 +246,9 @@ dependencies {
 
 // Run this once to be able to run the application with BUCK
 // puts all compile dependencies into folder libs for BUCK to use
-task copyDownloadableDepsToLibs(type: Copy) {
-    from configurations.compile
-    into 'libs'
-}
+//task copyDownloadableDepsToLibs(type: Copy) {
+//    from configurations.compile
+//    into 'libs'
+//}
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
