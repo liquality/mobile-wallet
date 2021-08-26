@@ -1,0 +1,197 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+# platform :android do
+#   desc "Runs all the tests"
+#   lane :test do
+#     gradle(task: "test")
+#   end
+#
+#   desc "Submit a new Beta Build to Crashlytics Beta"
+#   lane :beta do
+#     gradle(task: "clean assembleRelease")
+#     crashlytics
+#
+#     # sh "your_script.sh"
+#     # You can also use other beta testing services here
+#   end
+#
+#   desc "Deploy a new version to the Google Play"
+#   lane :deploy do
+#     gradle(task: "clean assembleRelease")
+#     upload_to_play_store
+#   end
+# end
+
+platform :android do
+  lane :badgeIt do
+    add_badge(glob: "/**/mipmap-*/ic_launcher.png")
+  end
+
+  desc "Increment build number and push to repository - Build number in this case is the android version code
+        Check out this link: https://jonathancardoso.com/en/blog/automated-release-publish-deployment-react-native-android-apps-using-fastlane-part-1-play-store/
+  "
+  lane :ibn do |options|
+    should_commit = options.fetch(:should_commit, true)
+    commit_message = options.fetch(:commit_message, "android: bump build number (version code) [skip ci]")
+    should_push = options.fetch(:should_push, true)
+
+    ensure_git_status_clean if should_commit
+
+    params = {
+      :app_project_dir => './android/app'
+    }
+    if options[:build_number]
+      params[:version_code] = options[:build_number].to_i
+    end
+
+    android_increment_version_code(params)
+    new_version_code = Actions.lane_context[Actions::SharedValues::ANDROID_VERSION_CODE]
+    UI.important("Incremented android version code to #{new_version_code}")
+
+    if should_commit
+      path = "android/app/build.gradle"
+      git_add(path: path)
+      git_commit(path: path, message: commit_message)
+      # Push the new commit and tag back to your git remote
+      push_to_git_remote if should_push
+    end
+  end
+
+  desc "Increment version number and push to repository - Version number in this case is the android version name"
+  lane :ivn do |options|
+    should_commit = options.fetch(:should_commit, true)
+    commit_message = options.fetch(:commit_message, "android: bump version number (version name) [skip ci]")
+    should_push = options.fetch(:should_push, true)
+
+    # Ensure that your git status is not dirty
+    ensure_git_status_clean if should_commit
+
+    increment_type = options.fetch(:increment_type, "patch")
+    new_version_params = options[:version]
+
+    params = {
+      app_project_dir: './android/app',
+      increment_type: increment_type,
+    }
+
+    unless new_version_params.nil?()
+      params[:version_name] = new_version_params
+    end
+
+    android_increment_version_name(params)
+    new_version_name = Actions.lane_context[Actions::SharedValues::ANDROID_VERSION_NAME]
+    UI.important("Incremented android version name to #{new_version_name}")
+
+    if should_commit
+      path = "android/app/build.gradle"
+      git_add(path: path)
+      git_commit(path: path, message: commit_message)
+      # Push the new commit and tag back to your git remote
+      push_to_git_remote if should_push
+    end
+  end
+
+  desc "Build a version of the app"
+  lane :build do |options|
+    build_task = options.fetch(:build_task, "assemble")
+    build_type = options.fetch(:build_type, "Release")
+
+    gradle_params = {
+      task: build_task,
+      build_type: build_type,
+      project_dir: './android',
+    }
+    gradle(gradle_params)
+  end
+
+  desc "Build and push a new alpha build to the Play Store"
+  lane :alpha do
+    ibn({
+      should_commit: false,
+      should_push: false
+    })
+    ivn({
+      should_commit: false,
+      should_push: false,
+      increment_type: 'patch'
+    })
+    build_params = {
+      build_task: "bundle",
+    }
+    generate_icons()
+    add_badge(glob: "/**/mipmap-*/ic_launcher.png")
+    build(build_params)
+
+    supply_params = {
+      track: "alpha",
+      skip_upload_apk: true,
+      # defaults to completed
+      release_status: "draft"
+    }
+    supply(supply_params)
+  end
+
+#   desc "promote the current alpha build to the beta track"
+#   lane :beta do
+#     version_codes = google_play_track_version_codes(track: "alpha")
+#
+#     version_code = version_codes.first
+#
+#     supply_params = {
+#       track: "alpha",
+#       track_promote_to: "beta",
+#       version_code: version_code,
+#     }
+#     supply(supply_params)
+#   end
+#
+#   desc "promote the current beta build to the production track"
+#   lane :production do
+#     version_codes = google_play_track_version_codes(track: "beta")
+#
+#     version_code = version_codes.first
+#
+#     supply_params = {
+#       track: "beta",
+#       track_promote_to: "production",
+#       version_code: version_code,
+#     }
+#     supply(supply_params)
+#   end
+#
+#   lane :generate_icons do
+#     android_appicon(
+#       appicon_image_file: './fastlane/metadata/app_icon.png',
+#       appicon_icon_types: [:launcher],
+#       appicon_path: './android/app/src/main/res/mipmap'
+#     )
+#     android_appicon(
+#       appicon_image_file: './fastlane/metadata/app_icon.png',
+#       appicon_icon_types: [:notification],
+#       appicon_path: './android/app/src/main/res/drawable',
+#       appicon_filename: 'ic_notification',
+#       generate_rounded: true
+#     )
+#     android_appicon(
+#       appicon_image_file: './fastlane/metadata/splash.jpg',
+#       appicon_icon_types: [:splash_port, :splash_land],
+#       appicon_path: './android/app/src/main/res/drawable',
+#       appicon_filename: 'splash'
+#     )
+#   end
+end
