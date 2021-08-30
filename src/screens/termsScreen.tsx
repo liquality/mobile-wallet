@@ -44,7 +44,9 @@ const TermsScreen = ({ navigation }: TermsProps) => {
           DELIVERING A PERFECT PRODUCT.
         </Text>
         <View style={styles.actions}>
-          <Pressable style={[styles.actionBtn, styles.cancelBtn]}>
+          <Pressable
+            style={[styles.actionBtn, styles.cancelBtn]}
+            onPress={() => navigation.goBack()}>
             <Text style={styles.cancelText}>Cancel</Text>
           </Pressable>
           <Pressable

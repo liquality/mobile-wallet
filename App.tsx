@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
-import { StatusBar, useColorScheme, View } from 'react-native'
-import { Colors } from 'react-native/Libraries/NewAppScreen'
+import { StatusBar, View } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { NavigationContainer } from '@react-navigation/native'
 import { createSwitchNavigator } from '@react-navigation/compat'
@@ -11,6 +10,7 @@ import PasswordCreationScreen from './src/screens/passwordCreationScreen'
 import WalletBackupScreen from './src/screens/walletBackupScreen'
 import SeedPhraseConfirmationScreen from './src/screens/seedPhraseConfirmationScreen'
 import CongratulationsScreen from './src/screens/congratulationsScreen'
+import { LiqualityThemeProvider } from './src/theme'
 
 const Stack = createStackNavigator()
 const OnboardingNavigator = () => (
@@ -50,10 +50,7 @@ const AppNavigator = createSwitchNavigator(
 )
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark'
-
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : 'white',
     flex: 1,
   }
 
@@ -62,12 +59,14 @@ const App = () => {
   })
 
   return (
-    <View style={backgroundStyle} testID={'app-test'}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    </View>
+    <LiqualityThemeProvider>
+      <View style={backgroundStyle} testID={'app-test'}>
+        <StatusBar barStyle={'light-content'} />
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </View>
+    </LiqualityThemeProvider>
   )
 }
 

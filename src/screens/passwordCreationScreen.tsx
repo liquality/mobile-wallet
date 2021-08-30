@@ -65,7 +65,9 @@ const PasswordCreationScreen = ({ navigation }: PasswordCreationProps) => {
         </View>
       </View>
       <View style={styles.actions}>
-        <Pressable style={[styles.actionBtn, styles.cancelBtn]}>
+        <Pressable
+          style={[styles.actionBtn, styles.cancelBtn]}
+          onPress={() => navigation.navigate('Entry')}>
           <Text style={styles.cancelText}>Cancel</Text>
         </Pressable>
         <Pressable
