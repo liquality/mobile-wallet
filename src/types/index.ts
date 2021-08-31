@@ -4,7 +4,7 @@ export type RootStackParamList = {
   Entry: undefined
   TermsScreen: undefined
   PasswordCreationScreen: undefined
-  WalletBackupScreen: undefined
+  WalletBackupScreen: { password: string }
   SeedPhraseConfirmationScreen: undefined
   CongratulationsScreen: undefined
 }

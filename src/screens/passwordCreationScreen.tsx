@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import {
   View,
   Text,
@@ -9,24 +9,54 @@ import {
   TextInput,
 } from 'react-native'
 
-import { RootStackParamList, UseInputStateReturnType } from '../types'
+import { RootStackParamList } from '../types'
 import { StackScreenProps } from '@react-navigation/stack'
+
 type PasswordCreationProps = StackScreenProps<
   RootStackParamList,
   'PasswordCreationScreen'
 >
 
+interface CustomUseInputStateReturnType<T> {
+  value: T
+  onChangeText:
+    | Dispatch<SetStateAction<T>>
+    | Dispatch<SetStateAction<T | undefined>>
+  reset: Dispatch<SetStateAction<T>>
+}
+
 const useInputState = (
   initialValue: string,
-): UseInputStateReturnType<string> => {
+): CustomUseInputStateReturnType<string> => {
   const [value, setValue] = useState<string>(initialValue)
-  return { value, onChangeText: setValue }
+  return { value, onChangeText: setValue, reset: setValue }
 }
 
 const PasswordCreationScreen = ({ navigation }: PasswordCreationProps) => {
+  const PASSWORD_LENGTH = 8
   const passwordInput = useInputState('')
   const passwordConfirmationInput = useInputState('')
+  const [error, setError] = useState('')
 
+  const resetInput = () => {
+    if (!!error && !!passwordInput.value) {
+      setError('')
+      passwordInput.reset('')
+      passwordConfirmationInput.reset('')
+    }
+  }
+
+  const arePasswordsValid = () => {
+    const isError =
+      !!passwordConfirmationInput.value &&
+      !!passwordInput.value &&
+      passwordInput.value === passwordConfirmationInput.value &&
+      passwordInput.value.trim().length >= PASSWORD_LENGTH
+    if (!isError) {
+      setError("Passwords don't match")
+    }
+    return isError
+  }
   return (
     <ImageBackground
       style={styles.container}
@@ -50,7 +80,9 @@ const PasswordCreationScreen = ({ navigation }: PasswordCreationProps) => {
           <TextInput
             style={styles.input}
             onChangeText={passwordInput.onChangeText}
+            onFocus={resetInput}
             value={passwordInput.value}
+            secureTextEntry
             autoCorrect={false}
           />
         </View>
@@ -59,10 +91,18 @@ const PasswordCreationScreen = ({ navigation }: PasswordCreationProps) => {
           <TextInput
             style={styles.input}
             onChangeText={passwordConfirmationInput.onChangeText}
+            onFocus={resetInput}
             value={passwordConfirmationInput.value}
+            secureTextEntry
             autoCorrect={false}
           />
         </View>
+        {!!error && <Text style={styles.error}>Passwords don't match</Text>}
+        {!!error && (
+          <Text style={styles.errorHint}>
+            Passwords must be at least 8 characters
+          </Text>
+        )}
       </View>
       <View style={styles.actions}>
         <Pressable
@@ -72,7 +112,12 @@ const PasswordCreationScreen = ({ navigation }: PasswordCreationProps) => {
         </Pressable>
         <Pressable
           style={[styles.actionBtn, styles.nextBtn]}
-          onPress={() => navigation.navigate('WalletBackupScreen')}>
+          onPress={() =>
+            arePasswordsValid() &&
+            navigation.navigate('WalletBackupScreen', {
+              password: passwordInput.value,
+            })
+          }>
           <Text style={styles.nextText}>Next</Text>
         </Pressable>
       </View>
@@ -161,6 +206,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#F8FAFF',
+  },
+  error: {
+    color: '#F12274',
+    fontSize: 12,
+    backgroundColor: '#FFF',
+    textAlignVertical: 'center',
+    marginTop: 5,
+    paddingLeft: 5,
+    paddingVertical: 5,
+    height: 25,
+  },
+  errorHint: {
+    color: '#FFF',
+    fontSize: 14,
+    fontWeight: '500',
+    marginTop: 20,
   },
 })
 export default PasswordCreationScreen
