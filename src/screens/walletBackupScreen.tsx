@@ -15,7 +15,7 @@ type WalletBackupProps = StackScreenProps<
   'WalletBackupScreen'
 >
 
-const WalletBackupScreen = ({ navigation }: WalletBackupProps) => {
+const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
   const DATA: Array<SeedPhraseType> = [
     {
       id: 1,
@@ -111,7 +111,9 @@ const WalletBackupScreen = ({ navigation }: WalletBackupProps) => {
           </Pressable>
           <Pressable
             style={[styles.actionBtn, styles.nextBtn]}
-            onPress={() => navigation.navigate('SeedPhraseConfirmationScreen')}>
+            onPress={() =>
+              navigation.navigate('SeedPhraseConfirmationScreen', route.params)
+            }>
             <Text style={styles.nextText}>Next</Text>
           </Pressable>
         </View>

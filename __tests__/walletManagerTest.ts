@@ -1,4 +1,5 @@
 import WalletManager from '../src/core/walletManager'
+import StorageManager from '../src/core/storageManager'
 
 describe('WalletManagerTest', () => {
   const PASSWORD = 'this is my cool password'
@@ -15,7 +16,11 @@ describe('WalletManagerTest', () => {
       mnemomnic: 'anjsnc8383jndndj',
       imported: false,
     }
-    const walletManager = new WalletManager(wallet, PASSWORD)
+    const walletManager = new WalletManager(
+      wallet,
+      PASSWORD,
+      new StorageManager(),
+    )
     const newWallet = await walletManager.createWallet()
     expect(newWallet.keySalt).toBeTruthy()
     expect(newWallet.wallets).toBeTruthy()

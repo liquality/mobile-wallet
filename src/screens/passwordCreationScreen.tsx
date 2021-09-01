@@ -32,7 +32,10 @@ const useInputState = (
   return { value, onChangeText: setValue, reset: setValue }
 }
 
-const PasswordCreationScreen = ({ navigation }: PasswordCreationProps) => {
+const PasswordCreationScreen = ({
+  route,
+  navigation,
+}: PasswordCreationProps) => {
   const PASSWORD_LENGTH = 8
   const passwordInput = useInputState('')
   const passwordConfirmationInput = useInputState('')
@@ -115,6 +118,7 @@ const PasswordCreationScreen = ({ navigation }: PasswordCreationProps) => {
           onPress={() =>
             arePasswordsValid() &&
             navigation.navigate('WalletBackupScreen', {
+              ...route.params,
               password: passwordInput.value,
             })
           }>

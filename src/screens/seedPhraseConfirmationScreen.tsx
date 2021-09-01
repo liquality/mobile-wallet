@@ -7,15 +7,19 @@ import {
   Pressable,
   ImageBackground,
   FlatList,
+  Alert,
 } from 'react-native'
 import { RootStackParamList, SeedPhraseType } from '../types'
 import { StackScreenProps } from '@react-navigation/stack'
+import WalletManager from '../core/walletManager'
+import StorageManager from '../core/storageManager'
 type SeedPhraseConfirmationProps = StackScreenProps<
   RootStackParamList,
   'SeedPhraseConfirmationScreen'
 >
 
 const SeedPhraseConfirmationScreen = ({
+  route,
   navigation,
 }: SeedPhraseConfirmationProps) => {
   const DATA: Array<SeedPhraseType> = [
@@ -76,6 +80,29 @@ const SeedPhraseConfirmationScreen = ({
       </Pressable>
     )
   }
+
+  const onContinue = () => {
+    if (!route.params.password) {
+      Alert.alert('Key information missig', 'Please try again')
+    }
+    const wallet = {
+      id: '1234',
+      at: Date.now(),
+      name: 'Account-1',
+      mnemomnic: 'anjsnc8383jndndj',
+      imported: false,
+    }
+    const walletManager = new WalletManager(
+      wallet,
+      route.params.password || '',
+      new StorageManager(),
+    )
+    walletManager.createWallet().then(() => {
+      walletManager.retrieveWallet().then(() => {
+        navigation.navigate('CongratulationsScreen')
+      })
+    })
+  }
   return (
     <ImageBackground
       style={styles.container}
@@ -126,7 +153,7 @@ const SeedPhraseConfirmationScreen = ({
           </Pressable>
           <Pressable
             style={[styles.actionBtn, styles.nextBtn]}
-            onPress={() => navigation.navigate('CongratulationsScreen')}>
+            onPress={onContinue}>
             <Text style={styles.continueText}>Continue</Text>
           </Pressable>
         </View>

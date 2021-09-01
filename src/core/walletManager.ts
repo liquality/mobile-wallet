@@ -10,6 +10,7 @@ import {
   AccountType,
   AccountWrapperType,
   NetworkWrapperType,
+  StorageManagerI,
   WalletType,
 } from './types'
 
@@ -19,21 +20,25 @@ import {
 //   state.setupAt = Date.now()
 // },
 
-// ACCEPT_TNC (state) {
-//   state.termsAcceptedAt = Date.now()
-// },
-
 class WalletManager {
+  storageKey: string
   wallets: Array<WalletType>
   password: string
   cryptoassets: any
   chains: any
+  storageManager: StorageManagerI
 
-  constructor(wallet: WalletType, password: string) {
+  constructor(
+    wallet: WalletType,
+    password: string,
+    storageManager: StorageManagerI,
+  ) {
     this.wallets = [wallet]
     this.password = password
     this.cryptoassets = assets
     this.chains = chains
+    this.storageManager = storageManager
+    this.storageKey = '@liqualityStore'
   }
 
   /**
@@ -74,13 +79,17 @@ class WalletManager {
       })
     })
 
-    return {
+    const state = {
       activeWalletId: id,
       encryptedWallets,
       keySalt,
       wallets: this.wallets,
       account,
     }
+    //persist to local storage
+    await this.persistToLocalStorage(state)
+
+    return state
   }
 
   /**
@@ -92,6 +101,18 @@ class WalletManager {
     //   JSON.stringify(this.wallets),
     // )
     // store
+  }
+
+  public async retrieveWallet(): Promise<any | Error> {
+    const wallet = await this.storageManager.read(this.storageKey)
+    if (wallet instanceof Error) {
+      return 'Unable to retrieve wallet from local storage'
+    }
+    return JSON.parse(wallet)
+  }
+
+  private async persistToLocalStorage(state: any) {
+    await this.storageManager.persist(this.storageKey, JSON.stringify(state))
   }
 
   private getNextAccountColor(chain: string, index: number) {

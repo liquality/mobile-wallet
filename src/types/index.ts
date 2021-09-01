@@ -1,11 +1,16 @@
 import { Dispatch, SetStateAction } from 'react'
 
+type StackPayload = {
+  termsAcceptedAt?: number
+  password?: string
+}
+
 export type RootStackParamList = {
   Entry: undefined
   TermsScreen: undefined
-  PasswordCreationScreen: undefined
-  WalletBackupScreen: { password: string }
-  SeedPhraseConfirmationScreen: undefined
+  PasswordCreationScreen: StackPayload
+  WalletBackupScreen: StackPayload
+  SeedPhraseConfirmationScreen: StackPayload
   CongratulationsScreen: undefined
 }
 

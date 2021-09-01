@@ -1,5 +1,10 @@
 import { NetworkEnum } from './config'
 
+export interface StorageManagerI {
+  persist: (key: string, data: any) => Promise<boolean>
+  read: (key: string) => Promise<any>
+}
+
 export interface WalletType {
   id: string
   at: number

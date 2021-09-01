@@ -30,6 +30,7 @@
     "@liquality/ethereum-ledger-provider": "^1.4.5",
     "@liquality/ethereum-networks": "^1.4.5",
     "@liquality/ethereum-rpc-provider": "^1.4.5",
+    "@react-native-async-storage/async-storage": "^1.15.7",
     "@react-navigation/compat": "^5.3.20",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/stack": "^6.0.7",

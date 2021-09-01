@@ -51,7 +51,11 @@ const TermsScreen = ({ navigation }: TermsProps) => {
           </Pressable>
           <Pressable
             style={[styles.actionBtn, styles.nextBtn]}
-            onPress={() => navigation.navigate('PasswordCreationScreen')}>
+            onPress={() =>
+              navigation.navigate('PasswordCreationScreen', {
+                termsAcceptedAt: Date.now(),
+              })
+            }>
             <Text style={styles.nextText}>I Accept</Text>
           </Pressable>
         </View>

@@ -1,7 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Image, ImageBackground } from 'react-native'
+import { StackScreenProps } from '@react-navigation/stack'
+import { RootStackParamList } from '../types'
 
-const CongratulationsScreen = () => {
+type CongratulationsProps = StackScreenProps<
+  RootStackParamList,
+  'SeedPhraseConfirmationScreen'
+>
+
+const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
+  useEffect(() => {
+    setTimeout(() => navigation.navigate('Entry'), 3000)
+  })
+
   return (
     <ImageBackground
       style={styles.container}
