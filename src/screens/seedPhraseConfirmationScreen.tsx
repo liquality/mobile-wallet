@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   FlatList,
   Alert,
 } from 'react-native'
-import { RootStackParamList, SeedPhraseType } from '../types'
+import { RootStackParamList, SeedWordType } from '../types'
 import { StackScreenProps } from '@react-navigation/stack'
 import WalletManager from '../core/walletManager'
 import StorageManager from '../core/storageManager'
@@ -18,78 +18,78 @@ type SeedPhraseConfirmationProps = StackScreenProps<
   'SeedPhraseConfirmationScreen'
 >
 
+const SeedWord = ({
+  item,
+  chosenSeedWords,
+  onPress,
+}: {
+  item: SeedWordType
+  chosenSeedWords: Array<string>
+  onPress: () => void
+}) => {
+  const [pressed, setPressed] = useState(false)
+  const { word } = item
+  return (
+    <Pressable
+      style={styles.word}
+      onPress={() => {
+        if (chosenSeedWords.length <= 3) {
+          setPressed(!pressed)
+        }
+        onPress()
+      }}>
+      <Text style={[styles.wordText, pressed ? styles.pressedWord : {}]}>
+        {word}
+      </Text>
+    </Pressable>
+  )
+}
+
 const SeedPhraseConfirmationScreen = ({
   route,
   navigation,
 }: SeedPhraseConfirmationProps) => {
-  const DATA: Array<SeedPhraseType> = [
-    {
-      id: 1,
-      word: 'logic',
-    },
-    {
-      id: 2,
-      word: 'resist',
-    },
-    {
-      id: 3,
-      word: 'cage',
-    },
-    {
-      id: 4,
-      word: 'dash',
-    },
-    {
-      id: 5,
-      word: 'trigger',
-    },
-    {
-      id: 6,
-      word: 'seminar',
-    },
-    {
-      id: 7,
-      word: 'monkey',
-    },
-    {
-      id: 8,
-      word: 'custom',
-    },
-    {
-      id: 9,
-      word: 'afraid',
-    },
-    {
-      id: 10,
-      word: 'zoom',
-    },
-    {
-      id: 11,
-      word: 'pudding',
-    },
-    {
-      id: 12,
-      word: 'enrich',
-    },
-  ]
-  const renderSeedWord = ({ item }: { item: SeedPhraseType }) => {
-    const { word } = item
+  const [chosenSeedWords, setChosenSeedWords] = useState<Array<string>>([])
+
+  const renderSeedWord = ({ item }: { item: SeedWordType }) => {
     return (
-      <Pressable style={styles.word}>
-        <Text style={styles.wordText}>{word}</Text>
-      </Pressable>
+      <SeedWord
+        onPress={() => {
+          if (
+            chosenSeedWords.length < 3 &&
+            chosenSeedWords.indexOf(item.word) < 0
+          ) {
+            setChosenSeedWords(Array.of(...chosenSeedWords, item.word))
+          } else {
+            setChosenSeedWords(chosenSeedWords.filter((w) => w !== item.word))
+          }
+        }}
+        item={item}
+        chosenSeedWords={chosenSeedWords}
+      />
+    )
+  }
+
+  const confirmSeedPhrase = () => {
+    const seedWords = route.params.seedWords
+    return (
+      seedWords &&
+      seedWords[0].word === chosenSeedWords[0] &&
+      seedWords[4].word === chosenSeedWords[1] &&
+      seedWords[11].word === chosenSeedWords[2]
     )
   }
 
   const onContinue = async () => {
-    if (!route.params.password) {
-      Alert.alert('Key information missig', 'Please try again')
+    if (!route.params.password || !confirmSeedPhrase()) {
+      Alert.alert('Key information missing', 'Please try again')
+      return
     }
     const wallet = {
       id: '1234',
       at: Date.now(),
       name: 'Account-1',
-      mnemomnic: 'anjsnc8383jndndj',
+      mnemomnic: route.params.seedWords?.join(' ') || '',
       imported: false,
     }
     const walletManager = new WalletManager(
@@ -115,31 +115,37 @@ const SeedPhraseConfirmationScreen = ({
         <Text style={styles.headerText}>Wallet</Text>
       </View>
       <View style={styles.prompt}>
-        <Text style={styles.promptText}>Backup your Wallet</Text>
+        <Text style={styles.promptText}>Confirm Seed Phrase</Text>
       </View>
       <Text style={styles.description}>
-        The seed phrase is the only way to restore your wallet. Write it down.
-        Next you will confirm it.
+        Tap the 3 words matching their position in the seed phrase. Once
+        confirmed, store the phrase securely.
       </Text>
       <View style={styles.seedPhrase}>
         <View style={styles.missingWords}>
           <View style={styles.missingWordView}>
             <Text style={styles.wordOrderText}>1ST WORD</Text>
-            <Text style={styles.missingWordText}>logic</Text>
+            <Text style={styles.missingWordText}>
+              {chosenSeedWords.length >= 1 && chosenSeedWords[0]}
+            </Text>
           </View>
           <View style={styles.missingWordView}>
-            <Text style={styles.wordOrderText}>8TH WORD</Text>
-            <Text style={styles.missingWordText} />
+            <Text style={styles.wordOrderText}>5TH WORD</Text>
+            <Text style={styles.missingWordText}>
+              {chosenSeedWords.length >= 2 && chosenSeedWords[1]}
+            </Text>
           </View>
           <View style={styles.missingWordView}>
             <Text style={styles.wordOrderText}>12TH WORD</Text>
-            <Text style={styles.missingWordText} />
+            <Text style={styles.missingWordText}>
+              {chosenSeedWords.length >= 3 && chosenSeedWords[2]}
+            </Text>
           </View>
         </View>
         <FlatList
           style={styles.flatList}
           numColumns={4}
-          data={DATA}
+          data={route.params.seedWords}
           renderItem={renderSeedWord}
           keyExtractor={(item) => `${item.id}`}
           columnWrapperStyle={styles.columnWrapperStyle}
@@ -224,6 +230,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: '#D9DFE5',
     borderWidth: 1,
+  },
+  pressedWord: {
+    color: '#A8AEB7',
   },
   wordText: {
     fontSize: 12,

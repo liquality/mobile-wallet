@@ -13,6 +13,7 @@ import {
   StorageManagerI,
   WalletType,
 } from './types'
+import { generateMnemonic } from 'bip39'
 
 // SETUP_WALLET (state, { key }) {
 //   state.key = key
@@ -90,6 +91,10 @@ class WalletManager {
     await this.persistToLocalStorage(state)
 
     return state
+  }
+
+  public static generateSeedWords() {
+    return generateMnemonic().split(' ')
   }
 
   /**

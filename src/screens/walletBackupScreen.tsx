@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -8,65 +8,18 @@ import {
   ImageBackground,
   FlatList,
 } from 'react-native'
-import { RootStackParamList, SeedPhraseType } from '../types'
+import { RootStackParamList, SeedWordType } from '../types'
 import { StackScreenProps } from '@react-navigation/stack'
+import WalletManager from '../core/walletManager'
 type WalletBackupProps = StackScreenProps<
   RootStackParamList,
   'WalletBackupScreen'
 >
 
 const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
-  const DATA: Array<SeedPhraseType> = [
-    {
-      id: 1,
-      word: 'logic',
-    },
-    {
-      id: 2,
-      word: 'resist',
-    },
-    {
-      id: 3,
-      word: 'cage',
-    },
-    {
-      id: 4,
-      word: 'dash',
-    },
-    {
-      id: 5,
-      word: 'trigger',
-    },
-    {
-      id: 6,
-      word: 'seminar',
-    },
-    {
-      id: 7,
-      word: 'monkey',
-    },
-    {
-      id: 8,
-      word: 'custom',
-    },
-    {
-      id: 9,
-      word: 'afraid',
-    },
-    {
-      id: 10,
-      word: 'zoom',
-    },
-    {
-      id: 11,
-      word: 'pudding',
-    },
-    {
-      id: 12,
-      word: 'enrich',
-    },
-  ]
-  const renderSeedWord = ({ item }: { item: SeedPhraseType }) => {
+  const [seedWords, setSeedWords] = useState<Array<SeedWordType>>()
+
+  const renderSeedWord = ({ item }: { item: SeedWordType }) => {
     const { id, word } = item
     return (
       <View style={styles.word}>
@@ -75,6 +28,18 @@ const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
       </View>
     )
   }
+
+  useEffect(() => {
+    const seedWordsArray = WalletManager.generateSeedWords().map(
+      (word, index) => ({
+        id: index + 1,
+        word,
+      }),
+    )
+
+    setSeedWords(seedWordsArray)
+  }, [])
+
   return (
     <ImageBackground
       style={styles.container}
@@ -91,14 +56,14 @@ const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
         <Text style={styles.promptText}>Backup your Wallet</Text>
       </View>
       <Text style={styles.description}>
-        Tap the 3 words matching their position in the seed phrase. Once
-        confirmed, store the phrase securely.
+        The seed phrase is the only way to restore your wallet. Write it down.
+        Next you will confirm it.
       </Text>
       <View style={styles.seedPhrase}>
         <FlatList
           numColumns={4}
           style={styles.flatList}
-          data={DATA}
+          data={seedWords}
           renderItem={renderSeedWord}
           keyExtractor={(item) => `${item.id}`}
           columnWrapperStyle={styles.columnWrapperStyle}
@@ -112,7 +77,10 @@ const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
           <Pressable
             style={[styles.actionBtn, styles.nextBtn]}
             onPress={() =>
-              navigation.navigate('SeedPhraseConfirmationScreen', route.params)
+              navigation.navigate('SeedPhraseConfirmationScreen', {
+                ...route.params,
+                seedWords,
+              })
             }>
             <Text style={styles.nextText}>Next</Text>
           </Pressable>
