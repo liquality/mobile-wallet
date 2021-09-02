@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   input: {
+    color: '#FFF',
     borderBottomColor: '#38FFFB',
     borderBottomWidth: 1,
   },

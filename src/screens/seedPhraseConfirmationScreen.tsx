@@ -81,7 +81,7 @@ const SeedPhraseConfirmationScreen = ({
     )
   }
 
-  const onContinue = () => {
+  const onContinue = async () => {
     if (!route.params.password) {
       Alert.alert('Key information missig', 'Please try again')
     }
@@ -97,11 +97,10 @@ const SeedPhraseConfirmationScreen = ({
       route.params.password || '',
       new StorageManager(),
     )
-    walletManager.createWallet().then(() => {
-      walletManager.retrieveWallet().then(() => {
-        navigation.navigate('CongratulationsScreen')
-      })
+    await walletManager.createWallet().catch(() => {
+      Alert.alert('Unable to create wallet', 'Please try again')
     })
+    navigation.navigate('CongratulationsScreen')
   }
   return (
     <ImageBackground
