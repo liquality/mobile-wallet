@@ -13,6 +13,8 @@ import { RootStackParamList, SeedWordType } from '../types'
 import { StackScreenProps } from '@react-navigation/stack'
 import WalletManager from '../core/walletManager'
 import StorageManager from '../core/storageManager'
+import Spinner from '../components/spinner'
+
 type SeedPhraseConfirmationProps = StackScreenProps<
   RootStackParamList,
   'SeedPhraseConfirmationScreen'
@@ -50,6 +52,7 @@ const SeedPhraseConfirmationScreen = ({
   navigation,
 }: SeedPhraseConfirmationProps) => {
   const [chosenSeedWords, setChosenSeedWords] = useState<Array<string>>([])
+  const [spinnerActive, setSpinnerActive] = useState(false)
 
   const renderSeedWord = ({ item }: { item: SeedWordType }) => {
     return (
@@ -80,11 +83,12 @@ const SeedPhraseConfirmationScreen = ({
     )
   }
 
-  const onContinue = async () => {
+  const onContinue = () => {
     if (!route.params.password || !confirmSeedPhrase()) {
       Alert.alert('Key information missing', 'Please try again')
       return
     }
+    setSpinnerActive(true)
     const wallet = {
       id: '1234',
       at: Date.now(),
@@ -97,15 +101,21 @@ const SeedPhraseConfirmationScreen = ({
       route.params.password || '',
       new StorageManager(),
     )
-    await walletManager.createWallet().catch(() => {
-      Alert.alert('Unable to create wallet', 'Please try again')
-    })
-    navigation.navigate('CongratulationsScreen')
+    walletManager
+      .createWallet()
+      .catch(() => {
+        Alert.alert('Unable to create wallet', 'Please try again')
+      })
+      .then(() => {
+        setSpinnerActive(false)
+        navigation.navigate('CongratulationsScreen')
+      })
   }
   return (
     <ImageBackground
       style={styles.container}
       source={require('../assets/bg/bg.png')}>
+      <Spinner loadingText={'Creating Wallet...'} visible={spinnerActive} />
       <View style={styles.header}>
         <Image
           style={styles.headerLogo}

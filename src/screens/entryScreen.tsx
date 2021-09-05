@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   headerText: {
+    fontFamily: 'Montserrat',
     color: '#fff',
     fontSize: 30,
     fontWeight: '300',
@@ -74,11 +75,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   descriptionTitle: {
+    fontFamily: 'Montserrat',
     fontSize: 50,
     color: '#FFF',
     marginBottom: 5,
   },
   descriptionDetails: {
+    fontFamily: 'Montserrat',
     fontSize: 18,
     color: '#FFF',
     marginBottom: 5,
@@ -107,6 +110,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   createText: {
+    fontFamily: 'Montserrat',
     fontSize: 14,
     fontWeight: '600',
     color: '#FFF',
