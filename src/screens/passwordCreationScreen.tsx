@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
 
 import { RootStackParamList } from '../types'
 import { StackScreenProps } from '@react-navigation/stack'
+import { ThemeContext } from '../theme'
 
 type PasswordCreationProps = StackScreenProps<
   RootStackParamList,
@@ -40,6 +41,7 @@ const PasswordCreationScreen = ({
   const passwordInput = useInputState('')
   const passwordConfirmationInput = useInputState('')
   const [error, setError] = useState('')
+  const theme = useContext(ThemeContext)
 
   const resetInput = () => {
     if (!!error && !!passwordInput.value) {
@@ -111,7 +113,7 @@ const PasswordCreationScreen = ({
         <Pressable
           style={[styles.actionBtn, styles.cancelBtn]}
           onPress={() => navigation.navigate('Entry')}>
-          <Text style={styles.cancelText}>Cancel</Text>
+          <Text style={[theme.buttonText, styles.cancelText]}>Cancel</Text>
         </Pressable>
         <Pressable
           style={[styles.actionBtn, styles.nextBtn]}
@@ -122,7 +124,7 @@ const PasswordCreationScreen = ({
               password: passwordInput.value,
             })
           }>
-          <Text style={styles.nextText}>Next</Text>
+          <Text style={[theme.buttonText, styles.nextText]}>Next</Text>
         </Pressable>
       </View>
     </ImageBackground>
@@ -197,8 +199,6 @@ const styles = StyleSheet.create({
     borderColor: '#9D4DFA',
   },
   cancelText: {
-    fontSize: 14,
-    fontWeight: '600',
     color: '#9D4DFA',
   },
   nextBtn: {
@@ -208,8 +208,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   nextText: {
-    fontSize: 14,
-    fontWeight: '600',
     color: '#F8FAFF',
   },
   error: {

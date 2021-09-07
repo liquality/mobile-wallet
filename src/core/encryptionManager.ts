@@ -1,7 +1,7 @@
 import _pbkdf2 from 'pbkdf2'
 import { enc as Enc, AES, lib as Lib } from 'crypto-js'
 
-const PBKDF2_ITERATIONS = 1000000
+const PBKDF2_ITERATIONS = 10000
 const PBKDF2_LENGTH = 32
 const PBKDF2_DIGEST = 'sha256'
 
@@ -28,7 +28,6 @@ export default class EncryptionManager {
   }
 
   public async encrypt(value: string) {
-    // const keySalt = Enc.Hex.stringify(Lib.WordArray.random(16))
     const keySalt = this.generateSalt(16)
     const derivedKey = await this.pbkdf2(this.key, keySalt)
     const rawEncryptedValue = AES.encrypt(value, derivedKey)

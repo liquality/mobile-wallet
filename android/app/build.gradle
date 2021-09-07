@@ -118,7 +118,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode
  * and the benefits of using Hermes will therefore be sharply reduced.
  */
-def enableHermes = project.ext.react.get("enableHermes", true);
+def enableHermes = project.ext.react.get("enableHermes", false);
 
 def areUploadKeystoreEnvsSet = System.getenv("LIQUALITY_APP_RELEASE_STORE_FILE") != null &&
                                 System.getenv("LIQUALITY_APP_RELEASE_STORE_PASSWORD") != null &&
@@ -152,8 +152,8 @@ android {
         applicationId "io.liquality"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "1.0.6"
+        versionCode 10
+        versionName "1.0.9"
     }
     splits {
         abi {

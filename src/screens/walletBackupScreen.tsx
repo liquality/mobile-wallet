@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
 import { RootStackParamList, SeedWordType } from '../types'
 import { StackScreenProps } from '@react-navigation/stack'
 import WalletManager from '../core/walletManager'
+import { ThemeContext } from '../theme'
 type WalletBackupProps = StackScreenProps<
   RootStackParamList,
   'WalletBackupScreen'
@@ -18,6 +19,7 @@ type WalletBackupProps = StackScreenProps<
 
 const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
   const [seedWords, setSeedWords] = useState<Array<SeedWordType>>()
+  const theme = useContext(ThemeContext)
 
   const renderSeedWord = ({ item }: { item: SeedWordType }) => {
     const { id, word } = item
@@ -72,7 +74,7 @@ const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
           <Pressable
             style={[styles.actionBtn, styles.cancelBtn]}
             onPress={() => navigation.navigate('Entry')}>
-            <Text style={styles.cancelText}>Cancel</Text>
+            <Text style={[styles.cancelText, theme.buttonText]}>Cancel</Text>
           </Pressable>
           <Pressable
             style={[styles.actionBtn, styles.nextBtn]}
@@ -82,7 +84,7 @@ const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
                 seedWords,
               })
             }>
-            <Text style={styles.nextText}>Next</Text>
+            <Text style={[theme.buttonText, styles.nextText]}>Next</Text>
           </Pressable>
         </View>
       </View>
@@ -168,8 +170,6 @@ const styles = StyleSheet.create({
     borderColor: '#9D4DFA',
   },
   cancelText: {
-    fontSize: 14,
-    fontWeight: '600',
     color: '#9D4DFA',
   },
   nextBtn: {
@@ -179,8 +179,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   nextText: {
-    fontSize: 14,
-    fontWeight: '600',
     color: '#F8FAFF',
   },
 })

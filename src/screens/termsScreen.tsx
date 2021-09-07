@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   View,
   Text,
@@ -10,9 +10,12 @@ import {
 } from 'react-native'
 import { RootStackParamList } from '../types'
 import { StackScreenProps } from '@react-navigation/stack'
+import { ThemeContext } from '../theme'
 type TermsProps = StackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation }: TermsProps) => {
+  const theme = useContext(ThemeContext)
+
   return (
     <ImageBackground
       style={styles.container}
@@ -22,12 +25,12 @@ const TermsScreen = ({ navigation }: TermsProps) => {
           style={styles.headerLogo}
           source={require('../assets/icons/logo-small.png')}
         />
-        <Text style={styles.headerText}>liquality</Text>
+        <Text style={styles.logoText}>liquality</Text>
         <Text style={styles.headerText}>Wallet</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.termsSection}>
-        <Text style={styles.termsTitle}>TermsScreen & Privacy</Text>
+        <Text style={styles.termsTitle}>Terms & Privacy</Text>
         <Text style={styles.termsCopy}>
           THIS IS THE BETA VERSION OF THE LIQUALITY PLATFORM WHICH IS STILL
           BEING ACTIVELY DEVELOPED. YOU ACKNOWLEDGE THE INFORMATION AVAILABLE IS
@@ -47,7 +50,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
           <Pressable
             style={[styles.actionBtn, styles.cancelBtn]}
             onPress={() => navigation.goBack()}>
-            <Text style={styles.cancelText}>Cancel</Text>
+            <Text style={[theme.buttonText, styles.cancelText]}>Cancel</Text>
           </Pressable>
           <Pressable
             style={[styles.actionBtn, styles.nextBtn]}
@@ -56,7 +59,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
                 termsAcceptedAt: Date.now(),
               })
             }>
-            <Text style={styles.nextText}>I Accept</Text>
+            <Text style={[theme.buttonText, styles.nextText]}>I Accept</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -82,7 +85,12 @@ const styles = StyleSheet.create({
     height: 30,
     marginBottom: 8,
   },
+  logoText: {
+    color: '#fff',
+    fontSize: 18,
+  },
   headerText: {
+    fontFamily: 'MontserratAlternates-Light',
     color: '#fff',
     fontSize: 22,
     fontWeight: '300',
@@ -90,15 +98,18 @@ const styles = StyleSheet.create({
   },
   termsSection: {
     marginTop: 20,
+    paddingBottom: 20,
     backgroundColor: '#fff',
     alignItems: 'center',
   },
   termsTitle: {
+    fontFamily: 'Montserrat-Regular',
     marginTop: 20,
     fontSize: 28,
     fontWeight: '400',
   },
   termsCopy: {
+    fontFamily: 'Montserrat-Regular',
     margin: 20,
     justifyContent: 'center',
     lineHeight: 20,
@@ -107,7 +118,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 20,
   },
   actionBtn: {
     justifyContent: 'center',
@@ -124,8 +135,6 @@ const styles = StyleSheet.create({
     borderColor: '#9D4DFA',
   },
   cancelText: {
-    fontSize: 14,
-    fontWeight: '600',
     color: '#9D4DFA',
   },
   nextBtn: {
@@ -135,8 +144,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   nextText: {
-    fontSize: 14,
-    fontWeight: '600',
     color: '#F8FAFF',
   },
 })

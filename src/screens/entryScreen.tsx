@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   View,
   Text,
@@ -10,16 +10,20 @@ import {
 import { StackScreenProps } from '@react-navigation/stack'
 import Logo from '../assets/icons/logo.svg'
 import { RootStackParamList } from '../types'
+import { ThemeContext } from '../theme'
+
 type EntryProps = StackScreenProps<RootStackParamList, 'Entry'>
 
 const Entry = ({ navigation }: EntryProps) => {
+  const theme = useContext(ThemeContext)
+
   return (
     <ImageBackground
       style={styles.container}
       source={require('../assets/bg/bg.png')}>
       <View style={styles.header}>
         <Logo width={135} height={83} />
-        <Text style={styles.headerText}>liquality</Text>
+        <Text style={styles.logoText}>liquality</Text>
       </View>
       <View style={styles.description}>
         <Text style={styles.descriptionTitle}>Wallet</Text>
@@ -38,7 +42,9 @@ const Entry = ({ navigation }: EntryProps) => {
         <Pressable
           style={[styles.createBtn, styles.createBtn]}
           onPress={() => navigation.navigate('TermsScreen')}>
-          <Text style={styles.createText}>Create a new Wallet </Text>
+          <Text style={[theme.buttonText, styles.createText]}>
+            Create a new Wallet
+          </Text>
         </Pressable>
       </View>
     </ImageBackground>
@@ -64,26 +70,26 @@ const styles = StyleSheet.create({
     height: 83,
     marginBottom: 8,
   },
-  headerText: {
-    fontFamily: 'Montserrat',
+  logoText: {
     color: '#fff',
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: '300',
     lineHeight: 27,
+    letterSpacing: 3,
   },
   description: {
     alignItems: 'center',
   },
   descriptionTitle: {
-    fontFamily: 'Montserrat',
-    fontSize: 50,
-    color: '#FFF',
+    fontFamily: 'MontserratAlternates-Light',
+    color: '#FFFFFF',
+    fontSize: 55,
     marginBottom: 5,
   },
   descriptionDetails: {
-    fontFamily: 'Montserrat',
+    fontFamily: 'Montserrat-Regular',
+    color: '#FFFFFF',
     fontSize: 18,
-    color: '#FFF',
     marginBottom: 5,
   },
   actionContainer: {
@@ -110,10 +116,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   createText: {
-    fontFamily: 'Montserrat',
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#FFF',
+    color: '#FFFFFF',
   },
 })
 export default Entry

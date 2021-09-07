@@ -15,12 +15,6 @@ import {
 } from './types'
 import { generateMnemonic } from 'bip39'
 
-// SETUP_WALLET (state, { key }) {
-//   state.key = key
-//   state.keyUpdatedAt = Date.now()
-//   state.setupAt = Date.now()
-// },
-
 class WalletManager {
   storageKey: string
   wallets: Array<WalletType>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import { StackScreenProps } from '@react-navigation/stack'
 import WalletManager from '../core/walletManager'
 import StorageManager from '../core/storageManager'
 import Spinner from '../components/spinner'
+import { ThemeContext } from '../theme'
 
 type SeedPhraseConfirmationProps = StackScreenProps<
   RootStackParamList,
@@ -53,6 +54,7 @@ const SeedPhraseConfirmationScreen = ({
 }: SeedPhraseConfirmationProps) => {
   const [chosenSeedWords, setChosenSeedWords] = useState<Array<string>>([])
   const [spinnerActive, setSpinnerActive] = useState(false)
+  const theme = useContext(ThemeContext)
 
   const renderSeedWord = ({ item }: { item: SeedWordType }) => {
     return (
@@ -164,12 +166,14 @@ const SeedPhraseConfirmationScreen = ({
           <Pressable
             style={[styles.actionBtn, styles.cancelBtn]}
             onPress={() => navigation.goBack()}>
-            <Text style={styles.backText}>Back</Text>
+            <Text style={[theme.buttonText, styles.backText]}>Back</Text>
           </Pressable>
           <Pressable
             style={[styles.actionBtn, styles.nextBtn]}
             onPress={onContinue}>
-            <Text style={styles.continueText}>Continue</Text>
+            <Text style={[theme.buttonText, styles.continueText]}>
+              Continue
+            </Text>
           </Pressable>
         </View>
       </View>
@@ -290,8 +294,6 @@ const styles = StyleSheet.create({
     borderColor: '#9D4DFA',
   },
   backText: {
-    fontSize: 14,
-    fontWeight: '600',
     color: '#9D4DFA',
   },
   nextBtn: {
@@ -301,8 +303,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   continueText: {
-    fontSize: 14,
-    fontWeight: '600',
     color: '#F8FAFF',
   },
 })
