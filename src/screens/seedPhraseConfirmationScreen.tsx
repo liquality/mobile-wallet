@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -54,6 +54,9 @@ const SeedPhraseConfirmationScreen = ({
 }: SeedPhraseConfirmationProps) => {
   const [chosenSeedWords, setChosenSeedWords] = useState<Array<string>>([])
   const [spinnerActive, setSpinnerActive] = useState(false)
+  const [shuffledSeedWords, setShuffledSeedWords] = useState<
+    Array<SeedWordType>
+  >([])
   const theme = useContext(ThemeContext)
 
   const renderSeedWord = ({ item }: { item: SeedWordType }) => {
@@ -113,6 +116,13 @@ const SeedPhraseConfirmationScreen = ({
         navigation.navigate('CongratulationsScreen')
       })
   }
+
+  useEffect(() => {
+    setShuffledSeedWords(
+      [...(route.params.seedWords || [])].sort(() => Math.random() - 0.5),
+    )
+  }, [route.params.seedWords])
+
   return (
     <ImageBackground
       style={styles.container}
@@ -157,7 +167,7 @@ const SeedPhraseConfirmationScreen = ({
         <FlatList
           style={styles.flatList}
           numColumns={4}
-          data={route.params.seedWords}
+          data={shuffledSeedWords}
           renderItem={renderSeedWord}
           keyExtractor={(item) => `${item.id}`}
           columnWrapperStyle={styles.columnWrapperStyle}

@@ -1,7 +1,7 @@
 import _pbkdf2 from 'pbkdf2'
 import { enc as Enc, AES, lib as Lib } from 'crypto-js'
 
-const PBKDF2_ITERATIONS = 10000
+const PBKDF2_ITERATIONS = 100000
 const PBKDF2_LENGTH = 32
 const PBKDF2_DIGEST = 'sha256'
 
