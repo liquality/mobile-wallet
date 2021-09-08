@@ -94,27 +94,29 @@ const SeedPhraseConfirmationScreen = ({
       return
     }
     setSpinnerActive(true)
-    const wallet = {
-      id: '1234',
-      at: Date.now(),
-      name: 'Account-1',
-      mnemomnic: route.params.seedWords?.join(' ') || '',
-      imported: false,
-    }
-    const walletManager = new WalletManager(
-      wallet,
-      route.params.password || '',
-      new StorageManager(),
-    )
-    walletManager
-      .createWallet()
-      .catch(() => {
-        Alert.alert('Unable to create wallet', 'Please try again')
-      })
-      .then(() => {
-        setSpinnerActive(false)
-        navigation.navigate('CongratulationsScreen')
-      })
+    setTimeout(() => {
+      const wallet = {
+        id: '1234',
+        at: Date.now(),
+        name: 'Account-1',
+        mnemomnic: route.params.seedWords?.join(' ') || '',
+        imported: false,
+      }
+      const walletManager = new WalletManager(
+        wallet,
+        route.params.password || '',
+        new StorageManager(),
+      )
+      walletManager
+        .createWallet()
+        .catch(() => {
+          Alert.alert('Unable to create wallet', 'Please try again')
+        })
+        .then(() => {
+          setSpinnerActive(false)
+          navigation.navigate('CongratulationsScreen')
+        })
+    }, 1000)
   }
 
   useEffect(() => {
@@ -127,7 +129,7 @@ const SeedPhraseConfirmationScreen = ({
     <ImageBackground
       style={styles.container}
       source={require('../assets/bg/bg.png')}>
-      <Spinner loadingText={'Creating Wallet...'} visible={spinnerActive} />
+      <Spinner loadingText={'Creating Wallet'} visible={spinnerActive} />
       <View style={styles.header}>
         <Image
           style={styles.headerLogo}

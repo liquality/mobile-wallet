@@ -1,3 +1,4 @@
+// Retrieved from this gist with minor modifications https://gist.github.com/ShopifyEng/96b5f2f55b274dab3a957bb12c3f2c4d
 import React, { useMemo } from 'react'
 import Animated from 'react-native-reanimated'
 import { View, Dimensions, StyleSheet } from 'react-native'
@@ -12,7 +13,7 @@ const purpleTriangle = require('../assets/confetti/purple-triangle.png')
 
 const NUM_CONFETTI = 100
 const COLORS = ['#00e4b2', '#09aec5', '#AC39FD', '#F41973', '#107ed5']
-const CONFETTI_SIZE = 16
+const CONFETTI_SIZE = 24
 
 const shapes = [
   diamand,

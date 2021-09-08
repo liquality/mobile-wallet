@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   messageText: {
-    color: '#fff',
+    fontFamily: 'Montserrat-Regular',
+    color: '#FFFFFF',
     fontSize: 28,
     lineHeight: 27,
   },

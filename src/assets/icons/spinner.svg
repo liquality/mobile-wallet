@@ -3,10 +3,10 @@
 <path d="M94 100V0L164 27.451L187 73.5294L200 112.745L182 190.196L94 200L28.5 185.294L0 138.235V79.4118L28.5 35.7843L94 100Z" fill="#C4C4C4" stroke="black" stroke-linejoin="round"/>
 </mask>
 <g mask="url(#mask0)">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M102.5 189.217C150.825 189.217 190 150.81 190 103.433C190 56.0554 150.825 17.6484 102.5 17.6484C54.1751 17.6484 15 56.0554 15 103.433C15 150.81 54.1751 189.217 102.5 189.217Z" stroke="url(#paint0_linear)" stroke-width="4" stroke-linejoin="round"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M100.5 187C148.825 187 188 147.825 188 99.5C188 51.1751 148.825 12 100.5 12C52.1751 12 13 51.1751 13 99.5C13 147.825 52.1751 187 100.5 187Z" stroke="url(#paint0_linear)" stroke-width="4" stroke-linejoin="round"/>
 </g>
 <defs>
-<linearGradient id="paint0_linear" x1="15" y1="101.873" x2="190" y2="101.873" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint0_linear" x1="13" y1="97.9091" x2="188" y2="97.9091" gradientUnits="userSpaceOnUse">
 <stop stop-color="#9C55F6"/>
 <stop offset="1" stop-color="#2CD2CA"/>
 </linearGradient>
