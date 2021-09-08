@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from 'react-native'
+import Logo from '../assets/icons/logo.svg'
 
 interface AssetType {
   id: string
@@ -108,7 +109,7 @@ const Wallet = () => {
       </View>
       <View style={styles.navBlock}>
         <Pressable style={styles.navBtn}>
-          <Image source={require('../assets/icons/logo-small.png')} />
+          <Logo width={84} height={30} />
         </Pressable>
         <Pressable style={styles.navBtn}>
           <Image

@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   Pressable,
   ImageBackground,
   FlatList,
@@ -15,6 +14,7 @@ import WalletManager from '../core/walletManager'
 import StorageManager from '../core/storageManager'
 import Spinner from '../components/spinner'
 import { ThemeContext } from '../theme'
+import ScreenHeader from './screenHeader'
 
 type SeedPhraseConfirmationProps = StackScreenProps<
   RootStackParamList,
@@ -130,14 +130,7 @@ const SeedPhraseConfirmationScreen = ({
       style={styles.container}
       source={require('../assets/bg/bg.png')}>
       <Spinner loadingText={'Creating Wallet'} visible={spinnerActive} />
-      <View style={styles.header}>
-        <Image
-          style={styles.headerLogo}
-          source={require('../assets/icons/logo-small.png')}
-        />
-        <Text style={styles.headerText}>liquality</Text>
-        <Text style={styles.headerText}>Wallet</Text>
-      </View>
+      <ScreenHeader />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Confirm Seed Phrase</Text>
       </View>
@@ -200,22 +193,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'orange',
     justifyContent: 'space-between',
     paddingVertical: 20,
-  },
-  header: {
-    marginTop: 60,
-    alignSelf: 'center',
-    alignItems: 'center',
-  },
-  headerLogo: {
-    width: 84,
-    height: 30,
-    marginBottom: 8,
-  },
-  headerText: {
-    color: '#fff',
-    fontSize: 22,
-    fontWeight: '300',
-    lineHeight: 27,
   },
   prompt: {
     marginTop: 62,

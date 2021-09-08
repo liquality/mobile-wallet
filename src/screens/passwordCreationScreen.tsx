@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   Pressable,
   ImageBackground,
   TextInput,
@@ -12,6 +11,7 @@ import {
 import { RootStackParamList } from '../types'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ThemeContext } from '../theme'
+import ScreenHeader from './screenHeader'
 
 type PasswordCreationProps = StackScreenProps<
   RootStackParamList,
@@ -44,7 +44,7 @@ const PasswordCreationScreen = ({
   const theme = useContext(ThemeContext)
 
   const resetInput = () => {
-    if (!!error && !!passwordInput.value) {
+    if (error) {
       setError('')
       passwordInput.reset('')
       passwordConfirmationInput.reset('')
@@ -66,14 +66,7 @@ const PasswordCreationScreen = ({
     <ImageBackground
       style={styles.container}
       source={require('../assets/bg/bg.png')}>
-      <View style={styles.header}>
-        <Image
-          style={styles.headerLogo}
-          source={require('../assets/icons/logo-small.png')}
-        />
-        <Text style={styles.headerText}>liquality</Text>
-        <Text style={styles.headerText}>Wallet</Text>
-      </View>
+      <ScreenHeader />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Create Password</Text>
       </View>
@@ -139,22 +132,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 20,
   },
-  header: {
-    marginTop: 60,
-    alignSelf: 'center',
-    alignItems: 'center',
-  },
-  headerLogo: {
-    width: 84,
-    height: 30,
-    marginBottom: 8,
-  },
-  headerText: {
-    color: '#fff',
-    fontSize: 22,
-    fontWeight: '300',
-    lineHeight: 27,
-  },
   prompt: {
     marginTop: 62,
     alignItems: 'center',
@@ -174,6 +151,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   input: {
+    marginTop: 5,
     color: '#FFF',
     borderBottomColor: '#38FFFB',
     borderBottomWidth: 1,
