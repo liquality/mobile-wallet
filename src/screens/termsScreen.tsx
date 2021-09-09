@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import ScreenHeader from './screenHeader'
 type TermsProps = StackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation }: TermsProps) => {
+  const [scrolledToEnd, setScrolledToEnd] = useState(false)
   const theme = useContext(ThemeContext)
 
   return (
@@ -21,24 +22,50 @@ const TermsScreen = ({ navigation }: TermsProps) => {
       style={styles.container}
       source={require('../assets/bg/bg.png')}>
       <ScreenHeader />
-
-      <ScrollView contentContainerStyle={styles.termsSection}>
-        <Text style={styles.termsTitle}>Terms & Privacy</Text>
-        <Text style={styles.termsCopy}>
-          THIS IS THE BETA VERSION OF THE LIQUALITY PLATFORM WHICH IS STILL
-          BEING ACTIVELY DEVELOPED. YOU ACKNOWLEDGE THE INFORMATION AVAILABLE IS
-          NOT INTENDED TO BE RELIED ON OR USED IN A PRODUCTION ENVIRONMENT. YOU
-          ACKNOWLEDGE AND ACCEPT THAT THE SITE OR SERVICES (A) MAY CONTAIN BUGS,
-          ERRORS, AND DEFECTS, (B) MAY FUNCTION IMPROPERLY OR BE SUBJECT TO
-          PERIODS OF DOWNTIME AN UNAVAILABILITY, (C) MAY RESULT IN TOTAL OR
-          PARTIAL LOSS OR CORRUPTION OF DATA USED IN THE SITE, AND (D) MAY BE
-          MODIFIED AT ANY TIME, INCLUDING THROUGH THE RELEASE OF SUBSEQUENT
-          VERSIONS, ALL WITH OR WITHOUT NOTICE. THE ALPHA PLATFORM IS AVAILABLE
-          ON AN “AS IS” AND “AS AVAILABLE” BASIS FOR THE SOLE PURPOSE OF
-          COLLECTING FEEDBACK ON QUALITY, USABILITY, PERFORMANCE AND ANY
-          DEFECTS. THANK YOU FOR YOUR SUPPORT WHILE WE CONTINUE TO WORK ON
-          DELIVERING A PERFECT PRODUCT.
-        </Text>
+      <View style={styles.containerWrapper}>
+        <ScrollView
+          contentContainerStyle={styles.termsSection}
+          scrollEventThrottle={1000}
+          onScroll={({ nativeEvent }) => {
+            if (
+              !scrolledToEnd &&
+              Math.floor(
+                nativeEvent.contentOffset.y +
+                  nativeEvent.layoutMeasurement.height,
+              ) >= Math.floor(nativeEvent.contentSize.height)
+            ) {
+              setScrolledToEnd(true)
+            }
+          }}>
+          <Text style={styles.termsTitle}>Terms & Privacy</Text>
+          <Text style={styles.termsCopy}>
+            THIS IS THE BETA VERSION OF THE LIQUALITY PLATFORM WHICH IS STILL
+            BEING ACTIVELY DEVELOPED. YOU ACKNOWLEDGE THE INFORMATION AVAILABLE
+            IS NOT INTENDED TO BE RELIED ON OR USED IN A PRODUCTION ENVIRONMENT.
+            YOU ACKNOWLEDGE AND ACCEPT THAT THE SITE OR SERVICES (A) MAY CONTAIN
+            BUGS, ERRORS, AND DEFECTS, (B) MAY FUNCTION IMPROPERLY OR BE SUBJECT
+            TO PERIODS OF DOWNTIME AN UNAVAILABILITY, (C) MAY RESULT IN TOTAL OR
+            PARTIAL LOSS OR CORRUPTION OF DATA USED IN THE SITE, AND (D) MAY BE
+            MODIFIED AT ANY TIME, INCLUDING THROUGH THE RELEASE OF SUBSEQUENT
+            VERSIONS, ALL WITH OR WITHOUT NOTICE. THE ALPHA PLATFORM IS
+            AVAILABLE ON AN “AS IS” AND “AS AVAILABLE” BASIS FOR THE SOLE
+            PURPOSE OF COLLECTING FEEDBACK ON QUALITY, USABILITY, PERFORMANCE
+            AND ANY DEFECTS. THANK YOU FOR YOUR SUPPORT WHILE WE CONTINUE TO
+            WORK ON DELIVERING A PERFECT PRODUCT. THIS IS THE BETA VERSION OF
+            THE LIQUALITY PLATFORM WHICH IS STILL BEING ACTIVELY DEVELOPED. YOU
+            ACKNOWLEDGE THE INFORMATION AVAILABLE IS NOT INTENDED TO BE RELIED
+            ON OR USED IN A PRODUCTION ENVIRONMENT. YOU ACKNOWLEDGE AND ACCEPT
+            THAT THE SITE OR SERVICES (A) MAY CONTAIN BUGS, ERRORS, AND DEFECTS,
+            (B) MAY FUNCTION IMPROPERLY OR BE SUBJECT TO PERIODS OF DOWNTIME AN
+            UNAVAILABILITY, (C) MAY RESULT IN TOTAL OR PARTIAL LOSS OR
+            CORRUPTION OF DATA USED IN THE SITE, AND (D) MAY BE MODIFIED AT ANY
+            TIME, INCLUDING THROUGH THE RELEASE OF SUBSEQUENT VERSIONS, ALL WITH
+            OR WITHOUT NOTICE. THE ALPHA PLATFORM IS AVAILABLE ON AN “AS IS” AND
+            “AS AVAILABLE” BASIS FOR THE SOLE PURPOSE OF COLLECTING FEEDBACK ON
+            QUALITY, USABILITY, PERFORMANCE AND ANY DEFECTS. THANK YOU FOR YOUR
+            SUPPORT WHILE WE CONTINUE TO WORK ON DELIVERING A PERFECT PRODUCT.
+          </Text>
+        </ScrollView>
         <View style={styles.actions}>
           <Pressable
             style={[styles.actionBtn, styles.cancelBtn]}
@@ -46,7 +73,12 @@ const TermsScreen = ({ navigation }: TermsProps) => {
             <Text style={[theme.buttonText, styles.cancelText]}>Cancel</Text>
           </Pressable>
           <Pressable
-            style={[styles.actionBtn, styles.nextBtn]}
+            style={[
+              styles.actionBtn,
+              styles.nextBtn,
+              !scrolledToEnd && styles.disabled,
+            ]}
+            disabled={!scrolledToEnd}
             onPress={() =>
               navigation.navigate('PasswordCreationScreen', {
                 termsAcceptedAt: Date.now(),
@@ -55,7 +87,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
             <Text style={[theme.buttonText, styles.nextText]}>I Accept</Text>
           </Pressable>
         </View>
-      </ScrollView>
+      </View>
     </ImageBackground>
   )
 }
@@ -63,13 +95,15 @@ const TermsScreen = ({ navigation }: TermsProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 1,
-    backgroundColor: 'orange',
     justifyContent: 'space-between',
-    paddingVertical: 20,
+  },
+  containerWrapper: {
+    flex: 1,
+    backgroundColor: '#fff',
+    marginTop: 20,
+    paddingBottom: 20,
   },
   termsSection: {
-    marginTop: 20,
     paddingBottom: 20,
     backgroundColor: '#fff',
     alignItems: 'center',
@@ -82,15 +116,17 @@ const styles = StyleSheet.create({
   },
   termsCopy: {
     fontFamily: 'Montserrat-Regular',
-    margin: 20,
+    marginHorizontal: 20,
+    marginTop: 20,
     justifyContent: 'center',
     lineHeight: 20,
+    textAlign: 'justify',
   },
   actions: {
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginTop: 20,
   },
   actionBtn: {
     justifyContent: 'center',
@@ -114,6 +150,9 @@ const styles = StyleSheet.create({
     borderColor: '#9D4DFA',
     borderWidth: 1,
     marginLeft: 10,
+  },
+  disabled: {
+    opacity: 0.5,
   },
   nextText: {
     color: '#F8FAFF',
