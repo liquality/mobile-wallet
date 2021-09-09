@@ -33,8 +33,6 @@ const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 1,
-    backgroundColor: 'orange',
     justifyContent: 'space-between',
     paddingVertical: 20,
   },

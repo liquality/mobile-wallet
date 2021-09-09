@@ -69,39 +69,40 @@ const PasswordCreationScreen = ({
       <ScreenHeader />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Create Password</Text>
-      </View>
-      <View style={styles.inputs}>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.inputLabel}>
-            CHOOSE PASSWORD (at least 8 characters){' '}
-          </Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={passwordInput.onChangeText}
-            onFocus={resetInput}
-            value={passwordInput.value}
-            secureTextEntry
-            autoCorrect={false}
-          />
+        <View style={styles.inputs}>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>
+              CHOOSE PASSWORD (at least 8 characters)
+            </Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={passwordInput.onChangeText}
+              onFocus={resetInput}
+              value={passwordInput.value}
+              secureTextEntry
+              autoCorrect={false}
+            />
+          </View>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>CONFIRM PASSWORD</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={passwordConfirmationInput.onChangeText}
+              onFocus={resetInput}
+              value={passwordConfirmationInput.value}
+              secureTextEntry
+              autoCorrect={false}
+            />
+          </View>
+          {!!error && <Text style={styles.error}>Passwords don't match</Text>}
+          {!!error && (
+            <Text style={styles.errorHint}>
+              Passwords must be at least 8 characters
+            </Text>
+          )}
         </View>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.inputLabel}>CONFIRM PASSWORD</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={passwordConfirmationInput.onChangeText}
-            onFocus={resetInput}
-            value={passwordConfirmationInput.value}
-            secureTextEntry
-            autoCorrect={false}
-          />
-        </View>
-        {!!error && <Text style={styles.error}>Passwords don't match</Text>}
-        {!!error && (
-          <Text style={styles.errorHint}>
-            Passwords must be at least 8 characters
-          </Text>
-        )}
       </View>
+
       <View style={styles.actions}>
         <Pressable
           style={[styles.actionBtn, styles.cancelBtn]}
@@ -109,7 +110,13 @@ const PasswordCreationScreen = ({
           <Text style={[theme.buttonText, styles.cancelText]}>Cancel</Text>
         </Pressable>
         <Pressable
-          style={[styles.actionBtn, styles.nextBtn]}
+          style={[
+            styles.actionBtn,
+            styles.nextBtn,
+            (!passwordInput.value || !passwordConfirmationInput.value) &&
+              styles.disabled,
+          ]}
+          disabled={!passwordInput.value || !passwordConfirmationInput.value}
           onPress={() =>
             arePasswordsValid() &&
             navigation.navigate('WalletBackupScreen', {
@@ -127,16 +134,16 @@ const PasswordCreationScreen = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 1,
-    backgroundColor: 'orange',
     justifyContent: 'space-between',
     paddingVertical: 20,
   },
   prompt: {
+    flex: 1,
     marginTop: 62,
     alignItems: 'center',
   },
   promptText: {
+    fontFamily: 'Montserrat-Regular',
     color: '#fff',
     fontSize: 28,
   },
@@ -187,6 +194,9 @@ const styles = StyleSheet.create({
   },
   nextText: {
     color: '#F8FAFF',
+  },
+  disabled: {
+    opacity: 0.5,
   },
   error: {
     color: '#F12274',

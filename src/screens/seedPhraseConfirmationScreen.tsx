@@ -133,11 +133,11 @@ const SeedPhraseConfirmationScreen = ({
       <ScreenHeader />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Confirm Seed Phrase</Text>
+        <Text style={styles.description}>
+          Tap the 3 words matching their position in the seed phrase. Once
+          confirmed, store the phrase securely.
+        </Text>
       </View>
-      <Text style={styles.description}>
-        Tap the 3 words matching their position in the seed phrase. Once
-        confirmed, store the phrase securely.
-      </Text>
       <View style={styles.seedPhrase}>
         <View style={styles.missingWords}>
           <View style={styles.missingWordView}>
@@ -174,7 +174,12 @@ const SeedPhraseConfirmationScreen = ({
             <Text style={[theme.buttonText, styles.backText]}>Back</Text>
           </Pressable>
           <Pressable
-            style={[styles.actionBtn, styles.nextBtn]}
+            style={[
+              styles.actionBtn,
+              styles.nextBtn,
+              chosenSeedWords.length < 3 && styles.disabled,
+            ]}
+            disabled={chosenSeedWords.length < 3}
             onPress={onContinue}>
             <Text style={[theme.buttonText, styles.continueText]}>
               Continue
@@ -189,21 +194,23 @@ const SeedPhraseConfirmationScreen = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 1,
-    backgroundColor: 'orange',
     justifyContent: 'space-between',
     paddingVertical: 20,
   },
   prompt: {
+    flex: 1,
     marginTop: 62,
     alignItems: 'center',
+    paddingHorizontal: 20,
   },
   promptText: {
-    color: '#fff',
+    fontFamily: 'Montserrat-Regular',
+    color: '#FFFFFF',
     fontSize: 28,
   },
   description: {
-    marginTop: 39,
+    fontFamily: 'Montserrat-SemiBold',
+    marginTop: 20,
     marginBottom: 18,
     alignSelf: 'center',
     textAlign: 'center',
@@ -293,6 +300,9 @@ const styles = StyleSheet.create({
   },
   continueText: {
     color: '#F8FAFF',
+  },
+  disabled: {
+    opacity: 0.5,
   },
 })
 

@@ -25,7 +25,7 @@ const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
     const { id, word } = item
     return (
       <View style={styles.word}>
-        <Text style={styles.wordText}>{id}</Text>
+        <Text style={styles.wordId}>{id}</Text>
         <Text style={styles.wordText}>{word}</Text>
       </View>
     )
@@ -49,11 +49,12 @@ const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
       <ScreenHeader />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Backup your Wallet</Text>
+        <Text style={styles.description}>
+          The seed phrase is the only way to restore your wallet. Write it down.
+          Next you will confirm it.
+        </Text>
       </View>
-      <Text style={styles.description}>
-        The seed phrase is the only way to restore your wallet. Write it down.
-        Next you will confirm it.
-      </Text>
+
       <View style={styles.seedPhrase}>
         <FlatList
           numColumns={4}
@@ -88,25 +89,27 @@ const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 1,
-    backgroundColor: 'orange',
     justifyContent: 'space-between',
     paddingVertical: 20,
   },
   prompt: {
+    flex: 1,
     marginTop: 62,
     alignItems: 'center',
+    paddingHorizontal: 20,
   },
   promptText: {
+    fontFamily: 'Montserrat-Regular',
     color: '#fff',
     fontSize: 28,
   },
   description: {
-    marginTop: 39,
+    fontFamily: 'Montserrat-SemiBold',
+    marginTop: 20,
     marginBottom: 18,
     alignSelf: 'center',
     textAlign: 'center',
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
     lineHeight: 24,
@@ -118,13 +121,19 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   columnWrapperStyle: {
-    margin: 5,
+    margin: 10,
   },
   word: {
     flex: 0.25,
   },
+  wordId: {
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 12,
+  },
   wordText: {
+    fontFamily: 'Montserrat-Regular',
     fontSize: 16,
+    marginTop: 5,
   },
   actions: {
     alignSelf: 'center',

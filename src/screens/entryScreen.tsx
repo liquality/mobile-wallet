@@ -27,8 +27,8 @@ const Entry = ({ navigation }: EntryProps) => {
       </View>
       <View style={styles.description}>
         <Text style={styles.descriptionTitle}>Wallet</Text>
-        <Text style={styles.descriptionDetails}>The atomic swap enabled</Text>
-        <Text style={styles.descriptionDetails}>multi-crypto wallet</Text>
+        <Text style={styles.descriptionDetails}>ONE WALLET,</Text>
+        <Text style={styles.descriptionDetails}>ALL CHAINS</Text>
       </View>
       <View style={styles.actionContainer}>
         <View style={styles.forgotPassword}>
@@ -54,8 +54,6 @@ const Entry = ({ navigation }: EntryProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 1,
-    backgroundColor: 'orange',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 20,
@@ -87,9 +85,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   descriptionDetails: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: 'Montserrat-SemiBold',
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 24,
     marginBottom: 5,
   },
   actionContainer: {
