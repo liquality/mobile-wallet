@@ -59,6 +59,7 @@ const Spinner = ({
             marginTop: Dimensions.get('window').height / 2 - 100,
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
+            backgroundColor: 'transparent',
           }}
         />
         <View style={styles.loadingView}>
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-    opacity: 0.8,
+    opacity: 0.9,
   },
   loadingView: {
     position: 'absolute',
