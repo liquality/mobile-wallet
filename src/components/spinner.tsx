@@ -55,12 +55,7 @@ const Spinner = ({
 `,
           }}
           ref={webview}
-          style={{
-            marginTop: Dimensions.get('window').height / 2 - 100,
-            width: Dimensions.get('window').width,
-            height: Dimensions.get('window').height,
-            backgroundColor: 'transparent',
-          }}
+          style={styles.webview}
         />
         <View style={styles.loadingView}>
           <Text style={styles.loadingText}>Loading</Text>
@@ -99,6 +94,12 @@ const styles = StyleSheet.create({
   loadingTextDetails: {
     fontFamily: 'Montserrat-Medium',
     fontSize: 11,
+  },
+  webview: {
+    marginTop: Dimensions.get('window').height / 2 - 100,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+    backgroundColor: 'transparent',
   },
 })
 
