@@ -6,9 +6,9 @@ export interface StorageManagerI {
 }
 
 export interface WalletType {
-  id: string
-  at: number
-  name: string
+  id?: string
+  at?: number
+  name?: string
   mnemomnic: string
   imported: boolean
 }

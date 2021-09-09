@@ -28,7 +28,14 @@ class WalletManager {
     password: string,
     storageManager: StorageManagerI,
   ) {
-    this.wallets = [wallet]
+    this.wallets = [
+      {
+        id: uuidv4(),
+        at: Date.now(),
+        name: 'Account-1',
+        ...wallet,
+      },
+    ]
     this.password = password
     this.cryptoassets = assets
     this.chains = chains

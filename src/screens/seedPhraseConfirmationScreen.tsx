@@ -96,9 +96,6 @@ const SeedPhraseConfirmationScreen = ({
     setSpinnerActive(true)
     setTimeout(() => {
       const wallet = {
-        id: '1234',
-        at: Date.now(),
-        name: 'Account-1',
         mnemomnic: route.params.seedWords?.join(' ') || '',
         imported: false,
       }

@@ -152,8 +152,8 @@ android {
         applicationId "io.liquality"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 10
-        versionName "1.0.9"
+        versionCode 11
+        versionName "1.0.10"
     }
     splits {
         abi {
