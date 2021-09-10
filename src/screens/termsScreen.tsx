@@ -82,6 +82,8 @@ const TermsScreen = ({ navigation }: TermsProps) => {
             onPress={() =>
               navigation.navigate('PasswordCreationScreen', {
                 termsAcceptedAt: Date.now(),
+                previousScreen: 'Entry',
+                nextScreen: 'WalletBackupScreen',
               })
             }>
             <Text style={[theme.buttonText, styles.nextText]}>I Accept</Text>

@@ -4,11 +4,16 @@ import SplashScreen from 'react-native-splash-screen'
 import { NavigationContainer } from '@react-navigation/native'
 import { createSwitchNavigator } from '@react-navigation/compat'
 import { LiqualityThemeProvider } from './src/theme'
-import { HomeNavigator, OnboardingNavigator } from './src/components/navigators'
+import {
+  HomeNavigator,
+  OnboardingNavigator,
+  WalletImportNavigator,
+} from './src/components/navigators'
 
 const AppNavigator = createSwitchNavigator(
   {
     OnboardingNavigator,
+    WalletImportNavigator,
     HomeNavigator,
   },
   {

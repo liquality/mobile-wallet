@@ -4,6 +4,9 @@ type StackPayload = {
   termsAcceptedAt?: number
   password?: string
   seedWords?: Array<SeedWordType>
+  previousScreen?: keyof RootStackParamList
+  nextScreen?: keyof RootStackParamList
+  seedPhrase?: string
 }
 
 export type RootStackParamList = {
@@ -12,7 +15,10 @@ export type RootStackParamList = {
   PasswordCreationScreen: StackPayload
   WalletBackupScreen: StackPayload
   SeedPhraseConfirmationScreen: StackPayload
-  CongratulationsScreen: undefined
+  CongratulationsScreen: StackPayload
+  UnlockWalletScreen: StackPayload
+  LoginScreen: undefined
+  WalletImportNavigator: undefined
 }
 
 export interface UseInputStateReturnType<T> {

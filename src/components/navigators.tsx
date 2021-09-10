@@ -1,3 +1,4 @@
+import React, { createContext } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import Entry from '../screens/entryScreen'
 import TermsScreen from '../screens/termsScreen'
@@ -5,7 +6,8 @@ import PasswordCreationScreen from '../screens/passwordCreationScreen'
 import WalletBackupScreen from '../screens/walletBackupScreen'
 import SeedPhraseConfirmationScreen from '../screens/seedPhraseConfirmationScreen'
 import CongratulationsScreen from '../screens/congratulationsScreen'
-import React, { createContext } from 'react'
+import UnlockWalletScreen from '../screens/wallet-import/unlockWalletScreen'
+import LoginScreen from '../screens/loginScreen'
 
 const Stack = createStackNavigator()
 
@@ -31,6 +33,21 @@ export const OnboardingNavigator = () => (
         name="CongratulationsScreen"
         component={CongratulationsScreen}
       />
+    </Stack.Navigator>
+  </OnboardingContext.Provider>
+)
+
+export const WalletImportNavigator = () => (
+  <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
+    <Stack.Navigator
+      initialRouteName="UnlockWalletScreen"
+      screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="UnlockWalletScreen" component={UnlockWalletScreen} />
+      <Stack.Screen
+        name="PasswordCreationScreen"
+        component={PasswordCreationScreen}
+      />
+      <Stack.Screen name="LoginScreen" component={LoginScreen} />
     </Stack.Navigator>
   </OnboardingContext.Provider>
 )

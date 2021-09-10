@@ -106,7 +106,9 @@ const PasswordCreationScreen = ({
       <View style={styles.actions}>
         <Pressable
           style={[styles.actionBtn, styles.cancelBtn]}
-          onPress={() => navigation.navigate('Entry')}>
+          onPress={() =>
+            navigation.navigate(route.params.nextScreen || 'Entry')
+          }>
           <Text style={[theme.buttonText, styles.cancelText]}>Cancel</Text>
         </Pressable>
         <Pressable
@@ -119,7 +121,7 @@ const PasswordCreationScreen = ({
           disabled={!passwordInput.value || !passwordConfirmationInput.value}
           onPress={() =>
             arePasswordsValid() &&
-            navigation.navigate('WalletBackupScreen', {
+            navigation.navigate(route.params.nextScreen || 'Entry', {
               ...route.params,
               password: passwordInput.value,
             })
@@ -199,6 +201,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   error: {
+    fontFamily: 'Montserrat-Light',
     color: '#F12274',
     fontSize: 12,
     backgroundColor: '#FFF',

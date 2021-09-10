@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Pressable,
   ImageBackground,
-  Alert,
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import Logo from '../assets/icons/logo.svg'
@@ -35,7 +34,7 @@ const Entry = ({ navigation }: EntryProps) => {
           <Text style={styles.forgotPasswordText}>Forgot password? </Text>
           <Text
             style={styles.forgotPasswordText}
-            onPress={() => Alert.alert('Import wallet flow')}>
+            onPress={() => navigation.navigate('WalletImportNavigator')}>
             Import with seed phrase
           </Text>
         </View>

@@ -13,7 +13,7 @@ import {
   StorageManagerI,
   WalletType,
 } from './types'
-import { generateMnemonic } from 'bip39'
+import { generateMnemonic, validateMnemonic } from 'bip39'
 
 class WalletManager {
   storageKey: string
@@ -96,6 +96,10 @@ class WalletManager {
 
   public static generateSeedWords() {
     return generateMnemonic().split(' ')
+  }
+
+  public static validateSeedPhrase(seedPhrase: string) {
+    return validateMnemonic(seedPhrase)
   }
 
   /**

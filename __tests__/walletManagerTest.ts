@@ -41,4 +41,16 @@ describe('WalletManagerTest', () => {
       seedWords1.sort().join(' ') !== seedWords2.sort().join(' '),
     ).toBeTruthy()
   })
+
+  it('should find a seed phrase NOT valid', () => {
+    expect(!WalletManager.validateSeedPhrase('blabl')).toBeTruthy()
+  })
+
+  it('should find a seed phrase valid', () => {
+    expect(
+      WalletManager.validateSeedPhrase(
+        'seed sock milk update focus rotate barely fade car face mechanic mercy',
+      ),
+    ).toBeTruthy()
+  })
 })
