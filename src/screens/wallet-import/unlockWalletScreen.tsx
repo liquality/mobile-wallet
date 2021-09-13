@@ -5,11 +5,11 @@ import {
   StyleSheet,
   Pressable,
   ImageBackground,
-  FlatList,
   Alert,
   TextInput,
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { RootStackParamList } from '../../types'
 import WalletManager from '../../core/walletManager'
 import { ThemeContext } from '../../theme'
@@ -71,8 +71,8 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
       return
     } else {
       navigation.navigate('PasswordCreationScreen', {
-        previousScreen: 'Entry',
-        nextScreen: 'Entry',
+        previousScreen: 'UnlockWalletScreen',
+        nextScreen: 'LoadingScreen',
         seedPhrase: chosenSeedWords.join(' ').trim(),
       })
     }
@@ -111,7 +111,8 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
             <Text style={styles.seedWordOptionText}>24 words</Text>
           </Pressable>
         </View>
-        <FlatList
+        <KeyboardAwareFlatList
+          enableAutomaticScroll={true}
           style={styles.flatList}
           numColumns={3}
           data={[...Array(seedPhraseLength).keys()].map((key) => ({
@@ -279,6 +280,16 @@ const styles = StyleSheet.create({
   },
   disabled: {
     opacity: 0.5,
+  },
+  scrollableWrapper: {
+    flex: 0.8,
+    backgroundColor: '#FFFFFF',
+  },
+  keyboardScrollableWrapper: {
+    flexGrow: 1,
+  },
+  contentWrapper: {
+    borderWidth: 1,
   },
 })
 

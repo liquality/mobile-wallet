@@ -25,9 +25,9 @@ const Entry = ({ navigation }: EntryProps) => {
         <Text style={styles.logoText}>liquality</Text>
       </View>
       <View style={styles.description}>
-        <Text style={styles.descriptionTitle}>Wallet</Text>
-        <Text style={styles.descriptionDetails}>ONE WALLET,</Text>
-        <Text style={styles.descriptionDetails}>ALL CHAINS</Text>
+        <Text style={styles.description1}>one</Text>
+        <Text style={styles.description2}>wallet</Text>
+        <Text style={styles.description1}>all chains</Text>
       </View>
       <View style={styles.actionContainer}>
         <View style={styles.forgotPassword}>
@@ -53,11 +53,11 @@ const Entry = ({ navigation }: EntryProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 20,
   },
   header: {
+    flex: 0.3,
     marginTop: 60,
     alignSelf: 'center',
     alignItems: 'center',
@@ -75,22 +75,25 @@ const styles = StyleSheet.create({
     letterSpacing: 3,
   },
   description: {
+    flex: 0.4,
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
-  descriptionTitle: {
+  description1: {
+    fontFamily: 'Montserrat-Light',
+    color: '#FFFFFF',
+    fontSize: 24,
+  },
+  description2: {
     fontFamily: 'MontserratAlternates-Light',
     color: '#FFFFFF',
     fontSize: 55,
-    marginBottom: 5,
-  },
-  descriptionDetails: {
-    fontFamily: 'Montserrat-SemiBold',
-    color: '#FFFFFF',
-    fontSize: 24,
-    marginBottom: 5,
+    marginVertical: 15,
   },
   actionContainer: {
+    flex: 0.3,
     width: '90%',
+    justifyContent: 'flex-end',
   },
   forgotPassword: {
     flexDirection: 'row',
@@ -101,6 +104,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '500',
+    marginLeft: 5,
   },
   createBtn: {
     justifyContent: 'center',

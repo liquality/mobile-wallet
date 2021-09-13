@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -21,7 +21,7 @@ const useInputState = (
   return { value, onChangeText: setValue }
 }
 
-const LoginScreen = ({ navigation }: LoginScreenProps) => {
+const LoginScreen = ({ route, navigation }: LoginScreenProps) => {
   const PASSWORD_LENGTH = 8
   const theme = useContext(ThemeContext)
   const passwordInput = useInputState('')
@@ -34,6 +34,10 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       navigation.navigate('Entry')
     }
   }
+
+  useEffect(() => {
+    Alert.alert(JSON.stringify(route.params))
+  })
 
   return (
     <ImageBackground

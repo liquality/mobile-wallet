@@ -8,6 +8,7 @@ import SeedPhraseConfirmationScreen from '../screens/seedPhraseConfirmationScree
 import CongratulationsScreen from '../screens/congratulationsScreen'
 import UnlockWalletScreen from '../screens/wallet-import/unlockWalletScreen'
 import LoginScreen from '../screens/loginScreen'
+import LoadingScreen from '../screens/wallet-import/loadingScreen'
 
 const Stack = createStackNavigator()
 
@@ -47,6 +48,7 @@ export const WalletImportNavigator = () => (
         name="PasswordCreationScreen"
         component={PasswordCreationScreen}
       />
+      <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
     </Stack.Navigator>
   </OnboardingContext.Provider>

@@ -15,10 +15,11 @@ export type RootStackParamList = {
   PasswordCreationScreen: StackPayload
   WalletBackupScreen: StackPayload
   SeedPhraseConfirmationScreen: StackPayload
-  CongratulationsScreen: StackPayload
+  CongratulationsScreen: undefined
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   WalletImportNavigator: undefined
+  LoadingScreen: StackPayload
 }
 
 export interface UseInputStateReturnType<T> {
