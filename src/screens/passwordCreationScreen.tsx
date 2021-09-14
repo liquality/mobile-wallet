@@ -81,6 +81,7 @@ const PasswordCreationScreen = ({
               value={passwordInput.value}
               secureTextEntry
               autoCorrect={false}
+              returnKeyType="done"
             />
           </View>
           <View style={styles.inputWrapper}>
@@ -92,6 +93,7 @@ const PasswordCreationScreen = ({
               value={passwordConfirmationInput.value}
               secureTextEntry
               autoCorrect={false}
+              returnKeyType="done"
             />
           </View>
           {!!error && <Text style={styles.error}>Passwords don't match</Text>}

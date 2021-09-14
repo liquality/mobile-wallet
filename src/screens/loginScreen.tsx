@@ -37,7 +37,7 @@ const LoginScreen = ({ route, navigation }: LoginScreenProps) => {
 
   useEffect(() => {
     Alert.alert(JSON.stringify(route.params))
-  })
+  }, [route.params])
 
   return (
     <ImageBackground
@@ -49,9 +49,9 @@ const LoginScreen = ({ route, navigation }: LoginScreenProps) => {
       </View>
       <View style={styles.contentWrapper}>
         <View style={styles.description}>
-          <Text style={styles.descriptionTitle}>Wallet</Text>
-          <Text style={styles.descriptionDetails}>ONE WALLET,</Text>
-          <Text style={styles.descriptionDetails}>ALL CHAINS</Text>
+          <Text style={styles.description1}>one</Text>
+          <Text style={styles.description2}>wallet</Text>
+          <Text style={styles.description1}>all chains</Text>
         </View>
         <View style={styles.inputWrapper}>
           <Text style={styles.inputLabel}>PASSWORD</Text>
@@ -62,6 +62,7 @@ const LoginScreen = ({ route, navigation }: LoginScreenProps) => {
             value={passwordInput.value}
             secureTextEntry
             autoCorrect={false}
+            returnKeyType="done"
           />
         </View>
         {!!error && <Text style={styles.error}>{error}</Text>}
@@ -76,7 +77,12 @@ const LoginScreen = ({ route, navigation }: LoginScreenProps) => {
           </Text>
         </View>
         <Pressable
-          style={[styles.createBtn, styles.createBtn]}
+          style={[
+            styles.createBtn,
+            styles.createBtn,
+            !passwordInput.value && styles.disabled,
+          ]}
+          disabled={!passwordInput.value}
           onPress={onUnlock}>
           <Text style={[theme.buttonText, styles.createText]}>Unlock</Text>
         </Pressable>
@@ -93,7 +99,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   header: {
-    flex: 0.3,
+    flex: 0.2,
     marginTop: 60,
     alignSelf: 'center',
     alignItems: 'center',
@@ -111,27 +117,26 @@ const styles = StyleSheet.create({
     letterSpacing: 3,
   },
   contentWrapper: {
-    flex: 0.5,
+    flex: 0.6,
+    justifyContent: 'space-around',
     width: '100%',
   },
   description: {
     alignItems: 'center',
   },
-  descriptionTitle: {
+  description1: {
+    fontFamily: 'Montserrat-Light',
+    color: '#FFFFFF',
+    fontSize: 24,
+  },
+  description2: {
     fontFamily: 'MontserratAlternates-Light',
     color: '#FFFFFF',
     fontSize: 55,
-    marginBottom: 5,
-  },
-  descriptionDetails: {
-    fontFamily: 'Montserrat-SemiBold',
-    color: '#FFFFFF',
-    fontSize: 24,
-    marginBottom: 5,
+    marginVertical: 15,
   },
   inputWrapper: {
     width: '90%',
-    marginTop: 30,
     marginHorizontal: 20,
   },
   inputLabel: {
@@ -183,6 +188,9 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginHorizontal: 20,
     height: 25,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 })
 export default LoginScreen

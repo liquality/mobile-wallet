@@ -44,7 +44,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
           autoCorrect={false}
           autoCapitalize={'none'}
           onChangeText={(text) => addSeedWord(text)}
-          returnKeyLabel="Done"
+          returnKeyType="done"
         />
       </View>
     )

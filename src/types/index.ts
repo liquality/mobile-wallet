@@ -18,8 +18,9 @@ export type RootStackParamList = {
   CongratulationsScreen: undefined
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
-  WalletImportNavigator: undefined
   LoadingScreen: StackPayload
+  WalletImportNavigator: undefined
+  MainNavigator: undefined
 }
 
 export interface UseInputStateReturnType<T> {

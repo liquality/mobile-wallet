@@ -49,9 +49,16 @@ export const WalletImportNavigator = () => (
         component={PasswordCreationScreen}
       />
       <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
     </Stack.Navigator>
   </OnboardingContext.Provider>
+)
+
+export const MainNavigator = () => (
+  <Stack.Navigator
+    initialRouteName="LoginScreen"
+    screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="LoginScreen" component={LoginScreen} />
+  </Stack.Navigator>
 )
 
 export const HomeNavigator = () => (

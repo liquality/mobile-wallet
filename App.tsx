@@ -8,16 +8,18 @@ import {
   HomeNavigator,
   OnboardingNavigator,
   WalletImportNavigator,
+  MainNavigator,
 } from './src/components/navigators'
 
 const AppNavigator = createSwitchNavigator(
   {
     OnboardingNavigator,
     WalletImportNavigator,
+    MainNavigator,
     HomeNavigator,
   },
   {
-    initialRouteName: 'OnboardingNavigator',
+    initialRouteName: 'MainNavigator',
   },
 )
 
