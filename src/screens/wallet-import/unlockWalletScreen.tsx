@@ -7,9 +7,11 @@ import {
   ImageBackground,
   Alert,
   TextInput,
+  KeyboardAvoidingView,
+  FlatList,
+  Platform,
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { RootStackParamList } from '../../types'
 import WalletManager from '../../core/walletManager'
 import { ThemeContext } from '../../theme'
@@ -20,32 +22,33 @@ type UnlockWalletScreenProps = StackScreenProps<
   'UnlockWalletScreen'
 >
 
-const SeedWord = ({
-  id,
-  addSeedWord,
-}: {
-  id: string
-  addSeedWord: (text: string) => void
-}) => {
-  return (
-    <View style={styles.missingWordView}>
-      <Text style={styles.wordOrderText}>{id}</Text>
-      <TextInput
-        style={styles.missingWordText}
-        autoCorrect={false}
-        autoCapitalize={'none'}
-        onChangeText={(text) => addSeedWord(text)}
-      />
-    </View>
-  )
-}
-
 const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
   const [seedPhraseLength, setPhraseLength] = useState(12)
   const [chosenSeedWords, setChosenSeedWords] = useState<Array<string>>(
     Array(12),
   )
   const theme = useContext(ThemeContext)
+
+  const SeedWord = ({
+    id,
+    addSeedWord,
+  }: {
+    id: string
+    addSeedWord: (text: string) => void
+  }) => {
+    return (
+      <View style={styles.missingWordView}>
+        <Text style={styles.wordOrderText}>{id}</Text>
+        <TextInput
+          style={styles.missingWordText}
+          autoCorrect={false}
+          autoCapitalize={'none'}
+          onChangeText={(text) => addSeedWord(text)}
+          returnKeyLabel="Done"
+        />
+      </View>
+    )
+  }
 
   const addSeedWord = (text: string, index: string) => {
     chosenSeedWords[parseInt(index, 10)] = text
@@ -61,12 +64,12 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
     )
   }
 
-  const confirmSeedPhrase = () => {
+  const validateSeedPhrase = () => {
     return WalletManager.validateSeedPhrase(chosenSeedWords.join(' ').trim())
   }
 
   const onContinue = () => {
-    if (!confirmSeedPhrase()) {
+    if (!validateSeedPhrase()) {
       Alert.alert('Your seed phrase is invalid', 'Please try again')
       return
     } else {
@@ -82,66 +85,70 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
     <ImageBackground
       style={styles.container}
       source={require('../../assets/bg/bg.png')}>
-      <ScreenHeader />
-      <View style={styles.prompt}>
-        <Text style={styles.promptText}>Unlock Wallet</Text>
-        <Text style={styles.description}>
-          Enter the seed phrase, in the same order saved when creating your
-          wallet.
-        </Text>
-      </View>
-      <View style={styles.seedPhrase}>
-        <View style={styles.seedWordLengthOptions}>
-          <Pressable
-            onPress={() => setPhraseLength(12)}
-            style={[
-              styles.seedWordOptionAction,
-              styles.btnLeftSide,
-              seedPhraseLength === 12 && styles.optionActive,
-            ]}>
-            <Text style={styles.seedWordOptionText}>12 words</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setPhraseLength(24)}
-            style={[
-              styles.seedWordOptionAction,
-              styles.btnRightSide,
-              seedPhraseLength === 24 && styles.optionActive,
-            ]}>
-            <Text style={styles.seedWordOptionText}>24 words</Text>
-          </Pressable>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboard}>
+        <ScreenHeader />
+        <View style={styles.prompt}>
+          <Text style={styles.promptText}>Unlock Wallet</Text>
+          <Text style={styles.description}>
+            Enter the seed phrase, in the same order saved when creating your
+            wallet.
+          </Text>
         </View>
-        <KeyboardAwareFlatList
-          enableAutomaticScroll={true}
-          style={styles.flatList}
-          numColumns={3}
-          data={[...Array(seedPhraseLength).keys()].map((key) => ({
-            id: `${key + 1}`,
-          }))}
-          renderItem={renderSeedWord}
-          keyExtractor={(item) => `${item.id}`}
-          columnWrapperStyle={styles.columnWrapperStyle}
-        />
-        <View style={styles.actions}>
-          <Pressable
-            style={[styles.actionBtn, styles.cancelBtn]}
-            onPress={() => navigation.goBack()}>
-            <Text style={[theme.buttonText, styles.cancelText]}>Cancel</Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.actionBtn,
-              styles.nextBtn,
-              !chosenSeedWords.every((val) => !!val) && styles.disabled,
-            ]}
-            disabled={!chosenSeedWords.every((val) => !!val)}
-            onPress={onContinue}>
-            <Text style={[theme.buttonText, styles.continueText]}>
-              Continue
-            </Text>
-          </Pressable>
+        <View style={styles.seedPhrase}>
+          <View style={styles.seedWordLengthOptions}>
+            <Pressable
+              onPress={() => setPhraseLength(12)}
+              style={[
+                styles.seedWordOptionAction,
+                styles.btnLeftSide,
+                seedPhraseLength === 12 && styles.optionActive,
+              ]}>
+              <Text style={styles.seedWordOptionText}>12 words</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => setPhraseLength(24)}
+              style={[
+                styles.seedWordOptionAction,
+                styles.btnRightSide,
+                seedPhraseLength === 24 && styles.optionActive,
+              ]}>
+              <Text style={styles.seedWordOptionText}>24 words</Text>
+            </Pressable>
+          </View>
+          <FlatList
+            style={styles.flatList}
+            numColumns={3}
+            showsVerticalScrollIndicator={true}
+            data={[...Array(seedPhraseLength).keys()].map((key) => ({
+              id: `${key + 1}`,
+            }))}
+            renderItem={renderSeedWord}
+            keyExtractor={(item) => `${item.id}`}
+            columnWrapperStyle={styles.columnWrapperStyle}
+          />
+          <View style={styles.actions}>
+            <Pressable
+              style={[styles.actionBtn, styles.cancelBtn]}
+              onPress={() => navigation.goBack()}>
+              <Text style={[theme.buttonText, styles.cancelText]}>Cancel</Text>
+            </Pressable>
+            <Pressable
+              style={[
+                styles.actionBtn,
+                styles.nextBtn,
+                !chosenSeedWords.every((val) => !!val) && styles.disabled,
+              ]}
+              disabled={!chosenSeedWords.every((val) => !!val)}
+              onPress={onContinue}>
+              <Text style={[theme.buttonText, styles.continueText]}>
+                Continue
+              </Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </ImageBackground>
   )
 }
@@ -154,6 +161,7 @@ const styles = StyleSheet.create({
   },
   prompt: {
     flex: 0.3,
+    // flexGrow: 1,
     marginTop: 62,
     alignItems: 'center',
     paddingHorizontal: 30,
@@ -176,6 +184,7 @@ const styles = StyleSheet.create({
   },
   seedPhrase: {
     flex: 0.7,
+    // flexGrow: 3,
     backgroundColor: '#fff',
   },
   flatList: {
@@ -290,6 +299,9 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     borderWidth: 1,
+  },
+  keyboard: {
+    flex: 1,
   },
 })
 
