@@ -15,7 +15,7 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
 import WalletManager from '../../core/walletManager'
 import { ThemeContext } from '../../theme'
-import ScreenHeader from '../screenHeader'
+import Header from '../header'
 
 type UnlockWalletScreenProps = StackScreenProps<
   RootStackParamList,
@@ -88,7 +88,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboard}>
-        <ScreenHeader />
+        <Header showText={true} />
         <View style={styles.prompt}>
           <Text style={styles.promptText}>Unlock Wallet</Text>
           <Text style={styles.description}>

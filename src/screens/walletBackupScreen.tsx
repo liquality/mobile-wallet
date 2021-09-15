@@ -11,7 +11,7 @@ import { RootStackParamList, SeedWordType } from '../types'
 import { StackScreenProps } from '@react-navigation/stack'
 import WalletManager from '../core/walletManager'
 import { ThemeContext } from '../theme'
-import ScreenHeader from './screenHeader'
+import Header from './header'
 type WalletBackupProps = StackScreenProps<
   RootStackParamList,
   'WalletBackupScreen'
@@ -46,7 +46,7 @@ const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
     <ImageBackground
       style={styles.container}
       source={require('../assets/bg/bg.png')}>
-      <ScreenHeader />
+      <Header showText={true} />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Backup your Wallet</Text>
         <Text style={styles.description}>

@@ -7,9 +7,9 @@ import {
   ImageBackground,
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import Logo from '../assets/icons/logo.svg'
 import { RootStackParamList } from '../types'
 import { ThemeContext } from '../theme'
+import Header from './header'
 
 type EntryProps = StackScreenProps<RootStackParamList, 'Entry'>
 
@@ -20,10 +20,7 @@ const Entry = ({ navigation }: EntryProps) => {
     <ImageBackground
       style={styles.container}
       source={require('../assets/bg/bg.png')}>
-      <View style={styles.header}>
-        <Logo width={135} height={83} />
-        <Text style={styles.logoText}>liquality</Text>
-      </View>
+      <Header width={135} height={83} style={styles.header} showText={false} />
       <View style={styles.description}>
         <Text style={styles.description1}>one</Text>
         <Text style={styles.description2}>wallet</Text>
@@ -58,21 +55,6 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 0.3,
-    marginTop: 60,
-    alignSelf: 'center',
-    alignItems: 'center',
-  },
-  headerLogo: {
-    width: 135,
-    height: 83,
-    marginBottom: 8,
-  },
-  logoText: {
-    color: '#fff',
-    fontSize: 25,
-    fontWeight: '300',
-    lineHeight: 27,
-    letterSpacing: 3,
   },
   description: {
     flex: 0.4,

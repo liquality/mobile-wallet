@@ -14,7 +14,7 @@ import WalletManager from '../core/walletManager'
 import StorageManager from '../core/storageManager'
 import Spinner from '../components/spinner'
 import { ThemeContext } from '../theme'
-import ScreenHeader from './screenHeader'
+import Header from './header'
 
 type SeedPhraseConfirmationProps = StackScreenProps<
   RootStackParamList,
@@ -127,7 +127,7 @@ const SeedPhraseConfirmationScreen = ({
       style={styles.container}
       source={require('../assets/bg/bg.png')}>
       <Spinner loadingText={'Creating Wallet'} visible={spinnerActive} />
-      <ScreenHeader />
+      <Header showText={true} />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Confirm Seed Phrase</Text>
         <Text style={styles.description}>

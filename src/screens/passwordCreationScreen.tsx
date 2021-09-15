@@ -11,7 +11,7 @@ import {
 import { RootStackParamList } from '../types'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ThemeContext } from '../theme'
-import ScreenHeader from './screenHeader'
+import Header from './header'
 
 type PasswordCreationProps = StackScreenProps<
   RootStackParamList,
@@ -66,7 +66,7 @@ const PasswordCreationScreen = ({
     <ImageBackground
       style={styles.container}
       source={require('../assets/bg/bg.png')}>
-      <ScreenHeader />
+      <Header showText={true} />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Create Password</Text>
         <View style={styles.inputs}>
@@ -97,11 +97,9 @@ const PasswordCreationScreen = ({
             />
           </View>
           {!!error && <Text style={styles.error}>Passwords don't match</Text>}
-          {!!error && (
-            <Text style={styles.errorHint}>
-              Passwords must be at least 8 characters
-            </Text>
-          )}
+          <Text style={styles.errorHint}>
+            Passwords must be at least 8 characters
+          </Text>
         </View>
       </View>
 

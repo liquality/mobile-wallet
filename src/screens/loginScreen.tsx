@@ -9,9 +9,9 @@ import {
   TextInput,
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import Logo from '../assets/icons/logo.svg'
 import { RootStackParamList, UseInputStateReturnType } from '../types'
 import { ThemeContext } from '../theme'
+import Header from './header'
 
 type LoginScreenProps = StackScreenProps<RootStackParamList, 'LoginScreen'>
 const useInputState = (
@@ -43,10 +43,7 @@ const LoginScreen = ({ route, navigation }: LoginScreenProps) => {
     <ImageBackground
       style={styles.container}
       source={require('../assets/bg/bg.png')}>
-      <View style={styles.header}>
-        <Logo width={135} height={83} />
-        <Text style={styles.logoText}>liquality</Text>
-      </View>
+      <Header showText={true} />
       <View style={styles.contentWrapper}>
         <View style={styles.description}>
           <Text style={styles.description1}>one</Text>
@@ -98,24 +95,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
   },
-  header: {
-    flex: 0.2,
-    marginTop: 60,
-    alignSelf: 'center',
-    alignItems: 'center',
-  },
-  headerLogo: {
-    width: 135,
-    height: 83,
-    marginBottom: 8,
-  },
-  logoText: {
-    color: '#fff',
-    fontSize: 25,
-    fontWeight: '300',
-    lineHeight: 27,
-    letterSpacing: 3,
-  },
   contentWrapper: {
     flex: 0.6,
     justifyContent: 'space-around',
@@ -140,8 +119,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   inputLabel: {
-    color: '#fff',
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '700',
     fontSize: 16,
+    color: '#fff',
   },
   input: {
     marginTop: 5,
@@ -159,10 +140,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   forgotPasswordText: {
+    fontFamily: 'Montserrat-Regular',
     textAlign: 'center',
     color: '#fff',
     fontSize: 14,
     fontWeight: '500',
+    marginLeft: 5,
   },
   createBtn: {
     justifyContent: 'center',

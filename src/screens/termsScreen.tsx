@@ -10,7 +10,7 @@ import {
 import { RootStackParamList } from '../types'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ThemeContext } from '../theme'
-import ScreenHeader from './screenHeader'
+import Header from './header'
 type TermsProps = StackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation }: TermsProps) => {
@@ -21,7 +21,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
     <ImageBackground
       style={styles.container}
       source={require('../assets/bg/bg.png')}>
-      <ScreenHeader />
+      <Header showText={true} />
       <View style={styles.containerWrapper}>
         <ScrollView
           contentContainerStyle={styles.termsSection}

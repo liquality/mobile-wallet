@@ -2,12 +2,25 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Logo from '../assets/icons/logo.svg'
 
-const ScreenHeader = () => {
+const Header = ({
+  width,
+  height,
+  style,
+  showText,
+}: {
+  width?: number
+  height?: number
+  style?: any
+  showText?: boolean
+}) => {
   return (
-    <View style={styles.header}>
-      <Logo width={84} height={30} style={styles.headerLogo} />
-      <Text style={styles.logoText}>liquality</Text>
-      <Text style={styles.headerText}>Wallet</Text>
+    <View style={[styles.header, style && style]}>
+      <Logo
+        width={width || 84}
+        height={height || 54}
+        style={styles.headerLogo}
+      />
+      {showText && <Text style={styles.headerText}>Wallet</Text>}
     </View>
   )
 }
@@ -33,4 +46,4 @@ const styles = StyleSheet.create({
     lineHeight: 27,
   },
 })
-export default ScreenHeader
+export default Header
