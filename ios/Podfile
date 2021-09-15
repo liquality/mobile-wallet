@@ -3,7 +3,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '10.0'
 
-target 'LiqualityMobile' do
+target 'Liquality' do
   config = use_native_modules!
 
   use_react_native!(
@@ -26,5 +26,10 @@ target 'LiqualityMobile' do
 
   post_install do |installer|
     react_native_post_install(installer)
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['OTHER_CPLUSPLUSFLAGS'] = '-DDONT_AUTOINSTALL_REANIMATED'
+        end
+     end
   end
 end

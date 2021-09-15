@@ -1,15 +1,31 @@
 import React, { useEffect } from 'react'
-import { SafeAreaView, StatusBar, useColorScheme } from 'react-native'
-import { Colors } from 'react-native/Libraries/NewAppScreen'
+import { StatusBar, View } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
-import Header from './src/components/header'
-import Wallet from './src/components/wallet'
+import { NavigationContainer } from '@react-navigation/native'
+import { createSwitchNavigator } from '@react-navigation/compat'
+import { LiqualityThemeProvider } from './src/theme'
+import {
+  HomeNavigator,
+  OnboardingNavigator,
+  WalletImportNavigator,
+  MainNavigator,
+} from './src/components/navigators'
+
+const AppNavigator = createSwitchNavigator(
+  {
+    OnboardingNavigator,
+    WalletImportNavigator,
+    MainNavigator,
+    HomeNavigator,
+  },
+  {
+    initialRouteName: 'MainNavigator',
+  },
+)
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark'
-
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : 'white',
+    flex: 1,
   }
 
   useEffect(() => {
@@ -17,11 +33,14 @@ const App = () => {
   })
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <Header />
-      <Wallet />
-    </SafeAreaView>
+    <LiqualityThemeProvider>
+      <View style={backgroundStyle} testID={'app-test'}>
+        <StatusBar barStyle={'light-content'} />
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </View>
+    </LiqualityThemeProvider>
   )
 }
 

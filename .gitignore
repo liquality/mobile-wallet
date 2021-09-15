@@ -20,6 +20,11 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+*.cer
+*.certSigningRequest
+*.p12
+*.mobileprovision
+*.dSYM.zip
 
 # Android/IntelliJ
 #
@@ -51,6 +56,7 @@ buck-out/
 */fastlane/report.xml
 */fastlane/Preview.html
 */fastlane/screenshots
+*/fastlane/.env
 
 # Bundle artifact
 *.jsbundle
