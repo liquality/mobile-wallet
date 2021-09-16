@@ -15,6 +15,7 @@ import StorageManager from '../core/storageManager'
 import Spinner from '../components/spinner'
 import { ThemeContext } from '../theme'
 import Header from './header'
+import { useAppDispatch } from '../hooks'
 
 type SeedPhraseConfirmationProps = StackScreenProps<
   RootStackParamList,
@@ -58,6 +59,7 @@ const SeedPhraseConfirmationScreen = ({
     Array<SeedWordType>
   >([])
   const theme = useContext(ThemeContext)
+  const dispatch = useAppDispatch()
 
   const renderSeedWord = ({ item }: { item: SeedWordType }) => {
     return (
@@ -109,7 +111,13 @@ const SeedPhraseConfirmationScreen = ({
         .catch(() => {
           Alert.alert('Unable to create wallet', 'Please try again')
         })
-        .then(() => {
+        .then((data) => {
+          dispatch({
+            type: 'SETUP_WALLET',
+            payload: {
+              ...data,
+            },
+          })
           setSpinnerActive(false)
           navigation.navigate('CongratulationsScreen')
         })

@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StatusBar, View } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { NavigationContainer } from '@react-navigation/native'
 import { createSwitchNavigator } from '@react-navigation/compat'
+import { Provider } from 'react-redux'
+import { store, hydrateStore } from './src/store'
 import { LiqualityThemeProvider } from './src/theme'
 import {
   HomeNavigator,
@@ -11,36 +13,52 @@ import {
   MainNavigator,
 } from './src/components/navigators'
 
-const AppNavigator = createSwitchNavigator(
-  {
-    OnboardingNavigator,
-    WalletImportNavigator,
-    MainNavigator,
-    HomeNavigator,
-  },
-  {
-    initialRouteName: 'MainNavigator',
-  },
-)
+const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
+  const Navigator = createSwitchNavigator(
+    {
+      OnboardingNavigator,
+      WalletImportNavigator,
+      MainNavigator,
+      HomeNavigator,
+    },
+    {
+      initialRouteName,
+    },
+  )
+
+  return <Navigator />
+}
 
 const App = () => {
+  const [initialRouteName, setInitialRouteName] = useState(
+    'OnboardingNavigator',
+  )
   const backgroundStyle = {
     flex: 1,
   }
 
   useEffect(() => {
-    SplashScreen.hide()
+    hydrateStore().then((state) => {
+      if (!state) {
+        setInitialRouteName('OnboardingNavigator')
+      } else {
+        setInitialRouteName('MainNavigator')
+      }
+      SplashScreen.hide()
+    })
   })
 
   return (
-    <LiqualityThemeProvider>
-      <View style={backgroundStyle} testID={'app-test'}>
-        <StatusBar barStyle={'light-content'} />
-        <NavigationContainer>
-          <AppNavigator />
-        </NavigationContainer>
-      </View>
-    </LiqualityThemeProvider>
+    <Provider store={store}>
+      <LiqualityThemeProvider>
+        <View style={backgroundStyle} testID={'app-test'}>
+          <StatusBar barStyle={'light-content'} />
+          <NavigationContainer>
+            <AppNavigator initialRouteName={initialRouteName} />
+          </NavigationContainer>
+        </View>
+      </LiqualityThemeProvider>
+    </Provider>
   )
 }
 

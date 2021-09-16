@@ -13,7 +13,7 @@ describe('WalletManagerTest', () => {
   const walletManager = new WalletManager(
     wallet,
     PASSWORD,
-    new StorageManager(),
+    new StorageManager('@liqualityStore', []),
   )
 
   beforeAll(() => {

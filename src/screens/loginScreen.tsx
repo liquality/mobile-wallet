@@ -1,17 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   View,
   Text,
   StyleSheet,
   Pressable,
   ImageBackground,
-  Alert,
   TextInput,
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList, UseInputStateReturnType } from '../types'
 import { ThemeContext } from '../theme'
 import Header from './header'
+import EncryptionManager from '../core/encryptionManager'
+import { useAppDispatch, useAppSelector } from '../hooks'
+import { WalletType } from '../core/types'
 
 type LoginScreenProps = StackScreenProps<RootStackParamList, 'LoginScreen'>
 const useInputState = (
@@ -21,23 +23,39 @@ const useInputState = (
   return { value, onChangeText: setValue }
 }
 
-const LoginScreen = ({ route, navigation }: LoginScreenProps) => {
+const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const PASSWORD_LENGTH = 8
   const theme = useContext(ThemeContext)
   const passwordInput = useInputState('')
   const [error, setError] = useState('')
+  const dispatch = useAppDispatch()
+  const { keySalt = '', encryptedWallets = '' } = useAppSelector((state) => ({
+    keySalt: state.keySalt,
+    encryptedWallets: state.encryptedWallets,
+  }))
 
-  const onUnlock = () => {
+  const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
       setError('Passwords must be at least 8 characters')
     } else {
-      navigation.navigate('Entry')
+      const decryptedWallets = await new EncryptionManager(
+        passwordInput.value,
+      ).decrypt(encryptedWallets, keySalt)
+      if (!decryptedWallets) {
+        setError('Password invalid')
+      } else {
+        dispatch({
+          type: 'LOGIN',
+          payload: {
+            key: passwordInput.value,
+            unlockedAt: Date.now(),
+            wallets: JSON.parse(decryptedWallets) as Array<WalletType>,
+          },
+        })
+        // navigation.navigate('Entry')
+      }
     }
   }
-
-  useEffect(() => {
-    Alert.alert(JSON.stringify(route.params))
-  }, [route.params])
 
   return (
     <ImageBackground
@@ -69,7 +87,7 @@ const LoginScreen = ({ route, navigation }: LoginScreenProps) => {
           <Text style={styles.forgotPasswordText}>Forgot password? </Text>
           <Text
             style={styles.forgotPasswordText}
-            onPress={() => Alert.alert('Import wallet flow')}>
+            onPress={() => navigation.navigate('WalletImportNavigator')}>
             Import with seed phrase
           </Text>
         </View>

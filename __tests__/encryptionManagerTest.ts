@@ -28,4 +28,13 @@ describe('EncryptionManagerTest', () => {
     const decryptedValue = await encryptionManager.decrypt(encrypted, keySalt)
     expect(decryptedValue).toEqual(DATA)
   })
+
+  it('should fail decryption when decyrpting using a different password', async () => {
+    const DATA = 'This is a cool wallet'
+    const encryptionManager = new EncryptionManager(PASSWORD)
+    const { encrypted, keySalt } = await encryptionManager.encrypt(DATA)
+    const encryptionManager2 = new EncryptionManager('BLA')
+    const decryptedValue = await encryptionManager2.decrypt(encrypted, keySalt)
+    expect(!decryptedValue).toBeTruthy()
+  })
 })
