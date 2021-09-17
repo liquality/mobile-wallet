@@ -10,13 +10,13 @@ import {
   AccountType,
   AccountWrapperType,
   NetworkWrapperType,
+  StateType,
   StorageManagerI,
   WalletType,
 } from './types'
 import { generateMnemonic, validateMnemonic } from 'bip39'
 
 class WalletManager {
-  storageKey: string
   wallets: Array<WalletType>
   password: string
   cryptoassets: any
@@ -40,7 +40,6 @@ class WalletManager {
     this.cryptoassets = assets
     this.chains = chains
     this.storageManager = storageManager
-    this.storageKey = '@liqualityStore'
   }
 
   /**
@@ -85,13 +84,16 @@ class WalletManager {
       activeWalletId: id,
       encryptedWallets,
       keySalt,
-      wallets: this.wallets,
       account,
     }
     //persist to local storage
     await this.persistToLocalStorage(state)
 
-    return state
+    return {
+      ...state,
+      wallets: this.wallets,
+      key: this.password,
+    }
   }
 
   public static generateSeedWords() {
@@ -113,16 +115,12 @@ class WalletManager {
     // store
   }
 
-  public async retrieveWallet(): Promise<any | Error> {
-    const wallet = await this.storageManager.read(this.storageKey)
-    if (wallet instanceof Error) {
-      return 'Unable to retrieve wallet from local storage'
-    }
-    return JSON.parse(wallet)
+  public async retrieveWallet(): Promise<StateType | Error> {
+    return await this.storageManager.read()
   }
 
-  private async persistToLocalStorage(state: any) {
-    await this.storageManager.persist(this.storageKey, JSON.stringify(state))
+  private async persistToLocalStorage(state: StateType) {
+    await this.storageManager.persist(state)
   }
 
   private getNextAccountColor(chain: string, index: number) {
