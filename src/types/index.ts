@@ -21,6 +21,7 @@ export type RootStackParamList = {
   LoadingScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
+  MainTabNavigator: undefined
 }
 
 export interface UseInputStateReturnType<T> {

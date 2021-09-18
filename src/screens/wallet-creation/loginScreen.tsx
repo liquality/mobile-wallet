@@ -8,12 +8,12 @@ import {
   TextInput,
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { RootStackParamList, UseInputStateReturnType } from '../types'
-import { ThemeContext } from '../theme'
-import Header from './header'
-import EncryptionManager from '../core/encryptionManager'
-import { useAppDispatch, useAppSelector } from '../hooks'
-import { WalletType } from '../core/types'
+import { RootStackParamList, UseInputStateReturnType } from '../../types'
+import { ThemeContext } from '../../theme'
+import Header from '../header'
+import EncryptionManager from '../../core/encryptionManager'
+import { useAppDispatch, useAppSelector } from '../../hooks'
+import { WalletType } from '../../core/types'
 
 type LoginScreenProps = StackScreenProps<RootStackParamList, 'LoginScreen'>
 const useInputState = (
@@ -52,7 +52,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             wallets: JSON.parse(decryptedWallets) as Array<WalletType>,
           },
         })
-        // navigation.navigate('Entry')
+        navigation.navigate('MainTabNavigator')
       }
     }
   }
@@ -60,7 +60,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   return (
     <ImageBackground
       style={styles.container}
-      source={require('../assets/bg/bg.png')}>
+      source={require('../../assets/bg/bg.png')}>
       <Header showText={true} />
       <View style={styles.contentWrapper}>
         <View style={styles.description}>

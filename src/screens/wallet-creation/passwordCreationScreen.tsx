@@ -8,10 +8,10 @@ import {
   TextInput,
 } from 'react-native'
 
-import { RootStackParamList } from '../types'
+import { RootStackParamList } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import { ThemeContext } from '../theme'
-import Header from './header'
+import { ThemeContext } from '../../theme'
+import Header from '../header'
 
 type PasswordCreationProps = StackScreenProps<
   RootStackParamList,
@@ -65,7 +65,7 @@ const PasswordCreationScreen = ({
   return (
     <ImageBackground
       style={styles.container}
-      source={require('../assets/bg/bg.png')}>
+      source={require('../../assets/bg/bg.png')}>
       <Header showText={true} />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Create Password</Text>

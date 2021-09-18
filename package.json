@@ -21,6 +21,10 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-regular-svg-icons": "^5.15.4",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-native-fontawesome": "^0.2.7",
     "@liquality/bitcoin-ledger-provider": "^1.4.5",
     "@liquality/bitcoin-rpc-provider": "^1.4.5",
     "@liquality/client": "^1.4.5",
@@ -31,6 +35,7 @@
     "@liquality/ethereum-networks": "^1.4.5",
     "@liquality/ethereum-rpc-provider": "^1.4.5",
     "@react-native-async-storage/async-storage": "^1.15.7",
+    "@react-navigation/bottom-tabs": "^6.0.5",
     "@react-navigation/compat": "^5.3.20",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/stack": "^6.0.7",

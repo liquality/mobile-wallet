@@ -7,7 +7,6 @@ import { Provider } from 'react-redux'
 import { store, hydrateStore } from './src/store'
 import { LiqualityThemeProvider } from './src/theme'
 import {
-  HomeNavigator,
   OnboardingNavigator,
   WalletImportNavigator,
   MainNavigator,
@@ -19,7 +18,6 @@ const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
       OnboardingNavigator,
       WalletImportNavigator,
       MainNavigator,
-      HomeNavigator,
     },
     {
       initialRouteName,

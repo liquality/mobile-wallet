@@ -8,14 +8,15 @@ import {
   FlatList,
   Alert,
 } from 'react-native'
-import { RootStackParamList, SeedWordType } from '../types'
+import { RootStackParamList, SeedWordType } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import WalletManager from '../core/walletManager'
-import StorageManager from '../core/storageManager'
-import Spinner from '../components/spinner'
-import { ThemeContext } from '../theme'
-import Header from './header'
-import { useAppDispatch } from '../hooks'
+import WalletManager from '../../core/walletManager'
+import StorageManager from '../../core/storageManager'
+import Spinner from '../../components/spinner'
+import { ThemeContext } from '../../theme'
+import Header from '../header'
+import { useAppDispatch } from '../../hooks'
+import { StateType } from '../../core/types'
 
 type SeedPhraseConfirmationProps = StackScreenProps<
   RootStackParamList,
@@ -97,6 +98,11 @@ const SeedPhraseConfirmationScreen = ({
     }
     setSpinnerActive(true)
     setTimeout(() => {
+      const excludedProps: Array<keyof StateType> = [
+        'key',
+        'wallets',
+        'unlockedAt',
+      ]
       const wallet = {
         mnemomnic: route.params.seedWords?.join(' ') || '',
         imported: false,
@@ -104,7 +110,7 @@ const SeedPhraseConfirmationScreen = ({
       const walletManager = new WalletManager(
         wallet,
         route.params.password || '',
-        new StorageManager(),
+        new StorageManager('@liquality-storage', excludedProps),
       )
       walletManager
         .createWallet()
@@ -133,7 +139,7 @@ const SeedPhraseConfirmationScreen = ({
   return (
     <ImageBackground
       style={styles.container}
-      source={require('../assets/bg/bg.png')}>
+      source={require('../../assets/bg/bg.png')}>
       <Spinner loadingText={'Creating Wallet'} visible={spinnerActive} />
       <Header showText={true} />
       <View style={styles.prompt}>

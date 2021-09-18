@@ -7,11 +7,11 @@ import {
   ImageBackground,
   FlatList,
 } from 'react-native'
-import { RootStackParamList, SeedWordType } from '../types'
+import { RootStackParamList, SeedWordType } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import WalletManager from '../core/walletManager'
-import { ThemeContext } from '../theme'
-import Header from './header'
+import WalletManager from '../../core/walletManager'
+import { ThemeContext } from '../../theme'
+import Header from '../header'
 type WalletBackupProps = StackScreenProps<
   RootStackParamList,
   'WalletBackupScreen'
@@ -45,7 +45,7 @@ const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
   return (
     <ImageBackground
       style={styles.container}
-      source={require('../assets/bg/bg.png')}>
+      source={require('../../assets/bg/bg.png')}>
       <Header showText={true} />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Backup your Wallet</Text>
