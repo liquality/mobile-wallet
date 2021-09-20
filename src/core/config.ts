@@ -1,3 +1,8 @@
+import { ChainNetworkType } from './types'
+import { ChainId } from '@liquality/cryptoassets/src/types'
+import { BitcoinNetworks } from '@liquality/bitcoin-networks'
+import { EthereumNetworks } from '@liquality/ethereum-networks'
+
 export interface DefaultAssetsType {
   mainnet: Array<string>
   testnet: Array<string>
@@ -44,6 +49,17 @@ export const SwapProviderType = {
   ONEINCHV3: 'ONEINCHV3',
   THORCHAIN: 'THORCHAIN',
   FASTBTC: 'FASTBTC',
+}
+
+export const ChainNetworks: ChainNetworkType = {
+  [ChainId.Bitcoin]: {
+    [NetworkEnum.Testnet]: BitcoinNetworks.bitcoin_testnet,
+    [NetworkEnum.Mainnet]: BitcoinNetworks.bitcoin,
+  },
+  [ChainId.Ethereum]: {
+    [NetworkEnum.Testnet]: EthereumNetworks.ropsten,
+    [NetworkEnum.Mainnet]: EthereumNetworks.ethereum_mainnet,
+  },
 }
 
 export default {
@@ -138,5 +154,13 @@ export default {
   },
   discordUrl: 'https://discord.gg/Xsqw7PW8wk',
   networks: ['mainnet', 'testnet'] as Array<NetworkEnum>,
-  chains: ['bitcoin', 'ethereum', 'rsk', 'bsc', 'near', 'polygon', 'arbitrum'],
+  chains: [
+    'bitcoin',
+    'ethereum',
+    'rsk',
+    'bsc',
+    'near',
+    'polygon',
+    'arbitrum',
+  ] as Array<ChainId>,
 }

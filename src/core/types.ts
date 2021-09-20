@@ -1,4 +1,7 @@
 import { NetworkEnum } from './config'
+import { ChainId } from '@liquality/cryptoassets/src/types'
+import { BitcoinNetwork } from '@liquality/bitcoin-networks'
+import { EthereumNetwork } from '@liquality/ethereum-networks'
 
 export interface StorageManagerI {
   persist: (data: StateType) => Promise<boolean | Error>
@@ -9,14 +12,15 @@ export interface WalletType {
   id?: string
   at?: number
   name?: string
+  assets?: Array<string>
+  activeNetwork?: NetworkEnum
   mnemomnic: string
   imported: boolean
 }
 
 export interface AccountType {
-  id: string
   name: string
-  chain: string
+  chain: ChainId
   type: string
   index: number
   addresses: Array<string>
@@ -27,8 +31,14 @@ export interface AccountType {
   updatedAt?: number
 }
 
+export type ChainNetworkType = {
+  [chainId in ChainId]?: {
+    [network in NetworkEnum]: BitcoinNetwork | EthereumNetwork
+  }
+}
+
 export type NetworkWrapperType = {
-  [network in NetworkEnum]: AccountType
+  [network in NetworkEnum]?: Array<AccountType>
 }
 
 export type AccountWrapperType = {
@@ -47,7 +57,7 @@ export interface StateType {
   encryptedWallets?: string
   enabledAssets?: any
   customTokens?: any
-  accounts?: any
+  accounts?: AccountWrapperType
   fiatRates?: any
   fees?: any
   history?: any
