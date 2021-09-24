@@ -1,86 +1,84 @@
+import { v4 as uuidv4 } from 'uuid'
+import config, { ChainNetworks, NetworkEnum } from './config'
+import {
+  AccountType,
+  AccountWrapperType,
+  EncryptionManagerI,
+  FiatRateType,
+  StateType,
+  StorageManagerI,
+  WalletManagerI,
+  WalletType,
+} from './types'
+import { generateMnemonic, validateMnemonic } from 'bip39'
 import {
   assets,
   ChainId,
   chains,
   isEthereumChain,
 } from '@liquality/cryptoassets'
-import { bitcoin } from '@liquality/types'
-import { v4 as uuidv4 } from 'uuid'
-import EncryptionManager from './encryptionManager'
-import config, {
-  accountColors,
-  chainDefaultColors,
-  ChainNetworks,
-  NetworkEnum,
-} from './config'
-import {
-  AccountType,
-  AccountWrapperType,
-  StateType,
-  StorageManagerI,
-  WalletType,
-} from './types'
-import { generateMnemonic, validateMnemonic } from 'bip39'
 import { EthereumNetwork } from '@liquality/ethereum-networks'
-import { Client } from '@liquality/client'
-import { BitcoinJsWalletProvider } from '@liquality/bitcoin-js-wallet-provider'
-import { BitcoinEsploraBatchApiProvider } from '@liquality/bitcoin-esplora-batch-api-provider'
-import { BitcoinFeeApiProvider } from '@liquality/bitcoin-fee-api-provider'
-import { BitcoinRpcFeeProvider } from '@liquality/bitcoin-rpc-fee-provider'
-import { EthereumRpcProvider } from '@liquality/ethereum-rpc-provider'
-import { EthereumJsWalletProvider } from '@liquality/ethereum-js-wallet-provider'
 import { EthereumGasNowFeeProvider } from '@liquality/ethereum-gas-now-fee-provider'
 import { EthereumRpcFeeProvider } from '@liquality/ethereum-rpc-fee-provider'
-import { BitcoinNetwork } from '@liquality/bitcoin-networks'
+import axios from 'axios'
+import { Asset } from '@liquality/cryptoassets/dist/src/types'
+import AbstractWalletManager from './abstractWalletManager'
 
-class WalletManager {
-  wallets: Array<WalletType>
-  password: string
-  cryptoassets: any
-  chains: any
+//TODO move urls to a config file
+class WalletManager extends AbstractWalletManager implements WalletManagerI {
+  wallets: Array<WalletType> = []
+  password: string = ''
+  cryptoassets: any = assets
+  chains: any = chains
   storageManager: StorageManagerI
+  encryptionManager: EncryptionManagerI
 
   constructor(
+    storageManager: StorageManagerI,
+    encryptionManager: EncryptionManagerI,
+  ) {
+    super()
+    this.storageManager = storageManager
+    this.encryptionManager = encryptionManager
+  }
+
+  /**
+   * Creates a wallet along with an account
+   */
+  public async createWallet(
     wallet: WalletType,
     password: string,
-    storageManager: StorageManagerI,
-  ) {
+  ): Promise<StateType> {
+    const walletId = uuidv4()
     this.wallets = [
       {
-        id: uuidv4(),
+        id: walletId,
         at: Date.now(),
         name: 'Account-1',
         ...wallet,
       },
     ]
     this.password = password
-    this.cryptoassets = assets
-    this.chains = chains
-    this.storageManager = storageManager
-  }
 
-  /**
-   * Creates a wallet along with an account
-   */
-  public async createWallet() {
-    const encryptionManager = new EncryptionManager(this.password)
-    const id = this.wallets[0].id
-    const accounts: AccountWrapperType = { [`${id}`]: {} }
+    const accounts: AccountWrapperType = { [walletId]: {} }
     const at = Date.now()
     const { networks, defaultAssets } = config
     const { encrypted: encryptedWallets, keySalt } =
-      await encryptionManager.encrypt(JSON.stringify(this.wallets))
+      await this.encryptionManager.encrypt(
+        JSON.stringify(this.wallets),
+        password,
+      )
 
     networks.forEach((network: NetworkEnum) => {
       const assetKeys = defaultAssets[network]
-      accounts[`${id}`][network] = []
+      accounts[walletId][network] = []
       config.chains.forEach(async (chainId) => {
         const assetList = assetKeys.filter((asset) => {
           return this.cryptoassets[asset]?.chain === chainId
         })
 
         const chain = this.chains[chainId]
-        accounts[`${id}`][network]?.push({
+        accounts[walletId][network]?.push({
           name: `${chain.name} 1`,
           chain: chainId,
           type: 'default',
@@ -96,7 +94,7 @@ class WalletManager {
     })
 
     const state = {
-      activeWalletId: id,
+      activeWalletId: walletId,
       encryptedWallets,
       keySalt,
       accounts,
@@ -111,104 +109,68 @@ class WalletManager {
     }
   }
 
-  public static generateSeedWords() {
-    return generateMnemonic().split(' ')
-  }
-
-  public static validateSeedPhrase(seedPhrase: string) {
-    return validateMnemonic(seedPhrase)
-  }
-
   /**
-   * Stores the encrypted wallets locally
+   * Reads data from storage and decrypts the encrypted wallet
    */
-  public async backupWallet() {
-    // const encryptionManager = new EncryptionManager(this.password)
-    // const { encrypted, keySalt } = await encryptionManager.encrypt(
-    //   JSON.stringify(this.wallets),
-    // )
-    // store
-  }
+  public async restoreWallet(
+    password: string,
+    state: StateType,
+  ): Promise<StateType> {
+    const { encryptedWallets, keySalt } = state
 
-  private createBtcClient(
-    network: NetworkEnum,
-    mnemonic: string,
-    accountType: string,
-    derivationPath: string,
-  ) {
-    const isTestnet = network === NetworkEnum.Testnet
-    const bitcoinNetwork = ChainNetworks[ChainId.Bitcoin]![network]
-    const esploraApi = config.exploraApis[network]
-    const batchEsploraApi = config.batchEsploraApis[network]
-
-    const btcClient = new Client()
-    btcClient.addProvider(
-      new BitcoinEsploraBatchApiProvider({
-        batchUrl: batchEsploraApi,
-        url: esploraApi,
-        network: bitcoinNetwork as BitcoinNetwork,
-        numberOfBlockConfirmation: 2,
-      }),
-    )
-
-    btcClient.addProvider(
-      new BitcoinJsWalletProvider({
-        network: bitcoinNetwork as BitcoinNetwork,
-        mnemonic,
-        baseDerivationPath: derivationPath,
-      }),
-    )
-
-    if (isTestnet) {
-      btcClient.addProvider(new BitcoinRpcFeeProvider())
-    } else {
-      btcClient.addProvider(
-        new BitcoinFeeApiProvider(
-          'https://liquality.io/swap/mempool/v1/fees/recommended',
-        ),
-      )
+    if (!encryptedWallets || !keySalt) {
+      throw new Error('Please import/create your wallet')
     }
 
-    return btcClient
-  }
-
-  private createEthereumClient(
-    ethereumNetwork: EthereumNetwork,
-    rpcApi: string,
-    feeProvider: EthereumRpcFeeProvider | EthereumGasNowFeeProvider,
-    mnemonic: string,
-    derivationPath: string,
-  ) {
-    const ethClient = new Client()
-    ethClient.addProvider(new EthereumRpcProvider({ uri: rpcApi }))
-
-    ethClient.addProvider(
-      new EthereumJsWalletProvider({
-        network: ethereumNetwork,
-        mnemonic,
-        derivationPath,
-      }),
+    const decryptedWallets = await this.encryptionManager.decrypt(
+      encryptedWallets!,
+      keySalt!,
+      password,
     )
+    if (!decryptedWallets) {
+      throw new Error('Password Invalid')
+    }
 
-    ethClient.addProvider(feeProvider)
+    const wallets = JSON.parse(decryptedWallets) as Array<WalletType>
 
-    return ethClient
+    if (!wallets || wallets.length === 0) {
+      throw new Error('Password Invalid')
+    }
+    const activeWalletId = wallets[0].id
+    //TODO update the enabledAsset dynamically
+    return {
+      key: password,
+      unlockedAt: Date.now(),
+      wallets,
+      enabledAssets: {
+        [NetworkEnum.Mainnet]: {
+          [activeWalletId!]: ['ETH'],
+        },
+        [NetworkEnum.Testnet]: {
+          [activeWalletId!]: ['ETH'],
+        },
+      },
+      activeNetwork: NetworkEnum.Testnet,
+    }
   }
 
-  public async updateAddresses(state: StateType): Promise<Array<string>> {
-    let updatedAddresses: Array<string> = []
-    for (const walletId in state.accounts) {
-      const network = state.accounts[walletId]
+  public async updateAddressesAndBalances(
+    state: StateType,
+  ): Promise<StateType> {
+    const stateClone = { ...state }
+
+    for (const walletId in stateClone.accounts) {
+      const network = stateClone.accounts[walletId]
       for (const networkId in network) {
-        if (state.activeNetwork !== networkId) {
+        if (stateClone.activeNetwork !== networkId) {
           continue
         }
         const accounts = network[networkId as NetworkEnum] as Array<AccountType>
         for (const account of accounts) {
           for (const asset of account.assets) {
             if (
-              !state.enabledAssets ||
-              !state.enabledAssets[networkId][walletId].includes(asset)
+              !stateClone.enabledAssets ||
+              !stateClone.enabledAssets[networkId][walletId].includes(asset)
             ) {
               continue
             }
@@ -232,7 +194,7 @@ class WalletManager {
             const feeProvider = isTestnet
               ? new EthereumRpcFeeProvider()
               : new EthereumGasNowFeeProvider()
-            const mnemonic = state.wallets?.find(
+            const mnemonic = stateClone.wallets?.find(
               (w) => w.id === walletId,
             )?.mnemomnic
 
@@ -247,78 +209,74 @@ class WalletManager {
               mnemonic,
               derivationPath,
             )
-            const result = await client.wallet.getUnusedAddress()
 
+            const result = await client.wallet.getUnusedAddress()
+            const balance = (await client.chain.getBalance([result])).toNumber()
             const address = isEthereumChain(this.cryptoassets[asset].chain)
               ? result.address.replace('0x', '')
               : result.address // TODO: Should not require removing 0x
-            // let updatedAddresses = []
-            if (account.chain === ChainId.Bitcoin) {
-              if (!account.addresses.includes(address)) {
-                updatedAddresses.push(...account.addresses, address)
-              } else {
-                updatedAddresses.push(...account.addresses)
-              }
-            } else {
-              updatedAddresses.push(address)
-            }
+            const currentAccount =
+              stateClone.accounts[`${walletId}`][networkId]![account.index]
+            currentAccount.addresses.push(address)
+            currentAccount.balances![asset] = balance
           }
         }
       }
     }
 
-    return updatedAddresses
+    return stateClone
   }
 
-  public async retrieveWallet(): Promise<StateType | Error> {
-    return await this.storageManager.read()
-  }
+  public async getPricesForAssets(
+    baseCurrencies: Array<string>,
+    toCurrency: string,
+  ): Promise<FiatRateType> {
+    const COIN_GECKO_API = 'https://api.coingecko.com/api/v3'
+    const coindIds = baseCurrencies
+      .filter((currency) => this.cryptoassets[currency]?.coinGeckoId)
+      .map((currency) => this.cryptoassets[currency].coinGeckoId)
+    const { data } = await axios.get(
+      `${COIN_GECKO_API}/simple/price?ids=${coindIds.join(
+        ',',
+      )}&vs_currencies=${toCurrency}`,
+    )
 
-  private async persistToLocalStorage(state: StateType) {
-    await this.storageManager.persist(state)
-  }
+    let prices = Object.keys(data).reduce((acc: any, coinGeckoId) => {
+      const asset = Object.entries<Asset>(this.cryptoassets).find((entry) => {
+        return entry[1].coinGeckoId === coinGeckoId
+      })
+      if (asset) {
+        acc[asset[0]] = {
+          [toCurrency.toUpperCase()]:
+            data[coinGeckoId][toCurrency.toLowerCase()],
+        }
+      }
 
-  private getNextAccountColor(chain: string, index: number) {
-    const defaultColor = chainDefaultColors[chain]
-    const defaultIndex = accountColors.findIndex((c) => c === defaultColor)
-    if (defaultIndex === -1) {
-      return defaultColor
-    }
-    const finalIndex = index + defaultIndex
-    if (finalIndex >= accountColors.length) {
-      return accountColors[defaultIndex]
-    }
-    return accountColors[finalIndex]
-  }
+      return acc
+    }, {})
 
-  // Derivation paths calculation
-  private getBitcoinDerivationPath(coinType: string, index: number) {
-    const BTC_ADDRESS_TYPE_TO_PREFIX = {
-      legacy: 44,
-      'p2sh-segwit': 49,
-      bech32: 84,
-    }
-    return `${
-      BTC_ADDRESS_TYPE_TO_PREFIX[bitcoin.AddressType.BECH32]
-    }'/${coinType}'/${index}'`
-  }
-
-  private getEthereumBasedDerivationPath = (coinType: string, index: number) =>
-    `m/44'/${coinType}'/${index}'/0/0`
-
-  private calculateDerivationPaths(
-    chainId: ChainId,
-  ): (network: NetworkEnum, index: number) => string | undefined {
-    if (chainId === ChainId.Bitcoin) {
-      return (network: NetworkEnum, index: number) => {
-        const bitcoinNetwork = ChainNetworks[ChainId.Bitcoin]![network]
-        return this.getBitcoinDerivationPath(bitcoinNetwork.coinType, index)
+    for (const baseCurrency of baseCurrencies) {
+      if (
+        !prices[baseCurrency] &&
+        this.cryptoassets[baseCurrency].matchingAsset
+      ) {
+        prices[baseCurrency] =
+          prices[this.cryptoassets[baseCurrency].matchingAsset]
       }
     }
-    return (network: NetworkEnum, index: number) => {
-      const ethNetwork = ChainNetworks[ChainId.Ethereum]![network]
-      return this.getEthereumBasedDerivationPath(ethNetwork.coinType, index)
-    }
+
+    return Object.keys(prices).reduce((acc: any, assetName) => {
+      acc[assetName] = prices[assetName][toCurrency.toUpperCase()]
+      return acc
+    }, {})
+  }
+
+  public static generateSeedWords() {
+    return generateMnemonic().split(' ')
+  }
+
+  public static validateSeedPhrase(seedPhrase: string) {
+    return validateMnemonic(seedPhrase)
   }
 }
 

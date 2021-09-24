@@ -11,9 +11,12 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList, UseInputStateReturnType } from '../../types'
 import { ThemeContext } from '../../theme'
 import Header from '../header'
-import EncryptionManager from '../../core/encryptionManager'
-import { useAppDispatch, useAppSelector } from '../../hooks'
-import { WalletType } from '../../core/types'
+import {
+  fetchFiatRatesForAssets,
+  restoreWallet,
+  updateAddressesAndBalances,
+} from '../../store'
+import { useDispatch } from 'react-redux'
 
 type LoginScreenProps = StackScreenProps<RootStackParamList, 'LoginScreen'>
 const useInputState = (
@@ -28,30 +31,26 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const theme = useContext(ThemeContext)
   const passwordInput = useInputState('')
   const [error, setError] = useState('')
-  const dispatch = useAppDispatch()
-  const { keySalt = '', encryptedWallets = '' } = useAppSelector((state) => ({
-    keySalt: state.keySalt,
-    encryptedWallets: state.encryptedWallets,
-  }))
+  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
 
   const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
       setError('Passwords must be at least 8 characters')
     } else {
-      const decryptedWallets = await new EncryptionManager(
-        passwordInput.value,
-      ).decrypt(encryptedWallets, keySalt)
-      if (!decryptedWallets) {
-        setError('Password invalid')
+      setLoading(true)
+      const { type = '', payload = {} } = await dispatch(
+        restoreWallet(passwordInput.value),
+      )
+      await dispatch(updateAddressesAndBalances())
+
+      await dispatch(fetchFiatRatesForAssets())
+      setLoading(false)
+      if (!type) {
+        setError('Please try again')
+      } else if (type === 'ERROR') {
+        setError(payload.errorMessage)
       } else {
-        dispatch({
-          type: 'LOGIN',
-          payload: {
-            key: passwordInput.value,
-            unlockedAt: Date.now(),
-            wallets: JSON.parse(decryptedWallets) as Array<WalletType>,
-          },
-        })
         navigation.navigate('MainTabNavigator')
       }
     }
@@ -99,7 +98,9 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
           ]}
           disabled={!passwordInput.value}
           onPress={onUnlock}>
-          <Text style={[theme.buttonText, styles.createText]}>Unlock</Text>
+          <Text style={[theme.buttonText, styles.createText]}>
+            {loading ? 'Unlocking...' : 'Unlock'}
+          </Text>
         </Pressable>
       </View>
     </ImageBackground>

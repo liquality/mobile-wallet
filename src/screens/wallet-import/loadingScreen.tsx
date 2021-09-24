@@ -3,35 +3,32 @@ import Spinner from '../../components/spinner'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
 import { useEffect, useState } from 'react'
-import WalletManager from '../../core/walletManager'
-import StorageManager from '../../core/storageManager'
 import { Alert } from 'react-native'
+import { createWallet } from '../../store'
+import { useDispatch } from 'react-redux'
 
 type LoadingScreenProps = StackScreenProps<RootStackParamList, 'LoadingScreen'>
 
 const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
   const [visible, setVisible] = useState(true)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    setTimeout(() => {
+    setTimeout(async () => {
       const wallet = {
         mnemomnic: route.params.seedPhrase || '',
         imported: true,
       }
-      const walletManager = new WalletManager(
-        wallet,
-        route.params.password || '',
-        new StorageManager(),
+
+      const { type } = await dispatch(
+        createWallet(wallet, route.params.password || ''),
       )
-      walletManager
-        .createWallet()
-        .catch(() => {
-          Alert.alert('Unable to create wallet', 'Please try again')
-        })
-        .then(() => {
-          setVisible(false)
-          navigation.navigate('LoginScreen')
-        })
+      if (type === 'ERROR') {
+        Alert.alert('Unable to create wallet', 'Please try again')
+      } else {
+        setVisible(false)
+        navigation.navigate('MainNavigator')
+      }
     }, 1000)
   })
   return <Spinner loadingText="Importing wallet" visible={visible} />

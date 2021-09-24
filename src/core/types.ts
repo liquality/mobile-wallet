@@ -3,9 +3,32 @@ import { ChainId } from '@liquality/cryptoassets/src/types'
 import { BitcoinNetwork } from '@liquality/bitcoin-networks'
 import { EthereumNetwork } from '@liquality/ethereum-networks'
 
+export interface WalletManagerI {
+  createWallet: (wallet: WalletType, password: string) => Promise<StateType>
+  restoreWallet: (password: string, state: StateType) => Promise<StateType>
+  updateAddressesAndBalances: (state: StateType) => Promise<StateType>
+  getPricesForAssets: (
+    baseCurrencies: Array<string>,
+    toCurrency: string,
+  ) => Promise<{ [asset: string]: number }>
+}
+
 export interface StorageManagerI {
   persist: (data: StateType) => Promise<boolean | Error>
   read: () => Promise<StateType | Error>
+}
+
+export interface EncryptionManagerI {
+  generateSalt: (byteCount: number) => string
+  encrypt: (
+    value: string,
+    password: string,
+  ) => Promise<{ encrypted: string; keySalt: string }>
+  decrypt: (
+    encrypted: string,
+    keySalt: string,
+    password: string,
+  ) => Promise<string>
 }
 
 export interface WalletType {
@@ -18,6 +41,16 @@ export interface WalletType {
   imported: boolean
 }
 
+export type BalanceType = {
+  [asset: string]: number
+}
+
+export type EnabledAssetType = {
+  [network in NetworkEnum]: {
+    [walletId: string]: Array<String>
+  }
+}
+
 export interface AccountType {
   name: string
   chain: ChainId
@@ -25,7 +58,7 @@ export interface AccountType {
   index: number
   addresses: Array<string>
   assets: Array<string>
-  balances?: any
+  balances?: BalanceType
   color: string
   createdAt: number
   updatedAt?: number
@@ -45,6 +78,10 @@ export type AccountWrapperType = {
   [id: string]: NetworkWrapperType
 }
 
+export type FiatRateType = {
+  [asset: string]: number
+}
+
 export interface StateType {
   // <do not keep these in localStorage>
   key?: string
@@ -55,10 +92,10 @@ export interface StateType {
   version?: number
   brokerReady?: boolean
   encryptedWallets?: string
-  enabledAssets?: any
+  enabledAssets?: EnabledAssetType
   customTokens?: any
   accounts?: AccountWrapperType
-  fiatRates?: any
+  fiatRates?: FiatRateType
   fees?: any
   history?: any
   marketData?: any
@@ -80,4 +117,5 @@ export interface StateType {
     askedTimes: number
     notAskAgain: boolean
   }
+  errorMessage?: string
 }

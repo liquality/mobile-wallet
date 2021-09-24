@@ -10,13 +10,11 @@ import {
 } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import WalletManager from '../../core/walletManager'
-import StorageManager from '../../core/storageManager'
 import Spinner from '../../components/spinner'
 import { ThemeContext } from '../../theme'
 import Header from '../header'
-import { useAppDispatch } from '../../hooks'
-import { StateType } from '../../core/types'
+import { createWallet } from '../../store'
+import { useDispatch } from 'react-redux'
 
 type SeedPhraseConfirmationProps = StackScreenProps<
   RootStackParamList,
@@ -60,7 +58,7 @@ const SeedPhraseConfirmationScreen = ({
     Array<SeedWordType>
   >([])
   const theme = useContext(ThemeContext)
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const renderSeedWord = ({ item }: { item: SeedWordType }) => {
     return (
@@ -97,36 +95,20 @@ const SeedPhraseConfirmationScreen = ({
       return
     }
     setSpinnerActive(true)
-    setTimeout(() => {
-      const excludedProps: Array<keyof StateType> = [
-        'key',
-        'wallets',
-        'unlockedAt',
-      ]
+    setTimeout(async () => {
       const wallet = {
         mnemomnic: route.params.seedWords?.join(' ') || '',
         imported: false,
       }
-      const walletManager = new WalletManager(
-        wallet,
-        route.params.password || '',
-        new StorageManager('@liquality-storage', excludedProps),
+      const { type } = await dispatch(
+        createWallet(wallet, route.params.password || ''),
       )
-      walletManager
-        .createWallet()
-        .catch(() => {
-          Alert.alert('Unable to create wallet', 'Please try again')
-        })
-        .then((data) => {
-          dispatch({
-            type: 'SETUP_WALLET',
-            payload: {
-              ...data,
-            },
-          })
-          setSpinnerActive(false)
-          navigation.navigate('CongratulationsScreen')
-        })
+      if (type === 'ERROR') {
+        Alert.alert('Unable to create wallet', 'Please try again')
+      } else {
+        setSpinnerActive(false)
+        navigation.navigate('CongratulationsScreen')
+      }
     }, 1000)
   }
 

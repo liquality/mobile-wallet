@@ -15,8 +15,15 @@ const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
         ...state,
         ...action.payload,
       }
+    case 'RESTORE_WALLET':
+      return {
+        ...state,
+        ...action.payload,
+      }
     default:
-      return {}
+      return {
+        ...state,
+      }
   }
 }
 

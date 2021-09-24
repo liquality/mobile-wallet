@@ -37,7 +37,7 @@ const App = () => {
 
   useEffect(() => {
     hydrateStore().then((state) => {
-      if (!state) {
+      if (!state || Object.keys(state).length === 0) {
         setInitialRouteName('OnboardingNavigator')
       } else {
         setInitialRouteName('MainNavigator')

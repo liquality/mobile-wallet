@@ -13,7 +13,9 @@ import {
   faArrowUp,
   faExchangeAlt,
 } from '@fortawesome/free-solid-svg-icons'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useAppSelector } from '../../hooks'
+import { AccountType } from '../../core/types'
 
 interface AssetType {
   id: string
@@ -68,8 +70,39 @@ const OverviewScreen = () => {
     ASSETS,
     ACTIVITY,
   }
-
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
+  const [totalFiatBalance, setTotalFiatBalance] = useState(0)
+  const [assetCount, setAssetCount] = useState(0)
+  const { accounts, walletId, activeNetwork, fiatRates } = useAppSelector(
+    (state) => ({
+      accounts: state.accounts,
+      walletId: state.activeWalletId,
+      activeNetwork: state.activeNetwork,
+      fiatRates: state.fiatRates,
+    }),
+  )
+
+  useEffect(() => {
+    const accts = accounts?.[walletId!]?.[activeNetwork!]
+    if (accts && fiatRates) {
+      let totalBalance = 0
+      for (let account of accts) {
+        totalBalance += Object.keys(account.balances!).reduce(
+          (total: number, asset: string) =>
+            total + account.balances![asset] * fiatRates[asset],
+          0,
+        )
+      }
+      setTotalFiatBalance(totalBalance)
+      setAssetCount(
+        accts.reduce(
+          (assetCounter: number, account: AccountType) =>
+            assetCounter + account.assets.length,
+          0,
+        ),
+      )
+    }
+  }, [accounts, activeNetwork, walletId, fiatRates])
 
   return (
     <View style={styles.container}>
@@ -78,11 +111,11 @@ const OverviewScreen = () => {
         source={require('../../assets/bg/action-block-bg.png')}>
         <View style={styles.totalValueSection}>
           <Text>
-            <Text style={styles.totalValue}>9,345.19</Text>
+            <Text style={styles.totalValue}>{totalFiatBalance}</Text>
             <Text style={styles.currency}>USD</Text>
           </Text>
         </View>
-        <Text style={styles.assets}>4 Assets</Text>
+        <Text style={styles.assets}>{assetCount} Assets</Text>
         <View style={styles.btnContainer}>
           <View style={styles.btnWrapper}>
             <Pressable style={styles.btn}>

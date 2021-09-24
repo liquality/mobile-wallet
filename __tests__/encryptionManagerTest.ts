@@ -9,32 +9,47 @@ describe('EncryptionManagerTest', () => {
   })
 
   it('should generate a base64 encoded salt', () => {
-    const encryptionManager = new EncryptionManager(PASSWORD)
+    const encryptionManager = new EncryptionManager()
     expect(encryptionManager.generateSalt(16)).toBeTruthy()
   })
 
   it('should encrypt a string', async () => {
-    const encryptionManager = new EncryptionManager(PASSWORD)
+    const encryptionManager = new EncryptionManager()
     const encryptedValue = await encryptionManager.encrypt(
       'This is a cool wallet',
+      PASSWORD,
     )
     expect(encryptedValue).toBeTruthy()
   })
 
   it('should decrypt a string', async () => {
     const DATA = 'This is a cool wallet'
-    const encryptionManager = new EncryptionManager(PASSWORD)
-    const { encrypted, keySalt } = await encryptionManager.encrypt(DATA)
-    const decryptedValue = await encryptionManager.decrypt(encrypted, keySalt)
+    const encryptionManager = new EncryptionManager()
+    const { encrypted, keySalt } = await encryptionManager.encrypt(
+      DATA,
+      PASSWORD,
+    )
+    const decryptedValue = await encryptionManager.decrypt(
+      encrypted,
+      keySalt,
+      PASSWORD,
+    )
     expect(decryptedValue).toEqual(DATA)
   })
 
   it('should fail decryption when decyrpting using a different password', async () => {
     const DATA = 'This is a cool wallet'
-    const encryptionManager = new EncryptionManager(PASSWORD)
-    const { encrypted, keySalt } = await encryptionManager.encrypt(DATA)
-    const encryptionManager2 = new EncryptionManager('BLA')
-    const decryptedValue = await encryptionManager2.decrypt(encrypted, keySalt)
+    const encryptionManager = new EncryptionManager()
+    const { encrypted, keySalt } = await encryptionManager.encrypt(
+      DATA,
+      PASSWORD,
+    )
+    const encryptionManager2 = new EncryptionManager()
+    const decryptedValue = await encryptionManager2.decrypt(
+      encrypted,
+      keySalt,
+      'BLA',
+    )
     expect(!decryptedValue).toBeTruthy()
   })
 })
