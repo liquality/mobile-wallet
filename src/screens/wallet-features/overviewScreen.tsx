@@ -15,7 +15,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../../hooks'
-import { AccountType } from '../../core/types'
+import { formatFiat } from '../../core/utils/coinFormatter'
+import BigNumber from 'bignumber.js'
 
 interface AssetType {
   id: string
@@ -71,7 +72,9 @@ const OverviewScreen = () => {
     ACTIVITY,
   }
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
-  const [totalFiatBalance, setTotalFiatBalance] = useState(0)
+  const [totalFiatBalance, setTotalFiatBalance] = useState<BigNumber>(
+    new BigNumber(0),
+  )
   const [assetCount, setAssetCount] = useState(0)
   const { accounts, walletId, activeNetwork, fiatRates } = useAppSelector(
     (state) => ({
@@ -86,21 +89,22 @@ const OverviewScreen = () => {
     const accts = accounts?.[walletId!]?.[activeNetwork!]
     if (accts && fiatRates) {
       let totalBalance = 0
+      let assetCounter = 0
       for (let account of accts) {
         totalBalance += Object.keys(account.balances!).reduce(
           (total: number, asset: string) =>
             total + account.balances![asset] * fiatRates[asset],
           0,
         )
-      }
-      setTotalFiatBalance(totalBalance)
-      setAssetCount(
-        accts.reduce(
-          (assetCounter: number, account: AccountType) =>
-            assetCounter + account.assets.length,
+
+        assetCounter += Object.keys(account.balances!).reduce(
+          (count: number, asset: string) =>
+            account.balances![asset] > 0 ? ++count : count,
           0,
-        ),
-      )
+        )
+      }
+      setTotalFiatBalance(new BigNumber(totalBalance))
+      setAssetCount(assetCounter)
     }
   }, [accounts, activeNetwork, walletId, fiatRates])
 
@@ -110,12 +114,15 @@ const OverviewScreen = () => {
         style={styles.overviewBlock}
         source={require('../../assets/bg/action-block-bg.png')}>
         <View style={styles.totalValueSection}>
-          <Text>
-            <Text style={styles.totalValue}>{totalFiatBalance}</Text>
-            <Text style={styles.currency}>USD</Text>
+          <Text style={styles.totalValue}>
+            {formatFiat(totalFiatBalance.dividedBy(100000000000000))}
           </Text>
+          <Text style={styles.currency}>USD</Text>
         </View>
-        <Text style={styles.assets}>{assetCount} Assets</Text>
+        <Text style={styles.assets}>
+          {assetCount}
+          {assetCount === 1 ? ' Asset' : ' Assets'}
+        </Text>
         <View style={styles.btnContainer}>
           <View style={styles.btnWrapper}>
             <Pressable style={styles.btn}>
@@ -196,7 +203,7 @@ const styles = StyleSheet.create({
   assets: {
     fontFamily: 'Montserrat-Regular',
     fontSize: 20,
-    fontWeight: '300',
+    fontWeight: '400',
     color: '#FFFFFF',
     textAlign: 'center',
   },
@@ -207,19 +214,21 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   totalValue: {
-    borderWidth: 1,
     color: '#FFFFFF',
     fontFamily: 'Montserrat-Regular',
     fontWeight: '500',
     fontSize: 36,
     marginTop: 15,
+    textAlignVertical: 'bottom',
   },
   currency: {
-    borderWidth: 1,
     color: '#FFFFFF',
     fontFamily: 'Montserrat-Regular',
     fontWeight: '500',
     fontSize: 18,
+    paddingBottom: 3,
+    paddingLeft: 5,
+    textAlignVertical: 'bottom',
   },
   btnContainer: {
     flexDirection: 'row',

@@ -161,7 +161,6 @@ const styles = StyleSheet.create({
   },
   prompt: {
     flex: 0.3,
-    // flexGrow: 1,
     marginTop: 62,
     alignItems: 'center',
     paddingHorizontal: 30,

@@ -7,7 +7,7 @@ import Infinity from '../assets/icons/infinity.svg'
 import Entry from '../screens/wallet-creation/entryScreen'
 import TermsScreen from '../screens/wallet-creation/termsScreen'
 import PasswordCreationScreen from '../screens/wallet-creation/passwordCreationScreen'
-import WalletBackupScreen from '../screens/wallet-creation/walletBackupScreen'
+import SeedPhraseScreen from '../screens/wallet-creation/seedPhraseScreen'
 import SeedPhraseConfirmationScreen from '../screens/wallet-creation/seedPhraseConfirmationScreen'
 import CongratulationsScreen from '../screens/wallet-creation/congratulationsScreen'
 import UnlockWalletScreen from '../screens/wallet-import/unlockWalletScreen'
@@ -35,7 +35,7 @@ export const OnboardingNavigator = () => (
         name="PasswordCreationScreen"
         component={PasswordCreationScreen}
       />
-      <Stack.Screen name="WalletBackupScreen" component={WalletBackupScreen} />
+      <Stack.Screen name="SeedPhraseScreen" component={SeedPhraseScreen} />
       <Stack.Screen
         name="SeedPhraseConfirmationScreen"
         component={SeedPhraseConfirmationScreen}

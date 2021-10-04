@@ -5,6 +5,7 @@ import { EthereumNetwork } from '@liquality/ethereum-networks'
 
 export interface WalletManagerI {
   createWallet: (wallet: WalletType, password: string) => Promise<StateType>
+  retrieveWallet: () => Promise<StateType>
   restoreWallet: (password: string, state: StateType) => Promise<StateType>
   updateAddressesAndBalances: (state: StateType) => Promise<StateType>
   getPricesForAssets: (
@@ -15,7 +16,7 @@ export interface WalletManagerI {
 
 export interface StorageManagerI {
   persist: (data: StateType) => Promise<boolean | Error>
-  read: () => Promise<StateType | Error>
+  read: () => Promise<StateType>
 }
 
 export interface EncryptionManagerI {

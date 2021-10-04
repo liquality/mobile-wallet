@@ -35,17 +35,15 @@ export const store = configureStore({
   middleware: new MiddlewareArray().concat([persistenceMiddleware, thunk]),
 })
 
-export const hydrateStore = (): Promise<StateType> => {
-  return storageManager
-    .read()
-    .then((state) => {
-      store.dispatch({ type: 'INIT_STORE', payload: state })
-      return state
-    })
-    .catch(() => {
-      store.dispatch({ type: 'INIT_STORE', payload: {} })
-      return {}
-    })
+export const hydrateStore = async (): Promise<StateType> => {
+  try {
+    const state = await walletManager.retrieveWallet()
+    store.dispatch({ type: 'INIT_STORE', payload: state })
+    return state
+  } catch (e) {
+    store.dispatch({ type: 'INIT_STORE', payload: {} })
+    return {}
+  }
 }
 
 export const createWallet =

@@ -109,8 +109,12 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
     }
   }
 
+  public async retrieveWallet(): Promise<StateType> {
+    return this.storageManager.read()
+  }
+
   /**
-   * Reads data from storage and decrypts the encrypted wallet
+   * Decrypts the encrypted wallet
    */
   public async restoreWallet(
     password: string,
@@ -154,6 +158,7 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
     }
   }
 
+  //TODO refactor
   public async updateAddressesAndBalances(
     state: StateType,
   ): Promise<StateType> {

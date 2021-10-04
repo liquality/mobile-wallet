@@ -14,10 +14,10 @@ import { ThemeContext } from '../../theme'
 import Header from '../header'
 type WalletBackupProps = StackScreenProps<
   RootStackParamList,
-  'WalletBackupScreen'
+  'SeedPhraseScreen'
 >
 
-const WalletBackupScreen = ({ route, navigation }: WalletBackupProps) => {
+const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
   const [seedWords, setSeedWords] = useState<Array<SeedWordType>>()
   const theme = useContext(ThemeContext)
 
@@ -168,4 +168,4 @@ const styles = StyleSheet.create({
     color: '#F8FAFF',
   },
 })
-export default WalletBackupScreen
+export default SeedPhraseScreen

@@ -13,7 +13,7 @@ export type RootStackParamList = {
   Entry: undefined
   TermsScreen: undefined
   PasswordCreationScreen: StackPayload
-  WalletBackupScreen: StackPayload
+  SeedPhraseScreen: StackPayload
   SeedPhraseConfirmationScreen: StackPayload
   CongratulationsScreen: undefined
   UnlockWalletScreen: StackPayload
