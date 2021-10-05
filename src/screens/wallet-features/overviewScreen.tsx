@@ -13,6 +13,7 @@ import {
   faArrowUp,
   faExchangeAlt,
   faTachometerAlt,
+  faGreaterThan,
 } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../../hooks'
@@ -52,6 +53,23 @@ const renderAsset = ({ item }: { item: DataElementType }) => {
             )}`}
           </Text>
         </View>
+        {!isNested && (
+          <View style={styles.col3}>
+            <Text style={styles.balance}>{balance}</Text>
+            <Text style={styles.balanceInUSD}>{balanceInUSD}</Text>
+          </View>
+        )}
+        {!isNested && (
+          <View style={styles.col4}>
+            <Pressable>
+              <FontAwesomeIcon
+                size={20}
+                icon={faGreaterThan}
+                color={'#A8AEB7'}
+              />
+            </Pressable>
+          </View>
+        )}
         {isNested && (
           <View style={styles.col3}>
             <Text style={styles.TotalBalanceInUSD}>
@@ -68,12 +86,6 @@ const renderAsset = ({ item }: { item: DataElementType }) => {
             </View>
           </View>
         )}
-        {!isNested && (
-          <View style={styles.col3}>
-            <Text style={styles.balance}>{balance}</Text>
-            <Text style={styles.balanceInUSD}>{balanceInUSD}</Text>
-          </View>
-        )}
       </View>
       {isNested &&
         item.assets!.map((subElem) => {
@@ -82,11 +94,19 @@ const renderAsset = ({ item }: { item: DataElementType }) => {
               <View style={styles.col1}>{getAssetIcon(subElem.name)}</View>
               <View style={styles.col2}>
                 <Text style={styles.name}>{subElem.name}</Text>
-                <Text style={styles.address}>{subElem.address}</Text>
               </View>
               <View style={styles.col3}>
                 <Text style={styles.balance}>{subElem.balance}</Text>
                 <Text style={styles.balanceInUSD}>{subElem.balanceInUSD}</Text>
+              </View>
+              <View style={styles.col4}>
+                <Pressable>
+                  <FontAwesomeIcon
+                    size={20}
+                    icon={faGreaterThan}
+                    color={'#A8AEB7'}
+                  />
+                </Pressable>
               </View>
             </View>
           )
@@ -357,23 +377,31 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   col1: {
-    flex: 0.2,
+    flex: 0.1,
     flexDirection: 'row',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    paddingRight: 5,
   },
   col2: {
     flex: 0.2,
+    justifyContent: 'center',
   },
   col3: {
-    flex: 0.7,
-    justifyContent: 'flex-end',
+    flex: 0.6,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
+  col4: {
+    flex: 0.1,
+    justifyContent: 'center',
     alignItems: 'flex-end',
   },
   plusSign: {
     marginRight: 20,
   },
   subElement: {
-    paddingLeft: 25,
+    paddingLeft: 50,
   },
   name: {
     fontFamily: 'Montserrat-Regular',
