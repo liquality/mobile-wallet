@@ -12,58 +12,97 @@ import {
   faArrowDown,
   faArrowUp,
   faExchangeAlt,
+  faTachometerAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../../hooks'
 import { formatFiat } from '../../core/utils/coinFormatter'
 import BigNumber from 'bignumber.js'
+import BTCIcon from '../../assets/icons/crypto/btc.svg'
+import ETHIcon from '../../assets/icons/crypto/eth.svg'
 
-interface AssetType {
-  id: string
-  name: string
-  address: string
-  balance: string
-  balanceInUSD: string
+const getAssetIcon = (asset: string) => {
+  if (asset === 'eth' || asset === 'ethereum') {
+    return <ETHIcon width={28} height={28} />
+  } else {
+    return <BTCIcon width={28} height={28} />
+  }
 }
 
-const DATA: Array<AssetType> = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    name: 'Ethereum',
-    address: 'b01992929293839393',
-    balance: '0.12345',
-    balanceInUSD: '$12.22',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    name: 'DAI',
-    address: 'b01992929293839393',
-    balance: '0.12345',
-    balanceInUSD: '$12.22',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    name: 'Bitcoin',
-    address: 'b01992929293839393',
-    balance: '0.12345',
-    balanceInUSD: '$12.22',
-  },
-]
-
-const renderAsset = ({ item }: { item: AssetType }) => {
+const renderAsset = ({ item }: { item: DataElementType }) => {
   const { name, address, balance, balanceInUSD } = item
+  const isNested = item.assets && item.assets.length > 0
+
   return (
-    <View style={[styles.row]}>
-      <View>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.address}>{address}</Text>
+    <View>
+      <View
+        style={[
+          styles.row,
+          { borderLeftColor: item.color, borderLeftWidth: 3 },
+        ]}>
+        <View style={styles.col1}>
+          <Text style={styles.plusSign}>{isNested ? '+' : ''}</Text>
+          {getAssetIcon(item.name)}
+        </View>
+        <View style={styles.col2}>
+          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.address}>
+            {`${address?.substring(0, 4)}...${address?.substring(
+              address?.length - 4,
+            )}`}
+          </Text>
+        </View>
+        {isNested && (
+          <View style={styles.col3}>
+            <Text style={styles.TotalBalanceInUSD}>
+              Total {balanceInUSD} USD
+            </Text>
+            <View style={styles.gas}>
+              <FontAwesomeIcon
+                size={20}
+                icon={faTachometerAlt}
+                color={'#9D4DFA'}
+                style={styles.gasIcon}
+              />
+              <Text style={styles.gasLabel}>Gas</Text>
+            </View>
+          </View>
+        )}
+        {!isNested && (
+          <View style={styles.col3}>
+            <Text style={styles.balance}>{balance}</Text>
+            <Text style={styles.balanceInUSD}>{balanceInUSD}</Text>
+          </View>
+        )}
       </View>
-      <View>
-        <Text style={styles.balance}>{balance}</Text>
-        <Text style={styles.balanceInUSD}>{balanceInUSD}</Text>
-      </View>
+      {isNested &&
+        item.assets!.map((subElem) => {
+          return (
+            <View style={[styles.row, styles.subElement]}>
+              <View style={styles.col1}>{getAssetIcon(subElem.name)}</View>
+              <View style={styles.col2}>
+                <Text style={styles.name}>{subElem.name}</Text>
+                <Text style={styles.address}>{subElem.address}</Text>
+              </View>
+              <View style={styles.col3}>
+                <Text style={styles.balance}>{subElem.balance}</Text>
+                <Text style={styles.balanceInUSD}>{subElem.balanceInUSD}</Text>
+              </View>
+            </View>
+          )
+        })}
     </View>
   )
+}
+
+type DataElementType = {
+  id: string
+  name: string
+  address?: string
+  balance: number
+  balanceInUSD: number
+  color?: string
+  assets?: Array<DataElementType>
 }
 
 const OverviewScreen = () => {
@@ -76,6 +115,7 @@ const OverviewScreen = () => {
     new BigNumber(0),
   )
   const [assetCount, setAssetCount] = useState(0)
+  const [data, setData] = useState<Array<DataElementType>>([])
   const { accounts, walletId, activeNetwork, fiatRates } = useAppSelector(
     (state) => ({
       accounts: state.accounts,
@@ -90,21 +130,65 @@ const OverviewScreen = () => {
     if (accts && fiatRates) {
       let totalBalance = 0
       let assetCounter = 0
+      let accountData: Array<DataElementType> = []
+
       for (let account of accts) {
-        totalBalance += Object.keys(account.balances!).reduce(
-          (total: number, asset: string) =>
-            total + account.balances![asset] * fiatRates[asset],
-          0,
+        if (Object.keys(account.balances!).length === 0) {
+          continue
+        }
+
+        const chainData: DataElementType = {
+          id: account.chain,
+          name: account.chain,
+          address: account.addresses[0], //TODO why pick only the first address
+          balance: 0,
+          balanceInUSD: 0,
+          color: account.color,
+          assets: [],
+        }
+        const { total, assetsData } = Object.keys(account.balances!).reduce(
+          (
+            acc: { total: number; assetsData: Array<DataElementType> },
+            asset: string,
+          ) => {
+            acc.total = acc.total + account.balances![asset] * fiatRates[asset]
+            acc.assetsData.push({
+              id: asset,
+              name: asset,
+              balance: account.balances![asset],
+              balanceInUSD: account.balances![asset] * fiatRates[asset],
+            })
+            return acc
+          },
+          { total: 0, assetsData: [] },
         )
+
+        totalBalance += total
 
         assetCounter += Object.keys(account.balances!).reduce(
           (count: number, asset: string) =>
             account.balances![asset] > 0 ? ++count : count,
           0,
         )
+
+        chainData.balance = assetsData.reduce(
+          (totalBal: number, assetData: DataElementType): number =>
+            totalBal + assetData.balance,
+          0,
+        ) as number
+
+        chainData.balanceInUSD = assetsData.reduce(
+          (totalBal: number, assetData: DataElementType) =>
+            totalBal + assetData.balanceInUSD,
+          0,
+        ) as number
+
+        chainData.assets?.push(...assetsData)
+        accountData.push(chainData)
       }
       setTotalFiatBalance(new BigNumber(totalBalance))
       setAssetCount(assetCounter)
+      setData(accountData)
     }
   }, [accounts, activeNetwork, walletId, fiatRates])
 
@@ -177,7 +261,7 @@ const OverviewScreen = () => {
       </View>
       <FlatList
         contentContainerStyle={styles.detailsBlock}
-        data={DATA}
+        data={data}
         renderItem={renderAsset}
         keyExtractor={(item) => item.id}
       />
@@ -195,10 +279,10 @@ const styles = StyleSheet.create({
     flex: 0.5,
     justifyContent: 'center',
     width: '100%',
+    paddingBottom: 20,
   },
   detailsBlock: {
     flex: 0.5,
-    marginTop: 15,
   },
   assets: {
     fontFamily: 'Montserrat-Regular',
@@ -267,10 +351,29 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     borderBottomWidth: 1,
     borderBottomColor: '#D9DFE5',
-    padding: 10,
+    padding: 5,
+  },
+  col1: {
+    flex: 0.2,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  col2: {
+    flex: 0.2,
+  },
+  col3: {
+    flex: 0.7,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+  },
+  plusSign: {
+    marginRight: 20,
+  },
+  subElement: {
+    paddingLeft: 25,
   },
   name: {
     fontFamily: 'Montserrat-Regular',
@@ -291,6 +394,22 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     color: '#646F85',
     fontSize: 12,
+  },
+  TotalBalanceInUSD: {
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 12,
+  },
+  gasLabel: {
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 12,
+    color: '#646F85',
+  },
+  gas: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
+  gasIcon: {
+    marginRight: 5,
   },
   header: {
     flexDirection: 'row',
