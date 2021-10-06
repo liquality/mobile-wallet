@@ -58,6 +58,7 @@ describe('WalletManagerTest', () => {
     ).toBeTruthy()
   })
 
+  //TODO run this against Truffle
   it('should find unused addresses', async () => {
     const {
       keySalt,
@@ -87,7 +88,7 @@ describe('WalletManagerTest', () => {
     const { accounts: updatedAccount } =
       await walletManager.updateAddressesAndBalances(state)
     const { addresses, balances = {} } =
-      updatedAccount![activeWalletId!][NetworkEnum.Testnet]![0]
+      updatedAccount![activeWalletId!][NetworkEnum.Testnet]![1]
     expect(
       addresses.length > 0 && addresses.length === Object.keys(balances).length,
     ).toBeTruthy()

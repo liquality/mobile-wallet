@@ -19,9 +19,12 @@ import { EthereumGasNowFeeProvider } from '@liquality/ethereum-gas-now-fee-provi
 import { EthereumRpcProvider } from '@liquality/ethereum-rpc-provider'
 import { EthereumJsWalletProvider } from '@liquality/ethereum-js-wallet-provider'
 
+const BITCOIN_FEE_API_URL =
+  'https://liquality.io/swap/mempool/v1/fees/recommended'
+
 export default class AbstractWalletManager {
   cryptoassets: any
-  storageManager: StorageManagerI
+  storageManager: StorageManagerI | undefined
 
   protected getNextAccountColor(chain: string, index: number) {
     const defaultColor = chainDefaultColors[chain]
@@ -100,11 +103,7 @@ export default class AbstractWalletManager {
     if (isTestnet) {
       btcClient.addProvider(new BitcoinRpcFeeProvider())
     } else {
-      btcClient.addProvider(
-        new BitcoinFeeApiProvider(
-          'https://liquality.io/swap/mempool/v1/fees/recommended',
-        ),
-      )
+      btcClient.addProvider(new BitcoinFeeApiProvider(BITCOIN_FEE_API_URL))
     }
 
     return btcClient
@@ -134,6 +133,6 @@ export default class AbstractWalletManager {
   }
 
   protected async persistToLocalStorage(state: StateType) {
-    await this.storageManager.persist(state)
+    await this.storageManager?.persist(state)
   }
 }

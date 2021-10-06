@@ -34,7 +34,7 @@ const activities: Array<ActivityDataElementType> = [
   },
   {
     id: '2',
-    transaction: 'BTC to DAI',
+    transaction: 'BTC to ETH',
     time: '4/28/2020, 3:34pm',
     amount: 0.1234,
     status: 'Locking ETH',

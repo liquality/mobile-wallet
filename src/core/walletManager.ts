@@ -24,6 +24,9 @@ import axios from 'axios'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
 import AbstractWalletManager from './abstractWalletManager'
 
+const ETHEREUM_TESTNET_URL = `https://ropsten.infura.io/v3/${config.infuraApiKey}`
+const MAINNET_TESTNET_URL = `https://mainnet.infura.io/v3/${config.infuraApiKey}`
+
 //TODO move urls to a config file
 class WalletManager extends AbstractWalletManager implements WalletManagerI {
   wallets: Array<WalletType> = []
@@ -191,11 +194,11 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
               )
             }
 
-            const isTestnet = networkId === 'testnet'
+            const isTestnet = networkId === NetworkEnum.Testnet
             const ethereumNetwork = ChainNetworks[ChainId.Ethereum]![networkId]
             const infuraApi = isTestnet
-              ? `https://ropsten.infura.io/v3/${config.infuraApiKey}`
-              : `https://mainnet.infura.io/v3/${config.infuraApiKey}`
+              ? ETHEREUM_TESTNET_URL
+              : MAINNET_TESTNET_URL
             const feeProvider = isTestnet
               ? new EthereumRpcFeeProvider()
               : new EthereumGasNowFeeProvider()
@@ -220,10 +223,8 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
             const address = isEthereumChain(this.cryptoassets[asset].chain)
               ? result.address.replace('0x', '')
               : result.address // TODO: Should not require removing 0x
-            const currentAccount =
-              stateClone.accounts[`${walletId}`][networkId]![account.index]
-            currentAccount.addresses.push(address)
-            currentAccount.balances![asset] = balance
+            account.addresses.push(address)
+            account.balances![asset] = balance
           }
         }
       }
