@@ -3,7 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   faGreaterThan,
   faTachometerAlt,
-} from '@fortawesome/free-solid-svg-icons'
+  faPlus,
+  faMinus,
+} from '@fortawesome/pro-light-svg-icons'
 import * as React from 'react'
 import ETHIcon from '../assets/icons/crypto/eth.svg'
 import BTCIcon from '../assets/icons/crypto/btc.svg'
@@ -47,9 +49,14 @@ const AssetFlatList = ({
           ]}>
           <View style={styles.col1}>
             <Pressable onPress={() => toggleRow(item.id)}>
-              <Text style={styles.plusSign}>
-                {isNested ? (item.showAssets ? '-' : '+') : ''}
-              </Text>
+              {isNested && (
+                <FontAwesomeIcon
+                  size={15}
+                  icon={item.showAssets ? faMinus : faPlus}
+                  color={'#A8AEB7'}
+                  style={styles.plusSign}
+                />
+              )}
             </Pressable>
             {getAssetIcon(item.name)}
           </View>
@@ -145,28 +152,27 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     borderBottomWidth: 1,
     borderBottomColor: '#D9DFE5',
-    padding: 10,
+    paddingVertical: 10,
   },
   col1: {
-    flex: 0.1,
+    flex: 0.15,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingRight: 5,
   },
   col2: {
     flex: 0.2,
     justifyContent: 'center',
   },
   col3: {
-    flex: 0.6,
+    flex: 0.55,
     justifyContent: 'center',
     alignItems: 'flex-end',
   },
   col4: {
     flex: 0.1,
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   plusSign: {
     marginRight: 5,

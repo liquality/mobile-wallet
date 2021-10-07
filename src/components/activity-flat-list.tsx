@@ -1,6 +1,8 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faExchangeAlt, faGreaterThan } from '@fortawesome/free-solid-svg-icons'
+import { faExchange, faSpinnerThird } from '@fortawesome/pro-duotone-svg-icons'
+import { faGreaterThan } from '@fortawesome/pro-light-svg-icons'
+
 import * as React from 'react'
 
 export type ActivityDataElementType = {
@@ -23,7 +25,12 @@ const ActivityFlatList = ({
     return (
       <View style={styles.row} key={item.id}>
         <View style={styles.col1}>
-          <FontAwesomeIcon size={23} icon={faExchangeAlt} color={'#9D4DFA'} />
+          <FontAwesomeIcon
+            size={23}
+            icon={faExchange}
+            secondaryColor={'#FF287D'}
+            color={'#2CD2CF'}
+          />
         </View>
         <View style={styles.col2}>
           <Text style={styles.transaction}>{transaction}</Text>
@@ -35,7 +42,12 @@ const ActivityFlatList = ({
         </View>
         <View style={styles.col4}>
           <Pressable>
-            <FontAwesomeIcon size={20} icon={faGreaterThan} color={'#A8AEB7'} />
+            <FontAwesomeIcon
+              size={35}
+              icon={faSpinnerThird}
+              secondaryColor={'#2CD2CF'}
+              color={'#D5D8DD'}
+            />
           </Pressable>
         </View>
         <View style={styles.col5}>
@@ -83,16 +95,17 @@ const styles = StyleSheet.create({
     flex: 0.4,
     justifyContent: 'center',
     alignItems: 'flex-end',
+    marginRight: 5,
   },
   col4: {
     flex: 0.1,
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   col5: {
     flex: 0.1,
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   transaction: {
     fontFamily: 'Montserrat-Regular',

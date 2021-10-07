@@ -2,7 +2,7 @@ import React, { createContext } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faUserCog, faCircle } from '@fortawesome/free-solid-svg-icons'
+import { faUserCog, faCircle } from '@fortawesome/pro-duotone-svg-icons'
 import Infinity from '../assets/icons/infinity.svg'
 import Entry from '../screens/wallet-creation/entryScreen'
 import TermsScreen from '../screens/wallet-creation/termsScreen'
@@ -77,6 +77,7 @@ const MainTabNavigator = () => (
               size={10}
               color={focused ? '#C4C4C4' : '#FFFFFF'}
               style={styles.icon}
+              secondaryColor={focused ? '#C4C4C4' : '#FFFFFF'}
             />
             {route.name === 'SettingsScreen' ? (
               <FontAwesomeIcon icon={faUserCog} size={size} color="#5F5F5F" />

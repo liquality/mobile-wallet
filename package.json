@@ -22,8 +22,9 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/free-regular-svg-icons": "^5.15.4",
-    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/pro-duotone-svg-icons": "^5.15.4",
+    "@fortawesome/pro-light-svg-icons": "^5.15.4",
+    "@fortawesome/pro-regular-svg-icons": "^5.15.4",
     "@fortawesome/react-native-fontawesome": "^0.2.7",
     "@liquality/bitcoin-esplora-batch-api-provider": "^1.6.1",
     "@liquality/bitcoin-fee-api-provider": "^1.6.1",
