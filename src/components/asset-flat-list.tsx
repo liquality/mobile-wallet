@@ -5,7 +5,10 @@ import {
   faPlus,
   faMinus,
 } from '@fortawesome/pro-light-svg-icons'
-import { faTachometerAltSlowest } from '@fortawesome/pro-duotone-svg-icons'
+import {
+  faTachometerAltAverage,
+  faTachometerAltSlowest,
+} from '@fortawesome/pro-duotone-svg-icons'
 import * as React from 'react'
 import ETHIcon from '../assets/icons/crypto/eth.svg'
 import BTCIcon from '../assets/icons/crypto/btc.svg'
@@ -97,7 +100,7 @@ const AssetFlatList = ({
                   <View style={styles.gas}>
                     <FontAwesomeIcon
                       size={20}
-                      icon={faTachometerAltSlowest}
+                      icon={faTachometerAltAverage}
                       color={'#000'}
                       secondaryColor={'#1CE5C3'}
                       style={styles.gasIcon}

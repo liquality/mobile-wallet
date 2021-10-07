@@ -48,13 +48,13 @@ export type BalanceType = {
 }
 
 export type EnabledAssetType = {
-  [network in NetworkEnum]: {
+  [network in NetworkEnum]?: {
     [walletId: string]: Array<String>
   }
 }
 
 export type FeeType = {
-  [network in NetworkEnum]: {
+  [network in NetworkEnum]?: {
     [walletId: string]: {
       [asset: string]: FeeDetails
     }
