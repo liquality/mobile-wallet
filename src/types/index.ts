@@ -7,6 +7,8 @@ type StackPayload = {
   previousScreen?: keyof RootStackParamList
   nextScreen?: keyof RootStackParamList
   seedPhrase?: string
+  mnemonic?: string
+  imported?: boolean
 }
 
 export type RootStackParamList = {

@@ -40,6 +40,7 @@ export const OnboardingNavigator = () => (
         name="SeedPhraseConfirmationScreen"
         component={SeedPhraseConfirmationScreen}
       />
+      <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
       <Stack.Screen
         name="CongratulationsScreen"
         component={CongratulationsScreen}
@@ -59,6 +60,10 @@ export const WalletImportNavigator = () => (
         component={PasswordCreationScreen}
       />
       <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+      <Stack.Screen
+        name="CongratulationsScreen"
+        component={CongratulationsScreen}
+      />
     </Stack.Navigator>
   </OnboardingContext.Provider>
 )

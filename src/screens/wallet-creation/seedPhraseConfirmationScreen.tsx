@@ -10,11 +10,8 @@ import {
 } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import Spinner from '../../components/spinner'
 import { ThemeContext } from '../../theme'
 import Header from '../header'
-import { createWallet } from '../../store'
-import { useDispatch } from 'react-redux'
 
 type SeedPhraseConfirmationProps = StackScreenProps<
   RootStackParamList,
@@ -53,12 +50,10 @@ const SeedPhraseConfirmationScreen = ({
   navigation,
 }: SeedPhraseConfirmationProps) => {
   const [chosenSeedWords, setChosenSeedWords] = useState<Array<string>>([])
-  const [spinnerActive, setSpinnerActive] = useState(false)
   const [shuffledSeedWords, setShuffledSeedWords] = useState<
     Array<SeedWordType>
   >([])
   const theme = useContext(ThemeContext)
-  const dispatch = useDispatch()
 
   const renderSeedWord = ({ item }: { item: SeedWordType }) => {
     return (
@@ -94,22 +89,10 @@ const SeedPhraseConfirmationScreen = ({
       Alert.alert('Key information missing', 'Please try again')
       return
     }
-    setSpinnerActive(true)
-    setTimeout(async () => {
-      const wallet = {
-        mnemomnic: route.params.seedWords?.join(' ') || '',
-        imported: false,
-      }
-      const { type } = await dispatch(
-        createWallet(wallet, route.params.password || ''),
-      )
-      if (type === 'ERROR') {
-        Alert.alert('Unable to create wallet', 'Please try again')
-      } else {
-        setSpinnerActive(false)
-        navigation.navigate('CongratulationsScreen')
-      }
-    }, 1000)
+    navigation.navigate('LoadingScreen', {
+      mnemonic: route.params.seedWords?.join(' ') || '',
+      imported: false,
+    })
   }
 
   useEffect(() => {
@@ -122,7 +105,6 @@ const SeedPhraseConfirmationScreen = ({
     <ImageBackground
       style={styles.container}
       source={require('../../assets/bg/bg.png')}>
-      <Spinner loadingText={'Creating Wallet'} visible={spinnerActive} />
       <Header showText={true} />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Confirm Seed Phrase</Text>

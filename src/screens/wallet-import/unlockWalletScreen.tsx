@@ -77,6 +77,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
         previousScreen: 'UnlockWalletScreen',
         nextScreen: 'LoadingScreen',
         seedPhrase: chosenSeedWords.join(' ').trim(),
+        imported: true,
       })
     }
   }

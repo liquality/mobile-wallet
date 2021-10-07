@@ -17,7 +17,7 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
     setTimeout(async () => {
       const wallet = {
         mnemomnic: route.params.seedPhrase || '',
-        imported: true,
+        imported: route.params.imported || false,
       }
 
       const { type } = await dispatch(
@@ -27,11 +27,11 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
         Alert.alert('Unable to create wallet', 'Please try again')
       } else {
         setVisible(false)
-        navigation.navigate('MainNavigator')
+        navigation.navigate('CongratulationsScreen')
       }
     }, 1000)
   })
-  return <Spinner loadingText="Importing wallet" visible={visible} />
+  return <Spinner loadingText="" visible={visible} />
 }
 
 export default LoadingScreen
