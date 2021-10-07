@@ -74,6 +74,17 @@ describe('WalletManagerTest', () => {
       keySalt,
       encryptedWallets,
       accounts,
+      fees: {
+        [NetworkEnum.Testnet]: {
+          [activeWalletId]: {
+            ETH: {
+              average: { fee: 3.7500000135 },
+              fast: { fee: 5.000000018 },
+              slow: { fee: 2.500000009 },
+            },
+          },
+        },
+      },
       enabledAssets: {
         [NetworkEnum.Mainnet]: {
           [activeWalletId]: ['ETH'],

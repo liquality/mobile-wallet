@@ -109,6 +109,14 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
       ...state,
       wallets: this.wallets,
       key: this.password,
+      fees: {
+        [NetworkEnum.Mainnet]: {
+          [walletId]: {},
+        },
+        [NetworkEnum.Testnet]: {
+          [walletId]: {},
+        },
+      },
     }
   }
 
@@ -155,6 +163,14 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
         },
         [NetworkEnum.Testnet]: {
           [activeWalletId!]: ['ETH'],
+        },
+      },
+      fees: {
+        [NetworkEnum.Mainnet]: {
+          [activeWalletId!]: {},
+        },
+        [NetworkEnum.Testnet]: {
+          [activeWalletId!]: {},
         },
       },
       activeNetwork: NetworkEnum.Testnet,
@@ -220,6 +236,10 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
 
             const result = await client.wallet.getUnusedAddress()
             const balance = (await client.chain.getBalance([result])).toNumber()
+            const feeDetails = await client.chain.getFees()
+            stateClone.fees![networkId][walletId]![
+              this.cryptoassets[asset].chain
+            ] = feeDetails
             const address = isEthereumChain(this.cryptoassets[asset].chain)
               ? result.address.replace('0x', '')
               : result.address // TODO: Should not require removing 0x

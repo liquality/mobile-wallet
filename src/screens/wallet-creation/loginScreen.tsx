@@ -41,20 +41,23 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       setError('Passwords must be at least 8 characters')
     } else {
       setLoading(true)
-      const { type = '', payload = {} } = await dispatch(
-        restoreWallet(passwordInput.value),
-      )
-      await dispatch(updateAddressesAndBalances())
+      //TODO find a better way to handle threads
+      setTimeout(async () => {
+        const { type = '', payload = {} } = await dispatch(
+          restoreWallet(passwordInput.value),
+        )
+        await dispatch(updateAddressesAndBalances())
 
-      await dispatch(fetchFiatRatesForAssets())
-      setLoading(false)
-      if (!type) {
-        setError('Please try again')
-      } else if (type === 'ERROR') {
-        setError(payload.errorMessage)
-      } else {
-        navigation.navigate('MainTabNavigator')
-      }
+        await dispatch(fetchFiatRatesForAssets())
+        setLoading(false)
+        if (!type) {
+          setError('Please try again')
+        } else if (type === 'ERROR') {
+          setError(payload.errorMessage)
+        } else {
+          navigation.navigate('MainTabNavigator')
+        }
+      }, 1000)
     }
   }
 

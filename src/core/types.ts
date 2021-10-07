@@ -2,6 +2,7 @@ import { NetworkEnum } from './config'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { BitcoinNetwork } from '@liquality/bitcoin-networks'
 import { EthereumNetwork } from '@liquality/ethereum-networks'
+import { FeeDetails } from '@liquality/types/lib/fees'
 
 export interface WalletManagerI {
   createWallet: (wallet: WalletType, password: string) => Promise<StateType>
@@ -52,6 +53,14 @@ export type EnabledAssetType = {
   }
 }
 
+export type FeeType = {
+  [network in NetworkEnum]: {
+    [walletId: string]: {
+      [asset: string]: FeeDetails
+    }
+  }
+}
+
 export interface AccountType {
   name: string
   chain: ChainId
@@ -97,7 +106,7 @@ export interface StateType {
   customTokens?: any
   accounts?: AccountWrapperType
   fiatRates?: FiatRateType
-  fees?: any
+  fees?: FeeType
   history?: any
   marketData?: any
   activeNetwork?: NetworkEnum

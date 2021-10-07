@@ -2,13 +2,14 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   faGreaterThan,
-  faTachometerAlt,
   faPlus,
   faMinus,
 } from '@fortawesome/pro-light-svg-icons'
+import { faTachometerAltSlowest } from '@fortawesome/pro-duotone-svg-icons'
 import * as React from 'react'
 import ETHIcon from '../assets/icons/crypto/eth.svg'
 import BTCIcon from '../assets/icons/crypto/btc.svg'
+import { FeeDetails } from '@liquality/types/lib/fees'
 
 export type DataElementType = {
   id: string
@@ -19,6 +20,7 @@ export type DataElementType = {
   color?: string
   assets?: Array<DataElementType>
   showAssets?: boolean
+  fees?: FeeDetails
 }
 
 const AssetFlatList = ({
@@ -37,7 +39,7 @@ const AssetFlatList = ({
   }
 
   const renderAsset = ({ item }: { item: DataElementType }) => {
-    const { name, address, balance, balanceInUSD } = item
+    const { name, address, balance, balanceInUSD, fees } = item
     const isNested = item.assets && item.assets.length > 0
 
     return (
@@ -91,13 +93,29 @@ const AssetFlatList = ({
                 Total {balanceInUSD} USD
               </Text>
               <View style={styles.gas}>
-                <FontAwesomeIcon
-                  size={20}
-                  icon={faTachometerAlt}
-                  color={'#9D4DFA'}
-                  style={styles.gasIcon}
-                />
-                <Text style={styles.gasLabel}>Gas</Text>
+                {fees?.slow?.fee && balance >= fees.slow.fee ? (
+                  <View style={styles.gas}>
+                    <FontAwesomeIcon
+                      size={20}
+                      icon={faTachometerAltSlowest}
+                      color={'#000'}
+                      secondaryColor={'#1CE5C3'}
+                      style={styles.gasIcon}
+                    />
+                    <Text style={styles.gasLabel}>Gas</Text>
+                  </View>
+                ) : (
+                  <View style={styles.getGas}>
+                    <FontAwesomeIcon
+                      size={20}
+                      icon={faTachometerAltSlowest}
+                      color={'#000'}
+                      secondaryColor={'#1CE5C3'}
+                      style={styles.gasIcon}
+                    />
+                    <Text style={styles.gasLabel}>Get Gas</Text>
+                  </View>
+                )}
               </View>
             </View>
           )}
@@ -217,6 +235,15 @@ const styles = StyleSheet.create({
   },
   gasIcon: {
     marginRight: 5,
+  },
+  getGas: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderRadius: 50,
+    borderColor: '#D9DFE5',
   },
 })
 

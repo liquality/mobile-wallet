@@ -54,12 +54,13 @@ const OverviewScreen = () => {
   const [data, setData] = useState<Array<DataElementType>>([])
   const [activityData] = useState<Array<ActivityDataElementType>>(activities)
 
-  const { accounts, walletId, activeNetwork, fiatRates } = useAppSelector(
+  const { accounts, walletId, activeNetwork, fiatRates, fees } = useAppSelector(
     (state) => ({
       accounts: state.accounts,
       walletId: state.activeWalletId,
       activeNetwork: state.activeNetwork,
       fiatRates: state.fiatRates,
+      fees: state.fees,
     }),
   )
 
@@ -92,13 +93,14 @@ const OverviewScreen = () => {
 
         const chainData: DataElementType = {
           id: account.chain,
-          name: account.chain,
+          name: account.name,
           address: account.addresses[0], //TODO why pick only the first address
           balance: 0,
           balanceInUSD: 0,
           color: account.color,
           assets: [],
           showAssets: false,
+          fees: fees?.[activeNetwork!][walletId!][account.chain],
         }
         const { total, assetsData } = Object.keys(account.balances!).reduce(
           (
@@ -144,7 +146,7 @@ const OverviewScreen = () => {
       setAssetCount(assetCounter)
       setData(accountData)
     }
-  }, [accounts, activeNetwork, walletId, fiatRates])
+  }, [accounts, activeNetwork, walletId, fiatRates, fees])
 
   return (
     <View style={styles.container}>
