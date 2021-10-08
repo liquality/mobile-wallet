@@ -1,9 +1,10 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faExchange, faSpinnerThird } from '@fortawesome/pro-duotone-svg-icons'
+import { faExchange } from '@fortawesome/pro-duotone-svg-icons'
 import { faGreaterThan } from '@fortawesome/pro-light-svg-icons'
 
 import * as React from 'react'
+import ProgressCircle from './progress-circle'
 
 export type ActivityDataElementType = {
   id: string
@@ -41,14 +42,12 @@ const ActivityFlatList = ({
           <Text style={styles.status}>{status}</Text>
         </View>
         <View style={styles.col4}>
-          <Pressable>
-            <FontAwesomeIcon
-              size={35}
-              icon={faSpinnerThird}
-              secondaryColor={'#2CD2CF'}
-              color={'#D5D8DD'}
-            />
-          </Pressable>
+          <ProgressCircle
+            size={35}
+            completed={2}
+            color={'#D5D8DD'}
+            secondaryColor={'#2CD2CF'}
+          />
         </View>
         <View style={styles.col5}>
           <Pressable>
