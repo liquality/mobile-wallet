@@ -51,13 +51,11 @@ const AssetScreen = ({ route }: AssetScreenProps) => {
         style={styles.overviewBlock}
         source={require('../../assets/bg/action-block-bg.png')}>
         <View style={styles.balance}>
-          <Text style={styles.balanceInUSD}>
-            ${formatFiat(balanceInUSD.dividedBy(10000000))}
-          </Text>
+          <Text style={styles.balanceInUSD}>${formatFiat(balanceInUSD)}</Text>
         </View>
         <View style={styles.balance}>
-          <Text style={styles.balanceInNative}>
-            {formatFiat(balance.dividedBy(1000000000))}
+          <Text style={styles.balanceInNative} numberOfLines={1}>
+            {formatFiat(balance)}
           </Text>
           <Text style={styles.nativeCurrency}>{name}</Text>
         </View>
@@ -218,6 +216,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'stretch',
     alignContent: 'stretch',
+    width: '50%',
     borderBottomWidth: 1,
     borderBottomColor: '#D9DFE5',
   },

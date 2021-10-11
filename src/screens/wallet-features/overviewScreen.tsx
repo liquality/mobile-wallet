@@ -164,8 +164,8 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
         style={styles.overviewBlock}
         source={require('../../assets/bg/action-block-bg.png')}>
         <View style={styles.totalValueSection}>
-          <Text style={styles.totalValue}>
-            {formatFiat(totalFiatBalance.dividedBy(100000000000000))}
+          <Text style={styles.totalValue} numberOfLines={1}>
+            {formatFiat(totalFiatBalance)}
           </Text>
           <Text style={styles.currency}>USD</Text>
         </View>
