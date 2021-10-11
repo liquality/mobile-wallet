@@ -11,13 +11,14 @@ import SeedPhraseScreen from '../screens/wallet-creation/seedPhraseScreen'
 import SeedPhraseConfirmationScreen from '../screens/wallet-creation/seedPhraseConfirmationScreen'
 import CongratulationsScreen from '../screens/wallet-creation/congratulationsScreen'
 import UnlockWalletScreen from '../screens/wallet-import/unlockWalletScreen'
-import LoginScreen from '../screens/wallet-creation/loginScreen'
 import LoadingScreen from '../screens/wallet-import/loadingScreen'
 import OverviewScreen from '../screens/wallet-features/overviewScreen'
-import OverviewHeaderLeft from './header-bar/overviewHeaderLeft'
-import OverviewHeaderRight from './header-bar/overviewHeaderRight'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import SettingsScreen from '../screens/wallet-features/settingsScreen'
+import AssetScreen from '../screens/wallet-features/asset-screen'
+import OverviewHeaderLeft from './header-bar/overviewHeaderLeft'
+import OverviewHeaderRight from './header-bar/overviewHeaderRight'
+import { HeaderBackButtonProps } from '@react-navigation/elements'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -68,7 +69,27 @@ export const WalletImportNavigator = () => (
   </OnboardingContext.Provider>
 )
 
-const MainTabNavigator = () => (
+export const AppStackNavigator = () => (
+  <Stack.Navigator
+    initialRouteName="OverviewScreen"
+    screenOptions={({ navigation, route }) => ({
+      headerShown: true,
+      title: '',
+      headerLeft: (props: HeaderBackButtonProps) => (
+        <OverviewHeaderLeft
+          includeBackBtn={!!props.canGoBack}
+          goBack={navigation.goBack}
+          screenTitle={route?.params?.screenTitle || 'Overview'}
+        />
+      ),
+      headerRight: () => <OverviewHeaderRight />,
+    })}>
+    <Stack.Screen name="OverviewScreen" component={OverviewScreen} />
+    <Stack.Screen name="AssetScreen" component={AssetScreen} />
+  </Stack.Navigator>
+)
+
+export const MainNavigator = () => (
   <Tab.Navigator
     initialRouteName="MainStackNavigator"
     screenOptions={({ route }) => ({
@@ -93,27 +114,13 @@ const MainTabNavigator = () => (
         )
       },
     })}>
-    <Tab.Screen name="OverviewScreen" component={OverviewScreen} />
-    <Tab.Screen name="SettingsScreen" component={SettingsScreen} />
-  </Tab.Navigator>
-)
-
-export const MainNavigator = () => (
-  <Stack.Navigator
-    initialRouteName="LoginScreen"
-    screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="LoginScreen" component={LoginScreen} />
-    <Stack.Screen
-      name="MainTabNavigator"
-      component={MainTabNavigator}
-      options={{
-        headerShown: true,
-        title: '',
-        headerLeft: () => <OverviewHeaderLeft />,
-        headerRight: () => <OverviewHeaderRight />,
-      }}
+    <Tab.Screen name="AppStackNavigator" component={AppStackNavigator} />
+    <Tab.Screen
+      name="SettingsScreen"
+      component={SettingsScreen}
+      options={{ headerShown: true, headerTitle: 'Settings' }}
     />
-  </Stack.Navigator>
+  </Tab.Navigator>
 )
 
 const styles = StyleSheet.create({

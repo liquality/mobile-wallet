@@ -13,13 +13,15 @@ import * as React from 'react'
 import ETHIcon from '../assets/icons/crypto/eth.svg'
 import BTCIcon from '../assets/icons/crypto/btc.svg'
 import { FeeDetails } from '@liquality/types/lib/fees'
+import BigNumber from 'bignumber.js'
+import { formatFiat, prettyBalance } from '../core/utils/coinFormatter'
 
 export type DataElementType = {
   id: string
   name: string
   address?: string
-  balance: number
-  balanceInUSD: number
+  balance: BigNumber
+  balanceInUSD: BigNumber
   color?: string
   assets?: Array<DataElementType>
   showAssets?: boolean
@@ -29,9 +31,11 @@ export type DataElementType = {
 const AssetFlatList = ({
   assets,
   toggleRow,
+  navigate,
 }: {
   assets: Array<DataElementType>
   toggleRow: (itemId: string) => void
+  navigate: (screen: string, params: any) => void
 }) => {
   const getAssetIcon = (asset: string) => {
     if (asset === 'eth' || asset === 'ethereum') {
@@ -63,7 +67,7 @@ const AssetFlatList = ({
                 />
               )}
             </Pressable>
-            {getAssetIcon(item.name)}
+            {getAssetIcon(item.id)}
           </View>
           <View style={styles.col2}>
             <Text style={styles.name}>{name}</Text>
@@ -75,8 +79,10 @@ const AssetFlatList = ({
           </View>
           {!isNested && (
             <View style={styles.col3}>
-              <Text style={styles.balance}>{balance}</Text>
-              <Text style={styles.balanceInUSD}>{balanceInUSD}</Text>
+              <Text style={styles.balance}>{formatFiat(balance)}</Text>
+              <Text style={styles.balanceInUSD}>
+                {formatFiat(balanceInUSD)}
+              </Text>
             </View>
           )}
           {!isNested && (
@@ -93,10 +99,10 @@ const AssetFlatList = ({
           {isNested && (
             <View style={styles.col3}>
               <Text style={styles.TotalBalanceInUSD}>
-                Total {balanceInUSD} USD
+                Total ${formatFiat(balanceInUSD)}
               </Text>
               <View style={styles.gas}>
-                {fees?.slow?.fee && balance >= fees.slow.fee ? (
+                {fees?.slow?.fee && balance.gte(fees.slow.fee) ? (
                   <View style={styles.gas}>
                     <FontAwesomeIcon
                       size={20}
@@ -133,13 +139,26 @@ const AssetFlatList = ({
                   <Text style={styles.name}>{subElem.name}</Text>
                 </View>
                 <View style={styles.col3}>
-                  <Text style={styles.balance}>{subElem.balance}</Text>
+                  <Text style={styles.balance}>
+                    {`${prettyBalance(subElem.balance, subElem.name)} ${
+                      subElem.name
+                    }`}
+                  </Text>
                   <Text style={styles.balanceInUSD}>
-                    {subElem.balanceInUSD}
+                    ${formatFiat(subElem.balanceInUSD)}
                   </Text>
                 </View>
                 <View style={styles.col4}>
-                  <Pressable>
+                  <Pressable
+                    onPress={() =>
+                      navigate('AssetScreen', {
+                        assetData: {
+                          ...subElem,
+                          address: item.address,
+                        },
+                        screenTitle: subElem.name,
+                      })
+                    }>
                     <FontAwesomeIcon
                       size={20}
                       icon={faGreaterThan}
@@ -156,7 +175,6 @@ const AssetFlatList = ({
 
   return (
     <FlatList
-      contentContainerStyle={styles.detailsBlock}
       data={assets}
       renderItem={renderAsset}
       keyExtractor={(item) => item.id}
@@ -165,9 +183,6 @@ const AssetFlatList = ({
 }
 
 const styles = StyleSheet.create({
-  detailsBlock: {
-    flex: 0.5,
-  },
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',

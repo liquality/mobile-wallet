@@ -60,7 +60,6 @@ const ActivityFlatList = ({
 
   return (
     <FlatList
-      contentContainerStyle={styles.detailsBlock}
       data={activities}
       renderItem={renderActivity}
       keyExtractor={(item) => item.id}
@@ -70,9 +69,6 @@ const ActivityFlatList = ({
 }
 
 const styles = StyleSheet.create({
-  detailsBlock: {
-    flex: 0.5,
-  },
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',

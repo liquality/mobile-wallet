@@ -11,7 +11,7 @@ type CongratulationsProps = StackScreenProps<
 
 const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
   useEffect(() => {
-    setTimeout(() => navigation.navigate('MainNavigator'), 3000)
+    setTimeout(() => navigation.navigate('LoginScreen'), 3000)
   })
 
   return (

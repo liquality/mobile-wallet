@@ -55,7 +55,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
         } else if (type === 'ERROR') {
           setError(payload.errorMessage)
         } else {
-          navigation.navigate('MainTabNavigator')
+          navigation.navigate('MainNavigator')
         }
       }, 1000)
     }

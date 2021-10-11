@@ -23,17 +23,17 @@ export const dpUI = (
 }
 
 export const prettyBalance = (
-  amount: number,
+  amount: BigNumber,
   coin: string,
   decimalPlaces: number = VALUE_DECIMALS,
-): BigNumber => {
+): string => {
   if (!amount || !coin) {
-    return new BigNumber(amount)
+    return '--'
   }
 
   const coinAsset = assets[coin] as Asset
-  const currency = new BigNumber(unitToCurrency(coinAsset, amount))
-  return dpUI(currency, decimalPlaces)
+  const currency = new BigNumber(unitToCurrency(coinAsset, amount.toNumber()))
+  return dpUI(currency, decimalPlaces).toString()
 }
 
 export const prettyFiatBalance = (amount: number, rate: number): string => {

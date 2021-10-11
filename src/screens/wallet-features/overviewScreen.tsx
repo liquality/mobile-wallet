@@ -23,6 +23,8 @@ import AssetFlatList, {
 import ActivityFlatList, {
   ActivityDataElementType,
 } from '../../components/activity-flat-list'
+import { StackScreenProps } from '@react-navigation/stack'
+import { RootStackParamList } from '../../types'
 
 const activities: Array<ActivityDataElementType> = [
   {
@@ -41,7 +43,9 @@ const activities: Array<ActivityDataElementType> = [
   },
 ]
 
-const OverviewScreen = () => {
+type OverviewProps = StackScreenProps<RootStackParamList, 'OverviewScreen'>
+
+const OverviewScreen = ({ navigation }: OverviewProps) => {
   enum ViewKind {
     ASSETS,
     ACTIVITY,
@@ -81,8 +85,9 @@ const OverviewScreen = () => {
 
   useEffect(() => {
     const accts = accounts?.[walletId!]?.[activeNetwork!]
+    let totalBalance = new BigNumber(0)
+
     if (accts && fiatRates) {
-      let totalBalance = 0
       let assetCounter = 0
       let accountData: Array<DataElementType> = []
 
@@ -95,8 +100,8 @@ const OverviewScreen = () => {
           id: account.chain,
           name: account.name,
           address: account.addresses[0], //TODO why pick only the first address
-          balance: 0,
-          balanceInUSD: 0,
+          balance: new BigNumber(0),
+          balanceInUSD: new BigNumber(0),
           color: account.color,
           assets: [],
           showAssets: false,
@@ -104,22 +109,27 @@ const OverviewScreen = () => {
         }
         const { total, assetsData } = Object.keys(account.balances!).reduce(
           (
-            acc: { total: number; assetsData: Array<DataElementType> },
+            acc: { total: BigNumber; assetsData: Array<DataElementType> },
             asset: string,
           ) => {
-            acc.total = acc.total + account.balances![asset] * fiatRates[asset]
+            acc.total = BigNumber.sum(
+              acc.total,
+              new BigNumber(account.balances![asset] * fiatRates[asset]),
+            )
             acc.assetsData.push({
               id: asset,
               name: asset,
-              balance: account.balances![asset],
-              balanceInUSD: account.balances![asset] * fiatRates[asset],
+              balance: new BigNumber(account.balances![asset]),
+              balanceInUSD: new BigNumber(
+                account.balances![asset] * fiatRates[asset],
+              ),
             })
             return acc
           },
-          { total: 0, assetsData: [] },
+          { total: new BigNumber(0), assetsData: [] },
         )
 
-        totalBalance += total
+        totalBalance = BigNumber.sum(totalBalance, total)
 
         assetCounter += Object.keys(account.balances!).reduce(
           (count: number, asset: string) =>
@@ -128,21 +138,21 @@ const OverviewScreen = () => {
         )
 
         chainData.balance = assetsData.reduce(
-          (totalBal: number, assetData: DataElementType): number =>
-            totalBal + assetData.balance,
-          0,
-        ) as number
+          (totalBal: BigNumber, assetData: DataElementType): BigNumber =>
+            BigNumber.sum(totalBal, assetData.balance),
+          new BigNumber(0),
+        )
 
         chainData.balanceInUSD = assetsData.reduce(
-          (totalBal: number, assetData: DataElementType) =>
-            totalBal + assetData.balanceInUSD,
-          0,
-        ) as number
+          (totalBal: BigNumber, assetData: DataElementType): BigNumber =>
+            BigNumber.sum(totalBal, assetData.balanceInUSD),
+          new BigNumber(0),
+        )
 
         chainData.assets?.push(...assetsData)
         accountData.push(chainData)
       }
-      setTotalFiatBalance(new BigNumber(totalBalance))
+      setTotalFiatBalance(totalBalance)
       setAssetCount(assetCounter)
       setData(accountData)
     }
@@ -154,7 +164,9 @@ const OverviewScreen = () => {
         style={styles.overviewBlock}
         source={require('../../assets/bg/action-block-bg.png')}>
         <View style={styles.totalValueSection}>
-          <Text style={styles.totalValue}>{formatFiat(totalFiatBalance)}</Text>
+          <Text style={styles.totalValue}>
+            {formatFiat(totalFiatBalance.dividedBy(100000000000000))}
+          </Text>
           <Text style={styles.currency}>USD</Text>
         </View>
         <Text style={styles.assets}>
@@ -195,7 +207,7 @@ const OverviewScreen = () => {
           </View>
         </View>
       </ImageBackground>
-      <View style={styles.header}>
+      <View style={styles.tabsBlock}>
         <Pressable
           style={[
             styles.leftHeader,
@@ -213,28 +225,43 @@ const OverviewScreen = () => {
           <Text style={styles.headerText}>ACTIVITY</Text>
         </Pressable>
       </View>
-      {selectedView === ViewKind.ACTIVITY && (
-        <ActivityFlatList activities={activityData}>
-          <View style={styles.activityActionBar}>
-            <Pressable style={styles.activityBtns}>
-              <FontAwesomeIcon
-                size={10}
-                icon={faGreaterThan}
-                color={'#A8AEB7'}
-              />
-              <Text style={styles.filterLabel}>Filter</Text>
-            </Pressable>
-            <Pressable style={styles.activityBtns}>
-              <FontAwesomeIcon size={10} icon={faArrowDown} color={'#A8AEB7'} />
-              <Text style={styles.exportLabel}>Export</Text>
-            </Pressable>
-          </View>
-        </ActivityFlatList>
-      )}
+      <View style={styles.contentBlock}>
+        {selectedView === ViewKind.ACTIVITY &&
+          (data.length > 0 ? (
+            <ActivityFlatList activities={activityData}>
+              <View style={styles.activityActionBar}>
+                <Pressable style={styles.activityBtns}>
+                  <FontAwesomeIcon
+                    size={10}
+                    icon={faGreaterThan}
+                    color={'#A8AEB7'}
+                  />
+                  <Text style={styles.filterLabel}>Filter</Text>
+                </Pressable>
+                <Pressable style={styles.activityBtns}>
+                  <FontAwesomeIcon
+                    size={10}
+                    icon={faArrowDown}
+                    color={'#A8AEB7'}
+                  />
+                  <Text style={styles.exportLabel}>Export</Text>
+                </Pressable>
+              </View>
+            </ActivityFlatList>
+          ) : (
+            <Text style={styles.noActivityMessageBlock}>
+              Once you start using your wallet you will see the activity here.
+            </Text>
+          ))}
 
-      {selectedView === ViewKind.ASSETS && (
-        <AssetFlatList assets={data} toggleRow={toggleRow} />
-      )}
+        {selectedView === ViewKind.ASSETS && (
+          <AssetFlatList
+            assets={data}
+            navigate={navigation.navigate}
+            toggleRow={toggleRow}
+          />
+        )}
+      </View>
     </View>
   )
 }
@@ -246,13 +273,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   overviewBlock: {
-    flex: 0.5,
+    flex: 0.3,
     justifyContent: 'center',
     width: '100%',
     paddingBottom: 20,
-  },
-  detailsBlock: {
-    flex: 0.5,
   },
   assets: {
     fontFamily: 'Montserrat-Regular',
@@ -291,7 +315,7 @@ const styles = StyleSheet.create({
   btnWrapper: {
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginHorizontal: 17,
+    marginHorizontal: 10,
   },
   btn: {
     alignItems: 'center',
@@ -313,13 +337,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     color: '#FFFFFF',
     fontWeight: '500',
-    fontSize: 17,
+    fontSize: 13,
     marginTop: 11,
   },
   smallIcon: {
     margin: 15,
   },
-  header: {
+  tabsBlock: {
     flexDirection: 'row',
     alignItems: 'stretch',
     alignContent: 'stretch',
@@ -367,6 +391,18 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     color: '#646F85',
     marginLeft: 5,
+  },
+  contentBlock: {
+    flex: 0.6,
+  },
+  noActivityMessageBlock: {
+    flex: 0.6,
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '400',
+    fontSize: 14,
+    marginHorizontal: 20,
+    marginTop: 15,
+    lineHeight: 20,
   },
 })
 

@@ -11,6 +11,7 @@ import {
   WalletImportNavigator,
   MainNavigator,
 } from './src/components/navigators'
+import LoginScreen from './src/screens/wallet-creation/loginScreen'
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
@@ -18,6 +19,7 @@ const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
       OnboardingNavigator,
       WalletImportNavigator,
       MainNavigator,
+      LoginScreen,
     },
     {
       initialRouteName,
@@ -40,7 +42,7 @@ const App = () => {
       if (!state || Object.keys(state).length === 0) {
         setInitialRouteName('OnboardingNavigator')
       } else {
-        setInitialRouteName('MainNavigator')
+        setInitialRouteName('LoginScreen')
       }
       SplashScreen.hide()
     })

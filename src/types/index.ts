@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from 'react'
+import { DataElementType } from '../components/asset-flat-list'
 
-type StackPayload = {
+export type StackPayload = {
   termsAcceptedAt?: number
   password?: string
   seedWords?: Array<SeedWordType>
@@ -9,6 +10,8 @@ type StackPayload = {
   seedPhrase?: string
   mnemonic?: string
   imported?: boolean
+  assetData: DataElementType
+  screenTitle: string
 }
 
 export type RootStackParamList = {
@@ -21,9 +24,10 @@ export type RootStackParamList = {
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   LoadingScreen: StackPayload
+  OverviewScreen: undefined
+  AssetScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
-  MainTabNavigator: undefined
 }
 
 export interface UseInputStateReturnType<T> {
