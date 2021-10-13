@@ -7,10 +7,10 @@ import {
   ImageBackground,
   ScrollView,
 } from 'react-native'
-import { RootStackParamList } from '../types'
+import { RootStackParamList } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import { ThemeContext } from '../theme'
-import Header from './header'
+import { ThemeContext } from '../../theme'
+import Header from '../header'
 type TermsProps = StackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation }: TermsProps) => {
@@ -20,7 +20,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
   return (
     <ImageBackground
       style={styles.container}
-      source={require('../assets/bg/bg.png')}>
+      source={require('../../assets/bg/bg.png')}>
       <Header showText={true} />
       <View style={styles.containerWrapper}>
         <ScrollView
@@ -83,7 +83,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
               navigation.navigate('PasswordCreationScreen', {
                 termsAcceptedAt: Date.now(),
                 previousScreen: 'Entry',
-                nextScreen: 'WalletBackupScreen',
+                nextScreen: 'SeedPhraseScreen',
               })
             }>
             <Text style={[theme.buttonText, styles.nextText]}>I Accept</Text>

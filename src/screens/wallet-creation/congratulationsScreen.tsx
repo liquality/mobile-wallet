@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Image, ImageBackground } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { RootStackParamList } from '../types'
-import Confetti from '../components/confetti'
+import { RootStackParamList } from '../../types'
+import Confetti from '../../components/confetti'
 
 type CongratulationsProps = StackScreenProps<
   RootStackParamList,
@@ -11,19 +11,19 @@ type CongratulationsProps = StackScreenProps<
 
 const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
   useEffect(() => {
-    setTimeout(() => navigation.navigate('MainNavigator'), 5000)
+    setTimeout(() => navigation.navigate('LoginScreen'), 3000)
   })
 
   return (
     <ImageBackground
       style={styles.container}
-      source={require('../assets/bg/bg.png')}>
+      source={require('../../assets/bg/bg.png')}>
       <Confetti />
       <View style={styles.message}>
         <Text style={styles.messageText}>Congrats!</Text>
         <Image
           style={styles.checkmark}
-          source={require('../assets/icons/checkmark.png')}
+          source={require('../../assets/icons/checkmark.png')}
         />
       </View>
     </ImageBackground>

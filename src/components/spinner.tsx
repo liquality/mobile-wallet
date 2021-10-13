@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import WebView from 'react-native-webview'
 
 const Spinner = ({
-  loadingText,
+  loadingText = '',
   visible,
 }: {
   loadingText: string
@@ -58,7 +58,7 @@ const Spinner = ({
           style={styles.webview}
         />
         <View style={styles.loadingView}>
-          <Text style={styles.loadingText}>Loading</Text>
+          <Text style={styles.loadingText}>Loading...</Text>
           <Text style={styles.loadingTextDetails}>{loadingText}</Text>
         </View>
       </View>

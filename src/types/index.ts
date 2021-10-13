@@ -1,24 +1,31 @@
 import { Dispatch, SetStateAction } from 'react'
+import { DataElementType } from '../components/asset-flat-list'
 
-type StackPayload = {
+export type StackPayload = {
   termsAcceptedAt?: number
   password?: string
   seedWords?: Array<SeedWordType>
   previousScreen?: keyof RootStackParamList
   nextScreen?: keyof RootStackParamList
   seedPhrase?: string
+  mnemonic?: string
+  imported?: boolean
+  assetData: DataElementType
+  screenTitle: string
 }
 
 export type RootStackParamList = {
   Entry: undefined
   TermsScreen: undefined
   PasswordCreationScreen: StackPayload
-  WalletBackupScreen: StackPayload
+  SeedPhraseScreen: StackPayload
   SeedPhraseConfirmationScreen: StackPayload
   CongratulationsScreen: undefined
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   LoadingScreen: StackPayload
+  OverviewScreen: undefined
+  AssetScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
 }

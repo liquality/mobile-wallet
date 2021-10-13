@@ -8,14 +8,10 @@ import {
   FlatList,
   Alert,
 } from 'react-native'
-import { RootStackParamList, SeedWordType } from '../types'
+import { RootStackParamList, SeedWordType } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import WalletManager from '../core/walletManager'
-import StorageManager from '../core/storageManager'
-import Spinner from '../components/spinner'
-import { ThemeContext } from '../theme'
-import Header from './header'
-import { useAppDispatch } from '../hooks'
+import { ThemeContext } from '../../theme'
+import Header from '../header'
 
 type SeedPhraseConfirmationProps = StackScreenProps<
   RootStackParamList,
@@ -54,12 +50,10 @@ const SeedPhraseConfirmationScreen = ({
   navigation,
 }: SeedPhraseConfirmationProps) => {
   const [chosenSeedWords, setChosenSeedWords] = useState<Array<string>>([])
-  const [spinnerActive, setSpinnerActive] = useState(false)
   const [shuffledSeedWords, setShuffledSeedWords] = useState<
     Array<SeedWordType>
   >([])
   const theme = useContext(ThemeContext)
-  const dispatch = useAppDispatch()
 
   const renderSeedWord = ({ item }: { item: SeedWordType }) => {
     return (
@@ -95,33 +89,10 @@ const SeedPhraseConfirmationScreen = ({
       Alert.alert('Key information missing', 'Please try again')
       return
     }
-    setSpinnerActive(true)
-    setTimeout(() => {
-      const wallet = {
-        mnemomnic: route.params.seedWords?.join(' ') || '',
-        imported: false,
-      }
-      const walletManager = new WalletManager(
-        wallet,
-        route.params.password || '',
-        new StorageManager(),
-      )
-      walletManager
-        .createWallet()
-        .catch(() => {
-          Alert.alert('Unable to create wallet', 'Please try again')
-        })
-        .then((data) => {
-          dispatch({
-            type: 'SETUP_WALLET',
-            payload: {
-              ...data,
-            },
-          })
-          setSpinnerActive(false)
-          navigation.navigate('CongratulationsScreen')
-        })
-    }, 1000)
+    navigation.navigate('LoadingScreen', {
+      mnemonic: route.params.seedWords?.join(' ') || '',
+      imported: false,
+    })
   }
 
   useEffect(() => {
@@ -133,8 +104,7 @@ const SeedPhraseConfirmationScreen = ({
   return (
     <ImageBackground
       style={styles.container}
-      source={require('../assets/bg/bg.png')}>
-      <Spinner loadingText={'Creating Wallet'} visible={spinnerActive} />
+      source={require('../../assets/bg/bg.png')}>
       <Header showText={true} />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Confirm Seed Phrase</Text>

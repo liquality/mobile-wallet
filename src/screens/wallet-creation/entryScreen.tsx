@@ -7,9 +7,9 @@ import {
   ImageBackground,
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { RootStackParamList } from '../types'
-import { ThemeContext } from '../theme'
-import Header from './header'
+import { RootStackParamList } from '../../types'
+import { ThemeContext } from '../../theme'
+import Header from '../header'
 
 type EntryProps = StackScreenProps<RootStackParamList, 'Entry'>
 
@@ -19,7 +19,7 @@ const Entry = ({ navigation }: EntryProps) => {
   return (
     <ImageBackground
       style={styles.container}
-      source={require('../assets/bg/bg.png')}>
+      source={require('../../assets/bg/bg.png')}>
       <Header width={135} height={83} style={styles.header} showText={false} />
       <View style={styles.description}>
         <Text style={styles.description1}>one</Text>

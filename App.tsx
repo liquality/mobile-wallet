@@ -7,11 +7,11 @@ import { Provider } from 'react-redux'
 import { store, hydrateStore } from './src/store'
 import { LiqualityThemeProvider } from './src/theme'
 import {
-  HomeNavigator,
   OnboardingNavigator,
   WalletImportNavigator,
   MainNavigator,
 } from './src/components/navigators'
+import LoginScreen from './src/screens/wallet-creation/loginScreen'
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
@@ -19,7 +19,7 @@ const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
       OnboardingNavigator,
       WalletImportNavigator,
       MainNavigator,
-      HomeNavigator,
+      LoginScreen,
     },
     {
       initialRouteName,
@@ -39,10 +39,10 @@ const App = () => {
 
   useEffect(() => {
     hydrateStore().then((state) => {
-      if (!state) {
+      if (!state || Object.keys(state).length === 0) {
         setInitialRouteName('OnboardingNavigator')
       } else {
-        setInitialRouteName('MainNavigator')
+        setInitialRouteName('LoginScreen')
       }
       SplashScreen.hide()
     })

@@ -1,5 +1,6 @@
 import _pbkdf2 from 'pbkdf2'
 import { enc as Enc, AES, lib as Lib } from 'crypto-js'
+import { EncryptionManagerI } from './types'
 
 const PBKDF2_ITERATIONS = 100000
 const PBKDF2_LENGTH = 32
@@ -11,13 +12,7 @@ interface CipherJsonType {
   s?: string
 }
 
-export default class EncryptionManager {
-  key: string
-
-  constructor(key: string) {
-    this.key = key
-  }
-
+export default class EncryptionManager implements EncryptionManagerI {
   public generateSalt(byteCount = 32): string {
     const view = new Uint8Array(byteCount)
     // @ts-ignore
@@ -27,9 +22,12 @@ export default class EncryptionManager {
     ).toString('base64')
   }
 
-  public async encrypt(value: string) {
+  public async encrypt(
+    value: string,
+    password: string,
+  ): Promise<{ encrypted: string; keySalt: string }> {
     const keySalt = this.generateSalt(16)
-    const derivedKey = await this.pbkdf2(this.key, keySalt)
+    const derivedKey = await this.pbkdf2(password, keySalt)
     const rawEncryptedValue = AES.encrypt(value, derivedKey)
     return {
       encrypted: this.JsonFormatter.stringify(rawEncryptedValue),
@@ -37,18 +35,22 @@ export default class EncryptionManager {
     }
   }
 
-  public async decrypt(encrypted: string, keySalt: string) {
+  public async decrypt(
+    encrypted: string,
+    keySalt: string,
+    password: string,
+  ): Promise<string> {
     if (!keySalt) {
-      return false
+      return ''
     }
 
     const encryptedValue = this.JsonFormatter.parse(encrypted)
     try {
-      const derivedKey = await this.pbkdf2(this.key, keySalt)
+      const derivedKey = await this.pbkdf2(password, keySalt)
       const decryptedValue = AES.decrypt(encryptedValue, derivedKey)
       return decryptedValue.toString(Enc.Utf8)
     } catch (e) {
-      return false
+      return ''
     }
   }
 
