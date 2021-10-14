@@ -75,6 +75,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           return {
             ...item,
             showAssets: !item.showAssets,
+            activeNetwork,
           }
         } else {
           return item

@@ -10,8 +10,8 @@ export type StackPayload = {
   seedPhrase?: string
   mnemonic?: string
   imported?: boolean
-  assetData: DataElementType
-  screenTitle: string
+  assetData?: DataElementType
+  screenTitle?: string
 }
 
 export type RootStackParamList = {
@@ -26,6 +26,7 @@ export type RootStackParamList = {
   LoadingScreen: StackPayload
   OverviewScreen: undefined
   AssetScreen: StackPayload
+  ReceiveScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
 }

@@ -15,6 +15,7 @@ import BTCIcon from '../assets/icons/crypto/btc.svg'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import BigNumber from 'bignumber.js'
 import { formatFiat, prettyBalance } from '../core/utils/coinFormatter'
+import { NetworkEnum } from '../core/config'
 
 export type DataElementType = {
   id: string
@@ -26,6 +27,7 @@ export type DataElementType = {
   assets?: Array<DataElementType>
   showAssets?: boolean
   fees?: FeeDetails
+  activeNetwork: NetworkEnum
 }
 
 const AssetFlatList = ({
@@ -38,7 +40,7 @@ const AssetFlatList = ({
   navigate: (screen: string, params: any) => void
 }) => {
   const getAssetIcon = (asset: string) => {
-    if (asset === 'eth' || asset === 'ethereum') {
+    if (asset.toLowerCase() === 'eth' || asset.toLowerCase() === 'ethereum') {
       return <ETHIcon width={28} height={28} />
     } else {
       return <BTCIcon width={28} height={28} />
@@ -51,11 +53,7 @@ const AssetFlatList = ({
 
     return (
       <View>
-        <View
-          style={[
-            styles.row,
-            { borderLeftColor: item.color, borderLeftWidth: 3 },
-          ]}>
+        <View style={[styles.row, { borderLeftColor: item.color }]}>
           <View style={styles.col1}>
             <Pressable onPress={() => toggleRow(item.id)}>
               {isNested && (
@@ -157,6 +155,7 @@ const AssetFlatList = ({
                           address: item.address,
                         },
                         screenTitle: subElem.name,
+                        activeNetwork: item.activeNetwork,
                       })
                     }>
                     <FontAwesomeIcon
@@ -188,6 +187,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     borderBottomWidth: 1,
     borderBottomColor: '#D9DFE5',
+    borderLeftWidth: 3,
     paddingVertical: 10,
   },
   col1: {

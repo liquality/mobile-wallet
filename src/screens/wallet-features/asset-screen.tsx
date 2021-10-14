@@ -40,10 +40,10 @@ const activities: Array<ActivityDataElementType> = [
 
 type AssetScreenProps = StackScreenProps<RootStackParamList, 'AssetScreen'>
 
-const AssetScreen = ({ route }: AssetScreenProps) => {
+const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const [activityData] = useState<Array<ActivityDataElementType>>(activities)
   const { name, address, balance, balanceInUSD }: DataElementType =
-    route.params.assetData
+    route.params.assetData!
 
   return (
     <View style={styles.container}>
@@ -88,7 +88,14 @@ const AssetScreen = ({ route }: AssetScreenProps) => {
             <Text style={styles.btnText}>Swap</Text>
           </View>
           <View style={styles.btnWrapper}>
-            <Pressable style={styles.btn}>
+            <Pressable
+              style={styles.btn}
+              onPress={() =>
+                navigation.navigate('ReceiveScreen', {
+                  assetData: route.params.assetData,
+                  screenTitle: `Receive ${name}`,
+                })
+              }>
               <FontAwesomeIcon
                 icon={faArrowDown}
                 size={20}
