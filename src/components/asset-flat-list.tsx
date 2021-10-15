@@ -27,7 +27,7 @@ export type DataElementType = {
   assets?: Array<DataElementType>
   showAssets?: boolean
   fees?: FeeDetails
-  activeNetwork: NetworkEnum
+  activeNetwork?: NetworkEnum
 }
 
 const AssetFlatList = ({

@@ -90,6 +90,7 @@ const SeedPhraseConfirmationScreen = ({
       return
     }
     navigation.navigate('LoadingScreen', {
+      ...route.params,
       mnemonic: route.params.seedWords?.join(' ') || '',
       imported: false,
     })

@@ -154,6 +154,7 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
     const activeWalletId = wallets[0].id
     //TODO update the enabledAsset dynamically
     return {
+      ...state,
       key: password,
       unlockedAt: Date.now(),
       wallets,

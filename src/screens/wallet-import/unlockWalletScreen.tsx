@@ -76,7 +76,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
       navigation.navigate('PasswordCreationScreen', {
         previousScreen: 'UnlockWalletScreen',
         nextScreen: 'LoadingScreen',
-        seedPhrase: chosenSeedWords.join(' ').trim(),
+        mnemonic: chosenSeedWords.join(' ').trim(),
         imported: true,
       })
     }

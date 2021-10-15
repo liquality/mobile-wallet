@@ -16,7 +16,7 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
   useEffect(() => {
     setTimeout(async () => {
       const wallet = {
-        mnemomnic: route.params.seedPhrase || '',
+        mnemomnic: route.params.mnemonic || '',
         imported: route.params.imported || false,
       }
 

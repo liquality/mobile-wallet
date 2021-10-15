@@ -33,6 +33,17 @@ describe('WalletManagerTest', () => {
     expect(newWallet.accounts).toBeTruthy()
   })
 
+  it('should be able to restore a wallet', async () => {
+    const newWallet = await walletManager.createWallet(wallet, PASSWORD)
+    delete newWallet.wallets
+    const retoredWallet = await walletManager.restoreWallet(PASSWORD, newWallet)
+
+    expect(retoredWallet.keySalt).toBeTruthy()
+    expect(retoredWallet.wallets).toBeTruthy()
+    expect(retoredWallet.encryptedWallets).toBeTruthy()
+    expect(retoredWallet.accounts).toBeTruthy()
+  })
+
   it('should generate 12 seed words', () => {
     const seedWords = WalletManager.generateSeedWords()
     expect(seedWords.length).toEqual(12)
