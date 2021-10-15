@@ -66,7 +66,14 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         </Text>
         <View style={styles.btnContainer}>
           <View style={styles.btnWrapper}>
-            <Pressable style={styles.btn}>
+            <Pressable
+              style={styles.btn}
+              onPress={() =>
+                navigation.navigate('SendScreen', {
+                  assetData: route.params.assetData,
+                  screenTitle: `Send ${name}`,
+                })
+              }>
               <FontAwesomeIcon
                 icon={faArrowUp}
                 color={'#9D4DFA'}

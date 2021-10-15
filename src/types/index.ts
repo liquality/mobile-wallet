@@ -27,6 +27,7 @@ export type RootStackParamList = {
   OverviewScreen: undefined
   AssetScreen: StackPayload
   ReceiveScreen: StackPayload
+  SendScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
 }
