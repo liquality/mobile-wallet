@@ -25,6 +25,7 @@ import ActivityFlatList, {
 } from '../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
+import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 
 const activities: Array<ActivityDataElementType> = [
   {
@@ -115,14 +116,23 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           ) => {
             acc.total = BigNumber.sum(
               acc.total,
-              new BigNumber(account.balances![asset] * fiatRates[asset]),
+              unitToCurrency(
+                cryptoassets[asset],
+                account.balances![asset],
+              ).times(fiatRates[asset]),
             )
+
             acc.assetsData.push({
               id: asset,
-              name: asset,
+              name: cryptoassets[asset].name,
+              code: asset,
+              chain: account.chain,
               balance: new BigNumber(account.balances![asset]),
               balanceInUSD: new BigNumber(
-                account.balances![asset] * fiatRates[asset],
+                unitToCurrency(
+                  cryptoassets[asset],
+                  account.balances![asset],
+                ).times(fiatRates[asset]),
               ),
             })
             return acc

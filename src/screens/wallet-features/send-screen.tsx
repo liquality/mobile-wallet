@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
+import { chains } from '@liquality/cryptoassets'
 import { StackScreenProps } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { RootStackParamList, UseInputStateReturnType } from '../../types'
@@ -7,7 +8,14 @@ import ETHIcon from '../../assets/icons/crypto/eth.svg'
 import BTCIcon from '../../assets/icons/crypto/btc.svg'
 import { faQrcode } from '@fortawesome/pro-light-svg-icons'
 import LiqualityButton from '../../components/button'
-import { prettyBalance } from '../../core/utils/coinFormatter'
+import { DataElementType } from '../../components/asset-flat-list'
+import { useAppSelector } from '../../hooks'
+import { NetworkEnum } from '../../core/config'
+import BigNumber from 'bignumber.js'
+import {
+  calculateAvailableAmnt,
+  calculateGasFee,
+} from '../../core/utils/fee-calculator'
 
 const useInputState = (
   initialValue: string,
@@ -19,10 +27,23 @@ const useInputState = (
 type SendScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
 
 const SendScreen = ({ navigation, route }: SendScreenProps) => {
+  const { code, balance, chain }: DataElementType = route.params.assetData!
+  const {
+    activeWalletId,
+    activeNetwork = NetworkEnum.Testnet,
+    fees,
+  } = useAppSelector((state) => ({
+    activeWalletId: state.activeWalletId,
+    activeNetwork: state.activeNetwork,
+    fees: state.fees,
+  }))
   const [speedMode, setSpeedMode] = useState('slow')
+  const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
+  const [availableAmount, setAvailableAmount] = useState<number>(0)
   const [error, setError] = useState('')
   const amountInput = useInputState('')
-  const { balance, name } = route.params.assetData
+  const addressInput = useInputState('')
+
   const getAssetIcon = (asset: string) => {
     if (asset.toLowerCase() === 'eth' || asset.toLowerCase() === 'ethereum') {
       return <ETHIcon width={28} height={28} />
@@ -30,6 +51,60 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       return <BTCIcon width={28} height={28} />
     }
   }
+
+  const isNumber = (value: string): boolean => {
+    return /^\d+(.\d+)?$/.test(value)
+  }
+
+  const validate = (): boolean => {
+    if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
+      setError('Enter a valid amount')
+      return false
+    } else if (new BigNumber(amountInput.value).gt(balance)) {
+      setError('Lower amount. This exceeds available balance.')
+      return false
+    } else if (!chain || !chains[chain].isValidAddress(addressInput.value)) {
+      setError('Wrong format. Please check the address.')
+      return false
+    }
+
+    return true
+  }
+
+  useEffect(() => {
+    if (!fees || !activeNetwork || !activeWalletId || !chain) {
+      setError('Please refresh your wallet')
+      return
+    }
+
+    const gasFee = calculateGasFee(
+      code,
+      fees[activeNetwork][activeWalletId][chain][speedMode]?.fee,
+    )
+
+    if (!gasFee) {
+      setError('Please refresh your wallet')
+      return
+    }
+
+    setFee(new BigNumber(gasFee))
+    setAvailableAmount(calculateAvailableAmnt(code, gasFee, balance.toNumber()))
+  }, [code, speedMode, fees, activeWalletId, activeNetwork, chain, balance])
+
+  const handleReviewPress = () => {
+    if (validate()) {
+      navigation.navigate('SendReviewScreen', {
+        screenTitle: `Send ${code} Review`,
+        sendTransaction: {
+          amount: new BigNumber(amountInput.value),
+          gasFee: fee!,
+          destinationAddress: addressInput.value,
+          asset: code,
+        },
+      })
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.headerBlock}>
@@ -51,26 +126,34 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
               returnKeyType="done"
             />
             <View style={styles.asset}>
-              {getAssetIcon('eth')}
-              <Text style={styles.assetName}>ETH</Text>
+              {getAssetIcon(code)}
+              <Text style={styles.assetName}>{code}</Text>
             </View>
           </View>
-          {!!error && <Text style={styles.error}>{error}</Text>}
           <View style={styles.row}>
             <View style={styles.balanceTextWrapper}>
               <Text style={styles.availableBalanceLabel}>Available</Text>
               <Text style={styles.availableBalance}>
-                {prettyBalance(balance, name)} {name}
+                {availableAmount} {code}
               </Text>
             </View>
-            <Pressable style={styles.maxBtn}>
+            <Pressable
+              style={styles.maxBtn}
+              onPress={() => amountInput.onChangeText(balance.toString())}>
               <Text style={styles.maxLabel}>Max</Text>
             </Pressable>
           </View>
           <View style={styles.sendToWrapper}>
             <Text>SEND TO</Text>
             <View style={styles.row}>
-              <TextInput style={styles.sendToInput} />
+              <TextInput
+                style={styles.sendToInput}
+                onChangeText={addressInput.onChangeText}
+                onFocus={() => setError('')}
+                value={addressInput.value}
+                autoCorrect={false}
+                returnKeyType="done"
+              />
               <FontAwesomeIcon icon={faQrcode} />
             </View>
           </View>
@@ -80,10 +163,12 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       <View style={styles.contentBlock}>
         <View style={styles.row}>
           <Text style={styles.speedLabel}>NETWORK SPEED/FEE</Text>
-          <Text style={styles.speedValue}>({speedMode} / 0.000002 BTC)</Text>
+          <Text style={styles.speedValue}>
+            {`(${speedMode} / ${fee} ${code})`}
+          </Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.speedAssetName}>ETH</Text>
+          <Text style={styles.speedAssetName}>{code}</Text>
           <View style={styles.speedBtnsWrapper}>
             <Pressable
               style={[
@@ -132,6 +217,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
           </View>
           <Text style={styles.customFee}>Custom</Text>
         </View>
+        {!!error && <Text style={styles.error}>{error}</Text>}
       </View>
       <View style={styles.actionBlock}>
         <View style={styles.row}>
@@ -147,7 +233,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
             textColor={'#FFFFFF'}
             backgroundColor={'#9D4DFA'}
             width={152}
-            action={() => ({})}
+            action={handleReviewPress}
           />
         </View>
       </View>
@@ -320,13 +406,12 @@ const styles = StyleSheet.create({
     color: '#9D4DFA',
   },
   error: {
-    fontFamily: 'Montserrat-Light',
+    fontFamily: 'Montserrat-Regular',
     color: '#F12274',
     fontSize: 12,
     backgroundColor: '#FFF',
     textAlignVertical: 'center',
     marginTop: 5,
-    paddingLeft: 5,
     paddingVertical: 5,
     height: 25,
   },

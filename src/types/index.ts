@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from 'react'
 import { DataElementType } from '../components/asset-flat-list'
+import BigNumber from 'bignumber.js'
 
 export type StackPayload = {
   termsAcceptedAt?: number
@@ -12,6 +13,12 @@ export type StackPayload = {
   imported?: boolean
   assetData?: DataElementType
   screenTitle?: string
+  sendTransaction?: {
+    amount: BigNumber
+    gasFee: BigNumber
+    destinationAddress: string
+    asset: string
+  }
 }
 
 export type RootStackParamList = {
@@ -28,6 +35,7 @@ export type RootStackParamList = {
   AssetScreen: StackPayload
   ReceiveScreen: StackPayload
   SendScreen: StackPayload
+  SendReviewScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
 }

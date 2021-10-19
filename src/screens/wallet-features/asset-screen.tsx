@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native'
-import { formatFiat } from '../../core/utils/coinFormatter'
+import { formatFiat, prettyBalance } from '../../core/utils/coinFormatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import ActivityFlatList, {
   ActivityDataElementType,
@@ -42,7 +42,7 @@ type AssetScreenProps = StackScreenProps<RootStackParamList, 'AssetScreen'>
 
 const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const [activityData] = useState<Array<ActivityDataElementType>>(activities)
-  const { name, address, balance, balanceInUSD }: DataElementType =
+  const { code, address, balance, balanceInUSD }: DataElementType =
     route.params.assetData!
 
   return (
@@ -55,9 +55,9 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         </View>
         <View style={styles.balance}>
           <Text style={styles.balanceInNative} numberOfLines={1}>
-            {formatFiat(balance)}
+            {prettyBalance(balance, code)}
           </Text>
-          <Text style={styles.nativeCurrency}>{name}</Text>
+          <Text style={styles.nativeCurrency}>{code}</Text>
         </View>
         <Text style={styles.address}>
           {`${address?.substring(0, 4)}...${address?.substring(
@@ -71,7 +71,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
               onPress={() =>
                 navigation.navigate('SendScreen', {
                   assetData: route.params.assetData,
-                  screenTitle: `Send ${name}`,
+                  screenTitle: `Send ${code}`,
                 })
               }>
               <FontAwesomeIcon
@@ -100,7 +100,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
               onPress={() =>
                 navigation.navigate('ReceiveScreen', {
                   assetData: route.params.assetData,
-                  screenTitle: `Receive ${name}`,
+                  screenTitle: `Receive ${code}`,
                 })
               }>
               <FontAwesomeIcon

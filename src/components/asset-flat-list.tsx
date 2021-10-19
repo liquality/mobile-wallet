@@ -16,10 +16,13 @@ import { FeeDetails } from '@liquality/types/lib/fees'
 import BigNumber from 'bignumber.js'
 import { formatFiat, prettyBalance } from '../core/utils/coinFormatter'
 import { NetworkEnum } from '../core/config'
+import { ChainId } from '@liquality/cryptoassets/src/types'
 
 export type DataElementType = {
   id: string
   name: string
+  code: string
+  chain?: ChainId
   address?: string
   balance: BigNumber
   balanceInUSD: BigNumber
@@ -48,7 +51,7 @@ const AssetFlatList = ({
   }
 
   const renderAsset = ({ item }: { item: DataElementType }) => {
-    const { name, address, balance, balanceInUSD, fees } = item
+    const { code, address, balance, balanceInUSD, fees } = item
     const isNested = item.assets && item.assets.length > 0
 
     return (
@@ -68,7 +71,7 @@ const AssetFlatList = ({
             {getAssetIcon(item.id)}
           </View>
           <View style={styles.col2}>
-            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.code}>{code}</Text>
             <Text style={styles.address}>
               {`${address?.substring(0, 4)}...${address?.substring(
                 address?.length - 4,
@@ -131,15 +134,21 @@ const AssetFlatList = ({
           item.showAssets &&
           item.assets!.map((subElem) => {
             return (
-              <View style={[styles.row, styles.subElement]} key={subElem.id}>
-                <View style={styles.col1}>{getAssetIcon(subElem.name)}</View>
+              <View
+                style={[
+                  styles.row,
+                  styles.subElement,
+                  { borderLeftColor: item.color },
+                ]}
+                key={subElem.id}>
+                <View style={styles.col1}>{getAssetIcon(subElem.code)}</View>
                 <View style={styles.col2}>
-                  <Text style={styles.name}>{subElem.name}</Text>
+                  <Text style={styles.code}>{subElem.name}</Text>
                 </View>
                 <View style={styles.col3}>
                   <Text style={styles.balance}>
-                    {`${prettyBalance(subElem.balance, subElem.name)} ${
-                      subElem.name
+                    {`${prettyBalance(subElem.balance, subElem.code)} ${
+                      subElem.code
                     }`}
                   </Text>
                   <Text style={styles.balanceInUSD}>
@@ -154,7 +163,7 @@ const AssetFlatList = ({
                           ...subElem,
                           address: item.address,
                         },
-                        screenTitle: subElem.name,
+                        screenTitle: subElem.code,
                         activeNetwork: item.activeNetwork,
                       })
                     }>
@@ -216,7 +225,7 @@ const styles = StyleSheet.create({
   subElement: {
     paddingLeft: 50,
   },
-  name: {
+  code: {
     fontFamily: 'Montserrat-Regular',
     color: '#000',
     fontSize: 12,

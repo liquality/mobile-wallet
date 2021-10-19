@@ -21,6 +21,7 @@ import OverviewHeaderRight from './header-bar/overviewHeaderRight'
 import { HeaderBackButtonProps } from '@react-navigation/elements'
 import ReceiveScreen from '../screens/wallet-features/receive-screen'
 import SendScreen from '../screens/wallet-features/send-screen'
+import SendReviewScreen from '../screens/wallet-features/send-review-screen'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -90,6 +91,7 @@ export const AppStackNavigator = () => (
     <Stack.Screen name="AssetScreen" component={AssetScreen} />
     <Stack.Screen name="ReceiveScreen" component={ReceiveScreen} />
     <Stack.Screen name="SendScreen" component={SendScreen} />
+    <Stack.Screen name="SendReviewScreen" component={SendReviewScreen} />
   </Stack.Navigator>
 )
 
