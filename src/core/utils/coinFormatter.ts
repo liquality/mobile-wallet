@@ -4,7 +4,7 @@ import { Asset } from '@liquality/cryptoassets/dist/src/types'
 
 export const VALUE_DECIMALS = 6
 
-//TODO It is not clear on how we should format amounts
+//TODO It is not clear how we should format amounts
 export const dp = (amount: number, coin: string) => {
   if (!amount) {
     return amount

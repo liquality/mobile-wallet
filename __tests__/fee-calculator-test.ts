@@ -18,24 +18,24 @@ describe('fee-calculator', () => {
 
   it('calculateAvailableAmnt: should calculate available amount', () => {
     expect(calculateAvailableAmnt('ETH', 2.34, 14979979875164946000)).toEqual(
-      12.639979875164945,
+      '12.639979',
     )
   })
 
   it('calculateAvailableAmnt: should calculate available amount for ERC20', () => {
     expect(calculateAvailableAmnt('ZAP', 2.34, 14979979875164946000)).toEqual(
-      14.979979875164945,
+      '14.979979',
     )
   })
 
   it('calculateAvailableAmnt: should throw error for negative fees', () => {
-    expect(() => calculateAvailableAmnt('ETH', -123, 1123) === 1000).toThrow(
+    expect(() => calculateAvailableAmnt('ETH', -123, 1123)).toThrow(
       'Invalid arguments',
     )
   })
 
   it('calculateAvailableAmnt: should throw error for invalid asset', () => {
-    expect(() => calculateAvailableAmnt('BLA', 123, 1123) === 1000).toThrow(
+    expect(() => calculateAvailableAmnt('BLA', 123, 1123)).toThrow(
       'Invalid asset name',
     )
   })

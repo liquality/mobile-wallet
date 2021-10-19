@@ -6,6 +6,7 @@ import {
   isEthereumChain,
   unitToCurrency,
 } from '@liquality/cryptoassets'
+import { prettyBalance } from './coinFormatter'
 
 const isERC20 = (asset: string) => {
   return cryptoassets[asset]?.type === 'erc20'
@@ -61,7 +62,7 @@ export const calculateAvailableAmnt = (
   _asset: string,
   _feePrice: number,
   _balance: number,
-): number => {
+): string => {
   if (!_asset || !_feePrice || _feePrice <= 0) {
     throw new Error('Invalid arguments')
   }
@@ -71,7 +72,7 @@ export const calculateAvailableAmnt = (
   }
 
   if (isERC20(_asset)) {
-    return unitToCurrency(cryptoassets[_asset], _balance).toNumber()
+    return prettyBalance(new BigNumber(_balance), _asset)
   } else {
     const available = BigNumber.max(
       new BigNumber(_balance).minus(
@@ -80,6 +81,6 @@ export const calculateAvailableAmnt = (
       0,
     )
 
-    return unitToCurrency(cryptoassets[_asset], available.toNumber()).toNumber()
+    return prettyBalance(available, _asset)
   }
 }

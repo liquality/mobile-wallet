@@ -16,6 +16,7 @@ import {
   calculateAvailableAmnt,
   calculateGasFee,
 } from '../../core/utils/fee-calculator'
+import { cryptoToFiat, fiatToCrypto } from '../../core/utils/coinFormatter'
 
 const useInputState = (
   initialValue: string,
@@ -32,14 +33,19 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     activeWalletId,
     activeNetwork = NetworkEnum.Testnet,
     fees,
+    fiatRates,
   } = useAppSelector((state) => ({
     activeWalletId: state.activeWalletId,
     activeNetwork: state.activeNetwork,
     fees: state.fees,
+    fiatRates: state.fiatRates,
   }))
-  const [speedMode, setSpeedMode] = useState('slow')
+  const [speedMode, setSpeedMode] = useState('average')
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
-  const [availableAmount, setAvailableAmount] = useState<number>(0)
+  const [availableAmount, setAvailableAmount] = useState<string>('')
+  const [amountInFiat, setAmountInFiat] = useState<number>(0)
+  const [amountInNative, setAmountInNative] = useState<number>(0)
+  const [showAmountsInFiat, setShowAmountsInFiat] = useState<boolean>(false)
   const [error, setError] = useState('')
   const amountInput = useInputState('')
   const addressInput = useInputState('')
@@ -105,26 +111,71 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     }
   }
 
+  const handleFiatBtnPress = () => {
+    if (showAmountsInFiat) {
+      amountInput.onChangeText(`${amountInNative}`)
+    } else {
+      amountInput.onChangeText(`${amountInFiat}`)
+    }
+    setShowAmountsInFiat(!showAmountsInFiat)
+  }
+
+  const handleOnChangeText = (text: string): void => {
+    if (!isNumber(text)) {
+      setError('Invalid amount.')
+      return
+    }
+    if (showAmountsInFiat) {
+      setAmountInNative(
+        fiatToCrypto(new BigNumber(text), fiatRates[code]).toNumber(),
+      )
+      setAmountInFiat(new BigNumber(text).toNumber())
+    } else {
+      setAmountInFiat(
+        cryptoToFiat(
+          new BigNumber(text).toNumber(),
+          fiatRates[code],
+        ).toNumber(),
+      )
+      setAmountInNative(new BigNumber(text).toNumber())
+    }
+    amountInput.onChangeText(text)
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.headerBlock}>
         <View style={styles.sendWrapper}>
           <View style={styles.row}>
             <Text>SEND</Text>
-            <Pressable style={styles.amountInFiatBtn}>
-              <Text style={styles.amountInFiat}>$0.00</Text>
+            <Pressable
+              style={[
+                styles.amountInFiatBtn,
+                showAmountsInFiat && styles.nativeStyle,
+              ]}
+              onPress={handleFiatBtnPress}>
+              <Text style={styles.amountBtnText}>
+                {showAmountsInFiat
+                  ? `${amountInNative} ${code}`
+                  : `$${amountInFiat}`}
+              </Text>
             </Pressable>
           </View>
           <View style={styles.row}>
-            <TextInput
-              style={styles.sendInput}
-              keyboardType={'numeric'}
-              onChangeText={amountInput.onChangeText}
-              onFocus={() => setError('')}
-              value={amountInput.value}
-              autoCorrect={false}
-              returnKeyType="done"
-            />
+            <View style={styles.sendInputCurrencyWrapper}>
+              <Text style={styles.sendInputCurrency}>
+                {showAmountsInFiat ? '$' : code}
+              </Text>
+              <TextInput
+                style={styles.sendInput}
+                keyboardType={'numeric'}
+                onChangeText={handleOnChangeText}
+                onFocus={() => setError('')}
+                value={amountInput.value}
+                autoCorrect={false}
+                returnKeyType="done"
+              />
+            </View>
             <View style={styles.asset}>
               {getAssetIcon(code)}
               <Text style={styles.assetName}>{code}</Text>
@@ -139,7 +190,9 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
             </View>
             <Pressable
               style={styles.maxBtn}
-              onPress={() => amountInput.onChangeText(balance.toString())}>
+              onPress={() =>
+                amountInput.onChangeText(availableAmount.toString())
+              }>
               <Text style={styles.maxLabel}>Max</Text>
             </Pressable>
           </View>
@@ -272,21 +325,36 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     paddingHorizontal: 10,
   },
-  amountInFiat: {
+  amountBtnText: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 18,
   },
+  nativeStyle: {
+    borderColor: '#38FFFB',
+  },
+  sendInputCurrencyWrapper: {
+    flexDirection: 'row',
+    width: '80%',
+    borderBottomColor: '#38FFFB',
+    borderBottomWidth: 1,
+  },
   sendInput: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
     fontSize: 28,
-    textAlign: 'right',
-    borderBottomColor: '#38FFFB',
-    borderBottomWidth: 1,
-    width: '80%',
+    textAlign: 'left',
     lineHeight: 40,
+    height: 40,
+    color: '#EAB300',
+  },
+  sendInputCurrency: {
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '300',
+    fontSize: 28,
+    textAlign: 'left',
+    lineHeight: 50,
     height: 40,
     color: '#EAB300',
   },
