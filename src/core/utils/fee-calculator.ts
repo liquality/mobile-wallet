@@ -49,7 +49,9 @@ export const calculateGasFee = (_asset: string, _feePrice: number): number => {
   return unitToCurrency(
     cryptoassets[nativeAsset],
     new BigNumber(feeUnit).times(feePrice).toNumber(),
-  ).toNumber()
+  )
+    .dp(6)
+    .toNumber()
 }
 
 /**

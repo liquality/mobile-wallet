@@ -4,9 +4,11 @@ import { chains } from '@liquality/cryptoassets'
 import { StackScreenProps } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { RootStackParamList, UseInputStateReturnType } from '../../types'
-import ETHIcon from '../../assets/icons/crypto/eth.svg'
-import BTCIcon from '../../assets/icons/crypto/btc.svg'
-import { faQrcode } from '@fortawesome/pro-light-svg-icons'
+import {
+  faAngleDown,
+  faAngleRight,
+  faQrcode,
+} from '@fortawesome/pro-light-svg-icons'
 import LiqualityButton from '../../components/button'
 import { DataElementType } from '../../components/asset-flat-list'
 import { useAppSelector } from '../../hooks'
@@ -17,6 +19,7 @@ import {
   calculateGasFee,
 } from '../../core/utils/fee-calculator'
 import { cryptoToFiat, fiatToCrypto } from '../../core/utils/coinFormatter'
+import AssetIcon from '../../components/asset-icon'
 
 const useInputState = (
   initialValue: string,
@@ -40,6 +43,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     fees: state.fees,
     fiatRates: state.fiatRates,
   }))
+  const [showFeeOptions, setShowFeeOptions] = useState(false)
   const [speedMode, setSpeedMode] = useState('average')
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
@@ -49,14 +53,6 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
   const [error, setError] = useState('')
   const amountInput = useInputState('')
   const addressInput = useInputState('')
-
-  const getAssetIcon = (asset: string) => {
-    if (asset.toLowerCase() === 'eth' || asset.toLowerCase() === 'ethereum') {
-      return <ETHIcon width={28} height={28} />
-    } else {
-      return <BTCIcon width={28} height={28} />
-    }
-  }
 
   const isNumber = (value: string): boolean => {
     return /^\d+(.\d+)?$/.test(value)
@@ -142,6 +138,17 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     amountInput.onChangeText(text)
   }
 
+  const handleFeeOptionsPress = () => {
+    setShowFeeOptions(!showFeeOptions)
+  }
+
+  const handleCustomPress = () => {
+    navigation.navigate('CustomFeeScreen', {
+      assetData: route.params.assetData,
+      screenTitle: 'NETWORK SPEED/FEE',
+    })
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.headerBlock}>
@@ -154,7 +161,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
                 showAmountsInFiat && styles.nativeStyle,
               ]}
               onPress={handleFiatBtnPress}>
-              <Text style={styles.amountBtnText}>
+              <Text style={styles.amount}>
                 {showAmountsInFiat
                   ? `${amountInNative} ${code}`
                   : `$${amountInFiat}`}
@@ -167,7 +174,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
                 {showAmountsInFiat ? '$' : code}
               </Text>
               <TextInput
-                style={styles.sendInput}
+                style={[styles.sendInputCurrency, styles.sendInput]}
                 keyboardType={'numeric'}
                 onChangeText={handleOnChangeText}
                 onFocus={() => setError('')}
@@ -177,14 +184,14 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
               />
             </View>
             <View style={styles.asset}>
-              {getAssetIcon(code)}
+              <AssetIcon asset={code} />
               <Text style={styles.assetName}>{code}</Text>
             </View>
           </View>
           <View style={styles.row}>
             <View style={styles.balanceTextWrapper}>
               <Text style={styles.availableBalanceLabel}>Available</Text>
-              <Text style={styles.availableBalance}>
+              <Text style={styles.amount}>
                 {availableAmount} {code}
               </Text>
             </View>
@@ -215,61 +222,73 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       </View>
       <View style={styles.contentBlock}>
         <View style={styles.row}>
+          <Pressable
+            onPress={handleFeeOptionsPress}
+            style={styles.feeOptionsButton}>
+            <FontAwesomeIcon
+              icon={showFeeOptions ? faAngleDown : faAngleRight}
+              size={20}
+            />
+          </Pressable>
           <Text style={styles.speedLabel}>NETWORK SPEED/FEE</Text>
           <Text style={styles.speedValue}>
             {`(${speedMode} / ${fee} ${code})`}
           </Text>
         </View>
-        <View style={styles.row}>
-          <Text style={styles.speedAssetName}>{code}</Text>
-          <View style={styles.speedBtnsWrapper}>
-            <Pressable
-              style={[
-                styles.speedBtn,
-                styles.speedLeftBtn,
-                speedMode === 'slow' && styles.speedBtnSelected,
-              ]}
-              onPress={() => setSpeedMode('slow')}>
-              <Text
+        {showFeeOptions && (
+          <View style={[styles.row, styles.speedOptions]}>
+            <Text style={styles.speedAssetName}>{code}</Text>
+            <View style={styles.speedBtnsWrapper}>
+              <Pressable
                 style={[
-                  styles.speedBtnLabel,
-                  speedMode === 'slow' && styles.speedTxtSelected,
-                ]}>
-                Slow
-              </Text>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.speedBtn,
-                speedMode === 'average' && styles.speedBtnSelected,
-              ]}
-              onPress={() => setSpeedMode('average')}>
-              <Text
+                  styles.speedBtn,
+                  styles.speedLeftBtn,
+                  speedMode === 'slow' && styles.speedBtnSelected,
+                ]}
+                onPress={() => setSpeedMode('slow')}>
+                <Text
+                  style={[
+                    styles.speedBtnLabel,
+                    speedMode === 'slow' && styles.speedTxtSelected,
+                  ]}>
+                  Slow
+                </Text>
+              </Pressable>
+              <Pressable
                 style={[
-                  styles.speedBtnLabel,
-                  speedMode === 'average' && styles.speedTxtSelected,
-                ]}>
-                Average
-              </Text>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.speedBtn,
-                styles.speedRightBtn,
-                speedMode === 'fast' && styles.speedBtnSelected,
-              ]}
-              onPress={() => setSpeedMode('fast')}>
-              <Text
+                  styles.speedBtn,
+                  speedMode === 'average' && styles.speedBtnSelected,
+                ]}
+                onPress={() => setSpeedMode('average')}>
+                <Text
+                  style={[
+                    styles.speedBtnLabel,
+                    speedMode === 'average' && styles.speedTxtSelected,
+                  ]}>
+                  Average
+                </Text>
+              </Pressable>
+              <Pressable
                 style={[
-                  styles.speedBtnLabel,
-                  speedMode === 'fast' && styles.speedTxtSelected,
-                ]}>
-                Fast
-              </Text>
+                  styles.speedBtn,
+                  styles.speedRightBtn,
+                  speedMode === 'fast' && styles.speedBtnSelected,
+                ]}
+                onPress={() => setSpeedMode('fast')}>
+                <Text
+                  style={[
+                    styles.speedBtnLabel,
+                    speedMode === 'fast' && styles.speedTxtSelected,
+                  ]}>
+                  Fast
+                </Text>
+              </Pressable>
+            </View>
+            <Pressable onPress={handleCustomPress}>
+              <Text style={styles.customFee}>Custom</Text>
             </Pressable>
           </View>
-          <Text style={styles.customFee}>Custom</Text>
-        </View>
+        )}
         {!!error && <Text style={styles.error}>{error}</Text>}
       </View>
       <View style={styles.actionBlock}>
@@ -325,7 +344,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     paddingHorizontal: 10,
   },
-  amountBtnText: {
+  amount: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '400',
     fontSize: 12,
@@ -347,16 +366,12 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     lineHeight: 40,
     height: 40,
+    width: '100%',
     color: '#EAB300',
   },
   sendInputCurrency: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    fontSize: 28,
-    textAlign: 'left',
     lineHeight: 50,
     height: 40,
-    color: '#EAB300',
   },
   asset: {
     flexDirection: 'row',
@@ -391,12 +406,6 @@ const styles = StyleSheet.create({
     color: '#646F85',
     marginRight: 5,
   },
-  availableBalance: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    fontSize: 12,
-    lineHeight: 15,
-  },
   sendToWrapper: {
     marginTop: 40,
   },
@@ -408,6 +417,11 @@ const styles = StyleSheet.create({
   },
   contentBlock: {
     flex: 0.3,
+  },
+  speedOptions: {
+    alignSelf: 'center',
+    width: '70%',
+    alignItems: 'center',
   },
   speedLabel: {
     alignSelf: 'flex-start',
@@ -472,6 +486,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 15,
     color: '#9D4DFA',
+  },
+  feeOptionsButton: {
+    justifyContent: 'flex-start',
+    marginLeft: -5,
   },
   error: {
     fontFamily: 'Montserrat-Regular',

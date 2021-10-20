@@ -10,13 +10,12 @@ import {
   faTachometerAltSlowest,
 } from '@fortawesome/pro-duotone-svg-icons'
 import * as React from 'react'
-import ETHIcon from '../assets/icons/crypto/eth.svg'
-import BTCIcon from '../assets/icons/crypto/btc.svg'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import BigNumber from 'bignumber.js'
 import { formatFiat, prettyBalance } from '../core/utils/coinFormatter'
 import { NetworkEnum } from '../core/config'
 import { ChainId } from '@liquality/cryptoassets/src/types'
+import AssetIcon from './asset-icon'
 
 export type DataElementType = {
   id: string
@@ -42,14 +41,6 @@ const AssetFlatList = ({
   toggleRow: (itemId: string) => void
   navigate: (screen: string, params: any) => void
 }) => {
-  const getAssetIcon = (asset: string) => {
-    if (asset.toLowerCase() === 'eth' || asset.toLowerCase() === 'ethereum') {
-      return <ETHIcon width={28} height={28} />
-    } else {
-      return <BTCIcon width={28} height={28} />
-    }
-  }
-
   const renderAsset = ({ item }: { item: DataElementType }) => {
     const { code, address, balance, balanceInUSD, fees } = item
     const isNested = item.assets && item.assets.length > 0
@@ -68,7 +59,7 @@ const AssetFlatList = ({
                 />
               )}
             </Pressable>
-            {getAssetIcon(item.id)}
+            <AssetIcon asset={item.id} />
           </View>
           <View style={styles.col2}>
             <Text style={styles.code}>{code}</Text>
@@ -141,7 +132,9 @@ const AssetFlatList = ({
                   { borderLeftColor: item.color },
                 ]}
                 key={subElem.id}>
-                <View style={styles.col1}>{getAssetIcon(subElem.code)}</View>
+                <View style={styles.col1}>
+                  <AssetIcon asset={subElem.code} />
+                </View>
                 <View style={styles.col2}>
                   <Text style={styles.code}>{subElem.name}</Text>
                 </View>

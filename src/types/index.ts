@@ -13,6 +13,7 @@ export type StackPayload = {
   imported?: boolean
   assetData?: DataElementType
   screenTitle?: string
+  customFee?: number
   sendTransaction?: {
     amount: BigNumber
     gasFee: BigNumber
@@ -36,6 +37,7 @@ export type RootStackParamList = {
   ReceiveScreen: StackPayload
   SendScreen: StackPayload
   SendReviewScreen: StackPayload
+  CustomFeeScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
 }

@@ -45,6 +45,20 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const { code, address, balance, balanceInUSD }: DataElementType =
     route.params.assetData!
 
+  const handleSendPress = () => {
+    navigation.navigate('SendScreen', {
+      assetData: route.params.assetData,
+      screenTitle: `Send ${code}`,
+    })
+  }
+
+  const handleReceivePress = () => {
+    navigation.navigate('ReceiveScreen', {
+      assetData: route.params.assetData,
+      screenTitle: `Receive ${code}`,
+    })
+  }
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -66,14 +80,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         </Text>
         <View style={styles.btnContainer}>
           <View style={styles.btnWrapper}>
-            <Pressable
-              style={styles.btn}
-              onPress={() =>
-                navigation.navigate('SendScreen', {
-                  assetData: route.params.assetData,
-                  screenTitle: `Send ${code}`,
-                })
-              }>
+            <Pressable style={styles.btn} onPress={handleSendPress}>
               <FontAwesomeIcon
                 icon={faArrowUp}
                 color={'#9D4DFA'}
@@ -95,14 +102,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             <Text style={styles.btnText}>Swap</Text>
           </View>
           <View style={styles.btnWrapper}>
-            <Pressable
-              style={styles.btn}
-              onPress={() =>
-                navigation.navigate('ReceiveScreen', {
-                  assetData: route.params.assetData,
-                  screenTitle: `Receive ${code}`,
-                })
-              }>
+            <Pressable style={styles.btn} onPress={handleReceivePress}>
               <FontAwesomeIcon
                 icon={faArrowDown}
                 size={20}

@@ -5,9 +5,9 @@ import { Asset } from '@liquality/cryptoassets/dist/src/types'
 export const VALUE_DECIMALS = 6
 
 //TODO It is not clear how we should format amounts
-export const dp = (amount: number, coin: string) => {
+export const dp = (amount: number, coin: string): BigNumber => {
   if (!amount) {
-    return amount
+    return new BigNumber(amount)
   }
   return new BigNumber(amount).dp(assets[coin].decimals)
 }

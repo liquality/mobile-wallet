@@ -11,14 +11,12 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClone, faCheck } from '@fortawesome/pro-light-svg-icons'
-
-import ETHIcon from '../../assets/icons/crypto/eth.svg'
-import BTCIcon from '../../assets/icons/crypto/btc.svg'
 import { DataElementType } from '../../components/asset-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
 import { NetworkEnum } from '../../core/config'
 import LiqualityButton from '../../components/button'
+import AssetIcon from '../../components/asset-icon'
 
 type ReceiveScreenProps = StackScreenProps<RootStackParamList, 'ReceiveScreen'>
 
@@ -67,15 +65,6 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
     )
   }
 
-  //TODO move this to a shared module
-  const getAssetIcon = (asset: string) => {
-    if (asset.toLowerCase() === 'eth' || asset.toLowerCase() === 'ethereum') {
-      return <ETHIcon width={28} height={28} />
-    } else {
-      return <BTCIcon width={28} height={28} />
-    }
-  }
-
   const handleLinkPress = (url: string) => {
     Linking.canOpenURL(url).then((supported) => {
       if (supported) {
@@ -92,7 +81,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerBlock}>
-        <View>{getAssetIcon(name)}</View>
+        <AssetIcon asset={name} />
         <Text style={styles.addressLabel}>
           Your current ETH/Rinkbey address
         </Text>
@@ -130,7 +119,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
           action={navigation.goBack}
         />
         <LiqualityButton
-          text={'Copy Address'}
+          text={buttonPressed ? 'Copied!' : 'Copy Address'}
           textColor={'#FFFFFF'}
           backgroundColor={'#9D4DFA'}
           width={150}
