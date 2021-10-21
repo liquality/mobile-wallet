@@ -6,7 +6,7 @@ import {
   isEthereumChain,
   unitToCurrency,
 } from '@liquality/cryptoassets'
-import { prettyBalance } from './coinFormatter'
+import { prettyBalance } from './coin-formatter'
 
 const isERC20 = (asset: string) => {
   return cryptoassets[asset]?.type === 'erc20'

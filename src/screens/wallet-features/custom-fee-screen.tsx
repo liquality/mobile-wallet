@@ -1,23 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import LiqualityButton from '../../components/button'
 import { NetworkEnum } from '../../core/config'
 import { useAppSelector } from '../../hooks'
 import { DataElementType } from '../../components/asset-flat-list'
 import { FeeDetail } from '@liquality/types/lib/fees'
-import { cryptoToFiat, formatFiat } from '../../core/utils/coinFormatter'
+import { cryptoToFiat, formatFiat } from '../../core/utils/coin-formatter'
 import { calculateGasFee } from '../../core/utils/fee-calculator'
 import AssetIcon from '../../components/asset-icon'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
+import { ChainId } from '@liquality/cryptoassets'
 
 type CustomFeeScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
 
 const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const [customFee, setCustomFee] = useState<number>(123)
-  const { code, chain }: DataElementType = route.params.assetData!
+  const { code, chain = ChainId.Ethereum }: DataElementType =
+    route.params.assetData!
   const {
-    activeWalletId,
+    activeWalletId = '',
     activeNetwork = NetworkEnum.Testnet,
     fees,
     fiatRates,
@@ -35,6 +37,10 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     })
   }
 
+  useEffect(() => {
+    fees?.[activeNetwork]?.[activeWalletId]?.[chain]
+  })
+
   return (
     <View style={styles.container}>
       <View>
@@ -46,7 +52,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
           <Text style={styles.label}>PRESETS</Text>
           <View style={styles.row}>
             {Object.entries<FeeDetail>(
-              fees[activeNetwork][activeWalletId][chain],
+              fees?.[activeNetwork]?.[activeWalletId]?.[chain],
             ).map(([speed, feeDetail], index) => {
               return (
                 <View style={[styles.col, index === 1 && styles.middleCol]}>

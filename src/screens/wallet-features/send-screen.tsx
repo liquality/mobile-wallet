@@ -18,7 +18,7 @@ import {
   calculateAvailableAmnt,
   calculateGasFee,
 } from '../../core/utils/fee-calculator'
-import { cryptoToFiat, fiatToCrypto } from '../../core/utils/coinFormatter'
+import { cryptoToFiat, fiatToCrypto } from '../../core/utils/coin-formatter'
 import AssetIcon from '../../components/asset-icon'
 
 const useInputState = (
@@ -44,7 +44,9 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     fiatRates: state.fiatRates,
   }))
   const [showFeeOptions, setShowFeeOptions] = useState(false)
-  const [speedMode, setSpeedMode] = useState('average')
+  const [speedMode, setSpeedMode] = useState<'slow' | 'average' | 'fast'>(
+    'average',
+  )
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
@@ -121,6 +123,12 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       setError('Invalid amount.')
       return
     }
+
+    if (!fiatRates) {
+      setError('Fiat rates missing!')
+      return
+    }
+
     if (showAmountsInFiat) {
       setAmountInNative(
         fiatToCrypto(new BigNumber(text), fiatRates[code]).toNumber(),
@@ -227,10 +235,10 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
             style={styles.feeOptionsButton}>
             <FontAwesomeIcon
               icon={showFeeOptions ? faAngleDown : faAngleRight}
-              size={20}
+              size={15}
             />
+            <Text style={styles.speedLabel}>NETWORK SPEED/FEE</Text>
           </Pressable>
-          <Text style={styles.speedLabel}>NETWORK SPEED/FEE</Text>
           <Text style={styles.speedValue}>
             {`(${speedMode} / ${fee} ${code})`}
           </Text>
@@ -428,14 +436,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontWeight: '700',
     fontSize: 12,
-    lineHeight: 16,
   },
   speedValue: {
     alignSelf: 'flex-start',
     fontFamily: 'Montserrat-Regular',
     fontWeight: '400',
     fontSize: 12,
-    lineHeight: 16,
   },
   speedBtnsWrapper: {
     flexDirection: 'row',
@@ -488,8 +494,9 @@ const styles = StyleSheet.create({
     color: '#9D4DFA',
   },
   feeOptionsButton: {
-    justifyContent: 'flex-start',
-    marginLeft: -5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   error: {
     fontFamily: 'Montserrat-Regular',

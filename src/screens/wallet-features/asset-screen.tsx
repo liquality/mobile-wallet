@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native'
-import { formatFiat, prettyBalance } from '../../core/utils/coinFormatter'
+import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import ActivityFlatList, {
   ActivityDataElementType,

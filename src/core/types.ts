@@ -53,13 +53,14 @@ export type EnabledAssetType = {
   }
 }
 
-export type FeeType = {
-  [network in NetworkEnum]?: {
+export type FeeType = Record<
+  NetworkEnum,
+  {
     [walletId: string]: {
       [asset: string]: FeeDetails
     }
   }
-}
+>
 
 export interface AccountType {
   name: string

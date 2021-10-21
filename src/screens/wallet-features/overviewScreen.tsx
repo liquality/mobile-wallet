@@ -15,7 +15,7 @@ import {
 import { faGreaterThan } from '@fortawesome/pro-light-svg-icons'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../../hooks'
-import { formatFiat } from '../../core/utils/coinFormatter'
+import { formatFiat } from '../../core/utils/coin-formatter'
 import BigNumber from 'bignumber.js'
 import AssetFlatList, {
   DataElementType,

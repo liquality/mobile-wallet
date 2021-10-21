@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
 import LiqualityButton from '../../components/button'
-import { prettyFiatBalance } from '../../core/utils/coinFormatter'
+import { prettyFiatBalance } from '../../core/utils/coin-formatter'
 import { useAppSelector } from '../../hooks'
 
 type SendReviewScreenProps = StackScreenProps<
