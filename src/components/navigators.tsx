@@ -23,8 +23,10 @@ import ReceiveScreen from '../screens/wallet-features/receive-screen'
 import SendScreen from '../screens/wallet-features/send-screen'
 import SendReviewScreen from '../screens/wallet-features/send-review-screen'
 import CustomFeeScreen from '../screens/wallet-features/custom-fee-screen'
+import SendConfirmationScreen from '../screens/wallet-features/send-confirmation-screen'
+import { RootStackParamList } from '../types'
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
 
 export const OnboardingContext = createContext({})
@@ -94,6 +96,10 @@ export const AppStackNavigator = () => (
     <Stack.Screen name="SendScreen" component={SendScreen} />
     <Stack.Screen name="SendReviewScreen" component={SendReviewScreen} />
     <Stack.Screen name="CustomFeeScreen" component={CustomFeeScreen} />
+    <Stack.Screen
+      name="SendConfirmationScreen"
+      component={SendConfirmationScreen}
+    />
   </Stack.Navigator>
 )
 

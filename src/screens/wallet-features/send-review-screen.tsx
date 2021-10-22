@@ -13,21 +13,25 @@ type SendReviewScreenProps = StackScreenProps<
 
 const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
   const { asset, destinationAddress, gasFee, amount } =
-    route.params.sendTransaction
+    route.params.sendTransaction || {}
   const [rate, setRate] = useState<number>(0)
   const [error, setError] = useState('')
   const { fiatRates } = useAppSelector((state) => ({
     fiatRates: state.fiatRates,
   }))
 
-  const handleSendPress = () => {}
+  const handleSendPress = () => {
+    navigation.navigate('SendConfirmationScreen', {
+      screenTitle: `SEND ${route.params.assetData?.code}`,
+    })
+  }
 
   const handleEditPress = () => {
     navigation.goBack()
   }
 
   useEffect(() => {
-    if (!fiatRates || !fiatRates[asset]) {
+    if (!fiatRates || !asset || !fiatRates[asset]) {
       setError('Rates not available')
     } else {
       setRate(fiatRates[asset])
@@ -40,33 +44,32 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <Text style={styles.sendLabel}>SEND</Text>
         <View style={styles.row}>
           <Text style={styles.amountInNative}>
-            {`${amount.dp(6)} ${asset}`}
+            {amount && `${amount.dp(6)} ${asset}`}
           </Text>
-          <Text style={styles.amountInFiat}>{`$${prettyFiatBalance(
-            amount.toNumber(),
-            rate,
-          )}`}</Text>
+          <Text style={styles.amountInFiat}>
+            {amount && `$${prettyFiatBalance(amount.toNumber(), rate)}`}
+          </Text>
         </View>
         <Text style={styles.feeLabel}>NETWORK FEE</Text>
         <View style={styles.row}>
-          <Text style={styles.feeAmountInNative}>{`${gasFee.dp(
-            6,
-          )} ${asset}`}</Text>
-          <Text style={styles.feeAmountInFiat}>{`$${prettyFiatBalance(
-            gasFee.toNumber(),
-            rate,
-          )}`}</Text>
+          <Text style={styles.feeAmountInNative}>
+            {gasFee && `${gasFee.dp(6)} ${asset}`}
+          </Text>
+          <Text style={styles.feeAmountInFiat}>
+            {gasFee && `$${prettyFiatBalance(gasFee.toNumber(), rate)}`}
+          </Text>
         </View>
 
         <Text style={styles.totalLabel}>AMOUNT + FEES</Text>
         <View style={styles.row}>
-          <Text style={styles.totalAmount}>{`${amount
-            .plus(gasFee)
-            .dp(6)} ${asset}`}</Text>
-          <Text style={styles.totalAmount}>{`$${prettyFiatBalance(
-            amount.plus(gasFee).toNumber(),
-            rate,
-          )}`}</Text>
+          <Text style={styles.totalAmount}>
+            {amount && gasFee && `${amount.plus(gasFee).dp(6)} ${asset}`}
+          </Text>
+          <Text style={styles.totalAmount}>
+            {amount &&
+              gasFee &&
+              `$${prettyFiatBalance(amount.plus(gasFee).toNumber(), rate)}`}
+          </Text>
         </View>
 
         <Text style={[styles.sendLabel, styles.sendToLabel]}>SEND TO</Text>

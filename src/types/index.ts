@@ -15,10 +15,10 @@ export type StackPayload = {
   screenTitle?: string
   customFee?: number
   sendTransaction?: {
-    amount: BigNumber
-    gasFee: BigNumber
-    destinationAddress: string
-    asset: string
+    amount?: BigNumber
+    gasFee?: BigNumber
+    destinationAddress?: string
+    asset?: string
   }
 }
 
@@ -37,6 +37,7 @@ export type RootStackParamList = {
   ReceiveScreen: StackPayload
   SendScreen: StackPayload
   SendReviewScreen: StackPayload
+  SendConfirmationScreen: StackPayload
   CustomFeeScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined

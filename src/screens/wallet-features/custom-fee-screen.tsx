@@ -4,7 +4,7 @@ import LiqualityButton from '../../components/button'
 import { NetworkEnum } from '../../core/config'
 import { useAppSelector } from '../../hooks'
 import { DataElementType } from '../../components/asset-flat-list'
-import { FeeDetail } from '@liquality/types/lib/fees'
+import { FeeDetails } from '@liquality/types/lib/fees'
 import { cryptoToFiat, formatFiat } from '../../core/utils/coin-formatter'
 import { calculateGasFee } from '../../core/utils/fee-calculator'
 import AssetIcon from '../../components/asset-icon'
@@ -16,6 +16,8 @@ type CustomFeeScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
 
 const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const [customFee, setCustomFee] = useState<number>(123)
+  const [gasFees, setGasFees] = useState<FeeDetails>()
+  const [error, setError] = useState('')
   const { code, chain = ChainId.Ethereum }: DataElementType =
     route.params.assetData!
   const {
@@ -38,8 +40,14 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   }
 
   useEffect(() => {
-    fees?.[activeNetwork]?.[activeWalletId]?.[chain]
-  })
+    const _feeDetails = fees?.[activeNetwork]?.[activeWalletId]?.[chain]
+    if (!_feeDetails) {
+      setError('Gas fees missing')
+      return
+    }
+
+    setGasFees(_feeDetails)
+  }, [fees, activeWalletId, activeNetwork, chain])
 
   return (
     <View style={styles.container}>
@@ -51,22 +59,31 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
           </View>
           <Text style={styles.label}>PRESETS</Text>
           <View style={styles.row}>
-            {Object.entries<FeeDetail>(
-              fees?.[activeNetwork]?.[activeWalletId]?.[chain],
-            ).map(([speed, feeDetail], index) => {
+            {['slow', 'average', 'fast'].map((speed, index) => {
               return (
-                <View style={[styles.col, index === 1 && styles.middleCol]}>
+                <View
+                  style={[styles.col, index === 1 && styles.middleCol]}
+                  key={speed}>
                   <Text style={[styles.preset, styles.speed]}>{speed}</Text>
                   <Text style={[styles.preset, styles.amount]}>
-                    {`${calculateGasFee(code, feeDetail.fee)} ${code}`}
+                    {gasFees &&
+                      `${calculateGasFee(
+                        code,
+                        gasFees[speed as keyof FeeDetails].fee,
+                      )} ${code}`}
                   </Text>
                   <Text style={[styles.preset, styles.fiat]}>
-                    {`${formatFiat(
-                      cryptoToFiat(
-                        calculateGasFee(code, feeDetail.fee),
-                        fiatRates[code],
-                      ).toNumber(),
-                    )} USD`}
+                    {fiatRates &&
+                      gasFees &&
+                      `${formatFiat(
+                        cryptoToFiat(
+                          calculateGasFee(
+                            code,
+                            gasFees[speed as keyof FeeDetails].fee,
+                          ),
+                          fiatRates[code],
+                        ).toNumber(),
+                      )} USD`}
                   </Text>
                 </View>
               )
@@ -96,6 +113,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
           <Text style={[styles.preset, styles.fiat]}>0.12 USD</Text>
         </View>
       </View>
+      {!!error && <Text style={styles.error}>{error}</Text>}
 
       <View style={[styles.block, styles.row, styles.actions]}>
         <LiqualityButton
@@ -192,6 +210,16 @@ const styles = StyleSheet.create({
   },
   actions: {
     justifyContent: 'space-around',
+  },
+  error: {
+    fontFamily: 'Montserrat-Regular',
+    color: '#F12274',
+    fontSize: 12,
+    backgroundColor: '#FFF',
+    textAlignVertical: 'center',
+    marginTop: 5,
+    paddingVertical: 5,
+    height: 25,
   },
 })
 
