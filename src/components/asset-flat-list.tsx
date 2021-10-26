@@ -20,11 +20,11 @@ import AssetIcon from './asset-icon'
 export type DataElementType = {
   id: string
   name: string
-  code: string
+  code?: string
   chain?: ChainId
   address?: string
-  balance: BigNumber
-  balanceInUSD: BigNumber
+  balance?: BigNumber
+  balanceInUSD?: BigNumber
   color?: string
   assets?: Array<DataElementType>
   showAssets?: boolean
@@ -71,9 +71,11 @@ const AssetFlatList = ({
           </View>
           {!isNested && (
             <View style={styles.col3}>
-              <Text style={styles.balance}>{formatFiat(balance)}</Text>
+              <Text style={styles.balance}>
+                {balance && formatFiat(balance)}
+              </Text>
               <Text style={styles.balanceInUSD}>
-                {formatFiat(balanceInUSD)}
+                {balanceInUSD && formatFiat(balanceInUSD)}
               </Text>
             </View>
           )}
@@ -91,10 +93,10 @@ const AssetFlatList = ({
           {isNested && (
             <View style={styles.col3}>
               <Text style={styles.TotalBalanceInUSD}>
-                Total ${formatFiat(balanceInUSD)}
+                Total ${balanceInUSD && formatFiat(balanceInUSD)}
               </Text>
               <View style={styles.gas}>
-                {fees?.slow?.fee && balance.gte(fees.slow.fee) ? (
+                {fees?.slow?.fee && balance && balance.gte(fees.slow.fee) ? (
                   <View style={styles.gas}>
                     <FontAwesomeIcon
                       size={20}
@@ -140,12 +142,14 @@ const AssetFlatList = ({
                 </View>
                 <View style={styles.col3}>
                   <Text style={styles.balance}>
-                    {`${prettyBalance(subElem.balance, subElem.code)} ${
-                      subElem.code
-                    }`}
+                    {subElem.balance &&
+                      subElem.code &&
+                      `${prettyBalance(subElem.balance, subElem.code)} ${
+                        subElem.code
+                      }`}
                   </Text>
                   <Text style={styles.balanceInUSD}>
-                    ${formatFiat(subElem.balanceInUSD)}
+                    ${subElem.balanceInUSD && formatFiat(subElem.balanceInUSD)}
                   </Text>
                 </View>
                 <View style={styles.col4}>

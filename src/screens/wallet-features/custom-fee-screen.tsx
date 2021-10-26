@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
 import LiqualityButton from '../../components/button'
 import { NetworkEnum } from '../../core/config'
 import { useAppSelector } from '../../hooks'
@@ -9,13 +9,20 @@ import { cryptoToFiat, formatFiat } from '../../core/utils/coin-formatter'
 import { calculateGasFee } from '../../core/utils/fee-calculator'
 import AssetIcon from '../../components/asset-icon'
 import { StackScreenProps } from '@react-navigation/stack'
-import { RootStackParamList } from '../../types'
+import { RootStackParamList, UseInputStateReturnType } from '../../types'
 import { ChainId } from '@liquality/cryptoassets'
 
 type CustomFeeScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
+type SpeedMode = keyof FeeDetails
+const useInputState = (
+  initialValue: string,
+): UseInputStateReturnType<string> => {
+  const [value, setValue] = useState<string>(initialValue)
+  return { value, onChangeText: setValue }
+}
 
 const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
-  const [customFee, setCustomFee] = useState<number>(123)
+  const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
   const [gasFees, setGasFees] = useState<FeeDetails>()
   const [error, setError] = useState('')
   const { code, chain = ChainId.Ethereum }: DataElementType =
@@ -31,11 +38,14 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     fees: state.fees,
     fiatRates: state.fiatRates,
   }))
+  const customFeeInput = useInputState(
+    `${fees?.[activeNetwork]?.[activeWalletId]?.[chain].average.fee || '0'}`,
+  )
 
   const handleApplyPress = () => {
     navigation.navigate('SendScreen', {
       assetData: route.params.assetData,
-      customFee,
+      customFee: parseFloat(customFeeInput.value),
     })
   }
 
@@ -49,6 +59,13 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     setGasFees(_feeDetails)
   }, [fees, activeWalletId, activeNetwork, chain])
 
+  if (!gasFees) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    )
+  }
   return (
     <View style={styles.container}>
       <View>
@@ -57,60 +74,107 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
             <AssetIcon asset={code} />
             <Text style={styles.asset}>ETH</Text>
           </View>
-          <Text style={styles.label}>PRESETS</Text>
+          <Text style={[styles.label, styles.headerLabel]}>PRESETS</Text>
           <View style={styles.row}>
-            {['slow', 'average', 'fast'].map((speed, index) => {
-              return (
-                <View
-                  style={[styles.col, index === 1 && styles.middleCol]}
-                  key={speed}>
-                  <Text style={[styles.preset, styles.speed]}>{speed}</Text>
-                  <Text style={[styles.preset, styles.amount]}>
-                    {gasFees &&
-                      `${calculateGasFee(
-                        code,
-                        gasFees[speed as keyof FeeDetails].fee,
-                      )} ${code}`}
-                  </Text>
-                  <Text style={[styles.preset, styles.fiat]}>
-                    {fiatRates &&
-                      gasFees &&
-                      `${formatFiat(
-                        cryptoToFiat(
-                          calculateGasFee(
-                            code,
-                            gasFees[speed as keyof FeeDetails].fee,
-                          ),
-                          fiatRates[code],
-                        ).toNumber(),
-                      )} USD`}
-                  </Text>
-                </View>
-              )
-            })}
+            {gasFees &&
+              Object.keys(gasFees).map((speed, index) => {
+                return (
+                  <Pressable
+                    style={[
+                      styles.col,
+                      index === 1 && styles.middleCol,
+                      speed === speedMode && styles.selected,
+                    ]}
+                    key={speed}
+                    onPress={() => {
+                      setSpeedMode(speed as SpeedMode)
+                      if (gasFees && code) {
+                        customFeeInput.onChangeText(
+                          gasFees[speed as SpeedMode].fee.toString(),
+                        )
+                      }
+                    }}>
+                    <Text style={[styles.preset, styles.speed]}>{speed}</Text>
+                    <Text style={[styles.preset, styles.amount]}>
+                      {gasFees &&
+                        code &&
+                        `${calculateGasFee(
+                          code,
+                          gasFees[speed as keyof FeeDetails].fee,
+                        )} ${code}`}
+                    </Text>
+                    <Text style={[styles.preset, styles.fiat]}>
+                      {fiatRates &&
+                        gasFees &&
+                        code &&
+                        `${formatFiat(
+                          cryptoToFiat(
+                            calculateGasFee(
+                              code,
+                              gasFees[speed as keyof FeeDetails].fee,
+                            ),
+                            fiatRates[code],
+                          ).toNumber(),
+                        )} USD`}
+                    </Text>
+                  </Pressable>
+                )
+              })}
           </View>
         </View>
 
         <View style={styles.block}>
-          <Text style={styles.label}>CUSTOMIZED SETTINGS</Text>
+          <Text style={[styles.label, styles.headerLabel]}>
+            CUSTOMIZED SETTINGS
+          </Text>
           <View style={styles.row}>
             <Text style={styles.label}>Gas Price</Text>
-            <Text style={styles.fiat}> 0.12 USD</Text>
+            <Text style={styles.fiat}>
+              {code &&
+                fiatRates &&
+                parseFloat(customFeeInput.value) > 0 &&
+                `$${formatFiat(
+                  cryptoToFiat(
+                    calculateGasFee(code, parseFloat(customFeeInput.value)),
+                    fiatRates[code],
+                  ).toNumber(),
+                )}`}
+            </Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.inputLabel}>GWEI</Text>
-            <View style={styles.gasInput}>
-              <Text style={styles.gasInput} onPress={() => setCustomFee(123)}>
-                123
-              </Text>
-            </View>
+            <TextInput
+              style={styles.gasInput}
+              onChangeText={customFeeInput.onChangeText}
+              value={customFeeInput.value}
+              autoCorrect={false}
+              autoCapitalize={'none'}
+              returnKeyType="done"
+            />
           </View>
         </View>
 
         <View style={[styles.block, styles.summary]}>
           <Text style={[styles.preset, styles.speed]}>New Speed/Fee</Text>
-          <Text style={[styles.preset, styles.amount]}>0.0000032 {code}</Text>
-          <Text style={[styles.preset, styles.fiat]}>0.12 USD</Text>
+          <Text style={[styles.preset, styles.amount]}>
+            {code &&
+              parseFloat(customFeeInput.value) > 0 &&
+              `${calculateGasFee(
+                code,
+                parseFloat(customFeeInput.value),
+              )} ${code}`}
+          </Text>
+          <Text style={[styles.preset, styles.fiat]}>
+            {code &&
+              fiatRates &&
+              parseFloat(customFeeInput.value) > 0 &&
+              `$${formatFiat(
+                cryptoToFiat(
+                  calculateGasFee(code, parseFloat(customFeeInput.value)),
+                  fiatRates[code],
+                ).toNumber(),
+              )}`}
+          </Text>
         </View>
       </View>
       {!!error && <Text style={styles.error}>{error}</Text>}
@@ -145,7 +209,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   col: {
     paddingLeft: 5,
@@ -169,6 +233,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontWeight: '700',
     fontSize: 12,
+    marginRight: 5,
+  },
+  headerLabel: {
     marginVertical: 10,
   },
   preset: {
@@ -200,16 +267,19 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
     fontSize: 14,
-    lineHeight: 26,
     marginRight: 5,
   },
   gasInput: {
-    width: '80%',
+    marginTop: 5,
     borderBottomColor: '#38FFFB',
     borderBottomWidth: 1,
+    width: '90%',
   },
   actions: {
     justifyContent: 'space-around',
+  },
+  selected: {
+    backgroundColor: '#F0F7F9',
   },
   error: {
     fontFamily: 'Montserrat-Regular',

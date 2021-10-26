@@ -150,13 +150,13 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
 
         chainData.balance = assetsData.reduce(
           (totalBal: BigNumber, assetData: DataElementType): BigNumber =>
-            BigNumber.sum(totalBal, assetData.balance),
+            BigNumber.sum(totalBal, assetData.balance || new BigNumber(0)),
           new BigNumber(0),
         )
 
         chainData.balanceInUSD = assetsData.reduce(
           (totalBal: BigNumber, assetData: DataElementType): BigNumber =>
-            BigNumber.sum(totalBal, assetData.balanceInUSD),
+            BigNumber.sum(totalBal, assetData.balanceInUSD || new BigNumber(0)),
           new BigNumber(0),
         )
 

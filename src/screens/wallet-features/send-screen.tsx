@@ -64,7 +64,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
       setError('Enter a valid amount')
       return false
-    } else if (new BigNumber(amountInput.value).gt(balance)) {
+    } else if (new BigNumber(amountInput.value).gt(balance!)) {
       setError('Lower amount. This exceeds available balance.')
       return false
     } else if (!chain || !chains[chain].isValidAddress(addressInput.value)) {
@@ -76,7 +76,14 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
   }
 
   useEffect(() => {
-    if (!fees || !activeNetwork || !activeWalletId || !chain) {
+    if (
+      !fees ||
+      !activeNetwork ||
+      !activeWalletId ||
+      !chain ||
+      !code ||
+      !balance
+    ) {
       setError('Please refresh your wallet')
       return
     }
@@ -131,14 +138,14 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
 
     if (showAmountsInFiat) {
       setAmountInNative(
-        fiatToCrypto(new BigNumber(text), fiatRates[code]).toNumber(),
+        fiatToCrypto(new BigNumber(text), fiatRates[code!]).toNumber(),
       )
       setAmountInFiat(new BigNumber(text).toNumber())
     } else {
       setAmountInFiat(
         cryptoToFiat(
           new BigNumber(text).toNumber(),
-          fiatRates[code],
+          fiatRates[code!],
         ).toNumber(),
       )
       setAmountInNative(new BigNumber(text).toNumber())

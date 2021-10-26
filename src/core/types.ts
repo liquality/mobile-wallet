@@ -15,9 +15,9 @@ export interface WalletManagerI {
   ) => Promise<{ [asset: string]: number }>
 }
 
-export interface StorageManagerI {
-  persist: (data: StateType) => Promise<boolean | Error>
-  read: () => Promise<StateType>
+export interface StorageManagerI<T> {
+  persist: (data: T) => Promise<boolean | Error>
+  read: () => Promise<T>
 }
 
 export interface EncryptionManagerI {
@@ -47,11 +47,12 @@ export type BalanceType = {
   [asset: string]: number
 }
 
-export type EnabledAssetType = {
-  [network in NetworkEnum]?: {
+export type EnabledAssetType = Record<
+  NetworkEnum,
+  {
     [walletId: string]: Array<String>
   }
-}
+>
 
 export type FeeType = Record<
   NetworkEnum,

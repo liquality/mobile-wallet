@@ -24,7 +24,7 @@ const BITCOIN_FEE_API_URL =
 
 export default class AbstractWalletManager {
   cryptoassets: any
-  storageManager: StorageManagerI | undefined
+  storageManager: StorageManagerI<StateType> | undefined
 
   protected getNextAccountColor(chain: string, index: number) {
     const defaultColor = chainDefaultColors[chain]

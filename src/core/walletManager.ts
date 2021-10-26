@@ -33,11 +33,11 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
   password: string = ''
   cryptoassets: any = assets
   chains: any = chains
-  storageManager: StorageManagerI
+  storageManager: StorageManagerI<StateType>
   encryptionManager: EncryptionManagerI
 
   constructor(
-    storageManager: StorageManagerI,
+    storageManager: StorageManagerI<StateType>,
     encryptionManager: EncryptionManagerI,
   ) {
     super()
