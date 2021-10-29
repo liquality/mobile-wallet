@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
-import WalletManager from '../../core/walletManager'
+import WalletManager from '../../core/wallet-manager'
 import { ThemeContext } from '../../theme'
 import Header from '../header'
 

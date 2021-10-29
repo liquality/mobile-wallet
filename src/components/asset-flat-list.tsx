@@ -13,7 +13,7 @@ import * as React from 'react'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import BigNumber from 'bignumber.js'
 import { formatFiat, prettyBalance } from '../core/utils/coin-formatter'
-import { NetworkEnum } from '../core/config'
+import { NetworkEnum } from '../core/types'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import AssetIcon from './asset-icon'
 

@@ -12,7 +12,7 @@ import {
 import LiqualityButton from '../../components/button'
 import { DataElementType } from '../../components/asset-flat-list'
 import { useAppSelector } from '../../hooks'
-import { NetworkEnum } from '../../core/config'
+import { NetworkEnum } from '../../core/types'
 import BigNumber from 'bignumber.js'
 import {
   calculateAvailableAmnt,

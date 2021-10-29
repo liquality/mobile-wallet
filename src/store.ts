@@ -6,10 +6,10 @@ import {
 } from '@reduxjs/toolkit'
 import thunk from 'redux-thunk'
 import rootReducer from './reducers'
-import StorageManager from './core/storageManager'
-import { AccountType, StateType, WalletType } from './core/types'
-import EncryptionManager from './core/encryptionManager'
-import WalletManager from './core/walletManager'
+import StorageManager from './core/storage-manager'
+import { AccountType, StateType } from './core/types'
+import EncryptionManager from './core/encryption-manager'
+import WalletManager from './core/wallet-manager'
 
 const excludedProps: Array<keyof StateType> = ['key', 'wallets', 'unlockedAt']
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
@@ -47,7 +47,7 @@ export const hydrateStore = async (): Promise<StateType> => {
 }
 
 export const createWallet =
-  (wallet: WalletType, password: string) => async (dispatch: any) => {
+  (wallet: StateType['wallets'], password: string) => async (dispatch: any) => {
     const newState = await walletManager.createWallet(wallet, password)
     try {
       return dispatch({

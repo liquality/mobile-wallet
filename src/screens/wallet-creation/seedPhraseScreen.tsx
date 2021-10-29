@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import WalletManager from '../../core/walletManager'
+import WalletManager from '../../core/wallet-manager'
 import { ThemeContext } from '../../theme'
 import Header from '../header'
 type WalletBackupProps = StackScreenProps<

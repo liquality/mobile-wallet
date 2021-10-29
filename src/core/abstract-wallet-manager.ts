@@ -1,9 +1,8 @@
-import { StateType, StorageManagerI } from './types'
+import { NetworkEnum, StateType, StorageManagerI } from './types'
 import config, {
   accountColors,
   chainDefaultColors,
   ChainNetworks,
-  NetworkEnum,
 } from './config'
 import { bitcoin } from '@liquality/types'
 import { ChainId } from '@liquality/cryptoassets'
@@ -26,8 +25,8 @@ export default class AbstractWalletManager {
   cryptoassets: any
   storageManager: StorageManagerI<StateType> | undefined
 
-  protected getNextAccountColor(chain: string, index: number) {
-    const defaultColor = chainDefaultColors[chain]
+  protected getNextAccountColor(chain: ChainId, index: number): string {
+    const defaultColor = chainDefaultColors[chain]!
     const defaultIndex = accountColors.findIndex((c) => c === defaultColor)
     if (defaultIndex === -1) {
       return defaultColor

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
 import LiqualityButton from '../../components/button'
-import { NetworkEnum } from '../../core/config'
+import { NetworkEnum } from '../../core/types'
 import { useAppSelector } from '../../hooks'
 import { DataElementType } from '../../components/asset-flat-list'
 import { FeeDetails } from '@liquality/types/lib/fees'

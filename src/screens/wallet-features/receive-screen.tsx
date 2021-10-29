@@ -14,7 +14,7 @@ import { faClone, faCheck } from '@fortawesome/pro-light-svg-icons'
 import { DataElementType } from '../../components/asset-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
-import { NetworkEnum } from '../../core/config'
+import { NetworkEnum } from '../../core/types'
 import LiqualityButton from '../../components/button'
 import AssetIcon from '../../components/asset-icon'
 
