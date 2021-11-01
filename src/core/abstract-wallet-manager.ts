@@ -24,6 +24,8 @@ const BITCOIN_FEE_API_URL =
 export default class AbstractWalletManager {
   cryptoassets: any
   storageManager: StorageManagerI<StateType> | undefined
+  //TODO we need to support other chains as well
+  client: Client | undefined
 
   protected getNextAccountColor(chain: ChainId, index: number): string {
     const defaultColor = chainDefaultColors[chain]!
@@ -127,7 +129,7 @@ export default class AbstractWalletManager {
     )
 
     ethClient.addProvider(feeProvider)
-
+    this.client = ethClient
     return ethClient
   }
 

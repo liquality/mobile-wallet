@@ -10,6 +10,7 @@ import StorageManager from './core/storage-manager'
 import { AccountType, StateType } from './core/types'
 import EncryptionManager from './core/encryption-manager'
 import WalletManager from './core/wallet-manager'
+import { SendOptions, Transaction } from '@liquality/types'
 
 const excludedProps: Array<keyof StateType> = ['key', 'wallets', 'unlockedAt']
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
@@ -146,6 +147,16 @@ export const fetchFiatRatesForAssets =
       })
     }
   }
+
+export const sendTransaction = async (
+  options: SendOptions,
+): Promise<Transaction | Error> => {
+  try {
+    return await walletManager.sendTransaction(options)
+  } catch (e) {
+    return new Error('Failed to send transaction')
+  }
+}
 
 export type AppDispatch = typeof store.dispatch
 

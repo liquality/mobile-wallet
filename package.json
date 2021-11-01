@@ -41,6 +41,7 @@
     "@liquality/ethereum-networks": "^1.4.5",
     "@liquality/ethereum-rpc-fee-provider": "^1.6.1",
     "@liquality/ethereum-rpc-provider": "^1.4.5",
+    "@liquality/types": "^1.4.5",
     "@react-native-async-storage/async-storage": "^1.15.7",
     "@react-native-clipboard/clipboard": "^1.9.0",
     "@react-navigation/bottom-tabs": "^6.0.5",

@@ -2,6 +2,7 @@ import { ChainId } from '@liquality/cryptoassets/src/types'
 import { BitcoinNetwork } from '@liquality/bitcoin-networks'
 import { EthereumNetwork } from '@liquality/ethereum-networks'
 import { FeeDetails } from '@liquality/types/lib/fees'
+import { SendOptions, Transaction } from '@liquality/types'
 
 //--------------------------CLASS INTERFACES/CONTRACTS-----------------------
 export interface WalletManagerI {
@@ -11,6 +12,7 @@ export interface WalletManagerI {
   ) => Promise<StateType>
   retrieveWallet: () => Promise<StateType>
   restoreWallet: (password: string, state: StateType) => Promise<StateType>
+  sendTransaction: (options: SendOptions) => Promise<Transaction | Error>
   updateAddressesAndBalances: (state: StateType) => Promise<StateType>
   getPricesForAssets: (
     baseCurrencies: Array<string>,

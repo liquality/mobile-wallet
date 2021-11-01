@@ -22,6 +22,7 @@ import { EthereumRpcFeeProvider } from '@liquality/ethereum-rpc-fee-provider'
 import axios from 'axios'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
 import AbstractWalletManager from './abstract-wallet-manager'
+import { SendOptions, Transaction } from '@liquality/types'
 
 const ETHEREUM_TESTNET_URL = `https://ropsten.infura.io/v3/${config.infuraApiKey}`
 const MAINNET_TESTNET_URL = `https://mainnet.infura.io/v3/${config.infuraApiKey}`
@@ -175,6 +176,15 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
       },
       activeNetwork: NetworkEnum.Testnet,
     }
+  }
+
+  public async sendTransaction(
+    options: SendOptions,
+  ): Promise<Transaction | Error> {
+    if (!this.client) {
+      return new Error('client is not instantiated')
+    }
+    return await this.client.chain.sendTransaction(options)
   }
 
   //TODO refactor

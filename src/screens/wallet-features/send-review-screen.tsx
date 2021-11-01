@@ -5,7 +5,9 @@ import { RootStackParamList } from '../../types'
 import LiqualityButton from '../../components/button'
 import { prettyFiatBalance } from '../../core/utils/coin-formatter'
 import { useAppSelector } from '../../hooks'
-import { calculateGasFee } from '../../core/utils/fee-calculator'
+import { sendTransaction } from '../../store'
+import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
+import BigNumber from 'bignumber.js'
 
 type SendReviewScreenProps = StackScreenProps<
   RootStackParamList,
@@ -22,9 +24,21 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
   }))
 
   const handleSendPress = async () => {
-    navigation.navigate('SendConfirmationScreen', {
-      screenTitle: `SEND ${route.params.assetData?.code}`,
-    })
+    try {
+      await sendTransaction({
+        to: destinationAddress!,
+        value: new BigNumber(
+          currencyToUnit(cryptoassets[asset!], amount!.toNumber()).toNumber(),
+        ),
+        fee: gasFee!.toNumber(),
+      })
+      navigation.navigate('SendConfirmationScreen', {
+        screenTitle: `SEND ${asset} Transaction Details`,
+        ...route.params,
+      })
+    } catch (_error) {
+      setError('Failed to send transaction: ' + _error)
+    }
   }
 
   const handleEditPress = () => {
@@ -54,14 +68,10 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <Text style={styles.feeLabel}>NETWORK FEE</Text>
         <View style={styles.row}>
           <Text style={styles.feeAmountInNative}>
-            {gasFee && `${calculateGasFee(asset!, gasFee.toNumber())} ${asset}`}
+            {gasFee && `${gasFee.toNumber()} ${asset}`}
           </Text>
           <Text style={styles.feeAmountInFiat}>
-            {gasFee &&
-              `$${prettyFiatBalance(
-                calculateGasFee(asset!, gasFee.toNumber()),
-                rate,
-              )}`}
+            {gasFee && `$${prettyFiatBalance(gasFee.toNumber(), rate)}`}
           </Text>
         </View>
 

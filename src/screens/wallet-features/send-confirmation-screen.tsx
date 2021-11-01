@@ -12,7 +12,7 @@ type SendConfirmationScreenProps = StackScreenProps<
 const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   route,
 }) => {
-  const { amount } = route.params.sendTransaction || {}
+  const { amount, asset } = route.params.sendTransaction || {}
 
   return (
     <View style={styles.container}>
@@ -25,16 +25,18 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
       </View>
       <View style={styles.block}>
         <Text style={styles.label}>TIME</Text>
-        <Text style={styles.content}>07/23/2021, 4.33pm</Text>
+        <Text style={styles.content}>{new Date().toUTCString()}</Text>
       </View>
       <View style={styles.block}>
         <Text style={styles.label}>SENT</Text>
-        <Text style={styles.content}>{amount && amount.dp(6)} ETH</Text>
+        <Text style={styles.content}>
+          {amount && `${amount.dp(6)} ${asset}`}
+        </Text>
       </View>
       <View style={styles.border}>
         <Text style={styles.label}>NETWORK SPEED/FEE</Text>
         <Text style={styles.content}>
-          [TKN] Fee: 0.0x [TKN/unit] | 0.0x gwei
+          {asset} Fee: 0.0x [TKN/unit] | 0.0x gwei
         </Text>
       </View>
       <TransactionDetails />
