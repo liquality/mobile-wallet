@@ -32,6 +32,7 @@ type SendScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
 
 const SendScreen = ({ navigation, route }: SendScreenProps) => {
   const { code, balance, chain }: DataElementType = route.params.assetData!
+  const customFee = route.params.customFee
   const {
     activeWalletId,
     activeNetwork = NetworkEnum.Testnet,
@@ -76,6 +77,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
   }
 
   useEffect(() => {
+    let gasFee
     if (
       !fees ||
       !activeNetwork ||
@@ -88,19 +90,36 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       return
     }
 
-    const gasFee = calculateGasFee(
-      code,
-      fees[activeNetwork][activeWalletId][chain][speedMode]?.fee,
-    )
+    if (customFee) {
+      setFee(new BigNumber(customFee!))
+      setAvailableAmount(
+        calculateAvailableAmnt(code, customFee!, balance.toNumber()),
+      )
+    } else {
+      gasFee = calculateGasFee(
+        code,
+        fees[activeNetwork]?.[activeWalletId]?.[chain]?.[speedMode]?.fee!,
+      )
 
-    if (!gasFee) {
-      setError('Please refresh your wallet')
-      return
+      if (!gasFee) {
+        setError('Please refresh your wallet')
+        return
+      }
+      setFee(new BigNumber(gasFee))
+      setAvailableAmount(
+        calculateAvailableAmnt(code, gasFee, balance.toNumber()),
+      )
     }
-
-    setFee(new BigNumber(gasFee))
-    setAvailableAmount(calculateAvailableAmnt(code, gasFee, balance.toNumber()))
-  }, [code, speedMode, fees, activeWalletId, activeNetwork, chain, balance])
+  }, [
+    code,
+    speedMode,
+    fees,
+    activeWalletId,
+    activeNetwork,
+    chain,
+    balance,
+    customFee,
+  ])
 
   const handleReviewPress = () => {
     if (validate()) {
@@ -385,8 +404,14 @@ const styles = StyleSheet.create({
     color: '#EAB300',
   },
   sendInputCurrency: {
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '300',
+    fontSize: 28,
+    textAlign: 'left',
+    color: '#EAB300',
     lineHeight: 50,
     height: 40,
+    paddingRight: 5,
   },
   asset: {
     flexDirection: 'row',

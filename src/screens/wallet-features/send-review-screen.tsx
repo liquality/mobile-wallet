@@ -5,6 +5,7 @@ import { RootStackParamList } from '../../types'
 import LiqualityButton from '../../components/button'
 import { prettyFiatBalance } from '../../core/utils/coin-formatter'
 import { useAppSelector } from '../../hooks'
+import { calculateGasFee } from '../../core/utils/fee-calculator'
 
 type SendReviewScreenProps = StackScreenProps<
   RootStackParamList,
@@ -20,7 +21,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
     fiatRates: state.fiatRates,
   }))
 
-  const handleSendPress = () => {
+  const handleSendPress = async () => {
     navigation.navigate('SendConfirmationScreen', {
       screenTitle: `SEND ${route.params.assetData?.code}`,
     })
@@ -53,10 +54,14 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <Text style={styles.feeLabel}>NETWORK FEE</Text>
         <View style={styles.row}>
           <Text style={styles.feeAmountInNative}>
-            {gasFee && `${gasFee.dp(6)} ${asset}`}
+            {gasFee && `${calculateGasFee(asset!, gasFee.toNumber())} ${asset}`}
           </Text>
           <Text style={styles.feeAmountInFiat}>
-            {gasFee && `$${prettyFiatBalance(gasFee.toNumber(), rate)}`}
+            {gasFee &&
+              `$${prettyFiatBalance(
+                calculateGasFee(asset!, gasFee.toNumber()),
+                rate,
+              )}`}
           </Text>
         </View>
 
