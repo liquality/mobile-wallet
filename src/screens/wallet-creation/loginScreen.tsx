@@ -137,7 +137,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               onOpenSesame()
             }}>
             <Text style={[theme.buttonText, styles.createText]}>
-              {loading ? 'Openning' : 'Open'} Sesame
+              {loading ? 'Opening' : 'Open'} Sesame
             </Text>
           </Pressable>
         </View>
