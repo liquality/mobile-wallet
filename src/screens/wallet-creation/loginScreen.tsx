@@ -15,6 +15,7 @@ import { ThemeContext } from '../../theme'
 import Header from '../header'
 import {
   fetchFiatRatesForAssets,
+  openSesame,
   restoreWallet,
   updateAddressesAndBalances,
 } from '../../store'
@@ -59,6 +60,24 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
         }
       }, 1000)
     }
+  }
+
+  // To make testing easier for team members
+  const onOpenSesame = async () => {
+    'worklet'
+    const wallet = {
+      mnemomnic:
+        'legend else tooth car romance thought rather share lunar reopen attend refuse',
+      imported: true,
+    }
+    openSesame(wallet, '123123123').then((newState) => {
+      dispatch({
+        type: 'SETUP_WALLET',
+        payload: newState,
+      })
+
+      navigation.navigate('MainNavigator')
+    })
   }
 
   return (
@@ -109,6 +128,16 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             onPress={onUnlock}>
             <Text style={[theme.buttonText, styles.createText]}>
               {loading ? 'Unlocking...' : 'Unlock'}
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.createBtn, styles.createBtn]}
+            onPress={() => {
+              setLoading(true)
+              onOpenSesame()
+            }}>
+            <Text style={[theme.buttonText, styles.createText]}>
+              {loading ? 'Openning' : 'Open'} Sesame
             </Text>
           </Pressable>
         </View>

@@ -47,8 +47,36 @@ export const hydrateStore = async (): Promise<StateType> => {
   }
 }
 
+export const openSesame = async (
+  wallet: Omit<StateType['wallets'], 'id' | 'at' | 'name'>,
+  password: string,
+): Promise<StateType> => {
+  let newState = await walletManager.createWallet(wallet, password)
+  newState = await walletManager.restoreWallet(password, newState)
+  newState = await walletManager.updateAddressesAndBalances(newState)
+  const { accounts, activeWalletId, activeNetwork } = newState
+
+  const assets = accounts![activeWalletId!]?.[activeNetwork!]?.reduce(
+    (assetNames: Array<string>, account: AccountType) => {
+      assetNames.push(...Object.keys(account.balances || {}))
+      return assetNames
+    },
+    [],
+  )
+
+  if (assets && assets.length > 0) {
+    newState.fiatRates = await walletManager.getPricesForAssets(assets, 'usd')
+  }
+
+  return newState
+}
+
 export const createWallet =
-  (wallet: StateType['wallets'], password: string) => async (dispatch: any) => {
+  (
+    wallet: Omit<StateType['wallets'], 'id' | 'at' | 'name'>,
+    password: string,
+  ) =>
+  async (dispatch: any) => {
     const newState = await walletManager.createWallet(wallet, password)
     try {
       return dispatch({

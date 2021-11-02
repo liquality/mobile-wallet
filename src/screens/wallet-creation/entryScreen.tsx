@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   View,
   Text,
@@ -10,11 +10,33 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
 import { ThemeContext } from '../../theme'
 import Header from '../header'
+import { openSesame } from '../../store'
+import { useDispatch } from 'react-redux'
 
 type EntryProps = StackScreenProps<RootStackParamList, 'Entry'>
 
 const Entry = ({ navigation }: EntryProps) => {
   const theme = useContext(ThemeContext)
+  const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false)
+
+  // To make testing easier for team members
+  const onOpenSesame = async () => {
+    'worklet'
+    const wallet = {
+      mnemomnic:
+        'legend else tooth car romance thought rather share lunar reopen attend refuse',
+      imported: true,
+    }
+    openSesame(wallet, '123123123').then((newState) => {
+      dispatch({
+        type: 'SETUP_WALLET',
+        payload: newState,
+      })
+
+      navigation.navigate('MainNavigator')
+    })
+  }
 
   return (
     <ImageBackground
@@ -40,6 +62,16 @@ const Entry = ({ navigation }: EntryProps) => {
           onPress={() => navigation.navigate('TermsScreen')}>
           <Text style={[theme.buttonText, styles.createText]}>
             Create a new Wallet
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[styles.createBtn, styles.createBtn]}
+          onPress={() => {
+            setLoading(true)
+            onOpenSesame()
+          }}>
+          <Text style={[theme.buttonText, styles.createText]}>
+            {loading ? 'Openning' : 'Open'} Sesame
           </Text>
         </Pressable>
       </View>
