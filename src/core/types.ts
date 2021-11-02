@@ -44,6 +44,8 @@ export interface DataMapperI<T, R> {
 }
 
 //-----------------------------------DATA TYPES----------------------------
+export type GasSpeedType = 'slow' | 'average' | 'fast'
+
 export interface AccountType {
   name: string
   chain: ChainId

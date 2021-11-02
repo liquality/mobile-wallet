@@ -12,7 +12,7 @@ import {
 import LiqualityButton from '../../components/button'
 import { DataElementType } from '../../components/asset-flat-list'
 import { useAppSelector } from '../../hooks'
-import { NetworkEnum } from '../../core/types'
+import { GasSpeedType, NetworkEnum } from '../../core/types'
 import BigNumber from 'bignumber.js'
 import {
   calculateAvailableAmnt,
@@ -32,7 +32,8 @@ type SendScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
 
 const SendScreen = ({ navigation, route }: SendScreenProps) => {
   const { code, balance, chain }: DataElementType = route.params.assetData!
-  const customFee = route.params.customFee
+  const [customFee, setCustomFee] = useState(route.params.customFee)
+  const gasSpeeds: GasSpeedType[] = ['slow', 'average', 'fast']
   const {
     activeWalletId,
     activeNetwork = NetworkEnum.Testnet,
@@ -45,9 +46,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     fiatRates: state.fiatRates,
   }))
   const [showFeeOptions, setShowFeeOptions] = useState(false)
-  const [speedMode, setSpeedMode] = useState<'slow' | 'average' | 'fast'>(
-    'average',
-  )
+  const [speedMode, setSpeedMode] = useState<GasSpeedType>('average')
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
@@ -265,58 +264,46 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
             />
             <Text style={styles.speedLabel}>NETWORK SPEED/FEE</Text>
           </Pressable>
-          <Text style={styles.speedValue}>
-            {`(${speedMode} / ${fee} ${code})`}
-          </Text>
+          {customFee ? (
+            <Text style={styles.speedValue}>
+              {`(Custom / ${calculateGasFee(code!, customFee)} ${code})`}
+            </Text>
+          ) : (
+            <Text style={styles.speedValue}>
+              {`(${speedMode} / ${fee} ${code})`}
+            </Text>
+          )}
         </View>
         {showFeeOptions && (
           <View style={[styles.row, styles.speedOptions]}>
             <Text style={styles.speedAssetName}>{code}</Text>
             <View style={styles.speedBtnsWrapper}>
-              <Pressable
-                style={[
-                  styles.speedBtn,
-                  styles.speedLeftBtn,
-                  speedMode === 'slow' && styles.speedBtnSelected,
-                ]}
-                onPress={() => setSpeedMode('slow')}>
-                <Text
+              {gasSpeeds.map((speed, idx) => (
+                <Pressable
                   style={[
-                    styles.speedBtnLabel,
-                    speedMode === 'slow' && styles.speedTxtSelected,
-                  ]}>
-                  Slow
-                </Text>
-              </Pressable>
-              <Pressable
-                style={[
-                  styles.speedBtn,
-                  speedMode === 'average' && styles.speedBtnSelected,
-                ]}
-                onPress={() => setSpeedMode('average')}>
-                <Text
-                  style={[
-                    styles.speedBtnLabel,
-                    speedMode === 'average' && styles.speedTxtSelected,
-                  ]}>
-                  Average
-                </Text>
-              </Pressable>
-              <Pressable
-                style={[
-                  styles.speedBtn,
-                  styles.speedRightBtn,
-                  speedMode === 'fast' && styles.speedBtnSelected,
-                ]}
-                onPress={() => setSpeedMode('fast')}>
-                <Text
-                  style={[
-                    styles.speedBtnLabel,
-                    speedMode === 'fast' && styles.speedTxtSelected,
-                  ]}>
-                  Fast
-                </Text>
-              </Pressable>
+                    styles.speedBtn,
+                    idx === 0 && styles.speedLeftBtn,
+                    idx === 2 && styles.speedRightBtn,
+                    speedMode === speed &&
+                      !customFee &&
+                      styles.speedBtnSelected,
+                  ]}
+                  onPress={() => {
+                    setCustomFee(undefined)
+                    setSpeedMode(speed)
+                  }}>
+                  <Text
+                    style={[
+                      styles.speedBtnLabel,
+                      speedMode === speed &&
+                        !customFee &&
+                        styles.speedTxtSelected,
+                      styles.speedLeftBtn,
+                    ]}>
+                    {speed}
+                  </Text>
+                </Pressable>
+              ))}
             </View>
             <Pressable onPress={handleCustomPress}>
               <Text style={styles.customFee}>Custom</Text>
@@ -499,6 +486,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontWeight: '400',
     fontSize: 11,
+    textTransform: 'capitalize',
     color: '#1D1E21',
   },
   speedBtnSelected: {
