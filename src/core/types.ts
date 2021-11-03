@@ -20,6 +20,9 @@ export interface WalletManagerI {
   ) => Promise<StateType['fiatRates']>
 }
 
+/**
+ * Interface that abstracts storage functionality so it can work seamlessly on different platforms
+ */
 export interface StorageManagerI<T> {
   persist: (data: T) => Promise<boolean | Error>
   read: () => Promise<T>

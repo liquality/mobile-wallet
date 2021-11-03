@@ -1,6 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StateType, StorageManagerI } from './types'
 
+/**
+ * Implementation of the StorageManagerI interface for mobile
+ */
 export default class StorageManager implements StorageManagerI<StateType> {
   excludedProps: Array<keyof StateType>
   storageKey: string

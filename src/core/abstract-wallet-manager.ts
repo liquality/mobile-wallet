@@ -21,6 +21,10 @@ import { EthereumJsWalletProvider } from '@liquality/ethereum-js-wallet-provider
 const BITCOIN_FEE_API_URL =
   'https://liquality.io/swap/mempool/v1/fees/recommended'
 
+/**
+ * A class that contains functionality that could be shared by the different chains.
+ * The idea is to use strategy pattern to handle logic related to different chains
+ */
 export default class AbstractWalletManager {
   cryptoassets: any
   storageManager: StorageManagerI<StateType> | undefined

@@ -2,6 +2,9 @@ import { DataMapperI, FlatState, StateType } from './types'
 import BigNumber from 'bignumber.js'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
 
+/**
+ * A class that converts raw state to computed state to abstract the complexity from the UI
+ */
 export default class DataMapper implements DataMapperI<StateType, FlatState> {
   state: StateType
   totalBalance: BigNumber = new BigNumber(0)

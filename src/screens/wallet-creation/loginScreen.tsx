@@ -15,11 +15,11 @@ import { ThemeContext } from '../../theme'
 import Header from '../header'
 import {
   fetchFiatRatesForAssets,
-  openSesame,
   restoreWallet,
   updateAddressesAndBalances,
 } from '../../store'
 import { useDispatch } from 'react-redux'
+import { onOpenSesame } from '../../utils'
 
 type LoginScreenProps = StackScreenProps<RootStackParamList, 'LoginScreen'>
 const useInputState = (
@@ -60,24 +60,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
         }
       }, 1000)
     }
-  }
-
-  // To make testing easier for team members
-  const onOpenSesame = async () => {
-    'worklet'
-    const wallet = {
-      mnemomnic:
-        'legend else tooth car romance thought rather share lunar reopen attend refuse',
-      imported: true,
-    }
-    openSesame(wallet, '123123123').then((newState) => {
-      dispatch({
-        type: 'SETUP_WALLET',
-        payload: newState,
-      })
-
-      navigation.navigate('MainNavigator')
-    })
   }
 
   return (
@@ -134,7 +116,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             style={[styles.createBtn, styles.createBtn]}
             onPress={() => {
               setLoading(true)
-              onOpenSesame()
+              onOpenSesame(dispatch, navigation)
             }}>
             <Text style={[theme.buttonText, styles.createText]}>
               {loading ? 'Opening' : 'Open'} Sesame
