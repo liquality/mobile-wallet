@@ -25,6 +25,7 @@ import SendReviewScreen from '../screens/wallet-features/send-review-screen'
 import CustomFeeScreen from '../screens/wallet-features/custom-fee-screen'
 import SendConfirmationScreen from '../screens/wallet-features/send-confirmation-screen'
 import { RootStackParamList } from '../types'
+import WithPopupMenu from './with-popup-menu'
 
 const Stack = createStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
@@ -88,17 +89,54 @@ export const AppStackNavigator = () => (
           screenTitle={route?.params?.screenTitle || 'Overview'}
         />
       ),
-      headerRight: () => <OverviewHeaderRight />,
+      headerRight: () => (
+        <OverviewHeaderRight
+          onPress={() => {
+            navigation.setParams({ showPopup: !route?.params?.showPopup })
+          }}
+        />
+      ),
     })}>
-    <Stack.Screen name="OverviewScreen" component={OverviewScreen} />
-    <Stack.Screen name="AssetScreen" component={AssetScreen} />
-    <Stack.Screen name="ReceiveScreen" component={ReceiveScreen} />
-    <Stack.Screen name="SendScreen" component={SendScreen} />
-    <Stack.Screen name="SendReviewScreen" component={SendReviewScreen} />
-    <Stack.Screen name="CustomFeeScreen" component={CustomFeeScreen} />
+    <Stack.Screen name="OverviewScreen">
+      {(props) => WithPopupMenu(OverviewScreen)(props)}
+    </Stack.Screen>
+    <Stack.Screen name="AssetScreen">
+      {(props) => WithPopupMenu(AssetScreen)(props)}
+    </Stack.Screen>
+    <Stack.Screen
+      name="ReceiveScreen"
+      component={ReceiveScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
+    />
+    <Stack.Screen
+      name="SendScreen"
+      component={SendScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
+    />
+    <Stack.Screen
+      name="SendReviewScreen"
+      component={SendReviewScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
+    />
+    <Stack.Screen
+      name="CustomFeeScreen"
+      component={CustomFeeScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
+    />
     <Stack.Screen
       name="SendConfirmationScreen"
       component={SendConfirmationScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
     />
   </Stack.Navigator>
 )

@@ -25,7 +25,7 @@ import AbstractWalletManager from './abstract-wallet-manager'
 import { SendOptions, Transaction } from '@liquality/types'
 
 const ETHEREUM_TESTNET_URL = `https://ropsten.infura.io/v3/${config.infuraApiKey}`
-const MAINNET_TESTNET_URL = `https://mainnet.infura.io/v3/${config.infuraApiKey}`
+const ETHEREUM_MAINNET_URL = `https://mainnet.infura.io/v3/${config.infuraApiKey}`
 
 //TODO move urls to a config file
 class WalletManager extends AbstractWalletManager implements WalletManagerI {
@@ -224,7 +224,7 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
             const ethereumNetwork = ChainNetworks[ChainId.Ethereum]![networkId]
             const infuraApi = isTestnet
               ? ETHEREUM_TESTNET_URL
-              : MAINNET_TESTNET_URL
+              : ETHEREUM_MAINNET_URL
             const feeProvider = isTestnet
               ? new EthereumRpcFeeProvider()
               : new EthereumGasNowFeeProvider()
