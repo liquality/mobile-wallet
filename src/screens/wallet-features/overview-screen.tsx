@@ -15,7 +15,7 @@ import {
 import { faGreaterThan } from '@fortawesome/pro-light-svg-icons'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../../hooks'
-import { formatFiat } from '../../core/utils/coinFormatter'
+import { formatFiat } from '../../core/utils/coin-formatter'
 import BigNumber from 'bignumber.js'
 import AssetFlatList, {
   DataElementType,
@@ -25,6 +25,7 @@ import ActivityFlatList, {
 } from '../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
+import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 
 const activities: Array<ActivityDataElementType> = [
   {
@@ -75,6 +76,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           return {
             ...item,
             showAssets: !item.showAssets,
+            activeNetwork,
           }
         } else {
           return item
@@ -114,14 +116,23 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           ) => {
             acc.total = BigNumber.sum(
               acc.total,
-              new BigNumber(account.balances![asset] * fiatRates[asset]),
+              unitToCurrency(
+                cryptoassets[asset],
+                account.balances![asset],
+              ).times(fiatRates[asset]),
             )
+
             acc.assetsData.push({
               id: asset,
-              name: asset,
+              name: cryptoassets[asset].name,
+              code: asset,
+              chain: account.chain,
               balance: new BigNumber(account.balances![asset]),
               balanceInUSD: new BigNumber(
-                account.balances![asset] * fiatRates[asset],
+                unitToCurrency(
+                  cryptoassets[asset],
+                  account.balances![asset],
+                ).times(fiatRates[asset]),
               ),
             })
             return acc
@@ -139,13 +150,13 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
 
         chainData.balance = assetsData.reduce(
           (totalBal: BigNumber, assetData: DataElementType): BigNumber =>
-            BigNumber.sum(totalBal, assetData.balance),
+            BigNumber.sum(totalBal, assetData.balance || new BigNumber(0)),
           new BigNumber(0),
         )
 
         chainData.balanceInUSD = assetsData.reduce(
           (totalBal: BigNumber, assetData: DataElementType): BigNumber =>
-            BigNumber.sum(totalBal, assetData.balanceInUSD),
+            BigNumber.sum(totalBal, assetData.balanceInUSD || new BigNumber(0)),
           new BigNumber(0),
         )
 

@@ -1,9 +1,8 @@
-import { StateType, StorageManagerI } from './types'
+import { NetworkEnum, StateType, StorageManagerI } from './types'
 import config, {
   accountColors,
   chainDefaultColors,
   ChainNetworks,
-  NetworkEnum,
 } from './config'
 import { bitcoin } from '@liquality/types'
 import { ChainId } from '@liquality/cryptoassets'
@@ -22,12 +21,18 @@ import { EthereumJsWalletProvider } from '@liquality/ethereum-js-wallet-provider
 const BITCOIN_FEE_API_URL =
   'https://liquality.io/swap/mempool/v1/fees/recommended'
 
+/**
+ * A class that contains functionality that could be shared by the different chains.
+ * The idea is to use strategy pattern to handle logic related to different chains
+ */
 export default class AbstractWalletManager {
   cryptoassets: any
-  storageManager: StorageManagerI | undefined
+  storageManager: StorageManagerI<StateType> | undefined
+  //TODO we need to support other chains as well
+  client: Client | undefined
 
-  protected getNextAccountColor(chain: string, index: number) {
-    const defaultColor = chainDefaultColors[chain]
+  protected getNextAccountColor(chain: ChainId, index: number): string {
+    const defaultColor = chainDefaultColors[chain]!
     const defaultIndex = accountColors.findIndex((c) => c === defaultColor)
     if (defaultIndex === -1) {
       return defaultColor
@@ -128,7 +133,7 @@ export default class AbstractWalletManager {
     )
 
     ethClient.addProvider(feeProvider)
-
+    this.client = ethClient
     return ethClient
   }
 

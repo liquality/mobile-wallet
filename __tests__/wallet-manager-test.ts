@@ -1,14 +1,15 @@
-import WalletManager from '../src/core/walletManager'
-import StorageManager from '../src/core/storageManager'
-import { NetworkEnum } from '../src/core/config'
-import { StateType, WalletType } from '../src/core/types'
-import EncryptionManager from '../src/core/encryptionManager'
+import WalletManager from '../src/core/wallet-manager'
+import StorageManager from '../src/core/storage-manager'
+import { NetworkEnum } from '../src/core/types'
+import { ArrayElement, StateType } from '../src/core/types'
+import EncryptionManager from '../src/core/encryption-manager'
 
 describe('WalletManagerTest', () => {
   const PASSWORD = '123123123'
-  const wallet: WalletType = {
-    at: Date.now(),
-    name: 'Account-1',
+  const wallet: Omit<
+    ArrayElement<StateType['wallets']>,
+    'id' | 'at' | 'name'
+  > = {
     mnemomnic:
       'legend else tooth car romance thought rather share lunar reopen attend refuse',
     assets: ['ETH'],
@@ -31,6 +32,17 @@ describe('WalletManagerTest', () => {
     expect(newWallet.wallets).toBeTruthy()
     expect(newWallet.encryptedWallets).toBeTruthy()
     expect(newWallet.accounts).toBeTruthy()
+  })
+
+  it('should be able to restore a wallet', async () => {
+    const newWallet = await walletManager.createWallet(wallet, PASSWORD)
+    delete newWallet.wallets
+    const retoredWallet = await walletManager.restoreWallet(PASSWORD, newWallet)
+
+    expect(retoredWallet.keySalt).toBeTruthy()
+    expect(retoredWallet.wallets).toBeTruthy()
+    expect(retoredWallet.encryptedWallets).toBeTruthy()
+    expect(retoredWallet.accounts).toBeTruthy()
   })
 
   it('should generate 12 seed words', () => {
@@ -107,6 +119,6 @@ describe('WalletManagerTest', () => {
 
   it('should get prices for assets', async () => {
     const prices = await walletManager.getPricesForAssets(['ETH', 'BTC'], 'USD')
-    expect(prices.ETH > 0 && prices.BTC > 0).toBeTruthy()
+    expect(prices && prices.ETH > 0 && prices.BTC > 0).toBeTruthy()
   })
 })

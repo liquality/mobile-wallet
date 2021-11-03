@@ -1,14 +1,13 @@
 import { v4 as uuidv4 } from 'uuid'
-import config, { ChainNetworks, NetworkEnum } from './config'
+import config, { ChainNetworks } from './config'
 import {
   AccountType,
-  AccountWrapperType,
+  ArrayElement,
   EncryptionManagerI,
-  FiatRateType,
+  NetworkEnum,
   StateType,
   StorageManagerI,
   WalletManagerI,
-  WalletType,
 } from './types'
 import { generateMnemonic, validateMnemonic } from 'bip39'
 import {
@@ -22,22 +21,23 @@ import { EthereumGasNowFeeProvider } from '@liquality/ethereum-gas-now-fee-provi
 import { EthereumRpcFeeProvider } from '@liquality/ethereum-rpc-fee-provider'
 import axios from 'axios'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
-import AbstractWalletManager from './abstractWalletManager'
+import AbstractWalletManager from './abstract-wallet-manager'
+import { SendOptions, Transaction } from '@liquality/types'
 
 const ETHEREUM_TESTNET_URL = `https://ropsten.infura.io/v3/${config.infuraApiKey}`
 const MAINNET_TESTNET_URL = `https://mainnet.infura.io/v3/${config.infuraApiKey}`
 
 //TODO move urls to a config file
 class WalletManager extends AbstractWalletManager implements WalletManagerI {
-  wallets: Array<WalletType> = []
+  wallets: StateType['wallets'] = []
   password: string = ''
   cryptoassets: any = assets
   chains: any = chains
-  storageManager: StorageManagerI
+  storageManager: StorageManagerI<StateType>
   encryptionManager: EncryptionManagerI
 
   constructor(
-    storageManager: StorageManagerI,
+    storageManager: StorageManagerI<StateType>,
     encryptionManager: EncryptionManagerI,
   ) {
     super()
@@ -49,7 +49,7 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
    * Creates a wallet along with an account
    */
   public async createWallet(
-    wallet: WalletType,
+    wallet: Omit<ArrayElement<StateType['wallets']>, 'id' | 'at' | 'name'>,
     password: string,
   ): Promise<StateType> {
     const walletId = uuidv4()
@@ -63,7 +63,7 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
     ]
     this.password = password
 
-    const accounts: AccountWrapperType = { [walletId]: {} }
+    const accounts: StateType['accounts'] = { [walletId]: {} }
     const at = Date.now()
     const { networks, defaultAssets } = config
     const { encrypted: encryptedWallets, keySalt } =
@@ -146,7 +146,7 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
       throw new Error('Password Invalid')
     }
 
-    const wallets = JSON.parse(decryptedWallets) as Array<WalletType>
+    const wallets = JSON.parse(decryptedWallets)
 
     if (!wallets || wallets.length === 0) {
       throw new Error('Password Invalid')
@@ -154,6 +154,7 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
     const activeWalletId = wallets[0].id
     //TODO update the enabledAsset dynamically
     return {
+      ...state,
       key: password,
       unlockedAt: Date.now(),
       wallets,
@@ -175,6 +176,15 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
       },
       activeNetwork: NetworkEnum.Testnet,
     }
+  }
+
+  public async sendTransaction(
+    options: SendOptions,
+  ): Promise<Transaction | Error> {
+    if (!this.client) {
+      return new Error('client is not instantiated')
+    }
+    return await this.client.chain.sendTransaction(options)
   }
 
   //TODO refactor
@@ -237,7 +247,7 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
             const result = await client.wallet.getUnusedAddress()
             const balance = (await client.chain.getBalance([result])).toNumber()
             const feeDetails = await client.chain.getFees()
-            stateClone.fees![networkId][walletId]![
+            stateClone.fees![networkId]![walletId]![
               this.cryptoassets[asset].chain
             ] = feeDetails
             const address = isEthereumChain(this.cryptoassets[asset].chain)
@@ -256,7 +266,7 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
   public async getPricesForAssets(
     baseCurrencies: Array<string>,
     toCurrency: string,
-  ): Promise<FiatRateType> {
+  ): Promise<StateType['fiatRates']> {
     const COIN_GECKO_API = 'https://api.coingecko.com/api/v3'
     const coindIds = baseCurrencies
       .filter((currency) => this.cryptoassets[currency]?.coinGeckoId)

@@ -10,17 +10,23 @@ import PasswordCreationScreen from '../screens/wallet-creation/passwordCreationS
 import SeedPhraseScreen from '../screens/wallet-creation/seedPhraseScreen'
 import SeedPhraseConfirmationScreen from '../screens/wallet-creation/seedPhraseConfirmationScreen'
 import CongratulationsScreen from '../screens/wallet-creation/congratulationsScreen'
-import UnlockWalletScreen from '../screens/wallet-import/unlockWalletScreen'
-import LoadingScreen from '../screens/wallet-import/loadingScreen'
-import OverviewScreen from '../screens/wallet-features/overviewScreen'
+import UnlockWalletScreen from '../screens/wallet-import/unlock-wallet-screen'
+import LoadingScreen from '../screens/wallet-import/loading-screen'
+import OverviewScreen from '../screens/wallet-features/overview-screen'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import SettingsScreen from '../screens/wallet-features/settingsScreen'
+import SettingsScreen from '../screens/wallet-features/settings-screen'
 import AssetScreen from '../screens/wallet-features/asset-screen'
-import OverviewHeaderLeft from './header-bar/overviewHeaderLeft'
-import OverviewHeaderRight from './header-bar/overviewHeaderRight'
+import OverviewHeaderLeft from './header-bar/overview-header-left'
+import OverviewHeaderRight from './header-bar/overview-header-right'
 import { HeaderBackButtonProps } from '@react-navigation/elements'
+import ReceiveScreen from '../screens/wallet-features/receive-screen'
+import SendScreen from '../screens/wallet-features/send-screen'
+import SendReviewScreen from '../screens/wallet-features/send-review-screen'
+import CustomFeeScreen from '../screens/wallet-features/custom-fee-screen'
+import SendConfirmationScreen from '../screens/wallet-features/send-confirmation-screen'
+import { RootStackParamList } from '../types'
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
 
 export const OnboardingContext = createContext({})
@@ -86,6 +92,14 @@ export const AppStackNavigator = () => (
     })}>
     <Stack.Screen name="OverviewScreen" component={OverviewScreen} />
     <Stack.Screen name="AssetScreen" component={AssetScreen} />
+    <Stack.Screen name="ReceiveScreen" component={ReceiveScreen} />
+    <Stack.Screen name="SendScreen" component={SendScreen} />
+    <Stack.Screen name="SendReviewScreen" component={SendReviewScreen} />
+    <Stack.Screen name="CustomFeeScreen" component={CustomFeeScreen} />
+    <Stack.Screen
+      name="SendConfirmationScreen"
+      component={SendConfirmationScreen}
+    />
   </Stack.Navigator>
 )
 

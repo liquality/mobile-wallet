@@ -20,6 +20,11 @@ const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
         ...state,
         ...action.payload,
       }
+    case 'UPDATE_WALLET':
+      return {
+        ...state,
+        ...action.payload,
+      }
     default:
       return {
         ...state,

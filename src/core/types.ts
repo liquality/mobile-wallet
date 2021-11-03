@@ -1,23 +1,31 @@
-import { NetworkEnum } from './config'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { BitcoinNetwork } from '@liquality/bitcoin-networks'
 import { EthereumNetwork } from '@liquality/ethereum-networks'
 import { FeeDetails } from '@liquality/types/lib/fees'
+import { SendOptions, Transaction } from '@liquality/types'
 
+//--------------------------CLASS INTERFACES/CONTRACTS-----------------------
 export interface WalletManagerI {
-  createWallet: (wallet: WalletType, password: string) => Promise<StateType>
+  createWallet: (
+    wallet: Omit<ArrayElement<StateType['wallets']>, 'id' | 'at' | 'name'>,
+    password: string,
+  ) => Promise<StateType>
   retrieveWallet: () => Promise<StateType>
   restoreWallet: (password: string, state: StateType) => Promise<StateType>
+  sendTransaction: (options: SendOptions) => Promise<Transaction | Error>
   updateAddressesAndBalances: (state: StateType) => Promise<StateType>
   getPricesForAssets: (
     baseCurrencies: Array<string>,
     toCurrency: string,
-  ) => Promise<{ [asset: string]: number }>
+  ) => Promise<StateType['fiatRates']>
 }
 
-export interface StorageManagerI {
-  persist: (data: StateType) => Promise<boolean | Error>
-  read: () => Promise<StateType>
+/**
+ * Interface that abstracts storage functionality so it can work seamlessly on different platforms
+ */
+export interface StorageManagerI<T> {
+  persist: (data: T) => Promise<boolean | Error>
+  read: () => Promise<T>
 }
 
 export interface EncryptionManagerI {
@@ -33,33 +41,13 @@ export interface EncryptionManagerI {
   ) => Promise<string>
 }
 
-export interface WalletType {
-  id?: string
-  at?: number
-  name?: string
-  assets?: Array<string>
-  activeNetwork?: NetworkEnum
-  mnemomnic: string
-  imported: boolean
+export interface DataMapperI<T, R> {
+  process: (input: T) => DataMapperI<T, R>
+  toJson: () => R
 }
 
-export type BalanceType = {
-  [asset: string]: number
-}
-
-export type EnabledAssetType = {
-  [network in NetworkEnum]?: {
-    [walletId: string]: Array<String>
-  }
-}
-
-export type FeeType = {
-  [network in NetworkEnum]?: {
-    [walletId: string]: {
-      [asset: string]: FeeDetails
-    }
-  }
-}
+//-----------------------------------DATA TYPES----------------------------
+export type GasSpeedType = 'slow' | 'average' | 'fast'
 
 export interface AccountType {
   name: string
@@ -68,45 +56,68 @@ export interface AccountType {
   index: number
   addresses: Array<string>
   assets: Array<string>
-  balances?: BalanceType
+  balances?: Record<string, number>
   color: string
   createdAt: number
   updatedAt?: number
 }
 
-export type ChainNetworkType = {
-  [chainId in ChainId]?: {
-    [network in NetworkEnum]: BitcoinNetwork | EthereumNetwork
-  }
+export type ChainNetworkType = Record<
+  ChainId,
+  Record<NetworkEnum, BitcoinNetwork | EthereumNetwork>
+>
+
+export enum NetworkEnum {
+  Mainnet = 'mainnet',
+  Testnet = 'testnet',
 }
 
-export type NetworkWrapperType = {
-  [network in NetworkEnum]?: Array<AccountType>
-}
+// helper to get the type of an array element
+export type ArrayElement<A> = A extends readonly (infer T)[] ? T : never
 
-export type AccountWrapperType = {
-  [id: string]: NetworkWrapperType
-}
-
-export type FiatRateType = {
-  [asset: string]: number
+export interface FlatState {
+  assetCount: number
+  totalBalance: number
+  totalBalanceInFiat: number
 }
 
 export interface StateType {
   // <do not keep these in localStorage>
   key?: string
-  wallets?: Array<WalletType>
+  wallets?: {
+    id: string
+    at: number
+    name: string
+    assets?: Array<string>
+    activeNetwork?: NetworkEnum
+    mnemomnic?: string
+    imported?: boolean
+  }[]
   unlockedAt?: number
   // </do not keep these in localStorage>
 
   version?: number
   brokerReady?: boolean
   encryptedWallets?: string
-  enabledAssets?: EnabledAssetType
+  enabledAssets?: Record<
+    NetworkEnum,
+    {
+      [walletId: string]: string[]
+    }
+  >
   customTokens?: any
-  accounts?: AccountWrapperType
-  fiatRates?: FiatRateType
-  fees?: FeeType
+  accounts?: Record<string, Partial<Record<NetworkEnum, AccountType[]>>>
+  fiatRates?: Record<string, number>
+  fees?: Partial<
+    Record<
+      NetworkEnum,
+      {
+        [walletId: string]: {
+          [asset: string]: FeeDetails
+        }
+      }
+    >
+  >
   history?: any
   marketData?: any
   activeNetwork?: NetworkEnum

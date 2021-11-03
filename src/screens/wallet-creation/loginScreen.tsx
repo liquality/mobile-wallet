@@ -19,6 +19,7 @@ import {
   updateAddressesAndBalances,
 } from '../../store'
 import { useDispatch } from 'react-redux'
+import { onOpenSesame } from '../../utils'
 
 type LoginScreenProps = StackScreenProps<RootStackParamList, 'LoginScreen'>
 const useInputState = (
@@ -109,6 +110,16 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             onPress={onUnlock}>
             <Text style={[theme.buttonText, styles.createText]}>
               {loading ? 'Unlocking...' : 'Unlock'}
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.createBtn, styles.createBtn]}
+            onPress={() => {
+              setLoading(true)
+              onOpenSesame(dispatch, navigation)
+            }}>
+            <Text style={[theme.buttonText, styles.createText]}>
+              {loading ? 'Opening' : 'Open'} Sesame
             </Text>
           </Pressable>
         </View>

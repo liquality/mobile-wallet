@@ -1,21 +1,7 @@
-import { ChainNetworkType } from './types'
+import { ChainNetworkType, NetworkEnum } from './types'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { BitcoinNetworks } from '@liquality/bitcoin-networks'
 import { EthereumNetworks } from '@liquality/ethereum-networks'
-
-export interface DefaultAssetsType {
-  mainnet: Array<string>
-  testnet: Array<string>
-}
-
-export enum NetworkEnum {
-  Mainnet = 'mainnet',
-  Testnet = 'testnet',
-}
-
-export type ChainColorType = {
-  [name: string]: string
-}
 
 export const accountColors = [
   '#000000',
@@ -33,7 +19,7 @@ export const accountColors = [
   '#8247E5',
 ]
 
-export const chainDefaultColors = {
+export const chainDefaultColors: Partial<Record<ChainId, string>> = {
   bitcoin: '#EAB300',
   ethereum: '#4F67E4',
   rsk: '#3AB24D',
@@ -41,9 +27,9 @@ export const chainDefaultColors = {
   near: '#000000',
   polygon: '#8247E5',
   arbitrum: '#28A0EF',
-} as ChainColorType
+}
 
-export const ChainNetworks: ChainNetworkType = {
+export const ChainNetworks: Partial<ChainNetworkType> = {
   [ChainId.Bitcoin]: {
     [NetworkEnum.Testnet]: BitcoinNetworks.bitcoin_testnet,
     [NetworkEnum.Mainnet]: BitcoinNetworks.bitcoin,
@@ -84,7 +70,7 @@ export default {
       'PWETH',
       'ARBETH',
     ],
-  } as DefaultAssetsType,
+  } as Record<NetworkEnum, string[]>,
   infuraApiKey: 'da99ebc8c0964bb8bb757b6f8cc40f1f',
   exploraApis: {
     testnet: 'https://liquality.io/testnet/electrs',
@@ -94,7 +80,7 @@ export default {
     testnet: 'https://liquality.io/electrs-testnet-batch',
     mainnet: 'https://api-mainnet-bitcoin-electrs-batch.liquality.io',
   },
-  networks: ['mainnet', 'testnet'] as Array<NetworkEnum>,
+  networks: ['mainnet', 'testnet'] as NetworkEnum[],
   chains: [
     'bitcoin',
     'ethereum',
@@ -103,5 +89,5 @@ export default {
     'near',
     'polygon',
     'arbitrum',
-  ] as Array<ChainId>,
+  ] as ChainId[],
 }

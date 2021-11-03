@@ -10,22 +10,26 @@ import {
   faTachometerAltSlowest,
 } from '@fortawesome/pro-duotone-svg-icons'
 import * as React from 'react'
-import ETHIcon from '../assets/icons/crypto/eth.svg'
-import BTCIcon from '../assets/icons/crypto/btc.svg'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import BigNumber from 'bignumber.js'
-import { formatFiat, prettyBalance } from '../core/utils/coinFormatter'
+import { formatFiat, prettyBalance } from '../core/utils/coin-formatter'
+import { NetworkEnum } from '../core/types'
+import { ChainId } from '@liquality/cryptoassets/src/types'
+import AssetIcon from './asset-icon'
 
 export type DataElementType = {
   id: string
   name: string
+  code?: string
+  chain?: ChainId
   address?: string
-  balance: BigNumber
-  balanceInUSD: BigNumber
+  balance?: BigNumber
+  balanceInUSD?: BigNumber
   color?: string
   assets?: Array<DataElementType>
   showAssets?: boolean
   fees?: FeeDetails
+  activeNetwork?: NetworkEnum
 }
 
 const AssetFlatList = ({
@@ -37,25 +41,13 @@ const AssetFlatList = ({
   toggleRow: (itemId: string) => void
   navigate: (screen: string, params: any) => void
 }) => {
-  const getAssetIcon = (asset: string) => {
-    if (asset === 'eth' || asset === 'ethereum') {
-      return <ETHIcon width={28} height={28} />
-    } else {
-      return <BTCIcon width={28} height={28} />
-    }
-  }
-
   const renderAsset = ({ item }: { item: DataElementType }) => {
-    const { name, address, balance, balanceInUSD, fees } = item
+    const { code, address, balance, balanceInUSD, fees } = item
     const isNested = item.assets && item.assets.length > 0
 
     return (
       <View>
-        <View
-          style={[
-            styles.row,
-            { borderLeftColor: item.color, borderLeftWidth: 3 },
-          ]}>
+        <View style={[styles.row, { borderLeftColor: item.color }]}>
           <View style={styles.col1}>
             <Pressable onPress={() => toggleRow(item.id)}>
               {isNested && (
@@ -67,10 +59,10 @@ const AssetFlatList = ({
                 />
               )}
             </Pressable>
-            {getAssetIcon(item.id)}
+            <AssetIcon asset={item.id} />
           </View>
           <View style={styles.col2}>
-            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.code}>{code}</Text>
             <Text style={styles.address}>
               {`${address?.substring(0, 4)}...${address?.substring(
                 address?.length - 4,
@@ -79,9 +71,11 @@ const AssetFlatList = ({
           </View>
           {!isNested && (
             <View style={styles.col3}>
-              <Text style={styles.balance}>{formatFiat(balance)}</Text>
+              <Text style={styles.balance}>
+                {balance && formatFiat(balance)}
+              </Text>
               <Text style={styles.balanceInUSD}>
-                {formatFiat(balanceInUSD)}
+                {balanceInUSD && formatFiat(balanceInUSD)}
               </Text>
             </View>
           )}
@@ -99,10 +93,10 @@ const AssetFlatList = ({
           {isNested && (
             <View style={styles.col3}>
               <Text style={styles.TotalBalanceInUSD}>
-                Total ${formatFiat(balanceInUSD)}
+                Total ${balanceInUSD && formatFiat(balanceInUSD)}
               </Text>
               <View style={styles.gas}>
-                {fees?.slow?.fee && balance.gte(fees.slow.fee) ? (
+                {fees?.slow?.fee && balance && balance.gte(fees.slow.fee) ? (
                   <View style={styles.gas}>
                     <FontAwesomeIcon
                       size={20}
@@ -133,19 +127,29 @@ const AssetFlatList = ({
           item.showAssets &&
           item.assets!.map((subElem) => {
             return (
-              <View style={[styles.row, styles.subElement]} key={subElem.id}>
-                <View style={styles.col1}>{getAssetIcon(subElem.name)}</View>
+              <View
+                style={[
+                  styles.row,
+                  styles.subElement,
+                  { borderLeftColor: item.color },
+                ]}
+                key={subElem.id}>
+                <View style={styles.col1}>
+                  <AssetIcon asset={subElem.code} />
+                </View>
                 <View style={styles.col2}>
-                  <Text style={styles.name}>{subElem.name}</Text>
+                  <Text style={styles.code}>{subElem.name}</Text>
                 </View>
                 <View style={styles.col3}>
                   <Text style={styles.balance}>
-                    {`${prettyBalance(subElem.balance, subElem.name)} ${
-                      subElem.name
-                    }`}
+                    {subElem.balance &&
+                      subElem.code &&
+                      `${prettyBalance(subElem.balance, subElem.code)} ${
+                        subElem.code
+                      }`}
                   </Text>
                   <Text style={styles.balanceInUSD}>
-                    ${formatFiat(subElem.balanceInUSD)}
+                    ${subElem.balanceInUSD && formatFiat(subElem.balanceInUSD)}
                   </Text>
                 </View>
                 <View style={styles.col4}>
@@ -156,7 +160,8 @@ const AssetFlatList = ({
                           ...subElem,
                           address: item.address,
                         },
-                        screenTitle: subElem.name,
+                        screenTitle: subElem.code,
+                        activeNetwork: item.activeNetwork,
                       })
                     }>
                     <FontAwesomeIcon
@@ -188,6 +193,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     borderBottomWidth: 1,
     borderBottomColor: '#D9DFE5',
+    borderLeftWidth: 3,
     paddingVertical: 10,
   },
   col1: {
@@ -216,7 +222,7 @@ const styles = StyleSheet.create({
   subElement: {
     paddingLeft: 50,
   },
-  name: {
+  code: {
     fontFamily: 'Montserrat-Regular',
     color: '#000',
     fontSize: 12,

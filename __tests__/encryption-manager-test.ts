@@ -1,4 +1,4 @@
-import EncryptionManager from '../src/core/encryptionManager'
+import EncryptionManager from '../src/core/encryption-manager'
 
 describe('EncryptionManagerTest', () => {
   const PASSWORD = 'this is my password'

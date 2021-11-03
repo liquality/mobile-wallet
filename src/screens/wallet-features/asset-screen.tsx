@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native'
-import { formatFiat } from '../../core/utils/coinFormatter'
+import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import ActivityFlatList, {
   ActivityDataElementType,
@@ -40,10 +40,24 @@ const activities: Array<ActivityDataElementType> = [
 
 type AssetScreenProps = StackScreenProps<RootStackParamList, 'AssetScreen'>
 
-const AssetScreen = ({ route }: AssetScreenProps) => {
+const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const [activityData] = useState<Array<ActivityDataElementType>>(activities)
-  const { name, address, balance, balanceInUSD }: DataElementType =
-    route.params.assetData
+  const { code, address, balance, balanceInUSD }: DataElementType =
+    route.params.assetData!
+
+  const handleSendPress = () => {
+    navigation.navigate('SendScreen', {
+      assetData: route.params.assetData,
+      screenTitle: `Send ${code}`,
+    })
+  }
+
+  const handleReceivePress = () => {
+    navigation.navigate('ReceiveScreen', {
+      assetData: route.params.assetData,
+      screenTitle: `Receive ${code}`,
+    })
+  }
 
   return (
     <View style={styles.container}>
@@ -55,9 +69,9 @@ const AssetScreen = ({ route }: AssetScreenProps) => {
         </View>
         <View style={styles.balance}>
           <Text style={styles.balanceInNative} numberOfLines={1}>
-            {formatFiat(balance)}
+            {prettyBalance(balance, code)}
           </Text>
-          <Text style={styles.nativeCurrency}>{name}</Text>
+          <Text style={styles.nativeCurrency}>{code}</Text>
         </View>
         <Text style={styles.address}>
           {`${address?.substring(0, 4)}...${address?.substring(
@@ -66,7 +80,7 @@ const AssetScreen = ({ route }: AssetScreenProps) => {
         </Text>
         <View style={styles.btnContainer}>
           <View style={styles.btnWrapper}>
-            <Pressable style={styles.btn}>
+            <Pressable style={styles.btn} onPress={handleSendPress}>
               <FontAwesomeIcon
                 icon={faArrowUp}
                 color={'#9D4DFA'}
@@ -88,7 +102,7 @@ const AssetScreen = ({ route }: AssetScreenProps) => {
             <Text style={styles.btnText}>Swap</Text>
           </View>
           <View style={styles.btnWrapper}>
-            <Pressable style={styles.btn}>
+            <Pressable style={styles.btn} onPress={handleReceivePress}>
               <FontAwesomeIcon
                 icon={faArrowDown}
                 size={20}
