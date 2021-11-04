@@ -65,11 +65,11 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         style={styles.overviewBlock}
         source={require('../../assets/bg/action-block-bg.png')}>
         <View style={styles.balance}>
-          <Text style={styles.balanceInUSD}>${formatFiat(balanceInUSD)}</Text>
+          <Text style={styles.balanceInUSD}>${formatFiat(balanceInUSD!)}</Text>
         </View>
         <View style={styles.balance}>
           <Text style={styles.balanceInNative} numberOfLines={1}>
-            {prettyBalance(balance, code)}
+            {prettyBalance(balance!, code!)}
           </Text>
           <Text style={styles.nativeCurrency}>{code}</Text>
         </View>

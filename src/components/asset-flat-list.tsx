@@ -5,10 +5,6 @@ import {
   faPlus,
   faMinus,
 } from '@fortawesome/pro-light-svg-icons'
-import {
-  faTachometerAltAverage,
-  faTachometerAltSlowest,
-} from '@fortawesome/pro-duotone-svg-icons'
 import * as React from 'react'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import BigNumber from 'bignumber.js'
@@ -16,6 +12,7 @@ import { formatFiat, prettyBalance } from '../core/utils/coin-formatter'
 import { NetworkEnum } from '../core/types'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import AssetIcon from './asset-icon'
+import GasIndicator from './ui/gas-indicator'
 
 export type DataElementType = {
   id: string
@@ -42,7 +39,7 @@ const AssetFlatList = ({
   navigate: (screen: string, params: any) => void
 }) => {
   const renderAsset = ({ item }: { item: DataElementType }) => {
-    const { code, address, balance, balanceInUSD, fees } = item
+    const { name, address, balance, balanceInUSD, fees } = item
     const isNested = item.assets && item.assets.length > 0
 
     return (
@@ -62,7 +59,7 @@ const AssetFlatList = ({
             <AssetIcon asset={item.id} />
           </View>
           <View style={styles.col2}>
-            <Text style={styles.code}>{code}</Text>
+            <Text style={styles.code}>{name}</Text>
             <Text style={styles.address}>
               {`${address?.substring(0, 4)}...${address?.substring(
                 address?.length - 4,
@@ -96,29 +93,7 @@ const AssetFlatList = ({
                 Total ${balanceInUSD && formatFiat(balanceInUSD)}
               </Text>
               <View style={styles.gas}>
-                {fees?.slow?.fee && balance && balance.gte(fees.slow.fee) ? (
-                  <View style={styles.gas}>
-                    <FontAwesomeIcon
-                      size={20}
-                      icon={faTachometerAltAverage}
-                      color={'#000'}
-                      secondaryColor={'#1CE5C3'}
-                      style={styles.gasIcon}
-                    />
-                    <Text style={styles.gasLabel}>Gas</Text>
-                  </View>
-                ) : (
-                  <View style={styles.getGas}>
-                    <FontAwesomeIcon
-                      size={20}
-                      icon={faTachometerAltSlowest}
-                      color={'#000'}
-                      secondaryColor={'#1CE5C3'}
-                      style={styles.gasIcon}
-                    />
-                    <Text style={styles.gasLabel}>Get Gas</Text>
-                  </View>
-                )}
+                <GasIndicator balance={balance!.toNumber()} gasFees={fees!} />
               </View>
             </View>
           )}

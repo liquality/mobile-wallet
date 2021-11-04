@@ -4,7 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faEllipsisV } from '@fortawesome/pro-regular-svg-icons'
 import { faCircle } from '@fortawesome/pro-duotone-svg-icons'
 
-const OverviewHeaderRight = (): React.ReactElement => {
+const OverviewHeaderRight = ({
+  onPress,
+}: {
+  onPress: () => void
+}): React.ReactElement => {
   return (
     <View style={styles.container}>
       <Pressable style={styles.connectDappBtn}>
@@ -15,7 +19,7 @@ const OverviewHeaderRight = (): React.ReactElement => {
           size={25}
         />
       </Pressable>
-      <Pressable style={styles.menuBtn}>
+      <Pressable style={styles.menuBtn} onPress={onPress}>
         <FontAwesomeIcon icon={faEllipsisV} size={25} />
       </Pressable>
     </View>

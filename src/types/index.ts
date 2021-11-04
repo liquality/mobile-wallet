@@ -14,6 +14,7 @@ export type StackPayload = {
   assetData?: DataElementType
   screenTitle?: string
   customFee?: number
+  showPopup?: boolean
   sendTransaction?: {
     amount?: BigNumber
     gasFee?: BigNumber

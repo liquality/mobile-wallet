@@ -107,7 +107,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           color: account.color,
           assets: [],
           showAssets: false,
-          fees: fees?.[activeNetwork!][walletId!][account.chain],
+          fees: fees?.[activeNetwork!]![walletId!][account.chain],
         }
         const { total, assetsData } = Object.keys(account.balances!).reduce(
           (
