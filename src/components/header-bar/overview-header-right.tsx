@@ -19,11 +19,7 @@ const OverviewHeaderRight = ({
           size={25}
         />
       </Pressable>
-      <Pressable
-        style={styles.menuBtn}
-        onPress={() => {
-          onPress()
-        }}>
+      <Pressable style={styles.menuBtn} onPress={onPress}>
         <FontAwesomeIcon icon={faEllipsisV} size={25} />
       </Pressable>
     </View>

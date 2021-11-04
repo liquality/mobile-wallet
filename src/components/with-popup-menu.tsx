@@ -10,16 +10,15 @@ import AssetScreen from '../screens/wallet-features/asset-screen'
 
 type OverviewParamsType = Parameters<typeof OverviewScreen>[0]
 type AssetPropsParamsType = Parameters<typeof AssetScreen>[0]
+type FctType = (...args: any) => any
+type Props<T extends FctType> = Parameters<T>[0] extends OverviewParamsType
+  ? OverviewParamsType
+  : AssetPropsParamsType
 
-const WithPopupMenu = <T extends (...args: any) => any>(
+const WithPopupMenu = <T extends FctType>(
   Component: (props: Parameters<T>[0]) => ReturnType<T>,
 ) => {
-  return ({
-    navigation,
-    route,
-  }: Parameters<T>[0] extends OverviewParamsType
-    ? OverviewParamsType
-    : AssetPropsParamsType) => {
+  return ({ navigation, route }: Props<T>) => {
     const handleLockPress = () => {
       navigation.navigate('LoginScreen')
     }
