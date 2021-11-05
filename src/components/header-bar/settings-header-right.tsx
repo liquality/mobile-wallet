@@ -3,9 +3,11 @@ import { faSignOut } from '@fortawesome/pro-light-svg-icons'
 import { Pressable, StyleSheet } from 'react-native'
 import React from 'react'
 
-const SettingsHeaderRight: React.FC<{
+type SettingsHeaderRightPropsType = {
   navigate: (screen: string) => void
-}> = (props) => {
+}
+
+const SettingsHeaderRight: React.FC<SettingsHeaderRightPropsType> = (props) => {
   return (
     <Pressable
       style={styles.signOutBtn}
