@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
   Alert,
+  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -18,6 +19,77 @@ import { DarkModeEnum } from '../../types'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from '../../hooks'
 import { ChainId } from '@liquality/cryptoassets'
+
+const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
+  const styles = StyleSheet.create({
+    modalView: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    contentWrapper: {
+      width: '90%',
+      alignItems: 'center',
+      backgroundColor: '#FFF',
+      borderColor: '#D9DFE5',
+      borderWidth: 1,
+      padding: 20,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    content: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '500',
+      fontSize: 14,
+      color: '#000D35',
+      textAlign: 'justify',
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+    },
+    header: {
+      fontSize: 16,
+      fontWeight: '700',
+      textAlign: 'center',
+      marginVertical: 5,
+    },
+  })
+
+  const handleOkButtonPress = () => {
+    onAction(false)
+  }
+
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={true}
+      style={styles.modalView}>
+      <View style={styles.container}>
+        <View style={styles.contentWrapper}>
+          <Text style={[styles.content, styles.header]}>What's New</Text>
+          <Text style={styles.content}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod
+            ante in augue tristique convallis. Morbi pharetra, erat quis mattis
+            tristique, sapien tortor convallis diam, elementum rhoncus erat
+            massa vitae nibh. Ut suscipit nisi enim, ut dictum felis tristique
+            sit amet.
+          </Text>
+          <LiqualityButton text={'OK'} action={handleOkButtonPress} />
+        </View>
+      </View>
+    </Modal>
+  )
+}
 
 const SettingsScreen = () => {
   const {
@@ -40,6 +112,7 @@ const SettingsScreen = () => {
   const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
   const [dappsNetwork, setDappsNetwork] = useState(injectEthereumChain)
   const [isPickerVisible, setIsPickerVisible] = useState<boolean>(false)
+  const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(true)
   const dispatch = useDispatch()
 
   const toggleDefaultWallet = () => {
@@ -234,7 +307,9 @@ const SettingsScreen = () => {
           </View>
           <View style={styles.info}>
             <Text style={styles.label}>{version}</Text>
-            <Text style={[styles.label, styles.link]}>What's new</Text>
+            <Pressable onPress={() => setIsWhatsNewVisible(true)}>
+              <Text style={[styles.label, styles.link]}>What's new</Text>
+            </Pressable>
           </View>
         </View>
       </ScrollView>
@@ -247,11 +322,12 @@ const SettingsScreen = () => {
             selectedValue={dappsNetwork}
             onValueChange={(itemValue) => setDappsNetwork(itemValue)}>
             {Object.keys(ChainId).map((item) => (
-              <Picker.Item label={item} value={item} />
+              <Picker.Item key={item} label={item} value={item} />
             ))}
           </Picker>
         </View>
       )}
+      {isWhatsNewVisible && <WhatsNew onAction={setIsWhatsNewVisible} />}
     </View>
   )
 }
