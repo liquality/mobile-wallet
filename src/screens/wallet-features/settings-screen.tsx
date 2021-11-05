@@ -1,5 +1,12 @@
-import React, { useState } from 'react'
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faAngleDown, faAngleUp } from '@fortawesome/pro-light-svg-icons'
@@ -8,27 +15,62 @@ import LiqualityButton from '../../components/button'
 import AssetIcon from '../../components/asset-icon'
 import SettingsSwitch from '../../components/ui/switch'
 import { DarkModeEnum } from '../../types'
+import { useDispatch } from 'react-redux'
+import { useAppSelector } from '../../hooks'
+import { ChainId } from '@liquality/cryptoassets'
 
 const SettingsScreen = () => {
-  const [isWeb3Enabled, setIsWeb3Enabled] = useState(false)
+  const {
+    activeNetwork,
+    injectEthereum = false,
+    injectEthereumChain,
+    analytics,
+    notifications = false,
+    version = 'Version 0.2.1',
+  } = useAppSelector((state) => ({
+    activeNetwork: state.activeNetwork,
+    injectEthereum: state.injectEthereum,
+    injectEthereumChain: state.injectEthereumChain,
+    analytics: state.analytics,
+    notifications: state.notifications,
+    version: state.version,
+  }))
   const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(false)
-  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(false)
   const [shouldSyncDevices, setShouldSyncDevices] = useState(false)
-  const [network, setNetwork] = useState<NetworkEnum>(NetworkEnum.Testnet)
   const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
-  const [dappsNetwork, setDappsNetwork] = useState('Ethereum')
+  const [dappsNetwork, setDappsNetwork] = useState(injectEthereumChain)
   const [isPickerVisible, setIsPickerVisible] = useState<boolean>(false)
+  const dispatch = useDispatch()
 
   const toggleDefaultWallet = () => {
-    setIsWeb3Enabled(!isWeb3Enabled)
+    dispatch({
+      type: 'DEFAULT_WALLET_UPDATE',
+      payload: {
+        injectEthereum: !injectEthereum,
+      },
+    })
   }
 
   const toggleAnalyticsOptin = () => {
     setIsAnalyticsEnabled(!isAnalyticsEnabled)
+    dispatch({
+      type: 'ANALYTICS_UPDATE',
+      payload: {
+        analytics: {
+          ...analytics,
+          acceptedDate: analytics?.acceptedDate ? undefined : Date.now(),
+        },
+      },
+    })
   }
 
   const toggleNotifications = () => {
-    setIsNotificationsEnabled(!isNotificationsEnabled)
+    dispatch({
+      type: 'NOTIFICATIONS_UPDATE',
+      payload: {
+        notifications: !notifications,
+      },
+    })
   }
 
   const toggleDeviceSync = () => {
@@ -37,7 +79,26 @@ const SettingsScreen = () => {
 
   const handleNetworkBtnPress = () => {
     setIsPickerVisible(!isPickerVisible)
+    dispatch({
+      type: 'ETHEREUM_CHAIN_UPDATE',
+      payload: { injectEthereumChain: dappsNetwork },
+    })
   }
+
+  const toggleNetwork = (network: NetworkEnum) => {
+    dispatch({
+      type: 'NETWORK_UPDATE',
+      payload: { activeNetwork: network },
+    })
+  }
+
+  useEffect(() => {
+    if (!activeNetwork) {
+      Alert.alert('Please reload your app')
+    }
+
+    setIsAnalyticsEnabled(!!analytics?.acceptedDate)
+  }, [activeNetwork, analytics])
 
   return (
     <View style={styles.container}>
@@ -46,7 +107,7 @@ const SettingsScreen = () => {
           <View style={styles.action}>
             <Text style={styles.label}>Default Wallet (Web3)</Text>
             <SettingsSwitch
-              isFeatureEnabled={isWeb3Enabled}
+              isFeatureEnabled={injectEthereum}
               enableFeature={toggleDefaultWallet}
             />
           </View>
@@ -102,7 +163,7 @@ const SettingsScreen = () => {
           <View style={styles.action}>
             <Text style={styles.label}>Notifications</Text>
             <SettingsSwitch
-              isFeatureEnabled={isNotificationsEnabled}
+              isFeatureEnabled={notifications}
               enableFeature={toggleNotifications}
             />
           </View>
@@ -131,18 +192,18 @@ const SettingsScreen = () => {
                   style={[
                     styles.btn,
                     styles.leftBtn,
-                    network === NetworkEnum.Mainnet && styles.btnSelected,
+                    activeNetwork === NetworkEnum.Mainnet && styles.btnSelected,
                   ]}
-                  onPress={() => setNetwork(NetworkEnum.Mainnet)}>
+                  onPress={() => toggleNetwork(NetworkEnum.Mainnet)}>
                   <Text>Mainnet</Text>
                 </Pressable>
                 <Pressable
                   style={[
                     styles.btn,
                     styles.rightBtn,
-                    network === NetworkEnum.Testnet && styles.btnSelected,
+                    activeNetwork === NetworkEnum.Testnet && styles.btnSelected,
                   ]}
-                  onPress={() => setNetwork(NetworkEnum.Testnet)}>
+                  onPress={() => toggleNetwork(NetworkEnum.Testnet)}>
                   <Text>Testnet</Text>
                 </Pressable>
               </View>
@@ -172,7 +233,7 @@ const SettingsScreen = () => {
             </View>
           </View>
           <View style={styles.info}>
-            <Text style={styles.label}>Version 0.2.2</Text>
+            <Text style={styles.label}>{version}</Text>
             <Text style={[styles.label, styles.link]}>What's new</Text>
           </View>
         </View>
@@ -185,8 +246,9 @@ const SettingsScreen = () => {
             mode={'dropdown'}
             selectedValue={dappsNetwork}
             onValueChange={(itemValue) => setDappsNetwork(itemValue)}>
-            <Picker.Item label="Ethereum" value="Ethereum" />
-            <Picker.Item label="Polygon" value="Polygon" />
+            {Object.keys(ChainId).map((item) => (
+              <Picker.Item label={item} value={item} />
+            ))}
           </Picker>
         </View>
       )}
