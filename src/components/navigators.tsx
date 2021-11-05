@@ -26,7 +26,7 @@ import CustomFeeScreen from '../screens/wallet-features/custom-fee-screen'
 import SendConfirmationScreen from '../screens/wallet-features/send-confirmation-screen'
 import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
-import SettingsHeaderRight from './header-bar/settings-header.right'
+import SettingsHeaderRight from './header-bar/settings-header-right'
 
 const Stack = createStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
