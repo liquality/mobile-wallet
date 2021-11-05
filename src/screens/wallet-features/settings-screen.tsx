@@ -41,7 +41,7 @@ const SettingsScreen = () => {
   const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
   const [dappsNetwork, setDappsNetwork] = useState(injectEthereumChain)
   const [isPickerVisible, setIsPickerVisible] = useState<boolean>(false)
-  const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(true)
+  const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
   const dispatch = useDispatch()
 
   const toggleDefaultWallet = () => {
