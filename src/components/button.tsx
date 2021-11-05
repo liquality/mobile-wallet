@@ -6,14 +6,14 @@ const LiqualityButton = ({
   text,
   textColor = '#9D4DFA',
   backgroundColor = '#F8FAFF',
-  width,
+  width = 150,
   action,
   children,
 }: {
   text: string
-  textColor: string
-  backgroundColor: string
-  width: number
+  textColor?: string
+  backgroundColor?: string
+  width?: number
   action: () => void
   children?: React.ReactElement
 }) => {

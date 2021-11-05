@@ -128,7 +128,7 @@ export interface StateType {
   termsAcceptedAt?: number
   setupAt?: number
   injectEthereum?: boolean
-  injectEthereumChain?: string
+  injectEthereumChain?: ChainId
   usbBridgeWindowsId?: number
   externalConnections?: any
   analytics?: {
@@ -138,5 +138,6 @@ export interface StateType {
     askedTimes: number
     notAskAgain: boolean
   }
+  notifications?: boolean
   errorMessage?: string
 }

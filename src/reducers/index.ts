@@ -25,6 +25,31 @@ const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
         ...state,
         ...action.payload,
       }
+    case 'NETWORK_UPDATE':
+      return {
+        ...state,
+        ...action.payload,
+      }
+    case 'ANALYTICS_UPDATE':
+      return {
+        ...state,
+        ...action.payload,
+      }
+    case 'DEFAULT_WALLET_UPDATE':
+      return {
+        ...state,
+        ...action.payload,
+      }
+    case 'ETHEREUM_CHAIN_UPDATE':
+      return {
+        ...state,
+        ...action.payload,
+      }
+    case 'NOTIFICATIONS_UPDATE':
+      return {
+        ...state,
+        ...action.payload,
+      }
     default:
       return {
         ...state,

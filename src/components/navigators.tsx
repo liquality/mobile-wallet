@@ -1,5 +1,5 @@
 import React, { createContext } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faUserCog, faCircle } from '@fortawesome/pro-duotone-svg-icons'
@@ -26,6 +26,7 @@ import CustomFeeScreen from '../screens/wallet-features/custom-fee-screen'
 import SendConfirmationScreen from '../screens/wallet-features/send-confirmation-screen'
 import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
+import SettingsHeaderRight from './header-bar/settings-header-right'
 
 const Stack = createStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
@@ -170,7 +171,14 @@ export const MainNavigator = () => (
     <Tab.Screen
       name="SettingsScreen"
       component={SettingsScreen}
-      options={{ headerShown: true, headerTitle: 'Settings' }}
+      options={({ navigation }) => ({
+        headerShown: true,
+        headerTitle: '',
+        headerLeft: () => <Text style={styles.settingsTitle}>SETTINGS</Text>,
+        headerRight: () => (
+          <SettingsHeaderRight navigate={navigation.navigate} />
+        ),
+      })}
     />
   </Tab.Navigator>
 )
@@ -182,5 +190,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginVertical: 5,
+  },
+  settingsTitle: {
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 20,
   },
 })
