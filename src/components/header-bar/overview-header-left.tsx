@@ -36,9 +36,13 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   overviewText: {
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 14,
     fontWeight: '600',
   },
   chainText: {
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 14,
     fontWeight: '300',
     marginLeft: 5,
   },

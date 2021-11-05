@@ -44,6 +44,7 @@
     "@liquality/types": "^1.4.5",
     "@react-native-async-storage/async-storage": "^1.15.7",
     "@react-native-clipboard/clipboard": "^1.9.0",
+    "@react-native-picker/picker": "^2.2.0",
     "@react-navigation/bottom-tabs": "^6.0.5",
     "@react-navigation/compat": "^5.3.20",
     "@react-navigation/native": "^6.0.2",

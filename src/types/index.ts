@@ -55,3 +55,8 @@ export interface SeedWordType {
   id: number
   word: string
 }
+
+export enum DarkModeEnum {
+  Light,
+  Dark,
+}
