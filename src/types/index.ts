@@ -38,6 +38,7 @@ export type StackPayload = {
     destinationAddress?: string
     asset?: string
   }
+  action?: ActionEnum
 }
 
 export type RootStackParamList = {
@@ -77,4 +78,10 @@ export interface SeedWordType {
 export enum DarkModeEnum {
   Light,
   Dark,
+}
+
+export enum ActionEnum {
+  SEND,
+  SWAP,
+  RECEIVE,
 }

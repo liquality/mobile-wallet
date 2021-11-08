@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, TextInput } from 'react-native'
+import { View, StyleSheet, TextInput, Alert } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faSearch } from '@fortawesome/pro-light-svg-icons'
 
 import {
+  ActionEnum,
   AssetDataElementType,
   RootStackParamList,
   StackPayload,
@@ -18,10 +19,15 @@ type AssetChooserProps = StackScreenProps<
 >
 
 const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
-  const { navigation } = props
+  const { navigation, route } = props
   const searchInput = useInputState('')
   const [data, setData] = useState<Array<AssetDataElementType>>([])
   const { assets, loading } = useWalletState()
+  const screenMap: Record<ActionEnum, keyof RootStackParamList> = {
+    [ActionEnum.RECEIVE]: 'ReceiveScreen',
+    [ActionEnum.SWAP]: 'ReceiveScreen',
+    [ActionEnum.SEND]: 'SendScreen',
+  }
 
   const filterByTerm = (): void => {
     const term = searchInput.value
@@ -49,10 +55,14 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
   }
 
   const onAssetSelected = (params: StackPayload) => {
-    navigation.navigate('SendScreen', {
-      assetData: params.assetData,
-      screenTitle: `Send ${params.assetData?.code}`,
-    })
+    if (!route.params.action) {
+      Alert.alert('Please reload your app')
+    } else {
+      navigation.navigate(screenMap[route.params.action], {
+        assetData: params.assetData,
+        screenTitle: `Send ${params.assetData?.code}`,
+      })
+    }
   }
 
   useEffect(() => {

@@ -21,7 +21,7 @@ import ActivityFlatList, {
   ActivityDataElementType,
 } from '../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
-import { RootStackParamList, StackPayload } from '../../types'
+import { ActionEnum, RootStackParamList, StackPayload } from '../../types'
 
 const activities: Array<ActivityDataElementType> = [
   {
@@ -54,9 +54,23 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   const handleSendBtnPress = () => {
     navigation.navigate('AssetChooserScreen', {
       screenTitle: 'Select asset for Send',
+      action: ActionEnum.SEND,
     })
   }
 
+  const handleReceiveBtnPress = () => {
+    navigation.navigate('AssetChooserScreen', {
+      screenTitle: 'Select asset for receive',
+      action: ActionEnum.RECEIVE,
+    })
+  }
+
+  const handleSwapBtnPress = () => {
+    navigation.navigate('AssetChooserScreen', {
+      screenTitle: 'Select asset for swap',
+      action: ActionEnum.SWAP,
+    })
+  }
   const onAssetSelected = (params: StackPayload) => {
     navigation.navigate('AssetScreen', params)
   }
@@ -91,7 +105,9 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
                 <Text style={styles.btnText}>Send</Text>
               </View>
               <View style={styles.btnWrapper}>
-                <Pressable style={[styles.btn, styles.swapBtn]}>
+                <Pressable
+                  style={[styles.btn, styles.swapBtn]}
+                  onPress={handleSwapBtnPress}>
                   <FontAwesomeIcon
                     size={30}
                     icon={faExchange}
@@ -102,7 +118,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
                 <Text style={styles.btnText}>Swap</Text>
               </View>
               <View style={styles.btnWrapper}>
-                <Pressable style={styles.btn}>
+                <Pressable style={styles.btn} onPress={handleReceiveBtnPress}>
                   <FontAwesomeIcon
                     icon={faArrowDown}
                     color={'#FFFFFF'}
