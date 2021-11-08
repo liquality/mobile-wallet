@@ -5,20 +5,18 @@ import { faLock, faPlug } from '@fortawesome/pro-light-svg-icons'
 import BackupIcon from '../assets/icons/backup.svg'
 import LedgerIcon from '../assets/icons/ledger.svg'
 import ManageAssetsIcon from '../assets/icons/manage-assets.svg'
-import OverviewScreen from '../screens/wallet-features/overview-screen'
-import AssetScreen from '../screens/wallet-features/asset-screen'
+import { StackScreenProps } from '@react-navigation/stack'
+import { RootStackParamList } from '../types'
 
-type OverviewParamsType = Parameters<typeof OverviewScreen>[0]
-type AssetPropsParamsType = Parameters<typeof AssetScreen>[0]
 type FctType = (...args: any) => any
-type Props<T extends FctType> = Parameters<T>[0] extends OverviewParamsType
-  ? OverviewParamsType
-  : AssetPropsParamsType
-
+type Props = StackScreenProps<
+  RootStackParamList,
+  'OverviewScreen' | 'AssetScreen' | 'AssetChooserScreen'
+>
 const WithPopupMenu = <T extends FctType>(
   Component: (props: Parameters<T>[0]) => ReturnType<T>,
 ) => {
-  return ({ navigation, route }: Props<T>) => {
+  return ({ navigation, route }: Props) => {
     const handleLockPress = () => {
       navigation.navigate('LoginScreen')
     }

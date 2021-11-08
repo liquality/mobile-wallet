@@ -3,13 +3,16 @@ import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
 import LiqualityButton from '../../components/button'
 import { NetworkEnum } from '../../core/types'
 import { useAppSelector } from '../../hooks'
-import { DataElementType } from '../../components/asset-flat-list'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { cryptoToFiat, formatFiat } from '../../core/utils/coin-formatter'
 import { calculateGasFee } from '../../core/utils/fee-calculator'
 import AssetIcon from '../../components/asset-icon'
 import { StackScreenProps } from '@react-navigation/stack'
-import { RootStackParamList, UseInputStateReturnType } from '../../types'
+import {
+  AssetDataElementType,
+  RootStackParamList,
+  UseInputStateReturnType,
+} from '../../types'
 import { ChainId } from '@liquality/cryptoassets'
 
 type CustomFeeScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
@@ -25,7 +28,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
   const [gasFees, setGasFees] = useState<FeeDetails>()
   const [error, setError] = useState('')
-  const { code, chain = ChainId.Ethereum }: DataElementType =
+  const { code, chain = ChainId.Ethereum }: AssetDataElementType =
     route.params.assetData!
   const {
     activeWalletId = '',

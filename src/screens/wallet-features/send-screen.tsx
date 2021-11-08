@@ -3,14 +3,17 @@ import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
 import { chains } from '@liquality/cryptoassets'
 import { StackScreenProps } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { RootStackParamList, UseInputStateReturnType } from '../../types'
+import {
+  AssetDataElementType,
+  RootStackParamList,
+  UseInputStateReturnType,
+} from '../../types'
 import {
   faAngleDown,
   faAngleRight,
   faQrcode,
 } from '@fortawesome/pro-light-svg-icons'
 import LiqualityButton from '../../components/button'
-import { DataElementType } from '../../components/asset-flat-list'
 import { useAppSelector } from '../../hooks'
 import { GasSpeedType, NetworkEnum } from '../../core/types'
 import BigNumber from 'bignumber.js'
@@ -31,7 +34,7 @@ const useInputState = (
 type SendScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
 
 const SendScreen = ({ navigation, route }: SendScreenProps) => {
-  const { code, balance, chain }: DataElementType = route.params.assetData!
+  const { code, balance, chain }: AssetDataElementType = route.params.assetData!
   const [customFee, setCustomFee] = useState(route.params.customFee)
   const gasSpeeds: GasSpeedType[] = ['slow', 'average', 'fast']
   const {

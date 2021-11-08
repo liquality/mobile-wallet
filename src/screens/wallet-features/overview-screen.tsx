@@ -13,19 +13,15 @@ import {
   faArrowUp,
 } from '@fortawesome/pro-regular-svg-icons'
 import { faGreaterThan } from '@fortawesome/pro-light-svg-icons'
-import { useEffect, useState } from 'react'
-import { useAppSelector } from '../../hooks'
+import { Fragment, useState } from 'react'
+import { useWalletState } from '../../hooks'
 import { formatFiat } from '../../core/utils/coin-formatter'
-import BigNumber from 'bignumber.js'
-import AssetFlatList, {
-  DataElementType,
-} from '../../components/asset-flat-list'
+import AssetFlatList from '../../components/asset-flat-list'
 import ActivityFlatList, {
   ActivityDataElementType,
 } from '../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
-import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 
 const activities: Array<ActivityDataElementType> = [
   {
@@ -52,171 +48,68 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     ACTIVITY,
   }
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
-  const [totalFiatBalance, setTotalFiatBalance] = useState<BigNumber>(
-    new BigNumber(0),
-  )
-  const [assetCount, setAssetCount] = useState(0)
-  const [data, setData] = useState<Array<DataElementType>>([])
   const [activityData] = useState<Array<ActivityDataElementType>>(activities)
+  const { assets, assetCount, totalFiatBalance, loading } = useWalletState()
 
-  const { accounts, walletId, activeNetwork, fiatRates, fees } = useAppSelector(
-    (state) => ({
-      accounts: state.accounts,
-      walletId: state.activeWalletId,
-      activeNetwork: state.activeNetwork,
-      fiatRates: state.fiatRates,
-      fees: state.fees,
-    }),
-  )
-
-  const toggleRow = (itemId: string) => {
-    setData(
-      data.map((item) => {
-        if (item.id === itemId) {
-          return {
-            ...item,
-            showAssets: !item.showAssets,
-            activeNetwork,
-          }
-        } else {
-          return item
-        }
-      }),
-    )
+  const handleSendBtnPress = () => {
+    navigation.navigate('AssetChooserScreen', {
+      screenTitle: 'Select asset for Send',
+    })
   }
-
-  useEffect(() => {
-    const accts = accounts?.[walletId!]?.[activeNetwork!]
-    let totalBalance = new BigNumber(0)
-
-    if (accts && fiatRates) {
-      let assetCounter = 0
-      let accountData: Array<DataElementType> = []
-
-      for (let account of accts) {
-        if (Object.keys(account.balances!).length === 0) {
-          continue
-        }
-
-        const chainData: DataElementType = {
-          id: account.chain,
-          name: account.name,
-          address: account.addresses[0], //TODO why pick only the first address
-          balance: new BigNumber(0),
-          balanceInUSD: new BigNumber(0),
-          color: account.color,
-          assets: [],
-          showAssets: false,
-          fees: fees?.[activeNetwork!]![walletId!][account.chain],
-        }
-        const { total, assetsData } = Object.keys(account.balances!).reduce(
-          (
-            acc: { total: BigNumber; assetsData: Array<DataElementType> },
-            asset: string,
-          ) => {
-            acc.total = BigNumber.sum(
-              acc.total,
-              unitToCurrency(
-                cryptoassets[asset],
-                account.balances![asset],
-              ).times(fiatRates[asset]),
-            )
-
-            acc.assetsData.push({
-              id: asset,
-              name: cryptoassets[asset].name,
-              code: asset,
-              chain: account.chain,
-              balance: new BigNumber(account.balances![asset]),
-              balanceInUSD: new BigNumber(
-                unitToCurrency(
-                  cryptoassets[asset],
-                  account.balances![asset],
-                ).times(fiatRates[asset]),
-              ),
-            })
-            return acc
-          },
-          { total: new BigNumber(0), assetsData: [] },
-        )
-
-        totalBalance = BigNumber.sum(totalBalance, total)
-
-        assetCounter += Object.keys(account.balances!).reduce(
-          (count: number, asset: string) =>
-            account.balances![asset] > 0 ? ++count : count,
-          0,
-        )
-
-        chainData.balance = assetsData.reduce(
-          (totalBal: BigNumber, assetData: DataElementType): BigNumber =>
-            BigNumber.sum(totalBal, assetData.balance || new BigNumber(0)),
-          new BigNumber(0),
-        )
-
-        chainData.balanceInUSD = assetsData.reduce(
-          (totalBal: BigNumber, assetData: DataElementType): BigNumber =>
-            BigNumber.sum(totalBal, assetData.balanceInUSD || new BigNumber(0)),
-          new BigNumber(0),
-        )
-
-        chainData.assets?.push(...assetsData)
-        accountData.push(chainData)
-      }
-      setTotalFiatBalance(totalBalance)
-      setAssetCount(assetCounter)
-      setData(accountData)
-    }
-  }, [accounts, activeNetwork, walletId, fiatRates, fees])
 
   return (
     <View style={styles.container}>
       <ImageBackground
         style={styles.overviewBlock}
         source={require('../../assets/bg/action-block-bg.png')}>
-        <View style={styles.totalValueSection}>
-          <Text style={styles.totalValue} numberOfLines={1}>
-            {formatFiat(totalFiatBalance)}
-          </Text>
-          <Text style={styles.currency}>USD</Text>
-        </View>
-        <Text style={styles.assets}>
-          {assetCount}
-          {assetCount === 1 ? ' Asset' : ' Assets'}
-        </Text>
-        <View style={styles.btnContainer}>
-          <View style={styles.btnWrapper}>
-            <Pressable style={styles.btn}>
-              <FontAwesomeIcon
-                icon={faArrowUp}
-                color={'#FFFFFF'}
-                style={styles.smallIcon}
-              />
-            </Pressable>
-            <Text style={styles.btnText}>Send</Text>
-          </View>
-          <View style={styles.btnWrapper}>
-            <Pressable style={[styles.btn, styles.swapBtn]}>
-              <FontAwesomeIcon
-                size={30}
-                icon={faExchange}
-                color={'#9D4DFA'}
-                style={styles.smallIcon}
-              />
-            </Pressable>
-            <Text style={styles.btnText}>Swap</Text>
-          </View>
-          <View style={styles.btnWrapper}>
-            <Pressable style={styles.btn}>
-              <FontAwesomeIcon
-                icon={faArrowDown}
-                color={'#FFFFFF'}
-                style={styles.smallIcon}
-              />
-            </Pressable>
-            <Text style={styles.btnText}>Receive</Text>
-          </View>
-        </View>
+        {loading && <Text style={styles.loading}>Loading...</Text>}
+        {!loading && (
+          <Fragment>
+            <View style={styles.totalValueSection}>
+              <Text style={styles.totalValue} numberOfLines={1}>
+                {formatFiat(totalFiatBalance)}
+              </Text>
+              <Text style={styles.currency}>USD</Text>
+            </View>
+            <Text style={styles.assets}>
+              {assetCount}
+              {assetCount === 1 ? ' Asset' : ' Assets'}
+            </Text>
+            <View style={styles.btnContainer}>
+              <View style={styles.btnWrapper}>
+                <Pressable style={styles.btn} onPress={handleSendBtnPress}>
+                  <FontAwesomeIcon
+                    icon={faArrowUp}
+                    color={'#FFFFFF'}
+                    style={styles.smallIcon}
+                  />
+                </Pressable>
+                <Text style={styles.btnText}>Send</Text>
+              </View>
+              <View style={styles.btnWrapper}>
+                <Pressable style={[styles.btn, styles.swapBtn]}>
+                  <FontAwesomeIcon
+                    size={30}
+                    icon={faExchange}
+                    color={'#9D4DFA'}
+                    style={styles.smallIcon}
+                  />
+                </Pressable>
+                <Text style={styles.btnText}>Swap</Text>
+              </View>
+              <View style={styles.btnWrapper}>
+                <Pressable style={styles.btn}>
+                  <FontAwesomeIcon
+                    icon={faArrowDown}
+                    color={'#FFFFFF'}
+                    style={styles.smallIcon}
+                  />
+                </Pressable>
+                <Text style={styles.btnText}>Receive</Text>
+              </View>
+            </View>
+          </Fragment>
+        )}
       </ImageBackground>
       <View style={styles.tabsBlock}>
         <Pressable
@@ -238,7 +131,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
       </View>
       <View style={styles.contentBlock}>
         {selectedView === ViewKind.ACTIVITY &&
-          (data.length > 0 ? (
+          (assets.length > 0 ? (
             <ActivityFlatList activities={activityData}>
               <View style={styles.activityActionBar}>
                 <Pressable style={styles.activityBtns}>
@@ -266,11 +159,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           ))}
 
         {selectedView === ViewKind.ASSETS && (
-          <AssetFlatList
-            assets={data}
-            navigate={navigation.navigate}
-            toggleRow={toggleRow}
-          />
+          <AssetFlatList assets={assets} navigate={navigation.navigate} />
         )}
       </View>
     </View>
@@ -414,6 +303,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 15,
     lineHeight: 20,
+  },
+  loading: {
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '400',
+    fontSize: 28,
+    color: '#FFF',
+    textAlign: 'center',
+    marginHorizontal: 20,
+    marginTop: 15,
+    lineHeight: 28,
   },
 })
 

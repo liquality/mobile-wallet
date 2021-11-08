@@ -11,9 +11,8 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClone, faCheck } from '@fortawesome/pro-light-svg-icons'
-import { DataElementType } from '../../components/asset-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
-import { RootStackParamList } from '../../types'
+import { AssetDataElementType, RootStackParamList } from '../../types'
 import { NetworkEnum } from '../../core/types'
 import LiqualityButton from '../../components/button'
 import AssetIcon from '../../components/asset-icon'
@@ -22,7 +21,7 @@ type ReceiveScreenProps = StackScreenProps<RootStackParamList, 'ReceiveScreen'>
 
 const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   const [buttonPressed, setButtonPressed] = useState<boolean>(false)
-  const { name, address, activeNetwork }: DataElementType =
+  const { name, address, activeNetwork }: AssetDataElementType =
     route.params.assetData!
 
   // Move this function to a shared module

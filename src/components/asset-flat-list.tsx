@@ -6,44 +6,51 @@ import {
   faMinus,
 } from '@fortawesome/pro-light-svg-icons'
 import * as React from 'react'
-import { FeeDetails } from '@liquality/types/lib/fees'
-import BigNumber from 'bignumber.js'
 import { formatFiat, prettyBalance } from '../core/utils/coin-formatter'
-import { NetworkEnum } from '../core/types'
-import { ChainId } from '@liquality/cryptoassets/src/types'
 import AssetIcon from './asset-icon'
 import GasIndicator from './ui/gas-indicator'
-
-export type DataElementType = {
-  id: string
-  name: string
-  code?: string
-  chain?: ChainId
-  address?: string
-  balance?: BigNumber
-  balanceInUSD?: BigNumber
-  color?: string
-  assets?: Array<DataElementType>
-  showAssets?: boolean
-  fees?: FeeDetails
-  activeNetwork?: NetworkEnum
-}
+import { useEffect, useState } from 'react'
+import { useAppSelector } from '../hooks'
+import { AssetDataElementType } from '../types'
 
 const AssetFlatList = ({
   assets,
-  toggleRow,
   navigate,
 }: {
-  assets: Array<DataElementType>
-  toggleRow: (itemId: string) => void
+  assets: Array<AssetDataElementType>
   navigate: (screen: string, params: any) => void
 }) => {
-  const renderAsset = ({ item }: { item: DataElementType }) => {
+  const [data, setData] = useState<Array<AssetDataElementType>>(assets)
+  const { activeNetwork } = useAppSelector((state) => ({
+    activeNetwork: state.activeNetwork,
+  }))
+
+  const toggleRow = (itemId: string) => {
+    setData(
+      data.map((item) => {
+        if (item.id === itemId) {
+          return {
+            ...item,
+            showAssets: !item.showAssets,
+            activeNetwork,
+          }
+        } else {
+          return item
+        }
+      }),
+    )
+  }
+
+  useEffect(() => {
+    setData(assets)
+  }, [assets])
+
+  const renderAsset = ({ item }: { item: AssetDataElementType }) => {
     const { name, address, balance, balanceInUSD, fees } = item
     const isNested = item.assets && item.assets.length > 0
 
     return (
-      <View>
+      <View style={styles.container}>
         <View style={[styles.row, { borderLeftColor: item.color }]}>
           <View style={styles.col1}>
             <Pressable onPress={() => toggleRow(item.id)}>
@@ -155,7 +162,7 @@ const AssetFlatList = ({
 
   return (
     <FlatList
-      data={assets}
+      data={data}
       renderItem={renderAsset}
       keyExtractor={(item) => item.id}
     />
@@ -163,11 +170,14 @@ const AssetFlatList = ({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginTop: 20,
+  },
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
+    borderTopWidth: 1,
+    borderTopColor: '#D9DFE5',
     borderLeftWidth: 3,
     paddingVertical: 10,
   },
