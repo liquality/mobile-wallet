@@ -11,6 +11,7 @@ import { AccountType, StateType } from './core/types'
 import EncryptionManager from './core/encryption-manager'
 import WalletManager from './core/wallet-manager'
 import { SendOptions, Transaction } from '@liquality/types'
+import { Alert } from 'react-native'
 
 const excludedProps: Array<keyof StateType> = ['key', 'wallets', 'unlockedAt']
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
@@ -51,24 +52,30 @@ export const openSesame = async (
   wallet: Omit<StateType['wallets'], 'id' | 'at' | 'name'>,
   password: string,
 ): Promise<StateType> => {
-  let newState = await walletManager.createWallet(wallet, password)
-  newState = await walletManager.restoreWallet(password, newState)
-  newState = await walletManager.updateAddressesAndBalances(newState)
-  const { accounts, activeWalletId, activeNetwork } = newState
+  try {
+    let newState = await walletManager.createWallet(wallet, password)
+    newState = await walletManager.restoreWallet(password, newState)
+    newState = await walletManager.updateAddressesAndBalances(newState)
+    const { accounts, activeWalletId, activeNetwork } = newState
 
-  const assets = accounts![activeWalletId!]?.[activeNetwork!]?.reduce(
-    (assetNames: Array<string>, account: AccountType) => {
-      assetNames.push(...Object.keys(account.balances || {}))
-      return assetNames
-    },
-    [],
-  )
+    const assets = accounts![activeWalletId!]?.[activeNetwork!]?.reduce(
+      (assetNames: Array<string>, account: AccountType) => {
+        assetNames.push(...Object.keys(account.balances || {}))
+        return assetNames
+      },
+      [],
+    )
 
-  if (assets && assets.length > 0) {
-    newState.fiatRates = await walletManager.getPricesForAssets(assets, 'usd')
+    if (assets && assets.length > 0) {
+      newState.fiatRates = await walletManager.getPricesForAssets(assets, 'usd')
+    }
+
+    return newState
+  } catch (error) {
+    Alert.alert(JSON.stringify(error))
   }
 
-  return newState
+  return {} as StateType
 }
 
 export const createWallet =

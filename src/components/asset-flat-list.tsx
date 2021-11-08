@@ -9,7 +9,7 @@ import * as React from 'react'
 import { formatFiat, prettyBalance } from '../core/utils/coin-formatter'
 import AssetIcon from './asset-icon'
 import GasIndicator from './ui/gas-indicator'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { useAppSelector } from '../hooks'
 import { AssetDataElementType, StackPayload } from '../types'
 
@@ -50,7 +50,7 @@ const AssetFlatList = ({
     const isNested = item.assets && item.assets.length > 0
 
     return (
-      <View style={styles.container}>
+      <Fragment>
         <View style={[styles.row, { borderLeftColor: item.color }]}>
           <View style={styles.col1}>
             <Pressable onPress={() => toggleRow(item.id)}>
@@ -155,7 +155,7 @@ const AssetFlatList = ({
               </View>
             )
           })}
-      </View>
+      </Fragment>
     )
   }
 
@@ -169,9 +169,6 @@ const AssetFlatList = ({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 20,
-  },
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
