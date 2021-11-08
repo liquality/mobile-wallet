@@ -4,7 +4,11 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faSearch } from '@fortawesome/pro-light-svg-icons'
 
-import { AssetDataElementType, RootStackParamList } from '../../types'
+import {
+  AssetDataElementType,
+  RootStackParamList,
+  StackPayload,
+} from '../../types'
 import AssetFlatList from '../../components/asset-flat-list'
 import { useInputState, useWalletState } from '../../hooks'
 
@@ -44,6 +48,13 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
     setData(filteredResults || [])
   }
 
+  const onAssetSelected = (params: StackPayload) => {
+    navigation.navigate('SendScreen', {
+      assetData: params.assetData,
+      screenTitle: `Send ${params.assetData?.code}`,
+    })
+  }
+
   useEffect(() => {
     if (!loading) {
       setData(assets)
@@ -65,7 +76,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
           returnKeyType="done"
         />
       </View>
-      <AssetFlatList assets={data} navigate={navigation.navigate} />
+      <AssetFlatList assets={data} onAssetSelected={onAssetSelected} />
     </View>
   )
 }

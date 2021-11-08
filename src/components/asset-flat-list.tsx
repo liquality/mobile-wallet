@@ -11,14 +11,14 @@ import AssetIcon from './asset-icon'
 import GasIndicator from './ui/gas-indicator'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../hooks'
-import { AssetDataElementType } from '../types'
+import { AssetDataElementType, StackPayload } from '../types'
 
 const AssetFlatList = ({
   assets,
-  navigate,
+  onAssetSelected,
 }: {
   assets: Array<AssetDataElementType>
-  navigate: (screen: string, params: any) => void
+  onAssetSelected: (params: StackPayload) => void
 }) => {
   const [data, setData] = useState<Array<AssetDataElementType>>(assets)
   const { activeNetwork } = useAppSelector((state) => ({
@@ -137,13 +137,12 @@ const AssetFlatList = ({
                 <View style={styles.col4}>
                   <Pressable
                     onPress={() =>
-                      navigate('AssetScreen', {
+                      onAssetSelected({
                         assetData: {
                           ...subElem,
                           address: item.address,
                         },
                         screenTitle: subElem.code,
-                        activeNetwork: item.activeNetwork,
                       })
                     }>
                     <FontAwesomeIcon

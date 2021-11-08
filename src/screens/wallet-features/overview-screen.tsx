@@ -21,7 +21,7 @@ import ActivityFlatList, {
   ActivityDataElementType,
 } from '../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
-import { RootStackParamList } from '../../types'
+import { RootStackParamList, StackPayload } from '../../types'
 
 const activities: Array<ActivityDataElementType> = [
   {
@@ -55,6 +55,10 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     navigation.navigate('AssetChooserScreen', {
       screenTitle: 'Select asset for Send',
     })
+  }
+
+  const onAssetSelected = (params: StackPayload) => {
+    navigation.navigate('AssetScreen', params)
   }
 
   return (
@@ -159,7 +163,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           ))}
 
         {selectedView === ViewKind.ASSETS && (
-          <AssetFlatList assets={assets} navigate={navigation.navigate} />
+          <AssetFlatList assets={assets} onAssetSelected={onAssetSelected} />
         )}
       </View>
     </View>
