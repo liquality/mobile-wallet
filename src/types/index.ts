@@ -1,6 +1,23 @@
 import { Dispatch, SetStateAction } from 'react'
-import { DataElementType } from '../components/asset-flat-list'
 import BigNumber from 'bignumber.js'
+import { ChainId } from '@liquality/cryptoassets/src/types'
+import { FeeDetails } from '@liquality/types/lib/fees'
+import { NetworkEnum } from '../core/types'
+
+export type AssetDataElementType = {
+  id: string
+  name: string
+  code?: string
+  chain?: ChainId
+  address?: string
+  balance?: BigNumber
+  balanceInUSD?: BigNumber
+  color?: string
+  assets?: Array<AssetDataElementType>
+  showAssets?: boolean
+  fees?: FeeDetails
+  activeNetwork?: NetworkEnum
+}
 
 export type StackPayload = {
   termsAcceptedAt?: number
@@ -11,7 +28,7 @@ export type StackPayload = {
   seedPhrase?: string
   mnemonic?: string
   imported?: boolean
-  assetData?: DataElementType
+  assetData?: AssetDataElementType
   screenTitle?: string
   customFee?: number
   showPopup?: boolean
@@ -21,6 +38,7 @@ export type StackPayload = {
     destinationAddress?: string
     asset?: string
   }
+  action?: ActionEnum
 }
 
 export type RootStackParamList = {
@@ -34,6 +52,7 @@ export type RootStackParamList = {
   LoginScreen: undefined
   LoadingScreen: StackPayload
   OverviewScreen: undefined
+  AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
   ReceiveScreen: StackPayload
   SendScreen: StackPayload
@@ -59,4 +78,10 @@ export interface SeedWordType {
 export enum DarkModeEnum {
   Light,
   Dark,
+}
+
+export enum ActionEnum {
+  SEND,
+  SWAP,
+  RECEIVE,
 }

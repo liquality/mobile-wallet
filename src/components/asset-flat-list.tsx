@@ -1,3 +1,4 @@
+import React, { FC, Fragment, useCallback, useEffect, useState } from 'react'
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
@@ -5,45 +6,53 @@ import {
   faPlus,
   faMinus,
 } from '@fortawesome/pro-light-svg-icons'
-import * as React from 'react'
-import { FeeDetails } from '@liquality/types/lib/fees'
-import BigNumber from 'bignumber.js'
 import { formatFiat, prettyBalance } from '../core/utils/coin-formatter'
-import { NetworkEnum } from '../core/types'
-import { ChainId } from '@liquality/cryptoassets/src/types'
 import AssetIcon from './asset-icon'
 import GasIndicator from './ui/gas-indicator'
+import { useAppSelector } from '../hooks'
+import { AssetDataElementType, StackPayload } from '../types'
 
-export type DataElementType = {
-  id: string
-  name: string
-  code?: string
-  chain?: ChainId
-  address?: string
-  balance?: BigNumber
-  balanceInUSD?: BigNumber
-  color?: string
-  assets?: Array<DataElementType>
-  showAssets?: boolean
-  fees?: FeeDetails
-  activeNetwork?: NetworkEnum
+type AssetFlatListPropsType = {
+  assets: Array<AssetDataElementType>
+  onAssetSelected: (params: StackPayload) => void
 }
 
-const AssetFlatList = ({
-  assets,
-  toggleRow,
-  navigate,
-}: {
-  assets: Array<DataElementType>
-  toggleRow: (itemId: string) => void
-  navigate: (screen: string, params: any) => void
-}) => {
-  const renderAsset = ({ item }: { item: DataElementType }) => {
+const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
+  const { assets, onAssetSelected } = props
+  const [data, setData] = useState<Array<AssetDataElementType>>(assets)
+  const { activeNetwork } = useAppSelector((state) => ({
+    activeNetwork: state.activeNetwork,
+  }))
+
+  const toggleRow = useCallback(
+    (itemId: string) => {
+      setData(
+        data.map((item) => {
+          if (item.id === itemId) {
+            return {
+              ...item,
+              showAssets: !item.showAssets,
+              activeNetwork,
+            }
+          } else {
+            return item
+          }
+        }),
+      )
+    },
+    [activeNetwork, data],
+  )
+
+  useEffect(() => {
+    setData(assets)
+  }, [assets])
+
+  const renderAsset = ({ item }: { item: AssetDataElementType }) => {
     const { name, address, balance, balanceInUSD, fees } = item
     const isNested = item.assets && item.assets.length > 0
 
     return (
-      <View>
+      <Fragment>
         <View style={[styles.row, { borderLeftColor: item.color }]}>
           <View style={styles.col1}>
             <Pressable onPress={() => toggleRow(item.id)}>
@@ -130,13 +139,12 @@ const AssetFlatList = ({
                 <View style={styles.col4}>
                   <Pressable
                     onPress={() =>
-                      navigate('AssetScreen', {
+                      onAssetSelected({
                         assetData: {
                           ...subElem,
                           address: item.address,
                         },
                         screenTitle: subElem.code,
-                        activeNetwork: item.activeNetwork,
                       })
                     }>
                     <FontAwesomeIcon
@@ -149,13 +157,13 @@ const AssetFlatList = ({
               </View>
             )
           })}
-      </View>
+      </Fragment>
     )
   }
 
   return (
     <FlatList
-      data={assets}
+      data={data}
       renderItem={renderAsset}
       keyExtractor={(item) => item.id}
     />
@@ -166,8 +174,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
+    borderTopWidth: 1,
+    borderTopColor: '#D9DFE5',
     borderLeftWidth: 3,
     paddingVertical: 10,
   },
@@ -246,4 +254,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default AssetFlatList
+export default React.memo(AssetFlatList)

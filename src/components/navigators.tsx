@@ -27,6 +27,7 @@ import SendConfirmationScreen from '../screens/wallet-features/send-confirmation
 import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
 import SettingsHeaderRight from './header-bar/settings-header-right'
+import AssetChooserScreen from '../screens/wallet-features/asset-chooser-screen'
 
 const Stack = createStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
@@ -100,6 +101,13 @@ export const AppStackNavigator = () => (
     })}>
     <Stack.Screen name="OverviewScreen">
       {(props) => WithPopupMenu(OverviewScreen)(props)}
+    </Stack.Screen>
+    <Stack.Screen
+      name="AssetChooserScreen"
+      options={() => ({
+        headerRight: () => <View />,
+      })}>
+      {(props) => WithPopupMenu(AssetChooserScreen)(props)}
     </Stack.Screen>
     <Stack.Screen name="AssetScreen">
       {(props) => WithPopupMenu(AssetScreen)(props)}

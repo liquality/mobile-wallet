@@ -17,9 +17,8 @@ import {
   faArrowDown,
   faArrowUp,
 } from '@fortawesome/pro-light-svg-icons'
-import { DataElementType } from '../../components/asset-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
-import { RootStackParamList } from '../../types'
+import { AssetDataElementType, RootStackParamList } from '../../types'
 
 const activities: Array<ActivityDataElementType> = [
   {
@@ -42,7 +41,7 @@ type AssetScreenProps = StackScreenProps<RootStackParamList, 'AssetScreen'>
 
 const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const [activityData] = useState<Array<ActivityDataElementType>>(activities)
-  const { code, address, balance, balanceInUSD }: DataElementType =
+  const { code, address, balance, balanceInUSD }: AssetDataElementType =
     route.params.assetData!
 
   const handleSendPress = () => {
