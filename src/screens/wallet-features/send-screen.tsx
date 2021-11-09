@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
 import { chains } from '@liquality/cryptoassets'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -23,6 +23,7 @@ import {
 } from '../../core/utils/fee-calculator'
 import { cryptoToFiat, fiatToCrypto } from '../../core/utils/coin-formatter'
 import AssetIcon from '../../components/asset-icon'
+import QrCodeScanner from '../../components/qr-code-scanner'
 
 const useInputState = (
   initialValue: string,
@@ -55,6 +56,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
   const [amountInNative, setAmountInNative] = useState<number>(0)
   const [showAmountsInFiat, setShowAmountsInFiat] = useState<boolean>(false)
+  const [isCameraVisible, setIsCameraVisible] = useState(false)
   const [error, setError] = useState('')
   const amountInput = useInputState('')
   const addressInput = useInputState('')
@@ -185,8 +187,23 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     })
   }
 
+  const handleQRCodeBtnPress = () => {
+    setIsCameraVisible(!isCameraVisible)
+  }
+
+  const handleCameraModalClose = useCallback(
+    (address: string) => {
+      setIsCameraVisible(!isCameraVisible)
+      if (address) {
+        addressInput.onChangeText(address.replace('ethereum:', ''))
+      }
+    },
+    [addressInput, isCameraVisible],
+  )
+
   return (
     <View style={styles.container}>
+      {isCameraVisible && <QrCodeScanner onClose={handleCameraModalClose} />}
       <View style={styles.headerBlock}>
         <View style={styles.sendWrapper}>
           <View style={styles.row}>
@@ -250,7 +267,9 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
                 autoCorrect={false}
                 returnKeyType="done"
               />
-              <FontAwesomeIcon icon={faQrcode} />
+              <Pressable onPress={handleQRCodeBtnPress}>
+                <FontAwesomeIcon icon={faQrcode} size={45} />
+              </Pressable>
             </View>
           </View>
           <View />
