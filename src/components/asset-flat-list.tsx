@@ -1,3 +1,4 @@
+import React, { FC, Fragment, useCallback, useEffect, useState } from 'react'
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
@@ -5,41 +6,42 @@ import {
   faPlus,
   faMinus,
 } from '@fortawesome/pro-light-svg-icons'
-import * as React from 'react'
 import { formatFiat, prettyBalance } from '../core/utils/coin-formatter'
 import AssetIcon from './asset-icon'
 import GasIndicator from './ui/gas-indicator'
-import { Fragment, useEffect, useState } from 'react'
 import { useAppSelector } from '../hooks'
 import { AssetDataElementType, StackPayload } from '../types'
 
-const AssetFlatList = ({
-  assets,
-  onAssetSelected,
-}: {
+type AssetFlatListPropsType = {
   assets: Array<AssetDataElementType>
   onAssetSelected: (params: StackPayload) => void
-}) => {
+}
+
+const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
+  const { assets, onAssetSelected } = props
   const [data, setData] = useState<Array<AssetDataElementType>>(assets)
   const { activeNetwork } = useAppSelector((state) => ({
     activeNetwork: state.activeNetwork,
   }))
 
-  const toggleRow = (itemId: string) => {
-    setData(
-      data.map((item) => {
-        if (item.id === itemId) {
-          return {
-            ...item,
-            showAssets: !item.showAssets,
-            activeNetwork,
+  const toggleRow = useCallback(
+    (itemId: string) => {
+      setData(
+        data.map((item) => {
+          if (item.id === itemId) {
+            return {
+              ...item,
+              showAssets: !item.showAssets,
+              activeNetwork,
+            }
+          } else {
+            return item
           }
-        } else {
-          return item
-        }
-      }),
-    )
-  }
+        }),
+      )
+    },
+    [activeNetwork, data],
+  )
 
   useEffect(() => {
     setData(assets)
@@ -252,4 +254,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default AssetFlatList
+export default React.memo(AssetFlatList)

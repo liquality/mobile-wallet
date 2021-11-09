@@ -14,9 +14,10 @@ type Props = StackScreenProps<
   'OverviewScreen' | 'AssetScreen' | 'AssetChooserScreen'
 >
 const WithPopupMenu = <T extends FctType>(
-  Component: (props: Parameters<T>[0]) => ReturnType<T>,
+  Component: (componentProps: Parameters<T>[0]) => ReturnType<T>,
 ) => {
-  return ({ navigation, route }: Props) => {
+  return (props: Props) => {
+    const { navigation, route } = props
     const handleLockPress = () => {
       navigation.navigate('LoginScreen')
     }

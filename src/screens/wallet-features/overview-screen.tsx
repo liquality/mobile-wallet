@@ -13,7 +13,7 @@ import {
   faArrowUp,
 } from '@fortawesome/pro-regular-svg-icons'
 import { faGreaterThan } from '@fortawesome/pro-light-svg-icons'
-import { Fragment, useState } from 'react'
+import { Fragment, useCallback, useState } from 'react'
 import { useWalletState } from '../../hooks'
 import { formatFiat } from '../../core/utils/coin-formatter'
 import AssetFlatList from '../../components/asset-flat-list'
@@ -51,29 +51,33 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   const [activityData] = useState<Array<ActivityDataElementType>>(activities)
   const { assets, assetCount, totalFiatBalance, loading } = useWalletState()
 
-  const handleSendBtnPress = () => {
+  const handleSendBtnPress = useCallback(() => {
     navigation.navigate('AssetChooserScreen', {
       screenTitle: 'Select asset for Send',
       action: ActionEnum.SEND,
     })
-  }
+  }, [navigation])
 
-  const handleReceiveBtnPress = () => {
+  const handleReceiveBtnPress = useCallback(() => {
     navigation.navigate('AssetChooserScreen', {
       screenTitle: 'Select asset for receive',
       action: ActionEnum.RECEIVE,
     })
-  }
+  }, [navigation])
 
-  const handleSwapBtnPress = () => {
+  const handleSwapBtnPress = useCallback(() => {
     navigation.navigate('AssetChooserScreen', {
       screenTitle: 'Select asset for swap',
       action: ActionEnum.SWAP,
     })
-  }
-  const onAssetSelected = (params: StackPayload) => {
-    navigation.navigate('AssetScreen', params)
-  }
+  }, [navigation])
+
+  const onAssetSelected = useCallback(
+    (params: StackPayload) => {
+      navigation.navigate('AssetScreen', params)
+    },
+    [navigation],
+  )
 
   return (
     <View style={styles.container}>

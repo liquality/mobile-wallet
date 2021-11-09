@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { View, StyleSheet, TextInput, Alert } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
@@ -23,13 +23,16 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
   const searchInput = useInputState('')
   const [data, setData] = useState<Array<AssetDataElementType>>([])
   const { assets, loading } = useWalletState()
-  const screenMap: Record<ActionEnum, keyof RootStackParamList> = {
-    [ActionEnum.RECEIVE]: 'ReceiveScreen',
-    [ActionEnum.SWAP]: 'ReceiveScreen',
-    [ActionEnum.SEND]: 'SendScreen',
-  }
+  const screenMap: Record<ActionEnum, keyof RootStackParamList> = useMemo(
+    () => ({
+      [ActionEnum.RECEIVE]: 'ReceiveScreen',
+      [ActionEnum.SWAP]: 'ReceiveScreen',
+      [ActionEnum.SEND]: 'SendScreen',
+    }),
+    [],
+  )
 
-  const filterByTerm = (): void => {
+  const filterByTerm = useCallback((): void => {
     const term = searchInput.value
 
     if (term.length === 0 || !assets) {
@@ -52,18 +55,21 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
       .filter((item) => item.name)
 
     setData(filteredResults || [])
-  }
+  }, [assets, searchInput.value])
 
-  const onAssetSelected = (params: StackPayload) => {
-    if (!route.params.action) {
-      Alert.alert('Please reload your app')
-    } else {
-      navigation.navigate(screenMap[route.params.action], {
-        assetData: params.assetData,
-        screenTitle: `Send ${params.assetData?.code}`,
-      })
-    }
-  }
+  const onAssetSelected = useCallback(
+    (params: StackPayload) => {
+      if (typeof route.params.action === 'undefined') {
+        Alert.alert('Please reload your app')
+      } else {
+        navigation.navigate(screenMap[route.params.action], {
+          assetData: params.assetData,
+          screenTitle: `Send ${params.assetData?.code}`,
+        })
+      }
+    },
+    [navigation, route.params.action, screenMap],
+  )
 
   useEffect(() => {
     if (!loading) {
