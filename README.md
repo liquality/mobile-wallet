@@ -5,7 +5,7 @@
 - Go to the project root folder and run `nvm use`. This will make sure the right version of Node is used.
 - Install npm dependencies
     ```
-    npm i
+    FONTAWESOME_NPM_AUTH_TOKEN=INSERT_THE_FONTAWESOME_TOKEN_HERE npm i
     ```
 - Install Cocoapods dependencies
     ```

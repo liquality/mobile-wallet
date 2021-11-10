@@ -1,24 +1,40 @@
-import React, { FC, useCallback } from 'react'
-import { View, StyleSheet, Modal, SafeAreaView, Pressable } from 'react-native'
+import React, { FC, useCallback, useState } from 'react'
+import {
+  View,
+  StyleSheet,
+  Modal,
+  SafeAreaView,
+  Pressable,
+  Text,
+} from 'react-native'
 import { BarCodeReadEvent, RNCamera } from 'react-native-camera'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTimes } from '@fortawesome/pro-light-svg-icons'
 import { ChainId, chains } from '@liquality/cryptoassets'
+import Svg, { Rect } from 'react-native-svg'
 
 type QrCodeScannerPropsType = {
   onClose: (address: string) => void
+  chain: ChainId
 }
 
 const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
-  const { onClose } = props
+  const { onClose, chain } = props
+  const [error, setError] = useState('')
 
   const handleQrCodeDetected = useCallback(
     (event: BarCodeReadEvent) => {
-      if (event.data && chains[ChainId.Ethereum].isValidAddress(event.data)) {
+      if (error) {
+        setError('')
+      }
+      const address = event.data.split(':')?.[1]
+      if (address && chains[chain].isValidAddress(address)) {
         onClose(event.data)
+      } else {
+        setError('Invalid QR Code')
       }
     },
-    [onClose],
+    [chain, error, onClose],
   )
 
   const handleCloseBtnPress = () => {
@@ -39,12 +55,25 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
           </Pressable>
         </View>
         <View style={styles.container}>
-          <RNCamera
-            style={styles.preview}
-            type={RNCamera.Constants.Type.back}
-            captureAudio={false}
-            onBarCodeRead={handleQrCodeDetected}
-          />
+          <Svg
+            viewBox={'0 0 260 260'}
+            x={0}
+            y={0}
+            height="260"
+            width="260"
+            style={styles.svg}>
+            <Rect x="0" y="0" width="50" height="50" fill="#fefefe" />
+            <Rect x="0" y="210" width="50" height="49" fill="#fefefe" />
+            <Rect x="210" y="0" width="49" height="50" fill="#fefefe" />
+            <Rect x="210" y="210" width="49" height="49" fill="#fefefe" />
+            <RNCamera
+              style={styles.preview}
+              type={RNCamera.Constants.Type.back}
+              captureAudio={false}
+              onBarCodeRead={handleQrCodeDetected}
+            />
+          </Svg>
+          {!!error && <Text style={styles.error}>{error}</Text>}
         </View>
       </SafeAreaView>
     </Modal>
@@ -73,11 +102,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  svg: {
+    borderColor: '#FFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   preview: {
-    width: 250,
-    height: 250,
+    width: 257,
+    height: 257,
     borderColor: '#fefefe',
-    borderWidth: 2,
+    marginTop: 1,
+    marginLeft: 1,
+  },
+  error: {
+    fontFamily: 'Montserrat-Light',
+    color: '#F12274',
+    fontSize: 12,
+    width: 260,
+    backgroundColor: '#FFF',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginTop: 5,
+    paddingLeft: 5,
+    paddingVertical: 5,
+    height: 25,
   },
 })
 
