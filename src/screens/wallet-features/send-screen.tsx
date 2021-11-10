@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
 import { chains } from '@liquality/cryptoassets'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -23,6 +23,7 @@ import {
 } from '../../core/utils/fee-calculator'
 import { cryptoToFiat, fiatToCrypto } from '../../core/utils/coin-formatter'
 import AssetIcon from '../../components/asset-icon'
+import QrCodeScanner from '../../components/qr-code-scanner'
 
 const useInputState = (
   initialValue: string,
@@ -55,6 +56,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
   const [amountInNative, setAmountInNative] = useState<number>(0)
   const [showAmountsInFiat, setShowAmountsInFiat] = useState<boolean>(false)
+  const [isCameraVisible, setIsCameraVisible] = useState(false)
   const [error, setError] = useState('')
   const amountInput = useInputState('')
   const addressInput = useInputState('')
@@ -63,7 +65,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     return /^\d+(.\d+)?$/.test(value)
   }
 
-  const validate = (): boolean => {
+  const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
       setError('Enter a valid amount')
       return false
@@ -76,7 +78,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     }
 
     return true
-  }
+  }, [addressInput.value, amountInput.value, balance, chain])
 
   useEffect(() => {
     let gasFee
@@ -123,7 +125,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     customFee,
   ])
 
-  const handleReviewPress = () => {
+  const handleReviewPress = useCallback(() => {
     if (validate()) {
       navigation.navigate('SendReviewScreen', {
         screenTitle: `Send ${code} Review`,
@@ -135,44 +137,47 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
         },
       })
     }
-  }
+  }, [addressInput.value, amountInput.value, code, fee, navigation, validate])
 
-  const handleFiatBtnPress = () => {
+  const handleFiatBtnPress = useCallback(() => {
     if (showAmountsInFiat) {
       amountInput.onChangeText(`${amountInNative}`)
     } else {
       amountInput.onChangeText(`${amountInFiat}`)
     }
     setShowAmountsInFiat(!showAmountsInFiat)
-  }
+  }, [amountInFiat, amountInNative, amountInput, showAmountsInFiat])
 
-  const handleOnChangeText = (text: string): void => {
-    if (!isNumber(text)) {
-      setError('Invalid amount.')
-      return
-    }
+  const handleOnChangeText = useCallback(
+    (text: string): void => {
+      if (!isNumber(text)) {
+        setError('Invalid amount.')
+        return
+      }
 
-    if (!fiatRates) {
-      setError('Fiat rates missing!')
-      return
-    }
+      if (!fiatRates) {
+        setError('Fiat rates missing!')
+        return
+      }
 
-    if (showAmountsInFiat) {
-      setAmountInNative(
-        fiatToCrypto(new BigNumber(text), fiatRates[code!]).toNumber(),
-      )
-      setAmountInFiat(new BigNumber(text).toNumber())
-    } else {
-      setAmountInFiat(
-        cryptoToFiat(
-          new BigNumber(text).toNumber(),
-          fiatRates[code!],
-        ).toNumber(),
-      )
-      setAmountInNative(new BigNumber(text).toNumber())
-    }
-    amountInput.onChangeText(text)
-  }
+      if (showAmountsInFiat) {
+        setAmountInNative(
+          fiatToCrypto(new BigNumber(text), fiatRates[code!]).toNumber(),
+        )
+        setAmountInFiat(new BigNumber(text).toNumber())
+      } else {
+        setAmountInFiat(
+          cryptoToFiat(
+            new BigNumber(text).toNumber(),
+            fiatRates[code!],
+          ).toNumber(),
+        )
+        setAmountInNative(new BigNumber(text).toNumber())
+      }
+      amountInput.onChangeText(text)
+    },
+    [amountInput, code, fiatRates, showAmountsInFiat],
+  )
 
   const handleFeeOptionsPress = () => {
     setShowFeeOptions(!showFeeOptions)
@@ -185,8 +190,25 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     })
   }
 
+  const handleQRCodeBtnPress = () => {
+    setIsCameraVisible(!isCameraVisible)
+  }
+
+  const handleCameraModalClose = useCallback(
+    (address: string) => {
+      setIsCameraVisible(!isCameraVisible)
+      if (address) {
+        addressInput.onChangeText(address.replace('ethereum:', ''))
+      }
+    },
+    [addressInput, isCameraVisible],
+  )
+
   return (
     <View style={styles.container}>
+      {isCameraVisible && chain && (
+        <QrCodeScanner chain={chain} onClose={handleCameraModalClose} />
+      )}
       <View style={styles.headerBlock}>
         <View style={styles.sendWrapper}>
           <View style={styles.row}>
@@ -250,7 +272,9 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
                 autoCorrect={false}
                 returnKeyType="done"
               />
-              <FontAwesomeIcon icon={faQrcode} />
+              <Pressable onPress={handleQRCodeBtnPress}>
+                <FontAwesomeIcon icon={faQrcode} size={45} />
+              </Pressable>
             </View>
           </View>
           <View />
