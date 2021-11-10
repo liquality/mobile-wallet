@@ -1,17 +1,11 @@
 import React, { FC, useCallback, useState } from 'react'
-import {
-  View,
-  StyleSheet,
-  Modal,
-  SafeAreaView,
-  Pressable,
-  Text,
-} from 'react-native'
+import { View, StyleSheet, Modal, SafeAreaView, Pressable } from 'react-native'
 import { BarCodeReadEvent, RNCamera } from 'react-native-camera'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTimes } from '@fortawesome/pro-light-svg-icons'
 import { ChainId, chains } from '@liquality/cryptoassets'
 import Svg, { Rect } from 'react-native-svg'
+import Error from '../components/ui/error'
 
 type QrCodeScannerPropsType = {
   onClose: (address: string) => void
@@ -73,7 +67,7 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
               onBarCodeRead={handleQrCodeDetected}
             />
           </Svg>
-          {!!error && <Text style={styles.error}>{error}</Text>}
+          {!!error && <Error message={error} style={styles.error} />}
         </View>
       </SafeAreaView>
     </Modal>
@@ -115,17 +109,7 @@ const styles = StyleSheet.create({
     marginLeft: 1,
   },
   error: {
-    fontFamily: 'Montserrat-Light',
-    color: '#F12274',
-    fontSize: 12,
     width: 260,
-    backgroundColor: '#FFF',
-    textAlignVertical: 'center',
-    textAlign: 'center',
-    marginTop: 5,
-    paddingLeft: 5,
-    paddingVertical: 5,
-    height: 25,
   },
 })
 
