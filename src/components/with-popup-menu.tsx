@@ -18,8 +18,15 @@ const WithPopupMenu = <T extends FctType>(
 ) => {
   return (props: Props) => {
     const { navigation, route } = props
+
     const handleLockPress = () => {
       navigation.navigate('LoginScreen')
+    }
+
+    const handleManageAssetsBtnPress = () => {
+      navigation.navigate('AssetManagementScreen', {
+        screenTitle: 'Manage Assets',
+      })
     }
 
     return (
@@ -31,7 +38,9 @@ const WithPopupMenu = <T extends FctType>(
               <FontAwesomeIcon icon={faPlug} style={styles.icon} />
               <Text>Connected Sites</Text>
             </Pressable>
-            <Pressable style={styles.menuItem}>
+            <Pressable
+              style={styles.menuItem}
+              onPress={handleManageAssetsBtnPress}>
               <ManageAssetsIcon style={styles.icon} />
               <Text>Manage Assets</Text>
             </Pressable>

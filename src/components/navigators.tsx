@@ -28,6 +28,7 @@ import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
 import SettingsHeaderRight from './header-bar/settings-header-right'
 import AssetChooserScreen from '../screens/wallet-features/asset-chooser-screen'
+import AssetManagementScreen from '../screens/wallet-features/asset-management-screen'
 
 const Stack = createStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
@@ -143,6 +144,13 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="SendConfirmationScreen"
       component={SendConfirmationScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
+    />
+    <Stack.Screen
+      name="AssetManagementScreen"
+      component={AssetManagementScreen}
       options={() => ({
         headerRight: () => <View />,
       })}

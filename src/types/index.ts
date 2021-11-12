@@ -54,6 +54,7 @@ export type RootStackParamList = {
   OverviewScreen: undefined
   AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
+  AssetManagementScreen: StackPayload
   ReceiveScreen: StackPayload
   SendScreen: StackPayload
   SendReviewScreen: StackPayload
