@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react'
+import React, { FC, Fragment, useCallback, useEffect, useState } from 'react'
 import { Alert, FlatList, StyleSheet, Text, View } from 'react-native'
 import AssetIcon from '../../components/asset-icon'
 import Switch from '../../components/ui/switch'
@@ -9,7 +9,7 @@ import { NetworkEnum } from '../../core/types'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
 import Config from '../../core/config'
 
-const AssetManagementScreen = (): React.ReactElement => {
+const AssetManagementScreen: FC = () => {
   const DEFAULT_COLOR = '#EFEFEF'
   const dispatch = useAppDispatch()
   const [data, setData] = useState<Asset[]>([])
@@ -109,7 +109,7 @@ const AssetManagementScreen = (): React.ReactElement => {
 
   return (
     <View style={styles.container}>
-      <SearchBox items={assets} updateData={setData} isTwoLevelSearch={false} />
+      <SearchBox items={assets} updateData={setData} />
       <FlatList
         data={data}
         renderItem={renderAsset}

@@ -1,71 +1,37 @@
-import React, { useCallback } from 'react'
-import { useInputState } from '../../hooks'
+import React, { Dispatch, SetStateAction, useCallback } from 'react'
 import { Pressable, StyleSheet, TextInput, View, Text } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faSearch, faTimes } from '@fortawesome/pro-light-svg-icons'
+import Fuse from 'fuse.js'
+import { useInputState } from '../../hooks'
 
 type SearchBoxPropsType<T> = {
-  updateData: (...args: any) => void
+  updateData: Dispatch<SetStateAction<T[]>>
   items: T[]
-  isTwoLevelSearch: boolean
+}
+
+const options = {
+  includeScore: true,
+  keys: ['name', 'code', 'assets.name', 'assets.code'],
 }
 
 const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
   props: SearchBoxPropsType<T>,
 ) => {
-  const { updateData, items, isTwoLevelSearch } = props
+  const { updateData, items } = props
   const searchInput = useInputState('')
 
-  const filterOneLevelItems = useCallback(() => {
-    const term = searchInput.value
-    if (term.length === 0 || !items) {
-      updateData(items || ([] as T[]))
-      return
-    }
-
-    //TODO maybe more efficient to use regex
-    const filteredResults: T[] = items.filter(
-      (item) =>
-        item.name.toLowerCase().indexOf(term.toLowerCase()) >= 0 ||
-        item.code.toLowerCase().indexOf(term.toLowerCase()) >= 0,
-    )
-
-    updateData(filteredResults)
-  }, [items, searchInput.value, updateData])
-
-  const filterTwoLevelItems = useCallback((): void => {
-    const term = searchInput.value
-
-    if (term.length === 0 || !items) {
-      updateData(items || ([] as T[]))
-      return
-    }
-
-    const filteredResults: T[] = items
-      .map((item) => {
-        const subs = item.items?.filter(
-          (sub) => sub.name.toLowerCase().indexOf(term.toLowerCase()) >= 0,
-        )
-        if (subs && subs.length > 0) {
-          return {
-            ...item,
-          }
-        } else {
-          return {} as T
-        }
-      })
-      .filter((item) => item.name)
-
-    updateData(filteredResults || [])
-  }, [items, searchInput.value, updateData])
-
   const filterItems = useCallback(() => {
-    if (isTwoLevelSearch) {
-      filterTwoLevelItems()
-    } else {
-      filterOneLevelItems()
+    const term = searchInput.value
+
+    if (term.length === 0 || !items) {
+      updateData(items || ([] as T[]))
+      return
     }
-  }, [filterOneLevelItems, filterTwoLevelItems, isTwoLevelSearch])
+    const fuse = new Fuse(items, options)
+    const results = fuse.search<T>(term)
+    updateData(results.map((result) => result.item))
+  }, [items, searchInput.value, updateData])
 
   const handleClearBtnPress = () => {
     searchInput.onChangeText('')
