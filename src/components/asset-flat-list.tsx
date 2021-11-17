@@ -124,7 +124,7 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
                 ]}
                 key={subElem.id}>
                 <View style={styles.col1}>
-                  <AssetIcon asset={subElem.code} />
+                  <AssetIcon asset={subElem.code} chain={subElem.chain} />
                 </View>
                 <View style={styles.col2}>
                   <Text style={styles.code}>{subElem.name}</Text>
