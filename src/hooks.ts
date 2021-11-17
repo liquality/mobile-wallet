@@ -76,6 +76,7 @@ export const useWalletState = () => {
                 name: cryptoassets[asset].name,
                 code: asset,
                 chain: account.chain,
+                color: account.color,
                 balance: new BigNumber(account.balances![asset]),
                 balanceInUSD: new BigNumber(
                   unitToCurrency(

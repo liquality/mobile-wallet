@@ -1,30 +1,49 @@
-import { AssetDataElementType } from '../../types'
-import React, { FC, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { useInputState } from '../../hooks'
 import { Pressable, StyleSheet, TextInput, View, Text } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faSearch, faTimes } from '@fortawesome/pro-light-svg-icons'
 
-type SearchBoxPropsType = {
+type SearchBoxPropsType<T> = {
   updateData: (...args: any) => void
-  assets: AssetDataElementType[]
+  items: T[]
+  isTwoLevelSearch: boolean
 }
 
-const SearchBox: FC<SearchBoxPropsType> = (props) => {
-  const { updateData, assets } = props
+const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
+  props: SearchBoxPropsType<T>,
+) => {
+  const { updateData, items, isTwoLevelSearch } = props
   const searchInput = useInputState('')
 
-  const filterByTerm = useCallback((): void => {
+  const filterOneLevelItems = useCallback(() => {
     const term = searchInput.value
-
-    if (term.length === 0 || !assets) {
-      updateData(assets || ([] as AssetDataElementType[]))
+    if (term.length === 0 || !items) {
+      updateData(items || ([] as T[]))
       return
     }
 
-    const filteredResults: AssetDataElementType[] = assets
+    //TODO maybe more efficient to use regex
+    const filteredResults: T[] = items.filter(
+      (item) =>
+        item.name.toLowerCase().indexOf(term.toLowerCase()) >= 0 ||
+        item.code.toLowerCase().indexOf(term.toLowerCase()) >= 0,
+    )
+
+    updateData(filteredResults)
+  }, [items, searchInput.value, updateData])
+
+  const filterTwoLevelItems = useCallback((): void => {
+    const term = searchInput.value
+
+    if (term.length === 0 || !items) {
+      updateData(items || ([] as T[]))
+      return
+    }
+
+    const filteredResults: T[] = items
       .map((item) => {
-        const subs = item.assets?.filter(
+        const subs = item.items?.filter(
           (sub) => sub.name.toLowerCase().indexOf(term.toLowerCase()) >= 0,
         )
         if (subs && subs.length > 0) {
@@ -32,16 +51,25 @@ const SearchBox: FC<SearchBoxPropsType> = (props) => {
             ...item,
           }
         } else {
-          return {} as AssetDataElementType
+          return {} as T
         }
       })
       .filter((item) => item.name)
 
     updateData(filteredResults || [])
-  }, [assets, searchInput.value, updateData])
+  }, [items, searchInput.value, updateData])
+
+  const filterItems = useCallback(() => {
+    if (isTwoLevelSearch) {
+      filterTwoLevelItems()
+    } else {
+      filterOneLevelItems()
+    }
+  }, [filterOneLevelItems, filterTwoLevelItems, isTwoLevelSearch])
 
   const handleClearBtnPress = () => {
     searchInput.onChangeText('')
+    updateData(items)
   }
 
   return (
@@ -52,7 +80,7 @@ const SearchBox: FC<SearchBoxPropsType> = (props) => {
         placeholder={'Search for a Currency'}
         keyboardType={'numeric'}
         onChangeText={searchInput.onChangeText}
-        onEndEditing={filterByTerm}
+        onEndEditing={filterItems}
         value={searchInput.value}
         autoCorrect={false}
         returnKeyType="done"

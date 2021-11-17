@@ -8,7 +8,7 @@ import NearIcon from '../assets/icons/crypto/near.svg'
 import PolygonIcon from '../assets/icons/crypto/polygon.svg'
 import ArbitrumIcon from '../assets/icons/crypto/arbeth.svg'
 import TerraIcon from '../assets/icons/crypto/terra.svg'
-import BlankIcon from '../assets/icons/crypto/blank_asset.svg'
+import BlankIcon from '../assets/icons/crypto/blank.svg'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FC } from 'react'
 
@@ -19,102 +19,52 @@ type AssetIconType = {
 }
 
 const AssetIcon: FC<AssetIconType> = (props) => {
-  const { chain, asset, size } = props
   const SIZE = 32
+  const { chain, asset, size = SIZE } = props
 
   if (!asset && !chain) {
-    return (
-      <BlankIcon
-        width={size || SIZE}
-        height={size || SIZE}
-        style={styles.icon}
-      />
-    )
+    return <BlankIcon width={size} height={size} style={styles.icon} />
   }
 
   if (asset?.toLowerCase() === 'eth' || chain?.toLowerCase() === 'ethereum') {
-    return (
-      <ETHIcon width={size || SIZE} height={size || SIZE} style={styles.icon} />
-    )
+    return <ETHIcon width={size} height={size} style={styles.icon} />
   } else if (
     asset?.toLowerCase() === 'rsk' ||
     chain?.toLowerCase() === ChainId.Rootstock
   ) {
-    return (
-      <RootstockIcon
-        width={size || SIZE}
-        height={size || SIZE}
-        style={styles.icon}
-      />
-    )
+    return <RootstockIcon width={size} height={size} style={styles.icon} />
   } else if (
     asset?.toLowerCase() === 'bsc' ||
     chain?.toLowerCase() === ChainId.BinanceSmartChain
   ) {
-    return (
-      <BinanceIcon
-        width={size || SIZE}
-        height={size || SIZE}
-        style={styles.icon}
-      />
-    )
+    return <BinanceIcon width={size} height={size} style={styles.icon} />
   } else if (
     asset?.toLowerCase() === 'near' ||
     chain?.toLowerCase() === ChainId.Near
   ) {
-    return (
-      <NearIcon
-        width={size || SIZE}
-        height={size || SIZE}
-        style={styles.icon}
-      />
-    )
+    return <NearIcon width={size} height={size} style={styles.icon} />
   } else if (
     asset?.toLowerCase() === 'polygon' ||
     chain?.toLowerCase() === ChainId.Polygon
   ) {
-    return (
-      <PolygonIcon
-        width={size || SIZE}
-        height={size || SIZE}
-        style={styles.icon}
-      />
-    )
+    return <PolygonIcon width={size} height={size} style={styles.icon} />
   } else if (
     asset?.toLowerCase() === 'arbitrum' ||
     asset?.toLowerCase() === ChainId.Arbitrum
   ) {
-    return (
-      <ArbitrumIcon
-        width={size || SIZE}
-        height={size || SIZE}
-        style={styles.icon}
-      />
-    )
+    return <ArbitrumIcon width={size} height={size} style={styles.icon} />
   } else if (
     asset?.toLowerCase() === 'ust' ||
     chain?.toLowerCase() === 'terra'
   ) {
-    return (
-      <TerraIcon
-        width={size || SIZE}
-        height={size || SIZE}
-        style={styles.icon}
-      />
-    )
+    return <TerraIcon width={size} height={size} style={styles.icon} />
   } else if (
     asset?.toLowerCase() === 'btc' ||
     chain?.toLowerCase() === ChainId.Bitcoin
   ) {
-    return <BTCIcon width={size || SIZE} height={SIZE} style={styles.icon} />
+    return <BTCIcon width={size} height={SIZE} style={styles.icon} />
   } else {
-    return (
-      <BlankIcon
-        width={size || SIZE}
-        height={size || SIZE}
-        style={styles.icon}
-      />
-    )
+    return <BlankIcon width={size} height={size} style={styles.icon} />
   }
 }
 

@@ -1,135 +1,119 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react'
-import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native'
-import { AssetDataElementType } from '../../types'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faMinus, faPlus } from '@fortawesome/pro-light-svg-icons'
+import { Alert, FlatList, StyleSheet, Text, View } from 'react-native'
 import AssetIcon from '../../components/asset-icon'
-import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
 import Switch from '../../components/ui/switch'
-import { useAppSelector, useWalletState } from '../../hooks'
+import { useAppDispatch, useAppSelector } from '../../hooks'
 import SearchBox from '../../components/ui/search-box'
-import { chains } from '@liquality/cryptoassets'
-import config from '../../core/config'
-import BigNumber from 'bignumber.js'
+import { assets as cryptoassets } from '@liquality/cryptoassets'
+import { NetworkEnum } from '../../core/types'
+import { Asset } from '@liquality/cryptoassets/dist/src/types'
+import Config from '../../core/config'
 
 const AssetManagementScreen = (): React.ReactElement => {
   const DEFAULT_COLOR = '#EFEFEF'
-  const { assets } = useWalletState()
-  const [data, setData] = useState<Array<AssetDataElementType>>(assets)
-  const { activeNetwork } = useAppSelector((state) => ({
-    activeNetwork: state.activeNetwork,
-  }))
+  const dispatch = useAppDispatch()
+  const [data, setData] = useState<Asset[]>([])
+  const [assets, setAssets] = useState<Asset[]>([])
+  const [myEnabledAssets, setMyEnabledAssets] = useState<string[]>([])
+  const { activeNetwork, activeWalletId, enabledAssets } = useAppSelector(
+    (state) => ({
+      activeNetwork: state.activeNetwork,
+      enabledAssets: state.enabledAssets,
+      activeWalletId: state.activeWalletId,
+    }),
+  )
 
-  const toggleRow = useCallback(
-    (itemId: string) => {
-      setData(
-        data.map((item) => {
-          if (item.id === itemId) {
-            return {
-              ...item,
-              showAssets: !item.showAssets,
-              activeNetwork,
-            }
-          } else {
-            return item
-          }
-        }),
-      )
+  const handleEnableFeature = useCallback(
+    (asset: string) => {
+      if (!activeWalletId || !activeNetwork) {
+        Alert.alert('Please reload your wallet')
+        return
+      }
+
+      dispatch({
+        type: 'TOGGLE_ASSET',
+        payload: {
+          enabledAssets: {
+            ...enabledAssets,
+            [activeNetwork]: {
+              [activeWalletId]: myEnabledAssets.includes(asset)
+                ? myEnabledAssets.filter((item) => item !== asset)
+                : myEnabledAssets.concat(asset),
+            },
+          },
+        },
+      })
     },
-    [activeNetwork, data],
+    [activeNetwork, activeWalletId, dispatch, enabledAssets, myEnabledAssets],
   )
 
   useEffect(() => {
-    const myAssets = config.chains.map(
-      (chain, idx) =>
-        ({
-          id: `${idx}`,
-          name: chain,
-          code: chains[chain]?.code,
-          assets: [],
-          balance: new BigNumber(100),
-          balanceInUSD: new BigNumber(100),
-        } as AssetDataElementType),
-    )
-    setData([...assets, ...myAssets])
-  }, [assets])
+    if (!activeWalletId || !activeNetwork) {
+      Alert.alert('Please reload your wallet')
+      return
+    }
 
-  const renderAsset = ({ item }: { item: AssetDataElementType }) => {
-    const { name, balanceInUSD } = item
-    const isNested = item.assets && item.assets.length > 0
+    setMyEnabledAssets(enabledAssets?.[activeNetwork]?.[activeWalletId] || [])
+    //TODO we still need to handle custom tokens
+    let myAssets: Asset[] = []
 
-    return (
-      <Fragment>
-        <View
-          style={[
-            styles.row,
-            { borderLeftColor: item.color || DEFAULT_COLOR },
-          ]}>
-          <View style={styles.col1}>
-            <Pressable onPress={() => toggleRow(item.id)}>
-              {isNested && (
-                <FontAwesomeIcon
-                  size={15}
-                  icon={item.showAssets ? faMinus : faPlus}
-                  color={'#A8AEB7'}
-                  style={styles.plusSign}
-                />
-              )}
-            </Pressable>
-            <AssetIcon chain={item.chain} asset={item.code} />
+    if (activeNetwork === NetworkEnum.Testnet) {
+      myAssets = Config.defaultAssets[activeNetwork].reduce(
+        (assetList: Asset[], asset) => {
+          if (cryptoassets.hasOwnProperty(asset)) {
+            assetList.push({
+              ...cryptoassets[asset],
+              contractAddress: Config.testnetContractAddresses[asset],
+            })
+          }
+          return assetList
+        },
+        [],
+      )
+    } else {
+      myAssets = Object.keys(cryptoassets).map((key) => cryptoassets[key])
+    }
+    setAssets(myAssets)
+    setData(myAssets)
+  }, [activeNetwork, activeWalletId, enabledAssets])
+
+  const renderAsset = useCallback(
+    ({ item }: { item: Asset }) => {
+      const { name, code, chain, color = DEFAULT_COLOR } = item
+      return (
+        <Fragment>
+          <View
+            style={[styles.row, { borderLeftColor: color || DEFAULT_COLOR }]}>
+            <View style={styles.col1}>
+              <AssetIcon chain={chain} asset={code} />
+            </View>
+            <View style={styles.col2}>
+              <Text style={styles.code}>{name}</Text>
+            </View>
+            <View style={styles.col3}>
+              <Switch
+                enableFeature={() => handleEnableFeature(code)}
+                isFeatureEnabled={
+                  !!enabledAssets?.[activeNetwork!]?.[
+                    activeWalletId!
+                  ]?.includes(code)
+                }
+              />
+            </View>
           </View>
-          <View style={styles.col2}>
-            <Text style={styles.code}>{name}</Text>
-            {isNested && (
-              <Text style={styles.TotalBalanceInUSD}>
-                Total ${balanceInUSD && formatFiat(balanceInUSD)}
-              </Text>
-            )}
-          </View>
-          <View style={styles.col3}>
-            <Switch enableFeature={() => ({})} isFeatureEnabled={true} />
-          </View>
-        </View>
-        {isNested &&
-          item.showAssets &&
-          item.assets!.map((subElem) => {
-            return (
-              <View
-                style={[
-                  styles.row,
-                  styles.subElement,
-                  { borderLeftColor: item.color || DEFAULT_COLOR },
-                ]}
-                key={subElem.id}>
-                <View style={styles.col1}>
-                  <AssetIcon chain={subElem.chain} asset={subElem.code} />
-                </View>
-                <View style={styles.col2}>
-                  <Text style={styles.code}>{subElem.name}</Text>
-                  <Text style={styles.balance}>
-                    {subElem.balance &&
-                      subElem.code &&
-                      `${prettyBalance(subElem.balance, subElem.code)} ${
-                        subElem.code
-                      }`}
-                  </Text>
-                </View>
-                <View style={styles.col3}>
-                  <Switch enableFeature={() => ({})} isFeatureEnabled={true} />
-                </View>
-              </View>
-            )
-          })}
-      </Fragment>
-    )
-  }
+        </Fragment>
+      )
+    },
+    [activeNetwork, activeWalletId, enabledAssets, handleEnableFeature],
+  )
+
   return (
     <View style={styles.container}>
-      <SearchBox assets={assets} updateData={setData} />
+      <SearchBox items={assets} updateData={setData} isTwoLevelSearch={false} />
       <FlatList
         data={data}
         renderItem={renderAsset}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.code}
       />
     </View>
   )
@@ -173,21 +157,6 @@ const styles = StyleSheet.create({
   code: {
     fontFamily: 'Montserrat-Regular',
     color: '#000',
-    fontSize: 12,
-    marginBottom: 5,
-  },
-  balance: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#000',
-    fontSize: 13,
-  },
-  balanceInUSD: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#646F85',
-    fontSize: 12,
-  },
-  TotalBalanceInUSD: {
-    fontFamily: 'Montserrat-Regular',
     fontSize: 12,
     marginBottom: 5,
   },
