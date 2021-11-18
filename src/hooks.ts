@@ -45,6 +45,7 @@ export const useWalletState = () => {
 
           const chainData: AssetDataElementType = {
             id: account.chain,
+            chain: account.chain,
             name: account.name,
             address: account.addresses[0], //TODO why pick only the first address
             balance: new BigNumber(0),
@@ -75,6 +76,7 @@ export const useWalletState = () => {
                 name: cryptoassets[asset].name,
                 code: asset,
                 chain: account.chain,
+                color: account.color,
                 balance: new BigNumber(account.balances![asset]),
                 balanceInUSD: new BigNumber(
                   unitToCurrency(

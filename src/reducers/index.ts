@@ -50,6 +50,11 @@ const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
         ...state,
         ...action.payload,
       }
+    case 'TOGGLE_ASSET':
+      return {
+        ...state,
+        ...action.payload,
+      }
     default:
       return {
         ...state,

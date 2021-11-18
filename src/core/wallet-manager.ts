@@ -158,14 +158,6 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
       key: password,
       unlockedAt: Date.now(),
       wallets,
-      enabledAssets: {
-        [NetworkEnum.Mainnet]: {
-          [activeWalletId!]: ['ETH'],
-        },
-        [NetworkEnum.Testnet]: {
-          [activeWalletId!]: ['ETH'],
-        },
-      },
       fees: {
         [NetworkEnum.Mainnet]: {
           [activeWalletId!]: {},

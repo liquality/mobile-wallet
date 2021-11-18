@@ -18,6 +18,7 @@ type AssetFlatListPropsType = {
 }
 
 const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
+  const DEFAULT_COLOR = '#EFEFEF'
   const { assets, onAssetSelected } = props
   const [data, setData] = useState<Array<AssetDataElementType>>(assets)
   const { activeNetwork } = useAppSelector((state) => ({
@@ -53,7 +54,11 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
 
     return (
       <Fragment>
-        <View style={[styles.row, { borderLeftColor: item.color }]}>
+        <View
+          style={[
+            styles.row,
+            { borderLeftColor: item.color || DEFAULT_COLOR },
+          ]}>
           <View style={styles.col1}>
             <Pressable onPress={() => toggleRow(item.id)}>
               {isNested && (
@@ -65,7 +70,7 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
                 />
               )}
             </Pressable>
-            <AssetIcon asset={item.id} />
+            <AssetIcon chain={item.chain} />
           </View>
           <View style={styles.col2}>
             <Text style={styles.code}>{name}</Text>
@@ -115,11 +120,11 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
                 style={[
                   styles.row,
                   styles.subElement,
-                  { borderLeftColor: item.color },
+                  { borderLeftColor: item.color || DEFAULT_COLOR },
                 ]}
                 key={subElem.id}>
                 <View style={styles.col1}>
-                  <AssetIcon asset={subElem.code} />
+                  <AssetIcon asset={subElem.code} chain={subElem.chain} />
                 </View>
                 <View style={styles.col2}>
                   <Text style={styles.code}>{subElem.name}</Text>
