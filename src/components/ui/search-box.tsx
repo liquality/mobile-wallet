@@ -51,10 +51,12 @@ const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
         autoCorrect={false}
         returnKeyType="done"
       />
-      <Pressable style={styles.clearBtn} onPress={handleClearBtnPress}>
-        <FontAwesomeIcon icon={faTimes} color={'#646F85'} />
-        <Text style={styles.clearBtnText}>Reset</Text>
-      </Pressable>
+      {searchInput.value.length > 0 && (
+        <Pressable style={styles.clearBtn} onPress={handleClearBtnPress}>
+          <FontAwesomeIcon icon={faTimes} color={'#646F85'} />
+          <Text style={styles.clearBtnText}>Reset</Text>
+        </Pressable>
+      )}
     </View>
   )
 }
