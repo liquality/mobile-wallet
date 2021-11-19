@@ -29,7 +29,7 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
   return (
     <View style={styles.container}>
       <View style={[styles.row, styles.md3]}>
-        <Label text={label} />
+        <Label text={label} variant="strong" />
         <LiqualityButton
           text={'0.00'}
           action={() => ({})}

@@ -20,9 +20,11 @@ import {
 } from '@fortawesome/pro-light-svg-icons'
 import GasController from '../../components/ui/gas-controller'
 import Label from '../../components/ui/label'
+import Warning from '../../components/ui/warning'
 
 const SwapScreen: FC = () => {
   const [areGasControllersVisible, setGasControllersVisible] = useState(false)
+
   const toggleGasControllers = () => {
     setGasControllersVisible(!areGasControllersVisible)
   }
@@ -57,7 +59,7 @@ const SwapScreen: FC = () => {
           />
         </View>
         <View style={styles.wrapper}>
-          <Text style={[styles.font, styles.label]}>Available</Text>
+          <Label text="Available" variant="light" />
           <Text style={[styles.font, styles.amount]}>3.123456 BTC</Text>
         </View>
       </View>
@@ -72,7 +74,7 @@ const SwapScreen: FC = () => {
         setAmountInNative={() => ({})}
       />
       <View style={[styles.box, styles.row]}>
-        <Label text="RATE" />
+        <Label text="RATE" variant="strong" />
         <LiqualityButton
           text="Liquality"
           variant="small"
@@ -88,31 +90,23 @@ const SwapScreen: FC = () => {
             icon={areGasControllersVisible ? faAngleDown : faAngleRight}
             size={15}
           />
-          <Text style={styles.speedLabel}>NETWORK SPEED/FEE</Text>
-          <Text style={styles.speedValue}>{'BTC avg / ETH avg'}</Text>
+          <Label text="NETWORK SPEED/FEE" variant="strong" />
+          <Label text="BTC avg / ETH avg" variant="light" />
         </Pressable>
       </View>
       {areGasControllersVisible && (
         <>
           <GasController assetSymbol="BTC" handleCustomPress={() => ({})} />
           <GasController assetSymbol="ETH" handleCustomPress={() => ({})} />
+          <Warning
+            text1="Max slippage is 0.5%."
+            text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6
+          hours at 20:45 GMT"
+            icon={faClock}
+          />
         </>
       )}
-      <View style={[styles.row, styles.box]}>
-        <FontAwesomeIcon
-          icon={faClock}
-          size={15}
-          color="#9C55F6"
-          style={styles.icon}
-        />
-        <Text style={[styles.font, styles.warning]}>
-          Max slippage is 0.5%.{' '}
-          <Text style={styles.warningMessage}>
-            If the swap doesn’t complete within 3 hours, you will be refunded in
-            6 hours at 20:45 GMT
-          </Text>
-        </Text>
-      </View>
+
       <View style={styles.footer}>
         <View style={[styles.buttonWrapper]}>
           <LiqualityButton
@@ -160,27 +154,8 @@ const styles = StyleSheet.create({
   },
   amount: {
     color: '#000D35',
-  },
-  label: {
-    color: '#646F85',
-    marginRight: 5,
-  },
-  icon: {
-    alignSelf: 'flex-start',
-    marginRight: 5,
-  },
-  speedLabel: {
-    alignSelf: 'flex-start',
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 12,
-    marginRight: 5,
-  },
-  speedValue: {
-    alignSelf: 'flex-start',
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    fontSize: 12,
+    marginVertical: 5,
+    lineHeight: 18,
   },
   feeOptionsButton: {
     flexDirection: 'row',
@@ -190,20 +165,11 @@ const styles = StyleSheet.create({
   footer: {
     position: 'absolute',
     bottom: 20,
-    width: '100%',
+    width: Dimensions.get('screen').width,
   },
   buttonWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-  },
-  warning: {
-    textAlign: 'justify',
-    fontWeight: '500',
-    fontSize: 10,
-    lineHeight: 16,
-  },
-  warningMessage: {
-    fontWeight: '300',
   },
 })
 
