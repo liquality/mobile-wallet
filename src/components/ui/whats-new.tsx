@@ -1,5 +1,5 @@
 import { Modal, StyleSheet, Text, View } from 'react-native'
-import LiqualityButton from '../button'
+import LiqualityButton from './button'
 import React from 'react'
 
 const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {

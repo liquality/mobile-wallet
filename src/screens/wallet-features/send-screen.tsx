@@ -13,7 +13,7 @@ import {
   faAngleRight,
   faQrcode,
 } from '@fortawesome/pro-light-svg-icons'
-import LiqualityButton from '../../components/button'
+import LiqualityButton from '../../components/ui/button'
 import { useAppSelector } from '../../hooks'
 import { GasSpeedType, NetworkEnum } from '../../core/types'
 import BigNumber from 'bignumber.js'

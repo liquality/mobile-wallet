@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import LiqualityButton from '../button'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import LiqualityButton from './button'
 
 type MessageBannerProps = {
   text1: string
@@ -30,14 +30,14 @@ const MessageBanner: FC<MessageBannerProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFF8DA',
-    paddingVertical: 5,
+    width: Dimensions.get('screen').width,
+    paddingVertical: 10,
     paddingHorizontal: 20,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    width: '100%',
   },
   text: {
     fontFamily: 'Montserrat-Regular',

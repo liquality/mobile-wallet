@@ -14,7 +14,7 @@ import { faClone, faCheck } from '@fortawesome/pro-light-svg-icons'
 import { StackScreenProps } from '@react-navigation/stack'
 import { AssetDataElementType, RootStackParamList } from '../../types'
 import { NetworkEnum } from '../../core/types'
-import LiqualityButton from '../../components/button'
+import LiqualityButton from '../../components/ui/button'
 import AssetIcon from '../../components/asset-icon'
 
 type ReceiveScreenProps = StackScreenProps<RootStackParamList, 'ReceiveScreen'>

@@ -1,13 +1,25 @@
-import { StyleSheet, View, Text, Pressable } from 'react-native'
 import React, { FC, useState } from 'react'
+import {
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  Dimensions,
+  SafeAreaView,
+} from 'react-native'
 import MessageBanner from '../../components/ui/message-banner'
 import AmountTextInputBlock from '../../components/ui/amount-text-input-block'
 import { ChainId } from '@liquality/cryptoassets/src/types'
-import LiqualityButton from '../../components/button'
+import LiqualityButton from '../../components/ui/button'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowDown } from '@fortawesome/pro-regular-svg-icons'
-import { faAngleDown, faAngleRight } from '@fortawesome/pro-light-svg-icons'
+import {
+  faAngleDown,
+  faAngleRight,
+  faClock,
+} from '@fortawesome/pro-light-svg-icons'
 import GasController from '../../components/ui/gas-controller'
+import Label from '../../components/ui/label'
 
 const SwapScreen: FC = () => {
   const [areGasControllersVisible, setGasControllersVisible] = useState(false)
@@ -16,7 +28,7 @@ const SwapScreen: FC = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <MessageBanner
         text1="No liquidity."
         text2="Request liquidity for tokens via"
@@ -60,7 +72,7 @@ const SwapScreen: FC = () => {
         setAmountInNative={() => ({})}
       />
       <View style={[styles.box, styles.row]}>
-        <Text>RATE</Text>
+        <Label text="RATE" />
         <LiqualityButton
           text="Liquality"
           variant="small"
@@ -68,31 +80,37 @@ const SwapScreen: FC = () => {
           action={() => ({})}
         />
       </View>
-      <View style={styles.box}>
-        <View style={styles.row}>
-          <Pressable
-            onPress={toggleGasControllers}
-            style={styles.feeOptionsButton}>
-            <FontAwesomeIcon
-              icon={areGasControllersVisible ? faAngleDown : faAngleRight}
-              size={15}
-            />
-            <Text style={styles.speedLabel}>NETWORK SPEED/FEE</Text>
-            <Text style={styles.speedValue}>{'BTC avg / ETH avg'}</Text>
-          </Pressable>
-        </View>
-        {areGasControllersVisible && (
-          <>
-            <GasController assetSymbol="BTC" handleCustomPress={() => ({})} />
-            <GasController assetSymbol="ETH" handleCustomPress={() => ({})} />
-          </>
-        )}
-      </View>
       <View style={[styles.row, styles.box]}>
-        <Text>Max slippage is 0.5%. </Text>
-        <Text>
-          If the swap doesn’t complete within 3 hours, you will be refunded in 6
-          hours at 20:45 GMT
+        <Pressable
+          onPress={toggleGasControllers}
+          style={styles.feeOptionsButton}>
+          <FontAwesomeIcon
+            icon={areGasControllersVisible ? faAngleDown : faAngleRight}
+            size={15}
+          />
+          <Text style={styles.speedLabel}>NETWORK SPEED/FEE</Text>
+          <Text style={styles.speedValue}>{'BTC avg / ETH avg'}</Text>
+        </Pressable>
+      </View>
+      {areGasControllersVisible && (
+        <>
+          <GasController assetSymbol="BTC" handleCustomPress={() => ({})} />
+          <GasController assetSymbol="ETH" handleCustomPress={() => ({})} />
+        </>
+      )}
+      <View style={[styles.row, styles.box]}>
+        <FontAwesomeIcon
+          icon={faClock}
+          size={15}
+          color="#9C55F6"
+          style={styles.icon}
+        />
+        <Text style={[styles.font, styles.warning]}>
+          Max slippage is 0.5%.{' '}
+          <Text style={styles.warningMessage}>
+            If the swap doesn’t complete within 3 hours, you will be refunded in
+            6 hours at 20:45 GMT
+          </Text>
         </Text>
       </View>
       <View style={styles.footer}>
@@ -111,23 +129,22 @@ const SwapScreen: FC = () => {
           />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: Dimensions.get('screen').width,
     backgroundColor: '#FFF',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    width: '100%',
   },
   box: {
-    justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10,
     paddingHorizontal: 20,
@@ -136,6 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   font: {
+    fontFamily: 'Montserrat-Regular',
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 15,
@@ -148,7 +166,8 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   icon: {
-    marginVertical: 10,
+    alignSelf: 'flex-start',
+    marginRight: 5,
   },
   speedLabel: {
     alignSelf: 'flex-start',
@@ -176,6 +195,15 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  warning: {
+    textAlign: 'justify',
+    fontWeight: '500',
+    fontSize: 10,
+    lineHeight: 16,
+  },
+  warningMessage: {
+    fontWeight: '300',
   },
 })
 

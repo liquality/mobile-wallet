@@ -1,6 +1,6 @@
 import React, { FC, useContext } from 'react'
 import { Pressable, StyleSheet, Text } from 'react-native'
-import { ThemeContext } from '../theme'
+import { ThemeContext } from '../../theme'
 
 type LiqualityButtonProps = {
   text: string
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     borderColor: '#9D4DFA',
     borderWidth: 1,
     paddingHorizontal: 5,
+    marginVertical: 5,
   },
   small: {},
   medium: {

@@ -1,9 +1,11 @@
 import React, { FC } from 'react'
 import { useInputState } from '../../hooks'
 import { StyleSheet, Text, TextInput, View } from 'react-native'
-import LiqualityButton from '../button'
+import LiqualityButton from './button'
 import AssetIcon from '../asset-icon'
 import { ChainId } from '@liquality/cryptoassets/src/types'
+import Label from './label'
+import { chainDefaultColors } from '../../core/config'
 
 type AmountTextInputBlockProps = {
   label: string
@@ -17,6 +19,7 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
   const { label, assetSymbol, chain, setAmountInNative, setAmountInFiat } =
     props
   const input = useInputState('')
+  const color = chainDefaultColors[chain]
 
   const handleEndEditing = () => {
     setAmountInFiat(input.value)
@@ -26,7 +29,7 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
   return (
     <View style={styles.container}>
       <View style={[styles.row, styles.md3]}>
-        <Text style={[styles.font, styles.label]}>{label}</Text>
+        <Label text={label} />
         <LiqualityButton
           text={'0.00'}
           action={() => ({})}
@@ -37,7 +40,7 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
       <View style={styles.row}>
         <View style={[styles.inputWrapper, styles.md3]}>
           <TextInput
-            style={[styles.font, styles.input]}
+            style={[styles.font, styles.input, { color }]}
             keyboardType={'numeric'}
             onChangeText={input.onChangeText}
             onEndEditing={handleEndEditing}
@@ -92,12 +95,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     height: 24,
     textAlign: 'left',
-  },
-  label: {
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#1D1E21',
   },
   amount: {
     fontWeight: '300',
