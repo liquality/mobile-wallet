@@ -59,7 +59,7 @@ const AssetIcon: FC<AssetIconType> = (props) => {
 
 const styles = StyleSheet.create({
   icon: {
-    marginRight: 5,
+    marginHorizontal: 5,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

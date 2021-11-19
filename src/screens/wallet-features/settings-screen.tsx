@@ -148,7 +148,12 @@ const SettingsScreen = () => {
         <View style={styles.row}>
           <View style={styles.action}>
             <Text style={styles.label}>Wallet Logs</Text>
-            <LiqualityButton text={'Download'} action={() => ({})} />
+            <LiqualityButton
+              text={'Download'}
+              type="positive"
+              variant="medium"
+              action={() => ({})}
+            />
           </View>
           <Text style={styles.description}>
             The wallet logs contain your public information such as addresses

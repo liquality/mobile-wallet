@@ -343,16 +343,14 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
         <View style={styles.row}>
           <LiqualityButton
             text={'Cancel'}
-            textColor={'#9D4DFA'}
-            backgroundColor={'#F8FAFF'}
-            width={152}
+            variant="medium"
+            type="negative"
             action={navigation.goBack}
           />
           <LiqualityButton
             text={'Review'}
-            textColor={'#FFFFFF'}
-            backgroundColor={'#9D4DFA'}
-            width={152}
+            variant="medium"
+            type="positive"
             action={handleReviewPress}
           />
         </View>

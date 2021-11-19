@@ -60,6 +60,7 @@ export type RootStackParamList = {
   SendReviewScreen: StackPayload
   SendConfirmationScreen: StackPayload
   CustomFeeScreen: StackPayload
+  SwapScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
 }

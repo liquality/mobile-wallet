@@ -95,16 +95,14 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <View style={styles.row}>
           <LiqualityButton
             text={'Edit'}
-            textColor={'#9D4DFA'}
-            backgroundColor={'#F8FAFF'}
-            width={152}
+            variant="medium"
+            type="negative"
             action={handleEditPress}
           />
           <LiqualityButton
             text={`Send ${asset}`}
-            textColor={'#FFFFFF'}
-            backgroundColor={'#9D4DFA'}
-            width={152}
+            variant="medium"
+            type="positive"
             action={handleSendPress}
           />
         </View>

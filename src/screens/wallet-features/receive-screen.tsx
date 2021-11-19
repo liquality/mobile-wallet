@@ -112,16 +112,14 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
       <View style={styles.ActionBlock}>
         <LiqualityButton
           text={'Done'}
-          textColor={'#9D4DFA'}
-          backgroundColor={'#F8FAFF'}
-          width={150}
+          variant="medium"
+          type="negative"
           action={navigation.goBack}
         />
         <LiqualityButton
           text={buttonPressed ? 'Copied!' : 'Copy Address'}
-          textColor={'#FFFFFF'}
-          backgroundColor={'#9D4DFA'}
-          width={150}
+          variant="medium"
+          type="positive"
           action={handleCopyAddressPress}>
           <FontAwesomeIcon
             icon={buttonPressed ? faCheck : faClone}

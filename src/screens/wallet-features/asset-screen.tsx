@@ -58,6 +58,13 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
     })
   }
 
+  const handleSwapPress = () => {
+    navigation.navigate('SwapScreen', {
+      assetData: route.params.assetData,
+      screenTitle: 'Swap',
+    })
+  }
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -90,7 +97,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             <Text style={styles.btnText}>Send</Text>
           </View>
           <View style={styles.btnWrapper}>
-            <Pressable style={styles.btn}>
+            <Pressable style={styles.btn} onPress={handleSwapPress}>
               <FontAwesomeIcon
                 icon={faExchange}
                 size={30}
