@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useState } from 'react'
+import React, { FC, useState } from 'react'
 import {
   Modal,
   StyleSheet,
@@ -17,6 +17,8 @@ import Thorchain from '../assets/icons/swap-providers/thorchain.svg'
 import Uniswap from '../assets/icons/swap-providers/uniswap.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTimes, faCheck } from '@fortawesome/pro-light-svg-icons'
+import SwapTypesInfo from './swap-types-info'
+import { ProviderType } from '../types'
 
 const ListHeader: FC = () => {
   const styles = StyleSheet.create({
@@ -69,13 +71,12 @@ const swapProviders: ProviderType[] = [
   },
 ]
 
-type ProviderType = { name: string; rate: number; icon: () => ReactElement }
-
 const SwapRates: FC = () => {
   const [selectedItem, setSelectedItem] = useState<ProviderType>(
     swapProviders[0],
   )
-  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [isRatesModalVisible, setIsRatesModalVisible] = useState(false)
+  const [isSwapTypesModalVisible, setIsSwapTypesModalVisible] = useState(false)
 
   const renderItem = ({ item }: { item: ProviderType }) => {
     return (
@@ -100,22 +101,30 @@ const SwapRates: FC = () => {
 
   return (
     <View style={[styles.box, styles.row]}>
-      <Label text="RATE" variant="strong" />
-      <LiqualityButton
-        text="Liquality"
-        variant="small"
-        type="plain"
-        action={() => setIsModalVisible(true)}>
-        <Logo width={20} style={styles.icon} />
-      </LiqualityButton>
-      {isModalVisible && (
+      <View style={{ flexDirection: 'row' }}>
+        <Label text="RATE" variant="strong" />
+        <LiqualityButton
+          text="Liquality"
+          variant="small"
+          type="plain"
+          action={() => setIsRatesModalVisible(true)}>
+          <Logo width={20} style={styles.icon} />
+        </LiqualityButton>
+      </View>
+      <Pressable onPress={() => setIsSwapTypesModalVisible(true)}>
+        <Text style={[styles.text, styles.link]}>Swap Types</Text>
+      </Pressable>
+      {isRatesModalVisible && (
         <View style={styles.centeredView}>
           <Modal transparent={true} animationType={'slide'}>
             <View style={styles.container}>
               <View style={styles.content}>
                 <View style={styles.header}>
-                  <Label text="4 AVAILABLE QUOTES" variant="strong" />
-                  <Pressable onPress={() => setIsModalVisible(false)}>
+                  <Label
+                    text={`${swapProviders.length} AVAILABLE QUOTES`}
+                    variant="strong"
+                  />
+                  <Pressable onPress={() => setIsRatesModalVisible(false)}>
                     <FontAwesomeIcon icon={faTimes} color={'#000'} />
                   </Pressable>
                 </View>
@@ -142,6 +151,12 @@ const SwapRates: FC = () => {
             </View>
           </Modal>
         </View>
+      )}
+      {isSwapTypesModalVisible && (
+        <SwapTypesInfo
+          swapProviders={swapProviders}
+          toggleModal={() => setIsSwapTypesModalVisible(false)}
+        />
       )}
     </View>
   )
@@ -172,7 +187,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   box: {
     alignItems: 'center',
@@ -224,6 +239,9 @@ const styles = StyleSheet.create({
   },
   padded: {
     paddingHorizontal: 20,
+  },
+  link: {
+    color: '#9D4DFA',
   },
 })
 

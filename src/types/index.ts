@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, ReactElement, SetStateAction } from 'react'
 import BigNumber from 'bignumber.js'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
@@ -75,6 +75,12 @@ export interface UseInputStateReturnType<T> {
 export interface SeedWordType {
   id: number
   word: string
+}
+
+export type ProviderType = {
+  name: string
+  rate: number
+  icon: () => ReactElement
 }
 
 export enum DarkModeEnum {
