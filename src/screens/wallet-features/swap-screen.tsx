@@ -21,6 +21,7 @@ import {
 import GasController from '../../components/ui/gas-controller'
 import Label from '../../components/ui/label'
 import Warning from '../../components/ui/warning'
+import SwapRates from '../../components/swap-rates'
 
 const SwapScreen: FC = () => {
   const [areGasControllersVisible, setGasControllersVisible] = useState(false)
@@ -73,15 +74,7 @@ const SwapScreen: FC = () => {
         setAmountInFiat={() => ({})}
         setAmountInNative={() => ({})}
       />
-      <View style={[styles.box, styles.row]}>
-        <Label text="RATE" variant="strong" />
-        <LiqualityButton
-          text="Liquality"
-          variant="small"
-          type="plain"
-          action={() => ({})}
-        />
-      </View>
+      <SwapRates />
       <View style={[styles.row, styles.box]}>
         <Pressable
           onPress={toggleGasControllers}
@@ -106,7 +99,6 @@ const SwapScreen: FC = () => {
           />
         </>
       )}
-
       <View style={styles.footer}>
         <View style={[styles.buttonWrapper]}>
           <LiqualityButton

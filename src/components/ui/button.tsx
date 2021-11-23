@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     height: 36,
   },
   large: {
-    width: '100%',
+    width: '80%',
     height: 36,
   },
   plain: {
