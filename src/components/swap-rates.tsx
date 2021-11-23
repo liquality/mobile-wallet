@@ -87,7 +87,7 @@ const SwapRates: FC = () => {
         ]}
         key={item.name}
         onPress={() => setSelectedItem(item)}>
-        <Text style={[styles.text, { flex: 0.5 }]}>{item.name}</Text>
+        <Text style={[styles.text, styles.half]}>{item.name}</Text>
         <View style={styles.providerCell}>
           {item.icon()}
           <Text style={[styles.text]}>{item.rate}</Text>
@@ -101,7 +101,7 @@ const SwapRates: FC = () => {
 
   return (
     <View style={[styles.box, styles.row]}>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={styles.row}>
         <Label text="RATE" variant="strong" />
         <LiqualityButton
           text="Liquality"
@@ -242,6 +242,9 @@ const styles = StyleSheet.create({
   },
   link: {
     color: '#9D4DFA',
+  },
+  half: {
+    flex: 0.5,
   },
 })
 

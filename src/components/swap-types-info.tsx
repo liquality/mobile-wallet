@@ -63,27 +63,23 @@ const SwapTypesInfo: FC<SwapTypesInfoProps> = (props) => {
                 <FontAwesomeIcon icon={faTimes} color={'#000'} />
               </Pressable>
             </View>
-            <Text style={[styles.text, styles.padded]}>
-              When trading assets provider vary regards the way its done:
-              assets, chain, fees, slippage etc. At a glance:
-            </Text>
-            <View style={styles.providersLogos}>
-              {swapProviders.map((item) => {
-                return (
-                  <View
-                    key={item.name}
-                    style={{
-                      flexDirection: 'row',
-                      marginHorizontal: 5,
-                      alignItems: 'center',
-                    }}>
-                    {item.icon()}
-                    <Text style={styles.text}>{item.name}</Text>
-                  </View>
-                )
-              })}
-            </View>
-            <ScrollView style={styles.scrollView}>
+            <ScrollView>
+              <Text style={[styles.text, styles.padded]}>
+                When trading assets provider vary regards the way its done:
+                assets, chain, fees, slippage etc. At a glance:
+              </Text>
+              <View style={styles.providersLogos}>
+                {swapProviders.map((item) => {
+                  return (
+                    <View
+                      key={item.name}
+                      style={[styles.miniLabel, styles.borderless]}>
+                      {item.icon()}
+                      <Text style={styles.text}>{item.name}</Text>
+                    </View>
+                  )
+                })}
+              </View>
               {providersInfo.map((provider) => (
                 <View style={styles.block}>
                   <View style={styles.miniLabel}>
@@ -152,15 +148,12 @@ const styles = StyleSheet.create({
   block: {
     padding: 20,
   },
-  scrollView: {
-    marginTop: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#A8AEB7',
-  },
   providersLogos: {
     flexDirection: 'row',
-    marginHorizontal: 5,
-    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#A8AEB7',
+    marginHorizontal: 20,
+    paddingBottom: 10,
     flexWrap: 'wrap',
   },
   miniLabel: {
@@ -171,6 +164,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#A8AEB7',
     borderRadius: 50,
+  },
+  borderless: {
+    borderWidth: 0,
+    // flexDirection: 'row',
+    // marginHorizontal: 5,
+    // alignItems: 'center',
   },
   description: {
     fontFamily: 'Montserrat-Regular',
