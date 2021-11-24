@@ -10,6 +10,7 @@ import {
 import { RootStackParamList } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ThemeContext } from '../../theme'
+import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 type TermsProps = StackScreenProps<RootStackParamList, 'TermsScreen'>
 
@@ -66,7 +67,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
             SUPPORT WHILE WE CONTINUE TO WORK ON DELIVERING A PERFECT PRODUCT.
           </Text>
         </ScrollView>
-        <View style={styles.actions}>
+        <ButtonFooter unpositioned>
           <Pressable
             style={[styles.actionBtn, styles.cancelBtn]}
             onPress={() => navigation.goBack()}>
@@ -88,7 +89,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
             }>
             <Text style={[theme.buttonText, styles.nextText]}>I Accept</Text>
           </Pressable>
-        </View>
+        </ButtonFooter>
       </View>
     </ImageBackground>
   )
@@ -124,12 +125,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     textAlign: 'justify',
   },
-  actions: {
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20,
-  },
   actionBtn: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -137,7 +132,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8FAFF',
     borderColor: '#9D4DFA',
     borderWidth: 1,
-    width: 152,
     height: 36,
   },
   cancelBtn: {

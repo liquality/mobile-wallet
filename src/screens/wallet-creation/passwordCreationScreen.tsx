@@ -12,6 +12,7 @@ import { RootStackParamList } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ThemeContext } from '../../theme'
 import Header from '../header'
+import ButtonFooter from '../../components/button-footer'
 
 type PasswordCreationProps = StackScreenProps<
   RootStackParamList,
@@ -103,7 +104,7 @@ const PasswordCreationScreen = ({
         </View>
       </View>
 
-      <View style={styles.actions}>
+      <ButtonFooter>
         <Pressable
           style={[styles.actionBtn, styles.cancelBtn]}
           onPress={() =>
@@ -128,7 +129,7 @@ const PasswordCreationScreen = ({
           }>
           <Text style={[theme.buttonText, styles.nextText]}>Next</Text>
         </Pressable>
-      </View>
+      </ButtonFooter>
     </ImageBackground>
   )
 }
@@ -178,7 +179,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8FAFF',
     borderColor: '#9D4DFA',
     borderWidth: 1,
-    width: 152,
     height: 36,
   },
   cancelBtn: {
