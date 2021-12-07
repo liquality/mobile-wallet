@@ -39,6 +39,12 @@ export const store = configureStore({
 })
 
 export const isNewInstallation = async (): Promise<boolean> => {
+  try {
+    const state = await wallet.restore()
+    store.dispatch({ type: 'INIT_STORE', payload: state })
+  } catch (e) {
+    store.dispatch({ type: 'INIT_STORE', payload: {} })
+  }
   return await wallet.isNewInstallation()
 }
 
