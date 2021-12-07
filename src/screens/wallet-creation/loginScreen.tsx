@@ -13,11 +13,7 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList, UseInputStateReturnType } from '../../types'
 import { ThemeContext } from '../../theme'
 import Header from '../header'
-import {
-  fetchFiatRatesForAssets,
-  restoreWallet,
-  updateAddressesAndBalances,
-} from '../../store/store'
+import { restoreWallet } from '../../store/store'
 import { useDispatch } from 'react-redux'
 import { onOpenSesame } from '../../utils'
 
@@ -47,9 +43,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
         const { type = '', payload = {} } = await dispatch(
           restoreWallet(passwordInput.value),
         )
-        await dispatch(updateAddressesAndBalances())
-
-        await dispatch(fetchFiatRatesForAssets())
         setLoading(false)
         if (!type) {
           setError('Please try again')

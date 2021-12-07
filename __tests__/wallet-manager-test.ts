@@ -1,6 +1,7 @@
 import StorageManager from '../src/core/storage-manager'
 import EncryptionManager from '../src/core/encryption-manager'
 import Wallet from '@liquality/core/dist/wallet'
+import { Config } from '@liquality/core/dist/config'
 import { NetworkEnum } from '@liquality/core/dist/types'
 import { config } from 'dotenv'
 import { AccountType } from '../src/core/types'
@@ -12,6 +13,7 @@ describe('WalletManagerTest', () => {
   let wallet = new Wallet(
     new StorageManager('@liqualityStore', []),
     new EncryptionManager(),
+    new Config(process.env.INFURA_API_KEY),
   )
 
   beforeAll(() => {
@@ -23,6 +25,7 @@ describe('WalletManagerTest', () => {
     wallet = new Wallet(
       new StorageManager('@liqualityStore', []),
       new EncryptionManager(),
+      new Config(process.env.INFURA_API_KEY),
     )
   })
 
