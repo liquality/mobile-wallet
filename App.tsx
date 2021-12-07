@@ -4,7 +4,7 @@ import SplashScreen from 'react-native-splash-screen'
 import { NavigationContainer } from '@react-navigation/native'
 import { createSwitchNavigator } from '@react-navigation/compat'
 import { Provider } from 'react-redux'
-import { store, hydrateStore } from './src/store'
+import { store, isNewInstallation } from './src/store/store'
 import { LiqualityThemeProvider } from './src/theme'
 import {
   OnboardingNavigator,
@@ -38,8 +38,8 @@ const App = () => {
   }
 
   useEffect(() => {
-    hydrateStore().then((state) => {
-      if (!state || Object.keys(state).length === 0) {
+    isNewInstallation().then((isNew) => {
+      if (isNew) {
         setInitialRouteName('OnboardingNavigator')
       } else {
         setInitialRouteName('LoginScreen')

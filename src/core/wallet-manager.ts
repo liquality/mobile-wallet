@@ -102,7 +102,7 @@ class WalletManager extends AbstractWalletManager implements WalletManagerI {
       keySalt,
       accounts,
     }
-    //persist to local storage
+    //write to local storage
     await this.persistToLocalStorage(state)
 
     return {

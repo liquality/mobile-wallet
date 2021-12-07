@@ -17,7 +17,7 @@ import {
   fetchFiatRatesForAssets,
   restoreWallet,
   updateAddressesAndBalances,
-} from '../../store'
+} from '../../store/store'
 import { useDispatch } from 'react-redux'
 import { onOpenSesame } from '../../utils'
 

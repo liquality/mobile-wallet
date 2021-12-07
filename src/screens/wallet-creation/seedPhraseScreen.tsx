@@ -9,9 +9,9 @@ import {
 } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import WalletManager from '../../core/wallet-manager'
 import { ThemeContext } from '../../theme'
 import Header from '../header'
+import Wallet from '@liquality/core/dist/wallet'
 type WalletBackupProps = StackScreenProps<
   RootStackParamList,
   'SeedPhraseScreen'
@@ -32,12 +32,10 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
   }
 
   useEffect(() => {
-    const seedWordsArray = WalletManager.generateSeedWords().map(
-      (word, index) => ({
-        id: index + 1,
-        word,
-      }),
-    )
+    const seedWordsArray = Wallet.generateSeedWords().map((word, index) => ({
+      id: index + 1,
+      word,
+    }))
 
     setSeedWords(seedWordsArray)
   }, [])

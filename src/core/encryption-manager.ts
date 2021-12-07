@@ -1,6 +1,6 @@
 import _pbkdf2 from 'pbkdf2'
 import { enc as Enc, AES, lib as Lib } from 'crypto-js'
-import { EncryptionManagerI } from './types'
+import { IEncryption } from '@liquality/core/dist/types'
 
 const PBKDF2_ITERATIONS = 100000
 const PBKDF2_LENGTH = 32
@@ -12,7 +12,7 @@ interface CipherJsonType {
   s?: string
 }
 
-export default class EncryptionManager implements EncryptionManagerI {
+export default class EncryptionManager implements IEncryption {
   public generateSalt(byteCount = 32): string {
     const view = new Uint8Array(byteCount)
     // @ts-ignore
@@ -24,15 +24,12 @@ export default class EncryptionManager implements EncryptionManagerI {
 
   public async encrypt(
     value: string,
+    keySalt: string,
     password: string,
-  ): Promise<{ encrypted: string; keySalt: string }> {
-    const keySalt = this.generateSalt(16)
+  ): Promise<string> {
     const derivedKey = await this.pbkdf2(password, keySalt)
     const rawEncryptedValue = AES.encrypt(value, derivedKey)
-    return {
-      encrypted: this.JsonFormatter.stringify(rawEncryptedValue),
-      keySalt,
-    }
+    return this.JsonFormatter.stringify(rawEncryptedValue)
   }
 
   public async decrypt(

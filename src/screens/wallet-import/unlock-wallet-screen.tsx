@@ -13,9 +13,9 @@ import {
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
-import WalletManager from '../../core/wallet-manager'
 import { ThemeContext } from '../../theme'
 import Header from '../header'
+import Wallet from '@liquality/core/dist/wallet'
 
 type UnlockWalletScreenProps = StackScreenProps<
   RootStackParamList,
@@ -65,7 +65,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
   }
 
   const validateSeedPhrase = () => {
-    return WalletManager.validateSeedPhrase(chosenSeedWords.join(' ').trim())
+    return Wallet.validateSeedPhrase(chosenSeedWords.join(' ').trim())
   }
 
   const onContinue = () => {

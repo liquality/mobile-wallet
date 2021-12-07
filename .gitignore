@@ -67,3 +67,4 @@ buck-out/
 android/keystore.properties
 android/app/debug
 android/app/release
+.env

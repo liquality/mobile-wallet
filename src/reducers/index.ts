@@ -6,6 +6,11 @@ const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
   action,
 ): StateType => {
   switch (action.type) {
+    case 'UPDATE_ACCOUNT':
+      return {
+        ...state,
+        accounts: {},
+      }
     case 'INIT_STORE':
       return {
         ...action.payload,

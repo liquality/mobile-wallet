@@ -100,7 +100,7 @@ export interface StateType {
     name: string
     assets?: Array<string>
     activeNetwork?: NetworkEnum
-    mnemomnic?: string
+    mnemonic?: string
     imported?: boolean
   }[]
   unlockedAt?: number

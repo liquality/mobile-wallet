@@ -5,25 +5,26 @@ import {
   PayloadAction,
 } from '@reduxjs/toolkit'
 import thunk from 'redux-thunk'
-import rootReducer from './reducers'
-import StorageManager from './core/storage-manager'
-import { AccountType, StateType } from './core/types'
-import EncryptionManager from './core/encryption-manager'
-import WalletManager from './core/wallet-manager'
-import { SendOptions, Transaction } from '@liquality/types'
 import { Alert } from 'react-native'
+import rootReducer from '../reducers'
+import StorageManager from '../core/storage-manager'
+import EncryptionManager from '../core/encryption-manager'
+import { SendOptions, Transaction } from '@liquality/types'
+import Wallet from '@liquality/core/dist/wallet'
+import { AccountType, NetworkEnum, StateType } from '@liquality/core/dist/types'
+import { ChainId } from '@liquality/cryptoassets'
 
 const excludedProps: Array<keyof StateType> = ['key', 'wallets', 'unlockedAt']
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
 let encryptionManager = new EncryptionManager()
-let walletManager = new WalletManager(storageManager, encryptionManager)
+const wallet = new Wallet(storageManager, encryptionManager)
 
 const persistenceMiddleware: Middleware<
   (action: PayloadAction<StateType>) => StateType,
   StateType
 > = ({ getState }) => {
   return (next) => (action) => {
-    storageManager.persist({
+    storageManager.write({
       ...getState(),
       ...action.payload,
     })
@@ -37,60 +38,21 @@ export const store = configureStore({
   middleware: new MiddlewareArray().concat([persistenceMiddleware, thunk]),
 })
 
-export const hydrateStore = async (): Promise<StateType> => {
-  try {
-    const state = await walletManager.retrieveWallet()
-    store.dispatch({ type: 'INIT_STORE', payload: state })
-    return state
-  } catch (e) {
-    store.dispatch({ type: 'INIT_STORE', payload: {} })
-    return {}
-  }
-}
-
-export const openSesame = async (
-  wallet: Omit<StateType['wallets'], 'id' | 'at' | 'name'>,
-  password: string,
-): Promise<StateType> => {
-  try {
-    let newState = await walletManager.createWallet(wallet, password)
-    newState = await walletManager.restoreWallet(password, newState)
-    newState = await walletManager.updateAddressesAndBalances(newState)
-    const { accounts, activeWalletId, activeNetwork } = newState
-
-    const assets = accounts![activeWalletId!]?.[activeNetwork!]?.reduce(
-      (assetNames: Array<string>, account: AccountType) => {
-        assetNames.push(...Object.keys(account.balances || {}))
-        return assetNames
-      },
-      [],
-    )
-
-    if (assets && assets.length > 0) {
-      newState.fiatRates = await walletManager.getPricesForAssets(assets, 'usd')
-    }
-
-    return newState
-  } catch (error) {
-    Alert.alert(JSON.stringify(error))
-  }
-
-  return {} as StateType
+export const isNewInstallation = async (): Promise<boolean> => {
+  return await wallet.isNewInstallation()
 }
 
 export const createWallet =
-  (
-    wallet: Omit<StateType['wallets'], 'id' | 'at' | 'name'>,
-    password: string,
-  ) =>
-  async (dispatch: any) => {
-    const newState = await walletManager.createWallet(wallet, password)
+  (password: string, mnemonic: string) => async (dispatch: any) => {
     try {
+      const walletState = await wallet.build(password, mnemonic, false)
+      await wallet.store(walletState)
       return dispatch({
         type: 'SETUP_WALLET',
-        payload: newState,
+        payload: walletState,
       })
     } catch (error: any) {
+      Alert.alert('Unable to create wallet. Try again!')
       return dispatch({
         type: 'ERROR',
         payload: {
@@ -108,10 +70,7 @@ export const restoreWallet =
   (password: string) =>
   async (dispatch: any): Promise<any> => {
     try {
-      const freshWallet: StateType = await walletManager.restoreWallet(
-        password,
-        store.getState(),
-      )
+      const freshWallet: StateType = await wallet.restore(password)
       return dispatch({
         type: 'RESTORE_WALLET',
         payload: {
@@ -131,13 +90,13 @@ export const restoreWallet =
 export const updateAddressesAndBalances =
   () =>
   async (dispatch: AppDispatch, getState: () => StateType): Promise<any> => {
-    const updatedState: StateType =
-      await walletManager.updateAddressesAndBalances(getState())
+    // const updatedState: StateType = await wall.updateAddressesAndBalances(
+    //   getState(),
+    // )
     return dispatch({
       type: 'UPDATE_ADDRESSES_AND_BALANCES',
       payload: {
         ...getState(),
-        ...updatedState,
       },
     })
   }
@@ -165,7 +124,7 @@ export const fetchFiatRatesForAssets =
       )
 
       if (assets && assets.length > 0) {
-        const fiatRates = await walletManager.getPricesForAssets(assets, 'usd')
+        const fiatRates = await wallet.fetchPricesForAssets(assets, 'usd')
         return dispatch({
           type: 'FIAT_RATES',
           payload: {
@@ -187,7 +146,13 @@ export const sendTransaction = async (
   options: SendOptions,
 ): Promise<Transaction | Error> => {
   try {
-    return await walletManager.sendTransaction(options)
+    const { data, value, to } = options
+    const account = await wallet.getAccount(
+      ChainId.Ethereum,
+      NetworkEnum.Testnet,
+    )
+    const assets = await account.getAssets()
+    return await assets[0].transmit(value, to, data)
   } catch (e) {
     return new Error('Failed to send transaction')
   }

@@ -5,7 +5,7 @@ import { RootStackParamList } from '../../types'
 import LiqualityButton from '../../components/ui/button'
 import { prettyFiatBalance } from '../../core/utils/coin-formatter'
 import { useAppSelector } from '../../hooks'
-import { sendTransaction } from '../../store'
+import { sendTransaction } from '../../store/store'
 import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
 import BigNumber from 'bignumber.js'
 
