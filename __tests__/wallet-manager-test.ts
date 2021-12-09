@@ -5,6 +5,17 @@ import { Config } from '@liquality/core/dist/config'
 import { NetworkEnum } from '@liquality/core/dist/types'
 import { config } from 'dotenv'
 import { AccountType } from '../src/core/types'
+import { ChainId } from '@liquality/cryptoassets'
+
+class CustomConfig extends Config {
+  public getDefaultEnabledAssets(network: NetworkEnum): string[] {
+    return super.getDefaultEnabledAssets(network).concat(['BTC'])
+  }
+
+  public getDefaultEnabledChains(network: NetworkEnum): ChainId[] {
+    return super.getDefaultEnabledChains(network).concat([ChainId.Bitcoin])
+  }
+}
 
 describe('WalletManagerTest', () => {
   config()
@@ -53,6 +64,21 @@ describe('WalletManagerTest', () => {
     await wallet.addAccounts(NetworkEnum.Testnet)
 
     expect(balances.ETH > 0).toBeTruthy()
+  })
+
+  it('should have a positive balance for two assets', async () => {
+    jest.setTimeout(50000)
+    wallet = new Wallet(
+      new StorageManager('@liqualityStore', []),
+      new EncryptionManager(),
+      new CustomConfig(process.env.INFURA_API_KEY),
+    )
+    const walletState = await wallet.build(PASSWORD, MNEMONIC, false)
+    const { activeNetwork, activeWalletId } = walletState
+    const accounts = walletState?.accounts?.[activeWalletId!][activeNetwork!]
+    const balance1 = accounts?.[0]?.balances?.ETH
+    const balance2 = accounts?.[1]?.balances?.BTC
+    expect(balance1 && balance2 && balance1 > 0 && balance2 > 0).toBeTruthy()
   })
 
   it('should call callback upon adding an account', async () => {
