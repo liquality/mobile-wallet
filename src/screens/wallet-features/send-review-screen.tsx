@@ -7,7 +7,7 @@ import { prettyFiatBalance } from '../../core/utils/coin-formatter'
 import { useAppSelector } from '../../hooks'
 import { sendTransaction } from '../../store/store'
 import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@liquality/types'
 
 type SendReviewScreenProps = StackScreenProps<
   RootStackParamList,

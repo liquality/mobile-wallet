@@ -16,7 +16,7 @@ import {
 import LiqualityButton from '../../components/ui/button'
 import { useAppSelector } from '../../hooks'
 import { GasSpeedType, NetworkEnum } from '../../core/types'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@liquality/types'
 import {
   calculateAvailableAmnt,
   calculateGasFee,

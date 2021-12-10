@@ -1,5 +1,5 @@
 import { Dispatch, ReactElement, SetStateAction } from 'react'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@liquality/types'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { NetworkEnum } from '../core/types'

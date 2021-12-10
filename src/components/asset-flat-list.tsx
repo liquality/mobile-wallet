@@ -114,7 +114,7 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
         </View>
         {isNested &&
           item.showAssets &&
-          item.assets!.map((subElem) => {
+          item.assets?.map((subElem) => {
             return (
               <View
                 style={[
