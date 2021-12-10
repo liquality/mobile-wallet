@@ -9,11 +9,13 @@ import { ChainId } from '@liquality/cryptoassets'
 
 class CustomConfig extends Config {
   public getDefaultEnabledAssets(network: NetworkEnum): string[] {
-    return super.getDefaultEnabledAssets(network).concat(['BTC'])
+    return super.getDefaultEnabledAssets(network)
   }
 
   public getDefaultEnabledChains(network: NetworkEnum): ChainId[] {
-    return super.getDefaultEnabledChains(network).concat([ChainId.Bitcoin])
+    return super
+      .getDefaultEnabledChains(network)
+      .concat([ChainId.Bitcoin, ChainId.Rootstock])
   }
 }
 
@@ -28,6 +30,7 @@ describe('WalletManagerTest', () => {
   )
 
   beforeAll(() => {
+    jest.setTimeout(100000)
     global.crypto = {}
     global.crypto.getRandomValues = () => new Uint8Array(1)
   })
@@ -55,19 +58,7 @@ describe('WalletManagerTest', () => {
     expect(account).toBeTruthy()
   })
 
-  it('should have a positive balance', async () => {
-    await wallet.init(PASSWORD, MNEMONIC)
-    let balances: Record<string, number> = {}
-    wallet.subscribe((account: AccountType) => {
-      balances = account.balances
-    })
-    await wallet.addAccounts(NetworkEnum.Testnet)
-
-    expect(balances.ETH > 0).toBeTruthy()
-  })
-
   it('should have a positive balance for two assets', async () => {
-    jest.setTimeout(50000)
     wallet = new Wallet(
       new StorageManager('@liqualityStore', []),
       new EncryptionManager(),
@@ -76,9 +67,25 @@ describe('WalletManagerTest', () => {
     const walletState = await wallet.build(PASSWORD, MNEMONIC, false)
     const { activeNetwork, activeWalletId } = walletState
     const accounts = walletState?.accounts?.[activeWalletId!][activeNetwork!]
-    const balance1 = accounts?.[0]?.balances?.ETH
-    const balance2 = accounts?.[1]?.balances?.BTC
-    expect(balance1 && balance2 && balance1 > 0 && balance2 > 0).toBeTruthy()
+    const ethBalance = accounts?.filter((item) => item.balances?.SOV)
+    const btcBalance = accounts?.filter((item) => item.balances?.RBTC)
+    expect(ethBalance && btcBalance).toBeTruthy()
+  })
+
+  it('should have a positive balance for rsk/rootstock assets', async () => {
+    wallet = new Wallet(
+      new StorageManager('@liqualityStore', []),
+      new EncryptionManager(),
+      new CustomConfig(process.env.INFURA_API_KEY),
+    )
+
+    const walletState = await wallet.build(PASSWORD, MNEMONIC, false)
+    const { activeNetwork, activeWalletId } = walletState
+    const accounts = walletState?.accounts?.[activeWalletId!][activeNetwork!]
+
+    const sovBalance = accounts?.filter((item) => item.balances?.SOV)
+    const rbtcBalance = accounts?.filter((item) => item.balances?.RBTC)
+    expect(sovBalance && rbtcBalance).toBeTruthy()
   })
 
   it('should call callback upon adding an account', async () => {
@@ -94,6 +101,7 @@ describe('WalletManagerTest', () => {
     await wallet.store(newWallet)
     delete newWallet.wallets
     const retoredWallet = await wallet.restore(PASSWORD)
+    await wallet.refresh()
 
     expect(retoredWallet.keySalt).toBeTruthy()
     expect(retoredWallet.wallets).toBeTruthy()
@@ -126,16 +134,18 @@ describe('WalletManagerTest', () => {
     ).toBeTruthy()
   })
 
-  // //TODO run this against Truffle
   it('should find unused addresses', async () => {
-    const {
-      activeWalletId = '',
-      activeNetwork,
-      accounts,
-    } = await wallet.build(PASSWORD, MNEMONIC, false)
+    const { activeWalletId, activeNetwork, accounts } = await wallet.build(
+      PASSWORD,
+      MNEMONIC,
+      false,
+    )
 
-    const { addresses, balances = {} } =
-      accounts[activeWalletId][activeNetwork][0]
+    if (!accounts || !activeWalletId || !activeNetwork) {
+      throw new Error('invalid setup')
+    }
+    const { addresses, balances } =
+      accounts![activeWalletId]![activeNetwork]![0]
     expect(
       addresses.length > 0 && addresses.length === Object.keys(balances).length,
     ).toBeTruthy()

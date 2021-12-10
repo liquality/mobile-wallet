@@ -84,11 +84,7 @@ export const restoreWallet =
       const { activeNetwork, activeWalletId } = walletState
       if (activeWalletId && activeNetwork) {
         wallet.subscribe((account: AccountType) => {
-          if (walletState.accounts) {
-            walletState.accounts[activeWalletId!][activeNetwork!] = [account]
-          }
           Object.assign(walletState.fiatRates, account.fiatRates)
-
           if (
             walletState.fees?.[activeNetwork]?.[activeWalletId] &&
             account.feeDetails
