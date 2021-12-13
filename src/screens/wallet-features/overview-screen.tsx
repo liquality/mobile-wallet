@@ -138,7 +138,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
       <View style={styles.tabsBlock}>
         <Pressable
           style={[
-            styles.leftHeader,
+            styles.tabHeader,
             selectedView === ViewKind.ASSETS && styles.headerFocused,
           ]}
           onPress={() => setSelectedView(ViewKind.ASSETS)}>
@@ -146,7 +146,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
         </Pressable>
         <Pressable
           style={[
-            styles.rightHeader,
+            styles.tabHeader,
             selectedView === ViewKind.ACTIVITY && styles.headerFocused,
           ]}
           onPress={() => setSelectedView(ViewKind.ACTIVITY)}>
@@ -271,25 +271,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'stretch',
     alignContent: 'stretch',
+  },
+  tabHeader: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#D9DFE5',
-  },
-  leftHeader: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  rightHeader: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
   },
   headerFocused: {
     borderBottomWidth: 1,
     borderBottomColor: '#000',
   },
   headerText: {
+    fontFamily: 'Montserrat-Regular',
     fontSize: 13,
+    lineHeight: 18,
     fontWeight: '600',
   },
   activityActionBar: {

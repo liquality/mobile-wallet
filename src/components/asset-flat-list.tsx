@@ -2,9 +2,9 @@ import React, { FC, Fragment, useCallback, useEffect, useState } from 'react'
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
-  faGreaterThan,
   faPlus,
   faMinus,
+  faChevronRight,
 } from '@fortawesome/pro-light-svg-icons'
 import { formatFiat, prettyBalance } from '../core/utils/coin-formatter'
 import AssetIcon from './asset-icon'
@@ -92,10 +92,19 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
           )}
           {!isNested && (
             <View style={styles.col4}>
-              <Pressable>
+              <Pressable
+                onPress={() =>
+                  onAssetSelected({
+                    assetData: {
+                      ...item,
+                      address: item.address,
+                    },
+                    screenTitle: item.code,
+                  })
+                }>
                 <FontAwesomeIcon
                   size={20}
-                  icon={faGreaterThan}
+                  icon={faChevronRight}
                   color={'#A8AEB7'}
                 />
               </Pressable>
@@ -154,7 +163,7 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
                     }>
                     <FontAwesomeIcon
                       size={20}
-                      icon={faGreaterThan}
+                      icon={faChevronRight}
                       color={'#A8AEB7'}
                     />
                   </Pressable>
@@ -179,10 +188,11 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    borderTopWidth: 1,
-    borderTopColor: '#D9DFE5',
+    borderBottomWidth: 1,
+    borderBottomColor: '#D9DFE5',
     borderLeftWidth: 3,
     paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   col1: {
     flex: 0.15,

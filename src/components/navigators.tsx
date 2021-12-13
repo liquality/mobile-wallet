@@ -2,7 +2,7 @@ import React, { createContext } from 'react'
 import { View, StyleSheet, Text } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faUserCog, faCircle } from '@fortawesome/pro-duotone-svg-icons'
+import { faUserCog } from '@fortawesome/pro-light-svg-icons'
 import Infinity from '../assets/icons/infinity.svg'
 import Entry from '../screens/wallet-creation/entryScreen'
 import TermsScreen from '../screens/wallet-creation/termsScreen'
@@ -174,14 +174,7 @@ export const MainNavigator = () => (
       title: '',
       tabBarIcon: ({ focused, size }) => {
         return (
-          <View style={styles.iconWrapper}>
-            <FontAwesomeIcon
-              icon={faCircle}
-              size={10}
-              color={focused ? '#C4C4C4' : '#FFFFFF'}
-              style={styles.icon}
-              secondaryColor={focused ? '#C4C4C4' : '#FFFFFF'}
-            />
+          <View style={[styles.iconWrapper, focused && styles.tabFocused]}>
             {route.name === 'SettingsScreen' ? (
               <FontAwesomeIcon icon={faUserCog} size={size} color="#5F5F5F" />
             ) : (
@@ -209,8 +202,15 @@ export const MainNavigator = () => (
 
 const styles = StyleSheet.create({
   iconWrapper: {
+    width: '100%',
+    height: '100%',
     alignItems: 'center',
-    marginTop: 5,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#D9DFE5',
+  },
+  tabFocused: {
+    borderTopColor: '#000',
   },
   icon: {
     marginVertical: 5,

@@ -52,6 +52,7 @@ export const useWalletState = () => {
             id: account.chain,
             chain: account.chain,
             name: account.name,
+            code: nativeAsset,
             address: account.addresses[0], //TODO why pick only the first address
             balance: new BigNumber(account.balances?.[nativeAsset] || 0),
             balanceInUSD: unitToCurrency(
