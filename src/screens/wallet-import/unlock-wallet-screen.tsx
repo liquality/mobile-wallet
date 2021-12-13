@@ -13,6 +13,7 @@ import {
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
+import ButtonFooter from '../../components/button-footer'
 import { ThemeContext } from '../../theme'
 import Header from '../header'
 import Wallet from '@liquality/core/dist/wallet'
@@ -129,7 +130,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
             keyExtractor={(item) => `${item.id}`}
             columnWrapperStyle={styles.columnWrapperStyle}
           />
-          <View style={styles.actions}>
+          <ButtonFooter>
             <Pressable
               style={[styles.actionBtn, styles.cancelBtn]}
               onPress={() => navigation.goBack()}>
@@ -147,7 +148,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
                 Continue
               </Text>
             </Pressable>
-          </View>
+          </ButtonFooter>
         </View>
       </KeyboardAvoidingView>
     </ImageBackground>
@@ -255,12 +256,6 @@ const styles = StyleSheet.create({
     width: '100%',
     fontSize: 16,
   },
-  actions: {
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 12,
-  },
   actionBtn: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -268,7 +263,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8FAFF',
     borderColor: '#9D4DFA',
     borderWidth: 1,
-    width: 152,
     height: 36,
   },
   cancelBtn: {

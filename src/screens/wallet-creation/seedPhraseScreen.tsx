@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
+import ButtonFooter from '../../components/button-footer'
 import { ThemeContext } from '../../theme'
 import Header from '../header'
 import Wallet from '@liquality/core/dist/wallet'
@@ -62,7 +63,7 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
           keyExtractor={(item) => `${item.id}`}
           columnWrapperStyle={styles.columnWrapperStyle}
         />
-        <View style={styles.actions}>
+        <ButtonFooter unpositioned>
           <Pressable
             style={[styles.actionBtn, styles.cancelBtn]}
             onPress={() => navigation.navigate('Entry')}>
@@ -78,7 +79,7 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
             }>
             <Text style={[theme.buttonText, styles.nextText]}>Next</Text>
           </Pressable>
-        </View>
+        </ButtonFooter>
       </View>
     </ImageBackground>
   )
@@ -133,12 +134,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 5,
   },
-  actions: {
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 12,
-  },
   actionBtn: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -146,7 +141,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8FAFF',
     borderColor: '#9D4DFA',
     borderWidth: 1,
-    width: 152,
     height: 36,
   },
   cancelBtn: {
