@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
-import LiqualityButton from '../../components/button'
+import LiqualityButton from '../../components/ui/button'
 import { prettyFiatBalance } from '../../core/utils/coin-formatter'
 import { useAppSelector } from '../../hooks'
-import { sendTransaction } from '../../store'
+import { sendTransaction } from '../../store/store'
 import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@liquality/types'
 
 type SendReviewScreenProps = StackScreenProps<
   RootStackParamList,
@@ -95,16 +95,14 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <View style={styles.row}>
           <LiqualityButton
             text={'Edit'}
-            textColor={'#9D4DFA'}
-            backgroundColor={'#F8FAFF'}
-            width={152}
+            variant="medium"
+            type="negative"
             action={handleEditPress}
           />
           <LiqualityButton
             text={`Send ${asset}`}
-            textColor={'#FFFFFF'}
-            backgroundColor={'#9D4DFA'}
-            width={152}
+            variant="medium"
+            type="positive"
             action={handleSendPress}
           />
         </View>

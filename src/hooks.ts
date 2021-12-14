@@ -1,9 +1,13 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import { RootState, AppDispatch } from './store'
+import { RootState, AppDispatch } from './store/store'
 import { useEffect, useState } from 'react'
 import { AssetDataElementType, UseInputStateReturnType } from './types'
-import BigNumber from 'bignumber.js'
-import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
+import {
+  assets as cryptoassets,
+  unitToCurrency,
+  chains,
+} from '@liquality/cryptoassets'
+import { BigNumber } from '@liquality/types'
 
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
@@ -43,77 +47,92 @@ export const useWalletState = () => {
             continue
           }
 
+          const nativeAsset = chains[account.chain].nativeAsset
           const chainData: AssetDataElementType = {
             id: account.chain,
             chain: account.chain,
             name: account.name,
+            code: nativeAsset,
             address: account.addresses[0], //TODO why pick only the first address
-            balance: new BigNumber(0),
-            balanceInUSD: new BigNumber(0),
+            balance: new BigNumber(account.balances?.[nativeAsset] || 0),
+            balanceInUSD: unitToCurrency(
+              cryptoassets[nativeAsset],
+              account.balances?.[nativeAsset] || 0,
+            ).times(fiatRates[nativeAsset]),
             color: account.color,
             assets: [],
             showAssets: false,
             fees: fees?.[activeNetwork!]![walletId!][account.chain],
           }
-          const { total, assetsData } = Object.keys(account.balances!).reduce(
-            (
-              acc: {
-                total: BigNumber
-                assetsData: Array<AssetDataElementType>
-              },
-              asset: string,
-            ) => {
-              acc.total = BigNumber.sum(
-                acc.total,
-                unitToCurrency(
-                  cryptoassets[asset],
-                  account.balances![asset],
-                ).times(fiatRates[asset]),
-              )
 
-              acc.assetsData.push({
-                id: asset,
-                name: cryptoassets[asset].name,
-                code: asset,
-                chain: account.chain,
-                color: account.color,
-                balance: new BigNumber(account.balances![asset]),
-                balanceInUSD: new BigNumber(
+          if (account.assets.length > 0) {
+            const { total, assetsData } = Object.keys(account.balances!).reduce(
+              (
+                acc: {
+                  total: BigNumber
+                  assetsData: Array<AssetDataElementType>
+                },
+                asset: string,
+              ) => {
+                acc.total = BigNumber.sum(
+                  acc.total,
                   unitToCurrency(
                     cryptoassets[asset],
                     account.balances![asset],
                   ).times(fiatRates[asset]),
+                )
+
+                acc.assetsData.push({
+                  id: asset,
+                  name: cryptoassets[asset].name,
+                  code: asset,
+                  chain: account.chain,
+                  color: account.color,
+                  balance: new BigNumber(account.balances![asset]),
+                  balanceInUSD: new BigNumber(
+                    unitToCurrency(
+                      cryptoassets[asset],
+                      account.balances![asset],
+                    ).times(fiatRates[asset]),
+                  ),
+                })
+                return acc
+              },
+              { total: new BigNumber(0), assetsData: [] },
+            )
+
+            totalBalance = BigNumber.sum(totalBalance, total)
+
+            assetCounter += Object.keys(account.balances!).reduce(
+              (count: number, asset: string) =>
+                account.balances![asset] > 0 ? ++count : count,
+              0,
+            )
+
+            chainData.balance = assetsData.reduce(
+              (
+                totalBal: BigNumber,
+                assetData: AssetDataElementType,
+              ): BigNumber =>
+                BigNumber.sum(totalBal, assetData.balance || new BigNumber(0)),
+              new BigNumber(0),
+            )
+
+            chainData.balanceInUSD = assetsData.reduce(
+              (
+                totalBal: BigNumber,
+                assetData: AssetDataElementType,
+              ): BigNumber =>
+                BigNumber.sum(
+                  totalBal,
+                  assetData.balanceInUSD || new BigNumber(0),
                 ),
-              })
-              return acc
-            },
-            { total: new BigNumber(0), assetsData: [] },
-          )
+              new BigNumber(0),
+            )
 
-          totalBalance = BigNumber.sum(totalBalance, total)
+            chainData.assets?.push(...assetsData)
+          }
 
-          assetCounter += Object.keys(account.balances!).reduce(
-            (count: number, asset: string) =>
-              account.balances![asset] > 0 ? ++count : count,
-            0,
-          )
-
-          chainData.balance = assetsData.reduce(
-            (totalBal: BigNumber, assetData: AssetDataElementType): BigNumber =>
-              BigNumber.sum(totalBal, assetData.balance || new BigNumber(0)),
-            new BigNumber(0),
-          )
-
-          chainData.balanceInUSD = assetsData.reduce(
-            (totalBal: BigNumber, assetData: AssetDataElementType): BigNumber =>
-              BigNumber.sum(
-                totalBal,
-                assetData.balanceInUSD || new BigNumber(0),
-              ),
-            new BigNumber(0),
-          )
-
-          chainData.assets?.push(...assetsData)
           accountData.push(chainData)
         }
         setTotalFiatBalance(totalBalance)

@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { StateType, StorageManagerI } from './types'
+import { IStorage, StateType } from '@liquality/core/dist/types'
 
 /**
  * Implementation of the StorageManagerI interface for mobile
  */
-export default class StorageManager implements StorageManagerI<StateType> {
+export default class StorageManager implements IStorage<StateType> {
   excludedProps: Array<keyof StateType>
   storageKey: string
 
@@ -13,7 +13,7 @@ export default class StorageManager implements StorageManagerI<StateType> {
     this.excludedProps = excludedProps
   }
 
-  public async persist(data: StateType): Promise<boolean | Error> {
+  public async write(data: StateType): Promise<boolean | Error> {
     if (!data || Object.keys(data).length === 0) {
       return new Error('Empty data')
     }
@@ -27,7 +27,7 @@ export default class StorageManager implements StorageManagerI<StateType> {
         await AsyncStorage.setItem(this.storageKey, JSON.stringify(data))
         return true
       } else {
-        return Error('Can not persist sensitive data')
+        return Error('Can not write sensitive data')
       }
     } catch (e) {
       return false

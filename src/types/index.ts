@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction } from 'react'
-import BigNumber from 'bignumber.js'
+import { Dispatch, ReactElement, SetStateAction } from 'react'
+import { BigNumber } from '@liquality/types'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { NetworkEnum } from '../core/types'
@@ -60,6 +60,7 @@ export type RootStackParamList = {
   SendReviewScreen: StackPayload
   SendConfirmationScreen: StackPayload
   CustomFeeScreen: StackPayload
+  SwapScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
 }
@@ -74,6 +75,12 @@ export interface UseInputStateReturnType<T> {
 export interface SeedWordType {
   id: number
   word: string
+}
+
+export type ProviderType = {
+  name: string
+  rate: number
+  icon: () => ReactElement
 }
 
 export enum DarkModeEnum {

@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
+import ETHChainIcon from '../assets/icons/crypto/ethereum_chain.svg'
 import ETHIcon from '../assets/icons/crypto/eth.svg'
-import BTCIcon from '../assets/icons/crypto/btc.svg'
+import BTCIcon from '../assets/icons/crypto/bitcoin_chain.svg'
+import RSKIcon from '../assets/icons/crypto/rsk_chain.svg'
 import RBTCIcon from '../assets/icons/crypto/rbtc.svg'
 import SovrynIcon from '../assets/icons/crypto/sov.svg'
 import DAIIcon from '../assets/icons/crypto/dai.svg'
@@ -25,11 +27,15 @@ const AssetIcon: FC<AssetIconType> = (props) => {
     return <BlankIcon width={size} height={size} style={styles.icon} />
   }
 
-  if (
+  if (!asset && chain?.toLowerCase() === ChainId.Ethereum) {
+    return <ETHChainIcon width={size} height={size} style={styles.icon} />
+  } else if (
     asset?.toLowerCase() === 'eth' &&
     chain?.toLowerCase() === ChainId.Ethereum
   ) {
     return <ETHIcon width={size} height={size} style={styles.icon} />
+  } else if (!asset && chain?.toLowerCase() === ChainId.Rootstock) {
+    return <RSKIcon width={size} height={size} style={styles.icon} />
   } else if (
     asset?.toLowerCase() === 'rbtc' &&
     chain?.toLowerCase() === ChainId.Rootstock
@@ -59,15 +65,7 @@ const AssetIcon: FC<AssetIconType> = (props) => {
 
 const styles = StyleSheet.create({
   icon: {
-    marginRight: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.35,
-    shadowRadius: 4,
-    elevation: 5,
+    marginHorizontal: 5,
   },
 })
 

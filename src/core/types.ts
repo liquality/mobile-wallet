@@ -49,6 +49,16 @@ export interface DataMapperI<T, R> {
 //-----------------------------------DATA TYPES----------------------------
 export type GasSpeedType = 'slow' | 'average' | 'fast'
 
+export const SwapProviderType = {
+  LIQUALITY: 'LIQUALITY',
+  UNISWAPV2: 'UNISWAPV2',
+  ONEINCHV3: 'ONEINCHV3',
+  THORCHAIN: 'THORCHAIN',
+  LIQUALITYBOOST: 'LIQUALITYBOOST',
+  FASTBTC: 'FASTBTC',
+  SOVRYN: 'SOVRYN',
+}
+
 export interface AccountType {
   name: string
   chain: ChainId
@@ -90,7 +100,7 @@ export interface StateType {
     name: string
     assets?: Array<string>
     activeNetwork?: NetworkEnum
-    mnemomnic?: string
+    mnemonic?: string
     imported?: boolean
   }[]
   unlockedAt?: number

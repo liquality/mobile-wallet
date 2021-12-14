@@ -1,5 +1,5 @@
 import { DataMapperI, FlatState, StateType } from './types'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@liquality/types'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
 
 /**

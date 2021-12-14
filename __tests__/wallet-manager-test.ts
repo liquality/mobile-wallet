@@ -1,43 +1,107 @@
-import WalletManager from '../src/core/wallet-manager'
 import StorageManager from '../src/core/storage-manager'
-import { NetworkEnum } from '../src/core/types'
-import { ArrayElement, StateType } from '../src/core/types'
 import EncryptionManager from '../src/core/encryption-manager'
+import Wallet from '@liquality/core/dist/wallet'
+import { Config } from '@liquality/core/dist/config'
+import { NetworkEnum } from '@liquality/core/dist/types'
+import { config } from 'dotenv'
+import { AccountType } from '../src/core/types'
+import { ChainId } from '@liquality/cryptoassets'
+
+class CustomConfig extends Config {
+  public getDefaultEnabledAssets(network: NetworkEnum): string[] {
+    return super.getDefaultEnabledAssets(network)
+  }
+
+  public getDefaultEnabledChains(network: NetworkEnum): ChainId[] {
+    return super
+      .getDefaultEnabledChains(network)
+      .concat([ChainId.Bitcoin, ChainId.Rootstock])
+  }
+}
 
 describe('WalletManagerTest', () => {
-  const PASSWORD = '123123123'
-  const wallet: Omit<
-    ArrayElement<StateType['wallets']>,
-    'id' | 'at' | 'name'
-  > = {
-    mnemomnic:
-      'legend else tooth car romance thought rather share lunar reopen attend refuse',
-    assets: ['ETH'],
-    activeNetwork: NetworkEnum.Testnet,
-    imported: false,
-  }
-  const walletManager = new WalletManager(
+  config()
+  const PASSWORD = process.env.PASSWORD!
+  const MNEMONIC = process.env.MNEMONIC!
+  let wallet = new Wallet(
     new StorageManager('@liqualityStore', []),
     new EncryptionManager(),
+    new Config(process.env.INFURA_API_KEY),
   )
 
   beforeAll(() => {
+    jest.setTimeout(100000)
     global.crypto = {}
     global.crypto.getRandomValues = () => new Uint8Array(1)
   })
 
+  beforeEach(() => {
+    wallet = new Wallet(
+      new StorageManager('@liqualityStore', []),
+      new EncryptionManager(),
+      new Config(process.env.INFURA_API_KEY),
+    )
+  })
+
   it('should create a wallet', async () => {
-    const newWallet = await walletManager.createWallet(wallet, PASSWORD)
-    expect(newWallet.keySalt).toBeTruthy()
-    expect(newWallet.wallets).toBeTruthy()
-    expect(newWallet.encryptedWallets).toBeTruthy()
-    expect(newWallet.accounts).toBeTruthy()
+    const initialState = await wallet.init(PASSWORD, MNEMONIC)
+    expect(initialState.keySalt).toBeTruthy()
+  })
+
+  it('should create an account', async () => {
+    let account
+    await wallet.init(PASSWORD, MNEMONIC)
+    wallet.subscribe((acct: AccountType) => {
+      account = acct
+    })
+    await wallet.addAccounts(NetworkEnum.Testnet)
+    expect(account).toBeTruthy()
+  })
+
+  it('should have a positive balance for two assets', async () => {
+    wallet = new Wallet(
+      new StorageManager('@liqualityStore', []),
+      new EncryptionManager(),
+      new CustomConfig(process.env.INFURA_API_KEY),
+    )
+    const walletState = await wallet.build(PASSWORD, MNEMONIC, false)
+    const { activeNetwork, activeWalletId } = walletState
+    const accounts = walletState?.accounts?.[activeWalletId!][activeNetwork!]
+    const ethBalance = accounts?.filter((item) => item.balances?.SOV)
+    const btcBalance = accounts?.filter((item) => item.balances?.RBTC)
+    expect(ethBalance && btcBalance).toBeTruthy()
+  })
+
+  it('should have a positive balance for rsk/rootstock assets', async () => {
+    wallet = new Wallet(
+      new StorageManager('@liqualityStore', []),
+      new EncryptionManager(),
+      new CustomConfig(process.env.INFURA_API_KEY),
+    )
+
+    const walletState = await wallet.build(PASSWORD, MNEMONIC, false)
+    const { activeNetwork, activeWalletId } = walletState
+    const accounts = walletState?.accounts?.[activeWalletId!][activeNetwork!]
+
+    const sovBalance = accounts?.filter((item) => item.balances?.SOV)
+    const rbtcBalance = accounts?.filter((item) => item.balances?.RBTC)
+    expect(sovBalance && rbtcBalance).toBeTruthy()
+  })
+
+  it('should call callback upon adding an account', async () => {
+    await wallet.init(PASSWORD, MNEMONIC)
+    const fnc = jest.fn()
+    wallet.subscribe(fnc)
+    await wallet.addAccounts(NetworkEnum.Testnet)
+    expect(fnc).toHaveBeenCalled()
   })
 
   it('should be able to restore a wallet', async () => {
-    const newWallet = await walletManager.createWallet(wallet, PASSWORD)
+    const newWallet = await wallet.build(PASSWORD, MNEMONIC, false)
+    await wallet.store(newWallet)
     delete newWallet.wallets
-    const retoredWallet = await walletManager.restoreWallet(PASSWORD, newWallet)
+    const retoredWallet = await wallet.restore(PASSWORD)
+    await wallet.refresh()
 
     expect(retoredWallet.keySalt).toBeTruthy()
     expect(retoredWallet.wallets).toBeTruthy()
@@ -46,79 +110,49 @@ describe('WalletManagerTest', () => {
   })
 
   it('should generate 12 seed words', () => {
-    const seedWords = WalletManager.generateSeedWords()
+    const seedWords = Wallet.generateSeedWords()
     expect(seedWords.length).toEqual(12)
   })
 
   it('should generate different random seed words', () => {
-    const seedWords1 = WalletManager.generateSeedWords()
-    const seedWords2 = WalletManager.generateSeedWords()
+    const seedWords1 = Wallet.generateSeedWords()
+    const seedWords2 = Wallet.generateSeedWords()
     expect(
       seedWords1.sort().join(' ') !== seedWords2.sort().join(' '),
     ).toBeTruthy()
   })
 
   it('should find a seed phrase NOT valid', () => {
-    expect(!WalletManager.validateSeedPhrase('blabl')).toBeTruthy()
+    expect(!Wallet.validateSeedPhrase('blabl')).toBeTruthy()
   })
 
   it('should find a seed phrase valid', () => {
     expect(
-      WalletManager.validateSeedPhrase(
+      Wallet.validateSeedPhrase(
         'seed sock milk update focus rotate barely fade car face mechanic mercy',
       ),
     ).toBeTruthy()
   })
 
-  //TODO run this against Truffle
   it('should find unused addresses', async () => {
-    const {
-      keySalt,
-      encryptedWallets,
-      activeWalletId = '',
-      accounts,
-      wallets,
-    } = await walletManager.createWallet(wallet, PASSWORD)
-    const state: StateType = {
-      key: PASSWORD,
-      wallets,
-      unlockedAt: Date.now(),
-      keySalt,
-      encryptedWallets,
-      accounts,
-      fees: {
-        [NetworkEnum.Testnet]: {
-          [activeWalletId]: {
-            ETH: {
-              average: { fee: 3.7500000135 },
-              fast: { fee: 5.000000018 },
-              slow: { fee: 2.500000009 },
-            },
-          },
-        },
-      },
-      enabledAssets: {
-        [NetworkEnum.Mainnet]: {
-          [activeWalletId]: ['ETH'],
-        },
-        [NetworkEnum.Testnet]: {
-          [activeWalletId]: ['ETH'],
-        },
-      },
-      activeNetwork: NetworkEnum.Testnet,
-      activeWalletId,
+    const { activeWalletId, activeNetwork, accounts } = await wallet.build(
+      PASSWORD,
+      MNEMONIC,
+      false,
+    )
+
+    if (!accounts || !activeWalletId || !activeNetwork) {
+      throw new Error('invalid setup')
     }
-    const { accounts: updatedAccount } =
-      await walletManager.updateAddressesAndBalances(state)
-    const { addresses, balances = {} } =
-      updatedAccount![activeWalletId!][NetworkEnum.Testnet]![1]
+    const { addresses, balances } =
+      accounts![activeWalletId]![activeNetwork]![0]
     expect(
       addresses.length > 0 && addresses.length === Object.keys(balances).length,
     ).toBeTruthy()
   })
 
   it('should get prices for assets', async () => {
-    const prices = await walletManager.getPricesForAssets(['ETH', 'BTC'], 'USD')
-    expect(prices && prices.ETH > 0 && prices.BTC > 0).toBeTruthy()
+    const { fiatRates } = await wallet.build(PASSWORD, MNEMONIC, false)
+    expect(fiatRates && fiatRates.ETH > 0).toBeTruthy()
   })
 })

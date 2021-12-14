@@ -1,4 +1,4 @@
-import { ChainNetworkType, NetworkEnum } from './types'
+import { ChainNetworkType, NetworkEnum, SwapProviderType } from './types'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { BitcoinNetworks } from '@liquality/bitcoin-networks'
 import { EthereumNetworks } from '@liquality/ethereum-networks'
@@ -95,4 +95,84 @@ export default {
     PWETH: '0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa',
     SUSHI: '0x0769fd68dFb93167989C6f7254cd0D766Fb2841F',
   } as Record<string, string>,
+  swapProviders: {
+    testnet: {
+      liquality: {
+        name: 'Liquality',
+        icon: 'liquality.svg',
+        type: SwapProviderType.LIQUALITY,
+        agent:
+          process.env.VUE_APP_AGENT_TESTNET_URL ||
+          'https://liquality.io/swap-testnet-dev/agent',
+      },
+      uniswapV2: {
+        name: 'Uniswap V2',
+        icon: 'uniswap.svg',
+        type: SwapProviderType.UNISWAPV2,
+        routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+      },
+      thorchain: {
+        name: 'Thorchain',
+        icon: 'thorchain.svg',
+        type: SwapProviderType.THORCHAIN,
+        thornode: 'https://testnet.thornode.thorchain.info',
+      },
+      sovryn: {
+        name: 'Sovyrn',
+        icon: 'sovryn.svg',
+        type: SwapProviderType.SOVRYN,
+        // routerAddress: SovrynTestnetAddresses.swapNetwork,
+        // routerAddressRBTC: SovrynTestnetAddresses.proxy3,
+        rpcURL: 'https://public-node.testnet.rsk.co/',
+      },
+    },
+    mainnet: {
+      liquality: {
+        name: 'Liquality',
+        icon: 'liquality.svg',
+        type: SwapProviderType.LIQUALITY,
+        agent: 'https://liquality.io/swap-dev/agent',
+      },
+      liqualityBoost: {
+        name: 'Liquality Boost',
+        type: SwapProviderType.LIQUALITYBOOST,
+        network: 'mainnet',
+        icon: 'liqualityboost.svg',
+        supportedBridgeAssets: ['MATIC'],
+      },
+      uniswapV2: {
+        name: 'Uniswap V2',
+        icon: 'uniswap.svg',
+        type: SwapProviderType.UNISWAPV2,
+        routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+      },
+      oneinchV3: {
+        name: 'Oneinch V3',
+        icon: 'oneinch.svg',
+        type: SwapProviderType.ONEINCHV3,
+        agent: 'https://api.1inch.exchange/v3.0',
+        routerAddress: '0x11111112542d85b3ef69ae05771c2dccff4faa26',
+        referrerAddress: {
+          ethereum: '0xaf2C465dC79DeDf7305CDe782439171D147Abac7',
+          polygon: '0x3a712CC47aeb0F20A7C9dE157c05d74B11F172f5',
+          bsc: '0x3a712CC47aeb0F20A7C9dE157c05d74B11F172f5',
+        },
+        referrerFee: 0.3,
+      },
+      fastBTC: {
+        name: 'FastBTC',
+        icon: 'sovryn.svg',
+        type: SwapProviderType.FASTBTC,
+        bridgeEndpoint: 'http://3.131.33.161:3000/',
+      },
+      sovryn: {
+        name: 'Sovyrn',
+        icon: 'sovryn.svg',
+        type: SwapProviderType.SOVRYN,
+        // routerAddress: SovrynMainnetAddresses.swapNetwork,
+        // routerAddressRBTC: SovrynMainnetAddresses.proxy3,
+        rpcURL: 'https://public-node.rsk.co/',
+      },
+    },
+  },
 }

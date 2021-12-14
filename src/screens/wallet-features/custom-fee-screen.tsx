@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
-import LiqualityButton from '../../components/button'
+import LiqualityButton from '../../components/ui/button'
 import { NetworkEnum } from '../../core/types'
 import { useAppSelector } from '../../hooks'
 import { FeeDetails } from '@liquality/types/lib/fees'
@@ -185,16 +185,14 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
       <View style={[styles.block, styles.row, styles.actions]}>
         <LiqualityButton
           text={'Cancel'}
-          textColor={'#9D4DFA'}
-          backgroundColor={'#F8FAFF'}
-          width={152}
+          variant="medium"
+          type="negative"
           action={navigation.goBack}
         />
         <LiqualityButton
           text={'Apply'}
-          textColor={'#FFFFFF'}
-          backgroundColor={'#9D4DFA'}
-          width={152}
+          variant="medium"
+          type="positive"
           action={handleApplyPress}
         />
       </View>

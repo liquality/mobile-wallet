@@ -2,6 +2,7 @@ import EncryptionManager from '../src/core/encryption-manager'
 
 describe('EncryptionManagerTest', () => {
   const PASSWORD = 'this is my password'
+  const DATA = 'This is a cool wallet'
 
   beforeAll(() => {
     global.crypto = {}
@@ -15,20 +16,19 @@ describe('EncryptionManagerTest', () => {
 
   it('should encrypt a string', async () => {
     const encryptionManager = new EncryptionManager()
+    const keySalt = encryptionManager.generateSalt(16)
     const encryptedValue = await encryptionManager.encrypt(
-      'This is a cool wallet',
+      DATA,
+      keySalt,
       PASSWORD,
     )
     expect(encryptedValue).toBeTruthy()
   })
 
   it('should decrypt a string', async () => {
-    const DATA = 'This is a cool wallet'
     const encryptionManager = new EncryptionManager()
-    const { encrypted, keySalt } = await encryptionManager.encrypt(
-      DATA,
-      PASSWORD,
-    )
+    const keySalt = encryptionManager.generateSalt(16)
+    const encrypted = await encryptionManager.encrypt(DATA, keySalt, PASSWORD)
     const decryptedValue = await encryptionManager.decrypt(
       encrypted,
       keySalt,
@@ -38,12 +38,9 @@ describe('EncryptionManagerTest', () => {
   })
 
   it('should fail decryption when decyrpting using a different password', async () => {
-    const DATA = 'This is a cool wallet'
     const encryptionManager = new EncryptionManager()
-    const { encrypted, keySalt } = await encryptionManager.encrypt(
-      DATA,
-      PASSWORD,
-    )
+    const keySalt = encryptionManager.generateSalt(16)
+    const encrypted = await encryptionManager.encrypt(DATA, keySalt, PASSWORD)
     const encryptionManager2 = new EncryptionManager()
     const decryptedValue = await encryptionManager2.decrypt(
       encrypted,

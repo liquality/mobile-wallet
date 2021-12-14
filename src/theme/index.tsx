@@ -4,8 +4,9 @@ import { StyleSheet } from 'react-native'
 const theme = StyleSheet.create({
   buttonText: {
     fontFamily: 'Montserrat-SemiBold',
-    fontSize: 14,
     fontWeight: '600',
+    fontSize: 14,
+    lineHeight: 18,
   },
   container: {
     flexDirection: 'row',

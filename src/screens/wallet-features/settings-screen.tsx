@@ -11,7 +11,7 @@ import { Picker } from '@react-native-picker/picker'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faAngleDown, faAngleUp } from '@fortawesome/pro-light-svg-icons'
 import { NetworkEnum } from '../../core/types'
-import LiqualityButton from '../../components/button'
+import LiqualityButton from '../../components/ui/button'
 import AssetIcon from '../../components/asset-icon'
 import SettingsSwitch from '../../components/ui/switch'
 import { DarkModeEnum } from '../../types'
@@ -148,7 +148,12 @@ const SettingsScreen = () => {
         <View style={styles.row}>
           <View style={styles.action}>
             <Text style={styles.label}>Wallet Logs</Text>
-            <LiqualityButton text={'Download'} action={() => ({})} />
+            <LiqualityButton
+              text={'Download'}
+              type="positive"
+              variant="medium"
+              action={() => ({})}
+            />
           </View>
           <Text style={styles.description}>
             The wallet logs contain your public information such as addresses

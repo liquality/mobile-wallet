@@ -228,6 +228,8 @@ PODS:
     - React-Core
   - react-native-splash-screen (3.2.0):
     - React
+  - react-native-udp (2.7.0):
+    - React
   - react-native-webview (11.13.0):
     - React-Core
   - React-perflogger (0.64.2)
@@ -348,6 +350,8 @@ PODS:
   - SDWebImageWebPCoder (0.6.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.7)
+  - TcpSockets (3.3.2):
+    - React
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -372,6 +376,7 @@ DEPENDENCIES:
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
+  - react-native-udp (from `../node_modules/react-native-udp`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -394,6 +399,7 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
+  - TcpSockets (from `../node_modules/react-native-tcp`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -444,6 +450,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
+  react-native-udp:
+    :path: "../node_modules/react-native-udp"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-perflogger:
@@ -488,6 +496,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
+  TcpSockets:
+    :path: "../node_modules/react-native-tcp"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -514,6 +524,7 @@ SPEC CHECKSUMS:
   react-native-randombytes: 5fc412efe7b5c55b9002c0004d75fe5fabcaa507
   react-native-safe-area-context: 5cf05f49df9d17261e40e518481f2e334c6cd4b5
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
+  react-native-udp: ccbd878f0f3b968217fc7e3d5eb5839fcaab8b6c
   react-native-webview: b176c6404ad40d10cfc818be41c053f85a72d751
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
   React-RCTActionSheet: af7796ba49ffe4ca92e7277a5d992d37203f7da5
@@ -538,6 +549,7 @@ SPEC CHECKSUMS:
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
+  TcpSockets: 8d839b9b14f6f344d98e4642ded13ab3112b462d
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
 PODFILE CHECKSUM: 59d5f059e36d781e45edb3ccbd41eaf8385c209a

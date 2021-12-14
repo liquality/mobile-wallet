@@ -1,5 +1,5 @@
 import { Modal, StyleSheet, Text, View } from 'react-native'
-import LiqualityButton from '../button'
+import LiqualityButton from './button'
 import React from 'react'
 
 const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
@@ -66,7 +66,12 @@ const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
             massa vitae nibh. Ut suscipit nisi enim, ut dictum felis tristique
             sit amet.
           </Text>
-          <LiqualityButton text={'OK'} action={handleOkButtonPress} />
+          <LiqualityButton
+            text={'OK'}
+            variant="medium"
+            type="positive"
+            action={handleOkButtonPress}
+          />
         </View>
       </View>
     </Modal>

@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@liquality/types'
 import { unitToCurrency, assets } from '@liquality/cryptoassets'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
 
