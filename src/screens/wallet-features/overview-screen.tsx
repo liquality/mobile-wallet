@@ -13,7 +13,7 @@ import {
   faArrowUp,
 } from '@fortawesome/pro-regular-svg-icons'
 import { faGreaterThan } from '@fortawesome/pro-light-svg-icons'
-import { Fragment, useCallback, useState } from 'react'
+import { Fragment, useCallback, useEffect, useState } from 'react'
 import { useWalletState } from '../../hooks'
 import { formatFiat } from '../../core/utils/coin-formatter'
 import AssetFlatList from '../../components/asset-flat-list'
@@ -22,6 +22,8 @@ import ActivityFlatList, {
 } from '../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ActionEnum, RootStackParamList, StackPayload } from '../../types'
+import { populateWallet } from '../../store/store'
+import { useDispatch } from 'react-redux'
 
 const activities: Array<ActivityDataElementType> = [
   {
@@ -50,6 +52,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
   const [activityData] = useState<Array<ActivityDataElementType>>(activities)
   const { assets, assetCount, totalFiatBalance, loading } = useWalletState()
+  const dispatch = useDispatch()
 
   const handleSendBtnPress = useCallback(() => {
     navigation.navigate('AssetChooserScreen', {
@@ -78,6 +81,10 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     },
     [navigation],
   )
+
+  useEffect(() => {
+    dispatch(populateWallet())
+  }, [dispatch])
 
   return (
     <View style={styles.container}>

@@ -1,4 +1,9 @@
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import {
+  TypedUseSelectorHook,
+  useDispatch,
+  useSelector,
+  shallowEqual,
+} from 'react-redux'
 import { RootState, AppDispatch } from './store/store'
 import { useEffect, useState } from 'react'
 import { AssetDataElementType, UseInputStateReturnType } from './types'
@@ -30,6 +35,7 @@ export const useWalletState = () => {
       fiatRates: state.fiatRates,
       fees: state.fees,
     }),
+    shallowEqual,
   )
 
   useEffect(() => {

@@ -12,15 +12,52 @@ import EncryptionManager from '../core/encryption-manager'
 import { SendOptions, Transaction } from '@liquality/types'
 import Wallet from '@liquality/core/dist/wallet'
 import { Config } from '@liquality/core/dist/config'
-import { AccountType, NetworkEnum, StateType } from '@liquality/core/dist/types'
+import { AccountType, StateType } from '@liquality/core/dist/types'
 import { ChainId } from '@liquality/cryptoassets'
 import { INFURA_API_KEY } from '@env'
+import { NetworkEnum } from '../core/types'
 
 const excludedProps: Array<keyof StateType> = ['key', 'wallets', 'unlockedAt']
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
 const encryptionManager = new EncryptionManager()
 const config = new Config(INFURA_API_KEY)
 const wallet = new Wallet(storageManager, encryptionManager, config)
+wallet.subscribe((account: AccountType) => {
+  const walletState = store.getState()
+  const { activeWalletId, activeNetwork } = walletState
+
+  if (activeWalletId && activeNetwork) {
+    const existingAccounts: AccountType[] =
+      walletState?.accounts?.[activeWalletId][activeNetwork] || []
+
+    if (walletState.accounts) {
+      if (existingAccounts.length === 0) {
+        walletState.accounts[activeWalletId][activeNetwork] = [account]
+      } else {
+        const index = existingAccounts.findIndex(
+          (item) => item.name === account.name,
+        )
+        if (index >= 0) {
+          walletState.accounts[activeWalletId][activeNetwork][index] = account
+        } else {
+          walletState.accounts[activeWalletId][activeNetwork]?.push(account)
+        }
+      }
+    }
+
+    Object.assign(walletState.fiatRates, account.fiatRates)
+
+    if (walletState.fees && account.feeDetails) {
+      walletState.fees[activeNetwork][activeWalletId][account.chain] =
+        account.feeDetails
+    }
+
+    store.dispatch({
+      type: 'UPDATE_WALLET',
+      payload: walletState,
+    })
+  }
+})
 
 const persistenceMiddleware: Middleware<
   (action: PayloadAction<StateType>) => StateType,
@@ -52,66 +89,36 @@ export const isNewInstallation = async (): Promise<boolean> => {
 }
 
 //TODO Use slices and async thunks instead
-export const createWallet =
-  (password: string, mnemonic: string) => async (dispatch: any) => {
-    try {
-      const walletState = await wallet.build(password, mnemonic, false)
-      await wallet.store(walletState)
-      return dispatch({
-        type: 'SETUP_WALLET',
-        payload: walletState,
-      })
-    } catch (error: any) {
-      Alert.alert('Unable to create wallet. Try again!')
-      return dispatch({
-        type: 'ERROR',
-        payload: {
-          errorMessage: 'Unable to create wallet. Try again!',
-        } as StateType,
-      })
-    }
-  }
+export const createWallet = async (
+  password: string,
+  mnemonic: string,
+): Promise<StateType> => {
+  return await wallet.init(password, mnemonic, false)
+}
 
+export const populateWallet = () => async (dispatch: any) => {
+  try {
+    await wallet.addAccounts(
+      store.getState().activeNetwork || NetworkEnum.Mainnet,
+    )
+    await wallet.store(store.getState())
+  } catch (error: any) {
+    Alert.alert('Unable to create wallet. Try again!')
+    return dispatch({
+      type: 'ERROR',
+      payload: {
+        errorMessage: 'Unable to create wallet. Try again!',
+      } as StateType,
+    })
+  }
+}
 /**
  * A dispatch action that restores/decrypts the wallet
  * @param password
  */
-export const restoreWallet =
-  (password: string) =>
-  async (dispatch: any): Promise<any> => {
-    try {
-      const walletState: StateType = await wallet.restore(password)
-      const { activeNetwork, activeWalletId } = walletState
-      if (activeWalletId && activeNetwork) {
-        wallet.subscribe((account: AccountType) => {
-          Object.assign(walletState.fiatRates, account.fiatRates)
-          if (
-            walletState.fees?.[activeNetwork]?.[activeWalletId] &&
-            account.feeDetails
-          ) {
-            walletState.fees[activeNetwork][activeWalletId][account.chain] =
-              account.feeDetails
-          }
-        })
-      }
-
-      await wallet.refresh()
-      //TODO Refresh balances, fees, and fiat rates
-      return dispatch({
-        type: 'RESTORE_WALLET',
-        payload: {
-          ...walletState,
-        },
-      })
-    } catch (error: any) {
-      return dispatch({
-        type: 'ERROR',
-        payload: {
-          errorMessage: error.message,
-        } as StateType,
-      })
-    }
-  }
+export const restoreWallet = async (password: string): Promise<StateType> => {
+  return await wallet.restore(password)
+}
 
 export const sendTransaction = async (
   options: SendOptions,

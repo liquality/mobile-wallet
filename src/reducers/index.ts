@@ -26,9 +26,10 @@ const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
         ...action.payload,
       }
     case 'UPDATE_WALLET':
+      const accounts = action.payload.accounts
       return {
         ...state,
-        ...action.payload,
+        accounts: { ...accounts },
       }
     case 'NETWORK_UPDATE':
       return {
