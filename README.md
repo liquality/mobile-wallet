@@ -24,27 +24,7 @@
 
 ## Using Node modules
 We are using rn-nodeify to provide polyfills for the code that is using Node modules. All the magic happens when we load the shim.js file.
-Here is how we set it up. Note that this only happens once during the project setup:
-
-### install react-native-crypto
-```
-npm i --save react-native-crypto
-```
-
-### install peer deps
-```
-npm i --save react-native-randombytes
-cd ios && pod install && cd ..
-```
-
-### install latest rn-nodeify
-```
-npm i --save-dev rn-nodeify
-```
-### install node core shims
-```
-./node_modules/.bin/rn-nodeify --hack --install
-```
+The shim file is generated in the postinstall step
 
 ## Linting
 
