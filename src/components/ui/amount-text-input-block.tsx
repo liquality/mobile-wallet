@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    // width: '100%',
   },
   md3: {
     width: '75%',
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     textAlign: 'right',
     lineHeight: 30,
-    height: 40,
+    height: 35,
     width: '100%',
     color: '#EAB300',
   },

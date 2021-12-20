@@ -41,6 +41,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [fromAsset, setFromAsset] = useState<AssetDataElementType>()
   const [toAsset, setToAsset] = useState<AssetDataElementType>()
   const [, setSelectedQuote] = useState<MarketDataType>()
+  const [showWarning] = useState(false)
 
   const toggleGasControllers = () => {
     setGasControllersVisible(!areGasControllersVisible)
@@ -80,11 +81,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <MessageBanner
-        text1="No liquidity."
-        text2="Request liquidity for tokens via"
-        onAction={() => ({})}
-      />
+      {showWarning && (
+        <MessageBanner
+          text1="No liquidity."
+          text2="Request liquidity for tokens via"
+          onAction={() => ({})}
+        />
+      )}
       <View style={styles.assetBlock}>
         <AmountTextInputBlock
           label="SEND"
@@ -149,13 +152,24 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             size={15}
           />
           <Label text="NETWORK SPEED/FEE" variant="strong" />
-          <Label text="BTC avg / ETH avg" variant="light" />
+          <Label
+            text={`${fromAsset?.code || 'BTC'} avg / ${
+              toAsset?.code || 'ETH'
+            } avg`}
+            variant="light"
+          />
         </Pressable>
       </View>
       {areGasControllersVisible && (
         <>
-          <GasController assetSymbol="BTC" handleCustomPress={() => ({})} />
-          <GasController assetSymbol="ETH" handleCustomPress={() => ({})} />
+          <GasController
+            assetSymbol={fromAsset?.code || 'BTC'}
+            handleCustomPress={() => ({})}
+          />
+          <GasController
+            assetSymbol={toAsset?.code || 'ETH'}
+            handleCustomPress={() => ({})}
+          />
           <Warning
             text1="Max slippage is 0.5%."
             text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6

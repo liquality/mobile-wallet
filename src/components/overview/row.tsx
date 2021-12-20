@@ -65,7 +65,7 @@ const Row: FC<RowProps> = (props) => {
         </View>
       )}
       <View style={styles.col4}>
-        {!isNested ? (
+        {isNested ? (
           <FontAwesomeIcon size={20} icon={faChevronRight} color={'#FFF'} />
         ) : (
           <Pressable

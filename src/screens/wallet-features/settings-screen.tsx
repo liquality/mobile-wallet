@@ -292,6 +292,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     borderWidth: 1,
+    borderColor: '#D9DFE5',
     paddingVertical: 5,
     paddingHorizontal: 10,
   },

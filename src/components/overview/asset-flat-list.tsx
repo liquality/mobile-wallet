@@ -56,6 +56,7 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
           item.assets?.map((subItem) => {
             return (
               <SubRow
+                key={item.id}
                 parentItem={item}
                 item={subItem}
                 onAssetSelected={onAssetSelected}
