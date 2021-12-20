@@ -145,9 +145,9 @@ export const useWalletState = () => {
         setAssetCount(assetCounter)
         setAssets(accountData)
       }
-      setLoading(false)
     }
-  }, [accounts, activeNetwork, fees, fiatRates, walletId])
+    setLoading(assetCount === 0)
+  }, [accounts, activeNetwork, assetCount, fees, fiatRates, walletId])
 
   return { loading, assetCount, assets, totalFiatBalance }
 }

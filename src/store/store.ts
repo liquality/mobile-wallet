@@ -5,7 +5,6 @@ import {
   PayloadAction,
 } from '@reduxjs/toolkit'
 import thunk from 'redux-thunk'
-import { Alert } from 'react-native'
 import rootReducer from '../reducers'
 import StorageManager from '../core/storage-manager'
 import EncryptionManager from '../core/encryption-manager'
@@ -116,22 +115,12 @@ export const createWallet = async (
   return await wallet.init(password, mnemonic, false)
 }
 
-export const populateWallet = () => async (dispatch: any) => {
-  try {
-    wallet
-      .addAccounts(store.getState().activeNetwork || NetworkEnum.Mainnet)
-      .then(() => {
-        wallet.store(store.getState())
-      })
-  } catch (error: any) {
-    Alert.alert('Unable to create wallet. Try again!')
-    return dispatch({
-      type: 'ERROR',
-      payload: {
-        errorMessage: 'Unable to create wallet. Try again!',
-      } as StateType,
+export const populateWallet = () => {
+  wallet
+    .addAccounts(store.getState().activeNetwork || NetworkEnum.Mainnet)
+    .then(() => {
+      wallet.store(store.getState())
     })
-  }
 }
 /**
  * A dispatch action that restores/decrypts the wallet
