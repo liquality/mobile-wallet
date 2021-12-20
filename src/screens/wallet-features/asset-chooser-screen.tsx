@@ -26,7 +26,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
   const screenMap: Record<ActionEnum, keyof RootStackParamList> = useMemo(
     () => ({
       [ActionEnum.RECEIVE]: 'ReceiveScreen',
-      [ActionEnum.SWAP]: 'ReceiveScreen',
+      [ActionEnum.SWAP]: 'SwapScreen',
       [ActionEnum.SEND]: 'SendScreen',
     }),
     [],
@@ -64,7 +64,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
       } else {
         navigation.navigate(screenMap[route.params.action], {
           assetData: params.assetData,
-          screenTitle: `Send ${params.assetData?.code}`,
+          screenTitle: `${route.params.action} ${params.assetData?.code}`,
         })
       }
     },

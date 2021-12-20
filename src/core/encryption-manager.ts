@@ -1,10 +1,9 @@
-import _pbkdf2 from 'pbkdf2'
+import { NativeModules } from 'react-native'
 import { enc as Enc, AES, lib as Lib } from 'crypto-js'
 import { IEncryption } from '@liquality/core/dist/types'
 
 const PBKDF2_ITERATIONS = 100000
 const PBKDF2_LENGTH = 32
-const PBKDF2_DIGEST = 'sha256'
 
 interface CipherJsonType {
   ct: string
@@ -87,22 +86,15 @@ export default class EncryptionManager implements IEncryption {
     },
   }
 
-  private async pbkdf2(password: string, salt: string): Promise<string> {
+  public async pbkdf2(password: string, salt: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      _pbkdf2.pbkdf2(
-        password,
-        salt,
-        PBKDF2_ITERATIONS,
-        PBKDF2_LENGTH,
-        PBKDF2_DIGEST,
-        (err, derivedKey) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(global.Buffer.from(derivedKey).toString('hex'))
-          }
-        },
-      )
+      NativeModules.Aes.pbkdf2(password, salt, PBKDF2_ITERATIONS, PBKDF2_LENGTH)
+        .then((seed: string) => {
+          resolve(global.Buffer.from(seed).toString('hex'))
+        })
+        .catch((seedError: Error) => {
+          reject(seedError)
+        })
     })
   }
 }

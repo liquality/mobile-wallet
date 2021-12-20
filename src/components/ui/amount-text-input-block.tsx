@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { useInputState } from '../../hooks'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
 import LiqualityButton from './button'
 import AssetIcon from '../asset-icon'
 import { ChainId } from '@liquality/cryptoassets/src/types'
@@ -35,6 +35,7 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
           action={() => ({})}
           variant="small"
           type="plain"
+          contentType="numeric"
         />
       </View>
       <View style={styles.row}>
@@ -58,14 +59,14 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
+    width: Dimensions.get('screen').width - 40 - 25,
     marginVertical: 5,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    width: '100%',
+    // width: '100%',
   },
   md3: {
     width: '75%',
@@ -79,20 +80,20 @@ const styles = StyleSheet.create({
   },
   font: {
     fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
+    fontWeight: '400',
   },
   input: {
-    fontSize: 28,
+    fontSize: 25,
     textAlign: 'right',
-    lineHeight: 40,
+    lineHeight: 30,
     height: 40,
     width: '100%',
     color: '#EAB300',
   },
   description: {
-    fontSize: 24,
+    fontSize: 25,
     color: '#1D1E21',
-    lineHeight: 24,
+    lineHeight: 25,
     height: 24,
     textAlign: 'left',
   },

@@ -1,4 +1,4 @@
-import { StateType } from '../core/types'
+import { StateType } from '@liquality/core/dist/types'
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
 
 const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
@@ -30,6 +30,12 @@ const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
       return {
         ...state,
         accounts: { ...accounts },
+      }
+    case 'UPDATE_MARKET_DATA':
+      const marketData = action.payload.marketData
+      return {
+        ...state,
+        marketData: [...marketData],
       }
     case 'NETWORK_UPDATE':
       return {

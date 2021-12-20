@@ -6,6 +6,7 @@ type LiqualityButtonProps = {
   text: string
   variant: 'small' | 'medium' | 'large'
   type: 'plain' | 'positive' | 'negative'
+  contentType?: 'numeric' | 'alphanumeric'
   children?: React.ReactElement
   action: (...args: unknown[]) => void
 }
@@ -15,6 +16,7 @@ const LiqualityButton: FC<LiqualityButtonProps> = (props) => {
     text,
     variant = 'medium',
     type = 'positive',
+    contentType = 'alphanumeric',
     action,
     children,
   } = props
@@ -25,7 +27,15 @@ const LiqualityButton: FC<LiqualityButtonProps> = (props) => {
       style={[styles.actionBtn, styles[variant], styles[type]]}
       onPress={action}>
       {children && children}
-      <Text style={[styles[type], theme.buttonText]}>{text}</Text>
+      <Text
+        style={[
+          styles[type],
+          contentType === 'alphanumeric'
+            ? theme.buttonText
+            : theme.buttonTextAmount,
+        ]}>
+        {text}
+      </Text>
     </Pressable>
   )
 }
@@ -53,6 +63,7 @@ const styles = StyleSheet.create({
   plain: {
     color: '#1D1E21',
     borderColor: '#D9DFE5',
+    fontWeight: '600',
   },
   positive: {
     color: '#FFFFFF',
@@ -61,15 +72,6 @@ const styles = StyleSheet.create({
   negative: {
     color: '#9D4DFA',
     backgroundColor: '#F8FAFF',
-  },
-  plainText: {
-    color: '#1D1E21',
-  },
-  positiveText: {
-    color: '#FFFFFF',
-  },
-  negativeText: {
-    color: '#9D4DFA',
   },
 })
 

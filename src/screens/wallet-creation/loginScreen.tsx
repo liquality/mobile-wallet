@@ -39,18 +39,16 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     } else {
       setLoading(true)
       //TODO find a better way to handle threads
-      setTimeout(async () => {
-        restoreWallet(passwordInput.value).then((walletState) => {
-          dispatch({
-            type: 'RESTORE_WALLET',
-            payload: {
-              ...walletState,
-            },
-          })
-          setLoading(false)
-          navigation.navigate('MainNavigator')
+      restoreWallet(passwordInput.value).then((walletState) => {
+        dispatch({
+          type: 'RESTORE_WALLET',
+          payload: {
+            ...walletState,
+          },
         })
-      }, 1000)
+        setLoading(false)
+        navigation.navigate('MainNavigator')
+      })
     }
   }
 

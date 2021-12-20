@@ -12,16 +12,32 @@ import EncryptionManager from '../core/encryption-manager'
 import { SendOptions, Transaction } from '@liquality/types'
 import Wallet from '@liquality/core/dist/wallet'
 import { Config } from '@liquality/core/dist/config'
-import { AccountType, StateType } from '@liquality/core/dist/types'
+import {
+  AccountType,
+  StateType,
+  NetworkEnum,
+  SwapProvidersEnum,
+} from '@liquality/core/dist/types'
 import { ChainId } from '@liquality/cryptoassets'
 import { INFURA_API_KEY } from '@env'
-import { NetworkEnum } from '../core/types'
 
 const excludedProps: Array<keyof StateType> = ['key', 'wallets', 'unlockedAt']
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
 const encryptionManager = new EncryptionManager()
 const config = new Config(INFURA_API_KEY)
 const wallet = new Wallet(storageManager, encryptionManager, config)
+
+//Subscribe to market data updates
+wallet.on('onMarketDataUpdate', (marketData) => {
+  store.dispatch({
+    type: 'UPDATE_MARKET_DATA',
+    payload: {
+      marketData,
+    } as StateType,
+  })
+})
+
+//Subscribe to account updates
 wallet.subscribe((account: AccountType) => {
   const walletState = store.getState()
   const { activeWalletId, activeNetwork } = walletState
@@ -88,6 +104,10 @@ export const isNewInstallation = async (): Promise<boolean> => {
   return await wallet.isNewInstallation()
 }
 
+export const retrieveSwapRates = async () => {
+  // wallet.
+}
+
 //TODO Use slices and async thunks instead
 export const createWallet = async (
   password: string,
@@ -98,10 +118,11 @@ export const createWallet = async (
 
 export const populateWallet = () => async (dispatch: any) => {
   try {
-    await wallet.addAccounts(
-      store.getState().activeNetwork || NetworkEnum.Mainnet,
-    )
-    await wallet.store(store.getState())
+    wallet
+      .addAccounts(store.getState().activeNetwork || NetworkEnum.Mainnet)
+      .then(() => {
+        wallet.store(store.getState())
+      })
   } catch (error: any) {
     Alert.alert('Unable to create wallet. Try again!')
     return dispatch({
@@ -118,6 +139,27 @@ export const populateWallet = () => async (dispatch: any) => {
  */
 export const restoreWallet = async (password: string): Promise<StateType> => {
   return await wallet.restore(password)
+}
+
+export const initSwaps = () => {
+  wallet.getSwapProvider(SwapProvidersEnum.LIQUALITY)
+  // const keys = Object.keys(wallet.getAccounts())
+  // console.log('keys: ', keys)
+  // const fromAccount: IAccount = wallet.getAccounts()[keys[0]]
+  // const toAccount: IAccount = wallet.getAccounts()[keys[1]]
+  // if (!fromAccount || !toAccount) {
+  //   console.log('Make sure to provide two accounts to perform a swap')
+  // }
+  // await swapProvider.performSwap(
+  //     fromAccount,
+  //     toAccount,
+  //     (await fromAccount.getAssets())[0].getSymbol(),
+  //     {
+  //       from: (await fromAccount.getUsedAddress()).address,
+  //       to: (await toAccount.getUsedAddress()).address,
+  //       toAmount: new BigNumber(1.23),
+  //     },
+  // )
 }
 
 export const sendTransaction = async (

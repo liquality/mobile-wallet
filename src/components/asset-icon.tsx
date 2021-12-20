@@ -20,7 +20,7 @@ type AssetIconType = {
 //TODO this approach does not scale, refactor to a better one
 //TODO Match the name of the icon to the name of the asset and load icons dynamically
 const AssetIcon: FC<AssetIconType> = (props) => {
-  const SIZE = 32
+  const SIZE = 25
   const { chain, asset, size = SIZE } = props
 
   if (!asset && !chain) {

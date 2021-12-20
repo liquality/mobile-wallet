@@ -1,3 +1,4 @@
+import React, { FC } from 'react'
 import {
   Modal,
   Pressable,
@@ -6,17 +7,17 @@ import {
   Text,
   View,
 } from 'react-native'
+import { MarketDataType } from '@liquality/core/dist/types'
 import Label from './ui/label'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTimes } from '@fortawesome/pro-light-svg-icons'
-import React, { FC } from 'react'
-import { ProviderType } from '../types'
 import Uniswap from '../assets/icons/swap-providers/uniswap.svg'
 import LiqualityBoost from '../assets/icons/swap-providers/liqualityboost.svg'
 import Liquality from '../assets/icons/swap-providers/liquality.svg'
 
 type SwapTypesInfoProps = {
-  swapProviders: ProviderType[]
+  swapProviders: MarketDataType[]
+  getIcon: (marketData: MarketDataType) => React.ReactElement
   toggleModal: () => void
 }
 
@@ -51,7 +52,7 @@ const providersInfo = [
 ]
 
 const SwapTypesInfo: FC<SwapTypesInfoProps> = (props) => {
-  const { swapProviders, toggleModal } = props
+  const { swapProviders, toggleModal, getIcon } = props
   return (
     <View style={styles.centeredView}>
       <Modal transparent={true} visible={true} animationType={'slide'}>
@@ -72,10 +73,10 @@ const SwapTypesInfo: FC<SwapTypesInfoProps> = (props) => {
                 {swapProviders.map((item) => {
                   return (
                     <View
-                      key={item.name}
+                      key={item.provider}
                       style={[styles.miniLabel, styles.borderless]}>
-                      {item.icon()}
-                      <Text style={styles.text}>{item.name}</Text>
+                      {getIcon(item)}
+                      <Text style={styles.text}>{item.provider}</Text>
                     </View>
                   )
                 })}

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {
   ImageBackground,
+  InteractionManager,
   Pressable,
   StyleSheet,
   Text,
@@ -83,7 +84,9 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   )
 
   useEffect(() => {
-    dispatch(populateWallet())
+    InteractionManager.runAfterInteractions(() => {
+      dispatch(populateWallet())
+    })
   }, [dispatch])
 
   return (

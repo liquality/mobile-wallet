@@ -89,7 +89,7 @@ export enum DarkModeEnum {
 }
 
 export enum ActionEnum {
-  SEND,
-  SWAP,
-  RECEIVE,
+  SEND = 'SEND',
+  SWAP = 'SWAP',
+  RECEIVE = 'RECEIVE',
 }

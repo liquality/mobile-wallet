@@ -31,6 +31,17 @@ import AssetChooserScreen from '../screens/wallet-features/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset-management-screen'
 import SwapScreen from '../screens/wallet-features/swap-screen'
 
+const config = {
+  animation: 'spring',
+  config: {
+    stiffness: 1000,
+    damping: 500,
+    mass: 3,
+    overshootClamping: true,
+    restDisplacementThreshold: 0.01,
+    restSpeedThreshold: 0.01,
+  },
+}
 const Stack = createStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
 
@@ -84,6 +95,11 @@ export const AppStackNavigator = () => (
   <Stack.Navigator
     initialRouteName="OverviewScreen"
     screenOptions={({ navigation, route }) => ({
+      gestureDirection: 'horizontal',
+      transitionSpec: {
+        open: config,
+        close: config,
+      },
       headerShown: true,
       title: '',
       headerLeft: (props: HeaderBackButtonProps) => (

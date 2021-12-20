@@ -59,8 +59,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   speedOptions: {
+    justifyContent: 'space-around',
     alignSelf: 'center',
-    width: '80%',
+    width: '70%',
     alignItems: 'center',
   },
   speedLabel: {
@@ -84,6 +85,7 @@ const styles = StyleSheet.create({
     height: 26,
     borderWidth: 1,
     paddingHorizontal: 10,
+    borderColor: '#D9DFE5',
   },
   speedLeftBtn: {
     borderBottomLeftRadius: 50,
