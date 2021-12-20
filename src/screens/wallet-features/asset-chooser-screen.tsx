@@ -10,7 +10,7 @@ import {
   RootStackParamList,
   StackPayload,
 } from '../../types'
-import AssetFlatList from '../../components/asset-flat-list'
+import AssetFlatList from '../../components/overview/asset-flat-list'
 import { useInputState, useWalletState } from '../../hooks'
 
 type AssetChooserProps = StackScreenProps<

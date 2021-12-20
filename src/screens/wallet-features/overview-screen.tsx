@@ -17,7 +17,7 @@ import { faGreaterThan } from '@fortawesome/pro-light-svg-icons'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import { useWalletState } from '../../hooks'
 import { formatFiat } from '../../core/utils/coin-formatter'
-import AssetFlatList from '../../components/asset-flat-list'
+import AssetFlatList from '../../components/overview/asset-flat-list'
 import ActivityFlatList, {
   ActivityDataElementType,
 } from '../../components/activity-flat-list'
