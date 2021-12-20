@@ -46,6 +46,7 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
     return (
       <Fragment>
         <Row
+          key={item.id}
           item={item}
           toggleRow={toggleRow}
           onAssetSelected={onAssetSelected}
@@ -56,7 +57,7 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
           item.assets?.map((subItem) => {
             return (
               <SubRow
-                key={item.id}
+                key={`${item.id}-${subItem.id}`}
                 parentItem={item}
                 item={subItem}
                 onAssetSelected={onAssetSelected}

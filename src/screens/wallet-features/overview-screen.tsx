@@ -24,7 +24,6 @@ import ActivityFlatList, {
 import { StackScreenProps } from '@react-navigation/stack'
 import { ActionEnum, RootStackParamList, StackPayload } from '../../types'
 import { populateWallet } from '../../store/store'
-import { useDispatch } from 'react-redux'
 
 const activities: Array<ActivityDataElementType> = [
   {
@@ -53,7 +52,6 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
   const [activityData] = useState<Array<ActivityDataElementType>>(activities)
   const { assets, assetCount, totalFiatBalance, loading } = useWalletState()
-  const dispatch = useDispatch()
 
   const handleSendBtnPress = useCallback(() => {
     navigation.navigate('AssetChooserScreen', {
@@ -85,9 +83,9 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
 
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      dispatch(populateWallet())
+      populateWallet()
     })
-  }, [dispatch])
+  }, [])
 
   return (
     <View style={styles.container}>
