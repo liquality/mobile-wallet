@@ -196,7 +196,7 @@ const SettingsScreen = () => {
                     activeNetwork === NetworkEnum.Mainnet && styles.btnSelected,
                   ]}
                   onPress={() => toggleNetwork(NetworkEnum.Mainnet)}>
-                  <Text>Mainnet</Text>
+                  <Text style={[styles.label, styles.small]}>Mainnet</Text>
                 </Pressable>
                 <Pressable
                   style={[
@@ -205,7 +205,7 @@ const SettingsScreen = () => {
                     activeNetwork === NetworkEnum.Testnet && styles.btnSelected,
                   ]}
                   onPress={() => toggleNetwork(NetworkEnum.Testnet)}>
-                  <Text>Testnet</Text>
+                  <Text style={[styles.label, styles.small]}>Testnet</Text>
                 </Pressable>
               </View>
             </View>
@@ -219,7 +219,7 @@ const SettingsScreen = () => {
                     darkMode === DarkModeEnum.Light && styles.btnSelected,
                   ]}
                   onPress={() => setDarkMode(DarkModeEnum.Light)}>
-                  <Text>light</Text>
+                  <Text style={[styles.label, styles.small]}>light</Text>
                 </Pressable>
                 <Pressable
                   style={[
@@ -228,13 +228,13 @@ const SettingsScreen = () => {
                     darkMode === DarkModeEnum.Dark && styles.btnSelected,
                   ]}
                   onPress={() => setDarkMode(DarkModeEnum.Dark)}>
-                  <Text>dark</Text>
+                  <Text style={[styles.label, styles.small]}>dark</Text>
                 </Pressable>
               </View>
             </View>
           </View>
           <View style={styles.info}>
-            <Text style={styles.label}>{version}</Text>
+            <Text style={[styles.label, styles.version]}>{version}</Text>
             <Pressable onPress={() => setIsWhatsNewVisible(true)}>
               <Text style={[styles.label, styles.link]}>What's new</Text>
             </Pressable>
@@ -293,7 +293,6 @@ const styles = StyleSheet.create({
   btn: {
     borderWidth: 1,
     borderColor: '#D9DFE5',
-    paddingVertical: 5,
     paddingHorizontal: 10,
   },
   leftBtn: {
@@ -310,12 +309,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F7F9',
   },
   link: {
+    fontSize: 14,
     color: '#9D4DFA',
+  },
+  version: {
+    fontSize: 14,
   },
   info: {
     flexDirection: 'row',
+    marginTop: 40,
   },
   description: {
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '300',
+    fontSize: 12,
+    lineHeight: 18,
     color: '#646F85',
   },
   switchBtn: {
@@ -341,6 +349,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     left: 0,
+  },
+  small: {
+    fontWeight: '300',
+    fontSize: 11,
+    lineHeight: 26,
+    color: '#1D1E21',
   },
 })
 

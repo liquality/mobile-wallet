@@ -307,6 +307,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
             <View style={styles.speedBtnsWrapper}>
               {gasSpeeds.map((speed, idx) => (
                 <Pressable
+                  key={speed}
                   style={[
                     styles.speedBtn,
                     idx === 0 && styles.speedLeftBtn,
@@ -495,6 +496,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 26,
     borderWidth: 1,
+    borderColor: '#D9DFE5',
     paddingHorizontal: 10,
   },
   speedLeftBtn: {

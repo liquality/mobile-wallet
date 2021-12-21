@@ -154,14 +154,17 @@ export const initSwaps = () => {
 export const sendTransaction = async (
   options: SendOptions,
 ): Promise<Transaction | Error> => {
+  if (!options || Object.keys(options).length === 0) {
+    throw new Error(`Failed to send transaction: ${options}`)
+  }
+
   try {
-    const { data, value, to } = options
     const account = await wallet.getAccount(
       ChainId.Ethereum,
       NetworkEnum.Testnet,
     )
     const assets = await account.getAssets()
-    return await assets[0].transmit(value, to, data)
+    return await assets[0].transmit(options)
   } catch (e) {
     return new Error('Failed to send transaction')
   }

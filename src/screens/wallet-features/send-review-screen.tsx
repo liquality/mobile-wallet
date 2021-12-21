@@ -32,6 +32,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         ),
         fee: gasFee!.toNumber(),
       })
+
       navigation.navigate('SendConfirmationScreen', {
         screenTitle: `SEND ${asset} Transaction Details`,
         ...route.params,
