@@ -8,7 +8,7 @@ import thunk from 'redux-thunk'
 import rootReducer from '../reducers'
 import StorageManager from '../core/storage-manager'
 import EncryptionManager from '../core/encryption-manager'
-import { SendOptions, Transaction } from '@liquality/types'
+import { BigNumber, SendOptions, Transaction } from '@liquality/types'
 import Wallet from '@liquality/core/dist/wallet'
 import { Config } from '@liquality/core/dist/config'
 import {
@@ -16,9 +16,13 @@ import {
   StateType,
   NetworkEnum,
   SwapProvidersEnum,
+  IAccount,
 } from '@liquality/core/dist/types'
 import { ChainId } from '@liquality/cryptoassets'
+import 'react-native-reanimated'
 import { INFURA_API_KEY } from '@env'
+import { AssetDataElementType } from '../types'
+import { Alert } from 'react-native'
 
 const excludedProps: Array<keyof StateType> = ['key', 'wallets', 'unlockedAt']
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
@@ -132,23 +136,57 @@ export const restoreWallet = async (password: string): Promise<StateType> => {
 
 export const initSwaps = () => {
   wallet.getSwapProvider(SwapProvidersEnum.LIQUALITY)
-  // const keys = Object.keys(wallet.getAccounts())
-  // console.log('keys: ', keys)
-  // const fromAccount: IAccount = wallet.getAccounts()[keys[0]]
-  // const toAccount: IAccount = wallet.getAccounts()[keys[1]]
-  // if (!fromAccount || !toAccount) {
-  //   console.log('Make sure to provide two accounts to perform a swap')
-  // }
-  // await swapProvider.performSwap(
-  //     fromAccount,
-  //     toAccount,
-  //     (await fromAccount.getAssets())[0].getSymbol(),
-  //     {
-  //       from: (await fromAccount.getUsedAddress()).address,
-  //       to: (await toAccount.getUsedAddress()).address,
-  //       toAmount: new BigNumber(1.23),
-  //     },
-  // )
+}
+
+export const performSwap = async (
+  from: AssetDataElementType,
+  to: AssetDataElementType,
+  fromAmount: BigNumber,
+  toAmount: BigNumber,
+) => {
+  const fromAccount: IAccount = wallet.getAccount(
+    from.chain,
+    store.getState().activeNetwork,
+  )
+  const toAccount: IAccount = wallet.getAccount(
+    to.chain,
+    store.getState().activeNetwork,
+  )
+
+  if (!fromAccount || !toAccount) {
+    Alert.alert('Make sure to provide two accounts to perform a swap')
+  }
+
+  const fromAssets = (await fromAccount.getAssets()) || []
+  const fromAsset =
+    fromAssets.length === 0 ? from.code : fromAssets[0].getSymbol()
+  const swapProvider = wallet.getSwapProvider(SwapProvidersEnum.LIQUALITY)
+  if (!fromAsset || !swapProvider) {
+    throw new Error('Failed to perform the swap')
+  }
+
+  // Send: undefined (lowest denomination) tb1qny4rdm3376uh0szgduep90hnl7urudzdfk3yer
+  // Receive: 0.025 (lowest denomination) 3f429e2212718a717bd7f9e83ca47dab7956447b
+  // My tb1qny4rdm3376uh0szgduep90hnl7urudzdfk3yer Address: tb1qnyam5rm4l7298640xs7s02e7fjckes5xsva3xt
+  // My 3f429e2212718a717bd7f9e83ca47dab7956447b Address: 3f429e2212718a717bd7f9e83ca47dab7956447b
+  // Counterparty tb1qny4rdm3376uh0szgduep90hnl7urudzdfk3yer Address: undefined
+  // Counterparty 3f429e2212718a717bd7f9e83ca47dab7956447b Address: undefined
+  // Timestamp: undefined
+  const quote = {
+    from: (await fromAccount.getUsedAddress()).address,
+    to: (await toAccount.getUsedAddress()).address,
+    fromAmount: fromAmount,
+    toAmount: toAmount,
+  }
+
+  const transaction = await swapProvider.performSwap(
+    fromAccount,
+    toAccount,
+    fromAsset,
+    quote,
+  )
+
+  return transaction
 }
 
 export const sendTransaction = async (

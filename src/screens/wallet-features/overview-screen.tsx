@@ -82,9 +82,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   )
 
   useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
-      populateWallet()
-    })
+    populateWallet()
   }, [])
 
   return (

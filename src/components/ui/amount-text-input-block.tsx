@@ -6,13 +6,14 @@ import AssetIcon from '../asset-icon'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import Label from './label'
 import { chainDefaultColors } from '../../core/config'
+import { BigNumber } from '@liquality/types'
 
 type AmountTextInputBlockProps = {
   label: string
   chain: ChainId
   assetSymbol: string
-  setAmountInFiat: (...args: unknown[]) => void
-  setAmountInNative: (...args: unknown[]) => void
+  setAmountInFiat: React.Dispatch<React.SetStateAction<BigNumber>>
+  setAmountInNative: React.Dispatch<React.SetStateAction<BigNumber>>
 }
 
 const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
@@ -22,8 +23,8 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
   const color = chainDefaultColors[chain]
 
   const handleEndEditing = () => {
-    setAmountInFiat(input.value)
-    setAmountInNative(input.value)
+    setAmountInFiat(new BigNumber(input.value))
+    setAmountInNative(new BigNumber(input.value))
   }
 
   return (

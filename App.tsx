@@ -52,7 +52,7 @@ const App = () => {
     <Provider store={store}>
       <LiqualityThemeProvider>
         <View style={backgroundStyle} testID={'app-test'}>
-          <StatusBar barStyle={'light-content'} />
+          <StatusBar barStyle={'dark-content'} />
           <NavigationContainer>
             <AppNavigator initialRouteName={initialRouteName} />
           </NavigationContainer>

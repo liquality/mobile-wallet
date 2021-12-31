@@ -25,12 +25,13 @@ import GasController from '../../components/ui/gas-controller'
 import Label from '../../components/ui/label'
 import Warning from '../../components/ui/warning'
 import SwapRates from '../../components/swap-rates'
-import { initSwaps } from '../../store/store'
+import { initSwaps, performSwap } from '../../store/store'
 import {
   ActionEnum,
   AssetDataElementType,
   RootStackParamList,
 } from '../../types'
+import { BigNumber } from '@liquality/types'
 
 type SwapScreenProps = StackScreenProps<RootStackParamList, 'SwapScreen'>
 
@@ -40,8 +41,20 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [areGasControllersVisible, setGasControllersVisible] = useState(false)
   const [fromAsset, setFromAsset] = useState<AssetDataElementType>()
   const [toAsset, setToAsset] = useState<AssetDataElementType>()
-  const [, setSelectedQuote] = useState<MarketDataType>()
+  const [selectedQuote, setSelectedQuote] = useState<MarketDataType>()
   const [showWarning] = useState(false)
+  const [fromAmountInNative, setFromAmountInNative] = useState<BigNumber>(
+    new BigNumber(0),
+  )
+  const [fromAmountInFiat, setFromAmountInFiat] = useState<BigNumber>(
+    new BigNumber(0),
+  )
+  const [toAmountInNative, setToAmountInNative] = useState<BigNumber>(
+    new BigNumber(0),
+  )
+  const [toAmountInFiat, setToAmountInFiat] = useState<BigNumber>(
+    new BigNumber(0),
+  )
 
   const toggleGasControllers = () => {
     setGasControllersVisible(!areGasControllersVisible)
@@ -65,6 +78,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
   const handleSelectQuote = (quote: MarketDataType) => {
     setSelectedQuote(quote)
+  }
+
+  const handleReviewBtnPress = async () => {
+    if (!fromAsset || !toAsset) {
+      throw new Error('Invalid arguments for swap')
+    }
+    await performSwap(fromAsset, toAsset, fromAmountInNative, toAmountInNative)
   }
 
   useEffect(() => {
@@ -93,8 +113,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           label="SEND"
           chain={fromAsset?.chain || ChainId.Bitcoin}
           assetSymbol={fromAsset?.code || 'BTC'}
-          setAmountInFiat={() => ({})}
-          setAmountInNative={() => ({})}
+          setAmountInFiat={setFromAmountInFiat}
+          setAmountInNative={setFromAmountInNative}
         />
         <Pressable style={styles.chevronBtn} onPress={handleFromAssetPress}>
           <FontAwesomeIcon icon={faChevronRight} size={15} color="#A8AEB7" />
@@ -130,8 +150,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           label="RECEIVE"
           chain={toAsset?.chain || ChainId.Ethereum}
           assetSymbol={toAsset?.code || 'ETH'}
-          setAmountInFiat={() => ({})}
-          setAmountInNative={() => ({})}
+          setAmountInFiat={setToAmountInFiat}
+          setAmountInNative={setToAmountInNative}
         />
         <Pressable style={styles.chevronBtn} onPress={handleToAssetPress}>
           <FontAwesomeIcon icon={faChevronRight} color="#A8AEB7" />
@@ -190,7 +210,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             text="Review"
             variant="medium"
             type="positive"
-            action={() => ({})}
+            action={handleReviewBtnPress}
           />
         </View>
       </View>
