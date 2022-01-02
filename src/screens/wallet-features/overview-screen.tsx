@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {
   ImageBackground,
-  InteractionManager,
   Pressable,
   StyleSheet,
   Text,

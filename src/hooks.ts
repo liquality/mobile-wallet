@@ -11,8 +11,10 @@ import {
   assets as cryptoassets,
   unitToCurrency,
   chains,
+  currencyToUnit,
 } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
+import { prettyBalance, prettyFiatBalance } from './core/utils/coin-formatter'
 
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
@@ -157,4 +159,35 @@ export const useInputState = (
 ): UseInputStateReturnType<string> => {
   const [value, setValue] = useState<string>(initialValue)
   return { value, onChangeText: setValue }
+}
+
+//TODO leave as a placeholder for now
+export const useCurrencyConverter = (props: {
+  amount: BigNumber
+  fromAsset: string
+  toAsset: string
+  fiatRate?: number
+}) => {
+  const [newAmount, setNewAmount] = useState(new BigNumber(0))
+  const [prettyAmount, setPrettyAmount] = useState('')
+  const { amount, fromAsset, toAsset, fiatRate } = props
+
+  useEffect(() => {
+    let amnt = new BigNumber(0)
+    if (fromAsset.toLowerCase() === 'usd') {
+      amnt = new BigNumber(
+        currencyToUnit(cryptoassets[toAsset], amount.toNumber()),
+      )
+      setNewAmount(amnt)
+      setPrettyAmount(prettyBalance(amnt, toAsset))
+    } else {
+      amnt = new BigNumber(
+        unitToCurrency(cryptoassets[fromAsset], amount.toNumber()),
+      )
+      setNewAmount(amnt)
+      setPrettyAmount(prettyFiatBalance(amnt.toNumber(), fiatRate))
+    }
+  }, [amount, fromAsset, toAsset, fiatRate])
+
+  return { amount: newAmount, prettyAmount }
 }

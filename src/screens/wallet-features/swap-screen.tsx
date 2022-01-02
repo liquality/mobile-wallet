@@ -41,7 +41,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [areGasControllersVisible, setGasControllersVisible] = useState(false)
   const [fromAsset, setFromAsset] = useState<AssetDataElementType>()
   const [toAsset, setToAsset] = useState<AssetDataElementType>()
-  const [selectedQuote, setSelectedQuote] = useState<MarketDataType>()
+  const [, setSelectedQuote] = useState<MarketDataType>()
   const [showWarning] = useState(false)
   const [fromAmountInNative, setFromAmountInNative] = useState<BigNumber>(
     new BigNumber(0),
@@ -113,6 +113,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           label="SEND"
           chain={fromAsset?.chain || ChainId.Bitcoin}
           assetSymbol={fromAsset?.code || 'BTC'}
+          amountInFiat={fromAmountInFiat}
+          amountInNative={fromAmountInNative}
           setAmountInFiat={setFromAmountInFiat}
           setAmountInNative={setFromAmountInNative}
         />
@@ -150,6 +152,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           label="RECEIVE"
           chain={toAsset?.chain || ChainId.Ethereum}
           assetSymbol={toAsset?.code || 'ETH'}
+          amountInFiat={toAmountInFiat}
+          amountInNative={toAmountInNative}
           setAmountInFiat={setToAmountInFiat}
           setAmountInNative={setToAmountInNative}
         />
