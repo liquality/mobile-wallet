@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import {
   Dimensions,
   Pressable,
@@ -10,51 +10,52 @@ import {
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { MarketDataType } from '@liquality/core/dist/types'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faArrowDown } from '@fortawesome/pro-regular-svg-icons'
 import { StackScreenProps } from '@react-navigation/stack'
 import {
+  faArrowDown,
   faAngleDown,
   faAngleRight,
   faChevronRight,
   faClock,
 } from '@fortawesome/pro-light-svg-icons'
-import MessageBanner from '../../components/ui/message-banner'
-import AmountTextInputBlock from '../../components/ui/amount-text-input-block'
-import LiqualityButton from '../../components/ui/button'
-import GasController from '../../components/ui/gas-controller'
-import Label from '../../components/ui/label'
-import Warning from '../../components/ui/warning'
-import SwapRates from '../../components/swap-rates'
-import { initSwaps, performSwap } from '../../store/store'
+import MessageBanner from '../../../components/ui/message-banner'
+import AmountTextInputBlock from '../../../components/ui/amount-text-input-block'
+import LiqualityButton from '../../../components/ui/button'
+import GasController from '../../../components/ui/gas-controller'
+import Label from '../../../components/ui/label'
+import Warning from '../../../components/ui/warning'
+import SwapRates from '../../../components/swap-rates'
+import { initSwaps } from '../../../store/store'
 import {
   ActionEnum,
   AssetDataElementType,
   RootStackParamList,
-} from '../../types'
+} from '../../../types'
 import { BigNumber } from '@liquality/types'
+import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import { prettyBalance } from '../../../core/utils/coin-formatter'
+import { useAppSelector } from '../../../hooks'
 
 type SwapScreenProps = StackScreenProps<RootStackParamList, 'SwapScreen'>
 
 const SwapScreen: FC<SwapScreenProps> = (props) => {
   const { navigation, route } = props
+  const { assetData } = route.params
+  const { marketData = [] } = useAppSelector((state) => ({
+    marketData: state.marketData,
+  }))
   const [fetchingAsset, setFetchingAsset] = useState<'TO' | 'FROM'>('TO')
   const [areGasControllersVisible, setGasControllersVisible] = useState(false)
-  const [fromAsset, setFromAsset] = useState<AssetDataElementType>()
+  const [fromAsset, setFromAsset] = useState<AssetDataElementType>(assetData)
   const [toAsset, setToAsset] = useState<AssetDataElementType>()
   const [, setSelectedQuote] = useState<MarketDataType>()
   const [showWarning] = useState(false)
-  const [fromAmountInNative, setFromAmountInNative] = useState<BigNumber>(
-    new BigNumber(0),
-  )
-  const [fromAmountInFiat, setFromAmountInFiat] = useState<BigNumber>(
-    new BigNumber(0),
-  )
-  const [toAmountInNative, setToAmountInNative] = useState<BigNumber>(
-    new BigNumber(0),
-  )
-  const [toAmountInFiat, setToAmountInFiat] = useState<BigNumber>(
-    new BigNumber(0),
-  )
+  const fromAmountInNative = useRef<BigNumber>(new BigNumber(0))
+  const toAmountInNative = useRef<BigNumber>(new BigNumber(0))
+  const fromNetworkFee = useRef<BigNumber>(new BigNumber(0))
+  const toNetworkFee = useRef<BigNumber>(new BigNumber(0))
+  const [maximumValue, setMaximumValue] = useState<BigNumber>(new BigNumber(0))
+  const [minimumValue, setMinimumValue] = useState<BigNumber>(new BigNumber(0))
 
   const toggleGasControllers = () => {
     setGasControllersVisible(!areGasControllersVisible)
@@ -84,11 +85,48 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     if (!fromAsset || !toAsset) {
       throw new Error('Invalid arguments for swap')
     }
-    await performSwap(fromAsset, toAsset, fromAmountInNative, toAmountInNative)
+
+    navigation.navigate('SwapReviewScreen', {
+      swapTransaction: {
+        fromAsset,
+        toAsset,
+        fromAmount: fromAmountInNative.current,
+        toAmount: toAmountInNative.current,
+        networkFee: toNetworkFee.current,
+      },
+      screenTitle: `Swap ${fromAsset.code} to ${toAsset.code}`,
+    })
+  }
+
+  const handleMinPress = () => {
+    setMaximumValue(new BigNumber(0))
+    //TODO why do we have to check against the liquality type
+    const liqualityMarket = marketData?.find(
+      (pair) => pair.from === fromAsset?.code && pair.to === toAsset?.code,
+      // && getSwapProviderConfig(this.activeNetwork, pair.provider).type ===
+      //   SwapProviderType.LIQUALITY,
+    )
+    const min = liqualityMarket
+      ? new BigNumber(liqualityMarket.min)
+      : new BigNumber(0)
+    setMinimumValue(min)
+  }
+
+  const handleMaxPress = () => {
+    if (assetData) {
+      const amnt = unitToCurrency(
+        cryptoassets[assetData.code],
+        assetData?.balance?.toNumber() || 0,
+      )
+      setMaximumValue(new BigNumber(amnt))
+    }
   }
 
   useEffect(() => {
     initSwaps()
+  }, [])
+
+  useEffect(() => {
     const asset = route.params.assetData
     if (asset) {
       if (fetchingAsset === 'TO') {
@@ -113,10 +151,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           label="SEND"
           chain={fromAsset?.chain || ChainId.Bitcoin}
           assetSymbol={fromAsset?.code || 'BTC'}
-          amountInFiat={fromAmountInFiat}
-          amountInNative={fromAmountInNative}
-          setAmountInFiat={setFromAmountInFiat}
-          setAmountInNative={setFromAmountInNative}
+          maximumValue={maximumValue}
+          minimumValue={minimumValue}
+          amountRef={fromAmountInNative}
         />
         <Pressable style={styles.chevronBtn} onPress={handleFromAssetPress}>
           <FontAwesomeIcon icon={faChevronRight} size={15} color="#A8AEB7" />
@@ -129,19 +166,23 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             variant="small"
             type="plain"
             contentType="numeric"
-            action={() => ({})}
+            action={handleMinPress}
           />
           <LiqualityButton
             text="Max"
             variant="small"
             type="plain"
             contentType="numeric"
-            action={() => ({})}
+            action={handleMaxPress}
           />
         </View>
         <View style={styles.wrapper}>
           <Label text="Available" variant="light" />
-          <Text style={[styles.font, styles.amount]}>3.123456 BTC</Text>
+          <Text style={[styles.font, styles.amount]}>
+            {`${prettyBalance(fromAsset?.balance, fromAsset?.code)} ${
+              fromAsset?.code
+            }`}
+          </Text>
         </View>
       </View>
       <View style={styles.box}>
@@ -152,10 +193,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           label="RECEIVE"
           chain={toAsset?.chain || ChainId.Ethereum}
           assetSymbol={toAsset?.code || 'ETH'}
-          amountInFiat={toAmountInFiat}
-          amountInNative={toAmountInNative}
-          setAmountInFiat={setToAmountInFiat}
-          setAmountInNative={setToAmountInNative}
+          amountRef={toAmountInNative}
         />
         <Pressable style={styles.chevronBtn} onPress={handleToAssetPress}>
           <FontAwesomeIcon icon={faChevronRight} color="#A8AEB7" />
@@ -189,10 +227,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           <GasController
             assetSymbol={fromAsset?.code || 'BTC'}
             handleCustomPress={() => ({})}
+            networkFee={fromNetworkFee}
           />
           <GasController
             assetSymbol={toAsset?.code || 'ETH'}
             handleCustomPress={() => ({})}
+            networkFee={toNetworkFee}
           />
           <Warning
             text1="Max slippage is 0.5%."

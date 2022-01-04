@@ -1,17 +1,38 @@
-import { GasSpeedType } from '../../core/types'
-import React, { FC, useState } from 'react'
+import React, { FC, MutableRefObject, useEffect, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { BigNumber, FeeDetails } from '@liquality/types'
+import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
+import { GasSpeedType } from '../../core/types'
+import { useAppSelector } from '../../hooks'
 
 const gasSpeeds: GasSpeedType[] = ['slow', 'average', 'fast']
 type GasControllerProps = {
   assetSymbol: string
   handleCustomPress: (...args: unknown[]) => void
+  networkFee: MutableRefObject<BigNumber>
 }
 
 const GasController: FC<GasControllerProps> = (props) => {
-  const { assetSymbol, handleCustomPress } = props
+  const { assetSymbol, handleCustomPress, networkFee } = props
   const [customFee, setCustomFee] = useState()
   const [speedMode, setSpeedMode] = useState<GasSpeedType>('average')
+  const { activeNetwork, activeWalletId, fees } = useAppSelector((state) => ({
+    activeNetwork: state.activeNetwork,
+    activeWalletId: state.activeWalletId,
+    fees: state.fees,
+  }))
+  const [gasFees, setGasFees] = useState<FeeDetails>()
+
+  useEffect(() => {
+    if (fees && activeNetwork && activeWalletId) {
+      const gFees: FeeDetails =
+        fees[activeNetwork][activeWalletId][cryptoassets[assetSymbol].chain]
+      setGasFees(gFees)
+      networkFee.current = new BigNumber(
+        unitToCurrency(cryptoassets[assetSymbol], gFees.average.fee),
+      )
+    }
+  }, [activeNetwork, activeWalletId, assetSymbol, fees, networkFee])
 
   return (
     <View style={[styles.container, styles.row, styles.speedOptions]}>
@@ -29,6 +50,7 @@ const GasController: FC<GasControllerProps> = (props) => {
             onPress={() => {
               setCustomFee(undefined)
               setSpeedMode(speed)
+              networkFee.current = new BigNumber(gasFees[speed].fee)
             }}>
             <Text
               style={[

@@ -7,23 +7,23 @@ import {
   AssetDataElementType,
   RootStackParamList,
   UseInputStateReturnType,
-} from '../../types'
+} from '../../../types'
 import {
   faAngleDown,
   faAngleRight,
   faQrcode,
 } from '@fortawesome/pro-light-svg-icons'
-import LiqualityButton from '../../components/ui/button'
-import { useAppSelector } from '../../hooks'
-import { GasSpeedType, NetworkEnum } from '../../core/types'
+import LiqualityButton from '../../../components/ui/button'
+import { useAppSelector } from '../../../hooks'
+import { GasSpeedType, NetworkEnum } from '../../../core/types'
 import { BigNumber } from '@liquality/types'
 import {
   calculateAvailableAmnt,
   calculateGasFee,
-} from '../../core/utils/fee-calculator'
-import { cryptoToFiat, fiatToCrypto } from '../../core/utils/coin-formatter'
-import AssetIcon from '../../components/asset-icon'
-import QrCodeScanner from '../../components/qr-code-scanner'
+} from '../../../core/utils/fee-calculator'
+import { cryptoToFiat, fiatToCrypto } from '../../../core/utils/coin-formatter'
+import AssetIcon from '../../../components/asset-icon'
+import QrCodeScanner from '../../../components/qr-code-scanner'
 
 const useInputState = (
   initialValue: string,

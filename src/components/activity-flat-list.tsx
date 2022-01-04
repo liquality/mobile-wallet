@@ -1,7 +1,6 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faExchange } from '@fortawesome/pro-duotone-svg-icons'
-import { faGreaterThan } from '@fortawesome/pro-light-svg-icons'
+import { faGreaterThan, faExchange } from '@fortawesome/pro-light-svg-icons'
 
 import * as React from 'react'
 import ProgressCircle from './progress-circle'

@@ -200,7 +200,6 @@ const styles = StyleSheet.create({
   box: {
     alignItems: 'center',
     marginVertical: 10,
-    paddingHorizontal: 20,
   },
   icon: {
     marginRight: 5,

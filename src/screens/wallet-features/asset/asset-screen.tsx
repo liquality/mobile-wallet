@@ -6,11 +6,11 @@ import {
   Text,
   View,
 } from 'react-native'
-import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
+import { formatFiat, prettyBalance } from '../../../core/utils/coin-formatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import ActivityFlatList, {
   ActivityDataElementType,
-} from '../../components/activity-flat-list'
+} from '../../../components/activity-flat-list'
 import {
   faGreaterThan,
   faExchange,
@@ -18,7 +18,7 @@ import {
   faArrowUp,
 } from '@fortawesome/pro-light-svg-icons'
 import { StackScreenProps } from '@react-navigation/stack'
-import { AssetDataElementType, RootStackParamList } from '../../types'
+import { AssetDataElementType, RootStackParamList } from '../../../types'
 
 const activities: Array<ActivityDataElementType> = [
   {
@@ -69,7 +69,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
     <View style={styles.container}>
       <ImageBackground
         style={styles.overviewBlock}
-        source={require('../../assets/bg/action-block-bg.png')}>
+        source={require('../../../assets/bg/action-block-bg.png')}>
         <View style={styles.balance}>
           <Text style={styles.balanceInUSD}>${formatFiat(balanceInUSD!)}</Text>
         </View>

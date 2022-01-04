@@ -10,15 +10,15 @@ import {
 import { Picker } from '@react-native-picker/picker'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faAngleDown, faAngleUp } from '@fortawesome/pro-light-svg-icons'
-import { NetworkEnum } from '../../core/types'
-import LiqualityButton from '../../components/ui/button'
-import AssetIcon from '../../components/asset-icon'
-import SettingsSwitch from '../../components/ui/switch'
-import { DarkModeEnum } from '../../types'
+import { NetworkEnum } from '../../../core/types'
+import LiqualityButton from '../../../components/ui/button'
+import AssetIcon from '../../../components/asset-icon'
+import SettingsSwitch from '../../../components/ui/switch'
+import { DarkModeEnum } from '../../../types'
 import { useDispatch } from 'react-redux'
-import { useAppSelector } from '../../hooks'
+import { useAppSelector } from '../../../hooks'
 import { ChainId } from '@liquality/cryptoassets'
-import WhatsNew from '../../components/ui/whats-new'
+import WhatsNew from '../../../components/ui/whats-new'
 
 const SettingsScreen = () => {
   const {

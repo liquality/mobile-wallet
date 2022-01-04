@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { RootStackParamList } from '../../types'
-import TransactionDetails from '../../components/transaction-details'
+import { RootStackParamList } from '../../../types'
+import TransactionDetails from '../../../components/transaction-details'
 
 type SendConfirmationScreenProps = StackScreenProps<
   RootStackParamList,

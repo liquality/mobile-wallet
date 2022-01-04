@@ -19,6 +19,14 @@ export type AssetDataElementType = {
   activeNetwork?: NetworkEnum
 }
 
+export type SwapInfoType = {
+  fromAsset: AssetDataElementType
+  toAsset: AssetDataElementType
+  fromAmount: BigNumber
+  toAmount: BigNumber
+  networkFee: BigNumber
+}
+
 export type StackPayload = {
   termsAcceptedAt?: number
   password?: string
@@ -38,6 +46,7 @@ export type StackPayload = {
     destinationAddress?: string
     asset?: string
   }
+  swapTransaction?: SwapInfoType
   action?: ActionEnum
 }
 
@@ -61,6 +70,7 @@ export type RootStackParamList = {
   SendConfirmationScreen: StackPayload
   CustomFeeScreen: StackPayload
   SwapScreen: StackPayload
+  SwapReviewScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
 }

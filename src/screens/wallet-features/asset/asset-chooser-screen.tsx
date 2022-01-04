@@ -9,9 +9,9 @@ import {
   AssetDataElementType,
   RootStackParamList,
   StackPayload,
-} from '../../types'
-import AssetFlatList from '../../components/overview/asset-flat-list'
-import { useInputState, useWalletState } from '../../hooks'
+} from '../../../types'
+import AssetFlatList from '../../../components/overview/asset-flat-list'
+import { useInputState, useWalletState } from '../../../hooks'
 
 type AssetChooserProps = StackScreenProps<
   RootStackParamList,

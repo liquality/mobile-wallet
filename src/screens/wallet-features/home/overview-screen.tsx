@@ -8,21 +8,21 @@ import {
 } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
+  faGreaterThan,
   faExchange,
   faArrowDown,
   faArrowUp,
-} from '@fortawesome/pro-regular-svg-icons'
-import { faGreaterThan } from '@fortawesome/pro-light-svg-icons'
+} from '@fortawesome/pro-light-svg-icons'
 import { Fragment, useCallback, useEffect, useState } from 'react'
-import { useWalletState } from '../../hooks'
-import { formatFiat } from '../../core/utils/coin-formatter'
-import AssetFlatList from '../../components/overview/asset-flat-list'
+import { useWalletState } from '../../../hooks'
+import { formatFiat } from '../../../core/utils/coin-formatter'
+import AssetFlatList from '../../../components/overview/asset-flat-list'
 import ActivityFlatList, {
   ActivityDataElementType,
-} from '../../components/activity-flat-list'
+} from '../../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
-import { ActionEnum, RootStackParamList, StackPayload } from '../../types'
-import { populateWallet } from '../../store/store'
+import { ActionEnum, RootStackParamList, StackPayload } from '../../../types'
+import { populateWallet } from '../../../store/store'
 
 const activities: Array<ActivityDataElementType> = [
   {
@@ -88,7 +88,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     <View style={styles.container}>
       <ImageBackground
         style={styles.overviewBlock}
-        source={require('../../assets/bg/action-block-bg.png')}>
+        source={require('../../../assets/bg/action-block-bg.png')}>
         {loading && <Text style={styles.loading}>Loading...</Text>}
         {!loading && (
           <Fragment>

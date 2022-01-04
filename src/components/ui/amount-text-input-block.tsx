@@ -1,4 +1,10 @@
-import React, { FC, useState } from 'react'
+import React, {
+  FC,
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
 import { useAppSelector, useInputState } from '../../hooks'
 import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
 import LiqualityButton from './button'
@@ -7,28 +13,24 @@ import { ChainId } from '@liquality/cryptoassets/src/types'
 import Label from './label'
 import { chainDefaultColors } from '../../core/config'
 import { BigNumber } from '@liquality/types'
-import { cryptoToFiat, fiatToCrypto } from '../../core/utils/coin-formatter'
+import {
+  cryptoToFiat,
+  fiatToCrypto,
+  formatFiat,
+} from '../../core/utils/coin-formatter'
 
 type AmountTextInputBlockProps = {
   label: string
   chain: ChainId
   assetSymbol: string
-  amountInFiat: BigNumber
-  amountInNative: BigNumber
-  setAmountInFiat: React.Dispatch<React.SetStateAction<BigNumber>>
-  setAmountInNative: React.Dispatch<React.SetStateAction<BigNumber>>
+  amountRef: MutableRefObject<BigNumber>
+  maximumValue?: BigNumber
+  minimumValue?: BigNumber
 }
 
 const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
-  const {
-    label,
-    assetSymbol,
-    chain,
-    amountInNative,
-    amountInFiat,
-    setAmountInNative,
-    setAmountInFiat,
-  } = props
+  const { label, assetSymbol, chain, maximumValue, minimumValue, amountRef } =
+    props
   const { fiatRates } = useAppSelector((state) => ({
     fiatRates: state.fiatRates,
   }))
@@ -38,34 +40,46 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
 
   const handleToggleAmount = () => {
     if (isAmountNative) {
-      input.onChangeText(amountInFiat.toString())
+      handleTextChange(
+        cryptoToFiat(
+          new BigNumber(input.value).toNumber(),
+          fiatRates?.[assetSymbol] || 0,
+        ).toString(),
+      )
     } else {
-      input.onChangeText(amountInNative.toString())
+      handleTextChange(
+        fiatToCrypto(
+          new BigNumber(input.value),
+          fiatRates?.[assetSymbol] || 0,
+        ).toString(),
+      )
     }
     setIsAmountNative(!isAmountNative)
   }
 
-  const handleTextChange = (text: string) => {
-    input.onChangeText(text)
-    if (isAmountNative) {
-      setAmountInNative(new BigNumber(text))
-      setAmountInFiat(
-        new BigNumber(
-          cryptoToFiat(
-            new BigNumber(text).toNumber(),
-            fiatRates?.[assetSymbol] || 0,
-          ),
-        ),
-      )
-    } else {
-      setAmountInNative(
-        new BigNumber(
-          fiatToCrypto(new BigNumber(text), fiatRates?.[assetSymbol] || 0),
-        ),
-      )
-      setAmountInFiat(new BigNumber(text))
+  const handleTextChange = useCallback(
+    (text: string) => {
+      if (isAmountNative) {
+        amountRef.current = new BigNumber(text)
+      } else {
+        amountRef.current = fiatToCrypto(
+          new BigNumber(text),
+          fiatRates?.[assetSymbol] || 0,
+        )
+      }
+
+      input.onChangeText(text)
+    },
+    [amountRef, assetSymbol, fiatRates, input, isAmountNative],
+  )
+
+  useEffect(() => {
+    if (maximumValue && maximumValue.gt(0)) {
+      handleTextChange(maximumValue.toString())
+    } else if (minimumValue && minimumValue.gt(0)) {
+      handleTextChange(minimumValue.toString())
     }
-  }
+  }, [handleTextChange, maximumValue, minimumValue])
 
   return (
     <View style={styles.container}>
@@ -74,8 +88,16 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
         <LiqualityButton
           text={
             isAmountNative
-              ? `$${amountInFiat.toString()}`
-              : `${assetSymbol} ${amountInNative.toString()}`
+              ? `$${formatFiat(
+                  cryptoToFiat(
+                    new BigNumber(input.value).toNumber(),
+                    fiatRates?.[assetSymbol] || 0,
+                  ),
+                )}`
+              : `${fiatToCrypto(
+                  new BigNumber(input.value),
+                  fiatRates?.[assetSymbol] || 0,
+                )} ${assetSymbol}`
           }
           action={handleToggleAmount}
           variant="small"

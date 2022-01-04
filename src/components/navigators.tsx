@@ -12,24 +12,25 @@ import SeedPhraseConfirmationScreen from '../screens/wallet-creation/seedPhraseC
 import CongratulationsScreen from '../screens/wallet-creation/congratulationsScreen'
 import UnlockWalletScreen from '../screens/wallet-import/unlock-wallet-screen'
 import LoadingScreen from '../screens/wallet-import/loading-screen'
-import OverviewScreen from '../screens/wallet-features/overview-screen'
+import OverviewScreen from '../screens/wallet-features/home/overview-screen'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import SettingsScreen from '../screens/wallet-features/settings-screen'
-import AssetScreen from '../screens/wallet-features/asset-screen'
+import SettingsScreen from '../screens/wallet-features/settings/settings-screen'
+import AssetScreen from '../screens/wallet-features/asset/asset-screen'
 import OverviewHeaderLeft from './header-bar/overview-header-left'
 import OverviewHeaderRight from './header-bar/overview-header-right'
 import { HeaderBackButtonProps } from '@react-navigation/elements'
-import ReceiveScreen from '../screens/wallet-features/receive-screen'
-import SendScreen from '../screens/wallet-features/send-screen'
-import SendReviewScreen from '../screens/wallet-features/send-review-screen'
+import ReceiveScreen from '../screens/wallet-features/receive/receive-screen'
+import SendScreen from '../screens/wallet-features/send/send-screen'
+import SendReviewScreen from '../screens/wallet-features/send/send-review-screen'
 import CustomFeeScreen from '../screens/wallet-features/custom-fee-screen'
-import SendConfirmationScreen from '../screens/wallet-features/send-confirmation-screen'
+import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
 import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
 import SettingsHeaderRight from './header-bar/settings-header-right'
-import AssetChooserScreen from '../screens/wallet-features/asset-chooser-screen'
-import AssetManagementScreen from '../screens/wallet-features/asset-management-screen'
-import SwapScreen from '../screens/wallet-features/swap-screen'
+import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
+import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
+import SwapScreen from '../screens/wallet-features/swap/swap-screen'
+import SwapReviewScreen from '../screens/wallet-features/swap/swap-review-screen'
 
 const config = {
   animation: 'spring',
@@ -175,6 +176,13 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="SwapScreen"
       component={SwapScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
+    />
+    <Stack.Screen
+      name="SwapReviewScreen"
+      component={SwapReviewScreen}
       options={() => ({
         headerRight: () => <View />,
       })}
