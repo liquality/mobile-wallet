@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
 import {
   Dimensions,
   Pressable,
@@ -40,11 +40,10 @@ type SwapScreenProps = StackScreenProps<RootStackParamList, 'SwapScreen'>
 
 const SwapScreen: FC<SwapScreenProps> = (props) => {
   const { navigation, route } = props
-  const { assetData } = route.params
+  const { assetData, swapAssetPair } = route.params
   const { marketData = [] } = useAppSelector((state) => ({
     marketData: state.marketData,
   }))
-  const [fetchingAsset, setFetchingAsset] = useState<'TO' | 'FROM'>('TO')
   const [areGasControllersVisible, setGasControllersVisible] = useState(false)
   const [fromAsset, setFromAsset] = useState<AssetDataElementType>(assetData)
   const [toAsset, setToAsset] = useState<AssetDataElementType>()
@@ -62,17 +61,21 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const handleFromAssetPress = () => {
-    setFetchingAsset('FROM')
     navigation.navigate('AssetChooserScreen', {
       screenTitle: 'Select asset for Swap',
+      swapAssetPair: {
+        toAsset,
+      },
       action: ActionEnum.SWAP,
     })
   }
 
   const handleToAssetPress = () => {
-    setFetchingAsset('TO')
     navigation.navigate('AssetChooserScreen', {
       screenTitle: 'Select asset for Swap',
+      swapAssetPair: {
+        fromAsset,
+      },
       action: ActionEnum.SWAP,
     })
   }
@@ -98,18 +101,21 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     })
   }
 
-  const handleMinPress = () => {
-    setMaximumValue(new BigNumber(0))
+  const min = useCallback((): BigNumber => {
     //TODO why do we have to check against the liquality type
     const liqualityMarket = marketData?.find(
       (pair) => pair.from === fromAsset?.code && pair.to === toAsset?.code,
       // && getSwapProviderConfig(this.activeNetwork, pair.provider).type ===
       //   SwapProviderType.LIQUALITY,
     )
-    const min = liqualityMarket
+    return liqualityMarket
       ? new BigNumber(liqualityMarket.min)
       : new BigNumber(0)
-    setMinimumValue(min)
+  }, [fromAsset?.code, marketData, toAsset?.code])
+
+  const handleMinPress = () => {
+    setMaximumValue(new BigNumber(0))
+    setMinimumValue(min())
   }
 
   const handleMaxPress = () => {
@@ -123,19 +129,19 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   useEffect(() => {
-    initSwaps()
-  }, [])
+    const swapProviders = initSwaps()
+    for (const provider of swapProviders) {
+      provider.getQuote(marketData, fromAsset.code, toAsset?.code)
+    }
+    setMinimumValue(min())
+  }, [fromAsset.code, marketData, min, toAsset?.code])
 
   useEffect(() => {
-    const asset = route.params.assetData
-    if (asset) {
-      if (fetchingAsset === 'TO') {
-        setToAsset(asset)
-      } else if (fetchingAsset === 'FROM') {
-        setFromAsset(asset)
-      }
+    if (swapAssetPair) {
+      setFromAsset(swapAssetPair.fromAsset)
+      setToAsset(swapAssetPair.toAsset)
     }
-  }, [fetchingAsset, route.params.assetData])
+  }, [swapAssetPair])
 
   return (
     <SafeAreaView style={styles.container}>

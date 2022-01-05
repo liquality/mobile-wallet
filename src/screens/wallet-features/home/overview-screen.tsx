@@ -75,9 +75,22 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
 
   const onAssetSelected = useCallback(
     (params: StackPayload) => {
-      navigation.navigate('AssetScreen', params)
+      const fromAsset = params.assetData
+      let toAsset = params.assetData
+      if (fromAsset?.code === 'ETH') {
+        toAsset = assets.filter((item) => item.code === 'BTC')[0]
+      } else {
+        toAsset = assets.filter((item) => item.code === 'ETH')[0]?.assets?.[0]
+      }
+      navigation.navigate('AssetScreen', {
+        ...params,
+        swapAssetPair: {
+          fromAsset,
+          toAsset,
+        },
+      })
     },
-    [navigation],
+    [assets, navigation],
   )
 
   useEffect(() => {

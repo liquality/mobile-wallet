@@ -19,6 +19,11 @@ export type AssetDataElementType = {
   activeNetwork?: NetworkEnum
 }
 
+export type SwapAssetPairType = {
+  fromAsset?: AssetDataElementType
+  toAsset?: AssetDataElementType
+}
+
 export type SwapInfoType = {
   fromAsset: AssetDataElementType
   toAsset: AssetDataElementType
@@ -46,6 +51,7 @@ export type StackPayload = {
     destinationAddress?: string
     asset?: string
   }
+  swapAssetPair?: SwapAssetPairType
   swapTransaction?: SwapInfoType
   action?: ActionEnum
 }

@@ -23,6 +23,7 @@ import 'react-native-reanimated'
 import { INFURA_API_KEY } from '@env'
 import { AssetDataElementType } from '../types'
 import { Alert } from 'react-native'
+import SwapProvider from '@liquality/core/dist/swaps/swap-provider'
 
 const excludedProps: Array<keyof StateType> = ['key', 'wallets', 'unlockedAt']
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
@@ -134,8 +135,10 @@ export const restoreWallet = async (password: string): Promise<StateType> => {
   return await wallet.restore(password)
 }
 
-export const initSwaps = () => {
-  wallet.getSwapProvider(SwapProvidersEnum.LIQUALITY)
+export const initSwaps = (): Partial<
+  Record<SwapProvidersEnum, SwapProvider>
+> => {
+  return wallet.getSwapProviders()
 }
 
 export const performSwap = async (

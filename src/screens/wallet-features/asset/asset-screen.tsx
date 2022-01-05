@@ -60,7 +60,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
 
   const handleSwapPress = () => {
     navigation.navigate('SwapScreen', {
-      assetData: route.params.assetData,
+      swapAssetPair: route.params.swapAssetPair,
       screenTitle: 'Swap',
     })
   }
