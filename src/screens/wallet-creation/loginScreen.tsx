@@ -8,6 +8,7 @@ import {
   TextInput,
   Platform,
   KeyboardAvoidingView,
+  Dimensions,
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList, UseInputStateReturnType } from '../../types'
@@ -56,62 +57,64 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     <ImageBackground
       style={styles.container}
       source={require('../../assets/bg/bg.png')}>
-      <Header showText={true} />
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'position' : 'height'}
         style={styles.keyboard}>
-        <View style={styles.contentWrapper}>
-          <View style={styles.description}>
-            <Text style={styles.description1}>one</Text>
-            <Text style={styles.description2}>wallet</Text>
-            <Text style={styles.description1}>all chains</Text>
-          </View>
+        <View style={styles.main}>
+          <Header showText={true} />
+          <View style={styles.contentWrapper}>
+            <View style={styles.description}>
+              <Text style={styles.description1}>one</Text>
+              <Text style={styles.description2}>wallet</Text>
+              <Text style={styles.description1}>all chains</Text>
+            </View>
 
-          <View style={styles.inputWrapper}>
-            <Text style={styles.inputLabel}>PASSWORD</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={passwordInput.onChangeText}
-              onFocus={() => setError('')}
-              value={passwordInput.value}
-              secureTextEntry
-              autoCorrect={false}
-              returnKeyType="done"
-            />
+            <View style={styles.inputWrapper}>
+              <Text style={styles.inputLabel}>PASSWORD</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={passwordInput.onChangeText}
+                onFocus={() => setError('')}
+                value={passwordInput.value}
+                secureTextEntry
+                autoCorrect={false}
+                returnKeyType="done"
+              />
+            </View>
+            {!!error && <Text style={styles.error}>{error}</Text>}
           </View>
-          {!!error && <Text style={styles.error}>{error}</Text>}
-        </View>
-        <View style={styles.actionContainer}>
-          <View style={styles.forgotPassword}>
-            <Text style={styles.forgotPasswordText}>Forgot password? </Text>
-            <Text
-              style={styles.forgotPasswordText}
-              onPress={() => navigation.navigate('WalletImportNavigator')}>
-              Import with seed phrase
-            </Text>
+          <View style={styles.actionContainer}>
+            <View style={styles.forgotPassword}>
+              <Text style={styles.forgotPasswordText}>Forgot password? </Text>
+              <Text
+                style={styles.forgotPasswordText}
+                onPress={() => navigation.navigate('WalletImportNavigator')}>
+                Import with seed phrase
+              </Text>
+            </View>
+            <Pressable
+              style={[
+                styles.createBtn,
+                styles.createBtn,
+                !passwordInput.value && styles.disabled,
+              ]}
+              disabled={!passwordInput.value}
+              onPress={onUnlock}>
+              <Text style={[theme.buttonText, styles.createText]}>
+                {loading ? 'Unlocking...' : 'Unlock'}
+              </Text>
+            </Pressable>
+            <Pressable
+              style={[styles.createBtn, styles.createBtn]}
+              onPress={() => {
+                setLoading(true)
+                onOpenSesame(dispatch, navigation)
+              }}>
+              <Text style={[theme.buttonText, styles.createText]}>
+                {loading ? 'Opening' : 'Open'} Sesame
+              </Text>
+            </Pressable>
           </View>
-          <Pressable
-            style={[
-              styles.createBtn,
-              styles.createBtn,
-              !passwordInput.value && styles.disabled,
-            ]}
-            disabled={!passwordInput.value}
-            onPress={onUnlock}>
-            <Text style={[theme.buttonText, styles.createText]}>
-              {loading ? 'Unlocking...' : 'Unlock'}
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[styles.createBtn, styles.createBtn]}
-            onPress={() => {
-              setLoading(true)
-              onOpenSesame(dispatch, navigation)
-            }}>
-            <Text style={[theme.buttonText, styles.createText]}>
-              {loading ? 'Opening' : 'Open'} Sesame
-            </Text>
-          </Pressable>
         </View>
       </KeyboardAvoidingView>
     </ImageBackground>
@@ -122,8 +125,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  main: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: Dimensions.get('window').width,
+  },
   contentWrapper: {
-    flex: 0.6,
+    flex: 0.7,
     justifyContent: 'space-around',
     width: '100%',
   },
@@ -206,7 +215,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 20,
   },
 })
 export default LoginScreen
