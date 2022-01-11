@@ -1,4 +1,11 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react'
 import {
   Dimensions,
   Pressable,
@@ -8,7 +15,7 @@ import {
   View,
 } from 'react-native'
 import { ChainId } from '@liquality/cryptoassets/src/types'
-import { MarketDataType } from '@liquality/core/dist/types'
+import { MarketDataType, QuoteType } from '@liquality/core/dist/types'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { StackScreenProps } from '@react-navigation/stack'
 import {
@@ -35,26 +42,58 @@ import { BigNumber } from '@liquality/types'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import { prettyBalance } from '../../../core/utils/coin-formatter'
 import { useAppSelector } from '../../../hooks'
+import { sortQuotes } from '../../../utils'
+import SwapProvider from '@liquality/core/dist/swaps/swap-provider'
+import { PayloadAction, Reducer } from '@reduxjs/toolkit'
+
+export type SwapEventType = {
+  fromAmount?: BigNumber
+  toAmount?: BigNumber
+}
+
+export const reducer: Reducer<SwapEventType, PayloadAction<SwapEventType>> = (
+  state,
+  action,
+) => {
+  switch (action.type) {
+    case 'FROM_AMOUNT_UPDATED':
+      return {
+        ...state,
+        fromAmount: action.payload.fromAmount,
+      }
+    case 'TO_AMOUNT_UPDATED':
+      return {
+        ...state,
+        toAmount: action.payload.toAmount,
+      }
+    default:
+      throw new Error()
+  }
+}
 
 type SwapScreenProps = StackScreenProps<RootStackParamList, 'SwapScreen'>
 
 const SwapScreen: FC<SwapScreenProps> = (props) => {
   const { navigation, route } = props
-  const { assetData, swapAssetPair } = route.params
+  const { swapAssetPair } = route.params
   const { marketData = [] } = useAppSelector((state) => ({
     marketData: state.marketData,
   }))
   const [areGasControllersVisible, setGasControllersVisible] = useState(false)
-  const [fromAsset, setFromAsset] = useState<AssetDataElementType>(assetData)
+  const [fromAsset, setFromAsset] = useState<AssetDataElementType | undefined>(
+    swapAssetPair?.fromAsset,
+  )
   const [toAsset, setToAsset] = useState<AssetDataElementType>()
   const [, setSelectedQuote] = useState<MarketDataType>()
   const [showWarning] = useState(false)
-  const fromAmountInNative = useRef<BigNumber>(new BigNumber(0))
-  const toAmountInNative = useRef<BigNumber>(new BigNumber(0))
   const fromNetworkFee = useRef<BigNumber>(new BigNumber(0))
   const toNetworkFee = useRef<BigNumber>(new BigNumber(0))
   const [maximumValue, setMaximumValue] = useState<BigNumber>(new BigNumber(0))
   const [minimumValue, setMinimumValue] = useState<BigNumber>(new BigNumber(0))
+  const [bestQuote, setBestQuote] = useState<BigNumber>(new BigNumber(0))
+  const [swapProviders, setSwapProviders] = useState<SwapProvider[]>([])
+  const [state, dispatch] = useReducer(reducer, {})
+  const toAmountInNative = useRef<BigNumber>(new BigNumber(0))
 
   const toggleGasControllers = () => {
     setGasControllersVisible(!areGasControllersVisible)
@@ -93,7 +132,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       swapTransaction: {
         fromAsset,
         toAsset,
-        fromAmount: fromAmountInNative.current,
+        fromAmount: state.fromAmount,
         toAmount: toAmountInNative.current,
         networkFee: toNetworkFee.current,
       },
@@ -119,29 +158,70 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const handleMaxPress = () => {
-    if (assetData) {
+    if (
+      swapAssetPair &&
+      swapAssetPair.fromAsset &&
+      swapAssetPair.fromAsset.code
+    ) {
       const amnt = unitToCurrency(
-        cryptoassets[assetData.code],
-        assetData?.balance?.toNumber() || 0,
+        cryptoassets[swapAssetPair.fromAsset.code],
+        swapAssetPair.fromAsset?.balance?.toNumber() || 0,
       )
       setMaximumValue(new BigNumber(amnt))
     }
   }
 
+  const updateBestQuote = useCallback(
+    async (amount: BigNumber) => {
+      let bestQuoteAmount = new BigNumber(0)
+      if (fromAsset && toAsset) {
+        const promises: Promise<QuoteType>[] = []
+        for (const provider of swapProviders) {
+          promises.push(
+            provider.getQuote(
+              marketData,
+              fromAsset?.code,
+              toAsset?.code,
+              amount,
+            ),
+          )
+        }
+
+        const responses = await Promise.all(promises)
+        const sortedQuotes = sortQuotes(responses.filter((q) => !!q))
+        if (sortedQuotes.length) {
+          bestQuoteAmount = new BigNumber(
+            unitToCurrency(
+              cryptoassets[toAsset.code],
+              sortedQuotes[0].toAmount?.toNumber() || 0,
+            ),
+          )
+        }
+      }
+
+      setBestQuote(bestQuoteAmount)
+    },
+    [fromAsset, marketData, swapProviders, toAsset],
+  )
+
   useEffect(() => {
-    const swapProviders = initSwaps()
-    for (const provider of swapProviders) {
-      provider.getQuote(marketData, fromAsset.code, toAsset?.code)
-    }
-    setMinimumValue(min())
-  }, [fromAsset.code, marketData, min, toAsset?.code])
+    setSwapProviders(Object.values(initSwaps()))
+  }, [])
 
   useEffect(() => {
     if (swapAssetPair) {
       setFromAsset(swapAssetPair.fromAsset)
       setToAsset(swapAssetPair.toAsset)
     }
-  }, [swapAssetPair])
+
+    const minimum = min()
+    setMinimumValue(minimum)
+  }, [swapAssetPair, min])
+
+  useEffect(() => {
+    const minimum = min()
+    updateBestQuote(state.fromAmount?.gt(0) ? state.fromAmount : minimum)
+  }, [min, state.fromAmount, updateBestQuote])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -154,12 +234,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       )}
       <View style={styles.assetBlock}>
         <AmountTextInputBlock
+          type="FROM"
           label="SEND"
           chain={fromAsset?.chain || ChainId.Bitcoin}
           assetSymbol={fromAsset?.code || 'BTC'}
           maximumValue={maximumValue}
           minimumValue={minimumValue}
-          amountRef={fromAmountInNative}
+          dispatch={dispatch}
         />
         <Pressable style={styles.chevronBtn} onPress={handleFromAssetPress}>
           <FontAwesomeIcon icon={faChevronRight} size={15} color="#A8AEB7" />
@@ -196,10 +277,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       </View>
       <View style={styles.assetBlock}>
         <AmountTextInputBlock
+          type="TO"
           label="RECEIVE"
           chain={toAsset?.chain || ChainId.Ethereum}
           assetSymbol={toAsset?.code || 'ETH'}
-          amountRef={toAmountInNative}
+          minimumValue={bestQuote}
         />
         <Pressable style={styles.chevronBtn} onPress={handleToAssetPress}>
           <FontAwesomeIcon icon={faChevronRight} color="#A8AEB7" />

@@ -1,10 +1,4 @@
-import React, {
-  FC,
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import { useAppSelector, useInputState } from '../../hooks'
 import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
 import LiqualityButton from './button'
@@ -18,23 +12,36 @@ import {
   fiatToCrypto,
   formatFiat,
 } from '../../core/utils/coin-formatter'
+import { SwapEventType } from '../../screens/wallet-features/swap/swap-screen'
 
 type AmountTextInputBlockProps = {
+  type: 'FROM' | 'TO'
   label: string
   chain: ChainId
   assetSymbol: string
-  amountRef: MutableRefObject<BigNumber>
   maximumValue?: BigNumber
   minimumValue?: BigNumber
+  defaultAmount?: BigNumber
+  dispatch?: React.Dispatch<{
+    payload: SwapEventType
+    type: string
+  }>
 }
 
 const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
-  const { label, assetSymbol, chain, maximumValue, minimumValue, amountRef } =
-    props
+  const {
+    label,
+    assetSymbol,
+    chain,
+    maximumValue,
+    minimumValue,
+    dispatch,
+    type,
+  } = props
   const { fiatRates } = useAppSelector((state) => ({
     fiatRates: state.fiatRates,
   }))
-  const input = useInputState('0')
+  const { value, onChangeText } = useInputState('0')
   const color = chainDefaultColors[chain]
   const [isAmountNative, setIsAmountNative] = useState<boolean>(true)
 
@@ -42,14 +49,14 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
     if (isAmountNative) {
       handleTextChange(
         cryptoToFiat(
-          new BigNumber(input.value).toNumber(),
+          new BigNumber(value).toNumber(),
           fiatRates?.[assetSymbol] || 0,
         ).toString(),
       )
     } else {
       handleTextChange(
         fiatToCrypto(
-          new BigNumber(input.value),
+          new BigNumber(value),
           fiatRates?.[assetSymbol] || 0,
         ).toString(),
       )
@@ -57,29 +64,47 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
     setIsAmountNative(!isAmountNative)
   }
 
-  const handleTextChange = useCallback(
-    (text: string) => {
-      if (isAmountNative) {
-        amountRef.current = new BigNumber(text)
-      } else {
-        amountRef.current = fiatToCrypto(
+  const updateAmount = useCallback(
+    (text: string): BigNumber => {
+      let newAmount = new BigNumber(text)
+      if (!isAmountNative) {
+        newAmount = fiatToCrypto(
           new BigNumber(text),
           fiatRates?.[assetSymbol] || 0,
         )
       }
 
-      input.onChangeText(text)
+      return newAmount
     },
-    [amountRef, assetSymbol, fiatRates, input, isAmountNative],
+    [assetSymbol, fiatRates, isAmountNative],
+  )
+
+  const handleTextChange = useCallback(
+    (text: string) => {
+      onChangeText(text)
+      const newAmount = updateAmount(text)
+
+      if (dispatch) {
+        dispatch({
+          type: type === 'TO' ? 'TO_AMOUNT_UPDATED' : 'FROM_AMOUNT_UPDATED',
+          payload: {
+            [type === 'TO' ? 'toAmount' : 'fromAmount']: newAmount,
+          },
+        })
+      }
+    },
+    [dispatch, onChangeText, type, updateAmount],
   )
 
   useEffect(() => {
     if (maximumValue && maximumValue.gt(0)) {
-      handleTextChange(maximumValue.toString())
+      updateAmount(maximumValue.toString())
+      onChangeText(maximumValue.toString())
     } else if (minimumValue && minimumValue.gt(0)) {
-      handleTextChange(minimumValue.toString())
+      updateAmount(minimumValue.toString())
+      onChangeText(minimumValue.toString())
     }
-  }, [handleTextChange, maximumValue, minimumValue])
+  }, [onChangeText, maximumValue, minimumValue, updateAmount])
 
   return (
     <View style={styles.container}>
@@ -90,12 +115,12 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
             isAmountNative
               ? `$${formatFiat(
                   cryptoToFiat(
-                    new BigNumber(input.value).toNumber(),
+                    new BigNumber(value).toNumber(),
                     fiatRates?.[assetSymbol] || 0,
                   ),
                 )}`
               : `${fiatToCrypto(
-                  new BigNumber(input.value),
+                  new BigNumber(value),
                   fiatRates?.[assetSymbol] || 0,
                 )} ${assetSymbol}`
           }
@@ -111,7 +136,7 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
             style={[styles.font, styles.input, { color }]}
             keyboardType={'numeric'}
             onChangeText={handleTextChange}
-            value={input.value}
+            value={value}
             placeholder={'0'}
             autoCorrect={false}
             returnKeyType="done"

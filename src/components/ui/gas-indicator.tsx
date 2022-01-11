@@ -37,6 +37,9 @@ const GasIndicator = ({
   })
 
   useEffect(() => {
+    if (!gasFees) {
+      return
+    }
     if (balance === 0) {
       setLabel('Get Gas')
     } else if (balance < gasFees.slow.fee) {
