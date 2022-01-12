@@ -1,5 +1,5 @@
 import React, { FC, useContext } from 'react'
-import { Pressable, StyleSheet, Text } from 'react-native'
+import { Pressable, StyleProp, StyleSheet, Text, ViewStyle } from 'react-native'
 import { ThemeContext } from '../../theme'
 
 type LiqualityButtonProps = {
@@ -7,8 +7,9 @@ type LiqualityButtonProps = {
   variant: 'small' | 'medium' | 'large'
   type: 'plain' | 'positive' | 'negative'
   contentType?: 'numeric' | 'alphanumeric'
-  children?: React.ReactElement
   action: (...args: unknown[]) => void
+  style?: StyleProp<ViewStyle>
+  children?: React.ReactElement
 }
 
 const LiqualityButton: FC<LiqualityButtonProps> = (props) => {
@@ -18,13 +19,14 @@ const LiqualityButton: FC<LiqualityButtonProps> = (props) => {
     type = 'positive',
     contentType = 'alphanumeric',
     action,
+    style,
     children,
   } = props
   const theme = useContext(ThemeContext)
 
   return (
     <Pressable
-      style={[styles.actionBtn, styles[variant], styles[type]]}
+      style={[styles.actionBtn, styles[variant], styles[type], style]}
       onPress={action}>
       {children && children}
       <Text

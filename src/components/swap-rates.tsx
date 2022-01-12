@@ -7,6 +7,8 @@ import {
   FlatList,
   Pressable,
   Alert,
+  StyleProp,
+  ViewStyle,
 } from 'react-native'
 import { MarketDataType, SwapProvidersEnum } from '@liquality/core/dist/types'
 import Label from './ui/label'
@@ -41,10 +43,11 @@ type SwapRatesProps = {
   fromAsset: string
   toAsset: string
   selectQuote: (quote: MarketDataType) => void
+  style?: StyleProp<ViewStyle>
 }
 
 const SwapRates: FC<SwapRatesProps> = (props) => {
-  const { fromAsset, toAsset, selectQuote } = props
+  const { fromAsset, toAsset, selectQuote, style } = props
   const { marketData } = useAppSelector((state) => ({
     marketData: state.marketData,
   }))
@@ -107,7 +110,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
   }, [fromAsset, marketData, toAsset])
 
   return (
-    <View style={[styles.box, styles.row]}>
+    <View style={[styles.box, styles.row, style]}>
       <View style={styles.row}>
         <Label text="RATE" variant="strong" />
         <LiqualityButton

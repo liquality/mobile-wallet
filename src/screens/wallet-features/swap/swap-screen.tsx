@@ -93,7 +93,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [bestQuote, setBestQuote] = useState<BigNumber>(new BigNumber(0))
   const [swapProviders, setSwapProviders] = useState<SwapProvider[]>([])
   const [state, dispatch] = useReducer(reducer, {})
-  const toAmountInNative = useRef<BigNumber>(new BigNumber(0))
 
   const toggleGasControllers = () => {
     setGasControllersVisible(!areGasControllersVisible)
@@ -124,7 +123,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const handleReviewBtnPress = async () => {
-    if (!fromAsset || !toAsset) {
+    if (!fromAsset || !toAsset || !state.fromAmount) {
       throw new Error('Invalid arguments for swap')
     }
 
@@ -133,7 +132,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         fromAsset,
         toAsset,
         fromAmount: state.fromAmount,
-        toAmount: toAmountInNative.current,
+        toAmount: bestQuote,
         networkFee: toNetworkFee.current,
       },
       screenTitle: `Swap ${fromAsset.code} to ${toAsset.code}`,
@@ -254,6 +253,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             type="plain"
             contentType="numeric"
             action={handleMinPress}
+            style={
+              state.fromAmount && minimumValue.eq(state.fromAmount)
+                ? { backgroundColor: '#F0F7F9' }
+                : {}
+            }
           />
           <LiqualityButton
             text="Max"
@@ -261,6 +265,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             type="plain"
             contentType="numeric"
             action={handleMaxPress}
+            style={
+              state.fromAmount && maximumValue.eq(state.fromAmount)
+                ? { backgroundColor: '#F0F7F9' }
+                : {}
+            }
           />
         </View>
         <View style={styles.wrapper}>
@@ -292,6 +301,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         fromAsset={fromAsset?.code || 'BTC'}
         toAsset={toAsset?.code || 'ETH'}
         selectQuote={handleSelectQuote}
+        style={{ paddingHorizontal: 20 }}
       />
       <View style={[styles.row, styles.box]}>
         <Pressable

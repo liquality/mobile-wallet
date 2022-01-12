@@ -74,16 +74,6 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
         )
       }
 
-      return newAmount
-    },
-    [assetSymbol, fiatRates, isAmountNative],
-  )
-
-  const handleTextChange = useCallback(
-    (text: string) => {
-      onChangeText(text)
-      const newAmount = updateAmount(text)
-
       if (dispatch) {
         dispatch({
           type: type === 'TO' ? 'TO_AMOUNT_UPDATED' : 'FROM_AMOUNT_UPDATED',
@@ -92,8 +82,17 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
           },
         })
       }
+      return newAmount
     },
-    [dispatch, onChangeText, type, updateAmount],
+    [assetSymbol, fiatRates, isAmountNative, dispatch, type],
+  )
+
+  const handleTextChange = useCallback(
+    (text: string) => {
+      onChangeText(text)
+      updateAmount(text)
+    },
+    [onChangeText, updateAmount],
   )
 
   useEffect(() => {
