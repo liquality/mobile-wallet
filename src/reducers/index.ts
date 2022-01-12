@@ -32,7 +32,7 @@ const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
         accounts: { ...accounts },
       }
     case 'UPDATE_MARKET_DATA':
-      const marketData = action.payload.marketData
+      const marketData = action.payload.marketData || []
       return {
         ...state,
         marketData: [...marketData],

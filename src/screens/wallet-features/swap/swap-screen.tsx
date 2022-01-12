@@ -79,12 +79,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const { marketData = [] } = useAppSelector((state) => ({
     marketData: state.marketData,
   }))
-  const [areGasControllersVisible, setGasControllersVisible] = useState(false)
+  const [areGasControllersVisible, setGasControllersVisible] = useState(true)
   const [fromAsset, setFromAsset] = useState<AssetDataElementType | undefined>(
     swapAssetPair?.fromAsset,
   )
   const [toAsset, setToAsset] = useState<AssetDataElementType>()
-  const [, setSelectedQuote] = useState<MarketDataType>()
+  const [selectedQuote, setSelectedQuote] = useState<MarketDataType>()
   const [showWarning] = useState(false)
   const fromNetworkFee = useRef<BigNumber>(new BigNumber(0))
   const toNetworkFee = useRef<BigNumber>(new BigNumber(0))
@@ -178,7 +178,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         for (const provider of swapProviders) {
           promises.push(
             provider.getQuote(
-              marketData,
+              marketData.filter((md) =>
+                selectedQuote ? md.provider === selectedQuote.provider : true,
+              ),
               fromAsset?.code,
               toAsset?.code,
               amount,
@@ -200,7 +202,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
       setBestQuote(bestQuoteAmount)
     },
-    [fromAsset, marketData, swapProviders, toAsset],
+    [fromAsset, marketData, selectedQuote, swapProviders, toAsset],
   )
 
   useEffect(() => {
