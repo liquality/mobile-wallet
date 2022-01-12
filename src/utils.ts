@@ -4,11 +4,9 @@ import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { createWallet } from './store/store'
 import { StateType } from './core/types'
 import { QuoteType, SwapProvidersEnum } from '@liquality/core/dist/types'
+import { MNEMONIC, PASSWORD } from '@env'
 
 export const onOpenSesame = async (dispatch: any, navigation: any) => {
-  const PASSWORD = '123123123'
-  const MNEMONIC =
-    'legend else tooth car romance thought rather share lunar reopen attend refuse'
   InteractionManager.runAfterInteractions(() => {
     createWallet(PASSWORD, MNEMONIC)
       .then((walletState) => {
@@ -30,8 +28,16 @@ export const onOpenSesame = async (dispatch: any, navigation: any) => {
   })
 }
 
-export function sortQuotes(quotes: QuoteType[]) {
-  return quotes.slice(0).sort((a, b) => {
+export const sortQuotes = (quotes: QuoteType[]): QuoteType[] => {
+  if (!quotes) {
+    throw new Error('Can not sort a null array')
+  }
+
+  if (quotes && quotes.length <= 1) {
+    return quotes
+  }
+
+  return quotes.slice(0).sort((a, b): number => {
     const isCrossChain = cryptoassets[a.from].chain !== cryptoassets[a.to].chain
     if (isCrossChain) {
       // Prefer Liquality for crosschain swaps where liquidity is available
@@ -42,6 +48,6 @@ export function sortQuotes(quotes: QuoteType[]) {
       }
     }
 
-    return b.toAmount?.minus(a.toAmount).toNumber()
+    return b.toAmount?.minus(a.toAmount || 0).toNumber() || 1
   })
 }
