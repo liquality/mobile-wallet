@@ -17,8 +17,13 @@ import {
   NetworkEnum,
   SwapProvidersEnum,
   IAccount,
+  SwapPayloadType,
 } from '@liquality/core/dist/types'
-import { ChainId } from '@liquality/cryptoassets'
+import {
+  ChainId,
+  currencyToUnit,
+  assets as cryptoassets,
+} from '@liquality/cryptoassets'
 import 'react-native-reanimated'
 import { INFURA_API_KEY } from '@env'
 import { AssetDataElementType } from '../types'
@@ -146,6 +151,8 @@ export const performSwap = async (
   to: AssetDataElementType,
   fromAmount: BigNumber,
   toAmount: BigNumber,
+  fromNetworkFee: BigNumber,
+  toNetworkFee: BigNumber,
 ) => {
   const fromAccount: IAccount = wallet.getAccount(
     from.chain,
@@ -160,34 +167,29 @@ export const performSwap = async (
     Alert.alert('Make sure to provide two accounts to perform a swap')
   }
 
-  const fromAssets = (await fromAccount.getAssets()) || []
-  const fromAsset =
-    fromAssets.length === 0 ? from.code : fromAssets[0].getSymbol()
   const swapProvider = wallet.getSwapProvider(SwapProvidersEnum.LIQUALITY)
-  if (!fromAsset || !swapProvider) {
+  if (!swapProvider) {
     throw new Error('Failed to perform the swap')
   }
 
-  // Send: undefined (lowest denomination) tb1qny4rdm3376uh0szgduep90hnl7urudzdfk3yer
-  // Receive: 0.025 (lowest denomination) 3f429e2212718a717bd7f9e83ca47dab7956447b
-  // My tb1qny4rdm3376uh0szgduep90hnl7urudzdfk3yer Address: tb1qnyam5rm4l7298640xs7s02e7fjckes5xsva3xt
-  // My 3f429e2212718a717bd7f9e83ca47dab7956447b Address: 3f429e2212718a717bd7f9e83ca47dab7956447b
-  // Counterparty tb1qny4rdm3376uh0szgduep90hnl7urudzdfk3yer Address: undefined
-  // Counterparty 3f429e2212718a717bd7f9e83ca47dab7956447b Address: undefined
-  // Timestamp: undefined
-  const quote = {
-    from: (await fromAccount.getUsedAddress()).address,
-    to: (await toAccount.getUsedAddress()).address,
-    fromAmount: fromAmount,
-    toAmount: toAmount,
+  const quote: Partial<SwapPayloadType> = {
+    from: from.code,
+    to: to.code,
+    fromAmount: new BigNumber(
+      currencyToUnit(cryptoassets[from.code], fromAmount.toNumber()),
+    ),
+    toAmount: new BigNumber(
+      currencyToUnit(cryptoassets[to.code], toAmount.toNumber()),
+    ),
+    fee: fromNetworkFee.toNumber(),
+    claimFee: toNetworkFee.toNumber(),
   }
 
-  const transaction = await swapProvider.performSwap(
-    fromAccount,
-    toAccount,
-    fromAsset,
-    quote,
-  )
+  const transaction = await swapProvider
+    .performSwap(fromAccount, toAccount, quote)
+    .catch((error: any) => {
+      Alert.alert('Failed to perform the swap: ' + error)
+    })
 
   return transaction
 }

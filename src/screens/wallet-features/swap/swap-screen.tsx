@@ -19,9 +19,9 @@ import { MarketDataType, QuoteType } from '@liquality/core/dist/types'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { StackScreenProps } from '@react-navigation/stack'
 import {
-  faArrowDown,
   faAngleDown,
   faAngleRight,
+  faArrowDown,
   faChevronRight,
   faClock,
 } from '@fortawesome/pro-light-svg-icons'
@@ -39,7 +39,7 @@ import {
   RootStackParamList,
 } from '../../../types'
 import { BigNumber } from '@liquality/types'
-import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
 import { prettyBalance } from '../../../core/utils/coin-formatter'
 import { useAppSelector } from '../../../hooks'
 import { sortQuotes } from '../../../utils'
@@ -133,7 +133,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         toAsset,
         fromAmount: state.fromAmount,
         toAmount: bestQuote,
-        networkFee: toNetworkFee.current,
+        toNetworkFee: toNetworkFee.current,
+        fromNetworkFee: fromNetworkFee.current,
       },
       screenTitle: `Swap ${fromAsset.code} to ${toAsset.code}`,
     })

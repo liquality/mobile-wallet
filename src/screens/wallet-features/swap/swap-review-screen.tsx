@@ -18,21 +18,52 @@ type SwapReviewScreenProps = StackScreenProps<
 
 const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   const { navigation, route } = props
-  const { fromAsset, toAsset, fromAmount, toAmount, networkFee }: SwapInfoType =
-    route.params.swapTransaction
+  const swapTransaction = route.params.swapTransaction
   const { fiatRates = {} } = useAppSelector((state) => ({
     fiatRates: state.fiatRates,
   }))
 
   const handleInitiateSwap = async () => {
-    if (route.params.swapTransaction) {
-      await performSwap(fromAsset, toAsset, fromAmount, toAmount)
+    if (swapTransaction) {
+      const {
+        fromAsset,
+        toAsset,
+        fromAmount,
+        toAmount,
+        fromNetworkFee,
+        toNetworkFee,
+      }: SwapInfoType = swapTransaction
+      try {
+        await performSwap(
+          fromAsset,
+          toAsset,
+          fromAmount,
+          toAmount,
+          fromNetworkFee,
+          toNetworkFee,
+        )
+      } catch (error) {
+        Alert.alert('Failed to perform swap')
+      }
     } else {
       Alert.alert('Can not perform swap')
     }
   }
 
   const handleSelectQuote = () => {}
+
+  if (!swapTransaction) {
+    return <View style={styles.container} />
+  }
+
+  const {
+    fromAsset,
+    toAsset,
+    fromAmount,
+    toAmount,
+    fromNetworkFee,
+    toNetworkFee,
+  }: SwapInfoType = swapTransaction
 
   return (
     <View style={styles.container}>
@@ -42,14 +73,14 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           amount={fromAmount}
           asset={fromAsset}
           fiatRates={fiatRates}
-          networkFee={networkFee}
+          networkFee={fromNetworkFee}
         />
         <SwapReviewAssetSummary
           type={'RECEIVE'}
           amount={toAmount}
           asset={toAsset}
           fiatRates={fiatRates}
-          networkFee={networkFee}
+          networkFee={toNetworkFee}
         />
         <SwapRates
           fromAsset={fromAsset.code}

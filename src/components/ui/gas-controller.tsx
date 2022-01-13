@@ -1,7 +1,7 @@
 import React, { FC, MutableRefObject, useEffect, useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { BigNumber, FeeDetails } from '@liquality/types'
-import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
+import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { GasSpeedType } from '../../core/types'
 import { useAppSelector } from '../../hooks'
 
@@ -25,12 +25,12 @@ const GasController: FC<GasControllerProps> = (props) => {
 
   useEffect(() => {
     if (fees && activeNetwork && activeWalletId) {
-      const gFees: FeeDetails =
-        fees[activeNetwork][activeWalletId][cryptoassets[assetSymbol].chain]
-      setGasFees(gFees)
-      networkFee.current = new BigNumber(
-        unitToCurrency(cryptoassets[assetSymbol], gFees.average.fee),
-      )
+      const gFees =
+        fees[activeNetwork]?.[activeWalletId][cryptoassets[assetSymbol].chain]
+      if (gFees) {
+        setGasFees(gFees)
+        networkFee.current = new BigNumber(gFees.average.fee as number)
+      }
     }
   }, [activeNetwork, activeWalletId, assetSymbol, fees, networkFee])
 
@@ -48,9 +48,13 @@ const GasController: FC<GasControllerProps> = (props) => {
               speedMode === speed && !customFee && styles.speedBtnSelected,
             ]}
             onPress={() => {
-              setCustomFee(undefined)
-              setSpeedMode(speed)
-              networkFee.current = new BigNumber(gasFees[speed].fee)
+              if (gasFees) {
+                setCustomFee(undefined)
+                setSpeedMode(speed)
+                networkFee.current = new BigNumber(gasFees[speed].fee as number)
+              } else {
+                Alert.alert('Invalid gas fees')
+              }
             }}>
             <Text
               style={[

@@ -7,8 +7,8 @@ import { NetworkEnum } from '../core/types'
 export type AssetDataElementType = {
   id: string
   name: string
-  code?: string
-  chain?: ChainId
+  code: string
+  chain: ChainId
   address?: string
   balance?: BigNumber
   balanceInUSD?: BigNumber
@@ -29,7 +29,8 @@ export type SwapInfoType = {
   toAsset: AssetDataElementType
   fromAmount: BigNumber
   toAmount: BigNumber
-  networkFee: BigNumber
+  fromNetworkFee: BigNumber
+  toNetworkFee: BigNumber
 }
 
 export type StackPayload = {
