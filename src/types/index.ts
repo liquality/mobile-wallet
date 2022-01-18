@@ -3,6 +3,7 @@ import { BigNumber } from '@liquality/types'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { NetworkEnum } from '../core/types'
+import { SwapTransactionType } from '@liquality/core/dist/types'
 
 export type AssetDataElementType = {
   id: string
@@ -54,6 +55,7 @@ export type StackPayload = {
   }
   swapAssetPair?: SwapAssetPairType
   swapTransaction?: SwapInfoType
+  swapTransactionConfirmation?: Partial<SwapTransactionType>
   action?: ActionEnum
 }
 
@@ -75,6 +77,7 @@ export type RootStackParamList = {
   SendScreen: StackPayload
   SendReviewScreen: StackPayload
   SendConfirmationScreen: StackPayload
+  SwapConfirmationScreen: StackPayload
   CustomFeeScreen: StackPayload
   SwapScreen: StackPayload
   SwapReviewScreen: StackPayload

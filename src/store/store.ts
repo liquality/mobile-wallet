@@ -18,6 +18,7 @@ import {
   SwapProvidersEnum,
   IAccount,
   SwapPayloadType,
+  SwapTransactionType,
 } from '@liquality/core/dist/types'
 import {
   ChainId,
@@ -137,7 +138,8 @@ export const populateWallet = () => {
  * @param password
  */
 export const restoreWallet = async (password: string): Promise<StateType> => {
-  return await wallet.restore(password)
+  const walletState = await wallet.restore(password)
+  return walletState
 }
 
 export const initSwaps = (): Partial<
@@ -153,7 +155,7 @@ export const performSwap = async (
   toAmount: BigNumber,
   fromNetworkFee: BigNumber,
   toNetworkFee: BigNumber,
-) => {
+): Promise<Partial<SwapTransactionType> | void> => {
   const fromAccount: IAccount = wallet.getAccount(
     from.chain,
     store.getState().activeNetwork,
@@ -185,13 +187,11 @@ export const performSwap = async (
     claimFee: toNetworkFee.toNumber(),
   }
 
-  const transaction = await swapProvider
+  return await swapProvider
     .performSwap(fromAccount, toAccount, quote)
     .catch((error: any) => {
       Alert.alert('Failed to perform the swap: ' + error)
     })
-
-  return transaction
 }
 
 export const sendTransaction = async (

@@ -34,7 +34,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         toNetworkFee,
       }: SwapInfoType = swapTransaction
       try {
-        await performSwap(
+        const transaction = await performSwap(
           fromAsset,
           toAsset,
           fromAmount,
@@ -42,6 +42,14 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           fromNetworkFee,
           toNetworkFee,
         )
+        if (transaction) {
+          navigation.navigate('SwapConfirmationScreen', {
+            swapTransactionConfirmation: transaction,
+            screenTitle: `Swap ${fromAsset.code} to ${toAsset.code} Details`,
+          })
+        } else {
+          Alert.alert('Failed to perform swap')
+        }
       } catch (error) {
         Alert.alert('Failed to perform swap')
       }

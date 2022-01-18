@@ -31,6 +31,7 @@ import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-s
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
 import SwapScreen from '../screens/wallet-features/swap/swap-screen'
 import SwapReviewScreen from '../screens/wallet-features/swap/swap-review-screen'
+import SwapConfirmationScreen from '../screens/wallet-features/swap/swap-confirmation-screen'
 
 const config = {
   animation: 'spring',
@@ -183,6 +184,13 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="SwapReviewScreen"
       component={SwapReviewScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
+    />
+    <Stack.Screen
+      name="SwapConfirmationScreen"
+      component={SwapConfirmationScreen}
       options={() => ({
         headerRight: () => <View />,
       })}
