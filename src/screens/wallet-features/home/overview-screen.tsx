@@ -17,29 +17,10 @@ import { Fragment, useCallback, useEffect, useState } from 'react'
 import { useWalletState } from '../../../hooks'
 import { formatFiat } from '../../../core/utils/coin-formatter'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
-import ActivityFlatList, {
-  ActivityDataElementType,
-} from '../../../components/activity-flat-list'
+import ActivityFlatList from '../../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ActionEnum, RootStackParamList, StackPayload } from '../../../types'
 import { populateWallet } from '../../../store/store'
-
-const activities: Array<ActivityDataElementType> = [
-  {
-    id: '1',
-    transaction: 'BTC to DAI',
-    time: '4/28/2020, 3:34pm',
-    amount: 0.1234,
-    status: 'Locking ETH',
-  },
-  {
-    id: '2',
-    transaction: 'BTC to ETH',
-    time: '4/28/2020, 3:34pm',
-    amount: 0.1234,
-    status: 'Locking ETH',
-  },
-]
 
 type OverviewProps = StackScreenProps<RootStackParamList, 'OverviewScreen'>
 
@@ -49,7 +30,6 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     ACTIVITY,
   }
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
-  const [activityData] = useState<Array<ActivityDataElementType>>(activities)
   const { assets, assetCount, totalFiatBalance, loading } = useWalletState()
 
   const handleSendBtnPress = useCallback(() => {
@@ -174,7 +154,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
       <View style={styles.contentBlock}>
         {selectedView === ViewKind.ACTIVITY &&
           (assets.length > 0 ? (
-            <ActivityFlatList activities={activityData}>
+            <ActivityFlatList navigate={navigation.navigate}>
               <View style={styles.activityActionBar}>
                 <Pressable style={styles.activityBtns}>
                   <FontAwesomeIcon

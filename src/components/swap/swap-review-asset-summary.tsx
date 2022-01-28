@@ -12,7 +12,11 @@ import {
 } from 'react-native'
 import Label from '../ui/label'
 import { chainDefaultColors } from '../../core/config'
-import { assets as cryptoassets } from '@liquality/cryptoassets'
+import {
+  assets as cryptoassets,
+  chains,
+  unitToCurrency,
+} from '@liquality/cryptoassets'
 import { cryptoToFiat, formatFiat } from '../../core/utils/coin-formatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCheck, faClone } from '@fortawesome/pro-light-svg-icons'
@@ -52,29 +56,34 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
           ]}>
           {`${amount} ${asset.code}`}
         </Text>
-        <Text style={[styles.font, styles.amount]}>{`$${formatFiat(
-          cryptoToFiat(amount, fiatRates[asset.code]),
-        )}`}</Text>
+        <Text style={[styles.font, styles.amount]}>
+          {amount &&
+            `$${formatFiat(
+              cryptoToFiat(amount.toNumber(), fiatRates[asset.code]),
+            )}`}
+        </Text>
       </View>
       <Label text="NETWORK FEE" variant="light" />
       <View style={styles.row}>
-        <Text
-          style={[
-            styles.font,
-            styles.amount,
-          ]}>{`${networkFee} ${asset.code}`}</Text>
+        <Text style={[styles.font, styles.amount]}>{`${networkFee} ${
+          chains[cryptoassets[asset.code].chain].fees.unit
+        }`}</Text>
         <Text style={[styles.font, styles.amount]}>{`$${formatFiat(
-          cryptoToFiat(networkFee, fiatRates[asset.code]),
+          cryptoToFiat(networkFee.toNumber(), fiatRates[asset.code]),
         )}`}</Text>
       </View>
       <Label text="AMOUNT + FEES" variant="light" />
       <View style={styles.row}>
         <Text style={[styles.font, styles.amountStrong]}>{`${amount.plus(
-          networkFee,
+          unitToCurrency(cryptoassets[asset.code], networkFee.toNumber()),
         )} ${asset.code}`}</Text>
         <Text style={[styles.font, styles.amountStrong]}>{`$${formatFiat(
           cryptoToFiat(
-            amount.plus(networkFee).toNumber(),
+            amount
+              .plus(
+                unitToCurrency(cryptoassets[asset.code], networkFee.toNumber()),
+              )
+              .toNumber(),
             fiatRates[asset.code],
           ),
         )}`}</Text>

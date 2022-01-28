@@ -67,6 +67,11 @@ const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
         ...state,
         ...action.payload,
       }
+    case 'TRANSACTION_UPDATE':
+      return {
+        ...state,
+        ...action.payload,
+      }
     default:
       return {
         ...state,

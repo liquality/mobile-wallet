@@ -3,7 +3,7 @@ import { BigNumber } from '@liquality/types'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { NetworkEnum } from '../core/types'
-import { SwapTransactionType } from '@liquality/core/dist/types'
+import { HistoryItem, SwapTransactionType } from '@liquality/core/dist/types'
 
 export type AssetDataElementType = {
   id: string
@@ -53,6 +53,7 @@ export type StackPayload = {
     destinationAddress?: string
     asset?: string
   }
+  sendTransactionConfirmation?: HistoryItem
   swapAssetPair?: SwapAssetPairType
   swapTransaction?: SwapInfoType
   swapTransactionConfirmation?: Partial<SwapTransactionType>

@@ -19,12 +19,13 @@ type SwapReviewScreenProps = StackScreenProps<
 const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   const { navigation, route } = props
   const swapTransaction = route.params.swapTransaction
-  const { fiatRates = {} } = useAppSelector((state) => ({
+  const { fiatRates = {}, activeNetwork } = useAppSelector((state) => ({
     fiatRates: state.fiatRates,
+    activeNetwork: state.activeNetwork,
   }))
 
   const handleInitiateSwap = async () => {
-    if (swapTransaction) {
+    if (swapTransaction && activeNetwork) {
       const {
         fromAsset,
         toAsset,
@@ -41,6 +42,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           toAmount,
           fromNetworkFee,
           toNetworkFee,
+          activeNetwork,
         )
         if (transaction) {
           navigation.navigate('SwapConfirmationScreen', {
@@ -74,65 +76,60 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   }: SwapInfoType = swapTransaction
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        <SwapReviewAssetSummary
-          type={'SEND'}
-          amount={fromAmount}
-          asset={fromAsset}
-          fiatRates={fiatRates}
-          networkFee={fromNetworkFee}
-        />
-        <SwapReviewAssetSummary
-          type={'RECEIVE'}
-          amount={toAmount}
-          asset={toAsset}
-          fiatRates={fiatRates}
-          networkFee={toNetworkFee}
-        />
-        <SwapRates
-          fromAsset={fromAsset.code}
-          toAsset={toAsset.code}
-          selectQuote={handleSelectQuote}
-        />
-        <Warning
-          text1="Max slippage is 0.5%."
-          text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6
+    <ScrollView contentContainerStyle={styles.container}>
+      <SwapReviewAssetSummary
+        type={'SEND'}
+        amount={fromAmount}
+        asset={fromAsset}
+        fiatRates={fiatRates}
+        networkFee={fromNetworkFee}
+      />
+      <SwapReviewAssetSummary
+        type={'RECEIVE'}
+        amount={toAmount}
+        asset={toAsset}
+        fiatRates={fiatRates}
+        networkFee={toNetworkFee}
+      />
+      <SwapRates
+        fromAsset={fromAsset.code}
+        toAsset={toAsset.code}
+        selectQuote={handleSelectQuote}
+      />
+      <Warning
+        text1="Max slippage is 0.5%."
+        text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6
           hours at 20:45 GMT"
-          icon={faClock}
+        icon={faClock}
+      />
+      <View style={[styles.buttonWrapper]}>
+        <LiqualityButton
+          text="Edit"
+          variant="medium"
+          type="negative"
+          action={() => navigation.goBack()}
         />
-        <View style={[styles.buttonWrapper]}>
-          <LiqualityButton
-            text="Edit"
-            variant="medium"
-            type="negative"
-            action={() => navigation.goBack()}
+        <LiqualityButton
+          text="Initiate Swap"
+          variant="medium"
+          type="positive"
+          action={handleInitiateSwap}>
+          <FontAwesomeIcon
+            icon={faExchange}
+            size={15}
+            color={'#FFFFFF'}
+            style={styles.icon}
           />
-          <LiqualityButton
-            text="Initiate Swap"
-            variant="medium"
-            type="positive"
-            action={handleInitiateSwap}>
-            <FontAwesomeIcon
-              icon={faExchange}
-              size={15}
-              color={'#FFFFFF'}
-              style={styles.icon}
-            />
-          </LiqualityButton>
-        </View>
-      </ScrollView>
-    </View>
+        </LiqualityButton>
+      </View>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     width: Dimensions.get('screen').width,
     backgroundColor: '#FFF',
-  },
-  scrollView: {
     padding: 20,
   },
   buttonWrapper: {

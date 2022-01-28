@@ -9,7 +9,7 @@ import {
   faPlus,
 } from '@fortawesome/pro-light-svg-icons'
 import AssetIcon from '../asset-icon'
-import { formatFiat } from '../../core/utils/coin-formatter'
+import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
 import GasIndicator from '../ui/gas-indicator'
 
 const DEFAULT_COLOR = '#EFEFEF'
@@ -58,9 +58,13 @@ const Row: FC<RowProps> = (props) => {
         </View>
       ) : (
         <View style={styles.col3}>
-          <Text style={styles.balance}>{balance && formatFiat(balance)}</Text>
+          <Text style={styles.balance}>
+            {item.balance &&
+              item.code &&
+              `${prettyBalance(item.balance, item.code)} ${item.code}`}
+          </Text>
           <Text style={styles.balanceInUSD}>
-            {balanceInUSD && formatFiat(balanceInUSD)}
+            ${balanceInUSD && formatFiat(balanceInUSD)}
           </Text>
         </View>
       )}

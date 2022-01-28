@@ -19,23 +19,31 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
     route.params.sendTransaction || {}
   const [rate, setRate] = useState<number>(0)
   const [error, setError] = useState('')
-  const { fiatRates } = useAppSelector((state) => ({
+  const { fiatRates, activeNetwork } = useAppSelector((state) => ({
     fiatRates: state.fiatRates,
+    activeNetwork: state.activeNetwork,
   }))
 
   const handleSendPress = async () => {
+    if (!asset || !destinationAddress || !amount || !gasFee || !activeNetwork) {
+      setError('Input data invalid')
+      return
+    }
+
     try {
-      await sendTransaction({
-        to: destinationAddress!,
+      const transaction = await sendTransaction({
+        asset,
+        activeNetwork,
+        to: destinationAddress,
         value: new BigNumber(
-          currencyToUnit(cryptoassets[asset!], amount!.toNumber()).toNumber(),
+          currencyToUnit(cryptoassets[asset], amount.toNumber()).toNumber(),
         ),
-        fee: gasFee!.toNumber(),
+        fee: gasFee.toNumber(),
       })
 
       navigation.navigate('SendConfirmationScreen', {
         screenTitle: `SEND ${asset} Transaction Details`,
-        ...route.params,
+        sendTransactionConfirmation: transaction,
       })
     } catch (_error) {
       setError('Failed to send transaction: ' + _error)

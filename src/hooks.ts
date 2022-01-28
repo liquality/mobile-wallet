@@ -29,16 +29,18 @@ export const useWalletState = () => {
   const [totalFiatBalance, setTotalFiatBalance] = useState<BigNumber>(
     new BigNumber(0),
   )
-  const { accounts, walletId, activeNetwork, fiatRates, fees } = useAppSelector(
-    (state) => ({
-      accounts: state.accounts,
-      walletId: state.activeWalletId,
-      activeNetwork: state.activeNetwork,
-      fiatRates: state.fiatRates,
-      fees: state.fees,
-    }),
-    shallowEqual,
-  )
+  const { accounts, walletId, activeNetwork, fiatRates, fees, history } =
+    useAppSelector(
+      (state) => ({
+        accounts: state.accounts,
+        walletId: state.activeWalletId,
+        activeNetwork: state.activeNetwork,
+        fiatRates: state.fiatRates,
+        fees: state.fees,
+        history: state.history,
+      }),
+      shallowEqual,
+    )
 
   useEffect(() => {
     if (accounts) {
@@ -151,7 +153,7 @@ export const useWalletState = () => {
     setLoading(assetCount === 0)
   }, [accounts, activeNetwork, assetCount, fees, fiatRates, walletId])
 
-  return { loading, assetCount, assets, totalFiatBalance }
+  return { loading, assetCount, assets, totalFiatBalance, history, fiatRates }
 }
 
 export const useInputState = (

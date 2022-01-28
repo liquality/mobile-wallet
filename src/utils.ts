@@ -51,3 +51,10 @@ export const sortQuotes = (quotes: QuoteType[]): QuoteType[] => {
     return b.toAmount?.minus(a.toAmount || 0).toNumber() || 1
   })
 }
+
+export const formatDate = (ms: string | number): string => {
+  const date = new Date(ms)
+  return `${
+    date.getMonth() + 1
+  }/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+}

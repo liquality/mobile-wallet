@@ -258,7 +258,7 @@ const SendConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
             </View>
             <View style={styles.cell}>
               <Label
-                text={`Yourt ${from} funding transaction`}
+                text={`Your ${from} funding transaction`}
                 variant="light"
               />
               <Text style={styles.transactionInfo}>{fromFundTx?.hash}</Text>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   ImageBackground,
   Pressable,
@@ -8,9 +8,7 @@ import {
 } from 'react-native'
 import { formatFiat, prettyBalance } from '../../../core/utils/coin-formatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import ActivityFlatList, {
-  ActivityDataElementType,
-} from '../../../components/activity-flat-list'
+import ActivityFlatList from '../../../components/activity-flat-list'
 import {
   faGreaterThan,
   faExchange,
@@ -20,27 +18,9 @@ import {
 import { StackScreenProps } from '@react-navigation/stack'
 import { AssetDataElementType, RootStackParamList } from '../../../types'
 
-const activities: Array<ActivityDataElementType> = [
-  {
-    id: '1',
-    transaction: 'BTC to DAI',
-    time: '4/28/2020, 3:34pm',
-    amount: 0.1234,
-    status: 'Locking ETH',
-  },
-  {
-    id: '2',
-    transaction: 'BTC to ETH',
-    time: '4/28/2020, 3:34pm',
-    amount: 0.1234,
-    status: 'Locking ETH',
-  },
-]
-
 type AssetScreenProps = StackScreenProps<RootStackParamList, 'AssetScreen'>
 
 const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
-  const [activityData] = useState<Array<ActivityDataElementType>>(activities)
   const { code, address, balance, balanceInUSD }: AssetDataElementType =
     route.params.assetData!
 
@@ -126,7 +106,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         </Pressable>
       </View>
       <View style={styles.contentBlock}>
-        <ActivityFlatList activities={activityData}>
+        <ActivityFlatList navigate={navigation.navigate}>
           <View style={styles.activityActionBar}>
             <Pressable style={styles.activityBtns}>
               <FontAwesomeIcon

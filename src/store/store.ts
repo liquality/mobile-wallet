@@ -8,7 +8,7 @@ import thunk from 'redux-thunk'
 import rootReducer from '../reducers'
 import StorageManager from '../core/storage-manager'
 import EncryptionManager from '../core/encryption-manager'
-import { BigNumber, SendOptions, Transaction } from '@liquality/types'
+import { BigNumber } from '@liquality/types'
 import Wallet from '@liquality/core/dist/wallet'
 import { Config } from '@liquality/core/dist/config'
 import {
@@ -19,12 +19,9 @@ import {
   IAccount,
   SwapPayloadType,
   SwapTransactionType,
+  HistoryItem,
 } from '@liquality/core/dist/types'
-import {
-  ChainId,
-  currencyToUnit,
-  assets as cryptoassets,
-} from '@liquality/cryptoassets'
+import { currencyToUnit, assets as cryptoassets } from '@liquality/cryptoassets'
 import 'react-native-reanimated'
 import { INFURA_API_KEY } from '@env'
 import { AssetDataElementType } from '../types'
@@ -43,6 +40,15 @@ wallet.on('onMarketDataUpdate', (marketData) => {
     type: 'UPDATE_MARKET_DATA',
     payload: {
       marketData,
+    } as StateType,
+  })
+})
+
+wallet.on('onTransactionUpdate', (transaction) => {
+  store.dispatch({
+    type: 'TRANSACTION_UPDATE',
+    payload: {
+      history: [...(store.getState().history || []), transaction],
     } as StateType,
   })
 })
@@ -138,8 +144,7 @@ export const populateWallet = () => {
  * @param password
  */
 export const restoreWallet = async (password: string): Promise<StateType> => {
-  const walletState = await wallet.restore(password)
-  return walletState
+  return await wallet.restore(password)
 }
 
 export const initSwaps = (): Partial<
@@ -155,15 +160,10 @@ export const performSwap = async (
   toAmount: BigNumber,
   fromNetworkFee: BigNumber,
   toNetworkFee: BigNumber,
+  activeNetwork: NetworkEnum,
 ): Promise<Partial<SwapTransactionType> | void> => {
-  const fromAccount: IAccount = wallet.getAccount(
-    from.chain,
-    store.getState().activeNetwork,
-  )
-  const toAccount: IAccount = wallet.getAccount(
-    to.chain,
-    store.getState().activeNetwork,
-  )
+  const fromAccount: IAccount = wallet.getAccount(from.chain, activeNetwork)
+  const toAccount: IAccount = wallet.getAccount(to.chain, activeNetwork)
 
   if (!fromAccount || !toAccount) {
     Alert.alert('Make sure to provide two accounts to perform a swap')
@@ -194,23 +194,27 @@ export const performSwap = async (
     })
 }
 
-export const sendTransaction = async (
-  options: SendOptions,
-): Promise<Transaction | Error> => {
+export const getSwapStatuses = (swapProviderType: SwapProvidersEnum) => {
+  return wallet.getSwapProvider(swapProviderType).statuses
+}
+
+export const sendTransaction = async (options: {
+  activeNetwork: NetworkEnum
+  asset: string
+  to: string
+  value: BigNumber
+  fee: number
+}): Promise<HistoryItem> => {
   if (!options || Object.keys(options).length === 0) {
     throw new Error(`Failed to send transaction: ${options}`)
   }
 
-  try {
-    const account = await wallet.getAccount(
-      ChainId.Ethereum,
-      NetworkEnum.Testnet,
-    )
-    const assets = await account.getAssets()
-    return await assets[0].transmit(options)
-  } catch (e) {
-    return new Error('Failed to send transaction')
-  }
+  const account = await wallet.getAccount(
+    cryptoassets[options.asset].chain,
+    options.activeNetwork,
+  )
+  const assets = await account.getAssets()
+  return await assets[0].transmit(options)
 }
 
 export type AppDispatch = typeof store.dispatch

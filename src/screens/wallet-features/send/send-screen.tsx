@@ -36,7 +36,7 @@ type SendScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
 
 const SendScreen = ({ navigation, route }: SendScreenProps) => {
   const { code, balance, chain }: AssetDataElementType = route.params.assetData!
-  const [customFee, setCustomFee] = useState(route.params.customFee)
+  const [customFee, setCustomFee] = useState<number>(0)
   const gasSpeeds: GasSpeedType[] = ['slow', 'average', 'fast']
   const {
     activeWalletId,
@@ -81,6 +81,20 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
   }, [addressInput.value, amountInput.value, balance, chain])
 
   useEffect(() => {
+    if (route.params.customFee) {
+      setFee(new BigNumber(route.params.customFee))
+      setCustomFee(route.params.customFee)
+      setAvailableAmount(
+        calculateAvailableAmnt(
+          code,
+          route.params.customFee,
+          balance.toNumber(),
+        ),
+      )
+    }
+  }, [balance, code, route.params.customFee])
+
+  useEffect(() => {
     let gasFee
     if (
       !fees ||
@@ -94,36 +108,18 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       return
     }
 
-    if (customFee) {
-      setFee(new BigNumber(customFee!))
-      setAvailableAmount(
-        calculateAvailableAmnt(code, customFee!, balance.toNumber()),
-      )
-    } else {
-      gasFee = calculateGasFee(
-        code,
-        fees[activeNetwork]?.[activeWalletId]?.[chain]?.[speedMode]?.fee!,
-      )
+    gasFee = calculateGasFee(
+      code,
+      fees[activeNetwork]?.[activeWalletId]?.[chain]?.[speedMode]?.fee,
+    )
 
-      if (!gasFee) {
-        setError('Please refresh your wallet')
-        return
-      }
-      setFee(new BigNumber(gasFee))
-      setAvailableAmount(
-        calculateAvailableAmnt(code, gasFee, balance.toNumber()),
-      )
+    if (!gasFee) {
+      setError('Please refresh your wallet')
+      return
     }
-  }, [
-    code,
-    speedMode,
-    fees,
-    activeWalletId,
-    activeNetwork,
-    chain,
-    balance,
-    customFee,
-  ])
+    setFee(new BigNumber(gasFee))
+    setAvailableAmount(calculateAvailableAmnt(code, gasFee, balance.toNumber()))
+  }, [code, speedMode, fees, activeWalletId, activeNetwork, chain, balance])
 
   const handleReviewPress = useCallback(() => {
     if (validate()) {
@@ -131,7 +127,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
         screenTitle: `Send ${code} Review`,
         sendTransaction: {
           amount: new BigNumber(amountInput.value),
-          gasFee: fee!,
+          gasFee: fee,
           destinationAddress: addressInput.value,
           asset: code,
         },
@@ -169,7 +165,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
         setAmountInFiat(
           cryptoToFiat(
             new BigNumber(text).toNumber(),
-            fiatRates[code!],
+            fiatRates[code],
           ).toNumber(),
         )
         setAmountInNative(new BigNumber(text).toNumber())
@@ -293,7 +289,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
           </Pressable>
           {customFee ? (
             <Text style={styles.speedValue}>
-              {`(Custom / ${calculateGasFee(code!, customFee)} ${code})`}
+              {`(Custom / ${calculateGasFee(code, customFee)} ${code})`}
             </Text>
           ) : (
             <Text style={styles.speedValue}>
@@ -317,7 +313,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
                       styles.speedBtnSelected,
                   ]}
                   onPress={() => {
-                    setCustomFee(undefined)
+                    setCustomFee(0)
                     setSpeedMode(speed)
                   }}>
                   <Text

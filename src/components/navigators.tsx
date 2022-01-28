@@ -1,8 +1,8 @@
 import React, { createContext } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, Pressable } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faUserCog } from '@fortawesome/pro-light-svg-icons'
+import { faCheck, faUserCog } from '@fortawesome/pro-light-svg-icons'
 import Infinity from '../assets/icons/infinity.svg'
 import Entry from '../screens/wallet-creation/entryScreen'
 import TermsScreen from '../screens/wallet-creation/termsScreen'
@@ -32,8 +32,9 @@ import AssetManagementScreen from '../screens/wallet-features/asset/asset-manage
 import SwapScreen from '../screens/wallet-features/swap/swap-screen'
 import SwapReviewScreen from '../screens/wallet-features/swap/swap-review-screen'
 import SwapConfirmationScreen from '../screens/wallet-features/swap/swap-confirmation-screen'
+import { TransitionSpec } from '@react-navigation/stack/src/types'
 
-const config = {
+const config: TransitionSpec = {
   animation: 'spring',
   config: {
     stiffness: 1000,
@@ -163,8 +164,17 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="SendConfirmationScreen"
       component={SendConfirmationScreen}
-      options={() => ({
-        headerRight: () => <View />,
+      options={({ navigation }) => ({
+        headerRight: () => (
+          <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
+            <FontAwesomeIcon
+              icon={faCheck}
+              size={20}
+              color={'#5F5F5F'}
+              style={styles.checkIcon}
+            />
+          </Pressable>
+        ),
       })}
     />
     <Stack.Screen
@@ -191,8 +201,17 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="SwapConfirmationScreen"
       component={SwapConfirmationScreen}
-      options={() => ({
-        headerRight: () => <View />,
+      options={({ navigation }) => ({
+        headerRight: () => (
+          <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
+            <FontAwesomeIcon
+              icon={faCheck}
+              size={20}
+              color={'#5F5F5F'}
+              style={styles.checkIcon}
+            />
+          </Pressable>
+        ),
       })}
     />
   </Stack.Navigator>
@@ -246,6 +265,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginVertical: 5,
+  },
+  checkIcon: {
+    marginRight: 20,
   },
   settingsTitle: {
     fontFamily: 'Montserrat-Regular',
