@@ -20,6 +20,7 @@ import {
   SwapPayloadType,
   SwapTransactionType,
   HistoryItem,
+  IAsset,
 } from '@liquality/core/dist/types'
 import { currencyToUnit, assets as cryptoassets } from '@liquality/cryptoassets'
 import 'react-native-reanimated'
@@ -44,11 +45,18 @@ wallet.on('onMarketDataUpdate', (marketData) => {
   })
 })
 
-wallet.on('onTransactionUpdate', (transaction) => {
+wallet.on('onTransactionUpdate', (transaction: HistoryItem) => {
   store.dispatch({
     type: 'TRANSACTION_UPDATE',
     payload: {
-      history: [...(store.getState().history || []), transaction],
+      history: [
+        ...(store.getState().history || []).filter((item) =>
+          item.type === 'SEND'
+            ? item.sendTransaction?.hash !== transaction.sendTransaction?.hash
+            : item.swapTransaction?.id !== transaction.swapTransaction?.id,
+        ),
+        transaction,
+      ],
     } as StateType,
   })
 })
@@ -132,8 +140,8 @@ export const createWallet = async (
   return await wallet.init(password, mnemonic, false)
 }
 
-export const populateWallet = () => {
-  wallet
+export const populateWallet = async () => {
+  await wallet
     .addAccounts(store.getState().activeNetwork || NetworkEnum.Mainnet)
     .then(() => {
       wallet.store(store.getState())
@@ -145,6 +153,30 @@ export const populateWallet = () => {
  */
 export const restoreWallet = async (password: string): Promise<StateType> => {
   return await wallet.restore(password)
+}
+
+export const fetchSendUpdates = async () => {
+  const activeNetwork = store.getState().activeNetwork
+  if (!activeNetwork || !store) {
+    return
+  }
+
+  const historyItems =
+    store?.getState()?.history?.filter((item) => item.type === 'SEND') || []
+
+  for (const item of historyItems) {
+    const account = await wallet.getAccount(
+      cryptoassets[item.from].chain,
+      activeNetwork,
+    )
+    if (!account) {
+      continue
+    }
+    const assets: IAsset[] = await account.getAssets()
+    if (assets.length > 0 && item.sendTransaction) {
+      assets[0].runRulesEngine(item.sendTransaction)
+    }
+  }
 }
 
 export const initSwaps = (): Partial<
@@ -217,6 +249,18 @@ export const sendTransaction = async (options: {
   return await assets[0].transmit(options)
 }
 
+export const speedUpTransaction = async (
+  asset: string,
+  activeNetwork: NetworkEnum,
+  tx: string,
+) => {
+  const account = await wallet.getAccount(
+    cryptoassets[asset].chain,
+    activeNetwork,
+  )
+
+  return await account.speedUpTransaction(tx, 10000000000)
+}
 export type AppDispatch = typeof store.dispatch
 
 export type RootState = ReturnType<typeof store.getState>

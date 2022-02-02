@@ -6,26 +6,35 @@ import { faClone } from '@fortawesome/pro-light-svg-icons'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {
   HistoryItem,
+  StateType,
   SwapProvidersEnum,
   TransactionStatusType,
 } from '@liquality/core/dist/types'
 import { getSwapStatuses } from '../store/store'
 import { formatDate } from '../utils'
+import { dpUI, prettyFiatBalance } from '../core/utils/coin-formatter'
+import { BigNumber } from '@liquality/types'
+import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import { useAppSelector } from '../hooks'
 
 type ConfirmationBlockProps = {
-  address: string
+  address?: string
   status: string
-  fee: number
+  fee?: number
   confirmations: number
+  asset: string
+  fiatRates: StateType['fiatRates']
 }
 
 const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
   props,
 ): React.ReactElement => {
-  const { address, status, fee, confirmations } = props
+  const { address, status, fee, confirmations, asset, fiatRates } = props
 
   const handleCopyAddressPress = async () => {
-    Clipboard.setString(address)
+    if (address) {
+      Clipboard.setString(address)
+    }
     // setButtonPressed(true)
   }
 
@@ -39,7 +48,17 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
       </View>
       <View style={[styles.row]}>
         <Text style={styles.label}>Fee</Text>
-        <Text style={styles.amount}>{fee} 0.000021 ETH/ $0.03</Text>
+        <Text style={styles.amount}>
+          {fiatRates &&
+            fee &&
+            `${dpUI(
+              new BigNumber(unitToCurrency(cryptoassets[asset], fee)),
+              9,
+            )} ${asset}/ $${prettyFiatBalance(
+              unitToCurrency(cryptoassets[asset], fee).toNumber(),
+              fiatRates[asset],
+            )}`}
+        </Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Confirmations</Text>
@@ -75,17 +94,27 @@ const Separator = ({ completed }: { completed: boolean }) => (
     </Svg>
   </View>
 )
-const TransactionDetails: React.FC<{ historyItem: HistoryItem }> = (
+
+type TransactionDetailsProps = {
+  type: 'SWAP' | 'SEND'
+  hash?: string
+  id?: string
+}
+const TransactionDetails: React.FC<TransactionDetailsProps> = (
   props,
 ): React.ReactElement => {
-  const { type, startTime, sendTransaction, swapTransaction } =
-    props.historyItem
+  const { type, hash, id } = props
+  const { fiatRates, history } = useAppSelector((state) => ({
+    fiatRates: state.fiatRates,
+    history: state.history,
+  }))
   const [statuses, setStatuses] = useState<TransactionStatusType[]>([])
+  const [historyItem, setHistoryItem] = useState<HistoryItem>()
 
   const getConfirmation = (
     step: number,
-  ): { confirmations: number; address: string; fee: number } => {
-    if (type === 'SWAP' && swapTransaction) {
+  ): { confirmations: number; address?: string; fee?: number } => {
+    if (type === 'SWAP' && historyItem?.swapTransaction) {
       const {
         fromFundTx,
         toFundTx,
@@ -94,7 +123,7 @@ const TransactionDetails: React.FC<{ historyItem: HistoryItem }> = (
         toAddress,
         fee,
         claimFee,
-      } = swapTransaction
+      } = historyItem.swapTransaction
       if (step === 0) {
         return {
           confirmations: fromFundTx?.confirmations || 0,
@@ -114,8 +143,8 @@ const TransactionDetails: React.FC<{ historyItem: HistoryItem }> = (
           fee,
         }
       }
-    } else if (type === 'SEND' && sendTransaction) {
-      const { confirmations = 0, _raw, fee } = sendTransaction
+    } else if (type === 'SEND' && historyItem?.sendTransaction) {
+      const { confirmations = 0, _raw, fee } = historyItem.sendTransaction
       return {
         confirmations,
         address: _raw.address,
@@ -123,20 +152,64 @@ const TransactionDetails: React.FC<{ historyItem: HistoryItem }> = (
       }
     }
 
-    return {}
+    return {
+      confirmations: 0,
+    }
+  }
+
+  const handleTransactionCancellation = () => {
+    //TODO display gas fee selector
   }
 
   useEffect(() => {
-    const transactionStatuses = getSwapStatuses(SwapProvidersEnum.LIQUALITY)
+    const historyItems =
+      history?.filter(
+        (item) =>
+          item.type === type &&
+          (item.swapTransaction?.id === id ||
+            item.sendTransaction?.hash === hash),
+      ) || []
+    if (historyItems.length) {
+      setHistoryItem(historyItems[0])
+    }
+    let transactionStatuses = getSwapStatuses(SwapProvidersEnum.LIQUALITY)
+    if (type === 'SWAP') {
+      transactionStatuses = getSwapStatuses(SwapProvidersEnum.LIQUALITY)
+    } else if (type === 'SEND') {
+      transactionStatuses = {
+        INITIATED: {
+          step: 0,
+          label: 'INITIATED',
+          filterStatus: '',
+        },
+        SUCCESS: {
+          step: 1,
+          label: 'SUCCESS',
+          filterStatus: '',
+        },
+      }
+    }
     setStatuses(Object.values(transactionStatuses))
-  }, [])
+  }, [hash, history, id, type])
+
+  if (!historyItem) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading</Text>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.sentInfo}>
-        <Text style={styles.label}>{formatDate(startTime)}</Text>
+        <Text style={styles.label}>{formatDate(historyItem.startTime)}</Text>
         <Text style={styles.label}>Started</Text>
+        <Pressable onPress={handleTransactionCancellation}>
+          <Text style={styles.link}>Cancel</Text>
+        </Pressable>
       </View>
+
       {statuses.map((item, index) => {
         const payload = getConfirmation(item.step)
         return (
@@ -147,6 +220,8 @@ const TransactionDetails: React.FC<{ historyItem: HistoryItem }> = (
                 status={item.label}
                 confirmations={payload.confirmations}
                 fee={payload.fee}
+                asset={historyItem.from}
+                fiatRates={fiatRates}
               />
             ) : (
               <EmptyBlock />
@@ -155,11 +230,13 @@ const TransactionDetails: React.FC<{ historyItem: HistoryItem }> = (
               {index === 0 && (
                 <>
                   <View style={styles.start} />
-                  <Separator completed={index <= item.step} />
+                  <Separator
+                    completed={item.step <= historyItem.currentStep - 1}
+                  />
                 </>
               )}
-              <Step completed={index <= item.step} />
-              <Separator completed={index <= item.step} />
+              <Step completed={item.step <= historyItem.currentStep - 1} />
+              <Separator completed={item.step <= historyItem.currentStep - 1} />
               {index === statuses.length - 1 && <View style={styles.start} />}
             </View>
             {index % 2 === 1 ? (
@@ -168,6 +245,8 @@ const TransactionDetails: React.FC<{ historyItem: HistoryItem }> = (
                 status={item.label}
                 confirmations={payload.confirmations}
                 fee={payload.fee}
+                asset={historyItem.from}
+                fiatRates={fiatRates}
               />
             ) : (
               <EmptyBlock />
@@ -260,6 +339,13 @@ const styles = StyleSheet.create({
   },
   copyBtn: {
     marginLeft: 5,
+  },
+  link: {
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 12,
+    fontWeight: '500',
+    lineHeight: 18,
+    color: '#9D4DFA',
   },
 })
 

@@ -17,11 +17,13 @@ import LiqualityButton from '../../../components/ui/button'
 import { useAppSelector } from '../../../hooks'
 import { GasSpeedType, NetworkEnum } from '../../../core/types'
 import { BigNumber } from '@liquality/types'
+import { calculateAvailableAmnt } from '../../../core/utils/fee-calculator'
 import {
-  calculateAvailableAmnt,
-  calculateGasFee,
-} from '../../../core/utils/fee-calculator'
-import { cryptoToFiat, fiatToCrypto } from '../../../core/utils/coin-formatter'
+  cryptoToFiat,
+  dpUI,
+  fiatToCrypto,
+  gasUnitToCurrency,
+} from '../../../core/utils/coin-formatter'
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 
@@ -81,7 +83,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
   }, [addressInput.value, amountInput.value, balance, chain])
 
   useEffect(() => {
-    if (route.params.customFee) {
+    if (route.params.customFee && balance) {
       setFee(new BigNumber(route.params.customFee))
       setCustomFee(route.params.customFee)
       setAvailableAmount(
@@ -108,17 +110,20 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       return
     }
 
-    gasFee = calculateGasFee(
-      code,
-      fees[activeNetwork]?.[activeWalletId]?.[chain]?.[speedMode]?.fee,
-    )
+    gasFee = fees[activeNetwork]?.[activeWalletId]?.[chain]?.[speedMode]?.fee
 
     if (!gasFee) {
       setError('Please refresh your wallet')
       return
     }
     setFee(new BigNumber(gasFee))
-    setAvailableAmount(calculateAvailableAmnt(code, gasFee, balance.toNumber()))
+    setAvailableAmount(
+      calculateAvailableAmnt(
+        code,
+        gasUnitToCurrency(code, gasFee).toNumber(),
+        balance.toNumber(),
+      ),
+    )
   }, [code, speedMode, fees, activeWalletId, activeNetwork, chain, balance])
 
   const handleReviewPress = useCallback(() => {
@@ -289,11 +294,17 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
           </Pressable>
           {customFee ? (
             <Text style={styles.speedValue}>
-              {`(Custom / ${calculateGasFee(code, customFee)} ${code})`}
+              {`(Custom / ${dpUI(
+                gasUnitToCurrency(code, new BigNumber(customFee)),
+                9,
+              )} ${code})`}
             </Text>
           ) : (
             <Text style={styles.speedValue}>
-              {`(${speedMode} / ${fee} ${code})`}
+              {`(${speedMode} / ${dpUI(
+                gasUnitToCurrency(code, new BigNumber(fee)),
+                9,
+              )} ${code})`}
             </Text>
           )}
         </View>

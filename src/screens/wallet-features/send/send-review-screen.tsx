@@ -3,7 +3,11 @@ import { StyleSheet, View, Text } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../../types'
 import LiqualityButton from '../../../components/ui/button'
-import { prettyFiatBalance } from '../../../core/utils/coin-formatter'
+import {
+  dpUI,
+  gasUnitToCurrency,
+  prettyFiatBalance,
+} from '../../../core/utils/coin-formatter'
 import { useAppSelector } from '../../../hooks'
 import { sendTransaction } from '../../../store/store'
 import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
@@ -77,22 +81,36 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <Text style={styles.feeLabel}>NETWORK FEE</Text>
         <View style={styles.row}>
           <Text style={styles.feeAmountInNative}>
-            {gasFee && `${gasFee.toNumber()} ${asset}`}
+            {asset &&
+              gasFee &&
+              dpUI(gasUnitToCurrency(asset, gasFee), 9).toString()}
           </Text>
           <Text style={styles.feeAmountInFiat}>
-            {gasFee && `$${prettyFiatBalance(gasFee.toNumber(), rate)}`}
+            {gasFee &&
+              asset &&
+              `$${prettyFiatBalance(
+                gasUnitToCurrency(asset, gasFee).toNumber(),
+                rate,
+              )}`}
           </Text>
         </View>
 
         <Text style={styles.totalLabel}>AMOUNT + FEES</Text>
         <View style={styles.row}>
           <Text style={styles.totalAmount}>
-            {amount && gasFee && `${amount.plus(gasFee).dp(6)} ${asset}`}
+            {amount &&
+              gasFee &&
+              asset &&
+              `${amount.plus(gasUnitToCurrency(asset, gasFee)).dp(9)} ${asset}`}
           </Text>
           <Text style={styles.totalAmount}>
             {amount &&
               gasFee &&
-              `$${prettyFiatBalance(amount.plus(gasFee).toNumber(), rate)}`}
+              asset &&
+              `$${prettyFiatBalance(
+                amount.plus(gasUnitToCurrency(asset, gasFee)).toNumber(),
+                rate,
+              )}`}
           </Text>
         </View>
 

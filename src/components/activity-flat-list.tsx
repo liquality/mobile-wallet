@@ -14,14 +14,7 @@ import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import ProgressCircle from './animations/progress-circle'
 import { formatDate } from '../utils'
 import { cryptoToFiat } from '../core/utils/coin-formatter'
-
-export type ActivityDataElementType = {
-  id: string
-  transaction: string
-  time: string
-  amount: number
-  status: string
-}
+import SuccessIcon from '../assets/icons/success-icon.svg'
 
 const ActivityFlatList = ({
   navigate,
@@ -35,7 +28,7 @@ const ActivityFlatList = ({
   const handleChevronPress = (historyItem: HistoryItem) => {
     if (historyItem.type === 'SWAP') {
       navigate('SwapConfirmationScreen', {
-        swapTransactionConfirmation: historyItem.swapTransaction,
+        swapTransactionConfirmation: historyItem,
         screenTitle: `Swap ${historyItem.from} to ${historyItem.to} Details`,
       })
     } else if (historyItem.type === 'SEND') {
@@ -55,6 +48,8 @@ const ActivityFlatList = ({
       swapTransaction,
       from,
       to,
+      currentStep,
+      status,
     } = item
     let transactionLabel, amountInNative, amountInFiat, transactionTime
 
@@ -112,7 +107,15 @@ const ActivityFlatList = ({
           <Text style={styles.status}>{`$${amountInFiat}`}</Text>
         </View>
         <View style={styles.col4}>
-          <ProgressCircle radius={17} current={2} total={totalSteps} />
+          {status === 'SUCCESS' ? (
+            <SuccessIcon />
+          ) : (
+            <ProgressCircle
+              radius={17}
+              current={currentStep}
+              total={totalSteps}
+            />
+          )}
         </View>
         <View style={styles.col5}>
           <Pressable onPress={() => handleChevronPress(item)}>

@@ -43,13 +43,14 @@ export const useWalletState = () => {
     )
 
   useEffect(() => {
+    let totalBalance = new BigNumber(0)
+    let assetCounter = 0
+
     if (accounts) {
       setAssetCount(Object.keys(accounts).length)
       const accts = accounts?.[walletId!]?.[activeNetwork!]
-      let totalBalance = new BigNumber(0)
 
       if (accts && fiatRates) {
-        let assetCounter = 0
         let accountData: Array<AssetDataElementType> = []
 
         for (let account of accts) {
@@ -113,12 +114,6 @@ export const useWalletState = () => {
 
             totalBalance = BigNumber.sum(totalBalance, total)
 
-            assetCounter += Object.keys(account.balances!).reduce(
-              (count: number, asset: string) =>
-                account.balances![asset] > 0 ? ++count : count,
-              0,
-            )
-
             chainData.balance = assetsData.reduce(
               (
                 totalBal: BigNumber,
@@ -141,6 +136,9 @@ export const useWalletState = () => {
             )
 
             chainData.assets?.push(...assetsData)
+            assetCounter += account.assets.length
+          } else {
+            assetCounter += 1
           }
 
           accountData.push(chainData)
@@ -150,8 +148,8 @@ export const useWalletState = () => {
         setAssets(accountData)
       }
     }
-    setLoading(assetCount === 0)
-  }, [accounts, activeNetwork, assetCount, fees, fiatRates, walletId])
+    setLoading(assetCounter === 0)
+  }, [accounts, activeNetwork, fees, fiatRates, walletId])
 
   return { loading, assetCount, assets, totalFiatBalance, history, fiatRates }
 }

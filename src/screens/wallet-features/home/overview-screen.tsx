@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Fragment, useCallback, useEffect, useState } from 'react'
 import {
   ImageBackground,
   Pressable,
@@ -8,19 +9,18 @@ import {
 } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
-  faGreaterThan,
-  faExchange,
   faArrowDown,
   faArrowUp,
+  faExchange,
+  faGreaterThan,
 } from '@fortawesome/pro-light-svg-icons'
-import { Fragment, useCallback, useEffect, useState } from 'react'
 import { useWalletState } from '../../../hooks'
 import { formatFiat } from '../../../core/utils/coin-formatter'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ActionEnum, RootStackParamList, StackPayload } from '../../../types'
-import { populateWallet } from '../../../store/store'
+import { fetchSendUpdates, populateWallet } from '../../../store/store'
 
 type OverviewProps = StackScreenProps<RootStackParamList, 'OverviewScreen'>
 
@@ -74,7 +74,9 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   )
 
   useEffect(() => {
-    populateWallet()
+    populateWallet().then(() => {
+      fetchSendUpdates()
+    })
   }, [])
 
   return (

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../../types'
 import TransactionDetails from '../../../components/transaction-details'
@@ -7,6 +7,7 @@ import { chains, unitToCurrency } from '@liquality/cryptoassets'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { formatDate } from '../../../utils'
 import ProgressCircle from '../../../components/animations/progress-circle'
+import SuccessIcon from '../../../assets/icons/success-icon.svg'
 
 type SendConfirmationScreenProps = StackScreenProps<
   RootStackParamList,
@@ -22,7 +23,12 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
     value: amount,
     feePrice,
     confirmations = 0,
+    status,
   } = transaction?.sendTransaction!
+
+  const handleTransactionSpeedUp = () => {
+    //TODO display gas fee selector
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -35,11 +41,15 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
             } confirmations`}
           </Text>
         </View>
-        <ProgressCircle
-          radius={17}
-          current={confirmations}
-          total={chains[cryptoassets[from].chain].safeConfirmations}
-        />
+        {status === 'SUCCESS' ? (
+          <SuccessIcon />
+        ) : (
+          <ProgressCircle
+            radius={17}
+            current={confirmations}
+            total={chains[cryptoassets[from].chain].safeConfirmations}
+          />
+        )}
       </View>
       <View style={styles.block}>
         <Text style={styles.label}>TIME</Text>
@@ -55,15 +65,23 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
             ).toNumber()} ${transaction?.from}`}
         </Text>
       </View>
-      <View style={styles.border}>
-        <Text style={styles.label}>NETWORK SPEED/FEE</Text>
-        <Text style={styles.content}>
-          {`${transaction?.from} Fee: ${feePrice}x ${
-            chains[cryptoassets[transaction?.from].chain].fees.unit
-          }`}
-        </Text>
+      <View style={[styles.border, styles.row]}>
+        <View>
+          <Text style={styles.label}>NETWORK SPEED/FEE</Text>
+          <Text style={styles.content}>
+            {`${transaction?.from} Fee: ${feePrice}x ${
+              chains[cryptoassets[transaction?.from].chain].fees.unit
+            }`}
+          </Text>
+        </View>
+        <Pressable onPress={handleTransactionSpeedUp}>
+          <Text style={styles.link}>Speed Up</Text>
+        </Pressable>
       </View>
-      <TransactionDetails historyItem={transaction!} />
+      <TransactionDetails
+        type="SEND"
+        hash={transaction.sendTransaction?.hash}
+      />
     </ScrollView>
   )
 }
@@ -103,6 +121,13 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 12,
     color: '#646F85',
+  },
+  link: {
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 12,
+    fontWeight: '500',
+    lineHeight: 18,
+    color: '#9D4DFA',
   },
 })
 

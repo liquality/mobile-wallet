@@ -1,8 +1,13 @@
 import { BigNumber } from '@liquality/types'
-import { unitToCurrency, assets } from '@liquality/cryptoassets'
+import {
+  unitToCurrency,
+  assets,
+  isEthereumChain,
+} from '@liquality/cryptoassets'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
 
 export const VALUE_DECIMALS = 6
+BigNumber.config({ EXPONENTIAL_AT: 1e9 })
 
 //TODO It is not clear how we should format amounts
 export const dp = (amount: number, coin: string): BigNumber => {
@@ -67,4 +72,13 @@ export const formatFiat = (amount: BigNumber | number): string => {
   }
 
   return amount.toFormat(2, BigNumber.ROUND_CEIL)
+}
+
+export const gasUnitToCurrency = (
+  asset: string,
+  amount: BigNumber,
+): BigNumber => {
+  return isEthereumChain(assets[asset].chain)
+    ? new BigNumber(amount).dividedBy(1e9)
+    : amount
 }

@@ -86,6 +86,10 @@ const SendConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     return `${hours}:${remainingMinutes}hr`
   }
 
+  const handleSpeedUpTransaction = () => {
+    //display gas fee selector
+  }
+
   useEffect(() => {
     setCompleted(expiresAt - Date.now() <= 0)
   }, [expiresAt])
@@ -101,8 +105,8 @@ const SendConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.label}>STATUS</Text>
           <Text style={styles.content}>{status}</Text>
         </View>
-        <Pressable>
-          <Text style={[styles.textButton, styles.link]}>Speed-up</Text>
+        <Pressable onPress={handleSpeedUpTransaction}>
+          <Text style={[styles.textButton, styles.link]}>Speed Up</Text>
         </Pressable>
         <ProgressCircle radius={17} current={2} total={4} />
       </View>
@@ -170,7 +174,11 @@ const SendConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           {`${to} Fee: ${fee} ${chains[cryptoassets[to].chain].fees.unit}`}
         </Text>
       </View>
-      <TransactionDetails />
+      <TransactionDetails
+        type="SWAP"
+        id={transaction.id}
+        hash={transaction.fromFundHash}
+      />
       <View>
         <Pressable
           style={styles.expandable}

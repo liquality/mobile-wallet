@@ -124,7 +124,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
         <TextInput
           style={styles.sendInput}
           placeholder={'Search for a Currency'}
-          keyboardType={'numeric'}
+          keyboardType={'ascii-capable'}
           onChangeText={searchInput.onChangeText}
           onEndEditing={filterByTerm}
           value={searchInput.value}

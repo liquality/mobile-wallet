@@ -28,6 +28,7 @@ const ProgressCircle: FC<ProgressCircleProps> = (props) => {
 
   useEffect(() => {
     const progress = (2 * PI * (radius - 2) * (total - current)) / total
+    offset.value = 0
     offset.value = withTiming(progress, {
       easing: Easing.inOut(Easing.ease),
     })
@@ -56,11 +57,10 @@ const ProgressCircle: FC<ProgressCircleProps> = (props) => {
         />
         <Text
           x={radius}
-          y={radius}
+          y={radius + 4}
           fontFamily="Montserrat-Regular"
           fontWeight="200"
           fontSize={10}
-          alignmentBaseline="center"
           textAnchor="middle"
           verticalAlign="center"
           stroke="#000D35">{`${current}/${total}`}</Text>
