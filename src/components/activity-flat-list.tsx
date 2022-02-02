@@ -1,4 +1,11 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import {
+  Alert,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   faChevronRight,
@@ -13,14 +20,15 @@ import { HistoryItem } from '@liquality/core/dist/types'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import ProgressCircle from './animations/progress-circle'
 import { formatDate } from '../utils'
-import { cryptoToFiat } from '../core/utils/coin-formatter'
+import { cryptoToFiat, dpUI } from '../core/utils/coin-formatter'
 import SuccessIcon from '../assets/icons/success-icon.svg'
+import { BigNumber } from '@liquality/types'
 
 const ActivityFlatList = ({
   navigate,
   children,
 }: {
-  navigate: (...args: unknown[]) => void
+  navigate: (...args: any[]) => void
   children: React.ReactElement
 }) => {
   const { history = [], fiatRates } = useWalletState()
@@ -56,10 +64,15 @@ const ActivityFlatList = ({
     if (type === 'SEND') {
       transactionLabel = `Send ${from}`
       amountInNative = sendTransaction?.value
-      amountInFiat = cryptoToFiat(
-        unitToCurrency(cryptoassets[from], sendTransaction?.value).toNumber(),
-        fiatRates[from],
-      )
+      if (!sendTransaction?.value || !fiatRates) {
+        Alert.alert('send transaction empty')
+      } else {
+        amountInFiat = cryptoToFiat(
+          unitToCurrency(cryptoassets[from], sendTransaction?.value).toNumber(),
+          fiatRates[from],
+        )
+      }
+
       transactionTime = startTime
     } else if (type === 'SWAP') {
       transactionLabel = `${from} to ${to}`
@@ -104,7 +117,9 @@ const ActivityFlatList = ({
                 amountInNative,
               ).toNumber()} ${from}`}
           </Text>
-          <Text style={styles.status}>{`$${amountInFiat}`}</Text>
+          <Text style={styles.status}>
+            {amountInFiat && `$${dpUI(new BigNumber(amountInFiat), 2)}`}
+          </Text>
         </View>
         <View style={styles.col4}>
           {status === 'SUCCESS' ? (

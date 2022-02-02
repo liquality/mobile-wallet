@@ -36,9 +36,14 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
         <View>
           <Text style={styles.label}>STATUS</Text>
           <Text style={styles.content}>
-            {`Pending ${
-              chains[cryptoassets[from].chain].safeConfirmations - confirmations
-            } confirmations`}
+            {status === 'SUCCESS'
+              ? `Completed / ${
+                  chains[cryptoassets[from].chain].safeConfirmations
+                } confirmations`
+              : `Pending / ${
+                  chains[cryptoassets[from].chain].safeConfirmations -
+                  confirmations
+                } confirmations`}
           </Text>
         </View>
         {status === 'SUCCESS' ? (
@@ -74,9 +79,11 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
             }`}
           </Text>
         </View>
-        <Pressable onPress={handleTransactionSpeedUp}>
-          <Text style={styles.link}>Speed Up</Text>
-        </Pressable>
+        {status !== 'SUCCESS' && (
+          <Pressable onPress={handleTransactionSpeedUp}>
+            <Text style={styles.link}>Speed Up</Text>
+          </Pressable>
+        )}
       </View>
       <TransactionDetails
         type="SEND"
@@ -88,6 +95,7 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#FFFFFF',
     paddingVertical: 15,
   },

@@ -205,9 +205,11 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (
       <View style={styles.sentInfo}>
         <Text style={styles.label}>{formatDate(historyItem.startTime)}</Text>
         <Text style={styles.label}>Started</Text>
-        <Pressable onPress={handleTransactionCancellation}>
-          <Text style={styles.link}>Cancel</Text>
-        </Pressable>
+        {historyItem.status !== 'SUCCESS' && (
+          <Pressable onPress={handleTransactionCancellation}>
+            <Text style={styles.link}>Cancel</Text>
+          </Pressable>
+        )}
       </View>
 
       {statuses.map((item, index) => {
@@ -230,13 +232,11 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (
               {index === 0 && (
                 <>
                   <View style={styles.start} />
-                  <Separator
-                    completed={item.step <= historyItem.currentStep - 1}
-                  />
+                  <Separator completed={item.step <= historyItem.currentStep} />
                 </>
               )}
-              <Step completed={item.step <= historyItem.currentStep - 1} />
-              <Separator completed={item.step <= historyItem.currentStep - 1} />
+              <Step completed={item.step <= historyItem.currentStep} />
+              <Separator completed={item.step <= historyItem.currentStep} />
               {index === statuses.length - 1 && <View style={styles.start} />}
             </View>
             {index % 2 === 1 ? (
