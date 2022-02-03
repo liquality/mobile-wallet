@@ -5,6 +5,7 @@ import Animated, {
   useSharedValue,
   withTiming,
   Easing,
+  withRepeat,
 } from 'react-native-reanimated'
 
 type ProgressCircleProps = {
@@ -28,10 +29,14 @@ const ProgressCircle: FC<ProgressCircleProps> = (props) => {
 
   useEffect(() => {
     const progress = (2 * PI * (radius - 2) * (total - current)) / total
-    offset.value = 0
-    offset.value = withTiming(progress, {
-      easing: Easing.inOut(Easing.ease),
-    })
+    offset.value = withRepeat(
+      withTiming(progress, {
+        duration: 500,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+      }),
+      -1,
+      false,
+    )
   }, [PI, current, offset, radius, total])
 
   return (

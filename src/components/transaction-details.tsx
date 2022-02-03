@@ -172,7 +172,7 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (
     if (historyItems.length) {
       setHistoryItem(historyItems[0])
     }
-    let transactionStatuses = getSwapStatuses(SwapProvidersEnum.LIQUALITY)
+    let transactionStatuses
     if (type === 'SWAP') {
       transactionStatuses = getSwapStatuses(SwapProvidersEnum.LIQUALITY)
     } else if (type === 'SEND') {
