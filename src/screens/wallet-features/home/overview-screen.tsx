@@ -20,7 +20,7 @@ import AssetFlatList from '../../../components/overview/asset-flat-list'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ActionEnum, RootStackParamList, StackPayload } from '../../../types'
-import { fetchSendUpdates, populateWallet } from '../../../store/store'
+import { fetchTransactionUpdates, populateWallet } from '../../../store/store'
 
 type OverviewProps = StackScreenProps<RootStackParamList, 'OverviewScreen'>
 
@@ -75,7 +75,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
 
   useEffect(() => {
     populateWallet().then(() => {
-      fetchSendUpdates()
+      fetchTransactionUpdates()
     })
   }, [])
 

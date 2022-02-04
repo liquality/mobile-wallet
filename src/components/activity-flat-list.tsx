@@ -15,7 +15,7 @@ import {
 } from '@fortawesome/pro-light-svg-icons'
 
 import * as React from 'react'
-import { useWalletState } from '../hooks'
+import { useAppSelector } from '../hooks'
 import { HistoryItem } from '@liquality/core/dist/types'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import ProgressCircle from './animations/progress-circle'
@@ -31,12 +31,15 @@ const ActivityFlatList = ({
   navigate: (...args: any[]) => void
   children: React.ReactElement
 }) => {
-  const { history = [], fiatRates } = useWalletState()
+  const { history = [], fiatRates } = useAppSelector((state) => ({
+    fiatRates: state.fiatRates,
+    history: state.history,
+  }))
 
   const handleChevronPress = (historyItem: HistoryItem) => {
     if (historyItem.type === 'SWAP') {
       navigate('SwapConfirmationScreen', {
-        swapTransactionConfirmation: historyItem,
+        swapTransactionConfirmation: historyItem.swapTransaction,
         screenTitle: `Swap ${historyItem.from} to ${historyItem.to} Details`,
       })
     } else if (historyItem.type === 'SEND') {

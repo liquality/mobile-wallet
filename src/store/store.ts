@@ -146,6 +146,9 @@ export const populateWallet = async () => {
     .then(() => {
       wallet.store(store.getState())
     })
+    .catch((error) => {
+      Alert.alert(`populateWallet: ${error}`)
+    })
 }
 /**
  * A dispatch action that restores/decrypts the wallet
@@ -155,14 +158,20 @@ export const restoreWallet = async (password: string): Promise<StateType> => {
   return await wallet.restore(password)
 }
 
-export const fetchSendUpdates = async () => {
+export const fetchTransactionUpdates = async () => {
   const activeNetwork = store.getState().activeNetwork
   if (!activeNetwork || !store) {
     return
   }
 
   const historyItems =
-    store?.getState()?.history?.filter((item) => item.type === 'SEND') || []
+    store
+      ?.getState()
+      ?.history?.filter(
+        (item) =>
+          (item.type === 'SEND' && item.status !== 'SUCCESS') ||
+          (item.type === 'SWAP' && item.status !== 'SUCCESS'),
+      ) || []
 
   for (const item of historyItems) {
     const account = await wallet.getAccount(

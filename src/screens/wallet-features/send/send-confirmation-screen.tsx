@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../../types'
@@ -8,6 +8,8 @@ import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { formatDate } from '../../../utils'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import SuccessIcon from '../../../assets/icons/success-icon.svg'
+import { useAppSelector } from '../../../hooks'
+import { HistoryItem } from '@liquality/core/dist/types'
 
 type SendConfirmationScreenProps = StackScreenProps<
   RootStackParamList,
@@ -19,16 +21,26 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
 }) => {
   const transaction = route.params.sendTransactionConfirmation!
   const { from, startTime } = transaction
-  const {
-    value: amount,
-    feePrice,
-    confirmations = 0,
-    status,
-  } = transaction?.sendTransaction!
+  const { value: amount, feePrice } = transaction?.sendTransaction!
+  const [historyItem, setHistoryItem] = useState<HistoryItem>(transaction)
+  const { history = [] } = useAppSelector((state) => ({
+    history: state.history,
+  }))
 
   const handleTransactionSpeedUp = () => {
     //TODO display gas fee selector
   }
+
+  useEffect(() => {
+    const historyItems = history.filter(
+      (item) =>
+        item.type === 'SEND' &&
+        item.sendTransaction?.hash === transaction.sendTransaction?.hash,
+    )
+    if (historyItems.length > 0) {
+      setHistoryItem(historyItems[0])
+    }
+  }, [history, transaction.sendTransaction?.hash])
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -36,22 +48,22 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
         <View>
           <Text style={styles.label}>STATUS</Text>
           <Text style={styles.content}>
-            {status === 'SUCCESS'
+            {historyItem.status === 'SUCCESS'
               ? `Completed / ${
                   chains[cryptoassets[from].chain].safeConfirmations
                 } confirmations`
               : `Pending / ${
                   chains[cryptoassets[from].chain].safeConfirmations -
-                  confirmations
+                  (historyItem?.sendTransaction?.confirmations || 0)
                 } confirmations`}
           </Text>
         </View>
-        {status === 'SUCCESS' ? (
+        {historyItem.status === 'SUCCESS' ? (
           <SuccessIcon />
         ) : (
           <ProgressCircle
             radius={17}
-            current={confirmations}
+            current={historyItem.sendTransaction?.confirmations || 0}
             total={chains[cryptoassets[from].chain].safeConfirmations}
           />
         )}
@@ -79,16 +91,13 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
             }`}
           </Text>
         </View>
-        {status !== 'SUCCESS' && (
+        {historyItem.status !== 'SUCCESS' && (
           <Pressable onPress={handleTransactionSpeedUp}>
             <Text style={styles.link}>Speed Up</Text>
           </Pressable>
         )}
       </View>
-      <TransactionDetails
-        type="SEND"
-        hash={transaction.sendTransaction?.hash}
-      />
+      <TransactionDetails type="SEND" historyItem={historyItem} />
     </ScrollView>
   )
 }

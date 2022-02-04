@@ -26,6 +26,7 @@ import {
 } from '../../../core/utils/coin-formatter'
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
+import { assets as cryptoassets } from '@liquality/cryptoassets'
 
 const useInputState = (
   initialValue: string,
@@ -243,7 +244,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
               />
             </View>
             <View style={styles.asset}>
-              <AssetIcon asset={code} />
+              <AssetIcon asset={code} chain={cryptoassets[code].chain} />
               <Text style={styles.assetName}>{code}</Text>
             </View>
           </View>
@@ -274,7 +275,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
                 returnKeyType="done"
               />
               <Pressable onPress={handleQRCodeBtnPress}>
-                <FontAwesomeIcon icon={faQrcode} size={45} />
+                <FontAwesomeIcon icon={faQrcode} size={25} />
               </Pressable>
             </View>
           </View>
