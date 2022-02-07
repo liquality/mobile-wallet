@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Fragment, useCallback, useEffect, useState } from 'react'
 import {
   ImageBackground,
   Pressable,
@@ -8,37 +9,18 @@ import {
 } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
-  faExchange,
   faArrowDown,
   faArrowUp,
-} from '@fortawesome/pro-regular-svg-icons'
-import { faGreaterThan } from '@fortawesome/pro-light-svg-icons'
-import { Fragment, useCallback, useState } from 'react'
-import { useWalletState } from '../../hooks'
-import { formatFiat } from '../../core/utils/coin-formatter'
-import AssetFlatList from '../../components/asset-flat-list'
-import ActivityFlatList, {
-  ActivityDataElementType,
-} from '../../components/activity-flat-list'
+  faExchange,
+  faGreaterThan,
+} from '@fortawesome/pro-light-svg-icons'
+import { useWalletState } from '../../../hooks'
+import { formatFiat } from '../../../core/utils/coin-formatter'
+import AssetFlatList from '../../../components/overview/asset-flat-list'
+import ActivityFlatList from '../../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
-import { ActionEnum, RootStackParamList, StackPayload } from '../../types'
-
-const activities: Array<ActivityDataElementType> = [
-  {
-    id: '1',
-    transaction: 'BTC to DAI',
-    time: '4/28/2020, 3:34pm',
-    amount: 0.1234,
-    status: 'Locking ETH',
-  },
-  {
-    id: '2',
-    transaction: 'BTC to ETH',
-    time: '4/28/2020, 3:34pm',
-    amount: 0.1234,
-    status: 'Locking ETH',
-  },
-]
+import { ActionEnum, RootStackParamList, StackPayload } from '../../../types'
+import { fetchTransactionUpdates, populateWallet } from '../../../store/store'
 
 type OverviewProps = StackScreenProps<RootStackParamList, 'OverviewScreen'>
 
@@ -48,7 +30,6 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     ACTIVITY,
   }
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
-  const [activityData] = useState<Array<ActivityDataElementType>>(activities)
   const { assets, assetCount, totalFiatBalance, loading } = useWalletState()
 
   const handleSendBtnPress = useCallback(() => {
@@ -74,16 +55,35 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
 
   const onAssetSelected = useCallback(
     (params: StackPayload) => {
-      navigation.navigate('AssetScreen', params)
+      const fromAsset = params.assetData
+      let toAsset = params.assetData
+      if (fromAsset?.code === 'ETH') {
+        toAsset = assets.filter((item) => item.code === 'BTC')[0]
+      } else {
+        toAsset = assets.filter((item) => item.code === 'ETH')[0]?.assets?.[0]
+      }
+      navigation.navigate('AssetScreen', {
+        ...params,
+        swapAssetPair: {
+          fromAsset,
+          toAsset,
+        },
+      })
     },
-    [navigation],
+    [assets, navigation],
   )
+
+  useEffect(() => {
+    populateWallet().then(() => {
+      fetchTransactionUpdates()
+    })
+  }, [])
 
   return (
     <View style={styles.container}>
       <ImageBackground
         style={styles.overviewBlock}
-        source={require('../../assets/bg/action-block-bg.png')}>
+        source={require('../../../assets/bg/action-block-bg.png')}>
         {loading && <Text style={styles.loading}>Loading...</Text>}
         {!loading && (
           <Fragment>
@@ -156,7 +156,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
       <View style={styles.contentBlock}>
         {selectedView === ViewKind.ACTIVITY &&
           (assets.length > 0 ? (
-            <ActivityFlatList activities={activityData}>
+            <ActivityFlatList navigate={navigation.navigate}>
               <View style={styles.activityActionBar}>
                 <Pressable style={styles.activityBtns}>
                   <FontAwesomeIcon

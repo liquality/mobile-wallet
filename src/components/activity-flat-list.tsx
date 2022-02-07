@@ -1,57 +1,151 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import {
+  Alert,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faExchange } from '@fortawesome/pro-duotone-svg-icons'
-import { faGreaterThan } from '@fortawesome/pro-light-svg-icons'
+import {
+  faChevronRight,
+  faExchange,
+  faLongArrowUp,
+  faLongArrowDown,
+} from '@fortawesome/pro-light-svg-icons'
 
 import * as React from 'react'
-import ProgressCircle from './progress-circle'
-
-export type ActivityDataElementType = {
-  id: string
-  transaction: string
-  time: string
-  amount: number
-  status: string
-}
+import { useAppSelector } from '../hooks'
+import { HistoryItem } from '@liquality/core/dist/types'
+import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import ProgressCircle from './animations/progress-circle'
+import { formatDate } from '../utils'
+import { cryptoToFiat, dpUI } from '../core/utils/coin-formatter'
+import SuccessIcon from '../assets/icons/success-icon.svg'
+import { BigNumber } from '@liquality/types'
 
 const ActivityFlatList = ({
-  activities,
+  navigate,
+  selectedAsset,
   children,
 }: {
-  activities: Array<ActivityDataElementType>
+  navigate: (...args: any[]) => void
+  selectedAsset?: string
   children: React.ReactElement
 }) => {
-  const renderActivity = ({ item }: { item: ActivityDataElementType }) => {
-    const { transaction, amount, time, status } = item
+  const { history = [], fiatRates } = useAppSelector((state) => ({
+    fiatRates: state.fiatRates,
+    history: selectedAsset
+      ? state.history?.filter((item) => item.from === selectedAsset)
+      : state.history,
+  }))
+
+  const handleChevronPress = (historyItem: HistoryItem) => {
+    if (historyItem.type === 'SWAP') {
+      navigate('SwapConfirmationScreen', {
+        swapTransactionConfirmation: historyItem.swapTransaction,
+        screenTitle: `Swap ${historyItem.from} to ${historyItem.to} Details`,
+      })
+    } else if (historyItem.type === 'SEND') {
+      navigate('SendConfirmationScreen', {
+        sendTransactionConfirmation: historyItem,
+        screenTitle: `Send ${historyItem.from} Details`,
+      })
+    }
+  }
+
+  const renderActivity = ({ item }: { item: HistoryItem }) => {
+    const {
+      type,
+      totalSteps,
+      startTime,
+      sendTransaction,
+      swapTransaction,
+      from,
+      to,
+      currentStep,
+      status,
+    } = item
+    let transactionLabel, amountInNative, amountInFiat, transactionTime
+
+    if (type === 'SEND') {
+      transactionLabel = `Send ${from}`
+      amountInNative = sendTransaction?.value
+      if (!sendTransaction?.value || !fiatRates) {
+        Alert.alert('send transaction empty')
+      } else {
+        amountInFiat = cryptoToFiat(
+          unitToCurrency(cryptoassets[from], sendTransaction?.value).toNumber(),
+          fiatRates[from],
+        )
+      }
+
+      transactionTime = startTime
+    } else if (type === 'SWAP') {
+      transactionLabel = `${from} to ${to}`
+      amountInNative = swapTransaction?.fromAmount
+      amountInFiat = swapTransaction?.fromAmountUsd
+      transactionTime = startTime
+    }
+
     return (
       <View style={styles.row} key={item.id}>
         <View style={styles.col1}>
-          <FontAwesomeIcon
-            size={23}
-            icon={faExchange}
-            secondaryColor={'#FF287D'}
-            color={'#2CD2CF'}
-          />
+          {type === 'SWAP' && (
+            <FontAwesomeIcon
+              size={23}
+              icon={faExchange}
+              secondaryColor={'#FF287D'}
+              color={'#2CD2CF'}
+            />
+          )}
+          {type === 'SEND' && (
+            <FontAwesomeIcon size={23} icon={faLongArrowUp} color={'#FF287D'} />
+          )}
+          {type === 'RECEIVE' && (
+            <FontAwesomeIcon
+              size={23}
+              icon={faLongArrowDown}
+              color={'#2CD2CF'}
+            />
+          )}
         </View>
         <View style={styles.col2}>
-          <Text style={styles.transaction}>{transaction}</Text>
-          <Text style={styles.time}>{time}</Text>
+          <Text style={styles.transaction}>{transactionLabel}</Text>
+          <Text style={styles.time}>
+            {transactionTime && formatDate(transactionTime)}
+          </Text>
         </View>
         <View style={styles.col3}>
-          <Text style={styles.amount}>{amount}</Text>
-          <Text style={styles.status}>{status}</Text>
+          <Text style={styles.amount}>
+            {amountInNative &&
+              `${unitToCurrency(
+                cryptoassets[from],
+                amountInNative,
+              ).toNumber()} ${from}`}
+          </Text>
+          <Text style={styles.status}>
+            {amountInFiat && `$${dpUI(new BigNumber(amountInFiat), 2)}`}
+          </Text>
         </View>
         <View style={styles.col4}>
-          <ProgressCircle
-            size={35}
-            completed={2}
-            color={'#D5D8DD'}
-            secondaryColor={'#2CD2CF'}
-          />
+          {status === 'SUCCESS' ? (
+            <SuccessIcon />
+          ) : (
+            <ProgressCircle
+              radius={17}
+              current={currentStep}
+              total={totalSteps}
+            />
+          )}
         </View>
         <View style={styles.col5}>
-          <Pressable>
-            <FontAwesomeIcon size={20} icon={faGreaterThan} color={'#A8AEB7'} />
+          <Pressable onPress={() => handleChevronPress(item)}>
+            <FontAwesomeIcon
+              size={20}
+              icon={faChevronRight}
+              color={'#A8AEB7'}
+            />
           </Pressable>
         </View>
       </View>
@@ -60,7 +154,7 @@ const ActivityFlatList = ({
 
   return (
     <FlatList
-      data={activities}
+      data={history}
       renderItem={renderActivity}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={children}
@@ -72,6 +166,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#D9DFE5',
     paddingVertical: 10,
@@ -90,7 +185,7 @@ const styles = StyleSheet.create({
     flex: 0.4,
     justifyContent: 'center',
     alignItems: 'flex-end',
-    marginRight: 5,
+    paddingRight: 15,
   },
   col4: {
     flex: 0.1,

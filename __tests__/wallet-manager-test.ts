@@ -1,5 +1,5 @@
 import StorageManager from '../src/core/storage-manager'
-import EncryptionManager from '../src/core/encryption-manager'
+import MockEncryptionManager from '../__mocks__/mock-encryption-manager'
 import Wallet from '@liquality/core/dist/wallet'
 import { Config } from '@liquality/core/dist/config'
 import { NetworkEnum } from '@liquality/core/dist/types'
@@ -25,7 +25,7 @@ describe('WalletManagerTest', () => {
   const MNEMONIC = process.env.MNEMONIC!
   let wallet = new Wallet(
     new StorageManager('@liqualityStore', []),
-    new EncryptionManager(),
+    new MockEncryptionManager(),
     new Config(process.env.INFURA_API_KEY),
   )
 
@@ -38,7 +38,7 @@ describe('WalletManagerTest', () => {
   beforeEach(() => {
     wallet = new Wallet(
       new StorageManager('@liqualityStore', []),
-      new EncryptionManager(),
+      new MockEncryptionManager(),
       new Config(process.env.INFURA_API_KEY),
     )
   })
@@ -61,7 +61,7 @@ describe('WalletManagerTest', () => {
   it('should have a positive balance for two assets', async () => {
     wallet = new Wallet(
       new StorageManager('@liqualityStore', []),
-      new EncryptionManager(),
+      new MockEncryptionManager(),
       new CustomConfig(process.env.INFURA_API_KEY),
     )
     const walletState = await wallet.build(PASSWORD, MNEMONIC, false)
@@ -75,7 +75,7 @@ describe('WalletManagerTest', () => {
   it('should have a positive balance for rsk/rootstock assets', async () => {
     wallet = new Wallet(
       new StorageManager('@liqualityStore', []),
-      new EncryptionManager(),
+      new MockEncryptionManager(),
       new CustomConfig(process.env.INFURA_API_KEY),
     )
 

@@ -3,12 +3,13 @@ import { BigNumber } from '@liquality/types'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { NetworkEnum } from '../core/types'
+import { HistoryItem, SwapTransactionType } from '@liquality/core/dist/types'
 
 export type AssetDataElementType = {
   id: string
   name: string
-  code?: string
-  chain?: ChainId
+  code: string
+  chain: ChainId
   address?: string
   balance?: BigNumber
   balanceInUSD?: BigNumber
@@ -17,6 +18,20 @@ export type AssetDataElementType = {
   showAssets?: boolean
   fees?: FeeDetails
   activeNetwork?: NetworkEnum
+}
+
+export type SwapAssetPairType = {
+  fromAsset?: AssetDataElementType
+  toAsset?: AssetDataElementType
+}
+
+export type SwapInfoType = {
+  fromAsset: AssetDataElementType
+  toAsset: AssetDataElementType
+  fromAmount: BigNumber
+  toAmount: BigNumber
+  fromNetworkFee: BigNumber
+  toNetworkFee: BigNumber
 }
 
 export type StackPayload = {
@@ -38,6 +53,10 @@ export type StackPayload = {
     destinationAddress?: string
     asset?: string
   }
+  sendTransactionConfirmation?: HistoryItem
+  swapAssetPair?: SwapAssetPairType
+  swapTransaction?: SwapInfoType
+  swapTransactionConfirmation?: Partial<SwapTransactionType>
   action?: ActionEnum
 }
 
@@ -59,8 +78,10 @@ export type RootStackParamList = {
   SendScreen: StackPayload
   SendReviewScreen: StackPayload
   SendConfirmationScreen: StackPayload
+  SwapConfirmationScreen: StackPayload
   CustomFeeScreen: StackPayload
   SwapScreen: StackPayload
+  SwapReviewScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
 }
@@ -89,7 +110,7 @@ export enum DarkModeEnum {
 }
 
 export enum ActionEnum {
-  SEND,
-  SWAP,
-  RECEIVE,
+  SEND = 'SEND',
+  SWAP = 'SWAP',
+  RECEIVE = 'RECEIVE',
 }

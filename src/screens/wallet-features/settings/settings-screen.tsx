@@ -7,24 +7,24 @@ import {
   Text,
   View,
 } from 'react-native'
-import { Picker } from '@react-native-picker/picker'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faAngleDown, faAngleUp } from '@fortawesome/pro-light-svg-icons'
-import { NetworkEnum } from '../../core/types'
-import LiqualityButton from '../../components/ui/button'
-import AssetIcon from '../../components/asset-icon'
-import SettingsSwitch from '../../components/ui/switch'
-import { DarkModeEnum } from '../../types'
+// import { Picker } from '@react-native-picker/picker'
+// import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+// import { faAngleDown, faAngleUp } from '@fortawesome/pro-light-svg-icons'
+import { NetworkEnum } from '../../../core/types'
+import LiqualityButton from '../../../components/ui/button'
+// import AssetIcon from '../../../components/asset-icon'
+import SettingsSwitch from '../../../components/ui/switch'
+import { DarkModeEnum } from '../../../types'
 import { useDispatch } from 'react-redux'
-import { useAppSelector } from '../../hooks'
-import { ChainId } from '@liquality/cryptoassets'
-import WhatsNew from '../../components/ui/whats-new'
+import { useAppSelector } from '../../../hooks'
+// import { ChainId } from '@liquality/cryptoassets'
+import WhatsNew from '../../../components/ui/whats-new'
 
 const SettingsScreen = () => {
   const {
     activeNetwork,
-    injectEthereum = false,
-    injectEthereumChain,
+    // injectEthereum = false,
+    // injectEthereumChain,
     analytics,
     notifications = false,
     version = 'Version 0.2.1',
@@ -37,21 +37,21 @@ const SettingsScreen = () => {
     version: state.version,
   }))
   const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(false)
-  const [shouldSyncDevices, setShouldSyncDevices] = useState(false)
+  // const [shouldSyncDevices, setShouldSyncDevices] = useState(false)
   const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
-  const [dappsNetwork, setDappsNetwork] = useState(injectEthereumChain)
-  const [isPickerVisible, setIsPickerVisible] = useState<boolean>(false)
+  // const [dappsNetwork, setDappsNetwork] = useState(injectEthereumChain)
+  // const [isPickerVisible, setIsPickerVisible] = useState<boolean>(false)
   const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
   const dispatch = useDispatch()
 
-  const toggleDefaultWallet = () => {
-    dispatch({
-      type: 'DEFAULT_WALLET_UPDATE',
-      payload: {
-        injectEthereum: !injectEthereum,
-      },
-    })
-  }
+  // const toggleDefaultWallet = () => {
+  //   dispatch({
+  //     type: 'DEFAULT_WALLET_UPDATE',
+  //     payload: {
+  //       injectEthereum: !injectEthereum,
+  //     },
+  //   })
+  // }
 
   const toggleAnalyticsOptin = () => {
     setIsAnalyticsEnabled(!isAnalyticsEnabled)
@@ -75,17 +75,17 @@ const SettingsScreen = () => {
     })
   }
 
-  const toggleDeviceSync = () => {
-    setShouldSyncDevices(true)
-  }
-
-  const handleNetworkBtnPress = () => {
-    setIsPickerVisible(!isPickerVisible)
-    dispatch({
-      type: 'ETHEREUM_CHAIN_UPDATE',
-      payload: { injectEthereumChain: dappsNetwork },
-    })
-  }
+  // const toggleDeviceSync = () => {
+  //   setShouldSyncDevices(true)
+  // }
+  //
+  // const handleNetworkBtnPress = () => {
+  //   setIsPickerVisible(!isPickerVisible)
+  //   dispatch({
+  //     type: 'ETHEREUM_CHAIN_UPDATE',
+  //     payload: { injectEthereumChain: dappsNetwork },
+  //   })
+  // }
 
   const toggleNetwork = (network: NetworkEnum) => {
     dispatch({
@@ -105,34 +105,34 @@ const SettingsScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <View style={styles.row}>
-          <View style={styles.action}>
-            <Text style={styles.label}>Default Wallet (Web3)</Text>
-            <SettingsSwitch
-              isFeatureEnabled={injectEthereum}
-              enableFeature={toggleDefaultWallet}
-            />
-          </View>
-          <Text style={styles.description}>
-            Set Liquality as the default dApp wallet. Other wallets cannot
-            interact with dApps while this is enabled.
-          </Text>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.action}>
-            <Text style={styles.label}>Network (Web3)</Text>
-            <Pressable style={styles.switchBtn} onPress={handleNetworkBtnPress}>
-              <AssetIcon asset={'ETH'} size={20} />
-              <Text style={styles.btnLabel}>{dappsNetwork}</Text>
-              <FontAwesomeIcon
-                icon={isPickerVisible ? faAngleUp : faAngleDown}
-              />
-            </Pressable>
-          </View>
-          <Text style={styles.description}>
-            Select which network should be used for dApps.
-          </Text>
-        </View>
+        {/*<View style={styles.row}>*/}
+        {/*  <View style={styles.action}>*/}
+        {/*    <Text style={styles.label}>Default Wallet (Web3)</Text>*/}
+        {/*    <SettingsSwitch*/}
+        {/*      isFeatureEnabled={injectEthereum}*/}
+        {/*      enableFeature={toggleDefaultWallet}*/}
+        {/*    />*/}
+        {/*  </View>*/}
+        {/*  <Text style={styles.description}>*/}
+        {/*    Set Liquality as the default dApp wallet. Other wallets cannot*/}
+        {/*    interact with dApps while this is enabled.*/}
+        {/*  </Text>*/}
+        {/*</View>*/}
+        {/*<View style={styles.row}>*/}
+        {/*  <View style={styles.action}>*/}
+        {/*    <Text style={styles.label}>Network (Web3)</Text>*/}
+        {/*    <Pressable style={styles.switchBtn} onPress={handleNetworkBtnPress}>*/}
+        {/*      <AssetIcon asset={'ETH'} size={20} />*/}
+        {/*      <Text style={styles.btnLabel}>{dappsNetwork}</Text>*/}
+        {/*      <FontAwesomeIcon*/}
+        {/*        icon={isPickerVisible ? faAngleUp : faAngleDown}*/}
+        {/*      />*/}
+        {/*    </Pressable>*/}
+        {/*  </View>*/}
+        {/*  <Text style={styles.description}>*/}
+        {/*    Select which network should be used for dApps.*/}
+        {/*  </Text>*/}
+        {/*</View>*/}
         <View style={styles.row}>
           <View style={styles.action}>
             <Text style={styles.label}>Analytics</Text>
@@ -172,18 +172,18 @@ const SettingsScreen = () => {
             Get informed about transaction status and funds received.
           </Text>
         </View>
-        <View style={styles.row}>
-          <View style={styles.action}>
-            <Text style={styles.label}>Sync Devices</Text>
-            <SettingsSwitch
-              isFeatureEnabled={shouldSyncDevices}
-              enableFeature={toggleDeviceSync}
-            />
-          </View>
-          <Text style={styles.description}>
-            Be up to date on all devices.which have access.
-          </Text>
-        </View>
+        {/*<View style={styles.row}>*/}
+        {/*  <View style={styles.action}>*/}
+        {/*    <Text style={styles.label}>Sync Devices</Text>*/}
+        {/*    <SettingsSwitch*/}
+        {/*      isFeatureEnabled={shouldSyncDevices}*/}
+        {/*      enableFeature={toggleDeviceSync}*/}
+        {/*    />*/}
+        {/*  </View>*/}
+        {/*  <Text style={styles.description}>*/}
+        {/*    Be up to date on all devices which have access.*/}
+        {/*  </Text>*/}
+        {/*</View>*/}
         <View style={styles.row}>
           <View style={styles.action}>
             <View>
@@ -196,7 +196,7 @@ const SettingsScreen = () => {
                     activeNetwork === NetworkEnum.Mainnet && styles.btnSelected,
                   ]}
                   onPress={() => toggleNetwork(NetworkEnum.Mainnet)}>
-                  <Text>Mainnet</Text>
+                  <Text style={[styles.label, styles.small]}>Mainnet</Text>
                 </Pressable>
                 <Pressable
                   style={[
@@ -205,7 +205,7 @@ const SettingsScreen = () => {
                     activeNetwork === NetworkEnum.Testnet && styles.btnSelected,
                   ]}
                   onPress={() => toggleNetwork(NetworkEnum.Testnet)}>
-                  <Text>Testnet</Text>
+                  <Text style={[styles.label, styles.small]}>Testnet</Text>
                 </Pressable>
               </View>
             </View>
@@ -219,7 +219,7 @@ const SettingsScreen = () => {
                     darkMode === DarkModeEnum.Light && styles.btnSelected,
                   ]}
                   onPress={() => setDarkMode(DarkModeEnum.Light)}>
-                  <Text>light</Text>
+                  <Text style={[styles.label, styles.small]}>light</Text>
                 </Pressable>
                 <Pressable
                   style={[
@@ -228,33 +228,33 @@ const SettingsScreen = () => {
                     darkMode === DarkModeEnum.Dark && styles.btnSelected,
                   ]}
                   onPress={() => setDarkMode(DarkModeEnum.Dark)}>
-                  <Text>dark</Text>
+                  <Text style={[styles.label, styles.small]}>dark</Text>
                 </Pressable>
               </View>
             </View>
           </View>
           <View style={styles.info}>
-            <Text style={styles.label}>{version}</Text>
+            <Text style={[styles.label, styles.version]}>{version}</Text>
             <Pressable onPress={() => setIsWhatsNewVisible(true)}>
               <Text style={[styles.label, styles.link]}>What's new</Text>
             </Pressable>
           </View>
         </View>
       </ScrollView>
-      {isPickerVisible && (
-        <View style={styles.pickerWrapper}>
-          <Picker
-            prompt={'Choose a Web3 Network'}
-            style={styles.picker}
-            mode={'dropdown'}
-            selectedValue={dappsNetwork}
-            onValueChange={(itemValue) => setDappsNetwork(itemValue)}>
-            {Object.keys(ChainId).map((item) => (
-              <Picker.Item key={item} label={item} value={item} />
-            ))}
-          </Picker>
-        </View>
-      )}
+      {/*{isPickerVisible && (*/}
+      {/*  <View style={styles.pickerWrapper}>*/}
+      {/*    <Picker*/}
+      {/*      prompt={'Choose a Web3 Network'}*/}
+      {/*      style={styles.picker}*/}
+      {/*      mode={'dropdown'}*/}
+      {/*      selectedValue={dappsNetwork}*/}
+      {/*      onValueChange={(itemValue) => setDappsNetwork(itemValue)}>*/}
+      {/*      {Object.keys(ChainId).map((item) => (*/}
+      {/*        <Picker.Item key={item} label={item} value={item} />*/}
+      {/*      ))}*/}
+      {/*    </Picker>*/}
+      {/*  </View>*/}
+      {/*)}*/}
       {isWhatsNewVisible && <WhatsNew onAction={setIsWhatsNewVisible} />}
     </View>
   )
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     borderWidth: 1,
-    paddingVertical: 5,
+    borderColor: '#D9DFE5',
     paddingHorizontal: 10,
   },
   leftBtn: {
@@ -309,12 +309,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F7F9',
   },
   link: {
+    fontSize: 14,
     color: '#9D4DFA',
+  },
+  version: {
+    fontSize: 14,
   },
   info: {
     flexDirection: 'row',
+    marginTop: 40,
   },
   description: {
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '300',
+    fontSize: 12,
+    lineHeight: 18,
     color: '#646F85',
   },
   switchBtn: {
@@ -340,6 +349,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     left: 0,
+  },
+  small: {
+    fontWeight: '300',
+    fontSize: 11,
+    lineHeight: 26,
+    color: '#1D1E21',
   },
 })
 

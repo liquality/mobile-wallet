@@ -1,40 +1,132 @@
-import React, { FC } from 'react'
-import { useInputState } from '../../hooks'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import React, { FC, useCallback, useEffect, useState } from 'react'
+import { useAppSelector, useInputState } from '../../hooks'
+import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
 import LiqualityButton from './button'
 import AssetIcon from '../asset-icon'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import Label from './label'
 import { chainDefaultColors } from '../../core/config'
+import { BigNumber } from '@liquality/types'
+import {
+  cryptoToFiat,
+  fiatToCrypto,
+  formatFiat,
+} from '../../core/utils/coin-formatter'
+import { SwapEventType } from '../../screens/wallet-features/swap/swap-screen'
 
 type AmountTextInputBlockProps = {
+  type: 'FROM' | 'TO'
   label: string
   chain: ChainId
   assetSymbol: string
-  setAmountInFiat: (...args: unknown[]) => void
-  setAmountInNative: (...args: unknown[]) => void
+  maximumValue?: BigNumber
+  minimumValue?: BigNumber
+  defaultAmount?: BigNumber
+  dispatch?: React.Dispatch<{
+    payload: SwapEventType
+    type: string
+  }>
 }
 
 const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
-  const { label, assetSymbol, chain, setAmountInNative, setAmountInFiat } =
-    props
-  const input = useInputState('')
+  const {
+    label,
+    assetSymbol,
+    chain,
+    maximumValue,
+    minimumValue,
+    dispatch,
+    type,
+  } = props
+  const { fiatRates } = useAppSelector((state) => ({
+    fiatRates: state.fiatRates,
+  }))
+  const { value, onChangeText } = useInputState('0')
   const color = chainDefaultColors[chain]
+  const [isAmountNative, setIsAmountNative] = useState<boolean>(true)
 
-  const handleEndEditing = () => {
-    setAmountInFiat(input.value)
-    setAmountInNative(input.value)
+  const handleToggleAmount = () => {
+    if (isAmountNative) {
+      handleTextChange(
+        cryptoToFiat(
+          new BigNumber(value).toNumber(),
+          fiatRates?.[assetSymbol] || 0,
+        ).toString(),
+      )
+    } else {
+      handleTextChange(
+        fiatToCrypto(
+          new BigNumber(value),
+          fiatRates?.[assetSymbol] || 0,
+        ).toString(),
+      )
+    }
+    setIsAmountNative(!isAmountNative)
   }
+
+  const updateAmount = useCallback(
+    (text: string): BigNumber => {
+      let newAmount = new BigNumber(text)
+      if (!isAmountNative) {
+        newAmount = fiatToCrypto(
+          new BigNumber(text),
+          fiatRates?.[assetSymbol] || 0,
+        )
+      }
+
+      if (dispatch) {
+        dispatch({
+          type: type === 'TO' ? 'TO_AMOUNT_UPDATED' : 'FROM_AMOUNT_UPDATED',
+          payload: {
+            [type === 'TO' ? 'toAmount' : 'fromAmount']: newAmount,
+          },
+        })
+      }
+      return newAmount
+    },
+    [assetSymbol, fiatRates, isAmountNative, dispatch, type],
+  )
+
+  const handleTextChange = useCallback(
+    (text: string) => {
+      onChangeText(text)
+      updateAmount(text)
+    },
+    [onChangeText, updateAmount],
+  )
+
+  useEffect(() => {
+    if (maximumValue && maximumValue.gt(0)) {
+      updateAmount(maximumValue.toString())
+      onChangeText(maximumValue.toString())
+    } else if (minimumValue && minimumValue.gt(0)) {
+      updateAmount(minimumValue.toString())
+      onChangeText(minimumValue.toString())
+    }
+  }, [onChangeText, maximumValue, minimumValue, updateAmount])
 
   return (
     <View style={styles.container}>
       <View style={[styles.row, styles.md3]}>
         <Label text={label} variant="strong" />
         <LiqualityButton
-          text={'0.00'}
-          action={() => ({})}
+          text={
+            isAmountNative
+              ? `$${formatFiat(
+                  cryptoToFiat(
+                    new BigNumber(value).toNumber(),
+                    fiatRates?.[assetSymbol] || 0,
+                  ),
+                )}`
+              : `${fiatToCrypto(
+                  new BigNumber(value),
+                  fiatRates?.[assetSymbol] || 0,
+                )} ${assetSymbol}`
+          }
+          action={handleToggleAmount}
           variant="small"
           type="plain"
+          contentType="numeric"
         />
       </View>
       <View style={styles.row}>
@@ -42,9 +134,9 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
           <TextInput
             style={[styles.font, styles.input, { color }]}
             keyboardType={'numeric'}
-            onChangeText={input.onChangeText}
-            onEndEditing={handleEndEditing}
-            value={input.value}
+            onChangeText={handleTextChange}
+            value={value}
+            placeholder={'0'}
             autoCorrect={false}
             returnKeyType="done"
           />
@@ -58,14 +150,13 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
+    width: Dimensions.get('screen').width - 40 - 25,
     marginVertical: 5,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    width: '100%',
   },
   md3: {
     width: '75%',
@@ -79,20 +170,20 @@ const styles = StyleSheet.create({
   },
   font: {
     fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
+    fontWeight: '400',
   },
   input: {
-    fontSize: 28,
+    fontSize: 25,
     textAlign: 'right',
-    lineHeight: 40,
-    height: 40,
+    lineHeight: 30,
+    height: 35,
     width: '100%',
     color: '#EAB300',
   },
   description: {
-    fontSize: 24,
+    fontSize: 25,
     color: '#1D1E21',
-    lineHeight: 24,
+    lineHeight: 25,
     height: 24,
     textAlign: 'left',
   },

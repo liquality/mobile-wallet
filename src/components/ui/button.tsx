@@ -1,13 +1,15 @@
 import React, { FC, useContext } from 'react'
-import { Pressable, StyleSheet, Text } from 'react-native'
+import { Pressable, StyleProp, StyleSheet, Text, ViewStyle } from 'react-native'
 import { ThemeContext } from '../../theme'
 
 type LiqualityButtonProps = {
   text: string
   variant: 'small' | 'medium' | 'large'
   type: 'plain' | 'positive' | 'negative'
-  children?: React.ReactElement
+  contentType?: 'numeric' | 'alphanumeric'
   action: (...args: unknown[]) => void
+  style?: StyleProp<ViewStyle>
+  children?: React.ReactElement
 }
 
 const LiqualityButton: FC<LiqualityButtonProps> = (props) => {
@@ -15,17 +17,27 @@ const LiqualityButton: FC<LiqualityButtonProps> = (props) => {
     text,
     variant = 'medium',
     type = 'positive',
+    contentType = 'alphanumeric',
     action,
+    style,
     children,
   } = props
   const theme = useContext(ThemeContext)
 
   return (
     <Pressable
-      style={[styles.actionBtn, styles[variant], styles[type]]}
+      style={[styles.actionBtn, styles[variant], styles[type], style]}
       onPress={action}>
       {children && children}
-      <Text style={[styles[type], theme.buttonText]}>{text}</Text>
+      <Text
+        style={[
+          styles[type],
+          contentType === 'alphanumeric'
+            ? theme.buttonText
+            : theme.buttonTextAmount,
+        ]}>
+        {text}
+      </Text>
     </Pressable>
   )
 }
@@ -53,6 +65,7 @@ const styles = StyleSheet.create({
   plain: {
     color: '#1D1E21',
     borderColor: '#D9DFE5',
+    fontWeight: '600',
   },
   positive: {
     color: '#FFFFFF',
@@ -61,15 +74,6 @@ const styles = StyleSheet.create({
   negative: {
     color: '#9D4DFA',
     backgroundColor: '#F8FAFF',
-  },
-  plainText: {
-    color: '#1D1E21',
-  },
-  positiveText: {
-    color: '#FFFFFF',
-  },
-  negativeText: {
-    color: '#9D4DFA',
   },
 })
 

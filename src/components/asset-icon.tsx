@@ -20,7 +20,7 @@ type AssetIconType = {
 //TODO this approach does not scale, refactor to a better one
 //TODO Match the name of the icon to the name of the asset and load icons dynamically
 const AssetIcon: FC<AssetIconType> = (props) => {
-  const SIZE = 32
+  const SIZE = 25
   const { chain, asset, size = SIZE } = props
 
   if (!asset && !chain) {
@@ -56,7 +56,7 @@ const AssetIcon: FC<AssetIconType> = (props) => {
     chain?.toLowerCase() === ChainId.Bitcoin
   ) {
     return <BTCIcon width={size} height={SIZE} style={styles.icon} />
-  } else if (chain?.toLowerCase() === 'ethereum') {
+  } else if (chain?.toLowerCase() === ChainId.Ethereum) {
     return <ETHIcon width={size} height={size} style={styles.icon} />
   } else {
     return <BlankIcon width={size} height={size} style={styles.icon} />

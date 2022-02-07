@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   Platform,
+  Dimensions,
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
@@ -43,6 +44,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
         <TextInput
           style={styles.missingWordText}
           autoCorrect={false}
+          keyboardType="ascii-capable"
           autoCapitalize={'none'}
           onChangeText={(text) => addSeedWord(text)}
           returnKeyType="done"
@@ -88,67 +90,71 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
       style={styles.container}
       source={require('../../assets/bg/bg.png')}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboard}>
+        behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+        style={[styles.keyboard, StyleSheet.absoluteFillObject]}>
         <Header showText={true} />
-        <View style={styles.prompt}>
+        <View style={[styles.prompt]}>
           <Text style={styles.promptText}>Unlock Wallet</Text>
           <Text style={styles.description}>
             Enter the seed phrase, in the same order saved when creating your
             wallet.
           </Text>
         </View>
-        <View style={styles.seedPhrase}>
-          <View style={styles.seedWordLengthOptions}>
-            <Pressable
-              onPress={() => setPhraseLength(12)}
-              style={[
-                styles.seedWordOptionAction,
-                styles.btnLeftSide,
-                seedPhraseLength === 12 && styles.optionActive,
-              ]}>
-              <Text style={styles.seedWordOptionText}>12 words</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => setPhraseLength(24)}
-              style={[
-                styles.seedWordOptionAction,
-                styles.btnRightSide,
-                seedPhraseLength === 24 && styles.optionActive,
-              ]}>
-              <Text style={styles.seedWordOptionText}>24 words</Text>
-            </Pressable>
+        <View style={styles.main}>
+          <View style={styles.seedPhrase}>
+            <View style={styles.seedWordLengthOptions}>
+              <Pressable
+                onPress={() => setPhraseLength(12)}
+                style={[
+                  styles.seedWordOptionAction,
+                  styles.btnLeftSide,
+                  seedPhraseLength === 12 && styles.optionActive,
+                ]}>
+                <Text style={styles.seedWordOptionText}>12 words</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => setPhraseLength(24)}
+                style={[
+                  styles.seedWordOptionAction,
+                  styles.btnRightSide,
+                  seedPhraseLength === 24 && styles.optionActive,
+                ]}>
+                <Text style={styles.seedWordOptionText}>24 words</Text>
+              </Pressable>
+            </View>
+            <FlatList
+              style={styles.flatList}
+              numColumns={3}
+              showsVerticalScrollIndicator={true}
+              data={[...Array(seedPhraseLength).keys()].map((key) => ({
+                id: `${key + 1}`,
+              }))}
+              renderItem={renderSeedWord}
+              keyExtractor={(item) => `${item.id}`}
+              columnWrapperStyle={styles.columnWrapperStyle}
+            />
+            <ButtonFooter unpositioned>
+              <Pressable
+                style={[styles.actionBtn, styles.cancelBtn]}
+                onPress={() => navigation.goBack()}>
+                <Text style={[theme.buttonText, styles.cancelText]}>
+                  Cancel
+                </Text>
+              </Pressable>
+              <Pressable
+                style={[
+                  styles.actionBtn,
+                  styles.nextBtn,
+                  !chosenSeedWords.every((val) => !!val) && styles.disabled,
+                ]}
+                disabled={!chosenSeedWords.every((val) => !!val)}
+                onPress={onContinue}>
+                <Text style={[theme.buttonText, styles.continueText]}>
+                  Continue
+                </Text>
+              </Pressable>
+            </ButtonFooter>
           </View>
-          <FlatList
-            style={styles.flatList}
-            numColumns={3}
-            showsVerticalScrollIndicator={true}
-            data={[...Array(seedPhraseLength).keys()].map((key) => ({
-              id: `${key + 1}`,
-            }))}
-            renderItem={renderSeedWord}
-            keyExtractor={(item) => `${item.id}`}
-            columnWrapperStyle={styles.columnWrapperStyle}
-          />
-          <ButtonFooter>
-            <Pressable
-              style={[styles.actionBtn, styles.cancelBtn]}
-              onPress={() => navigation.goBack()}>
-              <Text style={[theme.buttonText, styles.cancelText]}>Cancel</Text>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.actionBtn,
-                styles.nextBtn,
-                !chosenSeedWords.every((val) => !!val) && styles.disabled,
-              ]}
-              disabled={!chosenSeedWords.every((val) => !!val)}
-              onPress={onContinue}>
-              <Text style={[theme.buttonText, styles.continueText]}>
-                Continue
-              </Text>
-            </Pressable>
-          </ButtonFooter>
         </View>
       </KeyboardAvoidingView>
     </ImageBackground>
@@ -161,16 +167,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 20,
   },
+  main: {
+    flex: 0.7,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: Dimensions.get('window').width,
+  },
   prompt: {
     flex: 0.3,
     marginTop: 62,
     alignItems: 'center',
+    justifyContent: 'flex-end',
     paddingHorizontal: 30,
   },
   promptText: {
     fontFamily: 'Montserrat-Regular',
     color: '#FFFFFF',
     fontSize: 28,
+    lineHeight: 28,
   },
   description: {
     fontFamily: 'Montserrat-SemiBold',
@@ -184,9 +198,8 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   seedPhrase: {
-    flex: 0.7,
-    // flexGrow: 3,
     backgroundColor: '#fff',
+    width: Dimensions.get('window').width,
   },
   flatList: {
     marginTop: 20,
@@ -251,10 +264,12 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   missingWordText: {
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 16,
+    lineHeight: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#2CD2CF',
     width: '100%',
-    fontSize: 16,
   },
   actionBtn: {
     justifyContent: 'center',
@@ -284,18 +299,10 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 0.5,
   },
-  scrollableWrapper: {
-    flex: 0.8,
-    backgroundColor: '#FFFFFF',
-  },
-  keyboardScrollableWrapper: {
-    flexGrow: 1,
-  },
-  contentWrapper: {
-    borderWidth: 1,
-  },
   keyboard: {
     flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 })
 

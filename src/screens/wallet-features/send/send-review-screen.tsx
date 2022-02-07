@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { RootStackParamList } from '../../types'
-import LiqualityButton from '../../components/ui/button'
-import { prettyFiatBalance } from '../../core/utils/coin-formatter'
-import { useAppSelector } from '../../hooks'
-import { sendTransaction } from '../../store/store'
+import { RootStackParamList } from '../../../types'
+import LiqualityButton from '../../../components/ui/button'
+import {
+  dpUI,
+  gasUnitToCurrency,
+  prettyFiatBalance,
+} from '../../../core/utils/coin-formatter'
+import { useAppSelector } from '../../../hooks'
+import { sendTransaction } from '../../../store/store'
 import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 
@@ -19,22 +23,31 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
     route.params.sendTransaction || {}
   const [rate, setRate] = useState<number>(0)
   const [error, setError] = useState('')
-  const { fiatRates } = useAppSelector((state) => ({
+  const { fiatRates, activeNetwork } = useAppSelector((state) => ({
     fiatRates: state.fiatRates,
+    activeNetwork: state.activeNetwork,
   }))
 
   const handleSendPress = async () => {
+    if (!asset || !destinationAddress || !amount || !gasFee || !activeNetwork) {
+      setError('Input data invalid')
+      return
+    }
+
     try {
-      await sendTransaction({
-        to: destinationAddress!,
+      const transaction = await sendTransaction({
+        asset,
+        activeNetwork,
+        to: destinationAddress,
         value: new BigNumber(
-          currencyToUnit(cryptoassets[asset!], amount!.toNumber()).toNumber(),
+          currencyToUnit(cryptoassets[asset], amount.toNumber()).toNumber(),
         ),
-        fee: gasFee!.toNumber(),
+        fee: gasFee.toNumber(),
       })
+
       navigation.navigate('SendConfirmationScreen', {
         screenTitle: `SEND ${asset} Transaction Details`,
-        ...route.params,
+        sendTransactionConfirmation: transaction,
       })
     } catch (_error) {
       setError('Failed to send transaction: ' + _error)
@@ -68,22 +81,36 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <Text style={styles.feeLabel}>NETWORK FEE</Text>
         <View style={styles.row}>
           <Text style={styles.feeAmountInNative}>
-            {gasFee && `${gasFee.toNumber()} ${asset}`}
+            {asset &&
+              gasFee &&
+              dpUI(gasUnitToCurrency(asset, gasFee), 9).toString()}
           </Text>
           <Text style={styles.feeAmountInFiat}>
-            {gasFee && `$${prettyFiatBalance(gasFee.toNumber(), rate)}`}
+            {gasFee &&
+              asset &&
+              `$${prettyFiatBalance(
+                gasUnitToCurrency(asset, gasFee).toNumber(),
+                rate,
+              )}`}
           </Text>
         </View>
 
         <Text style={styles.totalLabel}>AMOUNT + FEES</Text>
         <View style={styles.row}>
           <Text style={styles.totalAmount}>
-            {amount && gasFee && `${amount.plus(gasFee).dp(6)} ${asset}`}
+            {amount &&
+              gasFee &&
+              asset &&
+              `${amount.plus(gasUnitToCurrency(asset, gasFee)).dp(9)} ${asset}`}
           </Text>
           <Text style={styles.totalAmount}>
             {amount &&
               gasFee &&
-              `$${prettyFiatBalance(amount.plus(gasFee).toNumber(), rate)}`}
+              asset &&
+              `$${prettyFiatBalance(
+                amount.plus(gasUnitToCurrency(asset, gasFee)).toNumber(),
+                rate,
+              )}`}
           </Text>
         </View>
 

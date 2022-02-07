@@ -47,7 +47,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
 
   const handleApplyPress = () => {
     navigation.navigate('SendScreen', {
-      assetData: route.params.assetData,
+      ...route.params,
       customFee: parseFloat(customFeeInput.value),
     })
   }

@@ -1,17 +1,38 @@
+import React, { FC, MutableRefObject, useEffect, useState } from 'react'
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
+import { BigNumber, FeeDetails } from '@liquality/types'
+import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { GasSpeedType } from '../../core/types'
-import React, { FC, useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { useAppSelector } from '../../hooks'
 
 const gasSpeeds: GasSpeedType[] = ['slow', 'average', 'fast']
 type GasControllerProps = {
   assetSymbol: string
   handleCustomPress: (...args: unknown[]) => void
+  networkFee: MutableRefObject<BigNumber>
 }
 
 const GasController: FC<GasControllerProps> = (props) => {
-  const { assetSymbol, handleCustomPress } = props
+  const { assetSymbol, handleCustomPress, networkFee } = props
   const [customFee, setCustomFee] = useState()
   const [speedMode, setSpeedMode] = useState<GasSpeedType>('average')
+  const { activeNetwork, activeWalletId, fees } = useAppSelector((state) => ({
+    activeNetwork: state.activeNetwork,
+    activeWalletId: state.activeWalletId,
+    fees: state.fees,
+  }))
+  const [gasFees, setGasFees] = useState<FeeDetails>()
+
+  useEffect(() => {
+    if (fees && activeNetwork && activeWalletId) {
+      const gFees =
+        fees[activeNetwork]?.[activeWalletId][cryptoassets[assetSymbol].chain]
+      if (gFees) {
+        setGasFees(gFees)
+        networkFee.current = new BigNumber(gFees.average.fee as number)
+      }
+    }
+  }, [activeNetwork, activeWalletId, assetSymbol, fees, networkFee])
 
   return (
     <View style={[styles.container, styles.row, styles.speedOptions]}>
@@ -27,8 +48,13 @@ const GasController: FC<GasControllerProps> = (props) => {
               speedMode === speed && !customFee && styles.speedBtnSelected,
             ]}
             onPress={() => {
-              setCustomFee(undefined)
-              setSpeedMode(speed)
+              if (gasFees) {
+                setCustomFee(undefined)
+                setSpeedMode(speed)
+                networkFee.current = new BigNumber(gasFees[speed].fee as number)
+              } else {
+                Alert.alert('Invalid gas fees')
+              }
             }}>
             <Text
               style={[
@@ -59,8 +85,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   speedOptions: {
+    justifyContent: 'space-around',
     alignSelf: 'center',
-    width: '80%',
+    width: '70%',
     alignItems: 'center',
   },
   speedLabel: {
@@ -84,6 +111,7 @@ const styles = StyleSheet.create({
     height: 26,
     borderWidth: 1,
     paddingHorizontal: 10,
+    borderColor: '#D9DFE5',
   },
   speedLeftBtn: {
     borderBottomLeftRadius: 50,

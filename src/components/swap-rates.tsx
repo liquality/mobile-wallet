@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import {
   Modal,
   StyleSheet,
@@ -6,19 +6,20 @@ import {
   Text,
   FlatList,
   Pressable,
+  Alert,
+  StyleProp,
+  ViewStyle,
 } from 'react-native'
+import { MarketDataType, SwapProvidersEnum } from '@liquality/core/dist/types'
 import Label from './ui/label'
 import LiqualityButton from './ui/button'
 import Logo from '../assets/icons/infinity.svg'
 import LiqualityBoost from '../assets/icons/swap-providers/liqualityboost.svg'
-import OneInch from '../assets/icons/swap-providers/oneinch.svg'
 import Sovryn from '../assets/icons/swap-providers/sovryn.svg'
-import Thorchain from '../assets/icons/swap-providers/thorchain.svg'
-import Uniswap from '../assets/icons/swap-providers/uniswap.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTimes, faCheck } from '@fortawesome/pro-light-svg-icons'
 import SwapTypesInfo from './swap-types-info'
-import { ProviderType } from '../types'
+import { useAppSelector } from '../hooks'
 
 const ListHeader: FC = () => {
   const styles = StyleSheet.create({
@@ -38,60 +39,61 @@ const ListHeader: FC = () => {
   )
 }
 
-const swapProviders: ProviderType[] = [
-  {
-    name: 'Liquality',
-    rate: 0.023847,
-    icon: () => <Logo width={15} height={15} style={styles.icon} />,
-  },
-  {
-    name: 'LiqualityBoost',
-    rate: 0.023847,
-    icon: () => <LiqualityBoost width={15} height={15} style={styles.icon} />,
-  },
-  {
-    name: 'Thorchain',
-    rate: 0.099847,
-    icon: () => <Thorchain width={15} height={15} style={styles.icon} />,
-  },
-  {
-    name: 'OneInch',
-    rate: 0.022247,
-    icon: () => <OneInch width={15} height={15} style={styles.icon} />,
-  },
-  {
-    name: 'Uniswap',
-    rate: 0.022247,
-    icon: () => <Uniswap width={15} height={15} style={styles.icon} />,
-  },
-  {
-    name: 'Sovryn',
-    rate: 0.022247,
-    icon: () => <Sovryn width={15} height={15} style={styles.icon} />,
-  },
-]
+type SwapRatesProps = {
+  fromAsset: string
+  toAsset: string
+  selectQuote: (quote: MarketDataType) => void
+  style?: StyleProp<ViewStyle>
+}
 
-const SwapRates: FC = () => {
-  const [selectedItem, setSelectedItem] = useState<ProviderType>(
-    swapProviders[0],
-  )
+const SwapRates: FC<SwapRatesProps> = (props) => {
+  const { fromAsset, toAsset, selectQuote, style } = props
+  const { marketData } = useAppSelector((state) => ({
+    marketData: state.marketData,
+  }))
+  const [selectedItem, setSelectedItem] = useState<MarketDataType>()
   const [isRatesModalVisible, setIsRatesModalVisible] = useState(false)
   const [isSwapTypesModalVisible, setIsSwapTypesModalVisible] = useState(false)
+  const [quotes, setQuotes] = useState<MarketDataType[]>([])
 
-  const renderItem = ({ item }: { item: ProviderType }) => {
+  const getSwapProviderIcon = (
+    marketQuotes: MarketDataType,
+  ): React.ReactElement => {
+    switch (marketQuotes.provider) {
+      case SwapProvidersEnum.LIQUALITY.toLowerCase():
+        return <Logo width={15} height={15} style={styles.icon} />
+      case SwapProvidersEnum.LIQUALITYBOOST.toLowerCase():
+        return <LiqualityBoost width={15} height={15} style={styles.icon} />
+      case SwapProvidersEnum.SOVRYN.toLowerCase():
+        return <Sovryn width={15} height={15} style={styles.icon} />
+      default:
+        return <Logo width={15} height={15} style={styles.icon} />
+    }
+  }
+
+  const handleSelectQuote = () => {
+    if (selectedItem) {
+      selectQuote(selectedItem)
+      setIsRatesModalVisible(false)
+    } else {
+      Alert.alert('Select a quote first')
+    }
+  }
+
+  const renderItem = ({ item }: { item: MarketDataType }) => {
     return (
       <Pressable
         style={[
           styles.listRow,
-          selectedItem.name === item.name && styles.selected,
+          selectedItem?.provider === item.provider && styles.selected,
         ]}
-        key={item.name}
+        key={item.provider}
         onPress={() => setSelectedItem(item)}>
-        <Text style={[styles.text, styles.half]}>{item.name}</Text>
+        <Text style={[styles.text, styles.half]}>{item.rate}</Text>
         <View style={styles.providerCell}>
-          {item.icon()}
-          <Text style={[styles.text]}>{item.rate}</Text>
-          {selectedItem.name === item.name && (
+          {getSwapProviderIcon(item)}
+          <Text style={[styles.text]}>{item.provider}</Text>
+          {selectedItem?.provider === item.provider && (
             <FontAwesomeIcon icon={faCheck} color={'#2CD2CF'} />
           )}
         </View>
@@ -99,8 +101,16 @@ const SwapRates: FC = () => {
     )
   }
 
+  useEffect(() => {
+    setQuotes(
+      marketData?.filter(
+        (item) => item.from === fromAsset && item.to === toAsset,
+      ) || [],
+    )
+  }, [fromAsset, marketData, toAsset])
+
   return (
-    <View style={[styles.box, styles.row]}>
+    <View style={[styles.box, styles.row, style]}>
       <View style={styles.row}>
         <Label text="RATE" variant="strong" />
         <LiqualityButton
@@ -121,7 +131,7 @@ const SwapRates: FC = () => {
               <View style={styles.content}>
                 <View style={styles.header}>
                   <Label
-                    text={`${swapProviders.length} AVAILABLE QUOTES`}
+                    text={`${quotes?.length} AVAILABLE QUOTES`}
                     variant="strong"
                   />
                   <Pressable onPress={() => setIsRatesModalVisible(false)}>
@@ -133,9 +143,9 @@ const SwapRates: FC = () => {
                 </Text>
                 <FlatList
                   contentContainerStyle={styles.flatList}
-                  data={swapProviders}
+                  data={quotes}
                   renderItem={renderItem}
-                  keyExtractor={(item) => item.name}
+                  keyExtractor={(item) => item.provider}
                   ListHeaderComponent={ListHeader}
                 />
                 <View style={styles.footer}>
@@ -143,7 +153,7 @@ const SwapRates: FC = () => {
                     text="Select Quote"
                     variant="large"
                     type="positive"
-                    action={() => ({})}
+                    action={handleSelectQuote}
                   />
                   <Text style={styles.text}>Learn about swap types</Text>
                 </View>
@@ -154,7 +164,8 @@ const SwapRates: FC = () => {
       )}
       {isSwapTypesModalVisible && (
         <SwapTypesInfo
-          swapProviders={swapProviders}
+          swapProviders={quotes || []}
+          getIcon={getSwapProviderIcon}
           toggleModal={() => setIsSwapTypesModalVisible(false)}
         />
       )}
@@ -192,7 +203,6 @@ const styles = StyleSheet.create({
   box: {
     alignItems: 'center',
     marginVertical: 10,
-    paddingHorizontal: 20,
   },
   icon: {
     marginRight: 5,
@@ -206,6 +216,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Montserrat-Regular',
+    textTransform: 'capitalize',
     color: '#000D35',
     fontWeight: '300',
     fontSize: 12,

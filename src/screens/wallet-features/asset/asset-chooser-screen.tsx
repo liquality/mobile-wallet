@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { View, StyleSheet, TextInput, Alert } from 'react-native'
+import { Alert, StyleSheet, TextInput, View } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faSearch } from '@fortawesome/pro-light-svg-icons'
@@ -9,9 +9,10 @@ import {
   AssetDataElementType,
   RootStackParamList,
   StackPayload,
-} from '../../types'
-import AssetFlatList from '../../components/asset-flat-list'
-import { useInputState, useWalletState } from '../../hooks'
+  SwapAssetPairType,
+} from '../../../types'
+import AssetFlatList from '../../../components/overview/asset-flat-list'
+import { useInputState, useWalletState } from '../../../hooks'
 
 type AssetChooserProps = StackScreenProps<
   RootStackParamList,
@@ -26,7 +27,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
   const screenMap: Record<ActionEnum, keyof RootStackParamList> = useMemo(
     () => ({
       [ActionEnum.RECEIVE]: 'ReceiveScreen',
-      [ActionEnum.SWAP]: 'ReceiveScreen',
+      [ActionEnum.SWAP]: 'SwapScreen',
       [ActionEnum.SEND]: 'SendScreen',
     }),
     [],
@@ -62,13 +63,52 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
       if (typeof route.params.action === 'undefined') {
         Alert.alert('Please reload your app')
       } else {
-        navigation.navigate(screenMap[route.params.action], {
-          assetData: params.assetData,
-          screenTitle: `Send ${params.assetData?.code}`,
-        })
+        if (route.params.action === ActionEnum.SWAP) {
+          //if swapAssetPair is falsy then the user is either coming from the overview or the asset screen, otherwise, the user is coming from the swap screen
+          if (!route.params.swapAssetPair) {
+            const fromAsset = params.assetData
+            let toAsset = params.assetData
+
+            if (fromAsset?.code === 'ETH') {
+              toAsset = assets.filter((item) => item.code === 'BTC')[0]
+            } else {
+              toAsset = assets.filter((item) => item.code === 'ETH')[0]
+                ?.assets?.[0]
+            }
+            navigation.navigate(screenMap[route.params.action], {
+              swapAssetPair: {
+                fromAsset,
+                toAsset,
+              },
+              screenTitle: `${route.params.action} ${params.assetData?.code}`,
+            })
+          } else {
+            const swapAssetPair: SwapAssetPairType = route.params.swapAssetPair
+            if (!route.params.swapAssetPair.toAsset) {
+              swapAssetPair.toAsset = params.assetData
+            } else {
+              swapAssetPair.fromAsset = params.assetData
+            }
+            navigation.navigate(screenMap[route.params.action], {
+              swapAssetPair,
+              screenTitle: `${route.params.action} ${params.assetData?.code}`,
+            })
+          }
+        } else {
+          navigation.navigate(screenMap[route.params.action], {
+            assetData: params.assetData,
+            screenTitle: `${route.params.action} ${params.assetData?.code}`,
+          })
+        }
       }
     },
-    [navigation, route.params.action, screenMap],
+    [
+      assets,
+      navigation,
+      route.params.action,
+      route.params.swapAssetPair,
+      screenMap,
+    ],
   )
 
   useEffect(() => {
@@ -84,7 +124,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
         <TextInput
           style={styles.sendInput}
           placeholder={'Search for a Currency'}
-          keyboardType={'numeric'}
+          keyboardType={'ascii-capable'}
           onChangeText={searchInput.onChangeText}
           onEndEditing={filterByTerm}
           value={searchInput.value}

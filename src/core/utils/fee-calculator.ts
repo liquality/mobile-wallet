@@ -13,10 +13,11 @@ const isERC20 = (asset: string) => {
 }
 
 /**
- *
+ * Converts gas fees from unit to currency (eg: GWEI -> ETH)
  * @param _asset asset name (ETH)
- * @param _feePrice fee price in currency
+ * @param _feePrice fee price in units
  */
+//TODO double check this logic
 export const calculateGasFee = (_asset: string, _feePrice: number): number => {
   if (!_asset || !_feePrice || _feePrice <= 0) {
     throw new Error('Invalid arguments')

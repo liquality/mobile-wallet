@@ -3,9 +3,9 @@ import Spinner from '../../components/spinner'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
 import { useEffect, useState } from 'react'
-import { Alert } from 'react-native'
 import { createWallet } from '../../store/store'
 import { useDispatch } from 'react-redux'
+import { StateType } from '../../core/types'
 
 type LoadingScreenProps = StackScreenProps<RootStackParamList, 'LoadingScreen'>
 
@@ -14,17 +14,23 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    setTimeout(async () => {
-      const { type } = await dispatch(
-        createWallet(route.params.password || '', route.params.mnemonic || ''),
-      )
-      if (type === 'ERROR') {
-        Alert.alert('Unable to create wallet', 'Please try again')
-      } else {
+    createWallet(route.params.password || '', route.params.mnemonic || '')
+      .then((walletState) => {
+        dispatch({
+          type: 'SETUP_WALLET',
+          payload: walletState,
+        })
         setVisible(false)
         navigation.navigate('CongratulationsScreen')
-      }
-    }, 1000)
+      })
+      .catch(() => {
+        dispatch({
+          type: 'ERROR',
+          payload: {
+            errorMessage: 'Unable to create wallet. Try again!',
+          } as StateType,
+        })
+      })
   })
   return <Spinner loadingText="" visible={visible} />
 }

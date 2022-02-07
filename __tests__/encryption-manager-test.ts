@@ -1,4 +1,4 @@
-import EncryptionManager from '../src/core/encryption-manager'
+import MockEncryptionManager from '../__mocks__/mock-encryption-manager'
 
 describe('EncryptionManagerTest', () => {
   const PASSWORD = 'this is my password'
@@ -10,12 +10,12 @@ describe('EncryptionManagerTest', () => {
   })
 
   it('should generate a base64 encoded salt', () => {
-    const encryptionManager = new EncryptionManager()
+    const encryptionManager = new MockEncryptionManager()
     expect(encryptionManager.generateSalt(16)).toBeTruthy()
   })
 
   it('should encrypt a string', async () => {
-    const encryptionManager = new EncryptionManager()
+    const encryptionManager = new MockEncryptionManager()
     const keySalt = encryptionManager.generateSalt(16)
     const encryptedValue = await encryptionManager.encrypt(
       DATA,
@@ -26,7 +26,7 @@ describe('EncryptionManagerTest', () => {
   })
 
   it('should decrypt a string', async () => {
-    const encryptionManager = new EncryptionManager()
+    const encryptionManager = new MockEncryptionManager()
     const keySalt = encryptionManager.generateSalt(16)
     const encrypted = await encryptionManager.encrypt(DATA, keySalt, PASSWORD)
     const decryptedValue = await encryptionManager.decrypt(
@@ -38,10 +38,10 @@ describe('EncryptionManagerTest', () => {
   })
 
   it('should fail decryption when decyrpting using a different password', async () => {
-    const encryptionManager = new EncryptionManager()
+    const encryptionManager = new MockEncryptionManager()
     const keySalt = encryptionManager.generateSalt(16)
     const encrypted = await encryptionManager.encrypt(DATA, keySalt, PASSWORD)
-    const encryptionManager2 = new EncryptionManager()
+    const encryptionManager2 = new MockEncryptionManager()
     const decryptedValue = await encryptionManager2.decrypt(
       encrypted,
       keySalt,

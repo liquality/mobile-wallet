@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   ImageBackground,
   Pressable,
@@ -6,11 +6,9 @@ import {
   Text,
   View,
 } from 'react-native'
-import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
+import { formatFiat, prettyBalance } from '../../../core/utils/coin-formatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import ActivityFlatList, {
-  ActivityDataElementType,
-} from '../../components/activity-flat-list'
+import ActivityFlatList from '../../../components/activity-flat-list'
 import {
   faGreaterThan,
   faExchange,
@@ -18,29 +16,11 @@ import {
   faArrowUp,
 } from '@fortawesome/pro-light-svg-icons'
 import { StackScreenProps } from '@react-navigation/stack'
-import { AssetDataElementType, RootStackParamList } from '../../types'
-
-const activities: Array<ActivityDataElementType> = [
-  {
-    id: '1',
-    transaction: 'BTC to DAI',
-    time: '4/28/2020, 3:34pm',
-    amount: 0.1234,
-    status: 'Locking ETH',
-  },
-  {
-    id: '2',
-    transaction: 'BTC to ETH',
-    time: '4/28/2020, 3:34pm',
-    amount: 0.1234,
-    status: 'Locking ETH',
-  },
-]
+import { AssetDataElementType, RootStackParamList } from '../../../types'
 
 type AssetScreenProps = StackScreenProps<RootStackParamList, 'AssetScreen'>
 
 const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
-  const [activityData] = useState<Array<ActivityDataElementType>>(activities)
   const { code, address, balance, balanceInUSD }: AssetDataElementType =
     route.params.assetData!
 
@@ -60,7 +40,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
 
   const handleSwapPress = () => {
     navigation.navigate('SwapScreen', {
-      assetData: route.params.assetData,
+      swapAssetPair: route.params.swapAssetPair,
       screenTitle: 'Swap',
     })
   }
@@ -69,7 +49,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
     <View style={styles.container}>
       <ImageBackground
         style={styles.overviewBlock}
-        source={require('../../assets/bg/action-block-bg.png')}>
+        source={require('../../../assets/bg/action-block-bg.png')}>
         <View style={styles.balance}>
           <Text style={styles.balanceInUSD}>${formatFiat(balanceInUSD!)}</Text>
         </View>
@@ -126,7 +106,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         </Pressable>
       </View>
       <View style={styles.contentBlock}>
-        <ActivityFlatList activities={activityData}>
+        <ActivityFlatList navigate={navigation.navigate} selectedAsset={code}>
           <View style={styles.activityActionBar}>
             <Pressable style={styles.activityBtns}>
               <FontAwesomeIcon

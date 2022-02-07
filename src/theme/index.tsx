@@ -8,6 +8,13 @@ const theme = StyleSheet.create({
     fontSize: 14,
     lineHeight: 18,
   },
+  buttonTextAmount: {
+    fontFamily: 'Montserrat-Light',
+    fontWeight: '500',
+    fontSize: 12,
+    lineHeight: 18,
+    color: '#1D1E21',
+  },
   container: {
     flexDirection: 'row',
     // white: '#FFFFFF',

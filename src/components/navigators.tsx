@@ -1,8 +1,8 @@
 import React, { createContext } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, Pressable } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faUserCog } from '@fortawesome/pro-light-svg-icons'
+import { faCheck, faUserCog } from '@fortawesome/pro-light-svg-icons'
 import Infinity from '../assets/icons/infinity.svg'
 import Entry from '../screens/wallet-creation/entryScreen'
 import TermsScreen from '../screens/wallet-creation/termsScreen'
@@ -12,25 +12,39 @@ import SeedPhraseConfirmationScreen from '../screens/wallet-creation/seedPhraseC
 import CongratulationsScreen from '../screens/wallet-creation/congratulationsScreen'
 import UnlockWalletScreen from '../screens/wallet-import/unlock-wallet-screen'
 import LoadingScreen from '../screens/wallet-import/loading-screen'
-import OverviewScreen from '../screens/wallet-features/overview-screen'
+import OverviewScreen from '../screens/wallet-features/home/overview-screen'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import SettingsScreen from '../screens/wallet-features/settings-screen'
-import AssetScreen from '../screens/wallet-features/asset-screen'
+import SettingsScreen from '../screens/wallet-features/settings/settings-screen'
+import AssetScreen from '../screens/wallet-features/asset/asset-screen'
 import OverviewHeaderLeft from './header-bar/overview-header-left'
 import OverviewHeaderRight from './header-bar/overview-header-right'
 import { HeaderBackButtonProps } from '@react-navigation/elements'
-import ReceiveScreen from '../screens/wallet-features/receive-screen'
-import SendScreen from '../screens/wallet-features/send-screen'
-import SendReviewScreen from '../screens/wallet-features/send-review-screen'
+import ReceiveScreen from '../screens/wallet-features/receive/receive-screen'
+import SendScreen from '../screens/wallet-features/send/send-screen'
+import SendReviewScreen from '../screens/wallet-features/send/send-review-screen'
 import CustomFeeScreen from '../screens/wallet-features/custom-fee-screen'
-import SendConfirmationScreen from '../screens/wallet-features/send-confirmation-screen'
+import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
 import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
 import SettingsHeaderRight from './header-bar/settings-header-right'
-import AssetChooserScreen from '../screens/wallet-features/asset-chooser-screen'
-import AssetManagementScreen from '../screens/wallet-features/asset-management-screen'
-import SwapScreen from '../screens/wallet-features/swap-screen'
+import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
+import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
+import SwapScreen from '../screens/wallet-features/swap/swap-screen'
+import SwapReviewScreen from '../screens/wallet-features/swap/swap-review-screen'
+import SwapConfirmationScreen from '../screens/wallet-features/swap/swap-confirmation-screen'
+import { TransitionSpec } from '@react-navigation/stack/src/types'
 
+const config: TransitionSpec = {
+  animation: 'spring',
+  config: {
+    stiffness: 1000,
+    damping: 500,
+    mass: 3,
+    overshootClamping: true,
+    restDisplacementThreshold: 0.01,
+    restSpeedThreshold: 0.01,
+  },
+}
 const Stack = createStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
 
@@ -84,6 +98,11 @@ export const AppStackNavigator = () => (
   <Stack.Navigator
     initialRouteName="OverviewScreen"
     screenOptions={({ navigation, route }) => ({
+      gestureDirection: 'horizontal',
+      transitionSpec: {
+        open: config,
+        close: config,
+      },
       headerShown: true,
       title: '',
       headerLeft: (props: HeaderBackButtonProps) => (
@@ -145,8 +164,17 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="SendConfirmationScreen"
       component={SendConfirmationScreen}
-      options={() => ({
-        headerRight: () => <View />,
+      options={({ navigation }) => ({
+        headerRight: () => (
+          <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
+            <FontAwesomeIcon
+              icon={faCheck}
+              size={20}
+              color={'#5F5F5F'}
+              style={styles.checkIcon}
+            />
+          </Pressable>
+        ),
       })}
     />
     <Stack.Screen
@@ -161,6 +189,29 @@ export const AppStackNavigator = () => (
       component={SwapScreen}
       options={() => ({
         headerRight: () => <View />,
+      })}
+    />
+    <Stack.Screen
+      name="SwapReviewScreen"
+      component={SwapReviewScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
+    />
+    <Stack.Screen
+      name="SwapConfirmationScreen"
+      component={SwapConfirmationScreen}
+      options={({ navigation }) => ({
+        headerRight: () => (
+          <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
+            <FontAwesomeIcon
+              icon={faCheck}
+              size={20}
+              color={'#5F5F5F'}
+              style={styles.checkIcon}
+            />
+          </Pressable>
+        ),
       })}
     />
   </Stack.Navigator>
@@ -214,6 +265,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginVertical: 5,
+  },
+  checkIcon: {
+    marginRight: 20,
   },
   settingsTitle: {
     fontFamily: 'Montserrat-Regular',
