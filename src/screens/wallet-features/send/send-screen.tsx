@@ -27,6 +27,7 @@ import {
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
+import { chainDefaultColors } from '../../../core/config'
 
 const useInputState = (
   initialValue: string,
@@ -65,7 +66,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
   const addressInput = useInputState('')
 
   const isNumber = (value: string): boolean => {
-    return /^\d+(.\d+)?$/.test(value)
+    return /^\d+(.\d*)?$/.test(value)
   }
 
   const validate = useCallback((): boolean => {
@@ -230,11 +231,12 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
           </View>
           <View style={styles.row}>
             <View style={styles.sendInputCurrencyWrapper}>
-              <Text style={styles.sendInputCurrency}>
-                {showAmountsInFiat ? '$' : code}
-              </Text>
               <TextInput
-                style={[styles.sendInputCurrency, styles.sendInput]}
+                style={[
+                  styles.sendInputCurrency,
+                  styles.sendInput,
+                  { color: chainDefaultColors[chain] },
+                ]}
                 keyboardType={'numeric'}
                 onChangeText={handleOnChangeText}
                 onFocus={() => setError('')}
@@ -418,7 +420,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
     fontSize: 28,
-    textAlign: 'left',
+    textAlign: 'right',
     lineHeight: 40,
     height: 40,
     width: '100%',
@@ -428,7 +430,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
     fontSize: 28,
-    textAlign: 'left',
+    textAlign: 'right',
     color: '#EAB300',
     lineHeight: 50,
     height: 40,

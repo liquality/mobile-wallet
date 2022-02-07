@@ -13,16 +13,16 @@ import Wallet from '@liquality/core/dist/wallet'
 import { Config } from '@liquality/core/dist/config'
 import {
   AccountType,
-  StateType,
-  NetworkEnum,
-  SwapProvidersEnum,
-  IAccount,
-  SwapPayloadType,
-  SwapTransactionType,
   HistoryItem,
+  IAccount,
   IAsset,
+  NetworkEnum,
+  StateType,
+  SwapPayloadType,
+  SwapProvidersEnum,
+  SwapTransactionType,
 } from '@liquality/core/dist/types'
-import { currencyToUnit, assets as cryptoassets } from '@liquality/cryptoassets'
+import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
 import 'react-native-reanimated'
 import { INFURA_API_KEY } from '@env'
 import { AssetDataElementType } from '../types'
@@ -174,16 +174,33 @@ export const fetchTransactionUpdates = async () => {
       ) || []
 
   for (const item of historyItems) {
-    const account = await wallet.getAccount(
+    const fromAccount = await wallet.getAccount(
       cryptoassets[item.from].chain,
       activeNetwork,
     )
-    if (!account) {
+    const toAccount = await wallet.getAccount(
+      cryptoassets[item.to].chain,
+      activeNetwork,
+    )
+    if (!fromAccount || !toAccount) {
       continue
     }
-    const assets: IAsset[] = await account.getAssets()
-    if (assets.length > 0 && item.sendTransaction) {
-      assets[0].runRulesEngine(item.sendTransaction)
+
+    if (item.type === 'SWAP') {
+      if (
+        item.swapTransaction &&
+        item.swapTransaction.from &&
+        item.swapTransaction.to
+      ) {
+        wallet
+          .getSwapProvider(SwapProvidersEnum.LIQUALITY)
+          .runRulesEngine(fromAccount, toAccount, item.swapTransaction)
+      }
+    } else if (item.type === 'SEND') {
+      const assets: IAsset[] = await fromAccount.getAssets()
+      if (assets.length > 0 && item.sendTransaction) {
+        assets[0].runRulesEngine(item.sendTransaction)
+      }
     }
   }
 }

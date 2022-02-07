@@ -106,7 +106,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         </Pressable>
       </View>
       <View style={styles.contentBlock}>
-        <ActivityFlatList navigate={navigation.navigate}>
+        <ActivityFlatList navigate={navigation.navigate} selectedAsset={code}>
           <View style={styles.activityActionBar}>
             <Pressable style={styles.activityBtns}>
               <FontAwesomeIcon

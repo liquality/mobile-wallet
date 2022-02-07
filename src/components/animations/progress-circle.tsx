@@ -4,7 +4,6 @@ import Animated, {
   useAnimatedProps,
   useSharedValue,
   withTiming,
-  Easing,
   withRepeat,
 } from 'react-native-reanimated'
 
@@ -18,8 +17,8 @@ const ProgressCircle: FC<ProgressCircleProps> = (props) => {
   const { radius, current, total } = props
   const { PI } = Math
   const AnimatedCircle = Animated.createAnimatedComponent(Circle)
-  const offset = useSharedValue(0)
   const circumference = 2 * PI * (radius - 2)
+  const offset = useSharedValue(circumference)
 
   const animatedProps = useAnimatedProps(() => {
     return {
@@ -28,16 +27,8 @@ const ProgressCircle: FC<ProgressCircleProps> = (props) => {
   })
 
   useEffect(() => {
-    const progress = (2 * PI * (radius - 2) * (total - current)) / total
-    offset.value = withRepeat(
-      withTiming(progress, {
-        duration: 500,
-        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-      }),
-      -1,
-      false,
-    )
-  }, [PI, current, offset, radius, total])
+    offset.value = withRepeat(withTiming(0), -1, false)
+  }, [offset])
 
   return (
     <Animated.View>
@@ -47,7 +38,7 @@ const ProgressCircle: FC<ProgressCircleProps> = (props) => {
           cy={radius}
           r={radius - 2}
           fill="transparent"
-          stroke="#D5D8DD"
+          stroke="#2CD2CF"
           strokeWidth="1"
         />
         <AnimatedCircle
@@ -57,7 +48,7 @@ const ProgressCircle: FC<ProgressCircleProps> = (props) => {
           r={radius - 2}
           fill="transparent"
           strokeWidth="1"
-          stroke="#2CD2CF"
+          stroke="#D5D8DD"
           strokeDasharray={`${circumference}, ${circumference}`}
         />
         <Text

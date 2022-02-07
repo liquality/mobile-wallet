@@ -80,5 +80,5 @@ export const gasUnitToCurrency = (
 ): BigNumber => {
   return isEthereumChain(assets[asset].chain)
     ? new BigNumber(amount).dividedBy(1e9)
-    : amount
+    : new BigNumber(amount)
 }

@@ -82,7 +82,7 @@ const SwapTypesInfo: FC<SwapTypesInfoProps> = (props) => {
                 })}
               </View>
               {providersInfo.map((provider) => (
-                <View style={styles.block}>
+                <View style={styles.block} key={provider.name}>
                   <View style={styles.miniLabel}>
                     {provider.icon()}
                     <Label text={provider.name} variant="light" />

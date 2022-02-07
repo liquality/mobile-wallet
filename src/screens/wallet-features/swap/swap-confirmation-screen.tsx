@@ -29,6 +29,7 @@ import ProgressCircle from '../../../components/animations/progress-circle'
 import ProgressBar from '../../../components/animations/progress-bar'
 import SuccessIcon from '../../../assets/icons/success-icon.svg'
 import { HistoryItem } from '@liquality/core/dist/types'
+import SwapRates from '../../../components/swap-rates'
 
 type SwapConfirmationScreenProps = StackScreenProps<
   RootStackParamList,
@@ -51,7 +52,6 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     from,
     to,
     toAmount,
-    status,
     createdAt,
     expiresAt,
     fee,
@@ -64,7 +64,8 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     minConf,
     secret,
     secretHash,
-  } = transaction
+    claimFee,
+  } = historyItem?.swapTransaction
 
   const formatDate = (ms: string | number): string => {
     const date = new Date(ms)
@@ -115,16 +116,18 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
         <View>
           <Text style={styles.label}>STATUS</Text>
           <Text style={styles.content}>
-            {status === 'SUCCESS' ? 'Complete' : status}
+            {historyItem?.status === 'SUCCESS'
+              ? 'Completed'
+              : historyItem?.status}
           </Text>
         </View>
-        {status !== 'SUCCESS' && (
+        {historyItem?.status !== 'SUCCESS' && (
           <Pressable onPress={handleSpeedUpTransaction}>
             <Text style={[styles.textButton, styles.link]}>Speed Up</Text>
           </Pressable>
         )}
 
-        {status === 'SUCCESS' ? (
+        {historyItem?.status === 'SUCCESS' ? (
           <SuccessIcon />
         ) : (
           <ProgressCircle
@@ -136,7 +139,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
       </View>
       <View style={styles.block}>
         <Text style={styles.label}>Trade Time</Text>
-        {status !== 'SUCCESS' && (
+        {historyItem?.status !== 'SUCCESS' && (
           <View style={styles.row}>
             <FontAwesomeIcon icon={faClock} size={15} color="#9C55F6" />
             <Text style={styles.content}>{elapsedTime(createdAt)}</Text>
@@ -152,7 +155,8 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.content}>{`Initiated ${formatDate(
             Date.parse(createdAt),
           )}`}</Text>
-          {status === 'SUCCESS' ? (
+          {historyItem?.status === 'SUCCESS' &&
+          historyItem?.swapTransaction?.endTime ? (
             <Text style={styles.content}>{`${'Completed'} ${formatDate(
               historyItem?.swapTransaction?.endTime,
             )}`}</Text>
@@ -181,7 +185,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
         </View>
         <View>
           <Text style={styles.label}>
-            {status === 'SUCCESS' ? 'RECEIVED' : 'PENDING RECEIPT'}
+            {historyItem?.status === 'SUCCESS' ? 'RECEIVED' : 'PENDING RECEIPT'}
           </Text>
           <Text style={styles.content}>
             {fromAmount &&
@@ -197,13 +201,19 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           </Text>
         </View>
       </View>
+      <SwapRates
+        fromAsset={from}
+        toAsset={to}
+        selectQuote={() => ({})}
+        style={{ paddingHorizontal: 20 }}
+      />
       <View style={styles.border}>
         <Text style={styles.label}>NETWORK SPEED/FEE</Text>
         <Text style={styles.content}>
           {`${from} Fee: ${fee} ${chains[cryptoassets[from].chain].fees.unit}`}
         </Text>
         <Text style={styles.content}>
-          {`${to} Fee: ${fee} ${chains[cryptoassets[to].chain].fees.unit}`}
+          {`${to} Fee: ${claimFee} ${chains[cryptoassets[to].chain].fees.unit}`}
         </Text>
       </View>
       {historyItem && (
@@ -250,7 +260,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
             </View>
             <View style={styles.cell}>
               <Label text="Status" variant="light" />
-              <Text style={styles.transactionInfo}>{status}</Text>
+              <Text style={styles.transactionInfo}>{historyItem?.status}</Text>
             </View>
             <View style={styles.cell}>
               <Label text="Buy" variant="light" />
@@ -304,12 +314,14 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
             <View style={styles.cell}>
               <View style={[styles.action]}>
                 <Text>Actions</Text>
-                <LiqualityButton
-                  text="Retry"
-                  variant="small"
-                  type="plain"
-                  action={() => ({})}
-                />
+                {historyItem?.status !== 'SUCCESS' && (
+                  <LiqualityButton
+                    text="Retry"
+                    variant="small"
+                    type="plain"
+                    action={() => ({})}
+                  />
+                )}
               </View>
             </View>
           </>

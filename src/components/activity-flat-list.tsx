@@ -26,14 +26,18 @@ import { BigNumber } from '@liquality/types'
 
 const ActivityFlatList = ({
   navigate,
+  selectedAsset,
   children,
 }: {
   navigate: (...args: any[]) => void
+  selectedAsset?: string
   children: React.ReactElement
 }) => {
   const { history = [], fiatRates } = useAppSelector((state) => ({
     fiatRates: state.fiatRates,
-    history: state.history,
+    history: selectedAsset
+      ? state.history?.filter((item) => item.from === selectedAsset)
+      : state.history,
   }))
 
   const handleChevronPress = (historyItem: HistoryItem) => {
