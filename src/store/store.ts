@@ -332,18 +332,20 @@ export const sendTransaction = async (options: {
  * @param asset
  * @param activeNetwork
  * @param tx
+ * @param newFee
  */
 export const speedUpTransaction = async (
   asset: string,
   activeNetwork: NetworkEnum,
   tx: string,
+  newFee: number,
 ) => {
   const account = await wallet.getAccount(
     cryptoassets[asset].chain,
     activeNetwork,
   )
 
-  return await account.speedUpTransaction(tx, 10000000000)
+  return await account.speedUpTransaction(tx, newFee)
 }
 
 export type AppDispatch = typeof store.dispatch

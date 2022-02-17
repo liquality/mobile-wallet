@@ -5,8 +5,8 @@ import { IStorage, StateType } from '@liquality/core/dist/types'
  * Implementation of the StorageManagerI interface for mobile
  */
 export default class StorageManager implements IStorage<StateType> {
-  excludedProps: Array<keyof StateType>
-  storageKey: string
+  private excludedProps: Array<keyof StateType>
+  private storageKey: string
 
   constructor(storageKey: string, excludedProps: Array<keyof StateType>) {
     this.storageKey = storageKey

@@ -38,6 +38,7 @@ type SwapConfirmationScreenProps = StackScreenProps<
 
 const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   route,
+  navigation,
 }) => {
   const { fiatRates, history = [] } = useAppSelector((state) => {
     const { activeNetwork, activeWalletId, history: historyObject } = state
@@ -48,6 +49,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     return {
       fiatRates: state.fiatRates,
       history: historyItems,
+      activeNetwork,
     }
   })
   const transaction = route.params.swapTransactionConfirmation
@@ -100,6 +102,15 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
 
   const handleSpeedUpTransaction = () => {
     //display gas fee selector
+    // if (from && activeNetwork && fromFundHash) {
+    //   speedUpTransaction(from, activeNetwork, fromFundHash, newFee)
+    // } else {
+    //   Alert.alert('Failed to speed up transaction')
+    // }
+    navigation.navigate('CustomFeeScreen', {
+      assetData: route.params.assetData,
+      screenTitle: 'NETWORK SPEED/FEE',
+    })
   }
 
   useEffect(() => {
@@ -125,7 +136,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.content}>
             {historyItem?.status === 'SUCCESS'
               ? 'Completed'
-              : historyItem?.status}
+              : historyItem?.statusMessage || historyItem?.status}
           </Text>
         </View>
         {historyItem?.status !== 'SUCCESS' && (
