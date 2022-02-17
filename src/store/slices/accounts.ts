@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AccountType } from '../../core/types'
 import { RootState } from '../store'
+import { AccountType } from '@liquality/core/dist/types'
 
 const initialState: AccountType[] = []
 

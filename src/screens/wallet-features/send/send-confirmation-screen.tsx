@@ -23,9 +23,16 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   const { from, startTime } = transaction
   const { value: amount, feePrice } = transaction?.sendTransaction!
   const [historyItem, setHistoryItem] = useState<HistoryItem>(transaction)
-  const { history = [] } = useAppSelector((state) => ({
-    history: state.history,
-  }))
+  const { history = [] } = useAppSelector((state) => {
+    const { activeNetwork, activeWalletId, history: historyObject } = state
+    let historyItems: HistoryItem[] = []
+    if (activeNetwork && activeWalletId && historyObject) {
+      historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
+    }
+    return {
+      history: historyItems,
+    }
+  })
 
   const handleTransactionSpeedUp = () => {
     //TODO display gas fee selector

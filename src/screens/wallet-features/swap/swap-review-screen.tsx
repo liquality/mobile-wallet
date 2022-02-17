@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { Dimensions, StyleSheet, View, ScrollView, Alert } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
@@ -23,8 +23,10 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
     fiatRates: state.fiatRates,
     activeNetwork: state.activeNetwork,
   }))
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleInitiateSwap = async () => {
+    setIsLoading(true)
     if (swapTransaction && activeNetwork) {
       const {
         fromAsset,
@@ -50,12 +52,15 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
             screenTitle: `Swap ${fromAsset.code} to ${toAsset.code} Details`,
           })
         } else {
+          setIsLoading(false)
           Alert.alert('Failed to perform swap')
         }
       } catch (error) {
+        setIsLoading(false)
         Alert.alert('Failed to perform swap')
       }
     } else {
+      setIsLoading(false)
       Alert.alert('Can not perform swap')
     }
   }
@@ -113,6 +118,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           text="Initiate Swap"
           variant="medium"
           type="positive"
+          isLoading={isLoading}
           action={handleInitiateSwap}>
           <FontAwesomeIcon
             icon={faExchange}

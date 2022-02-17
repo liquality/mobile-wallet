@@ -14,7 +14,7 @@ import {
   faExchange,
   faGreaterThan,
 } from '@fortawesome/pro-light-svg-icons'
-import { useWalletState } from '../../../hooks'
+import { useAppSelector, useWalletState } from '../../../hooks'
 import { formatFiat } from '../../../core/utils/coin-formatter'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import ActivityFlatList from '../../../components/activity-flat-list'
@@ -31,6 +31,9 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   }
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
   const { assets, assetCount, totalFiatBalance, loading } = useWalletState()
+  const { activeNetwork } = useAppSelector((state) => ({
+    activeNetwork: state.activeNetwork,
+  }))
 
   const handleSendBtnPress = useCallback(() => {
     navigation.navigate('AssetChooserScreen', {
@@ -77,7 +80,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     populateWallet().then(() => {
       fetchTransactionUpdates()
     })
-  }, [])
+  }, [activeNetwork])
 
   return (
     <View style={styles.container}>

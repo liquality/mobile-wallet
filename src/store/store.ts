@@ -9,8 +9,6 @@ import rootReducer from '../reducers'
 import StorageManager from '../core/storage-manager'
 import EncryptionManager from '../core/encryption-manager'
 import { BigNumber } from '@liquality/types'
-import Wallet from '@liquality/core/dist/wallet'
-import { Config } from '@liquality/core/dist/config'
 import {
   AccountType,
   HistoryItem,
@@ -28,14 +26,38 @@ import { INFURA_API_KEY } from '@env'
 import { AssetDataElementType } from '../types'
 import { Alert } from 'react-native'
 import SwapProvider from '@liquality/core/dist/swaps/swap-provider'
+import { Config } from '@liquality/core/dist/config'
+import Wallet from '@liquality/core/dist/wallet'
+import CustomConfig from '../core/config'
 
+//-------------------------1. CREATING AN INSTANCE OF THE WALLET--------------------------------------------------------
 const excludedProps: Array<keyof StateType> = ['key', 'wallets', 'unlockedAt']
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
 const encryptionManager = new EncryptionManager()
 const config = new Config(INFURA_API_KEY)
 const wallet = new Wallet(storageManager, encryptionManager, config)
 
-//Subscribe to market data updates
+//-------------------------2. CONFIGURING THE STORE---------------------------------------------------------------------
+const persistenceMiddleware: Middleware<
+  (action: PayloadAction<StateType>) => StateType,
+  StateType
+> = ({ getState }) => {
+  return (next) => (action) => {
+    storageManager.write({
+      ...getState(),
+      ...action.payload,
+    })
+    return next(action)
+  }
+}
+
+export const store = configureStore({
+  reducer: rootReducer,
+  preloadedState: {},
+  middleware: new MiddlewareArray().concat([persistenceMiddleware, thunk]),
+})
+
+//-------------------------3. REGISTERING THE CALLBACKS / SUBSCRIBING TO MEANINGFULL EVENTS-----------------------------
 wallet.on('onMarketDataUpdate', (marketData) => {
   store.dispatch({
     type: 'UPDATE_MARKET_DATA',
@@ -46,19 +68,36 @@ wallet.on('onMarketDataUpdate', (marketData) => {
 })
 
 wallet.on('onTransactionUpdate', (transaction: HistoryItem) => {
-  store.dispatch({
-    type: 'TRANSACTION_UPDATE',
-    payload: {
-      history: [
-        ...(store.getState().history || []).filter((item) =>
-          item.type === 'SEND'
-            ? item.sendTransaction?.hash !== transaction.sendTransaction?.hash
-            : item.swapTransaction?.id !== transaction.swapTransaction?.id,
-        ),
-        transaction,
-      ],
-    } as StateType,
-  })
+  const {
+    activeNetwork,
+    activeWalletId,
+    history: historyObject,
+  } = store.getState()
+
+  let historyItems: HistoryItem[] = []
+  if (activeNetwork && activeWalletId && historyObject) {
+    historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
+    store.dispatch({
+      type: 'TRANSACTION_UPDATE',
+      payload: {
+        history: {
+          ...historyObject,
+          [activeNetwork]: {
+            [activeWalletId]: [
+              ...historyItems.filter((item) =>
+                item.type === 'SEND'
+                  ? item.sendTransaction?.hash !==
+                    transaction.sendTransaction?.hash
+                  : item.swapTransaction?.id !==
+                    transaction.swapTransaction?.id,
+              ),
+              transaction,
+            ],
+          },
+        },
+      } as StateType,
+    })
+  }
 })
 
 //Subscribe to account updates
@@ -99,25 +138,7 @@ wallet.subscribe((account: AccountType) => {
   }
 })
 
-const persistenceMiddleware: Middleware<
-  (action: PayloadAction<StateType>) => StateType,
-  StateType
-> = ({ getState }) => {
-  return (next) => (action) => {
-    storageManager.write({
-      ...getState(),
-      ...action.payload,
-    })
-    return next(action)
-  }
-}
-
-export const store = configureStore({
-  reducer: rootReducer,
-  preloadedState: {},
-  middleware: new MiddlewareArray().concat([persistenceMiddleware, thunk]),
-})
-
+//-------------------------PERFORMING ACTIONS ON THE WALLET-------------------------------------------------------------
 export const isNewInstallation = async (): Promise<boolean> => {
   try {
     const state = await wallet.restore()
@@ -128,11 +149,11 @@ export const isNewInstallation = async (): Promise<boolean> => {
   return await wallet.isNewInstallation()
 }
 
-export const retrieveSwapRates = async () => {
-  // wallet.
-}
-
-//TODO Use slices and async thunks instead
+/**
+ * Creates a brand new wallet
+ * @param password
+ * @param mnemonic
+ */
 export const createWallet = async (
   password: string,
   mnemonic: string,
@@ -140,7 +161,10 @@ export const createWallet = async (
   return await wallet.init(password, mnemonic, false)
 }
 
-export const populateWallet = async () => {
+/**
+ * Populates an already instantiated wallet with account information
+ */
+export const populateWallet = async (): Promise<void> => {
   await wallet
     .addAccounts(store.getState().activeNetwork || NetworkEnum.Mainnet)
     .then(() => {
@@ -150,28 +174,35 @@ export const populateWallet = async () => {
       Alert.alert(`populateWallet: ${error}`)
     })
 }
+
 /**
- * A dispatch action that restores/decrypts the wallet
+ * Updates the config and populate the wallet accordingly
+ */
+export const updateWallet = async (): Promise<void> => {
+  wallet.updateConfig(new CustomConfig(INFURA_API_KEY, store.getState()))
+  await populateWallet()
+}
+
+/**
+ * Restores an already created wallet from local storage
  * @param password
  */
 export const restoreWallet = async (password: string): Promise<StateType> => {
   return await wallet.restore(password)
 }
 
-export const fetchTransactionUpdates = async () => {
-  const activeNetwork = store.getState().activeNetwork
-  if (!activeNetwork || !store) {
+export const fetchTransactionUpdates = async (): Promise<void> => {
+  const { activeNetwork, activeWalletId, history } = store.getState()
+  if (!activeNetwork || !activeWalletId || !history) {
     return
   }
 
   const historyItems =
-    store
-      ?.getState()
-      ?.history?.filter(
-        (item) =>
-          (item.type === 'SEND' && item.status !== 'SUCCESS') ||
-          (item.type === 'SWAP' && item.status !== 'SUCCESS'),
-      ) || []
+    history[activeNetwork]?.[activeWalletId]?.filter(
+      (item) =>
+        ['SEND', 'SWAP'].includes(item.type) &&
+        !['SUCCESS', 'REFUNDED'].includes(item.status),
+    ) || []
 
   for (const item of historyItems) {
     const fromAccount = await wallet.getAccount(
@@ -205,12 +236,25 @@ export const fetchTransactionUpdates = async () => {
   }
 }
 
+/**
+ * Retrieves active swap providers from the wallet
+ */
 export const initSwaps = (): Partial<
   Record<SwapProvidersEnum, SwapProvider>
 > => {
   return wallet.getSwapProviders()
 }
 
+/**
+ * Performs a swap
+ * @param from
+ * @param to
+ * @param fromAmount
+ * @param toAmount
+ * @param fromNetworkFee
+ * @param toNetworkFee
+ * @param activeNetwork
+ */
 export const performSwap = async (
   from: AssetDataElementType,
   to: AssetDataElementType,
@@ -252,10 +296,18 @@ export const performSwap = async (
     })
 }
 
+/**
+ * Retrieves the swap statuses we can display in the transaction timeline in transaction.details
+ * @param swapProviderType
+ */
 export const getSwapStatuses = (swapProviderType: SwapProvidersEnum) => {
   return wallet.getSwapProvider(swapProviderType).statuses
 }
 
+/**
+ * Performs a send operation
+ * @param options
+ */
 export const sendTransaction = async (options: {
   activeNetwork: NetworkEnum
   asset: string
@@ -275,6 +327,12 @@ export const sendTransaction = async (options: {
   return await assets[0].transmit(options)
 }
 
+/**
+ * Speeds up an already submitted transaction
+ * @param asset
+ * @param activeNetwork
+ * @param tx
+ */
 export const speedUpTransaction = async (
   asset: string,
   activeNetwork: NetworkEnum,
@@ -287,6 +345,7 @@ export const speedUpTransaction = async (
 
   return await account.speedUpTransaction(tx, 10000000000)
 }
+
 export type AppDispatch = typeof store.dispatch
 
 export type RootState = ReturnType<typeof store.getState>

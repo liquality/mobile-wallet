@@ -22,6 +22,7 @@ import ProgressCircle from './animations/progress-circle'
 import { formatDate } from '../utils'
 import { cryptoToFiat, dpUI } from '../core/utils/coin-formatter'
 import SuccessIcon from '../assets/icons/success-icon.svg'
+import RefundedIcon from '../assets/icons/refunded.svg'
 import { BigNumber } from '@liquality/types'
 
 const ActivityFlatList = ({
@@ -33,12 +34,20 @@ const ActivityFlatList = ({
   selectedAsset?: string
   children: React.ReactElement
 }) => {
-  const { history = [], fiatRates } = useAppSelector((state) => ({
-    fiatRates: state.fiatRates,
-    history: selectedAsset
-      ? state.history?.filter((item) => item.from === selectedAsset)
-      : state.history,
-  }))
+  const { history = [], fiatRates } = useAppSelector((state) => {
+    const { activeNetwork, activeWalletId, history: historyObject } = state
+    let historyItems: HistoryItem[] = []
+    if (activeNetwork && activeWalletId && historyObject) {
+      historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
+    }
+
+    return {
+      fiatRates: state.fiatRates,
+      history: selectedAsset
+        ? historyItems.filter((item) => item.from === selectedAsset)
+        : historyItems.filter((item) => !!item.id),
+    }
+  })
 
   const handleChevronPress = (historyItem: HistoryItem) => {
     if (historyItem.type === 'SWAP') {
@@ -129,9 +138,9 @@ const ActivityFlatList = ({
           </Text>
         </View>
         <View style={styles.col4}>
-          {status === 'SUCCESS' ? (
-            <SuccessIcon />
-          ) : (
+          {status === 'REFUNDED' && <RefundedIcon />}
+          {status === 'SUCCESS' && <SuccessIcon />}
+          {!['SUCCESS', 'REFUNDED'].includes(status) && (
             <ProgressCircle
               radius={17}
               current={currentStep}

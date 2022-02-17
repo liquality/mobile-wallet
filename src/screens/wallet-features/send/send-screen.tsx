@@ -15,7 +15,6 @@ import {
 } from '@fortawesome/pro-light-svg-icons'
 import LiqualityButton from '../../../components/ui/button'
 import { useAppSelector } from '../../../hooks'
-import { GasSpeedType, NetworkEnum } from '../../../core/types'
 import { BigNumber } from '@liquality/types'
 import { calculateAvailableAmnt } from '../../../core/utils/fee-calculator'
 import {
@@ -28,6 +27,7 @@ import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { chainDefaultColors } from '../../../core/config'
+import { GasSpeedType, NetworkEnum } from '@liquality/core/dist/types'
 
 const useInputState = (
   initialValue: string,

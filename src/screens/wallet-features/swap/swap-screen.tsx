@@ -85,7 +85,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   )
   const [toAsset, setToAsset] = useState<AssetDataElementType>()
   const [selectedQuote, setSelectedQuote] = useState<MarketDataType>()
-  const [showWarning] = useState(false)
+  const [error, setError] = useState('')
   const fromNetworkFee = useRef<BigNumber>(new BigNumber(0))
   const toNetworkFee = useRef<BigNumber>(new BigNumber(0))
   const [maximumValue, setMaximumValue] = useState<BigNumber>(new BigNumber(0))
@@ -177,30 +177,42 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       if (fromAsset && toAsset) {
         const promises: Promise<QuoteType>[] = []
         for (const provider of swapProviders) {
-          promises.push(
-            provider.getQuote(
-              marketData.filter((md) =>
-                selectedQuote ? md.provider === selectedQuote.provider : true,
-              ),
-              fromAsset?.code,
-              toAsset?.code,
-              amount,
+          const quote = provider.getQuote(
+            marketData.filter((md) =>
+              selectedQuote ? md.provider === selectedQuote.provider : true,
             ),
+            fromAsset?.code,
+            toAsset?.code,
+            amount,
           )
+          if (quote) {
+            promises.push(quote)
+          }
         }
 
-        const responses = await Promise.all(promises)
-        const sortedQuotes = sortQuotes(responses.filter((q) => !!q))
-        if (sortedQuotes.length) {
-          bestQuoteAmount = new BigNumber(
-            unitToCurrency(
-              cryptoassets[toAsset.code],
-              sortedQuotes[0].toAmount?.toNumber() || 0,
-            ),
+        if (promises.length === 0) {
+          setError(
+            "This pair isn't traded yet. See our list of compatible pairs here. You can also suggest list of your token on Liquality Discord",
           )
+        } else {
+          const responses = await Promise.all(promises)
+          const sortedQuotes = sortQuotes(responses.filter((q) => !!q))
+          if (sortedQuotes.length) {
+            bestQuoteAmount = new BigNumber(
+              unitToCurrency(
+                cryptoassets[toAsset.code],
+                sortedQuotes[0].toAmount?.toNumber() || 0,
+              ),
+            )
+          }
         }
       }
 
+      if (bestQuoteAmount.eq(0)) {
+        setError(
+          `Quotes not found: ${selectedQuote?.min} - ${selectedQuote?.max}`,
+        )
+      }
       setBestQuote(bestQuoteAmount)
     },
     [fromAsset, marketData, selectedQuote, swapProviders, toAsset],
@@ -221,18 +233,15 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }, [swapAssetPair, min])
 
   useEffect(() => {
+    setError('')
     const minimum = min()
     updateBestQuote(state.fromAmount?.gt(0) ? state.fromAmount : minimum)
   }, [min, state.fromAmount, updateBestQuote])
 
   return (
     <SafeAreaView style={styles.container}>
-      {showWarning && (
-        <MessageBanner
-          text1="No liquidity."
-          text2="Request liquidity for tokens via"
-          onAction={() => ({})}
-        />
+      {!!error && (
+        <MessageBanner text1="Error" text2={error} onAction={() => ({})} />
       )}
       <View style={styles.assetBlock}>
         <AmountTextInputBlock
@@ -278,9 +287,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         <View style={styles.wrapper}>
           <Label text="Available" variant="light" />
           <Text style={[styles.font, styles.amount]}>
-            {`${prettyBalance(fromAsset?.balance, fromAsset?.code)} ${
-              fromAsset?.code
-            }`}
+            {fromAsset?.balance &&
+              `${prettyBalance(fromAsset?.balance, fromAsset?.code)} ${
+                fromAsset?.code
+              }`}
           </Text>
         </View>
       </View>

@@ -5,9 +5,9 @@ import Switch from '../../../components/ui/switch'
 import { useAppDispatch, useAppSelector } from '../../../hooks'
 import SearchBox from '../../../components/ui/search-box'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
-import { NetworkEnum } from '../../../core/types'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
-import Config from '../../../core/config'
+import { customConfig } from '../../../core/config'
+import { NetworkEnum } from '@liquality/core/dist/types'
 
 const AssetManagementScreen: FC = () => {
   const DEFAULT_COLOR = '#EFEFEF'
@@ -58,12 +58,12 @@ const AssetManagementScreen: FC = () => {
     let myAssets: Asset[] = []
 
     if (activeNetwork === NetworkEnum.Testnet) {
-      myAssets = Config.defaultAssets[activeNetwork].reduce(
+      myAssets = customConfig.defaultAssets[activeNetwork].reduce(
         (assetList: Asset[], asset) => {
           if (cryptoassets.hasOwnProperty(asset)) {
             assetList.push({
               ...cryptoassets[asset],
-              contractAddress: Config.testnetContractAddresses[asset],
+              contractAddress: customConfig.testnetContractAddresses[asset],
             })
           }
           return assetList

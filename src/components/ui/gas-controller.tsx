@@ -2,8 +2,8 @@ import React, { FC, MutableRefObject, useEffect, useState } from 'react'
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { BigNumber, FeeDetails } from '@liquality/types'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
-import { GasSpeedType } from '../../core/types'
 import { useAppSelector } from '../../hooks'
+import { GasSpeedType } from '@liquality/core/dist/types'
 
 const gasSpeeds: GasSpeedType[] = ['slow', 'average', 'fast']
 type GasControllerProps = {

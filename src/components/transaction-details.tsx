@@ -99,7 +99,7 @@ type TimelineInfo = {
   step: number
   label: string
   asset?: string
-  fee?: string
+  fee?: number
   confirmations?: number
 }
 
@@ -173,15 +173,14 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (
     }
 
     const { to, from } = historyItem
-    if (type === 'SWAP') {
-      // transactionStatuses = getSwapStatuses(SwapProvidersEnum.LIQUALITY)
+    if (type === 'SWAP' && historyItem.swapTransaction) {
       const { fromFundTx, toFundTx, toClaimTx } = historyItem.swapTransaction
       transactionStatuses = [
         {
           step: 1,
           label: `Locked ${from}`,
           asset: from,
-          fee: fromFundTx?.fee,
+          fee: fromFundTx?.fee || 0,
           confirmations: fromFundTx?.confirmations,
         },
         {
@@ -199,7 +198,7 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (
           confirmations: toClaimTx?.confirmations,
         },
       ]
-    } else if (type === 'SEND') {
+    } else if (type === 'SEND' && historyItem.sendTransaction) {
       const { confirmations, fee } = historyItem.sendTransaction
       transactionStatuses = [
         {
@@ -244,7 +243,7 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (
         const payload = getConfirmation(item.step)
         return (
           <View key={`${item.label}-${index}`} style={styles.row}>
-            {index % 2 === 0 ? (
+            {index % 2 === 0 && item.asset ? (
               <ConfirmationBlock
                 address={payload.address}
                 status={item.label}
@@ -267,7 +266,7 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (
               <Separator completed={item.step <= historyItem.currentStep} />
               {index === statuses.length - 1 && <View style={styles.start} />}
             </View>
-            {index % 2 === 1 ? (
+            {index % 2 === 1 && item.asset ? (
               <ConfirmationBlock
                 address={payload.address}
                 status={item.label}
@@ -286,7 +285,9 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (
       {historyItem.status === 'SUCCESS' && (
         <View style={styles.sentInfo}>
           <Label text="Completed" variant="strong" />
-          <Text style={styles.label}>{formatDate(historyItem.endTime)}</Text>
+          <Text style={styles.label}>
+            {historyItem.endTime && formatDate(historyItem.endTime)}
+          </Text>
         </View>
       )}
     </View>

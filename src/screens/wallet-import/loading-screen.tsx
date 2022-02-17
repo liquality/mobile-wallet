@@ -5,7 +5,7 @@ import { RootStackParamList } from '../../types'
 import { useEffect, useState } from 'react'
 import { createWallet } from '../../store/store'
 import { useDispatch } from 'react-redux'
-import { StateType } from '../../core/types'
+import { StateType } from '@liquality/core/dist/types'
 
 type LoadingScreenProps = StackScreenProps<RootStackParamList, 'LoadingScreen'>
 

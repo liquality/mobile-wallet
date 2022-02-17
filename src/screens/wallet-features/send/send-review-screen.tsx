@@ -23,12 +23,14 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
     route.params.sendTransaction || {}
   const [rate, setRate] = useState<number>(0)
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const { fiatRates, activeNetwork } = useAppSelector((state) => ({
     fiatRates: state.fiatRates,
     activeNetwork: state.activeNetwork,
   }))
 
   const handleSendPress = async () => {
+    setIsLoading(true)
     if (!asset || !destinationAddress || !amount || !gasFee || !activeNetwork) {
       setError('Input data invalid')
       return
@@ -50,6 +52,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         sendTransactionConfirmation: transaction,
       })
     } catch (_error) {
+      setIsLoading(false)
       setError('Failed to send transaction: ' + _error)
     }
   }
@@ -130,6 +133,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
             text={`Send ${asset}`}
             variant="medium"
             type="positive"
+            isLoading={isLoading}
             action={handleSendPress}
           />
         </View>
