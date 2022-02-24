@@ -123,12 +123,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const handleReviewBtnPress = async () => {
-    if (!fromAsset || !toAsset || !state.fromAmount) {
+    if (!fromAsset || !toAsset || !state.fromAmount || !selectedQuote) {
       throw new Error('Invalid arguments for swap')
     }
 
     navigation.navigate('SwapReviewScreen', {
       swapTransaction: {
+        swapProviderType: selectedQuote.provider,
         fromAsset,
         toAsset,
         fromAmount: state.fromAmount,
@@ -174,7 +175,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const updateBestQuote = useCallback(
     async (amount: BigNumber) => {
       let bestQuoteAmount = new BigNumber(0)
-      if (fromAsset && toAsset) {
+      if (fromAsset?.code && toAsset?.code) {
         const promises: Promise<QuoteType>[] = []
         for (const provider of swapProviders) {
           const quote = provider.getQuote(

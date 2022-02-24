@@ -35,9 +35,11 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         toAmount,
         fromNetworkFee,
         toNetworkFee,
+        swapProviderType,
       }: SwapInfoType = swapTransaction
       try {
         const transaction = await performSwap(
+          swapProviderType?.toUpperCase(),
           fromAsset,
           toAsset,
           fromAmount,

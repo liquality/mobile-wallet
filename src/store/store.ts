@@ -173,6 +173,8 @@ export const populateWallet = async (): Promise<void> => {
     .catch((error) => {
       Alert.alert(`populateWallet: ${error}`)
     })
+
+  await getQuotes()
 }
 
 /**
@@ -228,7 +230,7 @@ export const fetchTransactionUpdates = async (): Promise<void> => {
           .runRulesEngine(fromAccount, toAccount, item.swapTransaction)
       }
     } else if (item.type === 'SEND') {
-      const assets: IAsset[] = await fromAccount.getAssets()
+      const assets: IAsset[] = fromAccount.getAssets()
       if (assets.length > 0 && item.sendTransaction) {
         assets[0].runRulesEngine(item.sendTransaction)
       }
@@ -247,6 +249,7 @@ export const initSwaps = (): Partial<
 
 /**
  * Performs a swap
+ * @param swapProviderType
  * @param from
  * @param to
  * @param fromAmount
@@ -256,6 +259,7 @@ export const initSwaps = (): Partial<
  * @param activeNetwork
  */
 export const performSwap = async (
+  swapProviderType: string,
   from: AssetDataElementType,
   to: AssetDataElementType,
   fromAmount: BigNumber,
@@ -267,11 +271,13 @@ export const performSwap = async (
   const fromAccount: IAccount = wallet.getAccount(from.chain, activeNetwork)
   const toAccount: IAccount = wallet.getAccount(to.chain, activeNetwork)
 
-  if (!fromAccount || !toAccount) {
+  if (!fromAccount || !toAccount || !swapProviderType) {
     Alert.alert('Make sure to provide two accounts to perform a swap')
   }
 
-  const swapProvider = wallet.getSwapProvider(SwapProvidersEnum.LIQUALITY)
+  const swapProvider = wallet.getSwapProvider(
+    swapProviderType.toUpperCase() as SwapProvidersEnum,
+  )
   if (!swapProvider) {
     throw new Error('Failed to perform the swap')
   }
@@ -323,7 +329,7 @@ export const sendTransaction = async (options: {
     cryptoassets[options.asset].chain,
     options.activeNetwork,
   )
-  const assets = await account.getAssets()
+  const assets = account.getAssets()
   return await assets[0].transmit(options)
 }
 
@@ -346,6 +352,28 @@ export const speedUpTransaction = async (
   )
 
   return await account.speedUpTransaction(tx, newFee)
+}
+
+export const getQuotes = async (
+  from: string,
+  to: string,
+  amount: BigNumber,
+) => {
+  const quotes = []
+  for (const provider of Object.values(wallet.getSwapProviders())) {
+    const quote = await provider.getQuote(
+      store.getState().marketData || [],
+      from,
+      to,
+      amount,
+    )
+
+    if (quote) {
+      quotes.push(quote)
+    }
+  }
+
+  return quotes
 }
 
 export type AppDispatch = typeof store.dispatch

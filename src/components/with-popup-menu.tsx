@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faLock, faPlug } from '@fortawesome/pro-light-svg-icons'
@@ -24,13 +24,18 @@ const WithPopupMenu = <T extends FctType>(
     }
 
     const handleManageAssetsBtnPress = () => {
+      navigation.setParams({ showPopup: !route?.params?.showPopup })
       navigation.navigate('AssetManagementScreen', {
         screenTitle: 'Manage Assets',
       })
     }
 
     return (
-      <Fragment>
+      <Pressable
+        style={styles.container}
+        onPress={() =>
+          navigation.setParams({ showPopup: !route?.params?.showPopup })
+        }>
         <Component navigation={navigation} route={route} />
         {route?.params?.showPopup && (
           <View style={styles.modalContainer}>
@@ -62,12 +67,15 @@ const WithPopupMenu = <T extends FctType>(
             </Pressable>
           </View>
         )}
-      </Fragment>
+      </Pressable>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   modalContainer: {
     zIndex: 5,
     position: 'absolute',

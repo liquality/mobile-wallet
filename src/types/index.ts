@@ -29,6 +29,7 @@ export type SwapAssetPairType = {
 }
 
 export type SwapInfoType = {
+  swapProviderType: string
   fromAsset: AssetDataElementType
   toAsset: AssetDataElementType
   fromAmount: BigNumber

@@ -29,7 +29,7 @@ platform :ios do
     lane :build do
         get_certificates           # invokes cert
         get_provisioning_profile   # invokes sigh
-        generate_icons
+#         generate_icons
         if lane_context[SharedValues::LANE_NAME] == 'ios beta'
             #TODO we need to define how we deal with versioning for both beta and release deployments
             increment_build_number(
@@ -37,10 +37,10 @@ platform :ios do
                 build_number: latest_testflight_build_number + 1
             )
             # requires imagemagick (brew install imagemagick)
-            add_badge(
+#             add_badge(
                 # shield: "Version-0.0.1-blue",
-                glob: "/LiqualityMobile/Images.xcassets/AppIcon.appiconset/*.png"
-            )
+#                 glob: "/LiqualityMobile/Images.xcassets/AppIcon.appiconset/*.png"
+#             )
         end
         build_app(workspace: "LiqualityMobile.xcworkspace", scheme: "LiqualityMobile")
     end
