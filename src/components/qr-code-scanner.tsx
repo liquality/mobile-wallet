@@ -1,11 +1,21 @@
-import React, { FC, useCallback, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import { View, StyleSheet, Modal, SafeAreaView, Pressable } from 'react-native'
-import { BarCodeReadEvent, RNCamera } from 'react-native-camera'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTimes } from '@fortawesome/pro-light-svg-icons'
 import { ChainId, chains } from '@liquality/cryptoassets'
 import Svg, { Rect } from 'react-native-svg'
 import Error from '../components/ui/error'
+import {
+  Camera,
+  useCameraDevices,
+  useFrameProcessor,
+} from 'react-native-vision-camera'
+import {
+  Barcode,
+  BarcodeFormat,
+  scanBarcodes,
+} from 'vision-camera-code-scanner'
+import { runOnJS } from 'react-native-reanimated'
 
 type QrCodeScannerPropsType = {
   onClose: (address: string) => void
@@ -13,17 +23,20 @@ type QrCodeScannerPropsType = {
 }
 
 const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
+  const [hasPermission, setHasPermission] = React.useState(false)
   const { onClose, chain } = props
   const [error, setError] = useState('')
+  const devices = useCameraDevices()
+  const device = devices.back
 
-  const handleQrCodeDetected = useCallback(
-    (event: BarCodeReadEvent) => {
+  const onQRCodeDetected = useCallback(
+    (qrCode: Barcode) => {
       if (error) {
         setError('')
       }
-      const address = event.data.split(':')?.[1]
+      const address = qrCode.displayValue?.split(':')?.[1]
       if (address && chains[chain].isValidAddress(address)) {
-        onClose(event.data)
+        onClose(address)
       } else {
         setError('Invalid QR Code')
       }
@@ -31,9 +44,27 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
     [chain, error, onClose],
   )
 
+  const frameProcessor = useFrameProcessor(
+    (frame) => {
+      'worklet'
+      const qrCodes = scanBarcodes(frame, [BarcodeFormat.QR_CODE])
+      if (qrCodes.length > 0) {
+        runOnJS(onQRCodeDetected)(qrCodes[0])
+      }
+    },
+    [onQRCodeDetected],
+  )
+
   const handleCloseBtnPress = () => {
     onClose('')
   }
+
+  useEffect(() => {
+    ;(async () => {
+      const status = await Camera.requestCameraPermission()
+      setHasPermission(status === 'authorized')
+    })()
+  }, [])
 
   return (
     <Modal style={styles.modalView}>
@@ -60,12 +91,15 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
             <Rect x="0" y="210" width="50" height="49" fill="#fefefe" />
             <Rect x="210" y="0" width="49" height="50" fill="#fefefe" />
             <Rect x="210" y="210" width="49" height="49" fill="#fefefe" />
-            <RNCamera
-              style={styles.preview}
-              type={RNCamera.Constants.Type.back}
-              captureAudio={false}
-              onBarCodeRead={handleQrCodeDetected}
-            />
+            {device && hasPermission && (
+              <Camera
+                style={styles.preview}
+                device={device}
+                isActive={true}
+                frameProcessor={frameProcessor}
+                frameProcessorFps={5}
+              />
+            )}
           </Svg>
           {!!error && <Error message={error} style={styles.error} />}
         </View>
@@ -107,6 +141,7 @@ const styles = StyleSheet.create({
     borderColor: '#fefefe',
     marginTop: 1,
     marginLeft: 1,
+    padding: 5,
   },
   error: {
     width: 260,
