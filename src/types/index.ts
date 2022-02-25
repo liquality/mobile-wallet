@@ -2,8 +2,11 @@ import { Dispatch, ReactElement, SetStateAction } from 'react'
 import { BigNumber } from '@liquality/types'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
-import { NetworkEnum } from '../core/types'
-import { HistoryItem, SwapTransactionType } from '@liquality/core/dist/types'
+import {
+  HistoryItem,
+  NetworkEnum,
+  SwapTransactionType,
+} from '@liquality/core/dist/types'
 
 export type AssetDataElementType = {
   id: string
@@ -26,6 +29,7 @@ export type SwapAssetPairType = {
 }
 
 export type SwapInfoType = {
+  swapProviderType: string
   fromAsset: AssetDataElementType
   toAsset: AssetDataElementType
   fromAmount: BigNumber

@@ -10,7 +10,6 @@ import {
 // import { Picker } from '@react-native-picker/picker'
 // import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 // import { faAngleDown, faAngleUp } from '@fortawesome/pro-light-svg-icons'
-import { NetworkEnum } from '../../../core/types'
 import LiqualityButton from '../../../components/ui/button'
 // import AssetIcon from '../../../components/asset-icon'
 import SettingsSwitch from '../../../components/ui/switch'
@@ -19,6 +18,8 @@ import { useDispatch } from 'react-redux'
 import { useAppSelector } from '../../../hooks'
 // import { ChainId } from '@liquality/cryptoassets'
 import WhatsNew from '../../../components/ui/whats-new'
+import { NetworkEnum } from '@liquality/core/dist/types'
+import { updateWallet } from '../../../store/store'
 
 const SettingsScreen = () => {
   const {
@@ -92,6 +93,7 @@ const SettingsScreen = () => {
       type: 'NETWORK_UPDATE',
       payload: { activeNetwork: network },
     })
+    updateWallet()
   }
 
   useEffect(() => {

@@ -1,5 +1,12 @@
 import React, { FC, useContext } from 'react'
-import { Pressable, StyleProp, StyleSheet, Text, ViewStyle } from 'react-native'
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  ViewStyle,
+} from 'react-native'
 import { ThemeContext } from '../../theme'
 
 type LiqualityButtonProps = {
@@ -9,6 +16,7 @@ type LiqualityButtonProps = {
   contentType?: 'numeric' | 'alphanumeric'
   action: (...args: unknown[]) => void
   style?: StyleProp<ViewStyle>
+  isLoading?: boolean
   children?: React.ReactElement
 }
 
@@ -20,6 +28,7 @@ const LiqualityButton: FC<LiqualityButtonProps> = (props) => {
     contentType = 'alphanumeric',
     action,
     style,
+    isLoading,
     children,
   } = props
   const theme = useContext(ThemeContext)
@@ -28,16 +37,20 @@ const LiqualityButton: FC<LiqualityButtonProps> = (props) => {
     <Pressable
       style={[styles.actionBtn, styles[variant], styles[type], style]}
       onPress={action}>
-      {children && children}
-      <Text
-        style={[
-          styles[type],
-          contentType === 'alphanumeric'
-            ? theme.buttonText
-            : theme.buttonTextAmount,
-        ]}>
-        {text}
-      </Text>
+      {!isLoading && !!children && children}
+      {isLoading ? (
+        <ActivityIndicator color="#FFF" />
+      ) : (
+        <Text
+          style={[
+            styles[type],
+            contentType === 'alphanumeric'
+              ? theme.buttonText
+              : theme.buttonTextAmount,
+          ]}>
+          {text}
+        </Text>
+      )}
     </Pressable>
   )
 }

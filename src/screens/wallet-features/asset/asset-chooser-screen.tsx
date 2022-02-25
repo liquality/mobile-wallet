@@ -73,7 +73,6 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
               toAsset = assets.filter((item) => item.code === 'BTC')[0]
             } else {
               toAsset = assets.filter((item) => item.code === 'ETH')[0]
-                ?.assets?.[0]
             }
             navigation.navigate(screenMap[route.params.action], {
               swapAssetPair: {

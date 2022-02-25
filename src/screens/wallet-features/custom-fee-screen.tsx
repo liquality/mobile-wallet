@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
 import LiqualityButton from '../../components/ui/button'
-import { NetworkEnum } from '../../core/types'
 import { useAppSelector } from '../../hooks'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { cryptoToFiat, formatFiat } from '../../core/utils/coin-formatter'
@@ -14,6 +13,7 @@ import {
   UseInputStateReturnType,
 } from '../../types'
 import { ChainId } from '@liquality/cryptoassets'
+import { NetworkEnum } from '@liquality/core/dist/types'
 
 type CustomFeeScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
 type SpeedMode = keyof FeeDetails

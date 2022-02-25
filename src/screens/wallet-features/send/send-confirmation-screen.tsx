@@ -18,17 +18,35 @@ type SendConfirmationScreenProps = StackScreenProps<
 
 const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   route,
+  navigation,
 }) => {
   const transaction = route.params.sendTransactionConfirmation!
   const { from, startTime } = transaction
   const { value: amount, feePrice } = transaction?.sendTransaction!
   const [historyItem, setHistoryItem] = useState<HistoryItem>(transaction)
-  const { history = [] } = useAppSelector((state) => ({
-    history: state.history,
-  }))
+  const { history = [] } = useAppSelector((state) => {
+    const { activeNetwork, activeWalletId, history: historyObject } = state
+    let historyItems: HistoryItem[] = []
+    if (activeNetwork && activeWalletId && historyObject) {
+      historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
+    }
+    return {
+      history: historyItems,
+      activeNetwork,
+    }
+  })
 
   const handleTransactionSpeedUp = () => {
     //TODO display gas fee selector
+    // if (from && activeNetwork && hash) {
+    //   speedUpTransaction(from, activeNetwork, hash, newFee)
+    // } else {
+    //   Alert.alert('Failed to speed up transaction')
+    // }
+    navigation.navigate('CustomFeeScreen', {
+      assetData: route.params.assetData,
+      screenTitle: 'NETWORK SPEED/FEE',
+    })
   }
 
   useEffect(() => {

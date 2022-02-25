@@ -2,8 +2,11 @@
 import { InteractionManager } from 'react-native'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { createWallet } from './store/store'
-import { StateType } from './core/types'
-import { QuoteType, SwapProvidersEnum } from '@liquality/core/dist/types'
+import {
+  QuoteType,
+  StateType,
+  SwapProvidersEnum,
+} from '@liquality/core/dist/types'
 import { MNEMONIC, PASSWORD } from '@env'
 
 export const onOpenSesame = async (dispatch: any, navigation: any) => {
