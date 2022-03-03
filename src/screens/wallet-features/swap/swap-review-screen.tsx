@@ -4,12 +4,12 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClock, faExchange } from '@fortawesome/pro-light-svg-icons'
 import { RootStackParamList, SwapInfoType } from '../../../types'
-import LiqualityButton from '../../../components/ui/button'
 import Warning from '../../../components/ui/warning'
 import SwapRates from '../../../components/swap-rates'
 import { performSwap } from '../../../store/store'
 import { useAppSelector } from '../../../hooks'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
+import Button from '../../../theme/button'
 
 type SwapReviewScreenProps = StackScreenProps<
   RootStackParamList,
@@ -110,25 +110,29 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         icon={faClock}
       />
       <View style={[styles.buttonWrapper]}>
-        <LiqualityButton
-          text="Edit"
-          variant="medium"
-          type="negative"
-          action={() => navigation.goBack()}
+        <Button
+          type="secondary"
+          variant="m"
+          label="Edit"
+          onPress={navigation.goBack}
+          isBorderless={false}
+          isActive={true}
         />
-        <LiqualityButton
-          text="Initiate Swap"
-          variant="medium"
-          type="positive"
-          isLoading={isLoading}
-          action={handleInitiateSwap}>
+        <Button
+          type="primary"
+          variant="m"
+          label="Initiate Swap"
+          onPress={handleInitiateSwap}
+          isBorderless={false}
+          isActive={true}
+          isLoading={isLoading}>
           <FontAwesomeIcon
             icon={faExchange}
             size={15}
             color={'#FFFFFF'}
             style={styles.icon}
           />
-        </LiqualityButton>
+        </Button>
       </View>
     </ScrollView>
   )

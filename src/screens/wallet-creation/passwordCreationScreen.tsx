@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import {
   View,
   Text,
@@ -10,7 +10,6 @@ import {
 
 import { RootStackParamList } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import { ThemeContext } from '../../theme'
 import Header from '../header'
 import ButtonFooter from '../../components/button-footer'
 
@@ -42,7 +41,6 @@ const PasswordCreationScreen = ({
   const passwordInput = useInputState('')
   const passwordConfirmationInput = useInputState('')
   const [error, setError] = useState('')
-  const theme = useContext(ThemeContext)
 
   const resetInput = () => {
     if (error) {
@@ -110,7 +108,7 @@ const PasswordCreationScreen = ({
           onPress={() =>
             navigation.navigate(route.params.nextScreen || 'Entry')
           }>
-          <Text style={[theme.buttonText, styles.cancelText]}>Cancel</Text>
+          <Text style={[styles.cancelText]}>Cancel</Text>
         </Pressable>
         <Pressable
           style={[
@@ -127,7 +125,7 @@ const PasswordCreationScreen = ({
               password: passwordInput.value,
             })
           }>
-          <Text style={[theme.buttonText, styles.nextText]}>Next</Text>
+          <Text style={[styles.nextText]}>Next</Text>
         </Pressable>
       </ButtonFooter>
     </ImageBackground>

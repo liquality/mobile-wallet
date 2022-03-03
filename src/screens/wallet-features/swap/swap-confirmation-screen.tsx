@@ -17,7 +17,6 @@ import {
 } from '@liquality/cryptoassets'
 import { cryptoToFiat, formatFiat } from '../../../core/utils/coin-formatter'
 import { useAppSelector } from '../../../hooks'
-import LiqualityButton from '../../../components/ui/button'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   faAngleDown,
@@ -30,6 +29,7 @@ import ProgressBar from '../../../components/animations/progress-bar'
 import SuccessIcon from '../../../assets/icons/success-icon.svg'
 import { HistoryItem } from '@liquality/core/dist/types'
 import SwapRates from '../../../components/swap-rates'
+import Button from '../../../theme/button'
 
 type SwapConfirmationScreenProps = StackScreenProps<
   RootStackParamList,
@@ -349,11 +349,13 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               <View style={[styles.action]}>
                 <Text>Actions</Text>
                 {historyItem?.status !== 'SUCCESS' && (
-                  <LiqualityButton
-                    text="Retry"
-                    variant="small"
-                    type="plain"
-                    action={() => ({})}
+                  <Button
+                    type="tertiary"
+                    variant="s"
+                    label="Retry"
+                    onPress={() => true}
+                    isBorderless={false}
+                    isActive={true}
                   />
                 )}
               </View>

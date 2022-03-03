@@ -12,7 +12,6 @@ import {
 } from 'react-native'
 import { MarketDataType, SwapProvidersEnum } from '@liquality/core/dist/types'
 import Label from './ui/label'
-import LiqualityButton from './ui/button'
 import Logo from '../assets/icons/infinity.svg'
 import LiqualityBoost from '../assets/icons/swap-providers/liqualityboost.svg'
 import Sovryn from '../assets/icons/swap-providers/sovryn.svg'
@@ -20,6 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTimes, faCheck } from '@fortawesome/pro-light-svg-icons'
 import SwapTypesInfo from './swap-types-info'
 import { useAppSelector } from '../hooks'
+import Button from '../theme/button'
 
 const ListHeader: FC = () => {
   const styles = StyleSheet.create({
@@ -113,13 +113,15 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
     <View style={[styles.box, styles.row, style]}>
       <View style={styles.row}>
         <Label text="RATE" variant="strong" />
-        <LiqualityButton
-          text="Liquality"
-          variant="small"
-          type="plain"
-          action={() => setIsRatesModalVisible(true)}>
+        <Button
+          type="tertiary"
+          variant="s"
+          label="Liquality"
+          onPress={() => setIsRatesModalVisible(true)}
+          isBorderless={false}
+          isActive={true}>
           <Logo width={20} style={styles.icon} />
-        </LiqualityButton>
+        </Button>
       </View>
       <Pressable onPress={() => setIsSwapTypesModalVisible(true)}>
         <Text style={[styles.text, styles.link]}>Swap Types</Text>
@@ -149,11 +151,13 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
                   ListHeaderComponent={ListHeader}
                 />
                 <View style={styles.footer}>
-                  <LiqualityButton
-                    text="Select Quote"
-                    variant="large"
-                    type="positive"
-                    action={handleSelectQuote}
+                  <Button
+                    type="primary"
+                    variant="l"
+                    label="Select Quote"
+                    onPress={handleSelectQuote}
+                    isBorderless={false}
+                    isActive={true}
                   />
                   <Text style={styles.text}>Learn about swap types</Text>
                 </View>

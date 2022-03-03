@@ -1,6 +1,6 @@
 import { Modal, StyleSheet, Text, View } from 'react-native'
-import LiqualityButton from './button'
 import React from 'react'
+import Button from '../../theme/button'
 
 const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
   const styles = StyleSheet.create({
@@ -66,11 +66,13 @@ const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
             massa vitae nibh. Ut suscipit nisi enim, ut dictum felis tristique
             sit amet.
           </Text>
-          <LiqualityButton
-            text={'OK'}
-            variant="medium"
-            type="positive"
-            action={handleOkButtonPress}
+          <Button
+            type="primary"
+            variant="m"
+            label="OK"
+            onPress={handleOkButtonPress}
+            isBorderless={false}
+            isActive={true}
           />
         </View>
       </View>

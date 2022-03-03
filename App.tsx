@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { StatusBar, View } from 'react-native'
+import { Provider } from 'react-redux'
 import SplashScreen from 'react-native-splash-screen'
 import { NavigationContainer } from '@react-navigation/native'
 import { createSwitchNavigator } from '@react-navigation/compat'
-import { Provider } from 'react-redux'
+import { ThemeProvider } from '@shopify/restyle'
 import { store, isNewInstallation } from './src/store/store'
-import { LiqualityThemeProvider } from './src/theme'
+import theme from './src/theme'
 import {
   OnboardingNavigator,
   WalletImportNavigator,
@@ -50,14 +51,14 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <LiqualityThemeProvider>
+      <ThemeProvider theme={theme}>
         <View style={backgroundStyle} testID={'app-test'}>
           <StatusBar barStyle={'dark-content'} />
           <NavigationContainer>
             <AppNavigator initialRouteName={initialRouteName} />
           </NavigationContainer>
         </View>
-      </LiqualityThemeProvider>
+      </ThemeProvider>
     </Provider>
   )
 }

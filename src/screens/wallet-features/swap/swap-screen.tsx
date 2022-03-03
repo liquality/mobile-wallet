@@ -27,7 +27,6 @@ import {
 } from '@fortawesome/pro-light-svg-icons'
 import MessageBanner from '../../../components/ui/message-banner'
 import AmountTextInputBlock from '../../../components/ui/amount-text-input-block'
-import LiqualityButton from '../../../components/ui/button'
 import GasController from '../../../components/ui/gas-controller'
 import Label from '../../../components/ui/label'
 import Warning from '../../../components/ui/warning'
@@ -45,6 +44,7 @@ import { useAppSelector } from '../../../hooks'
 import { sortQuotes } from '../../../utils'
 import SwapProvider from '@liquality/core/dist/swaps/swap-provider'
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
+import Button from '../../../theme/button'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -260,29 +260,21 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       </View>
       <View style={[styles.box, styles.row]}>
         <View style={styles.wrapper}>
-          <LiqualityButton
-            text="Min"
-            variant="small"
-            type="plain"
-            contentType="numeric"
-            action={handleMinPress}
-            style={
-              state.fromAmount && minimumValue.eq(state.fromAmount)
-                ? { backgroundColor: '#F0F7F9' }
-                : {}
-            }
+          <Button
+            type="tertiary"
+            variant="s"
+            label="Min"
+            onPress={handleMinPress}
+            isBorderless={false}
+            isActive={true}
           />
-          <LiqualityButton
-            text="Max"
-            variant="small"
-            type="plain"
-            contentType="numeric"
-            action={handleMaxPress}
-            style={
-              state.fromAmount && maximumValue.eq(state.fromAmount)
-                ? { backgroundColor: '#F0F7F9' }
-                : {}
-            }
+          <Button
+            type="tertiary"
+            variant="s"
+            label="Max"
+            onPress={handleMaxPress}
+            isBorderless={false}
+            isActive={true}
           />
         </View>
         <View style={styles.wrapper}>
@@ -356,17 +348,21 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       )}
       <View style={styles.footer}>
         <View style={[styles.buttonWrapper]}>
-          <LiqualityButton
-            text="Cancel"
-            variant="medium"
-            type="negative"
-            action={() => navigation.navigate('OverviewScreen')}
+          <Button
+            type="secondary"
+            variant="m"
+            label="Cancel"
+            onPress={() => navigation.navigate('OverviewScreen')}
+            isBorderless={false}
+            isActive={true}
           />
-          <LiqualityButton
-            text="Review"
-            variant="medium"
-            type="positive"
-            action={handleReviewBtnPress}
+          <Button
+            type="primary"
+            variant="m"
+            label="Review"
+            onPress={handleReviewBtnPress}
+            isBorderless={false}
+            isActive={true}
           />
         </View>
       </View>

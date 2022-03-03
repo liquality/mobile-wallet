@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
@@ -15,7 +15,6 @@ import {
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
 import ButtonFooter from '../../components/button-footer'
-import { ThemeContext } from '../../theme'
 import Header from '../header'
 import Wallet from '@liquality/core/dist/wallet'
 
@@ -29,7 +28,6 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
   const [chosenSeedWords, setChosenSeedWords] = useState<Array<string>>(
     Array(12),
   )
-  const theme = useContext(ThemeContext)
 
   const SeedWord = ({
     id,
@@ -137,9 +135,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
               <Pressable
                 style={[styles.actionBtn, styles.cancelBtn]}
                 onPress={() => navigation.goBack()}>
-                <Text style={[theme.buttonText, styles.cancelText]}>
-                  Cancel
-                </Text>
+                <Text style={[styles.cancelText]}>Cancel</Text>
               </Pressable>
               <Pressable
                 style={[
@@ -149,9 +145,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
                 ]}
                 disabled={!chosenSeedWords.every((val) => !!val)}
                 onPress={onContinue}>
-                <Text style={[theme.buttonText, styles.continueText]}>
-                  Continue
-                </Text>
+                <Text style={[styles.continueText]}>Continue</Text>
               </Pressable>
             </ButtonFooter>
           </View>

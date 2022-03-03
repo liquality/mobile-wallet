@@ -1,9 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import {
   View,
-  Text,
   StyleSheet,
-  Pressable,
   ImageBackground,
   TextInput,
   Platform,
@@ -12,11 +10,13 @@ import {
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList, UseInputStateReturnType } from '../../types'
-import { ThemeContext } from '../../theme'
 import Header from '../header'
 import { restoreWallet } from '../../store/store'
 import { useDispatch } from 'react-redux'
 import { onOpenSesame } from '../../utils'
+import Text from '../../theme/text'
+import Button from '../../theme/button'
+import Box from '../../theme/box'
 
 type LoginScreenProps = StackScreenProps<RootStackParamList, 'LoginScreen'>
 const useInputState = (
@@ -28,7 +28,6 @@ const useInputState = (
 
 const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const PASSWORD_LENGTH = 8
-  const theme = useContext(ThemeContext)
   const passwordInput = useInputState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -60,17 +59,17 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'height'}
         style={styles.keyboard}>
-        <View style={styles.main}>
+        <Box style={styles.main}>
           <Header showText={true} />
           <View style={styles.contentWrapper}>
             <View style={styles.description}>
-              <Text style={styles.description1}>one</Text>
-              <Text style={styles.description2}>wallet</Text>
-              <Text style={styles.description1}>all chains</Text>
+              <Text variant="slogan1">one</Text>
+              <Text variant="slogan2">wallet</Text>
+              <Text variant="slogan1">all chains</Text>
             </View>
 
             <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>PASSWORD</Text>
+              <Text variant="mainInputLabel">PASSWORD</Text>
               <TextInput
                 style={styles.input}
                 onChangeText={passwordInput.onChangeText}
@@ -81,41 +80,40 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
                 returnKeyType="done"
               />
             </View>
-            {!!error && <Text style={styles.error}>{error}</Text>}
+            {!!error && <Text variant="error">{error}</Text>}
           </View>
           <View style={styles.actionContainer}>
             <View style={styles.forgotPassword}>
-              <Text style={styles.forgotPasswordText}>Forgot password? </Text>
+              <Text variant="description">Forgot password? </Text>
               <Text
-                style={styles.forgotPasswordText}
+                variant="description"
                 onPress={() => navigation.navigate('WalletImportNavigator')}>
                 Import with seed phrase
               </Text>
             </View>
-            <Pressable
-              style={[
-                styles.createBtn,
-                styles.createBtn,
-                !passwordInput.value && styles.disabled,
-              ]}
-              disabled={!passwordInput.value}
-              onPress={onUnlock}>
-              <Text style={[theme.buttonText, styles.createText]}>
-                {loading ? 'Unlocking...' : 'Unlock'}
-              </Text>
-            </Pressable>
-            <Pressable
-              style={[styles.createBtn, styles.createBtn]}
-              onPress={() => {
+            <Button
+              type="primary"
+              variant="l"
+              label="Unlock"
+              isLoading={loading}
+              onPress={onUnlock}
+              isBorderless={true}
+              isActive={!!passwordInput.value}
+            />
+            <Button
+              type="primary"
+              variant="l"
+              label="Open Sesame"
+              isLoading={loading}
+              onPress={async () => {
                 setLoading(true)
-                onOpenSesame(dispatch, navigation)
-              }}>
-              <Text style={[theme.buttonText, styles.createText]}>
-                {loading ? 'Opening' : 'Open'} Sesame
-              </Text>
-            </Pressable>
+                await onOpenSesame(dispatch, navigation)
+              }}
+              isBorderless={true}
+              isActive={true}
+            />
           </View>
-        </View>
+        </Box>
       </KeyboardAvoidingView>
     </ImageBackground>
   )
@@ -139,26 +137,9 @@ const styles = StyleSheet.create({
   description: {
     alignItems: 'center',
   },
-  description1: {
-    fontFamily: 'Montserrat-Light',
-    color: '#FFFFFF',
-    fontSize: 24,
-  },
-  description2: {
-    fontFamily: 'MontserratAlternates-Light',
-    color: '#FFFFFF',
-    fontSize: 55,
-    marginVertical: 15,
-  },
   inputWrapper: {
     width: '90%',
     marginHorizontal: 20,
-  },
-  inputLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 16,
-    color: '#fff',
   },
   input: {
     marginTop: 5,
@@ -174,42 +155,6 @@ const styles = StyleSheet.create({
   forgotPassword: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  forgotPasswordText: {
-    fontFamily: 'Montserrat-Regular',
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '500',
-    marginLeft: 5,
-  },
-  createBtn: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
-    borderWidth: 1,
-    height: 36,
-    backgroundColor: '#9D4DFA',
-    borderColor: '#9D4DFA',
-    marginVertical: 20,
-  },
-  createText: {
-    color: '#FFFFFF',
-  },
-  error: {
-    fontFamily: 'Montserrat-Light',
-    color: '#F12274',
-    fontSize: 12,
-    backgroundColor: '#FFF',
-    textAlignVertical: 'center',
-    marginTop: 5,
-    paddingLeft: 5,
-    paddingVertical: 5,
-    marginHorizontal: 20,
-    height: 25,
-  },
-  disabled: {
-    opacity: 0.5,
   },
   keyboard: {
     flex: 1,

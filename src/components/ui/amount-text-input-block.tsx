@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from 'react'
 import { useAppSelector, useInputState } from '../../hooks'
 import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
-import LiqualityButton from './button'
 import AssetIcon from '../asset-icon'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import Label from './label'
@@ -13,6 +12,7 @@ import {
   formatFiat,
 } from '../../core/utils/coin-formatter'
 import { SwapEventType } from '../../screens/wallet-features/swap/swap-screen'
+import Button from '../../theme/button'
 
 type AmountTextInputBlockProps = {
   type: 'FROM' | 'TO'
@@ -109,8 +109,10 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
     <View style={styles.container}>
       <View style={[styles.row, styles.md3]}>
         <Label text={label} variant="strong" />
-        <LiqualityButton
-          text={
+        <Button
+          type="tertiary"
+          variant="s"
+          label={
             isAmountNative
               ? `$${formatFiat(
                   cryptoToFiat(
@@ -123,10 +125,9 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
                   fiatRates?.[assetSymbol] || 0,
                 )} ${assetSymbol}`
           }
-          action={handleToggleAmount}
-          variant="small"
-          type="plain"
-          contentType="numeric"
+          onPress={handleToggleAmount}
+          isBorderless={false}
+          isActive={true}
         />
       </View>
       <View style={styles.row}>

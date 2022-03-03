@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
-import { ThemeContext } from '../../theme'
 import Header from '../header'
 import { useDispatch } from 'react-redux'
 import { onOpenSesame } from '../../utils'
@@ -16,7 +15,6 @@ import { onOpenSesame } from '../../utils'
 type EntryProps = StackScreenProps<RootStackParamList, 'Entry'>
 
 const Entry = ({ navigation }: EntryProps) => {
-  const theme = useContext(ThemeContext)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
 
@@ -42,9 +40,7 @@ const Entry = ({ navigation }: EntryProps) => {
         <Pressable
           style={[styles.createBtn, styles.createBtn]}
           onPress={() => navigation.navigate('TermsScreen')}>
-          <Text style={[theme.buttonText, styles.createText]}>
-            Create a new Wallet
-          </Text>
+          <Text style={[styles.createText]}>Create a new Wallet</Text>
         </Pressable>
         <Pressable
           style={[styles.createBtn, styles.createBtn]}
@@ -52,7 +48,7 @@ const Entry = ({ navigation }: EntryProps) => {
             setLoading(true)
             onOpenSesame(dispatch, navigation)
           }}>
-          <Text style={[theme.buttonText, styles.createText]}>
+          <Text style={[styles.createText]}>
             {loading ? 'Opening' : 'Open'} Sesame
           </Text>
         </Pressable>
