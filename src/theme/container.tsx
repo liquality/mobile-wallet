@@ -7,7 +7,7 @@ type ContainerProps = {
 const Container: FC<ContainerProps> = (props) => {
   const { children } = props
 
-  return <Box flex={1}>{!!children && children}</Box>
+  return <Box flex={1}>{children}</Box>
 }
 
 export default Container

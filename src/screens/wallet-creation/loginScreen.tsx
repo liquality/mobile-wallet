@@ -101,7 +101,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               label="Unlock"
               isLoading={loading}
               onPress={onUnlock}
-              isBorderless={true}
+              isBorderless
               isActive={!!passwordInput.value}
             />
             <Button
@@ -113,7 +113,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
                 setLoading(true)
                 await onOpenSesame(dispatch, navigation)
               }}
-              isBorderless={true}
+              isBorderless
               isActive={true}
             />
           </Box>

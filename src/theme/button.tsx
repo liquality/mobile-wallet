@@ -43,21 +43,18 @@ const Button = ({
   return (
     <BaseButton
       variant={variant}
-      style={[
-        {
-          borderWidth: isBorderless ? 0 : 1,
-          opacity: isActive ? 1 : 0.7,
-        },
-        type === 'primary'
-          ? {
-              backgroundColor: theme.colors.buttonBackgroundPrimary,
-            }
-          : {
-              backgroundColor: theme.colors.buttonBackgroundSecondary,
-            },
-      ]}
+      style={{
+        borderWidth: isBorderless ? 0 : 1,
+        opacity: isActive ? 1 : 0.7,
+        backgroundColor:
+          theme.colors[
+            type === 'primary'
+              ? 'buttonBackgroundPrimary'
+              : 'buttonBackgroundSecondary'
+          ],
+      }}
       onPress={onPress}>
-      {!isLoading && !!children && children}
+      {!isLoading && children}
       {isLoading ? (
         <ActivityIndicator color={theme.colors.spinner} />
       ) : (
@@ -65,19 +62,16 @@ const Button = ({
           variant={
             type === 'tertiary' ? 'tertiaryButtonLabel' : 'mainButtonLabel'
           }
-          style={
-            type === 'primary'
-              ? {
-                  color: theme.colors.buttonFontPrimary,
-                }
-              : type === 'secondary'
-              ? {
-                  color: theme.colors.buttonFontSecondary,
-                }
-              : {
-                  color: theme.colors.buttonFontTertiary,
-                }
-          }>
+          style={{
+            color:
+              theme.colors[
+                type === 'primary'
+                  ? 'buttonFontPrimary'
+                  : type === 'secondary'
+                  ? 'buttonFontSecondary'
+                  : 'buttonFontTertiary'
+              ],
+          }}>
           {label}
         </Text>
       )}
