@@ -156,7 +156,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           <Text style={styles.headerText}>ACTIVITY</Text>
         </Pressable>
       </View>
-      <View style={styles.contentBlock}>
+      <View>
         {selectedView === ViewKind.ACTIVITY &&
           (assets.length > 0 ? (
             <ActivityFlatList navigate={navigation.navigate}>
@@ -200,9 +200,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   overviewBlock: {
-    flex: 0.3,
     justifyContent: 'center',
     width: '100%',
+    height: 225,
     paddingBottom: 20,
   },
   assets: {
@@ -316,11 +316,7 @@ const styles = StyleSheet.create({
     color: '#646F85',
     marginLeft: 5,
   },
-  contentBlock: {
-    flex: 0.6,
-  },
   noActivityMessageBlock: {
-    flex: 0.6,
     fontFamily: 'Montserrat-Regular',
     fontWeight: '400',
     fontSize: 14,

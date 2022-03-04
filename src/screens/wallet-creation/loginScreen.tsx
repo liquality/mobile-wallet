@@ -59,14 +59,18 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'height'}
         style={styles.keyboard}>
-        <Box style={styles.main}>
+        <Box
+          flex={1}
+          justifyContent="center"
+          alignItems="center"
+          width={Dimensions.get('window').width}>
           <Header showText={true} />
-          <View style={styles.contentWrapper}>
-            <View style={styles.description}>
+          <Box flex={0.6} justifyContent="space-around" width="100%">
+            <Box alignItems="center">
               <Text variant="slogan1">one</Text>
               <Text variant="slogan2">wallet</Text>
               <Text variant="slogan1">all chains</Text>
-            </View>
+            </Box>
 
             <View style={styles.inputWrapper}>
               <Text variant="mainInputLabel">PASSWORD</Text>
@@ -81,8 +85,8 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               />
             </View>
             {!!error && <Text variant="error">{error}</Text>}
-          </View>
-          <View style={styles.actionContainer}>
+          </Box>
+          <Box flex={0.3} width="90%" justifyContent="flex-end">
             <View style={styles.forgotPassword}>
               <Text variant="description">Forgot password? </Text>
               <Text
@@ -112,7 +116,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               isBorderless={true}
               isActive={true}
             />
-          </View>
+          </Box>
         </Box>
       </KeyboardAvoidingView>
     </ImageBackground>
@@ -123,20 +127,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  main: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: Dimensions.get('window').width,
-  },
-  contentWrapper: {
-    flex: 0.7,
-    justifyContent: 'space-around',
-    width: '100%',
-  },
-  description: {
-    alignItems: 'center',
-  },
   inputWrapper: {
     width: '90%',
     marginHorizontal: 20,
@@ -146,11 +136,6 @@ const styles = StyleSheet.create({
     color: '#FFF',
     borderBottomColor: '#38FFFB',
     borderBottomWidth: 1,
-  },
-  actionContainer: {
-    flex: 0.2,
-    width: '90%',
-    justifyContent: 'flex-end',
   },
   forgotPassword: {
     flexDirection: 'row',
