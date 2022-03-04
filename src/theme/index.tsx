@@ -3,20 +3,10 @@ import { createTheme } from '@shopify/restyle'
 const palette = {
   black: '#1D1E21',
   white: '#FFFFFF',
-
   blueVioletPrimary: '#9D4DFA',
   blueVioletSecondary: '#F8FAFF',
-
-  purpleLight: '#8C6FF7',
   purplePrimary: '#5A31F4',
-
   red: '#F12274',
-
-  purpleDark: '#3F22AB',
-  greenLight: '#56DCBA',
-  greenPrimary: '#0ECD9D',
-
-  greenDark: '#0A906E',
 }
 
 const theme = createTheme({
