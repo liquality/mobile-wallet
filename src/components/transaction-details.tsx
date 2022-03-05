@@ -45,7 +45,7 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
           <FontAwesomeIcon icon={faClone} color={'#9C4DF9'} size={10} />
         </Pressable>
       </View>
-      <View style={[styles.row]}>
+      <View style={styles.row}>
         <Text style={styles.label}>Fee</Text>
         <Text style={styles.amount}>
           {fiatRates &&

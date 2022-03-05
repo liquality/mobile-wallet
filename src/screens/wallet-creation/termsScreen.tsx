@@ -69,7 +69,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
           <Pressable
             style={[styles.actionBtn, styles.cancelBtn]}
             onPress={() => navigation.goBack()}>
-            <Text style={[styles.cancelText]}>Cancel</Text>
+            <Text style={styles.cancelText}>Cancel</Text>
           </Pressable>
           <Pressable
             style={[
@@ -85,7 +85,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
                 nextScreen: 'SeedPhraseScreen',
               })
             }>
-            <Text style={[styles.nextText]}>I Accept</Text>
+            <Text style={styles.nextText}>I Accept</Text>
           </Pressable>
         </ButtonFooter>
       </View>

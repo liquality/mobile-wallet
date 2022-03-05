@@ -109,7 +109,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           hours at 20:45 GMT"
         icon={faClock}
       />
-      <View style={[styles.buttonWrapper]}>
+      <View style={styles.buttonWrapper}>
         <Button
           type="secondary"
           variant="m"

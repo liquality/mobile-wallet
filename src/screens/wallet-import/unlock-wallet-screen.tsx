@@ -91,7 +91,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
         behavior={Platform.OS === 'ios' ? 'position' : 'height'}
         style={[styles.keyboard, StyleSheet.absoluteFillObject]}>
         <Header showText={true} />
-        <View style={[styles.prompt]}>
+        <View style={styles.prompt}>
           <Text style={styles.promptText}>Unlock Wallet</Text>
           <Text style={styles.description}>
             Enter the seed phrase, in the same order saved when creating your
@@ -135,7 +135,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
               <Pressable
                 style={[styles.actionBtn, styles.cancelBtn]}
                 onPress={() => navigation.goBack()}>
-                <Text style={[styles.cancelText]}>Cancel</Text>
+                <Text style={styles.cancelText}>Cancel</Text>
               </Pressable>
               <Pressable
                 style={[
@@ -145,7 +145,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
                 ]}
                 disabled={!chosenSeedWords.every((val) => !!val)}
                 onPress={onContinue}>
-                <Text style={[styles.continueText]}>Continue</Text>
+                <Text style={styles.continueText}>Continue</Text>
               </Pressable>
             </ButtonFooter>
           </View>

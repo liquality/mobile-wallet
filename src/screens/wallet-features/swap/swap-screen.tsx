@@ -347,7 +347,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         </>
       )}
       <View style={styles.footer}>
-        <View style={[styles.buttonWrapper]}>
+        <View style={styles.buttonWrapper}>
           <Button
             type="secondary"
             variant="m"

@@ -346,7 +346,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               <Text style={styles.transactionInfo}>{fromFundTx?.hash}</Text>
             </View>
             <View style={styles.cell}>
-              <View style={[styles.action]}>
+              <View style={styles.action}>
                 <Text>Actions</Text>
                 {historyItem?.status !== 'SUCCESS' && (
                   <Button

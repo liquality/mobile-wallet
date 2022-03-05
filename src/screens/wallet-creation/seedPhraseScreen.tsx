@@ -65,7 +65,7 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
           <Pressable
             style={[styles.actionBtn, styles.cancelBtn]}
             onPress={() => navigation.navigate('Entry')}>
-            <Text style={[styles.cancelText]}>Cancel</Text>
+            <Text style={styles.cancelText}>Cancel</Text>
           </Pressable>
           <Pressable
             style={[styles.actionBtn, styles.nextBtn]}
@@ -75,7 +75,7 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
                 seedWords,
               })
             }>
-            <Text style={[styles.nextText]}>Next</Text>
+            <Text style={styles.nextText}>Next</Text>
           </Pressable>
         </ButtonFooter>
       </View>

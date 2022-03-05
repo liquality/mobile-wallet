@@ -146,7 +146,7 @@ const SeedPhraseConfirmationScreen = ({
           <Pressable
             style={[styles.actionBtn, styles.cancelBtn]}
             onPress={() => navigation.goBack()}>
-            <Text style={[styles.backText]}>Back</Text>
+            <Text style={styles.backText}>Back</Text>
           </Pressable>
           <Pressable
             style={[
@@ -156,7 +156,7 @@ const SeedPhraseConfirmationScreen = ({
             ]}
             disabled={chosenSeedWords.length < 3}
             onPress={onContinue}>
-            <Text style={[styles.continueText]}>Continue</Text>
+            <Text style={styles.continueText}>Continue</Text>
           </Pressable>
         </ButtonFooter>
       </View>

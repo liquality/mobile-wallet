@@ -92,7 +92,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
         <Text style={[styles.text, styles.half]}>{item.rate}</Text>
         <View style={styles.providerCell}>
           {getSwapProviderIcon(item)}
-          <Text style={[styles.text]}>{item.provider}</Text>
+          <Text style={styles.text}>{item.provider}</Text>
           {selectedItem?.provider === item.provider && (
             <FontAwesomeIcon icon={faCheck} color={'#2CD2CF'} />
           )}
