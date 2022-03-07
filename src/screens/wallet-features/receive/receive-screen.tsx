@@ -13,18 +13,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClone, faCheck } from '@fortawesome/pro-light-svg-icons'
 import { StackScreenProps } from '@react-navigation/stack'
 import { AssetDataElementType, RootStackParamList } from '../../../types'
-import LiqualityButton from '../../../components/ui/button'
 import AssetIcon from '../../../components/asset-icon'
 import { NetworkEnum } from '@liquality/core/dist/types'
+import Button from '../../../theme/button'
+import { useAppSelector } from '../../../hooks'
 
 type ReceiveScreenProps = StackScreenProps<RootStackParamList, 'ReceiveScreen'>
 
 const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   const [buttonPressed, setButtonPressed] = useState<boolean>(false)
-  const { name, address, activeNetwork }: AssetDataElementType =
+  const { name, address, chain, code }: AssetDataElementType =
     route.params.assetData!
+  const { activeNetwork } = useAppSelector((state) => ({
+    activeNetwork: state.activeNetwork,
+  }))
 
-  // Move this function to a shared module
+  //TODO Read this from a config file
   const getFaucetUrl = (asset: string): { name: string; url: string } => {
     return (
       {
@@ -80,9 +84,9 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerBlock}>
-        <AssetIcon asset={name} />
+        <AssetIcon asset={code} chain={chain} />
         <Text style={styles.addressLabel}>
-          Your current ETH/Rinkbey address
+          {`Your current ${code}/${activeNetwork} address`}
         </Text>
         <View style={styles.addressWrapper}>
           <Text style={styles.address}>{address}</Text>
@@ -110,24 +114,28 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
         )}
       </View>
       <View style={styles.ActionBlock}>
-        <LiqualityButton
-          text={'Done'}
-          variant="medium"
-          type="negative"
-          action={navigation.goBack}
+        <Button
+          type="secondary"
+          variant="m"
+          label="Done"
+          onPress={navigation.goBack}
+          isBorderless={false}
+          isActive={true}
         />
-        <LiqualityButton
-          text={buttonPressed ? 'Copied!' : 'Copy Address'}
-          variant="medium"
-          type="positive"
-          action={handleCopyAddressPress}>
+        <Button
+          type="primary"
+          variant="m"
+          label={buttonPressed ? 'Copied!' : 'Copy Address'}
+          onPress={handleCopyAddressPress}
+          isBorderless={false}
+          isActive={true}>
           <FontAwesomeIcon
             icon={buttonPressed ? faCheck : faClone}
             size={15}
             color={'#FFFFFF'}
             style={styles.icon}
           />
-        </LiqualityButton>
+        </Button>
       </View>
     </View>
   )

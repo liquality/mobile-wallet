@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
-import LiqualityButton from './button'
+import Button from '../../theme/button'
 
 type MessageBannerProps = {
   text1: string
@@ -16,11 +16,13 @@ const MessageBanner: FC<MessageBannerProps> = (props) => {
       <Text style={styles.text}>{text1}</Text>
       <View style={styles.row}>
         <Text style={styles.text}>{text2}</Text>
-        <LiqualityButton
-          text="Add Liquidity"
-          action={onAction}
-          variant="small"
-          type="positive"
+        <Button
+          type="tertiary"
+          variant="s"
+          label="Add Liquidity"
+          onPress={onAction}
+          isBorderless={false}
+          isActive={true}
         />
       </View>
     </View>

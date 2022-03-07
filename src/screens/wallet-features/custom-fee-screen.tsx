@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
-import LiqualityButton from '../../components/ui/button'
 import { useAppSelector } from '../../hooks'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { cryptoToFiat, formatFiat } from '../../core/utils/coin-formatter'
@@ -14,6 +13,7 @@ import {
 } from '../../types'
 import { ChainId } from '@liquality/cryptoassets'
 import { NetworkEnum } from '@liquality/core/dist/types'
+import Button from '../../theme/button'
 
 type CustomFeeScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
 type SpeedMode = keyof FeeDetails
@@ -183,17 +183,21 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
       {!!error && <Text style={styles.error}>{error}</Text>}
 
       <View style={[styles.block, styles.row, styles.actions]}>
-        <LiqualityButton
-          text={'Cancel'}
-          variant="medium"
-          type="negative"
-          action={navigation.goBack}
+        <Button
+          type="secondary"
+          variant="m"
+          label="Cancel"
+          onPress={navigation.goBack}
+          isBorderless={false}
+          isActive={true}
         />
-        <LiqualityButton
-          text={'Apply'}
-          variant="medium"
-          type="positive"
-          action={handleApplyPress}
+        <Button
+          type="primary"
+          variant="m"
+          label="Apply"
+          onPress={handleApplyPress}
+          isBorderless={false}
+          isActive={true}
         />
       </View>
     </View>

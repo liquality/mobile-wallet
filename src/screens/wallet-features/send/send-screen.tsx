@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
+import { StyleSheet, View, TextInput, Pressable } from 'react-native'
 import { chains } from '@liquality/cryptoassets'
 import { StackScreenProps } from '@react-navigation/stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
@@ -13,7 +13,6 @@ import {
   faAngleRight,
   faQrcode,
 } from '@fortawesome/pro-light-svg-icons'
-import LiqualityButton from '../../../components/ui/button'
 import { useAppSelector } from '../../../hooks'
 import { BigNumber } from '@liquality/types'
 import { calculateAvailableAmnt } from '../../../core/utils/fee-calculator'
@@ -28,6 +27,8 @@ import QrCodeScanner from '../../../components/qr-code-scanner'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { chainDefaultColors } from '../../../core/config'
 import { GasSpeedType, NetworkEnum } from '@liquality/core/dist/types'
+import Button from '../../../theme/button'
+import Text from '../../../theme/text'
 
 const useInputState = (
   initialValue: string,
@@ -215,22 +216,20 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       <View style={styles.headerBlock}>
         <View style={styles.sendWrapper}>
           <View style={styles.row}>
-            <Text>SEND</Text>
-            <Pressable
-              style={[
-                styles.amountInFiatBtn,
-                showAmountsInFiat && styles.nativeStyle,
-              ]}
-              onPress={handleFiatBtnPress}>
-              <Text style={styles.amount}>
-                {showAmountsInFiat
-                  ? `${amountInNative} ${code}`
-                  : `$${amountInFiat}`}
-              </Text>
-            </Pressable>
-          </View>
-          <View style={styles.row}>
-            <View style={styles.sendInputCurrencyWrapper}>
+            <View style={{ flex: 1 }}>
+              <View style={styles.row}>
+                <Text variant="secondaryInputLabel">SEND</Text>
+                <Button
+                  label={
+                    showAmountsInFiat
+                      ? `${amountInNative} ${code}`
+                      : `$${amountInFiat}`
+                  }
+                  type="tertiary"
+                  variant="s"
+                  onPress={handleFiatBtnPress}
+                />
+              </View>
               <TextInput
                 style={[
                   styles.sendInputCurrency,
@@ -257,16 +256,17 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
                 {availableAmount} {code}
               </Text>
             </View>
-            <Pressable
-              style={styles.maxBtn}
+            <Button
+              label="Max"
+              type="tertiary"
+              variant="s"
               onPress={() =>
                 amountInput.onChangeText(availableAmount.toString())
-              }>
-              <Text style={styles.maxLabel}>Max</Text>
-            </Pressable>
+              }
+            />
           </View>
           <View style={styles.sendToWrapper}>
-            <Text>SEND TO</Text>
+            <Text variant="secondaryInputLabel">SEND TO</Text>
             <View style={styles.row}>
               <TextInput
                 style={styles.sendToInput}
@@ -293,7 +293,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
               icon={showFeeOptions ? faAngleDown : faAngleRight}
               size={15}
             />
-            <Text style={styles.speedLabel}>NETWORK SPEED/FEE</Text>
+            <Text variant="secondaryInputLabel">NETWORK SPEED/FEE</Text>
           </Pressable>
           {customFee ? (
             <Text style={styles.speedValue}>
@@ -348,23 +348,25 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
             </Pressable>
           </View>
         )}
-        {!!error && <Text style={styles.error}>{error}</Text>}
+        {!!error && <Text variant="error">{error}</Text>}
       </View>
       <View style={styles.actionBlock}>
-        <View style={styles.row}>
-          <LiqualityButton
-            text={'Cancel'}
-            variant="medium"
-            type="negative"
-            action={navigation.goBack}
-          />
-          <LiqualityButton
-            text={'Review'}
-            variant="medium"
-            type="positive"
-            action={handleReviewPress}
-          />
-        </View>
+        <Button
+          type="secondary"
+          variant="m"
+          label="Cancel"
+          onPress={navigation.goBack}
+          isBorderless={false}
+          isActive={true}
+        />
+        <Button
+          type="primary"
+          variant="m"
+          label="Review"
+          onPress={handleReviewPress}
+          isBorderless={false}
+          isActive={true}
+        />
       </View>
     </View>
   )
@@ -389,12 +391,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginBottom: 10,
   },
-  sendLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 16,
-    color: '#fff',
-  },
   amountInFiatBtn: {
     borderColor: '#000',
     borderWidth: 1,
@@ -410,12 +406,6 @@ const styles = StyleSheet.create({
   nativeStyle: {
     borderColor: '#38FFFB',
   },
-  sendInputCurrencyWrapper: {
-    flexDirection: 'row',
-    width: '80%',
-    borderBottomColor: '#38FFFB',
-    borderBottomWidth: 1,
-  },
   sendInput: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
@@ -425,6 +415,8 @@ const styles = StyleSheet.create({
     height: 40,
     width: '100%',
     color: '#EAB300',
+    borderBottomColor: '#38FFFB',
+    borderBottomWidth: 1,
   },
   sendInputCurrency: {
     fontFamily: 'Montserrat-Regular',
@@ -445,18 +437,6 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 24,
     lineHeight: 30,
-  },
-  maxBtn: {
-    borderColor: '#000',
-    borderWidth: 1,
-    borderRadius: 50,
-    paddingHorizontal: 10,
-  },
-  maxLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    fontSize: 12,
-    lineHeight: 18,
   },
   balanceTextWrapper: {
     flexDirection: 'row',
@@ -533,8 +513,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   actionBlock: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'flex-end',
     flex: 0.2,
-    justifyContent: 'flex-end',
   },
   speedAssetName: {
     fontFamily: 'Montserrat-Regular',
@@ -554,16 +536,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  error: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#F12274',
-    fontSize: 12,
-    backgroundColor: '#FFF',
-    textAlignVertical: 'center',
-    marginTop: 5,
-    paddingVertical: 5,
-    height: 25,
   },
 })
 export default SendScreen

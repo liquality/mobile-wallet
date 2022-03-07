@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../../types'
-import LiqualityButton from '../../../components/ui/button'
 import {
   dpUI,
   gasUnitToCurrency,
@@ -12,6 +11,8 @@ import { useAppSelector } from '../../../hooks'
 import { sendTransaction } from '../../../store/store'
 import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
+import Button from '../../../theme/button'
+import Text from '../../../theme/text'
 
 type SendReviewScreenProps = StackScreenProps<
   RootStackParamList,
@@ -72,7 +73,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.sendLabel}>SEND</Text>
+        <Text variant="mainInputLabel">SEND</Text>
         <View style={styles.row}>
           <Text style={styles.amountInNative}>
             {amount && `${amount.dp(6)} ${asset}`}
@@ -81,7 +82,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
             {amount && `$${prettyFiatBalance(amount.toNumber(), rate)}`}
           </Text>
         </View>
-        <Text style={styles.feeLabel}>NETWORK FEE</Text>
+        <Text variant="mainInputLabel">NETWORK FEE</Text>
         <View style={styles.row}>
           <Text style={styles.feeAmountInNative}>
             {asset &&
@@ -98,7 +99,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
           </Text>
         </View>
 
-        <Text style={styles.totalLabel}>AMOUNT + FEES</Text>
+        <Text variant="mainInputLabel">AMOUNT + FEES</Text>
         <View style={styles.row}>
           <Text style={styles.totalAmount}>
             {amount &&
@@ -117,24 +118,28 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
           </Text>
         </View>
 
-        <Text style={[styles.sendLabel, styles.sendToLabel]}>SEND TO</Text>
+        <Text variant="mainInputLabel">SEND TO</Text>
         <Text style={styles.address}>{destinationAddress}</Text>
-        {!!error && <Text style={styles.error}>{error}</Text>}
+        {!!error && <Text variant="error">{error}</Text>}
       </View>
       <View>
         <View style={styles.row}>
-          <LiqualityButton
-            text={'Edit'}
-            variant="medium"
-            type="negative"
-            action={handleEditPress}
+          <Button
+            type="secondary"
+            variant="m"
+            label="Edit"
+            onPress={handleEditPress}
+            isBorderless={false}
+            isActive={true}
           />
-          <LiqualityButton
-            text={`Send ${asset}`}
-            variant="medium"
-            type="positive"
+          <Button
+            type="primary"
+            variant="m"
+            label={`Send ${asset}`}
+            onPress={handleSendPress}
             isLoading={isLoading}
-            action={handleSendPress}
+            isBorderless={false}
+            isActive={true}
           />
         </View>
       </View>
@@ -156,14 +161,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginBottom: 10,
   },
-  sendLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#3D4767',
-    marginTop: 15,
-  },
   amountInNative: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
@@ -178,13 +175,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: '#646F85',
   },
-  feeLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#9A99A2',
-  },
   feeAmountInNative: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
@@ -198,14 +188,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     color: '#000D35',
-  },
-  totalLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#9A99A2',
-    marginTop: 25,
   },
   totalAmount: {
     fontFamily: 'Montserrat-Regular',
@@ -223,17 +205,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 18,
     color: '#000D35',
-  },
-  error: {
-    fontFamily: 'Montserrat-Light',
-    color: '#F12274',
-    fontSize: 12,
-    backgroundColor: '#FFF',
-    textAlignVertical: 'center',
-    marginTop: 5,
-    paddingLeft: 5,
-    paddingVertical: 5,
-    height: 25,
   },
 })
 

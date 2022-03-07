@@ -10,7 +10,6 @@ import {
 // import { Picker } from '@react-native-picker/picker'
 // import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 // import { faAngleDown, faAngleUp } from '@fortawesome/pro-light-svg-icons'
-import LiqualityButton from '../../../components/ui/button'
 // import AssetIcon from '../../../components/asset-icon'
 import SettingsSwitch from '../../../components/ui/switch'
 import { DarkModeEnum } from '../../../types'
@@ -20,6 +19,7 @@ import { useAppSelector } from '../../../hooks'
 import WhatsNew from '../../../components/ui/whats-new'
 import { NetworkEnum } from '@liquality/core/dist/types'
 import { updateWallet } from '../../../store/store'
+import Button from '../../../theme/button'
 
 const SettingsScreen = () => {
   const {
@@ -150,11 +150,13 @@ const SettingsScreen = () => {
         <View style={styles.row}>
           <View style={styles.action}>
             <Text style={styles.label}>Wallet Logs</Text>
-            <LiqualityButton
-              text={'Download'}
-              type="positive"
-              variant="medium"
-              action={() => ({})}
+            <Button
+              type="primary"
+              variant="m"
+              label="Download"
+              onPress={() => ({})}
+              isBorderless={false}
+              isActive={true}
             />
           </View>
           <Text style={styles.description}>

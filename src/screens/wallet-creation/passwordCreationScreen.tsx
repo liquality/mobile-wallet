@@ -1,18 +1,17 @@
-import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import {
   View,
   Text,
   StyleSheet,
-  Pressable,
   ImageBackground,
   TextInput,
 } from 'react-native'
 
 import { RootStackParamList } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import { ThemeContext } from '../../theme'
 import Header from '../header'
 import ButtonFooter from '../../components/button-footer'
+import Button from '../../theme/button'
 
 type PasswordCreationProps = StackScreenProps<
   RootStackParamList,
@@ -42,7 +41,6 @@ const PasswordCreationScreen = ({
   const passwordInput = useInputState('')
   const passwordConfirmationInput = useInputState('')
   const [error, setError] = useState('')
-  const theme = useContext(ThemeContext)
 
   const resetInput = () => {
     if (error) {
@@ -105,30 +103,30 @@ const PasswordCreationScreen = ({
       </View>
 
       <ButtonFooter>
-        <Pressable
-          style={[styles.actionBtn, styles.cancelBtn]}
+        <Button
+          type="secondary"
+          variant="m"
+          label="Cancel"
           onPress={() =>
             navigation.navigate(route.params.nextScreen || 'Entry')
-          }>
-          <Text style={[theme.buttonText, styles.cancelText]}>Cancel</Text>
-        </Pressable>
-        <Pressable
-          style={[
-            styles.actionBtn,
-            styles.nextBtn,
-            (!passwordInput.value || !passwordConfirmationInput.value) &&
-              styles.disabled,
-          ]}
-          disabled={!passwordInput.value || !passwordConfirmationInput.value}
+          }
+          isBorderless={false}
+          isActive={true}
+        />
+        <Button
+          type="primary"
+          variant="m"
+          label="Next"
           onPress={() =>
             arePasswordsValid() &&
             navigation.navigate(route.params.nextScreen || 'Entry', {
               ...route.params,
               password: passwordInput.value,
             })
-          }>
-          <Text style={[theme.buttonText, styles.nextText]}>Next</Text>
-        </Pressable>
+          }
+          isBorderless={false}
+          isActive={!passwordInput.value || !passwordConfirmationInput.value}
+        />
       </ButtonFooter>
     </ImageBackground>
   )

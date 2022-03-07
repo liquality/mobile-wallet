@@ -1,49 +1,156 @@
-import React, { createContext } from 'react'
-import { StyleSheet } from 'react-native'
+import { createTheme } from '@shopify/restyle'
 
-const theme = StyleSheet.create({
-  buttonText: {
-    fontFamily: 'Montserrat-SemiBold',
-    fontWeight: '600',
-    fontSize: 14,
-    lineHeight: 18,
+const palette = {
+  black: '#1D1E21',
+  white: '#FFFFFF',
+  blueVioletPrimary: '#9D4DFA',
+  blueVioletSecondary: '#F8FAFF',
+  purplePrimary: '#5A31F4',
+  red: '#F12274',
+}
+
+const theme = createTheme({
+  colors: {
+    mainBackground: palette.white,
+    mainForeground: palette.white,
+    secondaryForeground: palette.black,
+    buttonFontPrimary: palette.white,
+    buttonFontSecondary: palette.blueVioletPrimary,
+    buttonFontTertiary: palette.black,
+    buttonBackgroundPrimary: palette.blueVioletPrimary,
+    buttonBackgroundSecondary: palette.white,
+    mainButtonBorderColor: palette.blueVioletPrimary,
+    secondaryButtonBorderColor: palette.black,
+    danger: palette.red,
+    spinner: palette.white,
+    cardPrimaryBackground: palette.purplePrimary,
+    buttonPrimaryBackground: palette.purplePrimary,
   },
-  buttonTextAmount: {
-    fontFamily: 'Montserrat-Light',
-    fontWeight: '500',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#1D1E21',
+  spacing: {
+    s: 5,
+    m: 10,
+    l: 15,
+    xl: 20,
   },
-  container: {
-    flexDirection: 'row',
-    // white: '#FFFFFF',
-    // black: '#000000',
-    // lightBlueGray1: '#F0F7F9',
-    // lightBlueGray2: '#F8FAFF',
-    // lightBlueGray3: '#D9DFE5',
-    // lightBlueGray4: '#A8AEB7',
-    // middleGray1: '#9A99A2',
-    // middleGray2: '#646F85',
-    // darkGray1: '#3D4767',
-    // darkGray2: '#1D1E21',
-    // darkGray3: '#000D35',
-    // purple: '#9D4DFA',
-    // green: '#2CD2CF',
-    // lightGreen: '#38FFFB',
-    // red: '#F12274',
-    // darkPink: '#D421EB',
-    // orange: '#FE7F6B',
-    // gradient: 'rgb(48,46,120)', //#302e78 -> #1ce4c3
+  breakpoints: {
+    phone: 0,
+    longPhone: {
+      width: 0,
+      height: 812,
+    },
+    tablet: 768,
+    largeTablet: 1024,
   },
+  textVariants: {
+    header: {
+      fontFamily: 'Montserrat-Regular',
+      fontSize: 28,
+      lineHeight: 24,
+      color: 'mainForeground',
+    },
+    slogan1: {
+      fontFamily: 'Montserrat-Light',
+      color: 'mainForeground',
+      fontSize: 24,
+    },
+    slogan2: {
+      fontFamily: 'MontserratAlternates-Light',
+      color: 'mainForeground',
+      fontSize: 55,
+      marginVertical: 'l',
+    },
+    description: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '600',
+      fontSize: 14,
+      lineHeight: 24,
+      color: 'mainForeground',
+    },
+    mainInputLabel: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: 'bold',
+      fontSize: 12,
+      lineHeight: 18,
+      color: 'mainForeground',
+    },
+    secondaryInputLabel: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '700',
+      fontSize: 12,
+      lineHeight: 18,
+      color: 'secondaryForeground',
+    },
+    body: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '600',
+      fontSize: 14,
+      lineHeight: 24,
+      color: 'mainForeground',
+    },
+    mainButtonLabel: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '600',
+      fontSize: 14,
+      lineHeight: 10,
+      color: 'buttonFontPrimary',
+      paddingVertical: 'l',
+    },
+    tertiaryButtonLabel: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '400',
+      fontSize: 12,
+      lineHeight: 12,
+      color: 'buttonFontTertiary',
+    },
+    error: {
+      fontFamily: 'Montserrat-Light',
+      color: 'danger',
+      fontSize: 12,
+      backgroundColor: 'buttonBackgroundSecondary',
+      textAlignVertical: 'center',
+      marginTop: 5,
+      paddingLeft: 5,
+      paddingVertical: 5,
+      marginHorizontal: 20,
+      height: 25,
+    },
+  },
+  buttonVariants: {
+    l: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 50,
+      borderColor: 'mainButtonBorderColor',
+      paddingHorizontal: 'l',
+      marginVertical: 'l',
+      width: '100%',
+      height: 35,
+    },
+    m: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 50,
+      borderColor: 'mainButtonBorderColor',
+      paddingHorizontal: 'l',
+      paddingVertical: 'm',
+      marginVertical: 'l',
+      width: 150,
+      height: 35,
+    },
+    s: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 50,
+      borderColor: 'secondaryButtonBorderColor',
+      paddingHorizontal: 'm',
+      height: 20,
+    },
+  },
+  cardVariants: {},
 })
 
-export const ThemeContext = createContext(theme)
-
-export const LiqualityThemeProvider = ({
-  children,
-}: {
-  children: React.ReactElement
-}) => {
-  return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
-}
+export type Theme = typeof theme
+export default theme

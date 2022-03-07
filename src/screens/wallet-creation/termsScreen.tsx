@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
@@ -9,14 +9,12 @@ import {
 } from 'react-native'
 import { RootStackParamList } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import { ThemeContext } from '../../theme'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 type TermsProps = StackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation }: TermsProps) => {
   const [scrolledToEnd, setScrolledToEnd] = useState(false)
-  const theme = useContext(ThemeContext)
 
   return (
     <ImageBackground
@@ -71,7 +69,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
           <Pressable
             style={[styles.actionBtn, styles.cancelBtn]}
             onPress={() => navigation.goBack()}>
-            <Text style={[theme.buttonText, styles.cancelText]}>Cancel</Text>
+            <Text style={styles.cancelText}>Cancel</Text>
           </Pressable>
           <Pressable
             style={[
@@ -87,7 +85,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
                 nextScreen: 'SeedPhraseScreen',
               })
             }>
-            <Text style={[theme.buttonText, styles.nextText]}>I Accept</Text>
+            <Text style={styles.nextText}>I Accept</Text>
           </Pressable>
         </ButtonFooter>
       </View>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -10,7 +10,6 @@ import {
 } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
-import { ThemeContext } from '../../theme'
 import Header from '../header'
 import ButtonFooter from '../../components/button-footer'
 
@@ -54,7 +53,6 @@ const SeedPhraseConfirmationScreen = ({
   const [shuffledSeedWords, setShuffledSeedWords] = useState<
     Array<SeedWordType>
   >([])
-  const theme = useContext(ThemeContext)
 
   const renderSeedWord = ({ item }: { item: SeedWordType }) => {
     return (
@@ -148,7 +146,7 @@ const SeedPhraseConfirmationScreen = ({
           <Pressable
             style={[styles.actionBtn, styles.cancelBtn]}
             onPress={() => navigation.goBack()}>
-            <Text style={[theme.buttonText, styles.backText]}>Back</Text>
+            <Text style={styles.backText}>Back</Text>
           </Pressable>
           <Pressable
             style={[
@@ -158,9 +156,7 @@ const SeedPhraseConfirmationScreen = ({
             ]}
             disabled={chosenSeedWords.length < 3}
             onPress={onContinue}>
-            <Text style={[theme.buttonText, styles.continueText]}>
-              Continue
-            </Text>
+            <Text style={styles.continueText}>Continue</Text>
           </Pressable>
         </ButtonFooter>
       </View>

@@ -1,13 +1,13 @@
-import React, { FC, useContext } from 'react'
+import React, { FC } from 'react'
 import {
   ActivityIndicator,
   Pressable,
   StyleProp,
   StyleSheet,
-  Text,
   ViewStyle,
 } from 'react-native'
-import { ThemeContext } from '../../theme'
+import { createText } from '@shopify/restyle'
+import { Theme } from '../../theme'
 
 type LiqualityButtonProps = {
   text: string
@@ -20,18 +20,18 @@ type LiqualityButtonProps = {
   children?: React.ReactElement
 }
 
+//TODO this is deprecated
 const LiqualityButton: FC<LiqualityButtonProps> = (props) => {
   const {
     text,
     variant = 'medium',
     type = 'positive',
-    contentType = 'alphanumeric',
     action,
     style,
     isLoading,
     children,
   } = props
-  const theme = useContext(ThemeContext)
+  const Text = createText<Theme>()
 
   return (
     <Pressable
@@ -41,15 +41,7 @@ const LiqualityButton: FC<LiqualityButtonProps> = (props) => {
       {isLoading ? (
         <ActivityIndicator color="#FFF" />
       ) : (
-        <Text
-          style={[
-            styles[type],
-            contentType === 'alphanumeric'
-              ? theme.buttonText
-              : theme.buttonTextAmount,
-          ]}>
-          {text}
-        </Text>
+        <Text variant="mainButtonLabel">{text}</Text>
       )}
     </Pressable>
   )
