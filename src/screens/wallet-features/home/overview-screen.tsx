@@ -1,12 +1,6 @@
 import * as React from 'react'
 import { Fragment, useCallback, useEffect, useState } from 'react'
-import {
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { ImageBackground, Pressable, StyleSheet, View } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   faArrowDown,
@@ -21,6 +15,9 @@ import ActivityFlatList from '../../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ActionEnum, RootStackParamList, StackPayload } from '../../../types'
 import { fetchTransactionUpdates, populateWallet } from '../../../store/store'
+import ErrorBoundary from 'react-native-error-boundary'
+import Text from '../../../theme/text'
+import ErrorFallback from '../../../components/error-fallback'
 
 type OverviewProps = StackScreenProps<RootStackParamList, 'OverviewScreen'>
 
@@ -30,7 +27,8 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     ACTIVITY,
   }
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
-  const { assets, assetCount, totalFiatBalance, loading } = useWalletState()
+  const { assets, assetCount, totalFiatBalance, loading, error } =
+    useWalletState()
   const { activeNetwork } = useAppSelector((state) => ({
     activeNetwork: state.activeNetwork,
   }))
@@ -82,113 +80,124 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     })
   }, [activeNetwork])
 
+  if (error) {
+    return (
+      <ErrorFallback
+        error={new Error('Failed to load assets')}
+        resetError={() => ({})}
+      />
+    )
+  }
+
   return (
     <View style={styles.container}>
-      <ImageBackground
-        style={styles.overviewBlock}
-        source={require('../../../assets/bg/action-block-bg.png')}>
-        {loading && <Text style={styles.loading}>Loading...</Text>}
-        {!loading && (
-          <Fragment>
-            <View style={styles.totalValueSection}>
-              <Text style={styles.totalValue} numberOfLines={1}>
-                {formatFiat(totalFiatBalance)}
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <ImageBackground
+          style={styles.overviewBlock}
+          source={require('../../../assets/bg/action-block-bg.png')}>
+          {loading && <Text style={styles.loading}>Loading...</Text>}
+          {!loading && (
+            <Fragment>
+              <View style={styles.totalValueSection}>
+                <Text style={styles.totalValue} numberOfLines={1}>
+                  {formatFiat(totalFiatBalance)}
+                </Text>
+                <Text style={styles.currency}>USD</Text>
+              </View>
+              <Text style={styles.assets}>
+                {assetCount}
+                {assetCount === 1 ? ' Asset' : ' Assets'}
               </Text>
-              <Text style={styles.currency}>USD</Text>
-            </View>
-            <Text style={styles.assets}>
-              {assetCount}
-              {assetCount === 1 ? ' Asset' : ' Assets'}
-            </Text>
-            <View style={styles.btnContainer}>
-              <View style={styles.btnWrapper}>
-                <Pressable style={styles.btn} onPress={handleSendBtnPress}>
-                  <FontAwesomeIcon
-                    icon={faArrowUp}
-                    color={'#FFFFFF'}
-                    style={styles.smallIcon}
-                  />
-                </Pressable>
-                <Text style={styles.btnText}>Send</Text>
+              <View style={styles.btnContainer}>
+                <View style={styles.btnWrapper}>
+                  <Pressable style={styles.btn} onPress={handleSendBtnPress}>
+                    <FontAwesomeIcon
+                      icon={faArrowUp}
+                      color={'#FFFFFF'}
+                      style={styles.smallIcon}
+                    />
+                  </Pressable>
+                  <Text style={styles.btnText}>Send</Text>
+                </View>
+                <View style={styles.btnWrapper}>
+                  <Pressable
+                    style={[styles.btn, styles.swapBtn]}
+                    onPress={handleSwapBtnPress}>
+                    <FontAwesomeIcon
+                      size={30}
+                      icon={faExchange}
+                      color={'#9D4DFA'}
+                      style={styles.smallIcon}
+                    />
+                  </Pressable>
+                  <Text style={styles.btnText}>Swap</Text>
+                </View>
+                <View style={styles.btnWrapper}>
+                  <Pressable style={styles.btn} onPress={handleReceiveBtnPress}>
+                    <FontAwesomeIcon
+                      icon={faArrowDown}
+                      color={'#FFFFFF'}
+                      style={styles.smallIcon}
+                    />
+                  </Pressable>
+                  <Text style={styles.btnText}>Receive</Text>
+                </View>
               </View>
-              <View style={styles.btnWrapper}>
-                <Pressable
-                  style={[styles.btn, styles.swapBtn]}
-                  onPress={handleSwapBtnPress}>
-                  <FontAwesomeIcon
-                    size={30}
-                    icon={faExchange}
-                    color={'#9D4DFA'}
-                    style={styles.smallIcon}
-                  />
-                </Pressable>
-                <Text style={styles.btnText}>Swap</Text>
-              </View>
-              <View style={styles.btnWrapper}>
-                <Pressable style={styles.btn} onPress={handleReceiveBtnPress}>
-                  <FontAwesomeIcon
-                    icon={faArrowDown}
-                    color={'#FFFFFF'}
-                    style={styles.smallIcon}
-                  />
-                </Pressable>
-                <Text style={styles.btnText}>Receive</Text>
-              </View>
-            </View>
-          </Fragment>
-        )}
-      </ImageBackground>
-      <View style={styles.tabsBlock}>
-        <Pressable
-          style={[
-            styles.tabHeader,
-            selectedView === ViewKind.ASSETS && styles.headerFocused,
-          ]}
-          onPress={() => setSelectedView(ViewKind.ASSETS)}>
-          <Text style={styles.headerText}>ASSET</Text>
-        </Pressable>
-        <Pressable
-          style={[
-            styles.tabHeader,
-            selectedView === ViewKind.ACTIVITY && styles.headerFocused,
-          ]}
-          onPress={() => setSelectedView(ViewKind.ACTIVITY)}>
-          <Text style={styles.headerText}>ACTIVITY</Text>
-        </Pressable>
-      </View>
-      <View>
-        {selectedView === ViewKind.ACTIVITY &&
-          (assets.length > 0 ? (
-            <ActivityFlatList navigate={navigation.navigate}>
-              <View style={styles.activityActionBar}>
-                <Pressable style={styles.activityBtns}>
-                  <FontAwesomeIcon
-                    size={10}
-                    icon={faGreaterThan}
-                    color={'#A8AEB7'}
-                  />
-                  <Text style={styles.filterLabel}>Filter</Text>
-                </Pressable>
-                <Pressable style={styles.activityBtns}>
-                  <FontAwesomeIcon
-                    size={10}
-                    icon={faArrowDown}
-                    color={'#A8AEB7'}
-                  />
-                  <Text style={styles.exportLabel}>Export</Text>
-                </Pressable>
-              </View>
-            </ActivityFlatList>
-          ) : (
-            <Text style={styles.noActivityMessageBlock}>
-              Once you start using your wallet you will see the activity here.
-            </Text>
-          ))}
+            </Fragment>
+          )}
+        </ImageBackground>
+        <View style={styles.tabsBlock}>
+          <Pressable
+            style={[
+              styles.tabHeader,
+              selectedView === ViewKind.ASSETS && styles.headerFocused,
+            ]}
+            onPress={() => setSelectedView(ViewKind.ASSETS)}>
+            <Text style={styles.headerText}>ASSET</Text>
+          </Pressable>
+          <Pressable
+            style={[
+              styles.tabHeader,
+              selectedView === ViewKind.ACTIVITY && styles.headerFocused,
+            ]}
+            onPress={() => setSelectedView(ViewKind.ACTIVITY)}>
+            <Text style={styles.headerText}>ACTIVITY</Text>
+          </Pressable>
+        </View>
+        <View>
+          {selectedView === ViewKind.ACTIVITY &&
+            (assets.length > 0 ? (
+              <ActivityFlatList navigate={navigation.navigate}>
+                <View style={styles.activityActionBar}>
+                  <Pressable style={styles.activityBtns}>
+                    <FontAwesomeIcon
+                      size={10}
+                      icon={faGreaterThan}
+                      color={'#A8AEB7'}
+                    />
+                    <Text style={styles.filterLabel}>Filter</Text>
+                  </Pressable>
+                  <Pressable style={styles.activityBtns}>
+                    <FontAwesomeIcon
+                      size={10}
+                      icon={faArrowDown}
+                      color={'#A8AEB7'}
+                    />
+                    <Text style={styles.exportLabel}>Export</Text>
+                  </Pressable>
+                </View>
+              </ActivityFlatList>
+            ) : (
+              <Text style={styles.noActivityMessageBlock}>
+                Once you start using your wallet you will see the activity here.
+              </Text>
+            ))}
 
-        {selectedView === ViewKind.ASSETS && (
-          <AssetFlatList assets={assets} onAssetSelected={onAssetSelected} />
-        )}
-      </View>
+          {selectedView === ViewKind.ASSETS && (
+            <AssetFlatList assets={assets} onAssetSelected={onAssetSelected} />
+          )}
+        </View>
+      </ErrorBoundary>
     </View>
   )
 }
