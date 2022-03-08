@@ -84,7 +84,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     return (
       <ErrorFallback
         error={new Error('Failed to load assets')}
-        resetError={() => ({})}
+        resetError={() => navigation.navigate('LoginScreen')}
       />
     )
   }
