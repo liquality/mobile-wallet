@@ -15,6 +15,7 @@ const Spinner = ({
     <Modal transparent={true} visible={visible} animationType={'fade'}>
       <View style={styles.container}>
         <WebView
+          onShouldStartLoadWithRequest={() => false}
           source={{
             html: `
                 <!DOCTYPE html>

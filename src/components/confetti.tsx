@@ -1,9 +1,14 @@
-// Retrieved from this gist with minor modifications https://gist.github.com/ShopifyEng/96b5f2f55b274dab3a957bb12c3f2c4d
-import React, { useMemo } from 'react'
-import Animated from 'react-native-reanimated'
-import { View, Dimensions, StyleSheet } from 'react-native'
+import React, { FC, useEffect } from 'react'
+import Animated, {
+  FadeOut,
+  withDelay,
+  withTiming,
+  useSharedValue,
+  useAnimatedStyle,
+  cancelAnimation,
+} from 'react-native-reanimated'
+import { Dimensions, StyleSheet } from 'react-native'
 import FastImage from 'react-native-fast-image'
-
 const diamand = require('../assets/confetti/diamand.png')
 const emaralCircle = require('../assets/confetti/emrald-circle.png')
 const grenBar = require('../assets/confetti/green-bar.png')
@@ -13,8 +18,7 @@ const purpleTriangle = require('../assets/confetti/purple-triangle.png')
 
 const NUM_CONFETTI = 100
 const COLORS = ['#00e4b2', '#09aec5', '#AC39FD', '#F41973', '#107ed5']
-const CONFETTI_SIZE = 24
-
+const CONFETTI_SIZE = 16
 const shapes = [
   diamand,
   emaralCircle,
@@ -24,129 +28,7 @@ const shapes = [
   purpleTriangle,
 ]
 
-const createConfetti = () => {
-  const { width: screenWidth } = Dimensions.get('screen')
-
-  return [...new Array(NUM_CONFETTI)].map((_, i) => {
-    const clock = new Animated.Clock()
-
-    return {
-      key: i,
-      // Spawn confetti from two different sources, a quarter
-      // from the left and a quarter from the right edge of the screen.
-      x: new Animated.Value(
-        screenWidth * (i % 2 ? 0.25 : 0.75) - CONFETTI_SIZE / 2,
-      ),
-      y: new Animated.Value(-60),
-      angle: new Animated.Value(0),
-      xVel: new Animated.Value(Math.random() * 400 - 200),
-      yVel: new Animated.Value(Math.random() * 150 + 150),
-      angleVel: new Animated.Value((Math.random() * 3 - 1.5) * Math.PI),
-      delay: new Animated.Value(Math.floor(i / 10) * 0.3),
-      elasticity: Math.random() * 0.3 + 0.1,
-      color: COLORS[i % COLORS.length],
-      clock,
-      imageSource: shapes[Math.floor(Math.random() * 5)],
-    }
-  })
-}
-
-const Confetti = () => {
-  const confetti = useMemo(createConfetti, [])
-
-  return (
-    <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-      {confetti.map(
-        ({
-          key,
-          x,
-          y,
-          color,
-          angle,
-          xVel,
-          yVel,
-          angleVel,
-          elasticity,
-          delay,
-          clock,
-          imageSource,
-        }) => {
-          return (
-            <React.Fragment key={key}>
-              <Animated.Code>
-                {() => {
-                  const {
-                    startClock,
-                    set,
-                    add,
-                    sub,
-                    divide,
-                    diff,
-                    multiply,
-                    cond,
-                    clockRunning,
-                    greaterThan,
-                    lessThan,
-                  } = Animated
-                  const { width: screenWidth } = Dimensions.get('window')
-
-                  const timeDiff = diff(clock)
-                  const dt = divide(timeDiff, 1000)
-                  const dy = multiply(dt, yVel)
-                  const dx = multiply(dt, xVel)
-                  const dAngle = multiply(dt, angleVel)
-
-                  return cond(
-                    clockRunning(clock),
-                    [
-                      cond(
-                        greaterThan(delay, 0),
-                        [set(delay, sub(delay, dt))],
-                        [
-                          set(y, add(y, dy)),
-                          set(x, add(x, dx)),
-                          set(angle, add(angle, dAngle)),
-                        ],
-                      ),
-                      cond(greaterThan(x, screenWidth - CONFETTI_SIZE), [
-                        set(x, screenWidth - CONFETTI_SIZE),
-                        set(xVel, multiply(xVel, -elasticity)),
-                      ]),
-                      cond(lessThan(x, 0), [
-                        set(x, 0),
-                        set(xVel, multiply(xVel, -elasticity)),
-                      ]),
-                    ],
-                    [startClock(clock), timeDiff],
-                  )
-                }}
-              </Animated.Code>
-              <Animated.View
-                style={[
-                  styles.confettiContainer,
-                  {
-                    transform: [
-                      { translateX: x },
-                      { translateY: y },
-                      { rotate: angle },
-                      { rotateX: angle },
-                      { rotateY: angle },
-                    ],
-                  },
-                ]}>
-                <FastImage
-                  tintColor={color}
-                  source={imageSource}
-                  style={styles.confetti}
-                />
-              </Animated.View>
-            </React.Fragment>
-          )
-        },
-      )}
-    </View>
-  )
-}
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
 const styles = StyleSheet.create({
   confettiContainer: {
@@ -159,5 +41,139 @@ const styles = StyleSheet.create({
     height: CONFETTI_SIZE,
   },
 })
+
+type ConfettoProps = {
+  id: number
+  x: number
+  y: number
+  xVel: number
+  angle: number
+  delay: number
+  yVel: number
+  angleVel: number
+  color: string
+  elasticity: number
+  imageSource: any
+}
+
+const Confetto: FC<ConfettoProps> = (props) => {
+  const {
+    x,
+    y,
+    xVel,
+    angle,
+    delay,
+    yVel,
+    angleVel,
+    color,
+    elasticity,
+    imageSource,
+  } = props
+  const clock = useSharedValue(0)
+  const duration = useSharedValue(getDuration())
+  const localX = useSharedValue(x)
+  const localY = useSharedValue(y)
+  const localXVel = useSharedValue(xVel)
+  const localAngle = useSharedValue(angle)
+  const timeDiff = useSharedValue(0)
+  const dt = useSharedValue(0)
+  const dy = useSharedValue(0)
+  const dx = useSharedValue(0)
+  const dAngle = useSharedValue(0)
+
+  function getDuration() {
+    // Adding an extra 100 to the screen's height to ensure it goes off the screen.
+    // Then using time = distance / speed for the time calc.
+    let a = screenHeight + 100
+    return (a / yVel) * 1000
+  }
+
+  useEffect(() => {
+    // delay is multiplied by 1000 to convert into milliseconds
+    clock.value = withDelay(
+      delay * 1000,
+      withTiming(1, { duration: duration.value }),
+    )
+    return () => {
+      cancelAnimation(clock)
+    }
+  })
+
+  const uas = useAnimatedStyle(() => {
+    // Because our clock.value is going from 0 to 1, it's value will let us
+    // get the actual number of milliseconds by taking it multiplied by the
+    // total duration of the animation.
+    timeDiff.value = clock.value * duration.value
+    dt.value = timeDiff.value / 1000
+
+    dy.value = dt.value * yVel
+    dx.value = dt.value * localXVel.value
+    dAngle.value = dt.value * angleVel
+    localY.value = y + dy.value
+    localX.value = x + dx.value
+    localAngle.value += dAngle.value
+
+    if (localX.value > screenWidth - CONFETTI_SIZE) {
+      localX.value = screenWidth - CONFETTI_SIZE
+      localXVel.value = localXVel.value * -1 * elasticity
+    }
+
+    if (localX.value < 0) {
+      localX.value = 0
+      localXVel.value = xVel * -1 * elasticity
+    }
+
+    return {
+      transform: [
+        { translateX: localX.value },
+        { translateY: localY.value },
+        { rotate: localAngle.value + 'deg' },
+        { rotateX: localAngle.value + 'deg' },
+        { rotateY: localAngle.value + 'deg' },
+      ],
+    }
+  })
+
+  return (
+    <Animated.View style={[styles.confettiContainer, uas]}>
+      <FastImage
+        source={imageSource}
+        tintColor={color}
+        style={styles.confetti}
+      />
+    </Animated.View>
+  )
+}
+
+const Confetti = () => {
+  const confetti = [...new Array(NUM_CONFETTI)].map((_, index) => {
+    // For 'x', spawn confetti from two different sources, a quarter
+    // from the left and a quarter from the right edge of the screen.
+    return {
+      key: index,
+      x: screenWidth * (index % 2 ? 0.25 : 0.75) - CONFETTI_SIZE / 2,
+      y: -60,
+      angle: 0,
+      xVel: Math.random() * 400 - 200,
+      yVel: Math.random() * 165 + 165,
+      angleVel: (Math.random() * 3 - 1.5) * Math.PI,
+      delay: Math.floor(index / 10) * 0.5,
+      elasticity: Math.random() * 0.3 + 0.1,
+      color: COLORS[index % COLORS.length],
+      imageSource: shapes[Math.floor(Math.random() * 5)],
+    }
+  })
+
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={StyleSheet.absoluteFill}
+      exiting={FadeOut.duration(250)}>
+      {confetti.map((e) => {
+        return <Confetto {...e} />
+      })}
+    </Animated.View>
+  )
+}
 
 export default Confetti
