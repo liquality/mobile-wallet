@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
 })
 
 type ConfettoProps = {
-  id: number
   x: number
   y: number
   xVel: number
