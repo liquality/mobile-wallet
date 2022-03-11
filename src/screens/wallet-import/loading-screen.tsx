@@ -32,7 +32,7 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
         })
       })
   })
-  return <Spinner loadingText="" visible={visible} />
+  return <Spinner visible={visible} />
 }
 
 export default LoadingScreen
