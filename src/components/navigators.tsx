@@ -1,6 +1,6 @@
 import React, { createContext } from 'react'
 import { View, StyleSheet, Text, Pressable } from 'react-native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCheck, faUserCog } from '@fortawesome/pro-light-svg-icons'
 import Infinity from '../assets/icons/infinity.svg'
@@ -45,7 +45,7 @@ const config: TransitionSpec = {
     restSpeedThreshold: 0.01,
   },
 }
-const Stack = createStackNavigator<RootStackParamList>()
+const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
 
 export const OnboardingContext = createContext({})

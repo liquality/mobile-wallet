@@ -1,4 +1,4 @@
-import { Modal, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
 import Loader from '../assets/icons/loader.svg'
 import Animated, {
@@ -12,7 +12,7 @@ import Text from '../theme/text'
 import { Theme } from '../theme'
 import { useTheme } from '@shopify/restyle'
 
-const Spinner = ({ visible }: { visible: boolean }) => {
+const Spinner = () => {
   const angle = useSharedValue(0)
   const theme = useTheme<Theme>()
   const animatedStyle = useAnimatedStyle(() => {
@@ -28,20 +28,18 @@ const Spinner = ({ visible }: { visible: boolean }) => {
   })
 
   return (
-    <Modal transparent={true} visible={visible} animationType={'fade'}>
-      <View style={styles.container}>
-        <Animated.View style={animatedStyle}>
-          <Loader />
-        </Animated.View>
-        <View style={styles.loadingView}>
-          <Text
-            variant="description"
-            style={{ color: theme.colors.secondaryForeground }}>
-            Loading...
-          </Text>
-        </View>
+    <View style={styles.container}>
+      <Animated.View style={animatedStyle}>
+        <Loader />
+      </Animated.View>
+      <View style={styles.loadingView}>
+        <Text
+          variant="description"
+          style={{ color: theme.colors.secondaryForeground }}>
+          Loading...
+        </Text>
       </View>
-    </Modal>
+    </View>
   )
 }
 

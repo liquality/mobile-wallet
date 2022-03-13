@@ -17,6 +17,7 @@ import { RootStackParamList } from '../../types'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 import Wallet from '@liquality/core/dist/wallet'
+import Button from '../../theme/button'
 
 type UnlockWalletScreenProps = StackScreenProps<
   RootStackParamList,
@@ -132,21 +133,22 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
               columnWrapperStyle={styles.columnWrapperStyle}
             />
             <ButtonFooter unpositioned>
-              <Pressable
-                style={[styles.actionBtn, styles.cancelBtn]}
-                onPress={() => navigation.goBack()}>
-                <Text style={styles.cancelText}>Cancel</Text>
-              </Pressable>
-              <Pressable
-                style={[
-                  styles.actionBtn,
-                  styles.nextBtn,
-                  !chosenSeedWords.every((val) => !!val) && styles.disabled,
-                ]}
-                disabled={!chosenSeedWords.every((val) => !!val)}
-                onPress={onContinue}>
-                <Text style={styles.continueText}>Continue</Text>
-              </Pressable>
+              <Button
+                type="secondary"
+                variant="m"
+                label="Cancel"
+                onPress={navigation.goBack}
+                isBorderless={false}
+                isActive={true}
+              />
+              <Button
+                type="primary"
+                variant="m"
+                label="Continue"
+                onPress={onContinue}
+                isBorderless={false}
+                isActive={chosenSeedWords.every((val) => !!val)}
+              />
             </ButtonFooter>
           </View>
         </View>
@@ -264,34 +266,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#2CD2CF',
     width: '100%',
-  },
-  actionBtn: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
-    backgroundColor: '#F8FAFF',
-    borderColor: '#9D4DFA',
-    borderWidth: 1,
-    height: 36,
-  },
-  cancelBtn: {
-    backgroundColor: '#F8FAFF',
-    borderColor: '#9D4DFA',
-  },
-  cancelText: {
-    color: '#9D4DFA',
-  },
-  nextBtn: {
-    backgroundColor: '#9D4DFA',
-    borderColor: '#9D4DFA',
-    borderWidth: 1,
-    marginLeft: 10,
-  },
-  continueText: {
-    color: '#F8FAFF',
-  },
-  disabled: {
-    opacity: 0.5,
   },
   keyboard: {
     flex: 1,

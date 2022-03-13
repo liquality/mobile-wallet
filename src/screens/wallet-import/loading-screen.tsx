@@ -2,7 +2,7 @@ import React from 'react'
 import Spinner from '../../components/spinner'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { createWallet } from '../../store/store'
 import { useDispatch } from 'react-redux'
 import { StateType } from '@liquality/core/dist/types'
@@ -10,7 +10,6 @@ import { StateType } from '@liquality/core/dist/types'
 type LoadingScreenProps = StackScreenProps<RootStackParamList, 'LoadingScreen'>
 
 const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
-  const [visible, setVisible] = useState(true)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -20,7 +19,6 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
           type: 'SETUP_WALLET',
           payload: walletState,
         })
-        setVisible(false)
         navigation.navigate('CongratulationsScreen')
       })
       .catch(() => {
@@ -32,7 +30,7 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
         })
       })
   })
-  return <Spinner visible={visible} />
+  return <Spinner />
 }
 
 export default LoadingScreen

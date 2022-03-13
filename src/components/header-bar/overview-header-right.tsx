@@ -10,7 +10,7 @@ const OverviewHeaderRight = ({
 }): React.ReactElement => {
   return (
     <View style={styles.container}>
-      <Pressable style={styles.menuBtn} onPress={onPress}>
+      <Pressable onPress={onPress}>
         <FontAwesomeIcon icon={faBars} size={25} />
       </Pressable>
     </View>
@@ -22,9 +22,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  menuBtn: {
-    marginRight: 20,
   },
 })
 

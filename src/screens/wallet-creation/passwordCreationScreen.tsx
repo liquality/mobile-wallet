@@ -125,7 +125,7 @@ const PasswordCreationScreen = ({
             })
           }
           isBorderless={true}
-          isActive={!passwordInput.value || !passwordConfirmationInput.value}
+          isActive={!!passwordInput.value && !!passwordConfirmationInput.value}
         />
       </ButtonFooter>
     </ImageBackground>

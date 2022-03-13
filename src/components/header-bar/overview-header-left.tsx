@@ -33,7 +33,6 @@ const OverviewHeaderLeft = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginLeft: 20,
   },
   overviewText: {
     fontFamily: 'Montserrat-Regular',
