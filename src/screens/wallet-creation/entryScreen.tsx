@@ -38,7 +38,11 @@ const Entry = ({ navigation }: EntryProps) => {
           type="primary"
           variant="l"
           label="Create a new Wallet"
-          onPress={() => navigation.navigate('TermsScreen')}
+          onPress={() =>
+            navigation.navigate('TermsScreen', {
+              nextScreen: 'SeedPhraseScreen',
+            })
+          }
           isBorderless={true}
           isActive={true}
         />

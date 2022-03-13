@@ -119,7 +119,7 @@ const PasswordCreationScreen = ({
           label="Next"
           onPress={() =>
             arePasswordsValid() &&
-            navigation.navigate(route.params.nextScreen || 'Entry', {
+            navigation.navigate('LoadingScreen', {
               ...route.params,
               password: passwordInput.value,
             })
