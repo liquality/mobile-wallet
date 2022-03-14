@@ -17,7 +17,7 @@ const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
           index: 0,
           routes: [{ name: 'LoginScreen' }],
         }),
-      1000,
+      3000,
     )
   })
 

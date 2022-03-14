@@ -17,3 +17,7 @@ jest.mock('react-native-qrcode-svg', () => {
   const RN = require('react-native')
   return RN.View
 })
+jest.mock('react-native-error-boundary', () => {
+  const RN = require('react-native')
+  return RN.View
+})

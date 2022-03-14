@@ -110,8 +110,8 @@ const PasswordCreationScreen = ({
           onPress={() =>
             navigation.navigate(route.params.nextScreen || 'Entry')
           }
-          isBorderless={false}
-          isActive={true}
+          isBorderless
+          isActive
         />
         <Button
           type="primary"
@@ -119,13 +119,13 @@ const PasswordCreationScreen = ({
           label="Next"
           onPress={() =>
             arePasswordsValid() &&
-            navigation.navigate(route.params.nextScreen || 'Entry', {
+            navigation.navigate('LoadingScreen', {
               ...route.params,
               password: passwordInput.value,
             })
           }
-          isBorderless={false}
-          isActive={!passwordInput.value || !passwordConfirmationInput.value}
+          isBorderless
+          isActive={!!passwordInput.value && !!passwordConfirmationInput.value}
         />
       </ButtonFooter>
     </ImageBackground>

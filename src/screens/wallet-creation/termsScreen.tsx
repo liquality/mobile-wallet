@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Pressable,
   ImageBackground,
   ScrollView,
 } from 'react-native'
@@ -11,9 +10,10 @@ import { RootStackParamList } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
+import Button from '../../theme/button'
 type TermsProps = StackScreenProps<RootStackParamList, 'TermsScreen'>
 
-const TermsScreen = ({ navigation }: TermsProps) => {
+const TermsScreen = ({ navigation, route }: TermsProps) => {
   const [scrolledToEnd, setScrolledToEnd] = useState(false)
 
   return (
@@ -66,27 +66,30 @@ const TermsScreen = ({ navigation }: TermsProps) => {
           </Text>
         </ScrollView>
         <ButtonFooter unpositioned>
-          <Pressable
-            style={[styles.actionBtn, styles.cancelBtn]}
-            onPress={() => navigation.goBack()}>
-            <Text style={styles.cancelText}>Cancel</Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.actionBtn,
-              styles.nextBtn,
-              !scrolledToEnd && styles.disabled,
-            ]}
-            disabled={!scrolledToEnd}
+          <Button
+            type="secondary"
+            variant="m"
+            label="Cancel"
+            onPress={navigation.goBack}
+            isBorderless={false}
+            isActive={true}
+          />
+          <Button
+            type="primary"
+            variant="m"
+            label="I Accept"
             onPress={() =>
-              navigation.navigate('PasswordCreationScreen', {
-                termsAcceptedAt: Date.now(),
-                previousScreen: 'Entry',
-                nextScreen: 'SeedPhraseScreen',
-              })
-            }>
-            <Text style={styles.nextText}>I Accept</Text>
-          </Pressable>
+              navigation.navigate(
+                route?.params?.nextScreen || 'UnlockWalletScreen',
+                {
+                  termsAcceptedAt: Date.now(),
+                  previousScreen: 'Entry',
+                },
+              )
+            }
+            isBorderless={true}
+            isActive={scrolledToEnd}
+          />
         </ButtonFooter>
       </View>
     </ImageBackground>
@@ -122,34 +125,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     lineHeight: 20,
     textAlign: 'justify',
-  },
-  actionBtn: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
-    backgroundColor: '#F8FAFF',
-    borderColor: '#9D4DFA',
-    borderWidth: 1,
-    height: 36,
-  },
-  cancelBtn: {
-    backgroundColor: '#F8FAFF',
-    borderColor: '#9D4DFA',
-  },
-  cancelText: {
-    color: '#9D4DFA',
-  },
-  nextBtn: {
-    backgroundColor: '#9D4DFA',
-    borderColor: '#9D4DFA',
-    borderWidth: 1,
-    marginLeft: 10,
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  nextText: {
-    color: '#F8FAFF',
   },
 })
 export default TermsScreen
