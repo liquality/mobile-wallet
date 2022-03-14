@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  ImageBackground,
-  FlatList,
-} from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, FlatList } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 import Wallet from '@liquality/core/dist/wallet'
+import Button from '../../theme/button'
 type WalletBackupProps = StackScreenProps<
   RootStackParamList,
   'SeedPhraseScreen'
@@ -62,21 +56,27 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
           columnWrapperStyle={styles.columnWrapperStyle}
         />
         <ButtonFooter unpositioned>
-          <Pressable
-            style={[styles.actionBtn, styles.cancelBtn]}
-            onPress={() => navigation.navigate('Entry')}>
-            <Text style={styles.cancelText}>Cancel</Text>
-          </Pressable>
-          <Pressable
-            style={[styles.actionBtn, styles.nextBtn]}
+          <Button
+            type="secondary"
+            variant="m"
+            label="Cancel"
+            onPress={() => navigation.navigate('Entry')}
+            isBorderless={false}
+            isActive={true}
+          />
+          <Button
+            type="primary"
+            variant="m"
+            label="Next"
             onPress={() =>
               navigation.navigate('SeedPhraseConfirmationScreen', {
                 ...route.params,
                 seedWords,
               })
-            }>
-            <Text style={styles.nextText}>Next</Text>
-          </Pressable>
+            }
+            isBorderless={true}
+            isActive={true}
+          />
         </ButtonFooter>
       </View>
     </ImageBackground>
@@ -131,31 +131,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontSize: 16,
     marginTop: 5,
-  },
-  actionBtn: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
-    backgroundColor: '#F8FAFF',
-    borderColor: '#9D4DFA',
-    borderWidth: 1,
-    height: 36,
-  },
-  cancelBtn: {
-    backgroundColor: '#F8FAFF',
-    borderColor: '#9D4DFA',
-  },
-  cancelText: {
-    color: '#9D4DFA',
-  },
-  nextBtn: {
-    backgroundColor: '#9D4DFA',
-    borderColor: '#9D4DFA',
-    borderWidth: 1,
-    marginLeft: 10,
-  },
-  nextText: {
-    color: '#F8FAFF',
   },
 })
 export default SeedPhraseScreen

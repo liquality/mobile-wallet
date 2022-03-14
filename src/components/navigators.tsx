@@ -1,6 +1,6 @@
 import React, { createContext } from 'react'
 import { View, StyleSheet, Text, Pressable } from 'react-native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCheck, faUserCog } from '@fortawesome/pro-light-svg-icons'
 import Infinity from '../assets/icons/infinity.svg'
@@ -32,20 +32,9 @@ import AssetManagementScreen from '../screens/wallet-features/asset/asset-manage
 import SwapScreen from '../screens/wallet-features/swap/swap-screen'
 import SwapReviewScreen from '../screens/wallet-features/swap/swap-review-screen'
 import SwapConfirmationScreen from '../screens/wallet-features/swap/swap-confirmation-screen'
-import { TransitionSpec } from '@react-navigation/stack/src/types'
+import { TransitionPresets } from '@react-navigation/stack'
 
-const config: TransitionSpec = {
-  animation: 'spring',
-  config: {
-    stiffness: 1000,
-    damping: 500,
-    mass: 3,
-    overshootClamping: true,
-    restDisplacementThreshold: 0.01,
-    restSpeedThreshold: 0.01,
-  },
-}
-const Stack = createStackNavigator<RootStackParamList>()
+const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
 
 export const OnboardingContext = createContext({})
@@ -54,7 +43,11 @@ export const OnboardingNavigator = () => (
   <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
     <Stack.Navigator
       initialRouteName="Entry"
-      screenOptions={{ headerShown: false }}>
+      screenOptions={{
+        headerShown: false,
+        gestureEnabled: true,
+        ...TransitionPresets.SlideFromRightIOS,
+      }}>
       <Stack.Screen name="Entry" component={Entry} />
       <Stack.Screen name="TermsScreen" component={TermsScreen} />
       <Stack.Screen
@@ -78,8 +71,13 @@ export const OnboardingNavigator = () => (
 export const WalletImportNavigator = () => (
   <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
     <Stack.Navigator
-      initialRouteName="UnlockWalletScreen"
-      screenOptions={{ headerShown: false }}>
+      initialRouteName="TermsScreen"
+      screenOptions={{
+        headerShown: false,
+        gestureEnabled: true,
+        ...TransitionPresets.SlideFromRightIOS,
+      }}>
+      <Stack.Screen name="TermsScreen" component={TermsScreen} />
       <Stack.Screen name="UnlockWalletScreen" component={UnlockWalletScreen} />
       <Stack.Screen
         name="PasswordCreationScreen"
@@ -98,11 +96,8 @@ export const AppStackNavigator = () => (
   <Stack.Navigator
     initialRouteName="OverviewScreen"
     screenOptions={({ navigation, route }) => ({
-      gestureDirection: 'horizontal',
-      transitionSpec: {
-        open: config,
-        close: config,
-      },
+      gestureEnabled: true,
+      ...TransitionPresets.SlideFromRightIOS,
       headerShown: true,
       title: '',
       headerLeft: (props: HeaderBackButtonProps) => (

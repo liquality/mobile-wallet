@@ -12,6 +12,7 @@ import { RootStackParamList, SeedWordType } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
 import Header from '../header'
 import ButtonFooter from '../../components/button-footer'
+import Button from '../../theme/button'
 
 type SeedPhraseConfirmationProps = StackScreenProps<
   RootStackParamList,
@@ -84,11 +85,11 @@ const SeedPhraseConfirmationScreen = ({
   }
 
   const onContinue = () => {
-    if (!route.params.password || !confirmSeedPhrase()) {
+    if (!confirmSeedPhrase()) {
       Alert.alert('Key information missing', 'Please try again')
       return
     }
-    navigation.navigate('LoadingScreen', {
+    navigation.navigate('PasswordCreationScreen', {
       ...route.params,
       mnemonic: route.params.seedWords?.join(' ') || '',
       imported: false,
@@ -143,21 +144,22 @@ const SeedPhraseConfirmationScreen = ({
           columnWrapperStyle={styles.columnWrapperStyle}
         />
         <ButtonFooter unpositioned>
-          <Pressable
-            style={[styles.actionBtn, styles.cancelBtn]}
-            onPress={() => navigation.goBack()}>
-            <Text style={styles.backText}>Back</Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.actionBtn,
-              styles.nextBtn,
-              chosenSeedWords.length < 3 && styles.disabled,
-            ]}
-            disabled={chosenSeedWords.length < 3}
-            onPress={onContinue}>
-            <Text style={styles.continueText}>Continue</Text>
-          </Pressable>
+          <Button
+            type="secondary"
+            variant="m"
+            label="Back"
+            onPress={navigation.goBack}
+            isBorderless={false}
+            isActive={true}
+          />
+          <Button
+            type="primary"
+            variant="m"
+            label="Continue"
+            onPress={onContinue}
+            isBorderless={true}
+            isActive={chosenSeedWords.length >= 3}
+          />
         </ButtonFooter>
       </View>
     </ImageBackground>

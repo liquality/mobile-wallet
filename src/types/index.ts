@@ -66,7 +66,7 @@ export type StackPayload = {
 
 export type RootStackParamList = {
   Entry: undefined
-  TermsScreen: undefined
+  TermsScreen: StackPayload
   PasswordCreationScreen: StackPayload
   SeedPhraseScreen: StackPayload
   SeedPhraseConfirmationScreen: StackPayload
