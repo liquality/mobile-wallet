@@ -15,6 +15,18 @@ const Entry = ({ navigation }: EntryProps) => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
 
+  const handleImportPress = () => navigation.navigate('WalletImportNavigator')
+
+  const handleCreateWalletPress = () =>
+    navigation.navigate('TermsScreen', {
+      nextScreen: 'SeedPhraseScreen',
+    })
+
+  const handleOpenSesamePress = async () => {
+    setLoading(true)
+    await onOpenSesame(dispatch, navigation)
+  }
+
   return (
     <ImageBackground
       style={styles.container}
@@ -28,9 +40,7 @@ const Entry = ({ navigation }: EntryProps) => {
       <Box flex={0.3} width="90%" justifyContent="flex-end">
         <View style={styles.forgotPassword}>
           <Text variant="description">Forgot password? </Text>
-          <Text
-            variant="description"
-            onPress={() => navigation.navigate('WalletImportNavigator')}>
+          <Text variant="description" onPress={handleImportPress}>
             Import with seed phrase
           </Text>
         </View>
@@ -38,25 +48,18 @@ const Entry = ({ navigation }: EntryProps) => {
           type="primary"
           variant="l"
           label="Create a new Wallet"
-          onPress={() =>
-            navigation.navigate('TermsScreen', {
-              nextScreen: 'SeedPhraseScreen',
-            })
-          }
-          isBorderless={true}
-          isActive={true}
+          onPress={handleCreateWalletPress}
+          isBorderless
+          isActive
         />
         <Button
           type="primary"
           variant="l"
           label="Open Sesame"
-          onPress={() => {
-            setLoading(true)
-            onOpenSesame(dispatch, navigation)
-          }}
+          onPress={handleOpenSesamePress}
           isLoading={loading}
-          isBorderless={true}
-          isActive={true}
+          isBorderless
+          isActive
         />
       </Box>
     </ImageBackground>

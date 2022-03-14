@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useCallback, useEffect } from 'react'
 import Animated, {
   FadeOut,
   withDelay,
@@ -29,6 +29,23 @@ const shapes = [
 ]
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
+const confetti = [...new Array(NUM_CONFETTI)].map((_, index) => {
+  // For 'x', spawn confetti from two different sources, a quarter
+  // from the left and a quarter from the right edge of the screen.
+  return {
+    key: index,
+    x: screenWidth * (index % 2 ? 0.25 : 0.75) - CONFETTI_SIZE / 2,
+    y: -60,
+    angle: 0,
+    xVel: Math.random() * 400 - 200,
+    yVel: Math.random() * 165 + 165,
+    angleVel: (Math.random() * 3 - 1.5) * Math.PI,
+    delay: Math.floor(index / 10) * 0.5,
+    elasticity: Math.random() * 0.3 + 0.1,
+    color: COLORS[index % COLORS.length],
+    imageSource: shapes[Math.floor(Math.random() * 5)],
+  }
+})
 
 const styles = StyleSheet.create({
   confettiContainer: {
@@ -69,7 +86,6 @@ const Confetto: FC<ConfettoProps> = (props) => {
     imageSource,
   } = props
   const clock = useSharedValue(0)
-  const duration = useSharedValue(getDuration())
   const localX = useSharedValue(x)
   const localY = useSharedValue(y)
   const localXVel = useSharedValue(xVel)
@@ -80,12 +96,14 @@ const Confetto: FC<ConfettoProps> = (props) => {
   const dx = useSharedValue(0)
   const dAngle = useSharedValue(0)
 
-  function getDuration() {
+  const getDuration = useCallback(() => {
     // Adding an extra 100 to the screen's height to ensure it goes off the screen.
     // Then using time = distance / speed for the time calc.
     let a = screenHeight + 100
     return (a / yVel) * 1000
-  }
+  }, [yVel])
+
+  const duration = useSharedValue(getDuration())
 
   useEffect(() => {
     // delay is multiplied by 1000 to convert into milliseconds
@@ -96,7 +114,7 @@ const Confetto: FC<ConfettoProps> = (props) => {
     return () => {
       cancelAnimation(clock)
     }
-  })
+  }, [clock, delay, duration.value])
 
   const uas = useAnimatedStyle(() => {
     // Because our clock.value is going from 0 to 1, it's value will let us
@@ -131,7 +149,7 @@ const Confetto: FC<ConfettoProps> = (props) => {
         { rotateY: localAngle.value + 'deg' },
       ],
     }
-  })
+  }, [])
 
   return (
     <Animated.View style={[styles.confettiContainer, uas]}>
@@ -145,24 +163,6 @@ const Confetto: FC<ConfettoProps> = (props) => {
 }
 
 const Confetti = () => {
-  const confetti = [...new Array(NUM_CONFETTI)].map((_, index) => {
-    // For 'x', spawn confetti from two different sources, a quarter
-    // from the left and a quarter from the right edge of the screen.
-    return {
-      key: index,
-      x: screenWidth * (index % 2 ? 0.25 : 0.75) - CONFETTI_SIZE / 2,
-      y: -60,
-      angle: 0,
-      xVel: Math.random() * 400 - 200,
-      yVel: Math.random() * 165 + 165,
-      angleVel: (Math.random() * 3 - 1.5) * Math.PI,
-      delay: Math.floor(index / 10) * 0.5,
-      elasticity: Math.random() * 0.3 + 0.1,
-      color: COLORS[index % COLORS.length],
-      imageSource: shapes[Math.floor(Math.random() * 5)],
-    }
-  })
-
   return (
     <Animated.View
       pointerEvents="none"
