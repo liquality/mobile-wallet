@@ -48,115 +48,108 @@ export const useWalletState = () => {
     let assetCounter = 0
 
     try {
-      if (accounts) {
-        setAssetCount(Object.keys(accounts).length)
-        const accts = accounts?.[walletId!]?.[activeNetwork!]
-
-        if (accts && fiatRates) {
-          let accountData: Array<AssetDataElementType> = []
-
-          for (let account of accts) {
-            if (Object.keys(account.balances!).length === 0) {
-              continue
-            }
-
-            const nativeAsset = chains[account.chain].nativeAsset
-            const chainData: AssetDataElementType = {
-              id: account.chain,
-              chain: account.chain,
-              name: account.name,
-              code: nativeAsset,
-              address: account.addresses[0], //TODO why pick only the first address
-              balance: new BigNumber(account.balances?.[nativeAsset] || 0),
-              balanceInUSD: new BigNumber(
-                unitToCurrency(
-                  cryptoassets[nativeAsset],
-                  account.balances?.[nativeAsset] || 0,
-                ).times(fiatRates[nativeAsset]),
-              ),
-              color: account.color,
-              assets: [],
-              showAssets: false,
-              fees: fees?.[activeNetwork!]![walletId!][account.chain],
-            }
-
-            if (account.assets.length > 0) {
-              const { total, assetsData } = Object.keys(
-                account.balances!,
-              ).reduce(
-                (
-                  acc: {
-                    total: BigNumber
-                    assetsData: Array<AssetDataElementType>
-                  },
-                  asset: string,
-                ) => {
-                  acc.total = BigNumber.sum(
-                    acc.total,
-                    unitToCurrency(
-                      cryptoassets[asset],
-                      account.balances![asset],
-                    ).times(fiatRates[asset]),
-                  )
-
-                  acc.assetsData.push({
-                    id: asset,
-                    name: cryptoassets[asset].name,
-                    code: asset,
-                    chain: account.chain,
-                    color: account.color,
-                    balance: new BigNumber(account.balances![asset]),
-                    balanceInUSD: new BigNumber(
-                      unitToCurrency(
-                        cryptoassets[asset],
-                        account.balances![asset],
-                      ).times(fiatRates[asset]),
-                    ),
-                  })
-                  return acc
-                },
-                { total: new BigNumber(0), assetsData: [] },
-              )
-
-              totalBalance = BigNumber.sum(totalBalance, total)
-
-              chainData.balance = assetsData.reduce(
-                (
-                  totalBal: BigNumber,
-                  assetData: AssetDataElementType,
-                ): BigNumber =>
-                  BigNumber.sum(
-                    totalBal,
-                    assetData.balance || new BigNumber(0),
-                  ),
-                new BigNumber(0),
-              )
-
-              chainData.balanceInUSD = assetsData.reduce(
-                (
-                  totalBal: BigNumber,
-                  assetData: AssetDataElementType,
-                ): BigNumber =>
-                  BigNumber.sum(
-                    totalBal,
-                    assetData.balanceInUSD || new BigNumber(0),
-                  ),
-                new BigNumber(0),
-              )
-
-              chainData.assets?.push(...assetsData)
-              assetCounter += account.assets.length
-            } else {
-              assetCounter += 1
-            }
-
-            accountData.push(chainData)
-          }
-          setTotalFiatBalance(totalBalance)
-          setAssetCount(assetCounter)
-          setAssets(accountData)
-        }
+      if (!accounts) {
+        return
       }
+
+      setAssetCount(Object.keys(accounts).length)
+      const accts = accounts?.[walletId!]?.[activeNetwork!]
+
+      if (!accts || !fiatRates) {
+        return
+      }
+
+      let accountData: Array<AssetDataElementType> = []
+
+      for (let account of accts) {
+        if (Object.keys(account.balances!).length === 0) {
+          continue
+        }
+
+        const nativeAsset = chains[account.chain].nativeAsset
+        const chainData: AssetDataElementType = {
+          id: account.chain,
+          chain: account.chain,
+          name: account.name,
+          code: nativeAsset,
+          address: account.addresses[0], //TODO why pick only the first address
+          balance: new BigNumber(account.balances?.[nativeAsset] || 0),
+          balanceInUSD: new BigNumber(
+            unitToCurrency(
+              cryptoassets[nativeAsset],
+              account.balances?.[nativeAsset] || 0,
+            ).times(fiatRates[nativeAsset]),
+          ),
+          color: account.color,
+          assets: [],
+          showAssets: false,
+          fees: fees?.[activeNetwork!]![walletId!][account.chain],
+        }
+
+        if (account.assets.length > 0) {
+          const { total, assetsData } = Object.keys(account.balances!).reduce(
+            (
+              acc: {
+                total: BigNumber
+                assetsData: Array<AssetDataElementType>
+              },
+              asset: string,
+            ) => {
+              acc.total = BigNumber.sum(
+                acc.total,
+                unitToCurrency(
+                  cryptoassets[asset],
+                  account.balances![asset],
+                ).times(fiatRates[asset]),
+              )
+
+              acc.assetsData.push({
+                id: asset,
+                name: cryptoassets[asset].name,
+                code: asset,
+                chain: account.chain,
+                color: account.color,
+                balance: new BigNumber(account.balances![asset]),
+                balanceInUSD: new BigNumber(
+                  unitToCurrency(
+                    cryptoassets[asset],
+                    account.balances![asset],
+                  ).times(fiatRates[asset]),
+                ),
+              })
+              return acc
+            },
+            { total: new BigNumber(0), assetsData: [] },
+          )
+
+          totalBalance = BigNumber.sum(totalBalance, total)
+
+          chainData.balance = assetsData.reduce(
+            (totalBal: BigNumber, assetData: AssetDataElementType): BigNumber =>
+              BigNumber.sum(totalBal, assetData.balance || new BigNumber(0)),
+            new BigNumber(0),
+          )
+
+          chainData.balanceInUSD = assetsData.reduce(
+            (totalBal: BigNumber, assetData: AssetDataElementType): BigNumber =>
+              BigNumber.sum(
+                totalBal,
+                assetData.balanceInUSD || new BigNumber(0),
+              ),
+            new BigNumber(0),
+          )
+
+          chainData.assets?.push(...assetsData)
+          assetCounter += account.assets.length
+        } else {
+          assetCounter += 1
+        }
+
+        accountData.push(chainData)
+      }
+      setTotalFiatBalance(totalBalance)
+      setAssetCount(assetCounter)
+      setAssets(accountData)
       setLoading(assetCounter === 0)
     } catch (e: unknown) {
       setLoading(false)

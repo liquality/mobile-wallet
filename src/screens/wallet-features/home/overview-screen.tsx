@@ -95,8 +95,9 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
         <ImageBackground
           style={styles.overviewBlock}
           source={require('../../../assets/bg/action-block-bg.png')}>
-          {loading && <Text style={styles.loading}>Loading...</Text>}
-          {!loading && (
+          {loading ? (
+            <Text style={styles.loading}>Loading...</Text>
+          ) : (
             <Fragment>
               <View style={styles.totalValueSection}>
                 <Text style={styles.totalValue} numberOfLines={1}>
