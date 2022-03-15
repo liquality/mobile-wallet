@@ -15,7 +15,6 @@ import {
   View,
 } from 'react-native'
 import { ChainId } from '@liquality/cryptoassets/src/types'
-import { MarketDataType, QuoteType } from '@liquality/core/dist/types'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { StackScreenProps } from '@react-navigation/stack'
 import {
@@ -42,7 +41,6 @@ import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
 import { prettyBalance } from '../../../core/utils/coin-formatter'
 import { useAppSelector } from '../../../hooks'
 import { sortQuotes } from '../../../utils'
-import SwapProvider from '@liquality/core/dist/swaps/swap-provider'
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
 import Button from '../../../theme/button'
 
@@ -84,14 +82,14 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     swapAssetPair?.fromAsset,
   )
   const [toAsset, setToAsset] = useState<AssetDataElementType>()
-  const [selectedQuote, setSelectedQuote] = useState<MarketDataType>()
+  const [selectedQuote, setSelectedQuote] = useState<any>()
   const [error, setError] = useState('')
   const fromNetworkFee = useRef<BigNumber>(new BigNumber(0))
   const toNetworkFee = useRef<BigNumber>(new BigNumber(0))
   const [maximumValue, setMaximumValue] = useState<BigNumber>(new BigNumber(0))
   const [minimumValue, setMinimumValue] = useState<BigNumber>(new BigNumber(0))
   const [bestQuote, setBestQuote] = useState<BigNumber>(new BigNumber(0))
-  const [swapProviders, setSwapProviders] = useState<SwapProvider[]>([])
+  const [swapProviders, setSwapProviders] = useState<any[]>([])
   const [state, dispatch] = useReducer(reducer, {})
 
   const toggleGasControllers = () => {
@@ -118,7 +116,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     })
   }
 
-  const handleSelectQuote = (quote: MarketDataType) => {
+  const handleSelectQuote = (quote: any) => {
     setSelectedQuote(quote)
   }
 
@@ -176,7 +174,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     async (amount: BigNumber) => {
       let bestQuoteAmount = new BigNumber(0)
       if (fromAsset?.code && toAsset?.code) {
-        const promises: Promise<QuoteType>[] = []
+        const promises: Promise<any>[] = []
         for (const provider of swapProviders) {
           const quote = provider.getQuote(
             marketData.filter((md) =>

@@ -27,7 +27,6 @@ import Label from '../../../components/ui/label'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import ProgressBar from '../../../components/animations/progress-bar'
 import SuccessIcon from '../../../assets/icons/success-icon.svg'
-import { HistoryItem } from '@liquality/core/dist/types'
 import SwapRates from '../../../components/swap-rates'
 import Button from '../../../theme/button'
 
@@ -42,7 +41,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
 }) => {
   const { fiatRates, history = [] } = useAppSelector((state) => {
     const { activeNetwork, activeWalletId, history: historyObject } = state
-    let historyItems: HistoryItem[] = []
+    let historyItems: any[] = []
     if (activeNetwork && activeWalletId && historyObject) {
       historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
     }
@@ -55,7 +54,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   const transaction = route.params.swapTransactionConfirmation
   const [isExpanded, setIsExpanded] = useState(false)
   const [isSecretRevealed, setIsSecretRevealed] = useState(false)
-  const [historyItem, setHistoryItem] = useState<HistoryItem>()
+  const [historyItem, setHistoryItem] = useState<any>()
   const {
     fromAmount,
     from,

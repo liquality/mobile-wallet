@@ -17,7 +17,6 @@ import { useDispatch } from 'react-redux'
 import { useAppSelector } from '../../../hooks'
 // import { ChainId } from '@liquality/cryptoassets'
 import WhatsNew from '../../../components/ui/whats-new'
-import { NetworkEnum } from '@liquality/core/dist/types'
 import { updateWallet } from '../../../store/store'
 import Button from '../../../theme/button'
 
@@ -88,7 +87,7 @@ const SettingsScreen = () => {
   //   })
   // }
 
-  const toggleNetwork = (network: NetworkEnum) => {
+  const toggleNetwork = (network: any) => {
     dispatch({
       type: 'NETWORK_UPDATE',
       payload: { activeNetwork: network },
@@ -197,18 +196,18 @@ const SettingsScreen = () => {
                   style={[
                     styles.btn,
                     styles.leftBtn,
-                    activeNetwork === NetworkEnum.Mainnet && styles.btnSelected,
+                    activeNetwork === 'mainnet' && styles.btnSelected,
                   ]}
-                  onPress={() => toggleNetwork(NetworkEnum.Mainnet)}>
+                  onPress={() => toggleNetwork('mainnet')}>
                   <Text style={[styles.label, styles.small]}>Mainnet</Text>
                 </Pressable>
                 <Pressable
                   style={[
                     styles.btn,
                     styles.rightBtn,
-                    activeNetwork === NetworkEnum.Testnet && styles.btnSelected,
+                    activeNetwork === 'testnet' && styles.btnSelected,
                   ]}
-                  onPress={() => toggleNetwork(NetworkEnum.Testnet)}>
+                  onPress={() => toggleNetwork('testnet')}>
                   <Text style={[styles.label, styles.small]}>Testnet</Text>
                 </Pressable>
               </View>

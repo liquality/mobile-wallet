@@ -9,7 +9,6 @@ import { formatDate } from '../../../utils'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import SuccessIcon from '../../../assets/icons/success-icon.svg'
 import { useAppSelector } from '../../../hooks'
-import { HistoryItem } from '@liquality/core/dist/types'
 
 type SendConfirmationScreenProps = StackScreenProps<
   RootStackParamList,
@@ -23,10 +22,10 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   const transaction = route.params.sendTransactionConfirmation!
   const { from, startTime } = transaction
   const { value: amount, feePrice } = transaction?.sendTransaction!
-  const [historyItem, setHistoryItem] = useState<HistoryItem>(transaction)
+  const [historyItem, setHistoryItem] = useState<any>(transaction)
   const { history = [] } = useAppSelector((state) => {
     const { activeNetwork, activeWalletId, history: historyObject } = state
-    let historyItems: HistoryItem[] = []
+    let historyItems: any[] = []
     if (activeNetwork && activeWalletId && historyObject) {
       historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
     }

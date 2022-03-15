@@ -26,7 +26,6 @@ import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { chainDefaultColors } from '../../../core/config'
-import { GasSpeedType, NetworkEnum } from '@liquality/core/dist/types'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 
@@ -42,10 +41,10 @@ type SendScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
 const SendScreen = ({ navigation, route }: SendScreenProps) => {
   const { code, balance, chain }: AssetDataElementType = route.params.assetData!
   const [customFee, setCustomFee] = useState<number>(0)
-  const gasSpeeds: GasSpeedType[] = ['slow', 'average', 'fast']
+  const gasSpeeds: any[] = ['slow', 'average', 'fast']
   const {
     activeWalletId,
-    activeNetwork = NetworkEnum.Testnet,
+    activeNetwork = 'testnet',
     fees,
     fiatRates,
   } = useAppSelector((state) => ({
@@ -55,7 +54,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     fiatRates: state.fiatRates,
   }))
   const [showFeeOptions, setShowFeeOptions] = useState(false)
-  const [speedMode, setSpeedMode] = useState<GasSpeedType>('average')
+  const [speedMode, setSpeedMode] = useState<any>('average')
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
   const [amountInFiat, setAmountInFiat] = useState<number>(0)

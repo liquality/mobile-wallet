@@ -6,10 +6,6 @@ import mockClipboard from '@react-native-clipboard/clipboard/jest/clipboard-mock
 jest.mock('@react-native-clipboard/clipboard', () => mockClipboard)
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
 jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage)
-jest.mock('react-native-webview', () => {
-  const RN = require('react-native')
-  return RN.View
-})
 jest.mock('@fortawesome/react-native-fontawesome', () => ({
   FontAwesomeIcon: '',
 }))

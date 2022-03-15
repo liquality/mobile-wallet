@@ -14,7 +14,6 @@ import { faClone, faCheck } from '@fortawesome/pro-light-svg-icons'
 import { StackScreenProps } from '@react-navigation/stack'
 import { AssetDataElementType, RootStackParamList } from '../../../types'
 import AssetIcon from '../../../components/asset-icon'
-import { NetworkEnum } from '@liquality/core/dist/types'
 import Button from '../../../theme/button'
 import { useAppSelector } from '../../../hooks'
 
@@ -100,7 +99,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
           Scan QR code with a mobile wallet to send funds to this address.
         </Text>
         <QRCode value={address} size={200} />
-        {activeNetwork === NetworkEnum.Testnet && (
+        {activeNetwork === 'testnet' && (
           <Fragment>
             <Text style={styles.linkLabel}>
               {getFaucetUrl(name).name} Testnet faucet

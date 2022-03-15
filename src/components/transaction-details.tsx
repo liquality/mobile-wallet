@@ -4,7 +4,6 @@ import Svg, { Circle, Line } from 'react-native-svg'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClone } from '@fortawesome/pro-light-svg-icons'
 import Clipboard from '@react-native-clipboard/clipboard'
-import { HistoryItem, StateType } from '@liquality/core/dist/types'
 import { formatDate } from '../utils'
 import {
   dpUI,
@@ -22,7 +21,7 @@ type ConfirmationBlockProps = {
   fee?: number
   confirmations: number
   asset: string
-  fiatRates: StateType['fiatRates']
+  fiatRates: any['fiatRates']
 }
 
 const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
@@ -105,7 +104,7 @@ type TimelineInfo = {
 
 type TransactionDetailsProps = {
   type: 'SWAP' | 'SEND'
-  historyItem: HistoryItem
+  historyItem: any
 }
 const TransactionDetails: React.FC<TransactionDetailsProps> = (
   props,

@@ -12,7 +12,6 @@ import {
   UseInputStateReturnType,
 } from '../../types'
 import { ChainId } from '@liquality/cryptoassets'
-import { NetworkEnum } from '@liquality/core/dist/types'
 import Button from '../../theme/button'
 
 type CustomFeeScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
@@ -32,7 +31,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     route.params.assetData!
   const {
     activeWalletId = '',
-    activeNetwork = NetworkEnum.Testnet,
+    activeNetwork = 'testnet',
     fees,
     fiatRates,
   } = useAppSelector((state) => ({

@@ -47,7 +47,7 @@ const App = () => {
       }
       SplashScreen.hide()
     })
-  })
+  }, [])
 
   return (
     <Provider store={store}>

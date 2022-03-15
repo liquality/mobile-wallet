@@ -7,7 +7,6 @@ import {
   Text,
   View,
 } from 'react-native'
-import { MarketDataType } from '@liquality/core/dist/types'
 import Label from './ui/label'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTimes } from '@fortawesome/pro-light-svg-icons'
@@ -16,8 +15,8 @@ import LiqualityBoost from '../assets/icons/swap-providers/liqualityboost.svg'
 import Liquality from '../assets/icons/swap-providers/liquality.svg'
 
 type SwapTypesInfoProps = {
-  swapProviders: MarketDataType[]
-  getIcon: (marketData: MarketDataType) => React.ReactElement
+  swapProviders: any[]
+  getIcon: (marketData: any) => React.ReactElement
   toggleModal: () => void
 }
 

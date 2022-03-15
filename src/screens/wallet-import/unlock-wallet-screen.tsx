@@ -16,7 +16,6 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
-import Wallet from '@liquality/core/dist/wallet'
 import Button from '../../theme/button'
 
 type UnlockWalletScreenProps = StackScreenProps<
@@ -67,7 +66,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
   }
 
   const validateSeedPhrase = () => {
-    return Wallet.validateSeedPhrase(chosenSeedWords.join(' ').trim())
+    return true
   }
 
   const onContinue = () => {

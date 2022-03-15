@@ -1,24 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { IStorage, StateType } from '@liquality/core/dist/types'
 
 /**
  * Implementation of the StorageManagerI interface for mobile
  */
-export default class StorageManager implements IStorage<StateType> {
-  private excludedProps: Array<keyof StateType>
+export default class StorageManager {
+  private excludedProps: Array<keyof any>
   private storageKey: string
 
-  constructor(storageKey: string, excludedProps: Array<keyof StateType>) {
+  constructor(storageKey: string, excludedProps: Array<keyof any>) {
     this.storageKey = storageKey
     this.excludedProps = excludedProps
   }
 
-  public async write(data: StateType): Promise<boolean | Error> {
+  public async write(data: any): Promise<boolean | Error> {
     if (!data || Object.keys(data).length === 0) {
       return new Error('Empty data')
     }
     try {
-      this.excludedProps.forEach((prop: keyof StateType) => {
+      this.excludedProps.forEach((prop: keyof any) => {
         if (data.hasOwnProperty(prop)) {
           delete data[prop]
         }
@@ -34,10 +33,10 @@ export default class StorageManager implements IStorage<StateType> {
     }
   }
 
-  public async read(): Promise<StateType> {
+  public async read(): Promise<any> {
     try {
       const result = await AsyncStorage.getItem(this.storageKey)
-      return JSON.parse(result || '') as StateType
+      return JSON.parse(result || '') as any
     } catch (e) {
       return {}
     }

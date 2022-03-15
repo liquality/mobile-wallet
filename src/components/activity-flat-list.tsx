@@ -16,7 +16,6 @@ import {
 
 import * as React from 'react'
 import { useAppSelector } from '../hooks'
-import { HistoryItem } from '@liquality/core/dist/types'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import ProgressCircle from './animations/progress-circle'
 import { formatDate } from '../utils'
@@ -36,7 +35,7 @@ const ActivityFlatList = ({
 }) => {
   const { history = [], fiatRates } = useAppSelector((state) => {
     const { activeNetwork, activeWalletId, history: historyObject } = state
-    let historyItems: HistoryItem[] = []
+    let historyItems: any[] = []
     if (activeNetwork && activeWalletId && historyObject) {
       historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
     }
@@ -49,7 +48,7 @@ const ActivityFlatList = ({
     }
   })
 
-  const handleChevronPress = (historyItem: HistoryItem) => {
+  const handleChevronPress = (historyItem: any) => {
     if (historyItem.type === 'SWAP') {
       navigate('SwapConfirmationScreen', {
         swapTransactionConfirmation: historyItem.swapTransaction,
@@ -63,7 +62,7 @@ const ActivityFlatList = ({
     }
   }
 
-  const renderActivity = ({ item }: { item: HistoryItem }) => {
+  const renderActivity = ({ item }: { item: any }) => {
     const {
       type,
       totalSteps,

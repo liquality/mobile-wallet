@@ -2,11 +2,6 @@
 import { InteractionManager } from 'react-native'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { createWallet } from './store/store'
-import {
-  QuoteType,
-  StateType,
-  SwapProvidersEnum,
-} from '@liquality/core/dist/types'
 import { MNEMONIC, PASSWORD } from '@env'
 
 export const onOpenSesame = async (dispatch: any, navigation: any) => {
@@ -23,7 +18,7 @@ export const onOpenSesame = async (dispatch: any, navigation: any) => {
           type: 'ERROR',
           payload: {
             errorMessage: 'Unable to create wallet. Try again!',
-          } as StateType,
+          } as any,
         })
       })
   }).done(() => {
@@ -31,7 +26,7 @@ export const onOpenSesame = async (dispatch: any, navigation: any) => {
   })
 }
 
-export const sortQuotes = (quotes: QuoteType[]): QuoteType[] => {
+export const sortQuotes = (quotes: any[]): any[] => {
   if (!quotes) {
     throw new Error('Can not sort a null array')
   }
@@ -44,9 +39,9 @@ export const sortQuotes = (quotes: QuoteType[]): QuoteType[] => {
     const isCrossChain = cryptoassets[a.from].chain !== cryptoassets[a.to].chain
     if (isCrossChain) {
       // Prefer Liquality for crosschain swaps where liquidity is available
-      if (a.provider === SwapProvidersEnum.LIQUALITY) {
+      if (a.provider === 'LIQUALITY') {
         return -1
-      } else if (b.provider === SwapProvidersEnum.LIQUALITY) {
+      } else if (b.provider === 'LIQUALITY') {
         return 1
       }
     }

@@ -7,7 +7,6 @@ import SearchBox from '../../../components/ui/search-box'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
 import { customConfig } from '../../../core/config'
-import { NetworkEnum } from '@liquality/core/dist/types'
 
 const AssetManagementScreen: FC = () => {
   const DEFAULT_COLOR = '#EFEFEF'
@@ -57,7 +56,7 @@ const AssetManagementScreen: FC = () => {
     //TODO we still need to handle custom tokens
     let myAssets: Asset[] = []
 
-    if (activeNetwork === NetworkEnum.Testnet) {
+    if (activeNetwork === 'testnet') {
       myAssets = customConfig.defaultAssets[activeNetwork].reduce(
         (assetList: Asset[], asset) => {
           if (cryptoassets.hasOwnProperty(asset)) {

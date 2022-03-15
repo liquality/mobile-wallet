@@ -1,3 +1,4 @@
+import React from 'react'
 import { FC } from 'react'
 import Text from '../theme/text'
 import Button from '../theme/button'

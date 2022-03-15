@@ -10,7 +10,6 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native'
-import { MarketDataType, SwapProvidersEnum } from '@liquality/core/dist/types'
 import Label from './ui/label'
 import Logo from '../assets/icons/infinity.svg'
 import LiqualityBoost from '../assets/icons/swap-providers/liqualityboost.svg'
@@ -42,7 +41,7 @@ const ListHeader: FC = () => {
 type SwapRatesProps = {
   fromAsset: string
   toAsset: string
-  selectQuote: (quote: MarketDataType) => void
+  selectQuote: (quote: any) => void
   style?: StyleProp<ViewStyle>
 }
 
@@ -51,20 +50,18 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
   const { marketData } = useAppSelector((state) => ({
     marketData: state.marketData,
   }))
-  const [selectedItem, setSelectedItem] = useState<MarketDataType>()
+  const [selectedItem, setSelectedItem] = useState<any>()
   const [isRatesModalVisible, setIsRatesModalVisible] = useState(false)
   const [isSwapTypesModalVisible, setIsSwapTypesModalVisible] = useState(false)
-  const [quotes, setQuotes] = useState<MarketDataType[]>([])
+  const [quotes, setQuotes] = useState<any[]>([])
 
-  const getSwapProviderIcon = (
-    marketQuotes: MarketDataType,
-  ): React.ReactElement => {
+  const getSwapProviderIcon = (marketQuotes: any): React.ReactElement => {
     switch (marketQuotes.provider) {
-      case SwapProvidersEnum.LIQUALITY.toLowerCase():
+      case 'liquality':
         return <Logo width={15} height={15} style={styles.icon} />
-      case SwapProvidersEnum.LIQUALITYBOOST.toLowerCase():
+      case 'liqualityboost':
         return <LiqualityBoost width={15} height={15} style={styles.icon} />
-      case SwapProvidersEnum.SOVRYN.toLowerCase():
+      case 'sovryn':
         return <Sovryn width={15} height={15} style={styles.icon} />
       default:
         return <Logo width={15} height={15} style={styles.icon} />
@@ -80,7 +77,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
     }
   }
 
-  const renderItem = ({ item }: { item: MarketDataType }) => {
+  const renderItem = ({ item }: { item: any }) => {
     return (
       <Pressable
         style={[

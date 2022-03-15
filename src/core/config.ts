@@ -1,14 +1,3 @@
-import { ChainId } from '@liquality/cryptoassets/src/types'
-import { BitcoinNetworks } from '@liquality/bitcoin-networks'
-import { EthereumNetworks } from '@liquality/ethereum-networks'
-import { Config } from '@liquality/core/dist/config'
-import {
-  ChainNetworkType,
-  NetworkEnum,
-  StateType,
-  SwapProvidersEnum,
-} from '@liquality/core/dist/types'
-
 export const accountColors = [
   '#000000',
   '#1CE5C3',
@@ -25,7 +14,7 @@ export const accountColors = [
   '#8247E5',
 ]
 
-export const chainDefaultColors: Partial<Record<ChainId, string>> = {
+export const chainDefaultColors: Partial<Record<any, string>> = {
   bitcoin: '#EAB300',
   ethereum: '#4F67E4',
   rsk: '#3AB24D',
@@ -33,17 +22,6 @@ export const chainDefaultColors: Partial<Record<ChainId, string>> = {
   near: '#000000',
   polygon: '#8247E5',
   arbitrum: '#28A0EF',
-}
-
-export const ChainNetworks: Partial<ChainNetworkType> = {
-  [ChainId.Bitcoin]: {
-    [NetworkEnum.Testnet]: BitcoinNetworks.bitcoin_testnet,
-    [NetworkEnum.Mainnet]: BitcoinNetworks.bitcoin,
-  },
-  [ChainId.Ethereum]: {
-    [NetworkEnum.Testnet]: EthereumNetworks.ropsten,
-    [NetworkEnum.Mainnet]: EthereumNetworks.ethereum_mainnet,
-  },
 }
 
 export const customConfig = {
@@ -75,7 +53,7 @@ export const customConfig = {
       // 'MATIC',
       // 'PWETH',
     ],
-  } as Record<NetworkEnum, string[]>,
+  } as Record<any, string[]>,
   infuraApiKey: 'da99ebc8c0964bb8bb757b6f8cc40f1f',
   exploraApis: {
     testnet: 'https://liquality.io/testnet/electrs',
@@ -86,14 +64,14 @@ export const customConfig = {
     mainnet: 'https://api-mainnet-bitcoin-electrs-batch.liquality.io',
   },
   chains: [
-    ChainId.Bitcoin,
-    ChainId.Ethereum,
-    ChainId.Rootstock,
+    'bitcoin',
+    'ethereum',
+    'rootstock',
     // ChainId.BinanceSmartChain,
     // ChainId.Near,
     // ChainId.Polygon,
     // ChainId.Arbitrum,
-  ] as ChainId[],
+  ],
   testnetContractAddresses: {
     DAI: '0xad6d458402f60fd3bd25163575031acdce07538d',
     SOV: '0x6a9A07972D07E58f0daF5122D11e069288A375fB',
@@ -105,7 +83,7 @@ export const customConfig = {
       liquality: {
         name: 'Liquality',
         icon: 'liquality.svg',
-        type: SwapProvidersEnum.LIQUALITY,
+        type: 'LIQUALITY',
         agent:
           process.env.VUE_APP_AGENT_TESTNET_URL ||
           'https://liquality.io/swap-testnet-dev/agent',
@@ -113,19 +91,19 @@ export const customConfig = {
       uniswapV2: {
         name: 'Uniswap V2',
         icon: 'uniswap.svg',
-        type: SwapProvidersEnum.UNISWAPV2,
+        type: 'UNISWAPV2',
         routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
       },
       thorchain: {
         name: 'Thorchain',
         icon: 'thorchain.svg',
-        type: SwapProvidersEnum.THORCHAIN,
+        type: 'THORCHAIN',
         thornode: 'https://testnet.thornode.thorchain.info',
       },
       sovryn: {
         name: 'Sovyrn',
         icon: 'sovryn.svg',
-        type: SwapProvidersEnum.SOVRYN,
+        type: 'SOVRYN',
         // routerAddress: SovrynTestnetAddresses.swapNetwork,
         // routerAddressRBTC: SovrynTestnetAddresses.proxy3,
         rpcURL: 'https://public-node.testnet.rsk.co/',
@@ -135,12 +113,12 @@ export const customConfig = {
       liquality: {
         name: 'Liquality',
         icon: 'liquality.svg',
-        type: SwapProvidersEnum.LIQUALITY,
+        type: 'LIQUALITY',
         agent: 'https://liquality.io/swap-dev/agent',
       },
       liqualityBoost: {
         name: 'Liquality Boost',
-        type: SwapProvidersEnum.LIQUALITYBOOST,
+        type: 'LIQUALITYBOOST',
         network: 'mainnet',
         icon: 'liqualityboost.svg',
         supportedBridgeAssets: ['MATIC'],
@@ -148,13 +126,13 @@ export const customConfig = {
       uniswapV2: {
         name: 'Uniswap V2',
         icon: 'uniswap.svg',
-        type: SwapProvidersEnum.UNISWAPV2,
+        type: 'UNISWAPV2',
         routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
       },
       oneinchV3: {
         name: 'Oneinch V3',
         icon: 'oneinch.svg',
-        type: SwapProvidersEnum.ONEINCHV3,
+        type: 'ONEINCHV3',
         agent: 'https://api.1inch.exchange/v3.0',
         routerAddress: '0x11111112542d85b3ef69ae05771c2dccff4faa26',
         referrerAddress: {
@@ -167,13 +145,13 @@ export const customConfig = {
       fastBTC: {
         name: 'FastBTC',
         icon: 'sovryn.svg',
-        type: SwapProvidersEnum.FASTBTC,
+        type: 'FASTBTC',
         bridgeEndpoint: 'http://3.131.33.161:3000/',
       },
       sovryn: {
         name: 'Sovyrn',
         icon: 'sovryn.svg',
-        type: SwapProvidersEnum.SOVRYN,
+        type: 'SOVRYN',
         // routerAddress: SovrynMainnetAddresses.swapNetwork,
         // routerAddressRBTC: SovrynMainnetAddresses.proxy3,
         rpcURL: 'https://public-node.rsk.co/',
@@ -182,28 +160,26 @@ export const customConfig = {
   },
 }
 
-class CustomConfig extends Config {
-  private readonly _state: StateType
+class CustomConfig {
+  private readonly _state: any
 
-  constructor(infuraAPIKey: string, state: StateType) {
-    super(infuraAPIKey)
+  constructor(infuraAPIKey: string, state: any) {
     this._state = state
   }
 
-  public getDefaultEnabledAssets(network: NetworkEnum): string[] {
+  public getDefaultEnabledAssets(network: any): string[] {
     return (
-      (this._state.activeWalletId &&
-        this._state?.enabledAssets?.[network]?.[this._state.activeWalletId]) ||
-      super.getDefaultEnabledAssets(network)
+      this._state.activeWalletId &&
+      this._state?.enabledAssets?.[network]?.[this._state.activeWalletId]
     )
   }
 
-  public getDefaultEnabledChains(network: NetworkEnum): ChainId[] {
-    return customConfig.chains || super.getDefaultEnabledChains(network)
+  public getDefaultEnabledChains(): any[] {
+    return customConfig.chains
   }
 
-  public getDefaultNetwork(): NetworkEnum {
-    return this._state.activeNetwork || super.getDefaultNetwork()
+  public getDefaultNetwork(): any {
+    return this._state.activeNetwork
   }
 }
 

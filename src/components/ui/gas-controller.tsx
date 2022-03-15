@@ -3,9 +3,8 @@ import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { BigNumber, FeeDetails } from '@liquality/types'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { useAppSelector } from '../../hooks'
-import { GasSpeedType } from '@liquality/core/dist/types'
 
-const gasSpeeds: GasSpeedType[] = ['slow', 'average', 'fast']
+const gasSpeeds: any[] = ['slow', 'average', 'fast']
 type GasControllerProps = {
   assetSymbol: string
   handleCustomPress: (...args: unknown[]) => void
@@ -15,7 +14,7 @@ type GasControllerProps = {
 const GasController: FC<GasControllerProps> = (props) => {
   const { assetSymbol, handleCustomPress, networkFee } = props
   const [customFee, setCustomFee] = useState()
-  const [speedMode, setSpeedMode] = useState<GasSpeedType>('average')
+  const [speedMode, setSpeedMode] = useState<any>('average')
   const { activeNetwork, activeWalletId, fees } = useAppSelector((state) => ({
     activeNetwork: state.activeNetwork,
     activeWalletId: state.activeWalletId,

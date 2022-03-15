@@ -5,7 +5,6 @@ import { RootStackParamList } from '../../types'
 import { useEffect } from 'react'
 import { createWallet } from '../../store/store'
 import { useDispatch } from 'react-redux'
-import { StateType } from '@liquality/core/dist/types'
 
 type LoadingScreenProps = StackScreenProps<RootStackParamList, 'LoadingScreen'>
 
@@ -26,7 +25,7 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
           type: 'ERROR',
           payload: {
             errorMessage: 'Unable to create wallet. Try again!',
-          } as StateType,
+          },
         })
       })
   })

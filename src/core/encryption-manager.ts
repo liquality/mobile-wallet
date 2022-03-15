@@ -1,6 +1,5 @@
 import { NativeModules } from 'react-native'
 import { enc as Enc, AES, lib as Lib } from 'crypto-js'
-import { IEncryption } from '@liquality/core/dist/types'
 
 const PBKDF2_ITERATIONS = 100000
 const PBKDF2_LENGTH = 32
@@ -11,7 +10,7 @@ interface CipherJsonType {
   s?: string
 }
 
-export default class EncryptionManager implements IEncryption {
+export default class EncryptionManager {
   public generateSalt(byteCount = 32): string {
     const view = new Uint8Array(byteCount)
     // @ts-ignore
