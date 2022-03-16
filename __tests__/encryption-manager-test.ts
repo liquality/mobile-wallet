@@ -9,7 +9,7 @@ describe('EncryptionManagerTest', () => {
     global.crypto.getRandomValues = () => new Uint8Array(1)
   })
 
-  it('should generate a base64 encoded salt', () => {
+  fit('should generate a base64 encoded salt', () => {
     const encryptionManager = new MockEncryptionManager()
     expect(encryptionManager.generateSalt(16)).toBeTruthy()
   })
