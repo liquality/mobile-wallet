@@ -1,7 +1,7 @@
-import { AssetDataElementType, StackPayload } from '../../types'
-import React, { FC } from 'react'
-import { chainDefaultColors } from '../../core/config'
+import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { AssetDataElementType, StackPayload } from '../../types'
+import { chainDefaultColors } from '../../core/config'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   faChevronRight,
@@ -21,7 +21,7 @@ type RowProps = {
   isNested: boolean
 }
 
-const Row: FC<RowProps> = (props) => {
+const Row: React.FC<RowProps> = (props) => {
   const { item, toggleRow, onAssetSelected, isNested } = props
   const { name, address, balance, balanceInUSD, fees, chain } = item
   const chainColor = chain ? chainDefaultColors[chain] : DEFAULT_COLOR
@@ -53,7 +53,7 @@ const Row: FC<RowProps> = (props) => {
             Total ${balanceInUSD && formatFiat(balanceInUSD)}
           </Text>
           <View style={styles.gas}>
-            <GasIndicator balance={balance!.toNumber()} gasFees={fees!} />
+            <GasIndicator balance={balance?.toNumber() || 0} gasFees={fees} />
           </View>
         </View>
       ) : (
@@ -110,11 +110,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   col2: {
-    flex: 0.2,
+    flex: 0.25,
     justifyContent: 'center',
   },
   col3: {
-    flex: 0.55,
+    flex: 0.5,
     justifyContent: 'center',
     alignItems: 'flex-end',
   },

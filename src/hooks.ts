@@ -62,7 +62,7 @@ export const useWalletState = () => {
       let accountData: Array<AssetDataElementType> = []
 
       for (let account of accts) {
-        if (Object.keys(account.balances!).length === 0) {
+        if (Object.keys(account.balances).length === 0) {
           continue
         }
 
@@ -73,21 +73,14 @@ export const useWalletState = () => {
           name: account.name,
           code: nativeAsset,
           address: account.addresses[0], //TODO why pick only the first address
-          balance: new BigNumber(account.balances?.[nativeAsset] || 0),
-          balanceInUSD: new BigNumber(
-            unitToCurrency(
-              cryptoassets[nativeAsset],
-              account.balances?.[nativeAsset] || 0,
-            ).times(fiatRates[nativeAsset]),
-          ),
           color: account.color,
           assets: [],
           showAssets: false,
-          fees: fees?.[activeNetwork!]![walletId!][account.chain],
+          fees: fees?.[activeNetwork]?.[walletId]?.[account.chain],
         }
 
         if (account.assets.length > 0) {
-          const { total, assetsData } = Object.keys(account.balances!).reduce(
+          const { total, assetsData } = Object.keys(account.balances).reduce(
             (
               acc: {
                 total: BigNumber
@@ -99,7 +92,7 @@ export const useWalletState = () => {
                 acc.total,
                 unitToCurrency(
                   cryptoassets[asset],
-                  account.balances![asset],
+                  account.balances?.[asset],
                 ).times(fiatRates[asset]),
               )
 
@@ -109,13 +102,11 @@ export const useWalletState = () => {
                 code: asset,
                 chain: account.chain,
                 color: account.color,
-                balance: new BigNumber(account.balances![asset]),
-                balanceInUSD: new BigNumber(
-                  unitToCurrency(
-                    cryptoassets[asset],
-                    account.balances![asset],
-                  ).times(fiatRates[asset]),
-                ),
+                balance: new BigNumber(account.balances?.[asset]),
+                balanceInUSD: unitToCurrency(
+                  cryptoassets[asset],
+                  account.balances?.[asset],
+                ).times(fiatRates[asset]),
               })
               return acc
             },
@@ -124,6 +115,7 @@ export const useWalletState = () => {
 
           totalBalance = BigNumber.sum(totalBalance, total)
 
+          //calculate the total balance for the current account eg: ETH
           chainData.balance = assetsData.reduce(
             (totalBal: BigNumber, assetData: AssetDataElementType): BigNumber =>
               BigNumber.sum(totalBal, assetData.balance || new BigNumber(0)),

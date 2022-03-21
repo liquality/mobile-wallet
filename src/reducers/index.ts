@@ -2,6 +2,11 @@ import { PayloadAction, Reducer } from '@reduxjs/toolkit'
 
 const rootReducer: Reducer<any, PayloadAction<any>> = (state, action): any => {
   switch (action.type) {
+    case 'SWITCH_NAVIGATORS':
+      return {
+        ...state,
+        navigator: action.payload.navigator,
+      }
     case 'UPDATE_ACCOUNT':
       return {
         ...state,

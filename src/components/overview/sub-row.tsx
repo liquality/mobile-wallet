@@ -25,8 +25,8 @@ const SubRow: FC<SubRowProps> = (props) => {
     <View
       style={[styles.row, styles.subElement, { borderLeftColor: chainColor }]}
       key={item.id}>
-      <View style={[styles.col1]}>
-        <AssetIcon asset={item.code} chain={item.chain} />
+      <View style={styles.col1}>
+        <AssetIcon size={25} asset={item.code} />
         <Text style={styles.name}>{item.name}</Text>
       </View>
       <View style={styles.col2}>

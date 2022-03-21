@@ -120,6 +120,14 @@ export const store = configureStore({
 //   }
 // })
 
+wallet.original.subscribe((mutation, newState) => {
+  // console.log('---->', JSON.stringify(newState))
+  store.dispatch({
+    type: 'UPDATE_WALLET',
+    payload: newState,
+  })
+})
+
 //-------------------------PERFORMING ACTIONS ON THE WALLET-------------------------------------------------------------
 export const isNewInstallation = async (): Promise<boolean> => {
   // try {
@@ -153,6 +161,21 @@ export const createWallet = async (
  * Populates an already instantiated wallet with account information
  */
 export const populateWallet = async (): Promise<void> => {
+  const enabledAssets = [
+    'BTC',
+    'ETH',
+    'DAI',
+    'RBTC',
+    'BNB',
+    'NEAR',
+    'SOV',
+    'MATIC',
+    'PWETH',
+    'ARBETH',
+    'SOL',
+    'LUNA',
+    'UST',
+  ]
   // await wallet
   //   .addAccounts(store.getState().activeNetwork || 'mainnet')
   //   .then(() => {
@@ -172,7 +195,15 @@ export const populateWallet = async (): Promise<void> => {
   await wallet.dispatch.updateBalances({
     network: wallet.state.activeNetwork,
     walletId: wallet.state.activeWalletId,
-    assets: ['ETH', 'MATIC'],
+    assets: enabledAssets,
+  })
+
+  await wallet.dispatch.updateFiatRates({
+    assets: enabledAssets,
+  })
+
+  await wallet.dispatch.updateFees({
+    asset: enabledAssets,
   })
 }
 
@@ -185,7 +216,21 @@ export const updateWallet = async (): Promise<void> => {
   await wallet.dispatch.updateBalances({
     network: wallet.state.activeNetwork,
     walletId: wallet.state.activeWalletId,
-    assets: ['ETH', 'MATIC'],
+    assets: [
+      'BTC',
+      'ETH',
+      'DAI',
+      'RBTC',
+      'BNB',
+      'NEAR',
+      'SOV',
+      'MATIC',
+      'PWETH',
+      'ARBETH',
+      'SOL',
+      'LUNA',
+      'UST',
+    ],
   })
 }
 

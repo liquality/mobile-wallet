@@ -31,11 +31,7 @@ const WithPopupMenu = <T extends FctType>(
     }
 
     return (
-      <Pressable
-        style={styles.container}
-        onPress={() =>
-          navigation.setParams({ showPopup: !route?.params?.showPopup })
-        }>
+      <View style={styles.container}>
         <Component navigation={navigation} route={route} />
         {route?.params?.showPopup && (
           <View style={styles.modalContainer}>
@@ -67,7 +63,7 @@ const WithPopupMenu = <T extends FctType>(
             </Pressable>
           </View>
         )}
-      </Pressable>
+      </View>
     )
   }
 }
@@ -75,11 +71,12 @@ const WithPopupMenu = <T extends FctType>(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#D9DFE5',
   },
   modalContainer: {
     zIndex: 5,
     position: 'absolute',
-    backgroundColor: '#FFF',
+    backgroundColor: '#D9DFE5',
     borderWidth: 1,
     borderColor: '#D9DFE5',
     top: 0,

@@ -14,10 +14,11 @@ import AssetFlatList from '../../../components/overview/asset-flat-list'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ActionEnum, RootStackParamList, StackPayload } from '../../../types'
-import { fetchTransactionUpdates, populateWallet } from '../../../store/store'
+import { populateWallet } from '../../../store/store'
 import ErrorBoundary from 'react-native-error-boundary'
 import Text from '../../../theme/text'
 import ErrorFallback from '../../../components/error-fallback'
+import Box from '../../../theme/box'
 
 type OverviewProps = StackScreenProps<RootStackParamList, 'OverviewScreen'>
 
@@ -75,9 +76,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   )
 
   useEffect(() => {
-    populateWallet().then(() => {
-      fetchTransactionUpdates()
-    })
+    populateWallet()
   }, [activeNetwork])
 
   if (error) {
@@ -165,7 +164,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
             <Text style={styles.headerText}>ACTIVITY</Text>
           </Pressable>
         </View>
-        <View>
+        <Box flex={1}>
           {selectedView === ViewKind.ACTIVITY &&
             (assets.length > 0 ? (
               <ActivityFlatList navigate={navigation.navigate}>
@@ -197,7 +196,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           {selectedView === ViewKind.ASSETS && (
             <AssetFlatList assets={assets} onAssetSelected={onAssetSelected} />
           )}
-        </View>
+        </Box>
       </ErrorBoundary>
     </View>
   )

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { StatusBar, View } from 'react-native'
 import { Provider } from 'react-redux'
 import SplashScreen from 'react-native-splash-screen'
@@ -8,7 +8,7 @@ import { ThemeProvider } from '@shopify/restyle'
 import { store, isNewInstallation } from './src/store/store'
 import theme from './src/theme'
 import {
-  OnboardingNavigator,
+  WalletCreationNavigator,
   WalletImportNavigator,
   MainNavigator,
 } from './src/components/navigators'
@@ -17,7 +17,7 @@ import LoginScreen from './src/screens/wallet-creation/loginScreen'
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
     {
-      OnboardingNavigator,
+      WalletCreationNavigator,
       WalletImportNavigator,
       MainNavigator,
       LoginScreen,
@@ -30,9 +30,9 @@ const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   return <Navigator />
 }
 
-const App = () => {
+const App: FC = () => {
   const [initialRouteName, setInitialRouteName] = useState(
-    'OnboardingNavigator',
+    'WalletCreationNavigator',
   )
   const backgroundStyle = {
     flex: 1,
@@ -41,13 +41,17 @@ const App = () => {
   useEffect(() => {
     isNewInstallation().then((isNew) => {
       if (isNew) {
-        setInitialRouteName('OnboardingNavigator')
+        setInitialRouteName('WalletCreationNavigator')
       } else {
         setInitialRouteName('LoginScreen')
       }
       SplashScreen.hide()
     })
   }, [])
+
+  if (!initialRouteName) {
+    return <View />
+  }
 
   return (
     <Provider store={store}>
