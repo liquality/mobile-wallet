@@ -7,6 +7,7 @@ import SearchBox from '../../../components/ui/search-box'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
 import { customConfig } from '../../../core/config'
+import {toggleAsset} from '../../../store/store'
 
 const AssetManagementScreen: FC = () => {
   const DEFAULT_COLOR = '#EFEFEF'
@@ -23,12 +24,13 @@ const AssetManagementScreen: FC = () => {
   )
 
   const handleEnableFeature = useCallback(
-    (asset: string) => {
+    async (asset: string, newState: boolean) => {
       if (!activeWalletId || !activeNetwork) {
         Alert.alert('Please reload your wallet')
         return
       }
 
+      await toggleAsset(asset, newState)
       dispatch({
         type: 'TOGGLE_ASSET',
         payload: {
@@ -79,6 +81,9 @@ const AssetManagementScreen: FC = () => {
   const renderAsset = useCallback(
     ({ item }: { item: Asset }) => {
       const { name, code, chain, color = DEFAULT_COLOR } = item
+      const isEnabled = !!enabledAssets?.[activeNetwork!]?.[
+          activeWalletId!
+          ]?.includes(code)
       return (
         <Fragment>
           <View
@@ -91,12 +96,8 @@ const AssetManagementScreen: FC = () => {
             </View>
             <View style={styles.col3}>
               <Switch
-                enableFeature={() => handleEnableFeature(code)}
-                isFeatureEnabled={
-                  !!enabledAssets?.[activeNetwork!]?.[
-                    activeWalletId!
-                  ]?.includes(code)
-                }
+                enableFeature={(newState: boolean) => handleEnableFeature(code, newState)}
+                isFeatureEnabled={isEnabled}
               />
             </View>
           </View>

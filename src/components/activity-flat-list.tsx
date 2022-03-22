@@ -37,7 +37,7 @@ const ActivityFlatList = ({
     const { activeNetwork, activeWalletId, history: historyObject } = state
     let historyItems: any[] = []
     if (activeNetwork && activeWalletId && historyObject) {
-      historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
+      historyItems = historyObject?.[activeNetwork]?.[activeWalletId] || []
     }
 
     return {

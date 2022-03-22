@@ -10,22 +10,21 @@ import StorageManager from '../core/storage-manager'
 import { BigNumber } from '@liquality/types'
 import 'react-native-reanimated'
 import { wallet } from '@liquality/wallet-core'
+import {currencyToUnit} from '@liquality/cryptoassets'
+import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
+import {AssetDataElementType} from '../types'
 
-//-------------------------1. CREATING AN INSTANCE OF THE WALLET--------------------------------------------------------
+//-------------------------1. CREATE AN INSTANCE OF THE STORAGE MANAGER--------------------------------------------------------
 const excludedProps: Array<keyof any> = ['key', 'wallets', 'unlockedAt']
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
-// const config = new Config(INFURA_API_KEY)
-// const wallet = new Wallet(storageManager, encryptionManager, config)
 
-const SEED =
-  'obvious digital bronze kangaroo crew basic drink liquid secret unveil dose conduct'
-//-------------------------2. CONFIGURING THE STORE---------------------------------------------------------------------
+//-------------------------2. CONFIGURE THE STORE---------------------------------------------------------------------
 const persistenceMiddleware: Middleware<
   (action: PayloadAction<any>) => any,
   any
 > = ({ getState }) => {
-  return (next) => (action) => {
-    storageManager.write({
+  return (next) => async (action) => {
+    await storageManager.write({
       ...getState(),
       ...action.payload,
     })
@@ -39,87 +38,7 @@ export const store = configureStore({
   middleware: new MiddlewareArray().concat([persistenceMiddleware, thunk]),
 })
 
-//-------------------------3. REGISTERING THE CALLBACKS / SUBSCRIBING TO MEANINGFULL EVENTS-----------------------------
-// wallet.on('onMarketDataUpdate', (marketData) => {
-//   store.dispatch({
-//     type: 'UPDATE_MARKET_DATA',
-//     payload: {
-//       marketData,
-//     } as any,
-//   })
-// })
-//
-// wallet.on('onTransactionUpdate', (transaction: any) => {
-//   const {
-//     activeNetwork,
-//     activeWalletId,
-//     history: historyObject,
-//   } = store.getState()
-//
-//   let historyItems: any[] = []
-//   if (activeNetwork && activeWalletId && historyObject) {
-//     historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
-//     store.dispatch({
-//       type: 'TRANSACTION_UPDATE',
-//       payload: {
-//         history: {
-//           ...historyObject,
-//           [activeNetwork]: {
-//             [activeWalletId]: [
-//               ...historyItems.filter((item) =>
-//                 item.type === 'SEND'
-//                   ? item.sendTransaction?.hash !==
-//                     transaction.sendTransaction?.hash
-//                   : item.swapTransaction?.id !==
-//                     transaction.swapTransaction?.id,
-//               ),
-//               transaction,
-//             ],
-//           },
-//         },
-//       } as any,
-//     })
-//   }
-// })
-
-//Subscribe to account updates
-// wallet.subscribe((account: any) => {
-//   const walletState = store.getState()
-//   const { activeWalletId, activeNetwork } = walletState
-//
-//   if (activeWalletId && activeNetwork) {
-//     const existingAccounts: any[] =
-//       walletState?.accounts?.[activeWalletId][activeNetwork] || []
-//
-//     if (walletState.accounts) {
-//       if (existingAccounts.length === 0) {
-//         walletState.accounts[activeWalletId][activeNetwork] = [account]
-//       } else {
-//         const index = existingAccounts.findIndex(
-//           (item) => item.name === account.name,
-//         )
-//         if (index >= 0) {
-//           walletState.accounts[activeWalletId][activeNetwork][index] = account
-//         } else {
-//           walletState.accounts[activeWalletId][activeNetwork]?.push(account)
-//         }
-//       }
-//     }
-//
-//     Object.assign(walletState.fiatRates, account.fiatRates)
-//
-//     if (walletState.fees && account.feeDetails) {
-//       walletState.fees[activeNetwork][activeWalletId][account.chain] =
-//         account.feeDetails
-//     }
-//
-//     store.dispatch({
-//       type: 'UPDATE_WALLET',
-//       payload: walletState,
-//     })
-//   }
-// })
-
+//-------------------------3. REGISTER THE CALLBACKS / SUBSCRIBE TO MEANINGFULL EVENTS-----------------------------
 wallet.original.subscribe((mutation, newState) => {
   // console.log('---->', JSON.stringify(newState))
   store.dispatch({
@@ -128,16 +47,15 @@ wallet.original.subscribe((mutation, newState) => {
   })
 })
 
-//-------------------------PERFORMING ACTIONS ON THE WALLET-------------------------------------------------------------
+//-------------------------4. PERFORM ACTIONS ON THE WALLET-------------------------------------------------------------
 export const isNewInstallation = async (): Promise<boolean> => {
-  // try {
-  //   const state = await wallet.restore()
-  //   store.dispatch({ type: 'INIT_STORE', payload: state })
-  // } catch (e) {
-  //   store.dispatch({ type: 'INIT_STORE', payload: {} })
-  // }
-  // return await wallet.isNewInstallation()
-  return Promise.resolve(true)
+  const result = await storageManager.read()
+  if (result) {
+    store.dispatch({ type: 'INIT_STORE', payload: result })
+    return true
+  }
+
+  return false
 }
 
 /**
@@ -149,7 +67,6 @@ export const createWallet = async (
   password: string,
   mnemonic: string,
 ): Promise<any> => {
-  // return await wallet.init(password, mnemonic, false)
   await wallet.dispatch.createWallet({
     key: password,
     mnemonic: mnemonic,
@@ -161,6 +78,7 @@ export const createWallet = async (
  * Populates an already instantiated wallet with account information
  */
 export const populateWallet = async (): Promise<void> => {
+  const {activeNetwork, activeWalletId} = wallet.state
   const enabledAssets = [
     'BTC',
     'ETH',
@@ -176,25 +94,12 @@ export const populateWallet = async (): Promise<void> => {
     'LUNA',
     'UST',
   ]
-  // await wallet
-  //   .addAccounts(store.getState().activeNetwork || 'mainnet')
-  //   .then(() => {
-  //     wallet.store(store.getState())
-  //   })
-  //   .catch((error) => {
-  //     Alert.alert(`populateWallet: ${error}`)
-  //   })
-  //
-  // await getQuotes()
 
-  await wallet.dispatch.changeActiveNetwork({
-    walletId: wallet.state.activeWalletId,
-    network: 'testnet',
-  })
+  await wallet.dispatch.changeActiveNetwork({network: store.getState().activeNetwork || 'testnet'})
 
   await wallet.dispatch.updateBalances({
-    network: wallet.state.activeNetwork,
-    walletId: wallet.state.activeWalletId,
+    network: activeNetwork,
+    walletId: activeWalletId,
     assets: enabledAssets,
   })
 
@@ -208,29 +113,49 @@ export const populateWallet = async (): Promise<void> => {
 }
 
 /**
+ * Toggle network between mainnet and testnet
+ * @param network
+ */
+export const toggleNetwork = async (network: any): Promise<void> => {
+  await wallet.dispatch.changeActiveNetwork(network)
+  store.dispatch({
+    type: 'NETWORK_UPDATE',
+    payload: { activeNetwork: network },
+  })
+}
+
+/**
+ * Enable/Disable a given asset
+ * @param asset
+ * @param state
+ */
+export const toggleAsset = async (asset: string, state: boolean): Promise<void> => {
+  const {activeNetwork, activeWalletId} = wallet.state
+
+  if (state) {
+    await wallet.dispatch.enableAssets({
+      network: activeNetwork,
+      walletId: activeWalletId,
+      assets: [asset],
+    })
+  } else {
+    await  wallet.dispatch.disableAssets({
+      network: activeNetwork,
+      walletId: activeWalletId,
+      assets: [asset],
+    })
+  }
+}
+
+/**
  * Updates the config and populate the wallet accordingly
  */
 export const updateWallet = async (): Promise<void> => {
-  // wallet.updateConfig(new CustomConfig(INFURA_API_KEY, store.getState()))
-  // await populateWallet()
+  const {activeNetwork, activeWalletId, enabledAssets} = wallet.state
   await wallet.dispatch.updateBalances({
-    network: wallet.state.activeNetwork,
-    walletId: wallet.state.activeWalletId,
-    assets: [
-      'BTC',
-      'ETH',
-      'DAI',
-      'RBTC',
-      'BNB',
-      'NEAR',
-      'SOV',
-      'MATIC',
-      'PWETH',
-      'ARBETH',
-      'SOL',
-      'LUNA',
-      'UST',
-    ],
+    network: activeNetwork,
+    walletId: activeWalletId,
+    assets: enabledAssets,
   })
 }
 
@@ -239,11 +164,8 @@ export const updateWallet = async (): Promise<void> => {
  * @param password
  */
 export const restoreWallet = async (password: string): Promise<any> => {
-  // return await wallet.restore(password)
-  await wallet.dispatch.createWallet({
+  await wallet.dispatch.unlockWallet({
     key: password,
-    mnemonic: SEED,
-    imported: true,
   })
 }
 
@@ -311,49 +233,43 @@ export const initSwaps = (): Partial<Record<any, any>> => {
  * @param toNetworkFee
  * @param activeNetwork
  */
-// export const performSwap = async (
-//   swapProviderType: string,
-//   from: AssetDataElementType,
-//   to: AssetDataElementType,
-//   fromAmount: BigNumber,
-//   toAmount: BigNumber,
-//   fromNetworkFee: BigNumber,
-//   toNetworkFee: BigNumber,
-//   activeNetwork: any,
-// ): Promise<Partial<any> | void> => {
-//   // const fromAccount: any = wallet.getAccount(from.chain, activeNetwork)
-//   // const toAccount: any = wallet.getAccount(to.chain, activeNetwork)
-//   //
-//   // if (!fromAccount || !toAccount || !swapProviderType) {
-//   //   Alert.alert('Make sure to provide two accounts to perform a swap')
-//   // }
-//   //
-//   // const swapProvider = wallet.getSwapProvider(swapProviderType.toUpperCase())
-//   // if (!swapProvider) {
-//   //   throw new Error('Failed to perform the swap')
-//   // }
-//   //
-//   // const quote: Partial<any> = {
-//   //   from: from.code,
-//   //   to: to.code,
-//   //   fromAmount: new BigNumber(
-//   //     currencyToUnit(cryptoassets[from.code], fromAmount.toNumber()),
-//   //   ),
-//   //   toAmount: new BigNumber(
-//   //     currencyToUnit(cryptoassets[to.code], toAmount.toNumber()),
-//   //   ),
-//   //   fee: fromNetworkFee.toNumber(),
-//   //   claimFee: toNetworkFee.toNumber(),
-//   // }
-//   //
-//   // return await swapProvider
-//   //   .performSwap(fromAccount, toAccount, quote)
-//   //   .catch((error: any) => {
-//   //     Alert.alert('Failed to perform the swap: ' + error)
-//   //   })
-//
-//   return Promise.resolve({})
-// }
+export const performSwap = async (
+  swapProviderType: string,
+  from: AssetDataElementType,
+  to: AssetDataElementType,
+  fromAmount: BigNumber,
+  toAmount: BigNumber,
+  fromNetworkFee: BigNumber,
+  toNetworkFee: BigNumber,
+  activeNetwork: any,
+): Promise<Partial<any> | void> => {
+  const {activeWalletId} = wallet.state
+
+  const quote: Partial<any> = {
+    from: from.code,
+    to: to.code,
+    fromAmount: new BigNumber(
+      currencyToUnit(cryptoassets[from.code], fromAmount.toNumber()),
+    ),
+    toAmount: new BigNumber(
+      currencyToUnit(cryptoassets[to.code], toAmount.toNumber()),
+    ),
+    fee: fromNetworkFee.toNumber(),
+    claimFee: toNetworkFee.toNumber(),
+  }
+
+
+  //TODO populate the undefined values
+  return await wallet.dispatch.newSwap({
+    network: activeNetwork,
+    walletId: activeWalletId,
+    quote,
+    fee: fromNetworkFee.toNumber(),
+    claimFee: toNetworkFee,
+    feeLabel: undefined,
+    claimFeeLabel: undefined,
+  })
+}
 
 /**
  * Retrieves the swap statuses we can display in the transaction timeline in transaction.details
@@ -379,60 +295,76 @@ export const sendTransaction = async (options: {
     throw new Error(`Failed to send transaction: ${options}`)
   }
 
-  // const account = await wallet.getAccount(
-  //   cryptoassets[options.asset].chain,
-  //   options.activeNetwork,
-  // )
-  // const assets = account.getAssets()
-  // return await assets[0].transmit(options)
+  const {activeWalletId, activeNetwork, accounts} = wallet.state
+  const {asset, to, value, fee} = options
 
-  return Promise.resolve({})
+  //TODO populate the undefined values
+  return await wallet.dispatch.sendTransaction({
+    network: activeNetwork,
+    walletId: activeWalletId,
+    accountId: accounts[activeWalletId][activeNetwork][0]?.id,
+    asset,
+    to,
+    amount: value,
+    fee,
+    data: undefined,
+    feeLabel: undefined,
+    fiatRate: undefined,
+    gas: undefined,
+  })
 }
 
 /**
  * Speeds up an already submitted transaction
+ * @param id
+ * @param hash
  * @param asset
  * @param activeNetwork
  * @param tx
  * @param newFee
  */
-// export const speedUpTransaction = async (
-//   asset: string,
-//   activeNetwork: any,
-//   tx: string,
-//   newFee: number,
-// ) => {
-//   // const account = await wallet.getAccount(
-//   //   cryptoassets[asset].chain,
-//   //   activeNetwork,
-//   // )
-//   //
-//   // return await account.speedUpTransaction(tx, newFee)
-//   return Promise.resolve({})
-// }
+export const speedUpTransaction = async (
+    id: string,
+    hash: string,
+    asset: string,
+    activeNetwork: any,
+    tx: string,
+    newFee: number,
+    ) => {
+  const {activeWalletId} = wallet.state
 
-// export const getQuotes = async (
-//   from: string,
-//   to: string,
-//   amount: BigNumber,
-// ) => {
-//   // const quotes = []
-//   // for (const provider of Object.values(wallet.getSwapProviders())) {
-//   //   const quote = await provider.getQuote(
-//   //     store.getState().marketData || [],
-//   //     from,
-//   //     to,
-//   //     amount,
-//   //   )
-//   //
-//   //   if (quote) {
-//   //     quotes.push(quote)
-//   //   }
-//   // }
-//   //
-//   // return quotes
-//   return []
-// }
+  return await wallet.dispatch.updateTransactionFee({
+    id,
+    network: activeNetwork,
+    walletId: activeWalletId,
+    asset,
+    hash,
+    newFee,
+  })
+}
+
+/**
+ * Retrieve quotes that correspond to the passed in parameters
+ * @param from
+ * @param to
+ * @param amount
+ */
+export const getQuotes = async (
+  from: string,
+  to: string,
+  amount: BigNumber,
+): Promise<any> => {
+  const {activeNetwork} = wallet.state
+
+  return await wallet.dispatch.getQuotes({
+    network: activeNetwork,
+    from,
+    to,
+    fromAccountId: undefined,
+    toAccountId: undefined,
+    amount: amount,
+  })
+}
 
 export type AppDispatch = typeof store.dispatch
 
