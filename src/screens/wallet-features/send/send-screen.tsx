@@ -28,6 +28,7 @@ import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { chainDefaultColors } from '../../../core/config'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
+import Box from '../../../theme/box'
 
 const useInputState = (
   initialValue: string,
@@ -215,7 +216,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       <View style={styles.headerBlock}>
         <View style={styles.sendWrapper}>
           <View style={styles.row}>
-            <View style={{ flex: 1 }}>
+            <Box flex={1}>
               <View style={styles.row}>
                 <Text variant="secondaryInputLabel">SEND</Text>
                 <Button
@@ -242,7 +243,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
                 autoCorrect={false}
                 returnKeyType="done"
               />
-            </View>
+            </Box>
             <View style={styles.asset}>
               <AssetIcon asset={code} chain={cryptoassets[code].chain} />
               <Text style={styles.assetName}>{code}</Text>
@@ -390,20 +391,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginBottom: 10,
   },
-  amountInFiatBtn: {
-    borderColor: '#000',
-    borderWidth: 1,
-    borderRadius: 50,
-    paddingHorizontal: 10,
-  },
   amount: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 18,
-  },
-  nativeStyle: {
-    borderColor: '#38FFFB',
   },
   sendInput: {
     fontFamily: 'Montserrat-Regular',
@@ -464,12 +456,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '70%',
     alignItems: 'center',
-  },
-  speedLabel: {
-    alignSelf: 'flex-start',
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 12,
   },
   speedValue: {
     alignSelf: 'flex-start',

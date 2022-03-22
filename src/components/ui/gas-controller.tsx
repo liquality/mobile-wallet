@@ -89,18 +89,6 @@ const styles = StyleSheet.create({
     width: '70%',
     alignItems: 'center',
   },
-  speedLabel: {
-    alignSelf: 'flex-start',
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 12,
-  },
-  speedValue: {
-    alignSelf: 'flex-start',
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    fontSize: 12,
-  },
   speedBtnsWrapper: {
     flexDirection: 'row',
   },

@@ -16,7 +16,7 @@ const ProgressCircle = ({
   color: string
   secondaryColor: string
 }): React.ReactElement => {
-  const { progressCircle, text } = StyleSheet.create({
+  const styles = StyleSheet.create({
     progressCircle: {
       width: size,
       height: size,
@@ -39,11 +39,11 @@ const ProgressCircle = ({
   })
 
   return (
-    <View style={progressCircle}>
+    <View style={styles.progressCircle}>
       {completed === total ? (
         <FontAwesomeIcon size={20} icon={faCheck} color={'#2CD2CF'} />
       ) : (
-        <Text style={text}>
+        <Text style={styles.text}>
           {completed}/{total}
         </Text>
       )}

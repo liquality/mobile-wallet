@@ -196,9 +196,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: '#1D1E21',
   },
-  sendToLabel: {
-    marginTop: 40,
-  },
   address: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',

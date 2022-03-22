@@ -203,25 +203,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     justifyContent: 'space-between',
   },
-  word: {
-    flex: 0.2,
-    width: 60,
-    height: 23,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
-    backgroundColor: '#fff',
-    borderColor: '#D9DFE5',
-    borderWidth: 1,
-  },
-  pressedWord: {
-    color: '#A8AEB7',
-  },
-  wordText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#9D4DFA',
-  },
   seedWordLengthOptions: {
     flexDirection: 'row',
     justifyContent: 'center',

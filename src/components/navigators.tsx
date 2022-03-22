@@ -260,9 +260,6 @@ const styles = StyleSheet.create({
   tabFocused: {
     borderTopColor: '#000',
   },
-  icon: {
-    marginVertical: 5,
-  },
   checkIcon: {
     marginRight: 20,
   },

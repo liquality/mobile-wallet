@@ -147,12 +147,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingRight: 5,
   },
-  plusSign: {
-    marginRight: 5,
-  },
-  subElement: {
-    paddingLeft: 50,
-  },
   code: {
     fontFamily: 'Montserrat-Regular',
     color: '#000',

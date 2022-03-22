@@ -4,7 +4,6 @@ import React, { FC, useState } from 'react'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {
   Alert,
-  Dimensions,
   Pressable,
   StyleSheet,
   Text,
@@ -113,14 +112,6 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: Dimensions.get('screen').width,
-    backgroundColor: '#FFF',
-  },
-  scrollView: {
-    padding: 20,
-  },
   font: {
     fontFamily: 'Montserrat-Regular',
   },
@@ -154,10 +145,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     marginBottom: 15,
-  },
-  buttonWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
   },
   icon: {
     marginVertical: 5,

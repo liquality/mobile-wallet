@@ -224,9 +224,6 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderRightWidth: 0,
   },
-  highlighted: {
-    backgroundColor: '#F0F7F9',
-  },
   asset: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',

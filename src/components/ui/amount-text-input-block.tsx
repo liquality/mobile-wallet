@@ -188,11 +188,6 @@ const styles = StyleSheet.create({
     height: 24,
     textAlign: 'left',
   },
-  amount: {
-    fontWeight: '300',
-    fontSize: 12,
-    lineHeight: 18,
-  },
 })
 
 export default AmountTextInputBlock

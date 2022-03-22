@@ -92,12 +92,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 5,
   },
-  menuLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    fontSize: 12,
-    color: '#000D35',
-  },
   icon: {
     marginRight: 10,
   },

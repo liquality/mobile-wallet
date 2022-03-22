@@ -139,13 +139,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingBottom: 20,
   },
-  assets: {
-    fontFamily: 'Montserrat-Regular',
-    fontSize: 20,
-    fontWeight: '400',
-    color: '#FFFFFF',
-    textAlign: 'center',
-  },
   balance: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -221,11 +214,6 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D9DFE5',
   },
   leftHeader: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  rightHeader: {
     flex: 1,
     paddingVertical: 10,
     alignItems: 'center',

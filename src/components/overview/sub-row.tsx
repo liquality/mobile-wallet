@@ -91,11 +91,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 12,
   },
-  address: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#646F85',
-    fontSize: 12,
-  },
   balance: {
     fontFamily: 'Montserrat-Regular',
     color: '#000',

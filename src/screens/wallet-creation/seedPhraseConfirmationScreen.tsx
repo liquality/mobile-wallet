@@ -244,34 +244,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#2CD2CF',
   },
-  actionBtn: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
-    backgroundColor: '#F8FAFF',
-    borderColor: '#9D4DFA',
-    borderWidth: 1,
-    height: 36,
-  },
-  cancelBtn: {
-    backgroundColor: '#F8FAFF',
-    borderColor: '#9D4DFA',
-  },
-  backText: {
-    color: '#9D4DFA',
-  },
-  nextBtn: {
-    backgroundColor: '#9D4DFA',
-    borderColor: '#9D4DFA',
-    borderWidth: 1,
-    marginLeft: 10,
-  },
-  continueText: {
-    color: '#F8FAFF',
-  },
-  disabled: {
-    opacity: 0.5,
-  },
 })
 
 export default SeedPhraseConfirmationScreen

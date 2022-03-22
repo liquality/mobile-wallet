@@ -315,12 +315,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#9C4DF9',
   },
-  address: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '600',
-    fontSize: 10,
-    color: '#9D4DFA',
-  },
   amount: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
@@ -331,29 +325,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  step: {
-    width: 8,
-    height: 8,
-    borderRadius: 50,
-    backgroundColor: '#2CD2CF',
-  },
-  separator: {
-    flex: 0.49,
-    width: 1,
-    height: 20,
-    borderStyle: 'dotted',
-    borderWidth: 1,
-    borderColor: '#2CD2CF',
-  },
   start: {
     width: 10,
     height: 1,
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: '#2CD2CF',
-  },
-  list: {
-    marginTop: 15,
   },
   emptyBlock: {
     width: '45%',
@@ -367,10 +344,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '4%',
     marginHorizontal: 15,
-  },
-  centered: {
-    justifyContent: 'flex-start',
-    alignItems: 'center',
   },
   copyBtn: {
     marginLeft: 5,
