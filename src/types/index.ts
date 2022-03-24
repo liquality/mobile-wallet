@@ -1,5 +1,4 @@
 import { Dispatch, ReactElement, SetStateAction } from 'react'
-import { BigNumber } from '@liquality/types'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 
@@ -9,8 +8,8 @@ export type AssetDataElementType = {
   code: string
   chain: ChainId
   address?: string
-  balance?: BigNumber
-  balanceInUSD?: BigNumber
+  balance: number
+  balanceInUSD?: number
   color?: string
   assets?: Array<AssetDataElementType>
   showAssets?: boolean
@@ -27,10 +26,10 @@ export type SwapInfoType = {
   swapProviderType: string
   fromAsset: AssetDataElementType
   toAsset: AssetDataElementType
-  fromAmount: BigNumber
-  toAmount: BigNumber
-  fromNetworkFee: BigNumber
-  toNetworkFee: BigNumber
+  fromAmount: number
+  toAmount: number
+  fromNetworkFee: number
+  toNetworkFee: number
 }
 
 export type StackPayload = {
@@ -47,8 +46,8 @@ export type StackPayload = {
   customFee?: number
   showPopup?: boolean
   sendTransaction?: {
-    amount?: BigNumber
-    gasFee?: BigNumber
+    amount?: number
+    gasFee?: number
     destinationAddress?: string
     asset?: string
   }

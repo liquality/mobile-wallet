@@ -13,6 +13,7 @@ import {
   MainNavigator,
 } from './src/components/navigators'
 import LoginScreen from './src/screens/wallet-creation/loginScreen'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
@@ -58,9 +59,11 @@ const App: FC = () => {
       <ThemeProvider theme={theme}>
         <View style={backgroundStyle} testID={'app-test'}>
           <StatusBar barStyle={'dark-content'} />
-          <NavigationContainer>
-            <AppNavigator initialRouteName={initialRouteName} />
-          </NavigationContainer>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <NavigationContainer>
+              <AppNavigator initialRouteName={initialRouteName} />
+            </NavigationContainer>
+          </GestureHandlerRootView>
         </View>
       </ThemeProvider>
     </Provider>

@@ -12,13 +12,13 @@ import {
   Platform,
   Dimensions,
 } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 import Button from '../../theme/button'
 
-type UnlockWalletScreenProps = StackScreenProps<
+type UnlockWalletScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'UnlockWalletScreen'
 >

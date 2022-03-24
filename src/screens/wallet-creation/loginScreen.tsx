@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   Dimensions,
 } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, UseInputStateReturnType } from '../../types'
 import Header from '../header'
 import { restoreWallet } from '../../store/store'
@@ -18,7 +18,10 @@ import Text from '../../theme/text'
 import Button from '../../theme/button'
 import Box from '../../theme/box'
 
-type LoginScreenProps = StackScreenProps<RootStackParamList, 'LoginScreen'>
+type LoginScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'LoginScreen'
+>
 const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {

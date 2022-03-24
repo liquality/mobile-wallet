@@ -5,7 +5,7 @@ import { FeeDetails } from '@liquality/types/lib/fees'
 import { cryptoToFiat, formatFiat } from '../../core/utils/coin-formatter'
 import { calculateGasFee } from '../../core/utils/fee-calculator'
 import AssetIcon from '../../components/asset-icon'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
   AssetDataElementType,
   RootStackParamList,
@@ -14,7 +14,10 @@ import {
 import { ChainId } from '@liquality/cryptoassets'
 import Button from '../../theme/button'
 
-type CustomFeeScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
+type CustomFeeScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'SendScreen'
+>
 type SpeedMode = keyof FeeDetails
 const useInputState = (
   initialValue: string,

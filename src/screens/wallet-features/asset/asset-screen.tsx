@@ -15,10 +15,13 @@ import {
   faArrowDown,
   faArrowUp,
 } from '@fortawesome/pro-light-svg-icons'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AssetDataElementType, RootStackParamList } from '../../../types'
 
-type AssetScreenProps = StackScreenProps<RootStackParamList, 'AssetScreen'>
+type AssetScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'AssetScreen'
+>
 
 const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const { code, address, balance, balanceInUSD }: AssetDataElementType =

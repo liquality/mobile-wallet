@@ -11,13 +11,16 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClone, faCheck } from '@fortawesome/pro-light-svg-icons'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AssetDataElementType, RootStackParamList } from '../../../types'
 import AssetIcon from '../../../components/asset-icon'
 import Button from '../../../theme/button'
 import { useAppSelector } from '../../../hooks'
 
-type ReceiveScreenProps = StackScreenProps<RootStackParamList, 'ReceiveScreen'>
+type ReceiveScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'ReceiveScreen'
+>
 
 const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   const [buttonPressed, setButtonPressed] = useState<boolean>(false)

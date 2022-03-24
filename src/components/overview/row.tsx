@@ -12,6 +12,7 @@ import AssetIcon from '../asset-icon'
 import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
 import GasIndicator from '../ui/gas-indicator'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
+import { BigNumber } from '@liquality/types'
 
 const DEFAULT_COLOR = '#EFEFEF'
 
@@ -76,7 +77,7 @@ const Row: React.FC<RowProps> = (props) => {
               Total ${balanceInUSD && formatFiat(balanceInUSD)}
             </Text>
             <View style={styles.gas}>
-              <GasIndicator balance={balance?.toNumber() || 0} gasFees={fees} />
+              <GasIndicator balance={balance || 0} gasFees={fees} />
             </View>
           </View>
         ) : (
@@ -84,7 +85,9 @@ const Row: React.FC<RowProps> = (props) => {
             <Text style={styles.balance}>
               {item.balance &&
                 item.code &&
-                `${prettyBalance(item.balance, item.code)} ${item.code}`}
+                `${prettyBalance(new BigNumber(item.balance), item.code)} ${
+                  item.code
+                }`}
             </Text>
             <Text style={styles.balanceInUSD}>
               ${balanceInUSD && formatFiat(balanceInUSD)}

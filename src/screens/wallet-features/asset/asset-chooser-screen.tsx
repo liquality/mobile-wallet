@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Alert, StyleSheet, TextInput, View } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faSearch } from '@fortawesome/pro-light-svg-icons'
 
@@ -14,7 +14,7 @@ import {
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import { useInputState, useWalletState } from '../../../hooks'
 
-type AssetChooserProps = StackScreenProps<
+type AssetChooserProps = NativeStackScreenProps<
   RootStackParamList,
   'AssetChooserScreen'
 >

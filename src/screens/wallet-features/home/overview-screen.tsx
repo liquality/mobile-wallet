@@ -7,7 +7,7 @@ import { useAppSelector, useWalletState } from '../../../hooks'
 import { formatFiat } from '../../../core/utils/coin-formatter'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import ActivityFlatList from '../../../components/activity-flat-list'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ActionEnum, RootStackParamList, StackPayload } from '../../../types'
 import { populateWallet } from '../../../store/store'
 import ErrorBoundary from 'react-native-error-boundary'
@@ -16,7 +16,10 @@ import ErrorFallback from '../../../components/error-fallback'
 import Box from '../../../theme/box'
 import RoundButton from '../../../theme/round-button'
 
-type OverviewProps = StackScreenProps<RootStackParamList, 'OverviewScreen'>
+type OverviewProps = NativeStackScreenProps<
+  RootStackParamList,
+  'OverviewScreen'
+>
 
 const OverviewScreen = ({ navigation }: OverviewProps) => {
   enum ViewKind {

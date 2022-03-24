@@ -11,10 +11,8 @@ import {
   assets as cryptoassets,
   unitToCurrency,
   chains,
-  currencyToUnit,
 } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
-import { prettyBalance, prettyFiatBalance } from './core/utils/coin-formatter'
 
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
@@ -102,11 +100,13 @@ export const useWalletState = () => {
                 code: asset,
                 chain: account.chain,
                 color: account.color,
-                balance: new BigNumber(account.balances?.[asset]),
+                balance: account.balances?.[asset],
                 balanceInUSD: unitToCurrency(
                   cryptoassets[asset],
                   account.balances?.[asset],
-                ).times(fiatRates[asset]),
+                )
+                  .times(fiatRates[asset])
+                  .toNumber(),
               })
               return acc
             },
@@ -116,20 +116,30 @@ export const useWalletState = () => {
           totalBalance = BigNumber.sum(totalBalance, total)
 
           //calculate the total balance for the current account eg: ETH
-          chainData.balance = assetsData.reduce(
-            (totalBal: BigNumber, assetData: AssetDataElementType): BigNumber =>
-              BigNumber.sum(totalBal, assetData.balance || new BigNumber(0)),
-            new BigNumber(0),
-          )
+          chainData.balance = assetsData
+            .reduce(
+              (
+                totalBal: BigNumber,
+                assetData: AssetDataElementType,
+              ): BigNumber =>
+                BigNumber.sum(totalBal, assetData.balance || new BigNumber(0)),
+              new BigNumber(0),
+            )
+            .toNumber()
 
-          chainData.balanceInUSD = assetsData.reduce(
-            (totalBal: BigNumber, assetData: AssetDataElementType): BigNumber =>
-              BigNumber.sum(
-                totalBal,
-                assetData.balanceInUSD || new BigNumber(0),
-              ),
-            new BigNumber(0),
-          )
+          chainData.balanceInUSD = assetsData
+            .reduce(
+              (
+                totalBal: BigNumber,
+                assetData: AssetDataElementType,
+              ): BigNumber =>
+                BigNumber.sum(
+                  totalBal,
+                  assetData.balanceInUSD || new BigNumber(0),
+                ),
+              new BigNumber(0),
+            )
+            .toNumber()
 
           chainData.assets?.push(...assetsData)
           assetCounter += account.assets.length
@@ -165,37 +175,4 @@ export const useInputState = (
 ): UseInputStateReturnType<string> => {
   const [value, setValue] = useState<string>(initialValue)
   return { value, onChangeText: setValue }
-}
-
-//TODO leave as a placeholder for now
-export const useCurrencyConverter = (props: {
-  amount: BigNumber
-  fromAsset: string
-  toAsset: string
-  fiatRate?: number
-}) => {
-  const [newAmount, setNewAmount] = useState(new BigNumber(0))
-  const [prettyAmount, setPrettyAmount] = useState('')
-  const { amount, fromAsset, toAsset, fiatRate } = props
-
-  useEffect(() => {
-    let amnt = new BigNumber(0)
-    if (fromAsset.toLowerCase() === 'usd') {
-      amnt = new BigNumber(
-        currencyToUnit(cryptoassets[toAsset], amount.toNumber()),
-      )
-      setNewAmount(amnt)
-      setPrettyAmount(prettyBalance(amnt, toAsset))
-    } else {
-      amnt = new BigNumber(
-        unitToCurrency(cryptoassets[fromAsset], amount.toNumber()),
-      )
-      setNewAmount(amnt)
-      if (fiatRate) {
-        setPrettyAmount(prettyFiatBalance(amnt.toNumber(), fiatRate))
-      }
-    }
-  }, [amount, fromAsset, toAsset, fiatRate])
-
-  return { amount: newAmount, prettyAmount }
 }

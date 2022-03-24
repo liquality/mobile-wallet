@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import { Dimensions, StyleSheet, View, ScrollView, Alert } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClock, faExchange } from '@fortawesome/pro-light-svg-icons'
 import { RootStackParamList, SwapInfoType } from '../../../types'
@@ -9,8 +9,9 @@ import SwapRates from '../../../components/swap-rates'
 import { useAppSelector } from '../../../hooks'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
 import Button from '../../../theme/button'
+import { BigNumber } from '@liquality/types'
 
-type SwapReviewScreenProps = StackScreenProps<
+type SwapReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SwapReviewScreen'
 >
@@ -85,17 +86,17 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
     <ScrollView contentContainerStyle={styles.container}>
       <SwapReviewAssetSummary
         type={'SEND'}
-        amount={fromAmount}
+        amount={new BigNumber(fromAmount)}
         asset={fromAsset}
         fiatRates={fiatRates}
-        networkFee={fromNetworkFee}
+        networkFee={new BigNumber(fromNetworkFee)}
       />
       <SwapReviewAssetSummary
         type={'RECEIVE'}
-        amount={toAmount}
+        amount={new BigNumber(toAmount)}
         asset={toAsset}
         fiatRates={fiatRates}
-        networkFee={toNetworkFee}
+        networkFee={new BigNumber(toNetworkFee)}
       />
       <SwapRates
         fromAsset={fromAsset.code}

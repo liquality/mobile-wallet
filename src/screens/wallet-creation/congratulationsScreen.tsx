@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Image, ImageBackground } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import Confetti from '../../components/confetti'
 
-type CongratulationsProps = StackScreenProps<
+type CongratulationsProps = NativeStackScreenProps<
   RootStackParamList,
   'SeedPhraseConfirmationScreen'
 >

@@ -5,11 +5,11 @@ import { faLock, faPlug } from '@fortawesome/pro-light-svg-icons'
 import BackupIcon from '../assets/icons/backup.svg'
 import LedgerIcon from '../assets/icons/ledger.svg'
 import ManageAssetsIcon from '../assets/icons/manage-assets.svg'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../types'
 
 type FctType = (...args: any) => any
-type Props = StackScreenProps<
+type Props = NativeStackScreenProps<
   RootStackParamList,
   'OverviewScreen' | 'AssetScreen' | 'AssetChooserScreen'
 >

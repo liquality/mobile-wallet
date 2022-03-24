@@ -7,7 +7,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import TransactionDetails from '../../../components/transaction-details'
 import {
@@ -30,7 +30,7 @@ import SuccessIcon from '../../../assets/icons/success-icon.svg'
 import SwapRates from '../../../components/swap-rates'
 import Button from '../../../theme/button'
 
-type SwapConfirmationScreenProps = StackScreenProps<
+type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SwapConfirmationScreen'
 >

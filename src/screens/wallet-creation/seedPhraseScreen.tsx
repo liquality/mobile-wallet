@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, ImageBackground, FlatList } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 import Button from '../../theme/button'
-type WalletBackupProps = StackScreenProps<
+type WalletBackupProps = NativeStackScreenProps<
   RootStackParamList,
   'SeedPhraseScreen'
 >

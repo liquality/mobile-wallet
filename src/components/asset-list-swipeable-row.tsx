@@ -1,5 +1,5 @@
 import React, { FC, useRef } from 'react'
-import { Swipeable } from 'react-native-gesture-handler'
+import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { Animated, Dimensions } from 'react-native'
 import AnimatedBox from './animated-box'
 import { useNavigation } from '@react-navigation/core'

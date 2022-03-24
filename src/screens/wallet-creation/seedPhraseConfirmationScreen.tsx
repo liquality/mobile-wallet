@@ -9,12 +9,12 @@ import {
   Alert,
 } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import Header from '../header'
 import ButtonFooter from '../../components/button-footer'
 import Button from '../../theme/button'
 
-type SeedPhraseConfirmationProps = StackScreenProps<
+type SeedPhraseConfirmationProps = NativeStackScreenProps<
   RootStackParamList,
   'SeedPhraseConfirmationScreen'
 >

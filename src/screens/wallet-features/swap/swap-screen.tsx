@@ -16,7 +16,7 @@ import {
 } from 'react-native'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
   faAngleDown,
   faAngleRight,
@@ -69,7 +69,7 @@ export const reducer: Reducer<SwapEventType, PayloadAction<SwapEventType>> = (
   }
 }
 
-type SwapScreenProps = StackScreenProps<RootStackParamList, 'SwapScreen'>
+type SwapScreenProps = NativeStackScreenProps<RootStackParamList, 'SwapScreen'>
 
 const SwapScreen: FC<SwapScreenProps> = (props) => {
   const { navigation, route } = props
@@ -164,7 +164,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     ) {
       const amnt = unitToCurrency(
         cryptoassets[swapAssetPair.fromAsset.code],
-        swapAssetPair.fromAsset?.balance?.toNumber() || 0,
+        swapAssetPair.fromAsset?.balance || 0,
       )
       setMaximumValue(new BigNumber(amnt))
     }
@@ -279,9 +279,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           <Label text="Available" variant="light" />
           <Text style={[styles.font, styles.amount]}>
             {fromAsset?.balance &&
-              `${prettyBalance(fromAsset?.balance, fromAsset?.code)} ${
-                fromAsset?.code
-              }`}
+              `${prettyBalance(
+                new BigNumber(fromAsset?.balance),
+                fromAsset?.code,
+              )} ${fromAsset?.code}`}
           </Text>
         </View>
       </View>

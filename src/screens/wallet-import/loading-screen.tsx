@@ -1,12 +1,15 @@
 import React from 'react'
 import Spinner from '../../components/spinner'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import { useEffect } from 'react'
 import { createWallet } from '../../store/store'
 import { useDispatch } from 'react-redux'
 
-type LoadingScreenProps = StackScreenProps<RootStackParamList, 'LoadingScreen'>
+type LoadingScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'LoadingScreen'
+>
 
 const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
   const dispatch = useDispatch()

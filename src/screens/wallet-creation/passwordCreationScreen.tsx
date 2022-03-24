@@ -2,13 +2,13 @@ import React, { Dispatch, SetStateAction, useState } from 'react'
 import { View, StyleSheet, ImageBackground, TextInput } from 'react-native'
 
 import { RootStackParamList } from '../../types'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import Header from '../header'
 import ButtonFooter from '../../components/button-footer'
 import Button from '../../theme/button'
 import Text from '../../theme/text'
 
-type PasswordCreationProps = StackScreenProps<
+type PasswordCreationProps = NativeStackScreenProps<
   RootStackParamList,
   'PasswordCreationScreen'
 >

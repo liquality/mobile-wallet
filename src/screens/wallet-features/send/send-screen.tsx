@@ -1,13 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import { StyleSheet, View, TextInput, Pressable } from 'react-native'
-import { chains } from '@liquality/cryptoassets'
-import { StackScreenProps } from '@react-navigation/stack'
+import { ChainId, chains } from '@liquality/cryptoassets'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import {
-  AssetDataElementType,
-  RootStackParamList,
-  UseInputStateReturnType,
-} from '../../../types'
+import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import {
   faAngleDown,
   faAngleRight,
@@ -37,10 +33,16 @@ const useInputState = (
   return { value, onChangeText: setValue }
 }
 
-type SendScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
+type SendScreenProps = NativeStackScreenProps<RootStackParamList, 'SendScreen'>
 
-const SendScreen = ({ navigation, route }: SendScreenProps) => {
-  const { code, balance, chain }: AssetDataElementType = route.params.assetData!
+const SendScreen: FC<SendScreenProps> = (props) => {
+  const { navigation, route } = props
+  //TODO is there a better way to deal with this?
+  const {
+    code = 'ETH',
+    balance = 0,
+    chain = ChainId.Ethereum,
+  } = route.params.assetData || {}
   const [customFee, setCustomFee] = useState<number>(0)
   const gasSpeeds: any[] = ['slow', 'average', 'fast']
   const {
@@ -74,7 +76,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
       setError('Enter a valid amount')
       return false
-    } else if (new BigNumber(amountInput.value).gt(balance!)) {
+    } else if (new BigNumber(amountInput.value).gt(new BigNumber(balance))) {
       setError('Lower amount. This exceeds available balance.')
       return false
     } else if (!chain || !chains[chain].isValidAddress(addressInput.value)) {
@@ -90,11 +92,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       setFee(new BigNumber(route.params.customFee))
       setCustomFee(route.params.customFee)
       setAvailableAmount(
-        calculateAvailableAmnt(
-          code,
-          route.params.customFee,
-          balance.toNumber(),
-        ),
+        calculateAvailableAmnt(code, route.params.customFee, balance),
       )
     }
   }, [balance, code, route.params.customFee])
@@ -124,7 +122,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       calculateAvailableAmnt(
         code,
         gasUnitToCurrency(code, gasFee).toNumber(),
-        balance.toNumber(),
+        balance,
       ),
     )
   }, [code, speedMode, fees, activeWalletId, activeNetwork, chain, balance])
@@ -134,8 +132,8 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       navigation.navigate('SendReviewScreen', {
         screenTitle: `Send ${code} Review`,
         sendTransaction: {
-          amount: new BigNumber(amountInput.value),
-          gasFee: fee,
+          amount: new BigNumber(amountInput.value).toNumber(),
+          gasFee: fee.toNumber(),
           destinationAddress: addressInput.value,
           asset: code,
         },

@@ -7,6 +7,7 @@ import { AssetDataElementType, StackPayload } from '../../types'
 import AssetIcon from '../asset-icon'
 import { chainDefaultColors } from '../../core/config'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
+import { BigNumber } from '@liquality/types'
 
 type SubRowProps = {
   parentItem: AssetDataElementType
@@ -51,7 +52,9 @@ const SubRow: FC<SubRowProps> = (props) => {
           <Text style={styles.balance}>
             {item.balance &&
               item.code &&
-              `${prettyBalance(item.balance, item.code)} ${item.code}`}
+              `${prettyBalance(new BigNumber(item.balance), item.code)} ${
+                item.code
+              }`}
           </Text>
           <Text style={styles.balanceInUSD}>
             ${item.balanceInUSD && formatFiat(item.balanceInUSD)}

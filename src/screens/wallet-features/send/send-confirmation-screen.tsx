@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import TransactionDetails from '../../../components/transaction-details'
 import { chains, unitToCurrency } from '@liquality/cryptoassets'
@@ -10,7 +10,7 @@ import ProgressCircle from '../../../components/animations/progress-circle'
 import SuccessIcon from '../../../assets/icons/success-icon.svg'
 import { useAppSelector } from '../../../hooks'
 
-type SendConfirmationScreenProps = StackScreenProps<
+type SendConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SendConfirmationScreen'
 >

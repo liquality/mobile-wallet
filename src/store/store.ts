@@ -95,23 +95,62 @@ export const populateWallet = async (): Promise<void> => {
     'UST',
   ]
 
-  await wallet.dispatch.changeActiveNetwork({
-    network: activeNetwork || 'testnet',
-  })
+  await wallet.dispatch
+    .changeActiveNetwork({
+      network: activeNetwork || 'testnet',
+    })
+    .catch((e) => {
+      store.dispatch({
+        type: 'ERROR',
+        payload: `Failed to change active network: ${e}`,
+      })
+    })
 
-  await wallet.dispatch.updateBalances({
-    network: activeNetwork,
-    walletId: activeWalletId,
-    assets: enabledAssets,
-  })
+  await wallet.dispatch
+    .updateMarketData({
+      network: activeNetwork,
+    })
+    .catch((e) => {
+      store.dispatch({
+        type: 'ERROR',
+        payload: `Failed to update market data: ${e}`,
+      })
+    })
 
-  await wallet.dispatch.updateFiatRates({
-    assets: enabledAssets,
-  })
+  await wallet.dispatch
+    .updateBalances({
+      network: activeNetwork,
+      walletId: activeWalletId,
+      assets: enabledAssets,
+    })
+    .catch((e) => {
+      store.dispatch({
+        type: 'ERROR',
+        payload: `Failed update balances: ${e}`,
+      })
+    })
 
-  await wallet.dispatch.updateFees({
-    asset: enabledAssets,
-  })
+  await wallet.dispatch
+    .updateFiatRates({
+      assets: enabledAssets,
+    })
+    .catch((e) => {
+      store.dispatch({
+        type: 'ERROR',
+        payload: `Failed to update fiat rates: ${e}`,
+      })
+    })
+
+  await wallet.dispatch
+    .updateFees({
+      asset: enabledAssets,
+    })
+    .catch((e) => {
+      store.dispatch({
+        type: 'ERROR',
+        payload: `Failed to update fees: ${e}`,
+      })
+    })
 }
 
 /**

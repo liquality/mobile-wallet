@@ -47,7 +47,7 @@ type SwapRatesProps = {
 
 const SwapRates: FC<SwapRatesProps> = (props) => {
   const { fromAsset, toAsset, selectQuote, style } = props
-  const { marketData } = useAppSelector((state) => ({
+  const { marketData = [] } = useAppSelector((state) => ({
     marketData: state.marketData,
   }))
   const [selectedItem, setSelectedItem] = useState<any>()

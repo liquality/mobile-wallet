@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import {
   dpUI,
@@ -14,7 +14,7 @@ import { BigNumber } from '@liquality/types'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 
-type SendReviewScreenProps = StackScreenProps<
+type SendReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SendReviewScreen'
 >
@@ -43,9 +43,9 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         activeNetwork,
         to: destinationAddress,
         value: new BigNumber(
-          currencyToUnit(cryptoassets[asset], amount.toNumber()).toNumber(),
+          currencyToUnit(cryptoassets[asset], amount).toNumber(),
         ),
-        fee: gasFee.toNumber(),
+        fee: gasFee,
       })
 
       navigation.navigate('SendConfirmationScreen', {
@@ -76,10 +76,10 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <Text variant="mainInputLabel">SEND</Text>
         <View style={styles.row}>
           <Text style={styles.amountInNative}>
-            {amount && `${amount.dp(6)} ${asset}`}
+            {amount && `${new BigNumber(amount).dp(6)} ${asset}`}
           </Text>
           <Text style={styles.amountInFiat}>
-            {amount && `$${prettyFiatBalance(amount.toNumber(), rate)}`}
+            {amount && `$${prettyFiatBalance(amount, rate)}`}
           </Text>
         </View>
         <Text variant="mainInputLabel">NETWORK FEE</Text>
@@ -87,13 +87,16 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
           <Text style={styles.feeAmountInNative}>
             {asset &&
               gasFee &&
-              dpUI(gasUnitToCurrency(asset, gasFee), 9).toString()}
+              dpUI(
+                gasUnitToCurrency(asset, new BigNumber(gasFee)),
+                9,
+              ).toString()}
           </Text>
           <Text style={styles.feeAmountInFiat}>
             {gasFee &&
               asset &&
               `$${prettyFiatBalance(
-                gasUnitToCurrency(asset, gasFee).toNumber(),
+                gasUnitToCurrency(asset, new BigNumber(gasFee)).toNumber(),
                 rate,
               )}`}
           </Text>
@@ -105,14 +108,18 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
             {amount &&
               gasFee &&
               asset &&
-              `${amount.plus(gasUnitToCurrency(asset, gasFee)).dp(9)} ${asset}`}
+              `${new BigNumber(amount)
+                .plus(gasUnitToCurrency(asset, new BigNumber(gasFee)))
+                .dp(9)} ${asset}`}
           </Text>
           <Text style={styles.totalAmount}>
             {amount &&
               gasFee &&
               asset &&
               `$${prettyFiatBalance(
-                amount.plus(gasUnitToCurrency(asset, gasFee)).toNumber(),
+                new BigNumber(amount)
+                  .plus(gasUnitToCurrency(asset, new BigNumber(gasFee)))
+                  .toNumber(),
                 rate,
               )}`}
           </Text>

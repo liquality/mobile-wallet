@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import { View, StyleSheet, ImageBackground } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import Header from '../header'
 import Text from '../../theme/text'
@@ -9,7 +9,7 @@ import Box from '../../theme/box'
 import { createWallet } from '../../store/store'
 import { MNEMONIC, PASSWORD } from '@env'
 
-type EntryProps = StackScreenProps<RootStackParamList, 'Entry'>
+type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
 const Entry: FC<EntryProps> = (props): JSX.Element => {
   const { navigation } = props

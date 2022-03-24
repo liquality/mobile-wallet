@@ -277,7 +277,7 @@ PODS:
     - glog
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-safe-area-context (4.2.1):
+  - react-native-safe-area-context (4.2.2):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -608,7 +608,7 @@ SPEC CHECKSUMS:
   React-jsinspector: f4775ea9118cbe1f72b834f0f842baa7a99508d8
   React-logger: a1f028f6d8639a3f364ef80419e5e862e1115250
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-safe-area-context: 806f8370bf9fc9db90a3413aaa1aab0d2e22fdf3
+  react-native-safe-area-context: da2d11bd7df9bf7779e9bdc85081c141cfa544f4
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-udp: ff9d13e523f2b58e6bc5d4d32321ac60671b5dc9
   React-perflogger: 0afaf2f01a47fd0fc368a93bfbb5bd3b26db6e7f
