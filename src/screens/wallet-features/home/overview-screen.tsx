@@ -2,12 +2,7 @@ import * as React from 'react'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import { ImageBackground, Pressable, StyleSheet, View } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import {
-  faArrowDown,
-  faArrowUp,
-  faExchange,
-  faGreaterThan,
-} from '@fortawesome/pro-light-svg-icons'
+import { faArrowDown, faGreaterThan } from '@fortawesome/pro-light-svg-icons'
 import { useAppSelector, useWalletState } from '../../../hooks'
 import { formatFiat } from '../../../core/utils/coin-formatter'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
@@ -19,6 +14,7 @@ import ErrorBoundary from 'react-native-error-boundary'
 import Text from '../../../theme/text'
 import ErrorFallback from '../../../components/error-fallback'
 import Box from '../../../theme/box'
+import RoundButton from '../../../theme/round-button'
 
 type OverviewProps = StackScreenProps<RootStackParamList, 'OverviewScreen'>
 
@@ -108,41 +104,27 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
                 {assetCount}
                 {assetCount === 1 ? ' Asset' : ' Assets'}
               </Text>
-              <View style={styles.btnContainer}>
-                <View style={styles.btnWrapper}>
-                  <Pressable style={styles.btn} onPress={handleSendBtnPress}>
-                    <FontAwesomeIcon
-                      icon={faArrowUp}
-                      color={'#FFFFFF'}
-                      style={styles.smallIcon}
-                    />
-                  </Pressable>
-                  <Text style={styles.btnText}>Send</Text>
-                </View>
-                <View style={styles.btnWrapper}>
-                  <Pressable
-                    style={[styles.btn, styles.swapBtn]}
-                    onPress={handleSwapBtnPress}>
-                    <FontAwesomeIcon
-                      size={30}
-                      icon={faExchange}
-                      color={'#9D4DFA'}
-                      style={styles.smallIcon}
-                    />
-                  </Pressable>
-                  <Text style={styles.btnText}>Swap</Text>
-                </View>
-                <View style={styles.btnWrapper}>
-                  <Pressable style={styles.btn} onPress={handleReceiveBtnPress}>
-                    <FontAwesomeIcon
-                      icon={faArrowDown}
-                      color={'#FFFFFF'}
-                      style={styles.smallIcon}
-                    />
-                  </Pressable>
-                  <Text style={styles.btnText}>Receive</Text>
-                </View>
-              </View>
+
+              <Box flexDirection="row" justifyContent="center" marginTop="l">
+                <RoundButton
+                  onPress={handleSendBtnPress}
+                  label="Send"
+                  type="SEND"
+                  variant="smallPrimary"
+                />
+                <RoundButton
+                  onPress={handleSwapBtnPress}
+                  label="Swap"
+                  type="SWAP"
+                  variant="largePrimary"
+                />
+                <RoundButton
+                  onPress={handleReceiveBtnPress}
+                  label="Receive"
+                  type="RECEIVE"
+                  variant="smallPrimary"
+                />
+              </Box>
             </Fragment>
           )}
         </ImageBackground>
@@ -243,41 +225,6 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
     paddingLeft: 5,
     textAlignVertical: 'bottom',
-  },
-  btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  btnWrapper: {
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  btn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 40,
-    height: 40,
-    marginHorizontal: 7,
-    marginTop: 17,
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: '#FFFFFF',
-  },
-  swapBtn: {
-    backgroundColor: '#FFFFFF',
-    width: 57,
-    height: 57,
-  },
-  btnText: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#FFFFFF',
-    fontWeight: '500',
-    fontSize: 13,
-    marginTop: 11,
-  },
-  smallIcon: {
-    margin: 15,
   },
   tabsBlock: {
     flexDirection: 'row',

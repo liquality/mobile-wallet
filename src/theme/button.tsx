@@ -9,9 +9,8 @@ import {
 
 import Text from './text'
 import { Theme } from './'
-import React from 'react'
+import React, { FC } from 'react'
 
-// const BaseButton = createBox<Theme, PressableProps>(Pressable)
 const BaseButton = createRestyleComponent<
   VariantProps<Theme, 'buttonVariants'> & PressableProps,
   Theme
@@ -19,25 +18,27 @@ const BaseButton = createRestyleComponent<
 
 type Props = React.ComponentProps<typeof BaseButton> &
   ColorProps<Theme> & {
+    type?: 'primary' | 'secondary' | 'tertiary'
+    variant: 's' | 'm' | 'l'
     label: string
     onPress: () => void
     children?: React.ReactElement
     isLoading?: boolean
     isActive?: boolean
     isBorderless?: boolean
-    type?: 'primary' | 'secondary' | 'tertiary'
   }
 
-const Button = ({
-  type = 'primary',
-  variant = 'm',
-  onPress,
-  label,
-  isLoading = false,
-  isActive = true,
-  isBorderless = false,
-  children,
-}: Props) => {
+const Button: FC<Props> = (props) => {
+  const {
+    type = 'primary',
+    variant = 'm',
+    onPress,
+    label,
+    isLoading = false,
+    isActive = true,
+    isBorderless = false,
+    children,
+  } = props
   const theme = useTheme<Theme>()
 
   return (

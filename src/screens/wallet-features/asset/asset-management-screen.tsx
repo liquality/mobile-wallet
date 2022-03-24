@@ -7,7 +7,7 @@ import SearchBox from '../../../components/ui/search-box'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
 import { customConfig } from '../../../core/config'
-import {toggleAsset} from '../../../store/store'
+import { toggleAsset } from '../../../store/store'
 
 const AssetManagementScreen: FC = () => {
   const DEFAULT_COLOR = '#EFEFEF'
@@ -81,9 +81,8 @@ const AssetManagementScreen: FC = () => {
   const renderAsset = useCallback(
     ({ item }: { item: Asset }) => {
       const { name, code, chain, color = DEFAULT_COLOR } = item
-      const isEnabled = !!enabledAssets?.[activeNetwork!]?.[
-          activeWalletId!
-          ]?.includes(code)
+      const isEnabled =
+        !!enabledAssets?.[activeNetwork!]?.[activeWalletId!]?.includes(code)
       return (
         <Fragment>
           <View
@@ -96,7 +95,9 @@ const AssetManagementScreen: FC = () => {
             </View>
             <View style={styles.col3}>
               <Switch
-                enableFeature={(newState: boolean) => handleEnableFeature(code, newState)}
+                enableFeature={(newState: boolean) =>
+                  handleEnableFeature(code, newState)
+                }
                 isFeatureEnabled={isEnabled}
               />
             </View>

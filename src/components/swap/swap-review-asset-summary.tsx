@@ -2,13 +2,7 @@ import { BigNumber } from '@liquality/types'
 import { AssetDataElementType } from '../../types'
 import React, { FC, useState } from 'react'
 import Clipboard from '@react-native-clipboard/clipboard'
-import {
-  Alert,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import Label from '../ui/label'
 import { chainDefaultColors } from '../../core/config'
 import {

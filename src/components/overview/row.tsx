@@ -11,6 +11,7 @@ import {
 import AssetIcon from '../asset-icon'
 import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
 import GasIndicator from '../ui/gas-indicator'
+import AssetListSwipeableRow from '../asset-list-swipeable-row'
 
 const DEFAULT_COLOR = '#EFEFEF'
 
@@ -26,71 +27,94 @@ const Row: React.FC<RowProps> = (props) => {
   const { name, address, balance, balanceInUSD, fees, chain } = item
   const chainColor = chain ? chainDefaultColors[chain] : DEFAULT_COLOR
 
+  const handlePressOnRow = () => {
+    if (isNested) {
+      toggleRow(item.id)
+    } else {
+      onAssetSelected({
+        assetData: {
+          ...item,
+          address: item.address,
+        },
+        screenTitle: item.code,
+      })
+    }
+  }
+
   return (
-    <View style={[styles.row, { borderLeftColor: chainColor }]}>
-      <View style={styles.col1}>
-        <Pressable onPress={() => toggleRow(item.id)}>
-          <FontAwesomeIcon
-            size={15}
-            icon={item.showAssets ? faMinus : faPlus}
-            color={isNested ? '#A8AEB7' : '#FFF'}
-            style={styles.plusSign}
-          />
-        </Pressable>
-        <AssetIcon chain={item.chain} />
-      </View>
-      <View style={styles.col2}>
-        <Text style={styles.code}>{name}</Text>
-        <Text style={styles.address}>
-          {`${address?.substring(0, 4)}...${address?.substring(
-            address?.length - 4,
-          )}`}
-        </Text>
-      </View>
-      {isNested ? (
-        <View style={styles.col3}>
-          <Text style={styles.TotalBalanceInUSD}>
-            Total ${balanceInUSD && formatFiat(balanceInUSD)}
-          </Text>
-          <View style={styles.gas}>
-            <GasIndicator balance={balance?.toNumber() || 0} gasFees={fees} />
-          </View>
-        </View>
-      ) : (
-        <View style={styles.col3}>
-          <Text style={styles.balance}>
-            {item.balance &&
-              item.code &&
-              `${prettyBalance(item.balance, item.code)} ${item.code}`}
-          </Text>
-          <Text style={styles.balanceInUSD}>
-            ${balanceInUSD && formatFiat(balanceInUSD)}
-          </Text>
-        </View>
-      )}
-      <View style={styles.col4}>
-        {isNested ? (
-          <FontAwesomeIcon size={20} icon={faChevronRight} color={'#FFF'} />
-        ) : (
-          <Pressable
-            onPress={() =>
-              onAssetSelected({
-                assetData: {
-                  ...item,
-                  address: item.address,
-                },
-                screenTitle: item.code,
-              })
-            }>
+    <AssetListSwipeableRow
+      assetData={{
+        ...item,
+        address: item.address,
+      }}
+      assetSymbol={item.code}>
+      <Pressable
+        style={[styles.row, { borderLeftColor: chainColor }]}
+        onPress={handlePressOnRow}>
+        <View style={styles.col1}>
+          <Pressable onPress={() => toggleRow(item.id)}>
             <FontAwesomeIcon
-              size={20}
-              icon={faChevronRight}
-              color={'#A8AEB7'}
+              size={15}
+              icon={item.showAssets ? faMinus : faPlus}
+              color={isNested ? '#A8AEB7' : '#FFF'}
+              style={styles.plusSign}
             />
           </Pressable>
+          <AssetIcon chain={item.chain} />
+        </View>
+        <View style={styles.col2}>
+          <Text style={styles.code}>{name}</Text>
+          <Text style={styles.address}>
+            {`${address?.substring(0, 4)}...${address?.substring(
+              address?.length - 4,
+            )}`}
+          </Text>
+        </View>
+        {isNested ? (
+          <View style={styles.col3}>
+            <Text style={styles.TotalBalanceInUSD}>
+              Total ${balanceInUSD && formatFiat(balanceInUSD)}
+            </Text>
+            <View style={styles.gas}>
+              <GasIndicator balance={balance?.toNumber() || 0} gasFees={fees} />
+            </View>
+          </View>
+        ) : (
+          <View style={styles.col3}>
+            <Text style={styles.balance}>
+              {item.balance &&
+                item.code &&
+                `${prettyBalance(item.balance, item.code)} ${item.code}`}
+            </Text>
+            <Text style={styles.balanceInUSD}>
+              ${balanceInUSD && formatFiat(balanceInUSD)}
+            </Text>
+          </View>
         )}
-      </View>
-    </View>
+        <View style={styles.col4}>
+          {isNested ? (
+            <FontAwesomeIcon size={20} icon={faChevronRight} color={'#FFF'} />
+          ) : (
+            <Pressable
+              onPress={() =>
+                onAssetSelected({
+                  assetData: {
+                    ...item,
+                    address: item.address,
+                  },
+                  screenTitle: item.code,
+                })
+              }>
+              <FontAwesomeIcon
+                size={20}
+                icon={faChevronRight}
+                color={'#A8AEB7'}
+              />
+            </Pressable>
+          )}
+        </View>
+      </Pressable>
+    </AssetListSwipeableRow>
   )
 }
 
@@ -102,6 +126,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D9DFE5',
     borderLeftWidth: 3,
     paddingVertical: 10,
+    height: 60,
   },
   col1: {
     flex: 0.15,

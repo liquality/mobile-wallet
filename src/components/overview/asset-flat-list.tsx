@@ -42,7 +42,8 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
 
   const renderAsset = ({ item }: { item: AssetDataElementType }) => {
     //TODO is this logic correct?
-    const isNested = item.assets && item.assets.length > 0 && item.code !== 'BTC'
+    const isNested =
+      item.assets && item.assets.length > 0 && item.code !== 'BTC'
 
     return (
       <Fragment>

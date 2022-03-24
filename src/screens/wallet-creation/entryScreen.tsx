@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react'
+import React, { FC, useState } from 'react'
 import { View, StyleSheet, ImageBackground } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types'
@@ -12,7 +12,7 @@ import { MNEMONIC, PASSWORD } from '@env'
 type EntryProps = StackScreenProps<RootStackParamList, 'Entry'>
 
 const Entry: FC<EntryProps> = (props): JSX.Element => {
-  const  { navigation } = props
+  const { navigation } = props
   const [loading, setLoading] = useState(false)
 
   const handleImportPress = () => navigation.navigate('WalletImportNavigator')

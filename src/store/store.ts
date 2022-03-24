@@ -10,9 +10,9 @@ import StorageManager from '../core/storage-manager'
 import { BigNumber } from '@liquality/types'
 import 'react-native-reanimated'
 import { wallet } from '@liquality/wallet-core'
-import {currencyToUnit} from '@liquality/cryptoassets'
+import { currencyToUnit } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
-import {AssetDataElementType} from '../types'
+import { AssetDataElementType } from '../types'
 
 //-------------------------1. CREATE AN INSTANCE OF THE STORAGE MANAGER--------------------------------------------------------
 const excludedProps: Array<keyof any> = ['key', 'wallets', 'unlockedAt']
@@ -78,7 +78,7 @@ export const createWallet = async (
  * Populates an already instantiated wallet with account information
  */
 export const populateWallet = async (): Promise<void> => {
-  const {activeNetwork, activeWalletId} = wallet.state
+  const { activeNetwork, activeWalletId } = wallet.state
   const enabledAssets = [
     'BTC',
     'ETH',
@@ -95,7 +95,9 @@ export const populateWallet = async (): Promise<void> => {
     'UST',
   ]
 
-  await wallet.dispatch.changeActiveNetwork({network: store.getState().activeNetwork || 'testnet'})
+  await wallet.dispatch.changeActiveNetwork({
+    network: activeNetwork || 'testnet',
+  })
 
   await wallet.dispatch.updateBalances({
     network: activeNetwork,
@@ -129,8 +131,11 @@ export const toggleNetwork = async (network: any): Promise<void> => {
  * @param asset
  * @param state
  */
-export const toggleAsset = async (asset: string, state: boolean): Promise<void> => {
-  const {activeNetwork, activeWalletId} = wallet.state
+export const toggleAsset = async (
+  asset: string,
+  state: boolean,
+): Promise<void> => {
+  const { activeNetwork, activeWalletId } = wallet.state
 
   if (state) {
     await wallet.dispatch.enableAssets({
@@ -139,7 +144,7 @@ export const toggleAsset = async (asset: string, state: boolean): Promise<void> 
       assets: [asset],
     })
   } else {
-    await  wallet.dispatch.disableAssets({
+    await wallet.dispatch.disableAssets({
       network: activeNetwork,
       walletId: activeWalletId,
       assets: [asset],
@@ -151,7 +156,7 @@ export const toggleAsset = async (asset: string, state: boolean): Promise<void> 
  * Updates the config and populate the wallet accordingly
  */
 export const updateWallet = async (): Promise<void> => {
-  const {activeNetwork, activeWalletId, enabledAssets} = wallet.state
+  const { activeNetwork, activeWalletId, enabledAssets } = wallet.state
   await wallet.dispatch.updateBalances({
     network: activeNetwork,
     walletId: activeWalletId,
@@ -243,7 +248,7 @@ export const performSwap = async (
   toNetworkFee: BigNumber,
   activeNetwork: any,
 ): Promise<Partial<any> | void> => {
-  const {activeWalletId} = wallet.state
+  const { activeWalletId } = wallet.state
 
   const quote: Partial<any> = {
     from: from.code,
@@ -257,7 +262,6 @@ export const performSwap = async (
     fee: fromNetworkFee.toNumber(),
     claimFee: toNetworkFee.toNumber(),
   }
-
 
   //TODO populate the undefined values
   return await wallet.dispatch.newSwap({
@@ -295,8 +299,8 @@ export const sendTransaction = async (options: {
     throw new Error(`Failed to send transaction: ${options}`)
   }
 
-  const {activeWalletId, activeNetwork, accounts} = wallet.state
-  const {asset, to, value, fee} = options
+  const { activeWalletId, activeNetwork, accounts } = wallet.state
+  const { asset, to, value, fee } = options
 
   //TODO populate the undefined values
   return await wallet.dispatch.sendTransaction({
@@ -324,14 +328,14 @@ export const sendTransaction = async (options: {
  * @param newFee
  */
 export const speedUpTransaction = async (
-    id: string,
-    hash: string,
-    asset: string,
-    activeNetwork: any,
-    tx: string,
-    newFee: number,
-    ) => {
-  const {activeWalletId} = wallet.state
+  id: string,
+  hash: string,
+  asset: string,
+  activeNetwork: any,
+  tx: string,
+  newFee: number,
+) => {
+  const { activeWalletId } = wallet.state
 
   return await wallet.dispatch.updateTransactionFee({
     id,
@@ -354,7 +358,7 @@ export const getQuotes = async (
   to: string,
   amount: BigNumber,
 ): Promise<any> => {
-  const {activeNetwork} = wallet.state
+  const { activeNetwork } = wallet.state
 
   return await wallet.dispatch.getQuotes({
     network: activeNetwork,

@@ -1,10 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react'
-import {
-  View,
-  StyleSheet,
-  ImageBackground,
-  TextInput,
-} from 'react-native'
+import { View, StyleSheet, ImageBackground, TextInput } from 'react-native'
 
 import { RootStackParamList } from '../../types'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -96,9 +91,7 @@ const PasswordCreationScreen = ({
             />
           </View>
           {!!error && <Text variant="error">Passwords don't match</Text>}
-          <Text variant="error">
-            Passwords must be at least 8 characters
-          </Text>
+          <Text variant="error">Passwords must be at least 8 characters</Text>
         </View>
       </View>
 

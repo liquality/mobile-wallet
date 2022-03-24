@@ -1,11 +1,12 @@
-import { AssetDataElementType, StackPayload } from '../../types'
 import React, { FC } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import AssetIcon from '../asset-icon'
 import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faChevronRight } from '@fortawesome/pro-light-svg-icons'
+import { AssetDataElementType, StackPayload } from '../../types'
+import AssetIcon from '../asset-icon'
 import { chainDefaultColors } from '../../core/config'
+import AssetListSwipeableRow from '../asset-list-swipeable-row'
 
 type SubRowProps = {
   parentItem: AssetDataElementType
@@ -21,39 +22,61 @@ const SubRow: FC<SubRowProps> = (props) => {
     ? chainDefaultColors[parentItem.chain]
     : DEFAULT_COLOR
 
+  const handlePressOnRow = () => {
+    onAssetSelected({
+      assetData: {
+        ...item,
+        address: parentItem.address,
+      },
+      screenTitle: item.code,
+    })
+  }
+
   return (
-    <View
-      style={[styles.row, styles.subElement, { borderLeftColor: chainColor }]}
-      key={item.id}>
-      <View style={styles.col1}>
-        <AssetIcon size={25} asset={item.code} />
-        <Text style={styles.name}>{item.name}</Text>
-      </View>
-      <View style={styles.col2}>
-        <Text style={styles.balance}>
-          {item.balance &&
-            item.code &&
-            `${prettyBalance(item.balance, item.code)} ${item.code}`}
-        </Text>
-        <Text style={styles.balanceInUSD}>
-          ${item.balanceInUSD && formatFiat(item.balanceInUSD)}
-        </Text>
-      </View>
-      <View style={styles.col3}>
-        <Pressable
-          onPress={() =>
-            onAssetSelected({
-              assetData: {
-                ...item,
-                address: parentItem.address,
-              },
-              screenTitle: item.code,
-            })
-          }>
-          <FontAwesomeIcon size={20} icon={faChevronRight} color={'#A8AEB7'} />
-        </Pressable>
-      </View>
-    </View>
+    <AssetListSwipeableRow
+      assetData={{
+        ...item,
+        address: parentItem.address,
+      }}
+      assetSymbol={item.code}>
+      <Pressable
+        onPress={handlePressOnRow}
+        style={[styles.row, styles.subElement, { borderLeftColor: chainColor }]}
+        key={item.id}>
+        <View style={styles.col1}>
+          <AssetIcon size={25} asset={item.code} />
+          <Text style={styles.name}>{item.name}</Text>
+        </View>
+        <View style={styles.col2}>
+          <Text style={styles.balance}>
+            {item.balance &&
+              item.code &&
+              `${prettyBalance(item.balance, item.code)} ${item.code}`}
+          </Text>
+          <Text style={styles.balanceInUSD}>
+            ${item.balanceInUSD && formatFiat(item.balanceInUSD)}
+          </Text>
+        </View>
+        <View style={styles.col3}>
+          <Pressable
+            onPress={() =>
+              onAssetSelected({
+                assetData: {
+                  ...item,
+                  address: parentItem.address,
+                },
+                screenTitle: item.code,
+              })
+            }>
+            <FontAwesomeIcon
+              size={20}
+              icon={faChevronRight}
+              color={'#A8AEB7'}
+            />
+          </Pressable>
+        </View>
+      </Pressable>
+    </AssetListSwipeableRow>
   )
 }
 
@@ -65,6 +88,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D9DFE5',
     borderLeftWidth: 3,
     paddingVertical: 10,
+    height: 60,
   },
   col1: {
     flex: 0.35,
