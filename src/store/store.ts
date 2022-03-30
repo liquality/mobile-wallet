@@ -9,14 +9,20 @@ import rootReducer from '../reducers'
 import StorageManager from '../core/storage-manager'
 import { BigNumber } from '@liquality/types'
 import 'react-native-reanimated'
-import { wallet } from '@liquality/wallet-core'
+import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
 import { AssetDataElementType } from '../types'
+import { WalletOptions, Notification } from '@liquality/wallet-core/dist/types'
+import { decrypt, encrypt, Log, pbkdf2 } from '../utils'
+
+// Unwrap the type returned by a promise
+type Awaited<T> = T extends PromiseLike<infer U> ? U : T
 
 //-------------------------1. CREATE AN INSTANCE OF THE STORAGE MANAGER--------------------------------------------------------
 const excludedProps: Array<keyof any> = ['key', 'wallets', 'unlockedAt']
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
+let wallet: Awaited<ReturnType<typeof setupWallet>>
 
 //-------------------------2. CONFIGURE THE STORE---------------------------------------------------------------------
 const persistenceMiddleware: Middleware<
@@ -39,13 +45,26 @@ export const store = configureStore({
 })
 
 //-------------------------3. REGISTER THE CALLBACKS / SUBSCRIBE TO MEANINGFULL EVENTS-----------------------------
-wallet.original.subscribe((mutation, newState) => {
-  // console.log('---->', JSON.stringify(newState))
-  store.dispatch({
-    type: 'UPDATE_WALLET',
-    payload: newState,
+export const initWallet = async () => {
+  const walletOptions: WalletOptions = {
+    createNotification: (notification: Notification): any => {
+      Log(notification.message, 'info')
+    },
+    crypto: {
+      pbkdf2: pbkdf2,
+      decrypt: decrypt,
+      encrypt: encrypt,
+    },
+  }
+  wallet = setupWallet(walletOptions)
+  wallet.original.subscribe((mutation, newState) => {
+    // console.log('---->', JSON.stringify(newState))
+    store.dispatch({
+      type: 'UPDATE_WALLET',
+      payload: newState,
+    })
   })
-})
+}
 
 //-------------------------4. PERFORM ACTIONS ON THE WALLET-------------------------------------------------------------
 export const isNewInstallation = async (): Promise<boolean> => {
@@ -67,6 +86,7 @@ export const createWallet = async (
   password: string,
   mnemonic: string,
 ): Promise<any> => {
+  await initWallet()
   await wallet.dispatch.createWallet({
     key: password,
     mnemonic: mnemonic,

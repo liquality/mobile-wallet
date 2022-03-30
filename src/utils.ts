@@ -1,8 +1,10 @@
-// To make testing easier for team members
-import { InteractionManager } from 'react-native'
+import { InteractionManager, NativeModules } from 'react-native'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
+import { AES } from 'crypto-js'
 import { createWallet } from './store/store'
 import { MNEMONIC, PASSWORD } from '@env'
+
+// const IV_STRING = '0123456789abcdef0123456789abcdef'
 
 export const onOpenSesame = async (dispatch: any, navigation: any) => {
   InteractionManager.runAfterInteractions(() => {
@@ -55,4 +57,50 @@ export const formatDate = (ms: string | number): string => {
   return `${
     date.getMonth() + 1
   }/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+}
+
+export const pbkdf2 = async (
+  password: string,
+  salt: string,
+  iterations: number,
+  length: number,
+  digest: string,
+): Promise<string> => {
+  Log(digest, 'info')
+  const generatedValue = await NativeModules.Aes.pbkdf2(
+    password,
+    salt,
+    iterations,
+    length,
+  )
+
+  return global.Buffer.from(generatedValue).toString('hex')
+}
+
+export const encrypt = (value: string, derivedKey: string): any => {
+  return AES.encrypt(value, derivedKey)
+  // return NativeModules.Aes.encrypt(value, derivedKey, IV_STRING)
+}
+
+export const decrypt = (encrypted: string, derivedKey: string): any => {
+  try {
+    return AES.decrypt(encrypted, derivedKey)
+    // return NativeModules.Aes.decrypt(encrypted, derivedKey, IV_STRING)
+  } catch (e) {
+    return ''
+  }
+}
+
+//TODO This is only a placeholder until we implement a more sophisticated approach to collect logs
+const logDump: Record<string, string[]> = {
+  info: [],
+  warn: [],
+  error: [],
+}
+
+export const Log = (
+  message: string,
+  level: 'info' | 'warn' | 'error',
+): void => {
+  logDump[level].push(message)
 }
