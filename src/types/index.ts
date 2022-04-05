@@ -118,3 +118,19 @@ export enum ActionEnum {
   SWAP = 'SWAP',
   RECEIVE = 'RECEIVE',
 }
+
+export enum TimeLimitEnum {
+  ALL = 'All',
+  LAST_24HRS = 'last 24 hrs',
+  LAST_WEEK = 'last week',
+  LAST_MONTH = 'last month',
+}
+
+export enum ActivityStatusEnum {
+  PENDING = 'Pending',
+  COMPLETED = 'Completed',
+  CANCELLED = 'Canceled',
+  REFUNDED = 'Refunded',
+  NEEDS_ATTENTION = 'Needs Attention',
+  FAILED = 'Failed',
+}

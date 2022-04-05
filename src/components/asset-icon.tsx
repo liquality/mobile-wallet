@@ -55,7 +55,7 @@ const AssetIcon: FC<AssetIconType> = (props) => {
     asset?.toLowerCase() === 'btc' ||
     chain?.toLowerCase() === ChainId.Bitcoin
   ) {
-    return <BTCIcon width={size} height={SIZE} style={styles.icon} />
+    return <BTCIcon width={size} height={size} style={styles.icon} />
   } else if (chain?.toLowerCase() === ChainId.Ethereum) {
     return <ETHIcon width={size} height={size} style={styles.icon} />
   } else {

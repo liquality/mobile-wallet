@@ -10,7 +10,6 @@ import { formatFiat, prettyBalance } from '../../../core/utils/coin-formatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import {
-  faGreaterThan,
   faExchange,
   faArrowDown,
   faArrowUp,
@@ -106,22 +105,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         </Pressable>
       </View>
       <View style={styles.contentBlock}>
-        <ActivityFlatList navigate={navigation.navigate} selectedAsset={code}>
-          <View style={styles.activityActionBar}>
-            <Pressable style={styles.activityBtns}>
-              <FontAwesomeIcon
-                size={10}
-                icon={faGreaterThan}
-                color={'#A8AEB7'}
-              />
-              <Text style={styles.filterLabel}>Filter</Text>
-            </Pressable>
-            <Pressable style={styles.activityBtns}>
-              <FontAwesomeIcon size={10} icon={faArrowDown} color={'#A8AEB7'} />
-              <Text style={styles.exportLabel}>Export</Text>
-            </Pressable>
-          </View>
-        </ActivityFlatList>
+        <ActivityFlatList navigate={navigation.navigate} selectedAsset={code} />
       </View>
     </View>
   )

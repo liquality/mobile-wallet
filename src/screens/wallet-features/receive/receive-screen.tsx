@@ -113,7 +113,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
           </Fragment>
         )}
       </View>
-      <View style={styles.ActionBlock}>
+      <View style={styles.actionBlock}>
         <Button
           type="secondary"
           variant="m"
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: '#9D4DFA',
   },
-  ActionBlock: {
+  actionBlock: {
     flex: 0.3,
     flexDirection: 'row',
     justifyContent: 'space-between',

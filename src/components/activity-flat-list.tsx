@@ -21,18 +21,18 @@ import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import ProgressCircle from './animations/progress-circle'
 import { formatDate } from '../utils'
 import { cryptoToFiat, dpUI } from '../core/utils/coin-formatter'
-import SuccessIcon from '../assets/icons/success-icon.svg'
-import RefundedIcon from '../assets/icons/refunded.svg'
+import SuccessIcon from '../assets/icons/activity-status/completed.svg'
+import RefundedIcon from '../assets/icons/activity-status/refunded.svg'
 import { BigNumber } from '@liquality/types'
+import { MOCKED_HISTORY_ITEMS } from './activity-flat-list-mock'
+import ActivityFilter from './activity-filter'
 
 const ActivityFlatList = ({
   navigate,
   selectedAsset,
-  children,
 }: {
   navigate: (...args: any[]) => void
   selectedAsset?: string
-  children: React.ReactElement
 }) => {
   const { history = [], fiatRates } = useAppSelector((state) => {
     const { activeNetwork, activeWalletId, history: historyObject } = state
@@ -40,6 +40,9 @@ const ActivityFlatList = ({
     if (activeNetwork && activeWalletId && historyObject) {
       historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
     }
+
+    // TODO: Remove this
+    historyItems = MOCKED_HISTORY_ITEMS
 
     return {
       fiatRates: state.fiatRates,
@@ -166,7 +169,7 @@ const ActivityFlatList = ({
       data={history}
       renderItem={renderActivity}
       keyExtractor={(item) => item.id}
-      ListHeaderComponent={children}
+      ListHeaderComponent={<ActivityFilter numOfResults={history.length} />}
     />
   )
 }

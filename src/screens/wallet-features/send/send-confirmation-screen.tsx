@@ -7,7 +7,7 @@ import { chains, unitToCurrency } from '@liquality/cryptoassets'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { formatDate } from '../../../utils'
 import ProgressCircle from '../../../components/animations/progress-circle'
-import SuccessIcon from '../../../assets/icons/success-icon.svg'
+import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
 import { useAppSelector } from '../../../hooks'
 import { HistoryItem } from '@liquality/core/dist/types'
 

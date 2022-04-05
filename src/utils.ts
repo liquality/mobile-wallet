@@ -61,3 +61,10 @@ export const formatDate = (ms: string | number): string => {
     date.getMonth() + 1
   }/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
 }
+
+export const capitalizeFirstLetter = (str: string) => {
+  if (!str) {
+    return str
+  }
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
