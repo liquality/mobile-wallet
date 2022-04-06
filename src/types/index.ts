@@ -23,13 +23,14 @@ export type SwapAssetPairType = {
 }
 
 export type SwapInfoType = {
-  swapProviderType: string
   fromAsset: AssetDataElementType
   toAsset: AssetDataElementType
   fromAmount: number
   toAmount: number
   fromNetworkFee: number
   toNetworkFee: number
+  fromGasSpeed: string
+  toGasSpeed: string
 }
 
 export type StackPayload = {

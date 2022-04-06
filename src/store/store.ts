@@ -47,6 +47,9 @@ export const store = configureStore({
 //-------------------------3. REGISTER THE CALLBACKS / SUBSCRIBE TO MEANINGFULL EVENTS-----------------------------
 export const initWallet = async () => {
   const walletOptions: WalletOptions = {
+    initialState: {
+      activeNetwork: 'testnet',
+    },
     createNotification: (notification: Notification): any => {
       Log(notification.message, 'info')
     },
@@ -120,10 +123,7 @@ export const populateWallet = async (): Promise<void> => {
       network: activeNetwork || 'testnet',
     })
     .catch((e) => {
-      store.dispatch({
-        type: 'ERROR',
-        payload: `Failed to change active network: ${e}`,
-      })
+      Log(`Failed to change active network: ${e}`, 'error')
     })
 
   await wallet.dispatch
@@ -131,10 +131,7 @@ export const populateWallet = async (): Promise<void> => {
       network: activeNetwork,
     })
     .catch((e) => {
-      store.dispatch({
-        type: 'ERROR',
-        payload: `Failed to update market data: ${e}`,
-      })
+      Log(`Failed to update market data: ${e}`, 'error')
     })
 
   await wallet.dispatch
@@ -144,10 +141,7 @@ export const populateWallet = async (): Promise<void> => {
       assets: enabledAssets,
     })
     .catch((e) => {
-      store.dispatch({
-        type: 'ERROR',
-        payload: `Failed update balances: ${e}`,
-      })
+      Log(`Failed update balances: ${e}`, 'error')
     })
 
   await wallet.dispatch
@@ -155,10 +149,7 @@ export const populateWallet = async (): Promise<void> => {
       assets: enabledAssets,
     })
     .catch((e) => {
-      store.dispatch({
-        type: 'ERROR',
-        payload: `Failed to update fiat rates: ${e}`,
-      })
+      Log(`Failed to update fiat rates: ${e}`, 'error')
     })
 
   await wallet.dispatch
@@ -166,10 +157,19 @@ export const populateWallet = async (): Promise<void> => {
       asset: enabledAssets,
     })
     .catch((e) => {
-      store.dispatch({
-        type: 'ERROR',
-        payload: `Failed to update fees: ${e}`,
-      })
+      Log(`Failed to update fees: ${e}`, 'error')
+    })
+}
+
+export const updateMarketData = async (): Promise<void> => {
+  const { activeNetwork } = store.getState()
+
+  await wallet.dispatch
+    .updateMarketData({
+      network: activeNetwork,
+    })
+    .catch((e) => {
+      Log(`Failed to update market data: ${e}`, 'error')
     })
 }
 
@@ -233,51 +233,6 @@ export const restoreWallet = async (password: string): Promise<any> => {
   })
 }
 
-export const fetchTransactionUpdates = async (): Promise<void> => {
-  // const { activeNetwork, activeWalletId, history } = store.getState()
-  // if (!activeNetwork || !activeWalletId || !history) {
-  //   return
-  // }
-  //
-  // const historyItems =
-  //   history[activeNetwork]?.[activeWalletId]?.filter(
-  //     (item) =>
-  //       ['SEND', 'SWAP'].includes(item.type) &&
-  //       !['SUCCESS', 'REFUNDED'].includes(item.status),
-  //   ) || []
-  //
-  // for (const item of historyItems) {
-  //   const fromAccount = await wallet.getAccount(
-  //     cryptoassets[item.from].chain,
-  //     activeNetwork,
-  //   )
-  //   const toAccount = await wallet.getAccount(
-  //     cryptoassets[item.to].chain,
-  //     activeNetwork,
-  //   )
-  //   if (!fromAccount || !toAccount) {
-  //     continue
-  //   }
-  //
-  //   if (item.type === 'SWAP') {
-  //     if (
-  //       item.swapTransaction &&
-  //       item.swapTransaction.from &&
-  //       item.swapTransaction.to
-  //     ) {
-  //       wallet
-  //         .getSwapProvider('LIQUALITY')
-  //         .runRulesEngine(fromAccount, toAccount, item.swapTransaction)
-  //     }
-  //   } else if (item.type === 'SEND') {
-  //     const assets: any[] = fromAccount.getAssets()
-  //     if (assets.length > 0 && item.sendTransaction) {
-  //       assets[0].runRulesEngine(item.sendTransaction)
-  //     }
-  //   }
-  // }
-}
-
 /**
  * Retrieves active swap providers from the wallet
  */
@@ -288,26 +243,26 @@ export const initSwaps = (): Partial<Record<any, any>> => {
 
 /**
  * Performs a swap
- * @param swapProviderType
  * @param from
  * @param to
  * @param fromAmount
  * @param toAmount
  * @param fromNetworkFee
  * @param toNetworkFee
- * @param activeNetwork
+ * @param fromGasSpeed
+ * @param toGasSpeed
  */
 export const performSwap = async (
-  swapProviderType: string,
   from: AssetDataElementType,
   to: AssetDataElementType,
   fromAmount: BigNumber,
   toAmount: BigNumber,
   fromNetworkFee: BigNumber,
   toNetworkFee: BigNumber,
-  activeNetwork: any,
+  fromGasSpeed: string,
+  toGasSpeed: string,
 ): Promise<Partial<any> | void> => {
-  const { activeWalletId } = wallet.state
+  const { activeWalletId, activeNetwork } = wallet.state
 
   const quote: Partial<any> = {
     from: from.code,
@@ -322,15 +277,14 @@ export const performSwap = async (
     claimFee: toNetworkFee.toNumber(),
   }
 
-  //TODO populate the undefined values
   return await wallet.dispatch.newSwap({
     network: activeNetwork,
     walletId: activeWalletId,
     quote,
     fee: fromNetworkFee.toNumber(),
     claimFee: toNetworkFee,
-    feeLabel: undefined,
-    claimFeeLabel: undefined,
+    feeLabel: fromGasSpeed,
+    claimFeeLabel: toGasSpeed,
   })
 }
 
@@ -418,13 +372,21 @@ export const getQuotes = async (
   amount: BigNumber,
 ): Promise<any> => {
   const { activeNetwork } = wallet.state
+  const networkAccounts = wallet.getters.networkAccounts
+
+  const fromAccount = networkAccounts.find(
+    (account) => account.assets && account.assets.includes(from),
+  )
+  const toAccount = networkAccounts.find(
+    (account) => account.assets && account.assets.includes(to),
+  )
 
   return await wallet.dispatch.getQuotes({
     network: activeNetwork,
     from,
     to,
-    fromAccountId: undefined,
-    toAccountId: undefined,
+    fromAccountId: fromAccount.id,
+    toAccountId: toAccount.id,
     amount: amount,
   })
 }

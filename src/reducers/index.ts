@@ -1,12 +1,11 @@
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
+import { RootState } from '@liquality/wallet-core/dist/store/types'
 
-const rootReducer: Reducer<any, PayloadAction<any>> = (state, action): any => {
+const rootReducer: Reducer<RootState, PayloadAction<RootState>> = (
+  state,
+  action,
+): any => {
   switch (action.type) {
-    case 'SWITCH_NAVIGATORS':
-      return {
-        ...state,
-        navigator: action.payload.navigator,
-      }
     case 'UPDATE_ACCOUNT':
       return {
         ...state,
@@ -32,7 +31,7 @@ const rootReducer: Reducer<any, PayloadAction<any>> = (state, action): any => {
         ...action.payload,
       }
     case 'UPDATE_MARKET_DATA':
-      const marketData = action.payload.marketData || []
+      const marketData = action.payload.marketData || {}
       return {
         ...state,
         marketData: [...marketData],

@@ -30,7 +30,7 @@ import GasController from '../../../components/ui/gas-controller'
 import Label from '../../../components/ui/label'
 import Warning from '../../../components/ui/warning'
 import SwapRates from '../../../components/swap-rates'
-import { initSwaps } from '../../../store/store'
+import { getQuotes, updateMarketData } from '../../../store/store'
 import {
   ActionEnum,
   AssetDataElementType,
@@ -74,8 +74,9 @@ type SwapScreenProps = NativeStackScreenProps<RootStackParamList, 'SwapScreen'>
 const SwapScreen: FC<SwapScreenProps> = (props) => {
   const { navigation, route } = props
   const { swapAssetPair } = route.params
-  const { marketData = [] } = useAppSelector((state) => ({
+  const { marketData = {}, activeNetwork } = useAppSelector((state) => ({
     marketData: state.marketData,
+    activeNetwork: state.activeNetwork,
   }))
   const [areGasControllersVisible, setGasControllersVisible] = useState(true)
   const [fromAsset, setFromAsset] = useState<AssetDataElementType | undefined>(
@@ -89,7 +90,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [maximumValue, setMaximumValue] = useState<BigNumber>(new BigNumber(0))
   const [minimumValue, setMinimumValue] = useState<BigNumber>(new BigNumber(0))
   const [bestQuote, setBestQuote] = useState<BigNumber>(new BigNumber(0))
-  const [swapProviders, setSwapProviders] = useState<any[]>([])
+  const [quotes, setQuotes] = useState<any[]>([])
   const [state, dispatch] = useReducer(reducer, {})
 
   const toggleGasControllers = () => {
@@ -127,29 +128,30 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
     navigation.navigate('SwapReviewScreen', {
       swapTransaction: {
-        swapProviderType: selectedQuote.provider,
         fromAsset,
         toAsset,
-        fromAmount: state.fromAmount,
-        toAmount: bestQuote,
-        toNetworkFee: toNetworkFee.current,
-        fromNetworkFee: fromNetworkFee.current,
+        fromAmount: state.fromAmount.toNumber(),
+        toAmount: bestQuote.toNumber(),
+        toNetworkFee: toNetworkFee.current.toNumber(),
+        fromNetworkFee: fromNetworkFee.current.toNumber(),
+        fromGasSpeed: '',
+        toGasSpeed: '',
       },
-      screenTitle: `Swap ${fromAsset.code} to ${toAsset.code}`,
+      screenTitle: `Swap ${fromAsset.code} to ${toAsset.code} review`,
     })
   }
 
   const min = useCallback((): BigNumber => {
     //TODO why do we have to check against the liquality type
-    const liqualityMarket = marketData?.find(
+    const liqualityMarket = marketData?.[activeNetwork]?.find(
       (pair) => pair.from === fromAsset?.code && pair.to === toAsset?.code,
       // && getSwapProviderConfig(this.activeNetwork, pair.provider).type ===
       //   SwapProviderType.LIQUALITY,
     )
-    return liqualityMarket
+    return liqualityMarket && liqualityMarket.min
       ? new BigNumber(liqualityMarket.min)
       : new BigNumber(0)
-  }, [fromAsset?.code, marketData, toAsset?.code])
+  }, [activeNetwork, fromAsset?.code, marketData, toAsset?.code])
 
   const handleMinPress = () => {
     setMaximumValue(new BigNumber(0))
@@ -174,29 +176,17 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     async (amount: BigNumber) => {
       let bestQuoteAmount = new BigNumber(0)
       if (fromAsset?.code && toAsset?.code) {
-        const promises: Promise<any>[] = []
-        for (const provider of swapProviders) {
-          const quote = provider.getQuote(
-            marketData.filter((md) =>
-              selectedQuote ? md.provider === selectedQuote.provider : true,
-            ),
-            fromAsset?.code,
-            toAsset?.code,
-            amount,
-          )
-          if (quote) {
-            promises.push(quote)
-          }
-        }
+        const quoteList = await getQuotes(fromAsset.code, toAsset.code, amount)
 
-        if (promises.length === 0) {
+        if (quoteList.length === 0) {
           setError(
             "This pair isn't traded yet. See our list of compatible pairs here. You can also suggest list of your token on Liquality Discord",
           )
         } else {
-          const responses = await Promise.all(promises)
-          const sortedQuotes = sortQuotes(responses.filter((q) => !!q))
+          const sortedQuotes = sortQuotes(quoteList)
+          setQuotes(sortedQuotes)
           if (sortedQuotes.length) {
+            setSelectedQuote(sortedQuotes[0])
             bestQuoteAmount = new BigNumber(
               unitToCurrency(
                 cryptoassets[toAsset.code],
@@ -208,17 +198,15 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       }
 
       if (bestQuoteAmount.eq(0)) {
-        setError(
-          `Quotes not found: ${selectedQuote?.min} - ${selectedQuote?.max}`,
-        )
+        setError('Quotes not found')
       }
       setBestQuote(bestQuoteAmount)
     },
-    [fromAsset, marketData, selectedQuote, swapProviders, toAsset],
+    [fromAsset?.code, toAsset?.code],
   )
 
   useEffect(() => {
-    setSwapProviders(Object.values(initSwaps()))
+    updateMarketData()
   }, [])
 
   useEffect(() => {
@@ -277,13 +265,15 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         </View>
         <View style={styles.wrapper}>
           <Label text="Available" variant="light" />
-          <Text style={[styles.font, styles.amount]}>
-            {fromAsset?.balance &&
-              `${prettyBalance(
-                new BigNumber(fromAsset?.balance),
-                fromAsset?.code,
-              )} ${fromAsset?.code}`}
-          </Text>
+          {fromAsset?.balance && fromAsset?.code && (
+            <Text style={[styles.font, styles.amount]}>
+              {fromAsset?.balance &&
+                `${prettyBalance(
+                  new BigNumber(fromAsset.balance),
+                  fromAsset.code,
+                )} ${fromAsset.code}`}
+            </Text>
+          )}
         </View>
       </View>
       <View style={styles.box}>
@@ -302,12 +292,16 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         </Pressable>
       </View>
 
-      <SwapRates
-        fromAsset={fromAsset?.code || 'BTC'}
-        toAsset={toAsset?.code || 'ETH'}
-        selectQuote={handleSelectQuote}
-        style={{ paddingHorizontal: 20 }}
-      />
+      {fromAsset?.code && toAsset?.code && (
+        <SwapRates
+          fromAsset={fromAsset.code}
+          toAsset={toAsset.code}
+          quotes={quotes}
+          selectQuote={handleSelectQuote}
+          selectedQuote={selectedQuote}
+          style={{ paddingHorizontal: 20 }}
+        />
+      )}
       <View style={[styles.row, styles.box]}>
         <Pressable
           onPress={toggleGasControllers}

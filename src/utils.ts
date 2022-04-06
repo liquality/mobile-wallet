@@ -41,9 +41,9 @@ export const sortQuotes = (quotes: any[]): any[] => {
     const isCrossChain = cryptoassets[a.from].chain !== cryptoassets[a.to].chain
     if (isCrossChain) {
       // Prefer Liquality for crosschain swaps where liquidity is available
-      if (a.provider === 'LIQUALITY') {
+      if (a.provider?.toUpperCase() === 'LIQUALITY') {
         return -1
-      } else if (b.provider === 'LIQUALITY') {
+      } else if (b.provider?.toUpperCase() === 'LIQUALITY') {
         return 1
       }
     }
@@ -77,15 +77,27 @@ export const pbkdf2 = async (
   return global.Buffer.from(generatedValue).toString('hex')
 }
 
-export const encrypt = (value: string, derivedKey: string): any => {
-  return AES.encrypt(value, derivedKey)
-  // return NativeModules.Aes.encrypt(value, derivedKey, IV_STRING)
+export const encrypt = async (
+  value: string,
+  derivedKey: string,
+): Promise<any> => {
+  return Promise.resolve(AES.encrypt(value, derivedKey))
+  // const encrypted = await NativeModules.Aes.encrypt(
+  //   value,
+  //   derivedKey,
+  //   IV_STRING,
+  // )
+  // console.log('encrypted: ', encrypted, encrypted0)
+  // return encrypted
 }
 
-export const decrypt = (encrypted: string, derivedKey: string): any => {
+export const decrypt = async (
+  encrypted: string,
+  derivedKey: string,
+): Promise<any> => {
   try {
-    return AES.decrypt(encrypted, derivedKey)
-    // return NativeModules.Aes.decrypt(encrypted, derivedKey, IV_STRING)
+    return Promise.resolve(AES.decrypt(encrypted, derivedKey))
+    // return await NativeModules.Aes.decrypt(encrypted, derivedKey, IV_STRING)
   } catch (e) {
     return ''
   }

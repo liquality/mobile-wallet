@@ -10,6 +10,7 @@ import { useAppSelector } from '../../../hooks'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
 import Button from '../../../theme/button'
 import { BigNumber } from '@liquality/types'
+import { performSwap } from '../../../store/store'
 
 type SwapReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -28,39 +29,39 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   const handleInitiateSwap = async () => {
     setIsLoading(true)
     if (swapTransaction && activeNetwork) {
-      // const {
-      //   fromAsset,
-      //   toAsset,
-      //   fromAmount,
-      //   toAmount,
-      //   fromNetworkFee,
-      //   toNetworkFee,
-      //   swapProviderType,
-      // }: SwapInfoType = swapTransaction
-      // try {
-      // const transaction = await performSwap(
-      //   swapProviderType?.toUpperCase(),
-      //   fromAsset,
-      //   toAsset,
-      //   fromAmount,
-      //   toAmount,
-      //   fromNetworkFee,
-      //   toNetworkFee,
-      //   activeNetwork,
-      // )
-      // if (transaction) {
-      //   navigation.navigate('SwapConfirmationScreen', {
-      //     swapTransactionConfirmation: transaction,
-      //     screenTitle: `Swap ${fromAsset.code} to ${toAsset.code} Details`,
-      //   })
-      // } else {
-      //   setIsLoading(false)
-      //   Alert.alert('Failed to perform swap')
-      // }
-      // } catch (error) {
-      //   setIsLoading(false)
-      //   Alert.alert('Failed to perform swap')
-      // }
+      const {
+        fromAsset,
+        toAsset,
+        fromAmount,
+        toAmount,
+        fromNetworkFee,
+        toNetworkFee,
+      }: SwapInfoType = swapTransaction
+
+      try {
+        const transaction = await performSwap(
+          fromAsset,
+          toAsset,
+          fromAmount,
+          toAmount,
+          fromNetworkFee,
+          toNetworkFee,
+          '',
+          '',
+        )
+        if (transaction) {
+          navigation.navigate('SwapConfirmationScreen', {
+            swapTransactionConfirmation: transaction,
+            screenTitle: `Swap ${fromAsset.code} to ${toAsset.code} Details`,
+          })
+        } else {
+          setIsLoading(false)
+          Alert.alert('Failed to perform swap')
+        }
+      } catch (error) {
+        setIsLoading(false)
+        Alert.alert('Failed to perform swap')
+      }
     } else {
       setIsLoading(false)
       Alert.alert('Can not perform swap')

@@ -3,7 +3,6 @@ import {
   Modal,
   StyleSheet,
   View,
-  Text,
   FlatList,
   Pressable,
   Alert,
@@ -14,11 +13,16 @@ import Label from './ui/label'
 import Logo from '../assets/icons/infinity.svg'
 import LiqualityBoost from '../assets/icons/swap-providers/liqualityboost.svg'
 import Sovryn from '../assets/icons/swap-providers/sovryn.svg'
+import Thorchain from '../assets/icons/swap-providers/thorchain.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTimes, faCheck } from '@fortawesome/pro-light-svg-icons'
 import SwapTypesInfo from './swap-types-info'
-import { useAppSelector } from '../hooks'
 import Button from '../theme/button'
+import { unitToCurrency } from '@liquality/cryptoassets'
+import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
+import { dpUI } from '@liquality/wallet-core/dist/utils/coinFormatter'
+import Box from '../theme/box'
+import Text from '../theme/text'
 
 const ListHeader: FC = () => {
   const styles = StyleSheet.create({
@@ -41,19 +45,27 @@ const ListHeader: FC = () => {
 type SwapRatesProps = {
   fromAsset: string
   toAsset: string
+  quotes: any[]
+  selectedQuote: any
   selectQuote: (quote: any) => void
   style?: StyleProp<ViewStyle>
 }
 
 const SwapRates: FC<SwapRatesProps> = (props) => {
-  const { fromAsset, toAsset, selectQuote, style } = props
-  const { marketData = [] } = useAppSelector((state) => ({
-    marketData: state.marketData,
-  }))
-  const [selectedItem, setSelectedItem] = useState<any>()
+  const { selectQuote, style, quotes, selectedQuote, fromAsset, toAsset } =
+    props
+  const [selectedItem, setSelectedItem] = useState<any>(selectedQuote)
   const [isRatesModalVisible, setIsRatesModalVisible] = useState(false)
   const [isSwapTypesModalVisible, setIsSwapTypesModalVisible] = useState(false)
-  const [quotes, setQuotes] = useState<any[]>([])
+
+  const calculateQuoteRate = (quote: any) => {
+    const fromAmount = unitToCurrency(
+      cryptoassets[quote.from],
+      quote.fromAmount,
+    )
+    const toAmount = unitToCurrency(cryptoassets[quote.to], quote.toAmount)
+    return toAmount.div(fromAmount)
+  }
 
   const getSwapProviderIcon = (marketQuotes: any): React.ReactElement => {
     switch (marketQuotes.provider) {
@@ -63,6 +75,8 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
         return <LiqualityBoost width={15} height={15} style={styles.icon} />
       case 'sovryn':
         return <Sovryn width={15} height={15} style={styles.icon} />
+      case 'thorchain':
+        return <Thorchain width={15} height={15} style={styles.icon} />
       default:
         return <Logo width={15} height={15} style={styles.icon} />
     }
@@ -77,6 +91,10 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
     }
   }
 
+  useEffect(() => {
+    setSelectedItem(selectedQuote)
+  }, [selectedQuote])
+
   const renderItem = ({ item }: { item: any }) => {
     return (
       <Pressable
@@ -86,7 +104,9 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
         ]}
         key={item.provider}
         onPress={() => setSelectedItem(item)}>
-        <Text style={[styles.text, styles.half]}>{item.rate}</Text>
+        <Text style={[styles.text, styles.half]}>
+          {dpUI(calculateQuoteRate(item)).toString()}
+        </Text>
         <View style={styles.providerCell}>
           {getSwapProviderIcon(item)}
           <Text style={styles.text}>{item.provider}</Text>
@@ -98,28 +118,34 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
     )
   }
 
-  useEffect(() => {
-    setQuotes(
-      marketData?.filter(
-        (item) => item.from === fromAsset && item.to === toAsset,
-      ) || [],
-    )
-  }, [fromAsset, marketData, toAsset])
-
   return (
     <View style={[styles.box, styles.row, style]}>
-      <View style={styles.row}>
-        <Label text="RATE" variant="strong" />
-        <Button
-          type="tertiary"
-          variant="s"
-          label="Liquality"
-          onPress={() => setIsRatesModalVisible(true)}
-          isBorderless={false}
-          isActive={true}>
-          <Logo width={20} style={styles.icon} />
-        </Button>
-      </View>
+      <Box
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center">
+        <Box>
+          <Label text="RATE" variant="strong" />
+          <Button
+            type="tertiary"
+            variant="s"
+            label="Liquality"
+            onPress={() => setIsRatesModalVisible(true)}
+            isBorderless={false}
+            isActive={true}>
+            <Logo width={20} style={styles.icon} />
+          </Button>
+          {selectedQuote && (
+            <Box flexDirection="row" marginTop="s">
+              <Text variant="amountLabel">{`${fromAsset} = `}</Text>
+              <Text variant="amount">
+                {dpUI(calculateQuoteRate(selectedQuote)).toString()}
+              </Text>
+              <Text variant="amountLabel">{` ${toAsset}`}</Text>
+            </Box>
+          )}
+        </Box>
+      </Box>
       <Pressable onPress={() => setIsSwapTypesModalVisible(true)}>
         <Text style={[styles.text, styles.link]}>Swap Types</Text>
       </Pressable>

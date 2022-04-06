@@ -190,14 +190,13 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 1,
     backgroundColor: '#FFFFFF',
   },
   overviewBlock: {
     justifyContent: 'center',
     width: '100%',
     height: 225,
-    paddingBottom: 20,
+    paddingVertical: 10,
   },
   assets: {
     fontFamily: 'Montserrat-Regular',

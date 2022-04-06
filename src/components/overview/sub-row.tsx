@@ -42,8 +42,11 @@ const SubRow: FC<SubRowProps> = (props) => {
       assetSymbol={item.code}>
       <Pressable
         onPress={handlePressOnRow}
-        style={[styles.row, styles.subElement, { borderLeftColor: chainColor }]}
-        key={item.id}>
+        style={[
+          styles.row,
+          styles.subElement,
+          { borderLeftColor: chainColor },
+        ]}>
         <View style={styles.col1}>
           <AssetIcon size={25} asset={item.code} />
           <Text style={styles.name}>{item.name}</Text>

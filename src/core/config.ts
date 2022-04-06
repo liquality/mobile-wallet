@@ -159,28 +159,3 @@ export const customConfig = {
     },
   },
 }
-
-class CustomConfig {
-  private readonly _state: any
-
-  constructor(infuraAPIKey: string, state: any) {
-    this._state = state
-  }
-
-  public getDefaultEnabledAssets(network: any): string[] {
-    return (
-      this._state.activeWalletId &&
-      this._state?.enabledAssets?.[network]?.[this._state.activeWalletId]
-    )
-  }
-
-  public getDefaultEnabledChains(): any[] {
-    return customConfig.chains
-  }
-
-  public getDefaultNetwork(): any {
-    return this._state.activeNetwork
-  }
-}
-
-export default CustomConfig

@@ -1,22 +1,15 @@
 import React from 'react'
-import {
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { ImageBackground, Pressable, StyleSheet, View } from 'react-native'
 import { formatFiat, prettyBalance } from '../../../core/utils/coin-formatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import ActivityFlatList from '../../../components/activity-flat-list'
-import {
-  faGreaterThan,
-  faExchange,
-  faArrowDown,
-  faArrowUp,
-} from '@fortawesome/pro-light-svg-icons'
+import { faGreaterThan, faArrowDown } from '@fortawesome/pro-light-svg-icons'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AssetDataElementType, RootStackParamList } from '../../../types'
+import { BigNumber } from '@liquality/types'
+import RoundButton from '../../../theme/round-button'
+import Box from '../../../theme/box'
+import Text from '../../../theme/text'
 
 type AssetScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -49,63 +42,48 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   }
 
   return (
-    <View style={styles.container}>
+    <Box flex={1} backgroundColor="mainBackground">
       <ImageBackground
         style={styles.overviewBlock}
         source={require('../../../assets/bg/action-block-bg.png')}>
-        <View style={styles.balance}>
+        <Box flexDirection="row" justifyContent="center" alignItems="flex-end">
           <Text style={styles.balanceInUSD}>${formatFiat(balanceInUSD!)}</Text>
-        </View>
-        <View style={styles.balance}>
+        </Box>
+        <Box flexDirection="row" justifyContent="center" alignItems="flex-end">
           <Text style={styles.balanceInNative} numberOfLines={1}>
-            {prettyBalance(balance!, code!)}
+            {prettyBalance(new BigNumber(balance), code!)}
           </Text>
           <Text style={styles.nativeCurrency}>{code}</Text>
-        </View>
+        </Box>
         <Text style={styles.address}>
           {`${address?.substring(0, 4)}...${address?.substring(
             address?.length - 4,
           )}`}
         </Text>
-        <View style={styles.btnContainer}>
-          <View style={styles.btnWrapper}>
-            <Pressable style={styles.btn} onPress={handleSendPress}>
-              <FontAwesomeIcon
-                icon={faArrowUp}
-                color={'#9D4DFA'}
-                size={20}
-                style={styles.smallIcon}
-              />
-            </Pressable>
-            <Text style={styles.btnText}>Send</Text>
-          </View>
-          <View style={styles.btnWrapper}>
-            <Pressable style={styles.btn} onPress={handleSwapPress}>
-              <FontAwesomeIcon
-                icon={faExchange}
-                size={30}
-                color={'#9D4DFA'}
-                style={styles.smallIcon}
-              />
-            </Pressable>
-            <Text style={styles.btnText}>Swap</Text>
-          </View>
-          <View style={styles.btnWrapper}>
-            <Pressable style={styles.btn} onPress={handleReceivePress}>
-              <FontAwesomeIcon
-                icon={faArrowDown}
-                size={20}
-                color={'#9D4DFA'}
-                style={styles.smallIcon}
-              />
-            </Pressable>
-            <Text style={styles.btnText}>Receive</Text>
-          </View>
-        </View>
+        <Box flexDirection="row" justifyContent="center" marginTop="l">
+          <RoundButton
+            onPress={handleSendPress}
+            label="Send"
+            type="SEND"
+            variant="smallPrimary"
+          />
+          <RoundButton
+            onPress={handleSwapPress}
+            label="Swap"
+            type="SWAP"
+            variant="largePrimary"
+          />
+          <RoundButton
+            onPress={handleReceivePress}
+            label="Receive"
+            type="RECEIVE"
+            variant="smallPrimary"
+          />
+        </Box>
       </ImageBackground>
       <View style={styles.tabBlack}>
         <Pressable style={[styles.leftHeader, styles.headerFocused]}>
-          <Text style={styles.headerText}>ACTIVITY</Text>
+          <Text variant="tabHeader">ACTIVITY</Text>
         </Pressable>
       </View>
       <View style={styles.contentBlock}>
@@ -126,26 +104,16 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
           </View>
         </ActivityFlatList>
       </View>
-    </View>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 1,
-    backgroundColor: '#FFFFFF',
-  },
   overviewBlock: {
-    flex: 0.3,
     justifyContent: 'center',
     width: '100%',
-    paddingBottom: 20,
-  },
-  balance: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
+    height: 225,
+    paddingVertical: 10,
   },
   balanceInUSD: {
     color: '#FFFFFF',
@@ -177,37 +145,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
   },
-  btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  btnWrapper: {
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  btn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 44,
-    height: 44,
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 7,
-    marginTop: 17,
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: '#FFFFFF',
-  },
-  btnText: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#FFFFFF',
-    fontWeight: '600',
-    fontSize: 13,
-    marginTop: 11,
-  },
-  smallIcon: {
-    margin: 15,
-  },
   tabBlack: {
     flexDirection: 'row',
     alignItems: 'stretch',
@@ -224,10 +161,6 @@ const styles = StyleSheet.create({
   headerFocused: {
     borderBottomWidth: 1,
     borderBottomColor: '#000',
-  },
-  headerText: {
-    fontSize: 13,
-    fontWeight: '600',
   },
   activityActionBar: {
     flexDirection: 'row',
