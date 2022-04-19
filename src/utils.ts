@@ -1,8 +1,14 @@
 import { InteractionManager, NativeModules } from 'react-native'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { AES } from 'crypto-js'
-import { createWallet } from './store/store'
+import {
+  createWallet,
+  fetchFeesForAsset,
+  fetchSwapProvider,
+} from './store/store'
 import { MNEMONIC, PASSWORD } from '@env'
+import { BigNumber } from '@liquality/types'
+import { GasFees } from './types'
 
 // const IV_STRING = '0123456789abcdef0123456789abcdef'
 
@@ -111,8 +117,58 @@ const logDump: Record<string, string[]> = {
 }
 
 export const Log = (
-  message: string,
+  message: unknown,
   level: 'info' | 'warn' | 'error',
 ): void => {
-  logDump[level].push(message)
+  logDump[level].push(JSON.stringify(message))
+}
+
+export const calculateFees = async (
+  activeNetwork: string,
+  activeWalletId: string,
+  selectedQuote: any,
+  asset: string,
+  max: boolean,
+  txSource: 'from' | 'to',
+): Promise<GasFees> => {
+  if (!selectedQuote) throw new Error('Invalid arguments')
+  let fees: GasFees = {
+    slow: new BigNumber(0),
+    average: new BigNumber(0),
+    fast: new BigNumber(0),
+    custom: new BigNumber(0),
+  }
+  //TODO set an appropriate value for the custom fee
+  const assetFees = await fetchFeesForAsset(asset)
+  const swapProvider = fetchSwapProvider(selectedQuote.provider)
+  const feePrices = Object.values(assetFees).map((fee: BigNumber) =>
+    fee.toNumber(),
+  )
+  const params = {
+    network: activeNetwork,
+    walletId: activeWalletId,
+    asset,
+    txType:
+      txSource === 'from' ? swapProvider.fromTxType : swapProvider.toTxType,
+    quote: selectedQuote,
+    feePrices,
+    max,
+  }
+  Log(JSON.stringify(params), 'info')
+  const totalFees = await swapProvider.estimateFees(params).catch((e: any) => {
+    Log(`Failed to calculate totalFees: ${e}`, 'error')
+  })
+
+  if (!totalFees) throw new Error('Failed to calculate totalFees')
+
+  for (const [speed, fee] of Object.entries(assetFees)) {
+    //TODO why are we doing this when fees[speed] is always 0
+    // fees[speed] = fees[speed].plus(totalFees[feePrice])
+    fees = {
+      ...fees,
+      [speed]: totalFees[fee.toNumber()],
+    }
+  }
+
+  return fees
 }

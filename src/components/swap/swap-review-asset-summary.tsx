@@ -10,9 +10,15 @@ import {
   chains,
   unitToCurrency,
 } from '@liquality/cryptoassets'
-import { cryptoToFiat, formatFiat } from '../../core/utils/coin-formatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCheck, faClone } from '@fortawesome/pro-light-svg-icons'
+import {
+  cryptoToFiat,
+  formatFiat,
+  formatFiatUI,
+  prettyFiatBalance,
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
+import { getTxFee } from '../../core/utils/coin-formatter'
 
 type SwapReviewAssetSummaryProps = {
   type: 'SEND' | 'RECEIVE'
@@ -58,11 +64,14 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
       </View>
       <Label text="NETWORK FEE" variant="light" />
       <View style={styles.row}>
-        <Text style={[styles.font, styles.amount]}>{`${networkFee} ${
+        <Text style={[styles.font, styles.amount]}>{`${networkFee.toNumber()} ${
           chains[cryptoassets[asset.code].chain].fees.unit
         }`}</Text>
-        <Text style={[styles.font, styles.amount]}>{`$${formatFiat(
-          cryptoToFiat(networkFee.toNumber(), fiatRates[asset.code]),
+        <Text style={[styles.font, styles.amount]}>{`${formatFiatUI(
+          prettyFiatBalance(
+            getTxFee(asset.code, networkFee.toNumber()).toNumber(),
+            fiatRates[asset.code],
+          ),
         )}`}</Text>
       </View>
       <Label text="AMOUNT + FEES" variant="light" />
@@ -72,11 +81,7 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
         )} ${asset.code}`}</Text>
         <Text style={[styles.font, styles.amountStrong]}>{`$${formatFiat(
           cryptoToFiat(
-            amount
-              .plus(
-                unitToCurrency(cryptoassets[asset.code], networkFee.toNumber()),
-              )
-              .toNumber(),
+            amount.plus(getTxFee(asset.code, networkFee.toNumber())).toNumber(),
             fiatRates[asset.code],
           ),
         )}`}</Text>

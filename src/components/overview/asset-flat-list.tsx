@@ -47,7 +47,7 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
       item.assets && item.assets.length > 0 && item.code !== 'BTC'
 
     return (
-      <Fragment>
+      <Fragment key={uuidv4()}>
         <Row
           key={uuidv4()}
           item={item}

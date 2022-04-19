@@ -13,6 +13,7 @@ import {
   chains,
 } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
+import { v4 as uuidv4 } from 'uuid'
 
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
@@ -66,7 +67,7 @@ export const useWalletState = () => {
 
         const nativeAsset = chains[account.chain].nativeAsset
         const chainData: AssetDataElementType = {
-          id: account.chain,
+          id: uuidv4(),
           chain: account.chain,
           name: account.name,
           code: nativeAsset,

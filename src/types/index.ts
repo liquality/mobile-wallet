@@ -1,6 +1,7 @@
 import { Dispatch, ReactElement, SetStateAction } from 'react'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
+import { BigNumber } from '@liquality/types'
 
 export type AssetDataElementType = {
   id: string
@@ -27,10 +28,8 @@ export type SwapInfoType = {
   toAsset: AssetDataElementType
   fromAmount: number
   toAmount: number
-  fromNetworkFee: number
-  toNetworkFee: number
-  fromGasSpeed: string
-  toGasSpeed: string
+  fromNetworkFee: NetworkFeeType
+  toNetworkFee: NetworkFeeType
 }
 
 export type StackPayload = {
@@ -113,3 +112,16 @@ export enum ActionEnum {
   SWAP = 'SWAP',
   RECEIVE = 'RECEIVE',
 }
+
+export type NetworkFeeType = {
+  speed: keyof FeeDetails
+  value: number
+}
+
+export interface CustomFeeDetails extends FeeDetails {
+  custom: {
+    fee: number
+  }
+}
+
+export type GasFees = Record<'slow' | 'average' | 'fast' | 'custom', BigNumber>

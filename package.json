@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@blobfishkate/sovryncontracts": "^2.0.0",
+    "@ethersproject/shims": "^5.6.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/pro-light-svg-icons": "^5.15.4",
     "@fortawesome/react-native-fontawesome": "^0.2.7",

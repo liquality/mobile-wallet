@@ -6,14 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import {
-  Dimensions,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { Dimensions, Pressable, StyleSheet, Text } from 'react-native'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -26,7 +19,6 @@ import {
 } from '@fortawesome/pro-light-svg-icons'
 import MessageBanner from '../../../components/ui/message-banner'
 import AmountTextInputBlock from '../../../components/ui/amount-text-input-block'
-import GasController from '../../../components/ui/gas-controller'
 import Label from '../../../components/ui/label'
 import Warning from '../../../components/ui/warning'
 import SwapRates from '../../../components/swap-rates'
@@ -34,6 +26,7 @@ import { getQuotes, updateMarketData } from '../../../store/store'
 import {
   ActionEnum,
   AssetDataElementType,
+  NetworkFeeType,
   RootStackParamList,
 } from '../../../types'
 import { BigNumber } from '@liquality/types'
@@ -43,6 +36,8 @@ import { useAppSelector } from '../../../hooks'
 import { sortQuotes } from '../../../utils'
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
 import Button from '../../../theme/button'
+import Box from '../../../theme/box'
+import SwapFeeSelector from '../../../components/ui/swap-fee-selector'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -78,23 +73,23 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     marketData: state.marketData,
     activeNetwork: state.activeNetwork,
   }))
-  const [areGasControllersVisible, setGasControllersVisible] = useState(true)
+  const [areFeeSelectorsVisible, setFeeSelectorsVisible] = useState(true)
   const [fromAsset, setFromAsset] = useState<AssetDataElementType | undefined>(
     swapAssetPair?.fromAsset,
   )
   const [toAsset, setToAsset] = useState<AssetDataElementType>()
   const [selectedQuote, setSelectedQuote] = useState<any>()
   const [error, setError] = useState('')
-  const fromNetworkFee = useRef<BigNumber>(new BigNumber(0))
-  const toNetworkFee = useRef<BigNumber>(new BigNumber(0))
+  const fromNetworkFee = useRef<NetworkFeeType>()
+  const toNetworkFee = useRef<NetworkFeeType>()
   const [maximumValue, setMaximumValue] = useState<BigNumber>(new BigNumber(0))
   const [minimumValue, setMinimumValue] = useState<BigNumber>(new BigNumber(0))
   const [bestQuote, setBestQuote] = useState<BigNumber>(new BigNumber(0))
   const [quotes, setQuotes] = useState<any[]>([])
   const [state, dispatch] = useReducer(reducer, {})
 
-  const toggleGasControllers = () => {
-    setGasControllersVisible(!areGasControllersVisible)
+  const toggleFeeSelectors = () => {
+    setFeeSelectorsVisible(!areFeeSelectorsVisible)
   }
 
   const handleFromAssetPress = () => {
@@ -122,7 +117,14 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const handleReviewBtnPress = async () => {
-    if (!fromAsset || !toAsset || !state.fromAmount || !selectedQuote) {
+    if (
+      !fromAsset ||
+      !toAsset ||
+      !state.fromAmount ||
+      !selectedQuote ||
+      !fromNetworkFee.current ||
+      !toNetworkFee.current
+    ) {
       throw new Error('Invalid arguments for swap')
     }
 
@@ -132,10 +134,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         toAsset,
         fromAmount: state.fromAmount.toNumber(),
         toAmount: bestQuote.toNumber(),
-        toNetworkFee: toNetworkFee.current.toNumber(),
-        fromNetworkFee: fromNetworkFee.current.toNumber(),
-        fromGasSpeed: '',
-        toGasSpeed: '',
+        toNetworkFee: toNetworkFee.current,
+        fromNetworkFee: fromNetworkFee.current,
       },
       screenTitle: `Swap ${fromAsset.code} to ${toAsset.code} review`,
     })
@@ -226,11 +226,18 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }, [min, state.fromAmount, updateBestQuote])
 
   return (
-    <SafeAreaView style={styles.container}>
+    <Box
+      flex={1}
+      width={Dimensions.get('window').width}
+      backgroundColor="mainBackground">
       {!!error && (
         <MessageBanner text1="Error" text2={error} onAction={() => ({})} />
       )}
-      <View style={styles.assetBlock}>
+      <Box
+        flexDirection="row"
+        justifyContent="center"
+        alignItems="flex-end"
+        marginHorizontal="xl">
         <AmountTextInputBlock
           type="FROM"
           label="SEND"
@@ -243,9 +250,14 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         <Pressable style={styles.chevronBtn} onPress={handleFromAssetPress}>
           <FontAwesomeIcon icon={faChevronRight} size={15} color="#A8AEB7" />
         </Pressable>
-      </View>
-      <View style={[styles.box, styles.row]}>
-        <View style={styles.wrapper}>
+      </Box>
+      <Box
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="flex-end"
+        marginVertical="m"
+        paddingHorizontal="xl">
+        <Box flexDirection="row">
           <Button
             type="tertiary"
             variant="s"
@@ -262,8 +274,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             isBorderless={false}
             isActive={true}
           />
-        </View>
-        <View style={styles.wrapper}>
+        </Box>
+        <Box flexDirection="row">
           <Label text="Available" variant="light" />
           {fromAsset?.balance && fromAsset?.code && (
             <Text style={[styles.font, styles.amount]}>
@@ -274,12 +286,16 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                 )} ${fromAsset.code}`}
             </Text>
           )}
-        </View>
-      </View>
-      <View style={styles.box}>
+        </Box>
+      </Box>
+      <Box alignItems="center" marginVertical="m" paddingHorizontal="xl">
         <FontAwesomeIcon icon={faArrowDown} color="#A8AEB7" />
-      </View>
-      <View style={styles.assetBlock}>
+      </Box>
+      <Box
+        flexDirection="row"
+        justifyContent="center"
+        alignItems="flex-end"
+        marginHorizontal="xl">
         <AmountTextInputBlock
           type="TO"
           label="RECEIVE"
@@ -290,7 +306,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         <Pressable style={styles.chevronBtn} onPress={handleToAssetPress}>
           <FontAwesomeIcon icon={faChevronRight} color="#A8AEB7" />
         </Pressable>
-      </View>
+      </Box>
 
       {fromAsset?.code && toAsset?.code && (
         <SwapRates
@@ -302,12 +318,15 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           style={{ paddingHorizontal: 20 }}
         />
       )}
-      <View style={[styles.row, styles.box]}>
-        <Pressable
-          onPress={toggleGasControllers}
-          style={styles.feeOptionsButton}>
+      <Box
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+        marginVertical="m"
+        paddingHorizontal="xl">
+        <Pressable onPress={toggleFeeSelectors} style={styles.feeOptionsButton}>
           <FontAwesomeIcon
-            icon={areGasControllersVisible ? faAngleDown : faAngleRight}
+            icon={areFeeSelectorsVisible ? faAngleDown : faAngleRight}
             size={15}
           />
           <Label text="NETWORK SPEED/FEE" variant="strong" />
@@ -318,29 +337,39 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             variant="light"
           />
         </Pressable>
-      </View>
-      {areGasControllersVisible && (
-        <>
-          <GasController
-            assetSymbol={fromAsset?.code || 'BTC'}
-            handleCustomPress={() => ({})}
-            networkFee={fromNetworkFee}
-          />
-          <GasController
-            assetSymbol={toAsset?.code || 'ETH'}
-            handleCustomPress={() => ({})}
-            networkFee={toNetworkFee}
-          />
-          <Warning
-            text1="Max slippage is 0.5%."
-            text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6
+      </Box>
+      {areFeeSelectorsVisible &&
+        fromNetworkFee &&
+        toNetworkFee &&
+        selectedQuote && (
+          <>
+            <SwapFeeSelector
+              asset={fromAsset?.code || 'BTC'}
+              handleCustomPress={() => ({})}
+              networkFee={fromNetworkFee}
+              selectedQuote={selectedQuote}
+              type={'from'}
+            />
+            <SwapFeeSelector
+              asset={toAsset?.code || 'ETH'}
+              handleCustomPress={() => ({})}
+              networkFee={toNetworkFee}
+              selectedQuote={selectedQuote}
+              type={'to'}
+            />
+            <Warning
+              text1="Max slippage is 0.5%."
+              text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6
           hours at 20:45 GMT"
-            icon={faClock}
-          />
-        </>
-      )}
-      <View style={styles.footer}>
-        <View style={styles.buttonWrapper}>
+              icon={faClock}
+            />
+          </>
+        )}
+      <Box
+        position="absolute"
+        bottom={20}
+        width={Dimensions.get('screen').width}>
+        <Box flexDirection="row" justifyContent="space-around">
           <Button
             type="secondary"
             variant="m"
@@ -357,37 +386,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             isBorderless={false}
             isActive={true}
           />
-        </View>
-      </View>
-    </SafeAreaView>
+        </Box>
+      </Box>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: Dimensions.get('screen').width,
-    backgroundColor: '#FFF',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-  },
-  box: {
-    alignItems: 'center',
-    marginVertical: 10,
-    paddingHorizontal: 20,
-  },
-  assetBlock: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    marginHorizontal: 20,
-  },
-  wrapper: {
-    flexDirection: 'row',
-  },
   font: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '400',
@@ -407,15 +412,6 @@ const styles = StyleSheet.create({
   chevronBtn: {
     marginLeft: 15,
     marginBottom: 10,
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 20,
-    width: Dimensions.get('screen').width,
-  },
-  buttonWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
   },
 })
 

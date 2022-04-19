@@ -5,12 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClock, faExchange } from '@fortawesome/pro-light-svg-icons'
 import { RootStackParamList, SwapInfoType } from '../../../types'
 import Warning from '../../../components/ui/warning'
-import SwapRates from '../../../components/swap-rates'
 import { useAppSelector } from '../../../hooks'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
 import Button from '../../../theme/button'
 import { BigNumber } from '@liquality/types'
 import { performSwap } from '../../../store/store'
+import { Log } from '../../../utils'
 
 type SwapReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -42,13 +42,15 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         const transaction = await performSwap(
           fromAsset,
           toAsset,
-          fromAmount,
-          toAmount,
-          fromNetworkFee,
-          toNetworkFee,
-          '',
-          '',
+          new BigNumber(fromAmount),
+          new BigNumber(toAmount),
+          new BigNumber(fromNetworkFee.value),
+          new BigNumber(toNetworkFee.value),
+          fromNetworkFee.speed,
+          toNetworkFee.speed,
         )
+
+        Log(`Transaction: ${transaction}`, 'info')
         if (transaction) {
           navigation.navigate('SwapConfirmationScreen', {
             swapTransactionConfirmation: transaction,
@@ -67,8 +69,6 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
       Alert.alert('Can not perform swap')
     }
   }
-
-  const handleSelectQuote = () => {}
 
   if (!swapTransaction) {
     return <View style={styles.container} />
@@ -90,20 +90,20 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         amount={new BigNumber(fromAmount)}
         asset={fromAsset}
         fiatRates={fiatRates}
-        networkFee={new BigNumber(fromNetworkFee)}
+        networkFee={new BigNumber(fromNetworkFee.value)}
       />
       <SwapReviewAssetSummary
         type={'RECEIVE'}
         amount={new BigNumber(toAmount)}
         asset={toAsset}
         fiatRates={fiatRates}
-        networkFee={new BigNumber(toNetworkFee)}
+        networkFee={new BigNumber(toNetworkFee.value)}
       />
-      <SwapRates
+      {/* <SwapRates
         fromAsset={fromAsset.code}
         toAsset={toAsset.code}
         selectQuote={handleSelectQuote}
-      />
+      /> */}
       <Warning
         text1="Max slippage is 0.5%."
         text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6

@@ -7,14 +7,18 @@ import {
 import thunk from 'redux-thunk'
 import rootReducer from '../reducers'
 import StorageManager from '../core/storage-manager'
-import { BigNumber } from '@liquality/types'
+import { BigNumber, FeeDetail, FeeDetails } from '@liquality/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
-import { AssetDataElementType } from '../types'
+import { AssetDataElementType, GasFees } from '../types'
 import { WalletOptions, Notification } from '@liquality/wallet-core/dist/types'
 import { decrypt, encrypt, Log, pbkdf2 } from '../utils'
+import {
+  getFeeAsset,
+  getNativeAsset,
+} from '@liquality/wallet-core/dist/utils/asset'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -151,14 +155,42 @@ export const populateWallet = async (): Promise<void> => {
     .catch((e) => {
       Log(`Failed to update fiat rates: ${e}`, 'error')
     })
+}
 
-  await wallet.dispatch
+export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {
+  const extractFee = (feeDetail: FeeDetail) => {
+    if (typeof feeDetail.fee === 'number') {
+      return feeDetail.fee
+    } else {
+      return (
+        feeDetail.fee.maxPriorityFeePerGas +
+        feeDetail.fee.suggestedBaseFeePerGas
+      )
+    }
+  }
+
+  const fees: FeeDetails = await wallet.dispatch
     .updateFees({
-      asset: enabledAssets,
+      asset: getFeeAsset(asset) || getNativeAsset(asset),
     })
     .catch((e) => {
       Log(`Failed to update fees: ${e}`, 'error')
     })
+
+  if (!fees) throw new Error('Failed to fetch gas fees')
+
+  return {
+    slow: new BigNumber(extractFee(fees.slow)),
+    average: new BigNumber(extractFee(fees.average)),
+    fast: new BigNumber(extractFee(fees.fast)),
+    custom: new BigNumber(0),
+  }
+}
+
+export const fetchSwapProvider = (providerId: string) => {
+  const { activeNetwork } = store.getState()
+  if (!providerId) return
+  return wallet.getters.swapProvider(activeNetwork, providerId)
 }
 
 export const updateMarketData = async (): Promise<void> => {
