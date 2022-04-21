@@ -28,6 +28,7 @@ export type SwapInfoType = {
   toAsset: AssetDataElementType
   fromAmount: number
   toAmount: number
+  quote: any
   fromNetworkFee: NetworkFeeType
   toNetworkFee: NetworkFeeType
 }

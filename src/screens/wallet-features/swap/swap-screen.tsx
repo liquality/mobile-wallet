@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Dimensions, Pressable, StyleSheet, Text } from 'react-native'
+import { Alert, Dimensions, Pressable, StyleSheet, Text } from 'react-native'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -125,7 +125,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       !fromNetworkFee.current ||
       !toNetworkFee.current
     ) {
-      throw new Error('Invalid arguments for swap')
+      Alert.alert('Invalid arguments for swap')
+      return
     }
 
     navigation.navigate('SwapReviewScreen', {
@@ -134,8 +135,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         toAsset,
         fromAmount: state.fromAmount.toNumber(),
         toAmount: bestQuote.toNumber(),
-        toNetworkFee: toNetworkFee.current,
+        quote: selectedQuote,
         fromNetworkFee: fromNetworkFee.current,
+        toNetworkFee: toNetworkFee.current,
       },
       screenTitle: `Swap ${fromAsset.code} to ${toAsset.code} review`,
     })

@@ -65,7 +65,7 @@ export const initWallet = async () => {
   }
   wallet = setupWallet(walletOptions)
   wallet.original.subscribe((mutation, newState) => {
-    // console.log('---->', JSON.stringify(newState))
+    // Log(JSON.stringify(newState), 'info')
     store.dispatch({
       type: 'UPDATE_WALLET',
       payload: newState,
@@ -289,14 +289,16 @@ export const performSwap = async (
   to: AssetDataElementType,
   fromAmount: BigNumber,
   toAmount: BigNumber,
-  fromNetworkFee: BigNumber,
-  toNetworkFee: BigNumber,
+  selectedQuote: any,
+  fromNetworkFee: number,
+  toNetworkFee: number,
   fromGasSpeed: string,
   toGasSpeed: string,
 ): Promise<Partial<any> | void> => {
   const { activeWalletId, activeNetwork } = wallet.state
 
   const quote: Partial<any> = {
+    ...selectedQuote,
     from: from.code,
     to: to.code,
     fromAmount: new BigNumber(
@@ -305,19 +307,20 @@ export const performSwap = async (
     toAmount: new BigNumber(
       currencyToUnit(cryptoassets[to.code], toAmount.toNumber()),
     ),
-    fee: fromNetworkFee.toNumber(),
-    claimFee: toNetworkFee.toNumber(),
+    fee: fromNetworkFee,
+    claimFee: toNetworkFee,
   }
-
-  return await wallet.dispatch.newSwap({
+  const params = {
     network: activeNetwork,
     walletId: activeWalletId,
     quote,
-    fee: fromNetworkFee.toNumber(),
+    fee: fromNetworkFee,
     claimFee: toNetworkFee,
     feeLabel: fromGasSpeed,
     claimFeeLabel: toGasSpeed,
-  })
+  }
+  Log(params, 'info')
+  return await wallet.dispatch.newSwap(params)
 }
 
 /**

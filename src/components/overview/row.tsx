@@ -10,7 +10,6 @@ import {
 } from '@fortawesome/pro-light-svg-icons'
 import AssetIcon from '../asset-icon'
 import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
-import GasIndicator from '../ui/gas-indicator'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
 
@@ -25,7 +24,7 @@ type RowProps = {
 
 const Row: React.FC<RowProps> = (props) => {
   const { item, toggleRow, onAssetSelected, isNested } = props
-  const { name, address, balance, balanceInUSD, fees, chain } = item
+  const { name, address, balanceInUSD, chain } = item
   const chainColor = chain ? chainDefaultColors[chain] : DEFAULT_COLOR
 
   const handlePressOnRow = () => {
@@ -76,9 +75,9 @@ const Row: React.FC<RowProps> = (props) => {
             <Text style={styles.TotalBalanceInUSD}>
               Total ${balanceInUSD && formatFiat(balanceInUSD)}
             </Text>
-            <View style={styles.gas}>
+            {/* <View style={styles.gas}>
               <GasIndicator balance={balance || 0} gasFees={fees} />
-            </View>
+            </View> */}
           </View>
         ) : (
           <View style={styles.col3}>

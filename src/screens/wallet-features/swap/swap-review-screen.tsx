@@ -34,6 +34,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         toAsset,
         fromAmount,
         toAmount,
+        quote,
         fromNetworkFee,
         toNetworkFee,
       }: SwapInfoType = swapTransaction
@@ -44,8 +45,9 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           toAsset,
           new BigNumber(fromAmount),
           new BigNumber(toAmount),
-          new BigNumber(fromNetworkFee.value),
-          new BigNumber(toNetworkFee.value),
+          quote,
+          fromNetworkFee.value,
+          toNetworkFee.value,
           fromNetworkFee.speed,
           toNetworkFee.speed,
         )
@@ -58,15 +60,16 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           })
         } else {
           setIsLoading(false)
-          Alert.alert('Failed to perform swap')
+          Alert.alert('Swap Response null')
         }
       } catch (error) {
         setIsLoading(false)
+        Log(`Failed to perform swap: ${error}`, 'error')
         Alert.alert('Failed to perform swap')
       }
     } else {
       setIsLoading(false)
-      Alert.alert('Can not perform swap')
+      Alert.alert('Invalid params. Please try again')
     }
   }
 
