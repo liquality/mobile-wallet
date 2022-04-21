@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
@@ -17,21 +17,25 @@ const ICON_MAP = {
   [ActionEnum.RECEIVE]: faArrowDown,
 }
 
-const ActionTypeToggles = () => {
-  const [actionTypes, setActionTypes] = useState<ActionEnum[]>([])
+const ActionTypeToggles = ({
+  value,
+  onChange,
+}: {
+  value: ActionEnum[]
+  onChange: (actionTypes: ActionEnum[]) => void
+}) => {
   const renderItem = useCallback(
     (key: ActionEnum) => {
-      const isSelected = actionTypes.includes(key)
+      const isSelected = value?.includes(key)
       return (
         <Pressable
           style={isSelected ? styles.selectedButton : styles.button}
-          onPress={() =>
-            setActionTypes(
-              isSelected
-                ? actionTypes.filter((type) => type !== key)
-                : [...new Set([...actionTypes, key])],
-            )
-          }>
+          onPress={() => {
+            const newActionTypes = isSelected
+              ? value.filter((type) => type !== key)
+              : [...new Set([...value, key])]
+            onChange(newActionTypes)
+          }}>
           <Text style={styles.label}>
             {capitalizeFirstLetter(key.toLowerCase())}
           </Text>
@@ -39,7 +43,7 @@ const ActionTypeToggles = () => {
         </Pressable>
       )
     },
-    [actionTypes],
+    [onChange, value],
   )
 
   return <View style={styles.container}>{ITEMS.map(renderItem)}</View>

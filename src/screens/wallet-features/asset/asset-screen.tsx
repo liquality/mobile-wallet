@@ -209,11 +209,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
   },
-  rightHeader: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
   headerFocused: {
     borderBottomWidth: 1,
     borderBottomColor: '#000',
@@ -221,30 +216,6 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 13,
     fontWeight: '600',
-  },
-  activityActionBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#F8FAFF',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
-  },
-  activityBtns: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  filterLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    color: '#1D1E21',
-    marginLeft: 5,
-  },
-  exportLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    color: '#646F85',
-    marginLeft: 5,
   },
   contentBlock: {
     flex: 0.6,

@@ -29,6 +29,7 @@ import WithPopupMenu from './with-popup-menu'
 import SettingsHeaderRight from './header-bar/settings-header-right'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
+import AssetToggleScreen from '../screens/wallet-features/asset/asset-toggle-screen'
 import SwapScreen from '../screens/wallet-features/swap/swap-screen'
 import SwapReviewScreen from '../screens/wallet-features/swap/swap-review-screen'
 import SwapConfirmationScreen from '../screens/wallet-features/swap/swap-confirmation-screen'
@@ -175,6 +176,13 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="AssetManagementScreen"
       component={AssetManagementScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
+    />
+    <Stack.Screen
+      name="AssetToggleScreen"
+      component={AssetToggleScreen}
       options={() => ({
         headerRight: () => <View />,
       })}

@@ -26,3 +26,8 @@ jest.mock('react-native-calendars', () => {
     Calendar: () => null,
   }
 })
+
+jest.mock('react-native-modal-filter-picker', () => {
+  const RN = require('react-native')
+  return RN.View
+})

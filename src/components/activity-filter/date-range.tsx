@@ -1,54 +1,76 @@
 import React, { useCallback, useState } from 'react'
-import { Modal, Pressable, StyleSheet, View, Text } from 'react-native'
+import { Pressable, StyleSheet, View, Text } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCalendar, faTimes } from '@fortawesome/pro-light-svg-icons'
-import Label from '../ui/label'
-import DateRangePicker from './date-range-picker'
+import { faCalendar } from '@fortawesome/pro-light-svg-icons'
 import SectionTitle from './section-title'
+import DatePicker from './date-picker'
 
-const DateRange = () => {
-  const [isDateRangeModalVisible, setIsDateRangeModalVisible] = useState(false)
-  const handlePickStartDate = useCallback(() => {
-    setIsDateRangeModalVisible(true)
+const DateRange = ({
+  start,
+  end,
+  onChange,
+}: {
+  start: string | undefined
+  end: string | undefined
+  onChange: (_start: string, _end: string) => void
+}) => {
+  const [isStartDatePickerVisible, setStartDatePickerVisible] = useState(false)
+  const [isEndDatePickerVisible, setEndDatePickerVisible] = useState(false)
+  const handleOpenStartDate = useCallback(() => {
+    setStartDatePickerVisible(true)
   }, [])
-  const [dateRange, setDateRange] = useState<string[]>(['', ''])
-  const [startDate, endDate] = dateRange
+  const handleCloseStartDate = useCallback(() => {
+    setStartDatePickerVisible(false)
+  }, [])
+  const handleOpenPickEndDate = useCallback(() => {
+    setEndDatePickerVisible(true)
+  }, [])
+  const handleCloseEndDate = useCallback(() => {
+    setEndDatePickerVisible(false)
+  }, [])
+
+  const handleChangeStartDate = useCallback(
+    (date) => {
+      onChange(date, end)
+    },
+    [end, onChange],
+  )
+
+  const handleChangeEndDate = useCallback(
+    (date) => {
+      onChange(start, date)
+    },
+    [onChange, start],
+  )
 
   return (
     <View style={styles.container}>
       <SectionTitle title="DATE RANGE" />
       <View style={styles.content}>
-        <Pressable style={styles.button} onPress={handlePickStartDate}>
-          <Text style={styles.label}>{startDate || 'Start'}</Text>
+        <Pressable style={styles.button} onPress={handleOpenStartDate}>
+          <Text style={styles.label}>{start || 'Start'}</Text>
           {calendarIcon}
         </Pressable>
         <Pressable
           style={[styles.button, styles.secondButton]}
-          onPress={handlePickStartDate}>
-          <Text style={styles.label}>{endDate || 'End'}</Text>
+          onPress={handleOpenPickEndDate}>
+          <Text style={styles.label}>{end || 'End'}</Text>
           {calendarIcon}
         </Pressable>
-        <Modal
-          transparent
-          animationType={'slide'}
-          visible={isDateRangeModalVisible}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <View style={styles.modalHeader}>
-                <Label text="Date Range" variant="strong" />
-                <Pressable onPress={() => setIsDateRangeModalVisible(false)}>
-                  <FontAwesomeIcon icon={faTimes} color={'#000'} />
-                </Pressable>
-              </View>
-              <DateRangePicker
-                initialRange={dateRange}
-                onSuccess={(_startDate: string, _endDate: string) =>
-                  setDateRange([_startDate, _endDate])
-                }
-              />
-            </View>
-          </View>
-        </Modal>
+        <DatePicker
+          title="Start Date"
+          open={isStartDatePickerVisible}
+          onClose={handleCloseStartDate}
+          date={start}
+          onChange={handleChangeStartDate}
+        />
+        <DatePicker
+          title="End Date"
+          open={isEndDatePickerVisible}
+          onClose={handleCloseEndDate}
+          date={end}
+          onChange={handleChangeEndDate}
+        />
       </View>
     </View>
   )
@@ -86,26 +108,6 @@ const styles = StyleSheet.create({
   },
   day: {
     textAlign: 'center',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContent: {
-    backgroundColor: '#FFF',
-    width: '90%',
-    borderColor: '#D9DFE5',
-    borderWidth: 1,
-    paddingVertical: 10,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    width: '100%',
   },
 })
 

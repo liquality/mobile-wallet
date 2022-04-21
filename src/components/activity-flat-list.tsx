@@ -24,8 +24,8 @@ import { cryptoToFiat, dpUI } from '../core/utils/coin-formatter'
 import SuccessIcon from '../assets/icons/activity-status/completed.svg'
 import RefundedIcon from '../assets/icons/activity-status/refunded.svg'
 import { BigNumber } from '@liquality/types'
-import { MOCKED_HISTORY_ITEMS } from './activity-flat-list-mock'
 import ActivityFilter from './activity-filter'
+import { useFilteredHistory } from '../custom-hooks'
 
 const ActivityFlatList = ({
   navigate,
@@ -34,23 +34,11 @@ const ActivityFlatList = ({
   navigate: (...args: any[]) => void
   selectedAsset?: string
 }) => {
-  const { history = [], fiatRates } = useAppSelector((state) => {
-    const { activeNetwork, activeWalletId, history: historyObject } = state
-    let historyItems: HistoryItem[] = []
-    if (activeNetwork && activeWalletId && historyObject) {
-      historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
-    }
-
-    // TODO: Remove this
-    historyItems = MOCKED_HISTORY_ITEMS
-
-    return {
-      fiatRates: state.fiatRates,
-      history: selectedAsset
-        ? historyItems.filter((item) => item.from === selectedAsset)
-        : historyItems.filter((item) => !!item.id),
-    }
-  })
+  const historyItems = useFilteredHistory()
+  const history = selectedAsset
+    ? historyItems.filter((item) => item.from === selectedAsset)
+    : historyItems.filter((item) => !!item.id)
+  const fiatRates = useAppSelector((state) => state.fiatRates)
 
   const handleChevronPress = (historyItem: HistoryItem) => {
     if (historyItem.type === 'SWAP') {
@@ -168,7 +156,7 @@ const ActivityFlatList = ({
     <FlatList
       data={history}
       renderItem={renderActivity}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item, index) => `history-item-${index}`}
       ListHeaderComponent={<ActivityFilter numOfResults={history.length} />}
     />
   )

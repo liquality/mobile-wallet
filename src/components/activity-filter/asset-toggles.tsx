@@ -1,59 +1,75 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-
+import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { faCheck } from '@fortawesome/pro-solid-svg-icons'
 
-import { AssetDataElementType } from '../../types'
 import { capitalizeFirstLetter } from '../../utils'
 import SectionTitle from './section-title'
-import { useWalletState } from '../../hooks'
+import { useAppSelector } from '../../hooks'
 import AssetIcon from '../asset-icon'
-import { withNavigation } from '@react-navigation/compat'
+import { useNavigation } from '@react-navigation/native'
 
-const getItemsFromAssets = (assets: Array<AssetDataElementType>): any[] => {
+const getItemsFromAssets = (assets: Array<string>): any[] => {
   if (assets.length < 6) {
     return assets
   }
 
-  return [...assets.slice(0, 4), { id: 'more' }]
+  return [...assets.slice(0, 4), 'more']
 }
 
-const AssetToggles = ({ navigation }: { navigation: any }) => {
-  const { assets } = useWalletState()
-  const items = getItemsFromAssets([...assets, ...assets])
+const AssetToggles = ({
+  value,
+  onChange,
+}: {
+  value: string[]
+  onChange: (assets: string[]) => void
+}) => {
+  const { activeNetwork, activeWalletId, enabledAssets } = useAppSelector(
+    (state) => ({
+      activeNetwork: state.activeNetwork,
+      enabledAssets: state.enabledAssets,
+      activeWalletId: state.activeWalletId,
+    }),
+  )
+  const assetCodes =
+    !activeWalletId || !activeNetwork
+      ? []
+      : enabledAssets?.[activeNetwork]?.[activeWalletId] || []
+  const items = getItemsFromAssets([...assetCodes, ...assetCodes])
+  const navigation = useNavigation()
 
   const handleMoreBtnPress = useCallback(() => {
-    navigation.navigate('AssetManagementScreen', {
+    navigation.navigate('AssetToggleScreen', {
       screenTitle: 'Select asset',
+      selectedAssetCodes: value,
+      onSelectAssetCodes: onChange,
     })
-  }, [navigation])
+  }, [navigation, value, onChange])
 
-  const [assetIds, setAssetIds] = useState<string[]>([])
   const renderItem = useCallback(
-    (item: AssetDataElementType) => {
-      const assetId = item.id
-      const isSelected = assetIds.includes(assetId)
+    (assetCode: string) => {
+      const isSelected = value.includes(assetCode)
       return (
         <Pressable
           style={styles.button}
           onPress={() => {
-            if (assetId === 'more') {
+            if (assetCode === 'more') {
               handleMoreBtnPress()
               return
             }
 
-            setAssetIds(
+            onChange(
               isSelected
-                ? assetIds.filter((type) => type !== assetId)
-                : [...new Set([...assetIds, assetId])],
+                ? value.filter((type) => type !== assetCode)
+                : [...new Set([...value, assetCode])],
             )
           }}>
           <View style={styles.iconContainer}>
-            {assetId === 'more' ? (
+            {assetCode === 'more' ? (
               <View style={styles.more} />
             ) : (
-              <AssetIcon chain={item.chain} size={32} />
+              <AssetIcon chain={cryptoassets[assetCode].chain} size={32} />
             )}
             {isSelected && (
               <FontAwesomeIcon
@@ -65,12 +81,13 @@ const AssetToggles = ({ navigation }: { navigation: any }) => {
             )}
           </View>
           <Text style={styles.label}>
-            {capitalizeFirstLetter(assetId.toUpperCase())}
+            {capitalizeFirstLetter(assetCode.toUpperCase())}
           </Text>
         </Pressable>
       )
     },
-    [assetIds, handleMoreBtnPress],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [assetCodes, handleMoreBtnPress],
   )
 
   return (
@@ -119,4 +136,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default withNavigation(AssetToggles)
+export default AssetToggles

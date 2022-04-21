@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 
 import { ActivityStatusEnum } from '../../types'
@@ -45,22 +45,25 @@ const ICON_MAP = {
   },
 }
 
-const ActivityStatusToggles = () => {
-  const [activityStatuses, setActivityStatuses] = useState<
-    ActivityStatusEnum[]
-  >([])
+const ActivityStatusToggles = ({
+  value,
+  onChange,
+}: {
+  value: ActivityStatusEnum[]
+  onChange: (actionTypes: ActivityStatusEnum[]) => void
+}) => {
   const renderItem = useCallback(
     (key: ActivityStatusEnum) => {
       const { icon: Icon, width: iconWidth, height: iconHeight } = ICON_MAP[key]
-      const isSelected = activityStatuses.includes(key)
+      const isSelected = value.includes(key)
       return (
         <Pressable
           style={isSelected ? styles.selectedButton : styles.button}
           onPress={() =>
-            setActivityStatuses(
+            onChange(
               isSelected
-                ? activityStatuses.filter((type) => type !== key)
-                : [...new Set([...activityStatuses, key])],
+                ? value.filter((type) => type !== key)
+                : [...new Set([...value, key])],
             )
           }>
           <Icon width={iconWidth} height={iconHeight} />
@@ -70,7 +73,7 @@ const ActivityStatusToggles = () => {
         </Pressable>
       )
     },
-    [activityStatuses],
+    [onChange, value],
   )
 
   return (

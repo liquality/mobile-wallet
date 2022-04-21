@@ -1,7 +1,7 @@
 import { HistoryItem } from '@liquality/core/dist/types'
 import { TxStatus } from '@liquality/types'
 
-export const MOCKED_HISTORY_ITEMS: HistoryItem[] = [
+const HISTORY_ITEMS: HistoryItem[] = [
   {
     currentStep: 2,
     endTime: 1646243649532,
@@ -121,4 +121,12 @@ export const MOCKED_HISTORY_ITEMS: HistoryItem[] = [
     totalSteps: 4,
     type: 'SWAP',
   },
+]
+
+export const MOCKED_HISTORY_ITEMS = [
+  ...HISTORY_ITEMS,
+  ...HISTORY_ITEMS,
+  ...HISTORY_ITEMS,
+  ...HISTORY_ITEMS,
+  ...HISTORY_ITEMS,
 ]

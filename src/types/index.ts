@@ -62,6 +62,8 @@ export type StackPayload = {
   swapTransaction?: SwapInfoType
   swapTransactionConfirmation?: Partial<SwapTransactionType>
   action?: ActionEnum
+  selectedAssetCodes?: string[]
+  onSelectAssetCodes?: (selectedAssetCodes: string[]) => void
 }
 
 export type RootStackParamList = {
@@ -78,6 +80,7 @@ export type RootStackParamList = {
   AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
   AssetManagementScreen: StackPayload
+  AssetToggleScreen: StackPayload
   ReceiveScreen: StackPayload
   SendScreen: StackPayload
   SendReviewScreen: StackPayload

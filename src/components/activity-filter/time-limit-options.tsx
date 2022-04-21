@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCircle } from '@fortawesome/pro-light-svg-icons'
@@ -8,20 +8,29 @@ import { TimeLimitEnum } from '../../types'
 
 const ITEMS = Object.values(TimeLimitEnum)
 
-const TimeLimitOptions = () => {
-  const [timeLimit, setTimeLimit] = useState<TimeLimitEnum>(TimeLimitEnum.ALL)
+const TimeLimitOptions = ({
+  value,
+  onChange,
+}: {
+  value: TimeLimitEnum | undefined
+  onChange: (timeLimit: TimeLimitEnum) => void
+}) => {
   const renderItem = useCallback(
     (key: TimeLimitEnum) => (
-      <Pressable style={styles.button} onPress={() => setTimeLimit(key)}>
+      <Pressable
+        style={styles.button}
+        onPress={() => {
+          onChange(key)
+        }}>
         <FontAwesomeIcon
-          icon={timeLimit === key ? faSolidCircle : faCircle}
-          color={timeLimit === key ? '#2CD2CF' : '#646F85'}
+          icon={value === key ? faSolidCircle : faCircle}
+          color={value === key ? '#2CD2CF' : '#646F85'}
           {...commonIconProps}
         />
         <Text style={styles.label}>{key}</Text>
       </Pressable>
     ),
-    [timeLimit],
+    [onChange, value],
   )
 
   return <View style={styles.container}>{ITEMS.map(renderItem)}</View>
