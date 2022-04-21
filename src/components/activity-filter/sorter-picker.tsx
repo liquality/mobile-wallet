@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { StyleSheet, Dimensions } from 'react-native'
 import ModalFilterPicker from 'react-native-modal-filter-picker'
 
@@ -16,17 +16,12 @@ export const SORT_OPTIONS = [
   { key: 'by_token', label: 'By Token (A to Z)' },
 ]
 
-const SorterPicker = ({
-  isOpen,
-  value,
-  onSelect,
-  onCancel,
-}: {
+const SorterPicker: FC<{
   isOpen: boolean
   value: string | undefined
   onSelect: (key: string) => void
   onCancel: () => void
-}) => (
+}> = ({ isOpen, value, onSelect, onCancel }) => (
   <ModalFilterPicker
     visible={isOpen}
     onSelect={onSelect as unknown as (key: string) => void}

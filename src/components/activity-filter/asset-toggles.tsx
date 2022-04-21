@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
@@ -18,13 +18,10 @@ const getItemsFromAssets = (assets: Array<string>): any[] => {
   return [...assets.slice(0, 4), 'more']
 }
 
-const AssetToggles = ({
-  value,
-  onChange,
-}: {
+const AssetToggles: FC<{
   value: string[]
   onChange: (assets: string[]) => void
-}) => {
+}> = ({ value, onChange }) => {
   const { activeNetwork, activeWalletId, enabledAssets } = useAppSelector(
     (state) => ({
       activeNetwork: state.activeNetwork,

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 
 import { ActivityStatusEnum } from '../../types'
@@ -45,13 +45,10 @@ const ICON_MAP = {
   },
 }
 
-const ActivityStatusToggles = ({
-  value,
-  onChange,
-}: {
+const ActivityStatusToggles: FC<{
   value: ActivityStatusEnum[]
   onChange: (actionTypes: ActivityStatusEnum[]) => void
-}) => {
+}> = ({ value, onChange }) => {
   const renderItem = useCallback(
     (key: ActivityStatusEnum) => {
       const { icon: Icon, width: iconWidth, height: iconHeight } = ICON_MAP[key]

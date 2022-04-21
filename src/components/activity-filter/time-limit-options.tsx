@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCircle } from '@fortawesome/pro-light-svg-icons'
@@ -8,13 +8,10 @@ import { TimeLimitEnum } from '../../types'
 
 const ITEMS = Object.values(TimeLimitEnum)
 
-const TimeLimitOptions = ({
-  value,
-  onChange,
-}: {
+const TimeLimitOptions: FC<{
   value: TimeLimitEnum | undefined
   onChange: (timeLimit: TimeLimitEnum) => void
-}) => {
+}> = ({ value, onChange }) => {
   const renderItem = useCallback(
     (key: TimeLimitEnum) => (
       <Pressable

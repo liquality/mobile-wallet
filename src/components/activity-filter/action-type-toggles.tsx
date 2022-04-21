@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
@@ -17,13 +17,10 @@ const ICON_MAP = {
   [ActionEnum.RECEIVE]: faArrowDown,
 }
 
-const ActionTypeToggles = ({
-  value,
-  onChange,
-}: {
+const ActionTypeToggles: FC<{
   value: ActionEnum[]
   onChange: (actionTypes: ActionEnum[]) => void
-}) => {
+}> = ({ value, onChange }) => {
   const renderItem = useCallback(
     (key: ActionEnum) => {
       const isSelected = value?.includes(key)

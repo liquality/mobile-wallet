@@ -1,19 +1,15 @@
-import React, { useCallback, useState } from 'react'
+import React, { FC, useCallback, useState } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCalendar } from '@fortawesome/pro-light-svg-icons'
 import SectionTitle from './section-title'
 import DatePicker from './date-picker'
 
-const DateRange = ({
-  start,
-  end,
-  onChange,
-}: {
+const DateRange: FC<{
   start: string | undefined
   end: string | undefined
   onChange: (_start: string, _end: string) => void
-}) => {
+}> = ({ start, end, onChange }) => {
   const [isStartDatePickerVisible, setStartDatePickerVisible] = useState(false)
   const [isEndDatePickerVisible, setEndDatePickerVisible] = useState(false)
   const handleOpenStartDate = useCallback(() => {

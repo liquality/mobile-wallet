@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { StyleSheet, Text } from 'react-native'
 
-const SectionTitle = ({ title }: { title: string }) => (
+const SectionTitle: FC<{ title: string }> = ({ title }) => (
   <Text style={styles.title}>{title}</Text>
 )
 

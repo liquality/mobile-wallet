@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { faTimes } from '@fortawesome/pro-light-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { Modal, View, Pressable, StyleSheet, Dimensions } from 'react-native'
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const DatePicker = ({ title, open, date, onChange, onClose }: Props) => (
+const DatePicker: FC<Props> = ({ title, open, date, onChange, onClose }) => (
   <Modal transparent animationType={'slide'} visible={open}>
     <View style={styles.modalContainer}>
       <View style={styles.modalContent}>
