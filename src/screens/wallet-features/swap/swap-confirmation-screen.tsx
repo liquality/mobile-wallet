@@ -26,7 +26,7 @@ import {
 import Label from '../../../components/ui/label'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import ProgressBar from '../../../components/animations/progress-bar'
-import SuccessIcon from '../../../assets/icons/success-icon.svg'
+import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
 import { HistoryItem } from '@liquality/core/dist/types'
 import SwapRates from '../../../components/swap-rates'
 import Button from '../../../theme/button'

@@ -72,6 +72,11 @@ const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
         ...state,
         ...action.payload,
       }
+    case 'UPDATE_ASSET_FILTER':
+      return {
+        ...state,
+        ...action.payload,
+      }
     default:
       return {
         ...state,

@@ -22,6 +22,7 @@ type Props = React.ComponentProps<typeof BaseButton> &
     label: string
     onPress: () => void
     children?: React.ReactElement
+    appendChildren?: boolean
     isLoading?: boolean
     isActive?: boolean
     isBorderless?: boolean
@@ -37,6 +38,7 @@ const Button = ({
   isActive = true,
   isBorderless = false,
   children,
+  appendChildren = false,
 }: Props) => {
   const theme = useTheme<Theme>()
 
@@ -54,7 +56,7 @@ const Button = ({
           ],
       }}
       onPress={onPress}>
-      {!isLoading && children}
+      {!isLoading && !appendChildren && children}
       {isLoading ? (
         <ActivityIndicator color={theme.colors.spinner} />
       ) : (
@@ -75,6 +77,7 @@ const Button = ({
           {label}
         </Text>
       )}
+      {!isLoading && appendChildren && children}
     </BaseButton>
   )
 }

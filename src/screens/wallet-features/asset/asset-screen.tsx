@@ -10,7 +10,6 @@ import { formatFiat, prettyBalance } from '../../../core/utils/coin-formatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import {
-  faGreaterThan,
   faExchange,
   faArrowDown,
   faArrowUp,
@@ -106,22 +105,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         </Pressable>
       </View>
       <View style={styles.contentBlock}>
-        <ActivityFlatList navigate={navigation.navigate} selectedAsset={code}>
-          <View style={styles.activityActionBar}>
-            <Pressable style={styles.activityBtns}>
-              <FontAwesomeIcon
-                size={10}
-                icon={faGreaterThan}
-                color={'#A8AEB7'}
-              />
-              <Text style={styles.filterLabel}>Filter</Text>
-            </Pressable>
-            <Pressable style={styles.activityBtns}>
-              <FontAwesomeIcon size={10} icon={faArrowDown} color={'#A8AEB7'} />
-              <Text style={styles.exportLabel}>Export</Text>
-            </Pressable>
-          </View>
-        </ActivityFlatList>
+        <ActivityFlatList navigate={navigation.navigate} selectedAsset={code} />
       </View>
     </View>
   )
@@ -225,11 +209,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
   },
-  rightHeader: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
   headerFocused: {
     borderBottomWidth: 1,
     borderBottomColor: '#000',
@@ -237,30 +216,6 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 13,
     fontWeight: '600',
-  },
-  activityActionBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#F8FAFF',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
-  },
-  activityBtns: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  filterLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    color: '#1D1E21',
-    marginLeft: 5,
-  },
-  exportLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    color: '#646F85',
-    marginLeft: 5,
   },
   contentBlock: {
     flex: 0.6,

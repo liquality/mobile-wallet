@@ -6,7 +6,6 @@ import {
   faArrowDown,
   faArrowUp,
   faExchange,
-  faGreaterThan,
 } from '@fortawesome/pro-light-svg-icons'
 import { useAppSelector, useWalletState } from '../../../hooks'
 import { formatFiat } from '../../../core/utils/coin-formatter'
@@ -165,35 +164,15 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
             <Text style={styles.headerText}>ACTIVITY</Text>
           </Pressable>
         </View>
-        <View>
+        <View style={styles.contentBlock}>
           {selectedView === ViewKind.ACTIVITY &&
             (assets.length > 0 ? (
-              <ActivityFlatList navigate={navigation.navigate}>
-                <View style={styles.activityActionBar}>
-                  <Pressable style={styles.activityBtns}>
-                    <FontAwesomeIcon
-                      size={10}
-                      icon={faGreaterThan}
-                      color={'#A8AEB7'}
-                    />
-                    <Text style={styles.filterLabel}>Filter</Text>
-                  </Pressable>
-                  <Pressable style={styles.activityBtns}>
-                    <FontAwesomeIcon
-                      size={10}
-                      icon={faArrowDown}
-                      color={'#A8AEB7'}
-                    />
-                    <Text style={styles.exportLabel}>Export</Text>
-                  </Pressable>
-                </View>
-              </ActivityFlatList>
+              <ActivityFlatList navigate={navigation.navigate} />
             ) : (
               <Text style={styles.noActivityMessageBlock}>
                 Once you start using your wallet you will see the activity here.
               </Text>
             ))}
-
           {selectedView === ViewKind.ASSETS && (
             <AssetFlatList assets={assets} onAssetSelected={onAssetSelected} />
           )}
@@ -302,29 +281,8 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     fontWeight: '600',
   },
-  activityActionBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#F8FAFF',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
-  },
-  activityBtns: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  filterLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    color: '#1D1E21',
-    marginLeft: 5,
-  },
-  exportLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    color: '#646F85',
-    marginLeft: 5,
+  contentBlock: {
+    flex: 1,
   },
   noActivityMessageBlock: {
     fontFamily: 'Montserrat-Regular',
