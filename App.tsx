@@ -59,7 +59,7 @@ const App: FC = () => {
       <ThemeProvider theme={theme}>
         <View style={backgroundStyle} testID={'app-test'}>
           <StatusBar barStyle={'dark-content'} />
-          <GestureHandlerRootView style={{ flex: 1 }}>
+          <GestureHandlerRootView style={backgroundStyle}>
             <NavigationContainer>
               <AppNavigator initialRouteName={initialRouteName} />
             </NavigationContainer>

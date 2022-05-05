@@ -4,6 +4,7 @@
 
 import 'react-native'
 import React from 'react'
+jest.mock('../src/core/storage-manager')
 import App from '../App'
 import { render, waitFor } from '@testing-library/react-native'
 import splashScreen from 'react-native-splash-screen'

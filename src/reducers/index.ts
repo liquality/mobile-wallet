@@ -1,7 +1,22 @@
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
 import { RootState } from '@liquality/wallet-core/dist/store/types'
 
-const rootReducer: Reducer<RootState, PayloadAction<RootState>> = (
+export interface CustomRootState extends RootState {
+  assetFilter?: {
+    timeLimit?: string
+    actionTypes?: string[]
+    dateRange?: {
+      start: string | undefined
+      end: string | undefined
+    }
+    activityStatuses?: string[]
+    assetToggles?: string[]
+    sorter?: string | undefined
+  }
+}
+
+//TODO clean up the unused cases
+const rootReducer: Reducer<CustomRootState, PayloadAction<CustomRootState>> = (
   state,
   action,
 ): any => {
