@@ -76,6 +76,11 @@ const rootReducer: Reducer<RootState, PayloadAction<RootState>> = (
         ...state,
         history: action.payload.history,
       }
+    case 'UPDATE_ASSET_FILTER':
+      return {
+        ...state,
+        ...action.payload,
+      }
     default:
       return {
         ...state,

@@ -61,6 +61,8 @@ export type StackPayload = {
   swapTransaction?: SwapInfoType
   swapTransactionConfirmation?: SwapHistoryItem
   action?: ActionEnum
+  selectedAssetCodes?: string[]
+  onSelectAssetCodes?: (selectedAssetCodes: string[]) => void
 }
 
 export type RootStackParamList = {
@@ -77,6 +79,7 @@ export type RootStackParamList = {
   AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
   AssetManagementScreen: StackPayload
+  AssetToggleScreen: StackPayload
   ReceiveScreen: StackPayload
   SendScreen: StackPayload
   SendReviewScreen: StackPayload
@@ -116,6 +119,22 @@ export enum ActionEnum {
   SEND = 'SEND',
   SWAP = 'SWAP',
   RECEIVE = 'RECEIVE',
+}
+
+export enum TimeLimitEnum {
+  ALL = 'All',
+  LAST_24HRS = 'last 24 hrs',
+  LAST_WEEK = 'last week',
+  LAST_MONTH = 'last month',
+}
+
+export enum ActivityStatusEnum {
+  PENDING = 'Pending',
+  COMPLETED = 'Completed',
+  CANCELLED = 'Canceled',
+  REFUNDED = 'Refunded',
+  NEEDS_ATTENTION = 'Needs Attention',
+  FAILED = 'Failed',
 }
 
 export type NetworkFeeType = {

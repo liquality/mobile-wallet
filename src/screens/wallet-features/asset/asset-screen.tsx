@@ -1,9 +1,7 @@
 import React from 'react'
 import { ImageBackground, Pressable, StyleSheet, View } from 'react-native'
 import { formatFiat, prettyBalance } from '../../../core/utils/coin-formatter'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import ActivityFlatList from '../../../components/activity-flat-list'
-import { faGreaterThan, faArrowDown } from '@fortawesome/pro-light-svg-icons'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AssetDataElementType, RootStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
@@ -87,22 +85,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         </Pressable>
       </View>
       <View style={styles.contentBlock}>
-        <ActivityFlatList navigate={navigation.navigate} selectedAsset={code}>
-          <View style={styles.activityActionBar}>
-            <Pressable style={styles.activityBtns}>
-              <FontAwesomeIcon
-                size={10}
-                icon={faGreaterThan}
-                color={'#A8AEB7'}
-              />
-              <Text style={styles.filterLabel}>Filter</Text>
-            </Pressable>
-            <Pressable style={styles.activityBtns}>
-              <FontAwesomeIcon size={10} icon={faArrowDown} color={'#A8AEB7'} />
-              <Text style={styles.exportLabel}>Export</Text>
-            </Pressable>
-          </View>
-        </ActivityFlatList>
+        <ActivityFlatList navigate={navigation.navigate} selectedAsset={code} />
       </View>
     </Box>
   )
@@ -185,6 +168,10 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     color: '#646F85',
     marginLeft: 5,
+  },
+  headerText: {
+    fontSize: 13,
+    fontWeight: '600',
   },
   contentBlock: {
     flex: 0.6,

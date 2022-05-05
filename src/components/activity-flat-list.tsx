@@ -7,40 +7,30 @@ import {
 } from '@fortawesome/pro-light-svg-icons'
 
 import * as React from 'react'
-import { useAppSelector } from '../hooks'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import ProgressCircle from './animations/progress-circle'
 import { formatDate } from '../utils'
-import { dpUI } from '../core/utils/coin-formatter'
-import SuccessIcon from '../assets/icons/success-icon.svg'
-import RefundedIcon from '../assets/icons/refunded.svg'
+import SuccessIcon from '../assets/icons/activity-status/completed.svg'
+import RefundedIcon from '../assets/icons/activity-status/refunded.svg'
 import { BigNumber } from '@liquality/types'
 import {
   HistoryItem,
   TransactionType,
 } from '@liquality/wallet-core/dist/store/types'
+import ActivityFilter from './activity-filter'
+import { useFilteredHistory } from '../custom-hooks'
 
 const ActivityFlatList = ({
   navigate,
   selectedAsset,
-  children,
 }: {
   navigate: (...args: any[]) => void
   selectedAsset?: string
-  children: React.ReactElement
 }) => {
-  const { historyItems = [] } = useAppSelector((state) => {
-    const { activeNetwork, activeWalletId, history: historyObject } = state
-
-    return {
-      fiatRates: state.fiatRates,
-      historyItems: (
-        historyObject?.[activeNetwork]?.[activeWalletId] || []
-      ).filter((item) =>
-        selectedAsset ? item.from === selectedAsset : !!item.id,
-      ),
-    }
-  })
+  const historyItems = useFilteredHistory()
+  const history = selectedAsset
+    ? historyItems.filter((item) => item.from === selectedAsset)
+    : historyItems.filter((item) => !!item.id)
 
   const handleChevronPress = (historyItem: HistoryItem) => {
     if (historyItem.type === 'SWAP') {
@@ -104,10 +94,7 @@ const ActivityFlatList = ({
                 new BigNumber(amount),
               ).toNumber()} ${from}`}
           </Text>
-          <Text style={styles.status}>
-            {`$${dpUI(new BigNumber(amountInUsd), 2)}`}
-            {`$${amountInUsd}`}
-          </Text>
+          <Text style={styles.status}>{`$${amountInUsd}`}</Text>
         </View>
         <View style={styles.col4}>
           {status === 'REFUNDED' && <RefundedIcon />}
@@ -131,10 +118,10 @@ const ActivityFlatList = ({
 
   return (
     <FlatList
-      data={historyItems}
+      data={history}
       renderItem={renderActivity}
-      keyExtractor={(item) => item.id}
-      ListHeaderComponent={children}
+      keyExtractor={(item, index) => `history-item-${index}`}
+      ListHeaderComponent={<ActivityFilter numOfResults={history.length} />}
     />
   )
 }
