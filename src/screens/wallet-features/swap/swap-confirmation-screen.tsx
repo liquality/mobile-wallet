@@ -27,8 +27,11 @@ import Label from '../../../components/ui/label'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import ProgressBar from '../../../components/animations/progress-bar'
 import SuccessIcon from '../../../assets/icons/success-icon.svg'
-import SwapRates from '../../../components/swap-rates'
 import Button from '../../../theme/button'
+import {
+  HistoryItem,
+  TransactionType,
+} from '@liquality/wallet-core/dist/store/types'
 
 type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -41,9 +44,9 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
 }) => {
   const { fiatRates, history = [] } = useAppSelector((state) => {
     const { activeNetwork, activeWalletId, history: historyObject } = state
-    let historyItems: any[] = []
-    if (activeNetwork && activeWalletId && historyObject) {
-      historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
+    let historyItems: HistoryItem[] = []
+    if (historyObject?.[activeNetwork]?.[activeWalletId]) {
+      historyItems = historyObject?.[activeNetwork]?.[activeWalletId] || []
     }
     return {
       fiatRates: state.fiatRates,
@@ -54,7 +57,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   const transaction = route.params.swapTransactionConfirmation
   const [isExpanded, setIsExpanded] = useState(false)
   const [isSecretRevealed, setIsSecretRevealed] = useState(false)
-  const [historyItem, setHistoryItem] = useState<any>()
+  const [historyItem, setHistoryItem] = useState<HistoryItem>()
   const {
     fromAmount,
     from,
@@ -73,7 +76,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     secret,
     secretHash,
     claimFee,
-  } = historyItem?.swapTransaction || {}
+  } = transaction || {}
 
   const formatDate = (ms: string | number): string => {
     const date = new Date(ms)
@@ -115,15 +118,14 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   useEffect(() => {
     const historyItems = history.filter(
       (item) =>
-        item.type === 'SWAP' &&
-        item.swapTransaction?.fromFundHash === transaction?.fromFundHash,
+        item.type === TransactionType.Swap && item.id === transaction?.id,
     )
     if (historyItems.length > 0) {
       setHistoryItem(historyItems[0])
     }
-  }, [fromFundHash, history, transaction?.fromFundHash])
+  }, [fromFundHash, history, transaction?.id])
 
-  if (!historyItem?.swapTransaction) {
+  if (!historyItem) {
     return <View style={styles.container} />
   }
 
@@ -135,7 +137,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.content}>
             {historyItem?.status === 'SUCCESS'
               ? 'Completed'
-              : historyItem?.statusMessage || historyItem?.status}
+              : historyItem?.status}
           </Text>
         </View>
         {historyItem?.status !== 'SUCCESS' && (
@@ -147,11 +149,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
         {historyItem?.status === 'SUCCESS' ? (
           <SuccessIcon />
         ) : (
-          <ProgressCircle
-            radius={17}
-            current={historyItem?.currentStep || 0}
-            total={historyItem?.totalSteps || 0}
-          />
+          <ProgressCircle radius={17} current={2} total={4} />
         )}
       </View>
       <View style={styles.block}>
@@ -176,10 +174,9 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.content}>
             {createdAt && `Initiated ${formatDate(Date.parse(createdAt))}`}
           </Text>
-          {historyItem?.status === 'SUCCESS' &&
-          historyItem?.swapTransaction?.endTime ? (
+          {historyItem?.status === 'SUCCESS' && historyItem?.endTime ? (
             <Text style={styles.content}>{`${'Completed'} ${formatDate(
-              historyItem?.swapTransaction?.endTime,
+              historyItem?.endTime,
             )}`}</Text>
           ) : (
             <Text style={styles.content}>
@@ -228,14 +225,14 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           </Text>
         </View>
       </View>
-      {from && to && (
+      {/* {from && to && (
         <SwapRates
           fromAsset={from}
           toAsset={to}
           selectQuote={() => ({})}
           style={{ paddingHorizontal: 20 }}
         />
-      )}
+      )} */}
       <View style={styles.border}>
         <Text style={styles.label}>NETWORK SPEED/FEE</Text>
         <Text style={styles.content}>

@@ -66,10 +66,15 @@ const rootReducer: Reducer<RootState, PayloadAction<RootState>> = (
         ...state,
         ...action.payload,
       }
+    case 'NEW_TRANSACTION':
+      return {
+        ...state,
+        history: action.payload.history,
+      }
     case 'TRANSACTION_UPDATE':
       return {
         ...state,
-        ...action.payload,
+        history: action.payload.history,
       }
     default:
       return {

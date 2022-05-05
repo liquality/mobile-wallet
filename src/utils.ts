@@ -9,6 +9,11 @@ import {
 import { MNEMONIC, PASSWORD } from '@env'
 import { BigNumber } from '@liquality/types'
 import { GasFees } from './types'
+import {
+  EstimateFeeRequest,
+  SwapQuote,
+} from '@liquality/wallet-core/dist/swaps/types'
+import { Network } from '@liquality/wallet-core/dist/store/types'
 
 // const IV_STRING = '0123456789abcdef0123456789abcdef'
 
@@ -34,7 +39,7 @@ export const onOpenSesame = async (dispatch: any, navigation: any) => {
   })
 }
 
-export const sortQuotes = (quotes: any[]): any[] => {
+export const sortQuotes = (quotes: SwapQuote[]): SwapQuote[] => {
   if (!quotes) {
     throw new Error('Can not sort a null array')
   }
@@ -54,7 +59,11 @@ export const sortQuotes = (quotes: any[]): any[] => {
       }
     }
 
-    return b.toAmount?.minus(a.toAmount || 0).toNumber() || 1
+    return (
+      new BigNumber(b.toAmount)
+        .minus(new BigNumber(a.toAmount || 0))
+        .toNumber() || 1
+    )
   })
 }
 
@@ -124,9 +133,9 @@ export const Log = (
 }
 
 export const calculateFees = async (
-  activeNetwork: string,
+  activeNetwork: Network,
   activeWalletId: string,
-  selectedQuote: any,
+  selectedQuote: SwapQuote,
   asset: string,
   max: boolean,
   txSource: 'from' | 'to',
@@ -138,13 +147,16 @@ export const calculateFees = async (
     fast: new BigNumber(0),
     custom: new BigNumber(0),
   }
-  //TODO set an appropriate value for the custom fee
   const assetFees = await fetchFeesForAsset(asset)
   const swapProvider = fetchSwapProvider(selectedQuote.provider)
   const feePrices = Object.values(assetFees).map((fee: BigNumber) =>
     fee.toNumber(),
   )
-  const params = {
+
+  if (!swapProvider?.fromTxType || !swapProvider?.toTxType)
+    throw new Error('Failed to fetch a swap provider')
+
+  const params: EstimateFeeRequest<string, SwapQuote> = {
     network: activeNetwork,
     walletId: activeWalletId,
     asset,
@@ -158,6 +170,7 @@ export const calculateFees = async (
   const totalFees = await swapProvider.estimateFees(params).catch((e: any) => {
     Log(`Failed to calculate totalFees: ${e}`, 'error')
   })
+  // {"0":"0","26.171984565000002":"0.00431837745322500033","26.210744674":"0.00432477287121","26.254814469000003":"0.0043320443873850005"}
 
   if (!totalFees) throw new Error('Failed to calculate totalFees')
 
@@ -166,7 +179,7 @@ export const calculateFees = async (
     // fees[speed] = fees[speed].plus(totalFees[feePrice])
     fees = {
       ...fees,
-      [speed]: totalFees[fee.toNumber()],
+      [speed]: totalFees[fee.toNumber()].plus(fee),
     }
   }
 

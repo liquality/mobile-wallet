@@ -38,6 +38,7 @@ import { PayloadAction, Reducer } from '@reduxjs/toolkit'
 import Button from '../../../theme/button'
 import Box from '../../../theme/box'
 import SwapFeeSelector from '../../../components/ui/swap-fee-selector'
+import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -78,7 +79,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     swapAssetPair?.fromAsset,
   )
   const [toAsset, setToAsset] = useState<AssetDataElementType>()
-  const [selectedQuote, setSelectedQuote] = useState<any>()
+  const [selectedQuote, setSelectedQuote] = useState<SwapQuote>()
   const [error, setError] = useState('')
   const fromNetworkFee = useRef<NetworkFeeType>()
   const toNetworkFee = useRef<NetworkFeeType>()
@@ -112,7 +113,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     })
   }
 
-  const handleSelectQuote = (quote: any) => {
+  const handleSelectQuote = (quote: SwapQuote) => {
     setSelectedQuote(quote)
   }
 
@@ -192,7 +193,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             bestQuoteAmount = new BigNumber(
               unitToCurrency(
                 cryptoassets[toAsset.code],
-                sortedQuotes[0].toAmount?.toNumber() || 0,
+                new BigNumber(sortedQuotes[0].toAmount || 0),
               ),
             )
           }
@@ -332,12 +333,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             size={15}
           />
           <Label text="NETWORK SPEED/FEE" variant="strong" />
-          <Label
-            text={`${fromAsset?.code || 'BTC'} avg / ${
-              toAsset?.code || 'ETH'
-            } avg`}
-            variant="light"
-          />
+          {fromAsset?.code && toAsset?.code && (
+            <Label
+              text={`${fromAsset?.code} avg / ${toAsset?.code} avg`}
+              variant="light"
+            />
+          )}
         </Pressable>
       </Box>
       {areFeeSelectorsVisible &&
@@ -345,20 +346,24 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         toNetworkFee &&
         selectedQuote && (
           <>
-            <SwapFeeSelector
-              asset={fromAsset?.code || 'BTC'}
-              handleCustomPress={() => ({})}
-              networkFee={fromNetworkFee}
-              selectedQuote={selectedQuote}
-              type={'from'}
-            />
-            <SwapFeeSelector
-              asset={toAsset?.code || 'ETH'}
-              handleCustomPress={() => ({})}
-              networkFee={toNetworkFee}
-              selectedQuote={selectedQuote}
-              type={'to'}
-            />
+            {fromAsset?.code && (
+              <SwapFeeSelector
+                asset={fromAsset?.code}
+                handleCustomPress={() => ({})}
+                networkFee={fromNetworkFee}
+                selectedQuote={selectedQuote}
+                type={'from'}
+              />
+            )}
+            {toAsset?.code && (
+              <SwapFeeSelector
+                asset={toAsset?.code}
+                handleCustomPress={() => ({})}
+                networkFee={toNetworkFee}
+                selectedQuote={selectedQuote}
+                type={'to'}
+              />
+            )}
             <Warning
               text1="Max slippage is 0.5%."
               text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6
