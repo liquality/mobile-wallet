@@ -201,10 +201,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
             {fromAmount &&
               from &&
               `$${cryptoToFiat(
-                unitToCurrency(
-                  cryptoassets[from],
-                  new BigNumber(fromAmount),
-                ).toNumber(),
+                unitToCurrency(cryptoassets[from], new BigNumber(fromAmount)),
                 fiatRates?.[from] || 0,
               )}`}
           </Text>
@@ -225,10 +222,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
             {to &&
               toAmount &&
               `$${cryptoToFiat(
-                unitToCurrency(
-                  cryptoassets[to],
-                  new BigNumber(toAmount),
-                ).toNumber(),
+                unitToCurrency(cryptoassets[to], new BigNumber(toAmount)),
                 fiatRates?.[to] || 0,
               )}`}
           </Text>

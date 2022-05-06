@@ -116,9 +116,9 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
             isAmountNative
               ? `$${formatFiat(
                   cryptoToFiat(
-                    new BigNumber(value).toNumber(),
+                    new BigNumber(value),
                     fiatRates?.[assetSymbol] || 0,
-                  ),
+                  ) as BigNumber,
                 )}`
               : `${fiatToCrypto(
                   new BigNumber(value),
