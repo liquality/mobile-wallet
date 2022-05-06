@@ -21,9 +21,7 @@ const SendFeeSelector: FC<SendFeeSelectorProps> = (props) => {
 
   useEffect(() => {
     fetchFeesForAsset(asset)
-      .then((fees) => {
-        setGasFees(fees)
-      })
+      .then(setGasFees)
       .catch(() => Alert.alert('Failed to fetch gas fees'))
   }, [activeNetwork, activeWalletId, asset, networkFee])
 

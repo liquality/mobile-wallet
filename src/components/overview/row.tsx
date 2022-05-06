@@ -15,6 +15,7 @@ import {
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
+import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
 
 const DEFAULT_COLOR = '#EFEFEF'
 
@@ -35,22 +36,14 @@ const Row: React.FC<RowProps> = (props) => {
       toggleRow(item.id)
     } else {
       onAssetSelected({
-        assetData: {
-          ...item,
-          address: item.address,
-        },
+        assetData: item,
         screenTitle: item.code,
       })
     }
   }
 
   return (
-    <AssetListSwipeableRow
-      assetData={{
-        ...item,
-        address: item.address,
-      }}
-      assetSymbol={item.code}>
+    <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
       <Pressable
         style={[styles.row, { borderLeftColor: chainColor }]}
         onPress={handlePressOnRow}>
@@ -68,9 +61,7 @@ const Row: React.FC<RowProps> = (props) => {
         <View style={styles.col2}>
           <Text style={styles.code}>{name}</Text>
           <Text style={styles.address}>
-            {`${address?.substring(0, 4)}...${address?.substring(
-              address?.length - 4,
-            )}`}
+            {address && shortenAddress(address)}
           </Text>
         </View>
         {isNested ? (
@@ -102,10 +93,7 @@ const Row: React.FC<RowProps> = (props) => {
             <Pressable
               onPress={() =>
                 onAssetSelected({
-                  assetData: {
-                    ...item,
-                    address: item.address,
-                  },
+                  assetData: item,
                   screenTitle: item.code,
                 })
               }>

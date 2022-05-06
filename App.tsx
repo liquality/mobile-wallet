@@ -14,6 +14,7 @@ import {
 } from './src/components/navigators'
 import LoginScreen from './src/screens/wallet-creation/loginScreen'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { Log } from './src/utils'
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
@@ -40,14 +41,16 @@ const App: FC = () => {
   }
 
   useEffect(() => {
-    isNewInstallation().then((isNew) => {
-      if (isNew) {
-        setInitialRouteName('WalletCreationNavigator')
-      } else {
-        setInitialRouteName('LoginScreen')
-      }
-      SplashScreen.hide()
-    })
+    isNewInstallation()
+      .then((isNew) => {
+        if (isNew) {
+          setInitialRouteName('WalletCreationNavigator')
+        } else {
+          setInitialRouteName('LoginScreen')
+        }
+      })
+      .catch((e) => Log(`Failed to start the app: ${e}`, 'error'))
+    SplashScreen.hide()
   }, [])
 
   if (!initialRouteName) {

@@ -30,9 +30,7 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
       asset,
       true,
       type,
-    ).then((fees) => {
-      setGasFees(fees)
-    })
+    ).then(setGasFees)
   }, [activeNetwork, activeWalletId, asset, networkFee, selectedQuote, type])
 
   //TODO add an ErrorBoundary component
