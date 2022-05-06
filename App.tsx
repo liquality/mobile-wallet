@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { StatusBar, View } from 'react-native'
 import { Provider } from 'react-redux'
 import SplashScreen from 'react-native-splash-screen'
@@ -8,16 +8,18 @@ import { ThemeProvider } from '@shopify/restyle'
 import { store, isNewInstallation } from './src/store/store'
 import theme from './src/theme'
 import {
-  OnboardingNavigator,
+  WalletCreationNavigator,
   WalletImportNavigator,
   MainNavigator,
 } from './src/components/navigators'
 import LoginScreen from './src/screens/wallet-creation/loginScreen'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { Log } from './src/utils'
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
     {
-      OnboardingNavigator,
+      WalletCreationNavigator,
       WalletImportNavigator,
       MainNavigator,
       LoginScreen,
@@ -30,33 +32,41 @@ const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   return <Navigator />
 }
 
-const App = () => {
+const App: FC = () => {
   const [initialRouteName, setInitialRouteName] = useState(
-    'OnboardingNavigator',
+    'WalletCreationNavigator',
   )
   const backgroundStyle = {
     flex: 1,
   }
 
   useEffect(() => {
-    isNewInstallation().then((isNew) => {
-      if (isNew) {
-        setInitialRouteName('OnboardingNavigator')
-      } else {
-        setInitialRouteName('LoginScreen')
-      }
-      SplashScreen.hide()
-    })
-  })
+    isNewInstallation()
+      .then((isNew) => {
+        if (isNew) {
+          setInitialRouteName('WalletCreationNavigator')
+        } else {
+          setInitialRouteName('LoginScreen')
+        }
+      })
+      .catch((e) => Log(`Failed to start the app: ${e}`, 'error'))
+    SplashScreen.hide()
+  }, [])
+
+  if (!initialRouteName) {
+    return <View />
+  }
 
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <View style={backgroundStyle} testID={'app-test'}>
           <StatusBar barStyle={'dark-content'} />
-          <NavigationContainer>
-            <AppNavigator initialRouteName={initialRouteName} />
-          </NavigationContainer>
+          <GestureHandlerRootView style={backgroundStyle}>
+            <NavigationContainer>
+              <AppNavigator initialRouteName={initialRouteName} />
+            </NavigationContainer>
+          </GestureHandlerRootView>
         </View>
       </ThemeProvider>
     </Provider>

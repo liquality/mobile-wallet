@@ -34,13 +34,14 @@ import SwapScreen from '../screens/wallet-features/swap/swap-screen'
 import SwapReviewScreen from '../screens/wallet-features/swap/swap-review-screen'
 import SwapConfirmationScreen from '../screens/wallet-features/swap/swap-confirmation-screen'
 import { TransitionPresets } from '@react-navigation/stack'
+import LoginScreen from '../screens/wallet-creation/loginScreen'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
 
 export const OnboardingContext = createContext({})
 
-export const OnboardingNavigator = () => (
+export const WalletCreationNavigator = () => (
   <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
     <Stack.Navigator
       initialRouteName="Entry"
@@ -116,6 +117,7 @@ export const AppStackNavigator = () => (
         />
       ),
     })}>
+    <Stack.Screen name="LoginScreen" component={LoginScreen} />
     <Stack.Screen name="OverviewScreen">
       {(props) => WithPopupMenu(OverviewScreen)(props)}
     </Stack.Screen>
@@ -222,7 +224,7 @@ export const AppStackNavigator = () => (
 
 export const MainNavigator = () => (
   <Tab.Navigator
-    initialRouteName="MainStackNavigator"
+    initialRouteName="AppStackNavigator"
     screenOptions={({ route }) => ({
       headerShown: false,
       title: '',
@@ -265,9 +267,6 @@ const styles = StyleSheet.create({
   },
   tabFocused: {
     borderTopColor: '#000',
-  },
-  icon: {
-    marginVertical: 5,
   },
   checkIcon: {
     marginRight: 20,

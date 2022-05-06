@@ -10,7 +10,7 @@ import {
   cryptoToFiat,
   fiatToCrypto,
   formatFiat,
-} from '../../core/utils/coin-formatter'
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { SwapEventType } from '../../screens/wallet-features/swap/swap-screen'
 import Button from '../../theme/button'
 
@@ -116,9 +116,9 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
             isAmountNative
               ? `$${formatFiat(
                   cryptoToFiat(
-                    new BigNumber(value).toNumber(),
+                    new BigNumber(value),
                     fiatRates?.[assetSymbol] || 0,
-                  ),
+                  ) as BigNumber,
                 )}`
               : `${fiatToCrypto(
                   new BigNumber(value),
@@ -187,11 +187,6 @@ const styles = StyleSheet.create({
     lineHeight: 25,
     height: 24,
     textAlign: 'left',
-  },
-  amount: {
-    fontWeight: '300',
-    fontSize: 12,
-    lineHeight: 18,
   },
 })
 

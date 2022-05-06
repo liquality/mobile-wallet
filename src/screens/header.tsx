@@ -34,10 +34,6 @@ const styles = StyleSheet.create({
   headerLogo: {
     marginBottom: 8,
   },
-  logoText: {
-    color: '#fff',
-    fontSize: 18,
-  },
   headerText: {
     fontFamily: 'MontserratAlternates-Light',
     color: '#fff',

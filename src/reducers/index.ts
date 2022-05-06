@@ -1,10 +1,25 @@
-import { StateType } from '@liquality/core/dist/types'
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
+import { RootState } from '@liquality/wallet-core/dist/store/types'
 
-const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
+export interface CustomRootState extends RootState {
+  assetFilter?: {
+    timeLimit?: string
+    actionTypes?: string[]
+    dateRange?: {
+      start: string | undefined
+      end: string | undefined
+    }
+    activityStatuses?: string[]
+    assetToggles?: string[]
+    sorter?: string | undefined
+  }
+}
+
+//TODO clean up the unused cases
+const rootReducer: Reducer<CustomRootState, PayloadAction<CustomRootState>> = (
   state,
   action,
-): StateType => {
+): any => {
   switch (action.type) {
     case 'UPDATE_ACCOUNT':
       return {
@@ -26,13 +41,12 @@ const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
         ...action.payload,
       }
     case 'UPDATE_WALLET':
-      const accounts = action.payload.accounts
       return {
         ...state,
-        accounts: { ...accounts },
+        ...action.payload,
       }
     case 'UPDATE_MARKET_DATA':
-      const marketData = action.payload.marketData || []
+      const marketData = action.payload.marketData || {}
       return {
         ...state,
         marketData: [...marketData],
@@ -67,10 +81,15 @@ const rootReducer: Reducer<StateType, PayloadAction<StateType>> = (
         ...state,
         ...action.payload,
       }
+    case 'NEW_TRANSACTION':
+      return {
+        ...state,
+        history: action.payload.history,
+      }
     case 'TRANSACTION_UPDATE':
       return {
         ...state,
-        ...action.payload,
+        history: action.payload.history,
       }
     case 'UPDATE_ASSET_FILTER':
       return {

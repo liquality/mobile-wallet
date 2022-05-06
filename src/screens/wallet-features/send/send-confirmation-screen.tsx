@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import TransactionDetails from '../../../components/transaction-details'
 import { chains, unitToCurrency } from '@liquality/cryptoassets'
@@ -9,9 +9,8 @@ import { formatDate } from '../../../utils'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
 import { useAppSelector } from '../../../hooks'
-import { HistoryItem } from '@liquality/core/dist/types'
 
-type SendConfirmationScreenProps = StackScreenProps<
+type SendConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SendConfirmationScreen'
 >
@@ -23,10 +22,10 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   const transaction = route.params.sendTransactionConfirmation!
   const { from, startTime } = transaction
   const { value: amount, feePrice } = transaction?.sendTransaction!
-  const [historyItem, setHistoryItem] = useState<HistoryItem>(transaction)
+  const [historyItem, setHistoryItem] = useState<any>(transaction)
   const { history = [] } = useAppSelector((state) => {
     const { activeNetwork, activeWalletId, history: historyObject } = state
-    let historyItems: HistoryItem[] = []
+    let historyItems: any[] = []
     if (activeNetwork && activeWalletId && historyObject) {
       historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
     }

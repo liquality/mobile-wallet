@@ -2,20 +2,25 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
 import { useAppSelector } from '../../hooks'
 import { FeeDetails } from '@liquality/types/lib/fees'
-import { cryptoToFiat, formatFiat } from '../../core/utils/coin-formatter'
+import {
+  cryptoToFiat,
+  formatFiat,
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { calculateGasFee } from '../../core/utils/fee-calculator'
 import AssetIcon from '../../components/asset-icon'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
   AssetDataElementType,
   RootStackParamList,
   UseInputStateReturnType,
 } from '../../types'
 import { ChainId } from '@liquality/cryptoassets'
-import { NetworkEnum } from '@liquality/core/dist/types'
 import Button from '../../theme/button'
 
-type CustomFeeScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
+type CustomFeeScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'SendScreen'
+>
 type SpeedMode = keyof FeeDetails
 const useInputState = (
   initialValue: string,
@@ -32,7 +37,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     route.params.assetData!
   const {
     activeWalletId = '',
-    activeNetwork = NetworkEnum.Testnet,
+    activeNetwork = 'testnet',
     fees,
     fiatRates,
   } = useAppSelector((state) => ({
@@ -224,9 +229,6 @@ const styles = StyleSheet.create({
   middleCol: {
     borderLeftWidth: 0,
     borderRightWidth: 0,
-  },
-  highlighted: {
-    backgroundColor: '#F0F7F9',
   },
   asset: {
     fontFamily: 'Montserrat-Regular',

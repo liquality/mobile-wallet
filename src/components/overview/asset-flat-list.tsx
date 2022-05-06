@@ -1,5 +1,6 @@
 import React, { FC, Fragment, useCallback, useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
+import { v4 as uuidv4 } from 'uuid'
 import { useAppSelector } from '../../hooks'
 import { AssetDataElementType, StackPayload } from '../../types'
 import Row from './row'
@@ -41,12 +42,14 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
   }, [assets])
 
   const renderAsset = ({ item }: { item: AssetDataElementType }) => {
-    const isNested = item.assets && item.assets.length > 0
+    //TODO is this logic correct?
+    const isNested =
+      item.assets && item.assets.length > 0 && item.code !== 'BTC'
 
     return (
-      <Fragment>
+      <Fragment key={uuidv4()}>
         <Row
-          key={item.id}
+          key={uuidv4()}
           item={item}
           toggleRow={toggleRow}
           onAssetSelected={onAssetSelected}
@@ -57,7 +60,7 @@ const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
           item.assets?.map((subItem) => {
             return (
               <SubRow
-                key={`${item.id}-${subItem.id}`}
+                key={uuidv4()}
                 parentItem={item}
                 item={subItem}
                 onAssetSelected={onAssetSelected}

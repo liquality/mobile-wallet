@@ -1,29 +1,22 @@
-import {
-  Alert,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   faChevronRight,
   faExchange,
   faLongArrowUp,
-  faLongArrowDown,
 } from '@fortawesome/pro-light-svg-icons'
 
 import * as React from 'react'
-import { useAppSelector } from '../hooks'
-import { HistoryItem } from '@liquality/core/dist/types'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import ProgressCircle from './animations/progress-circle'
 import { formatDate } from '../utils'
-import { cryptoToFiat, dpUI } from '../core/utils/coin-formatter'
 import SuccessIcon from '../assets/icons/activity-status/completed.svg'
 import RefundedIcon from '../assets/icons/activity-status/refunded.svg'
 import { BigNumber } from '@liquality/types'
+import {
+  HistoryItem,
+  TransactionType,
+} from '@liquality/wallet-core/dist/store/types'
 import ActivityFilter from './activity-filter'
 import { useFilteredHistory } from '../custom-hooks'
 
@@ -38,12 +31,11 @@ const ActivityFlatList = ({
   const history = selectedAsset
     ? historyItems.filter((item) => item.from === selectedAsset)
     : historyItems.filter((item) => !!item.id)
-  const fiatRates = useAppSelector((state) => state.fiatRates)
 
   const handleChevronPress = (historyItem: HistoryItem) => {
     if (historyItem.type === 'SWAP') {
       navigate('SwapConfirmationScreen', {
-        swapTransactionConfirmation: historyItem.swapTransaction,
+        swapTransactionConfirmation: historyItem,
         screenTitle: `Swap ${historyItem.from} to ${historyItem.to} Details`,
       })
     } else if (historyItem.type === 'SEND') {
@@ -55,43 +47,28 @@ const ActivityFlatList = ({
   }
 
   const renderActivity = ({ item }: { item: HistoryItem }) => {
-    const {
-      type,
-      totalSteps,
-      startTime,
-      sendTransaction,
-      swapTransaction,
-      from,
-      to,
-      currentStep,
-      status,
-    } = item
-    let transactionLabel, amountInNative, amountInFiat, transactionTime
+    const { id, type, startTime, from, to, status } = item
+    let transactionLabel, transactionTime, amount, amountInUsd
+    if (item.type === TransactionType.Swap) {
+      amount = item.fromAmount
+      amountInUsd = item.fromAmountUsd
+    } else if (item.type === TransactionType.Send) {
+      amount = item.amount
+      amountInUsd = item.amount
+    }
 
-    if (type === 'SEND') {
+    if (type === TransactionType.Send) {
       transactionLabel = `Send ${from}`
-      amountInNative = sendTransaction?.value
-      if (!sendTransaction?.value || !fiatRates) {
-        Alert.alert('send transaction empty')
-      } else {
-        amountInFiat = cryptoToFiat(
-          unitToCurrency(cryptoassets[from], sendTransaction?.value).toNumber(),
-          fiatRates[from],
-        )
-      }
-
       transactionTime = startTime
-    } else if (type === 'SWAP') {
+    } else if (type === TransactionType.Swap) {
       transactionLabel = `${from} to ${to}`
-      amountInNative = swapTransaction?.fromAmount
-      amountInFiat = swapTransaction?.fromAmountUsd
       transactionTime = startTime
     }
 
     return (
-      <View style={styles.row} key={item.id}>
+      <View style={styles.row} key={id}>
         <View style={styles.col1}>
-          {type === 'SWAP' && (
+          {type === TransactionType.Swap && (
             <FontAwesomeIcon
               size={23}
               icon={faExchange}
@@ -99,15 +76,8 @@ const ActivityFlatList = ({
               color={'#2CD2CF'}
             />
           )}
-          {type === 'SEND' && (
+          {type === TransactionType.Send && (
             <FontAwesomeIcon size={23} icon={faLongArrowUp} color={'#FF287D'} />
-          )}
-          {type === 'RECEIVE' && (
-            <FontAwesomeIcon
-              size={23}
-              icon={faLongArrowDown}
-              color={'#2CD2CF'}
-            />
           )}
         </View>
         <View style={styles.col2}>
@@ -118,25 +88,19 @@ const ActivityFlatList = ({
         </View>
         <View style={styles.col3}>
           <Text style={styles.amount}>
-            {amountInNative &&
+            {amount &&
               `${unitToCurrency(
                 cryptoassets[from],
-                amountInNative,
+                new BigNumber(amount),
               ).toNumber()} ${from}`}
           </Text>
-          <Text style={styles.status}>
-            {amountInFiat && `$${dpUI(new BigNumber(amountInFiat), 2)}`}
-          </Text>
+          <Text style={styles.status}>{`$${amountInUsd}`}</Text>
         </View>
         <View style={styles.col4}>
           {status === 'REFUNDED' && <RefundedIcon />}
           {status === 'SUCCESS' && <SuccessIcon />}
           {!['SUCCESS', 'REFUNDED'].includes(status) && (
-            <ProgressCircle
-              radius={17}
-              current={currentStep}
-              total={totalSteps}
-            />
+            <ProgressCircle radius={17} current={2} total={4} />
           )}
         </View>
         <View style={styles.col5}>

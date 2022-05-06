@@ -1,18 +1,18 @@
-import React, { useState } from 'react'
+import React, { FC, useState } from 'react'
 import { View, StyleSheet, ImageBackground } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import Header from '../header'
-import { useDispatch } from 'react-redux'
-import { onOpenSesame } from '../../utils'
 import Text from '../../theme/text'
 import Button from '../../theme/button'
 import Box from '../../theme/box'
+import { createWallet } from '../../store/store'
+import { MNEMONIC, PASSWORD } from '@env'
 
-type EntryProps = StackScreenProps<RootStackParamList, 'Entry'>
+type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
-const Entry = ({ navigation }: EntryProps) => {
-  const dispatch = useDispatch()
+const Entry: FC<EntryProps> = (props): JSX.Element => {
+  const { navigation } = props
   const [loading, setLoading] = useState(false)
 
   const handleImportPress = () => navigation.navigate('WalletImportNavigator')
@@ -24,7 +24,8 @@ const Entry = ({ navigation }: EntryProps) => {
 
   const handleOpenSesamePress = async () => {
     setLoading(true)
-    await onOpenSesame(dispatch, navigation)
+    await createWallet(PASSWORD, MNEMONIC)
+    navigation.navigate('MainNavigator')
   }
 
   return (
@@ -74,11 +75,6 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 0.3,
-  },
-  actionContainer: {
-    flex: 0.3,
-    width: '90%',
-    justifyContent: 'flex-end',
   },
   forgotPassword: {
     flexDirection: 'row',

@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { StyleSheet, View, TextInput, Pressable } from 'react-native'
-import { chains } from '@liquality/cryptoassets'
-import { StackScreenProps } from '@react-navigation/stack'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import React, { FC, useCallback, useEffect, useState } from 'react'
+import { Pressable, StyleSheet, TextInput, View } from 'react-native'
 import {
-  AssetDataElementType,
-  RootStackParamList,
-  UseInputStateReturnType,
-} from '../../../types'
+  assets as cryptoassets,
+  ChainId,
+  chains,
+} from '@liquality/cryptoassets'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import {
   faAngleDown,
   faAngleRight,
@@ -20,15 +20,15 @@ import {
   cryptoToFiat,
   dpUI,
   fiatToCrypto,
-  gasUnitToCurrency,
-} from '../../../core/utils/coin-formatter'
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
-import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { chainDefaultColors } from '../../../core/config'
-import { GasSpeedType, NetworkEnum } from '@liquality/core/dist/types'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
+import Box from '../../../theme/box'
+import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
+import { FeeLabel, Network } from '@liquality/wallet-core/dist/store/types'
 
 const useInputState = (
   initialValue: string,
@@ -37,15 +37,21 @@ const useInputState = (
   return { value, onChangeText: setValue }
 }
 
-type SendScreenProps = StackScreenProps<RootStackParamList, 'SendScreen'>
+type SendScreenProps = NativeStackScreenProps<RootStackParamList, 'SendScreen'>
 
-const SendScreen = ({ navigation, route }: SendScreenProps) => {
-  const { code, balance, chain }: AssetDataElementType = route.params.assetData!
+const SendScreen: FC<SendScreenProps> = (props) => {
+  const { navigation, route } = props
+  //TODO is there a better way to deal with this?
+  const {
+    code = 'ETH',
+    balance = 0,
+    chain = ChainId.Ethereum,
+  } = route.params.assetData || {}
   const [customFee, setCustomFee] = useState<number>(0)
-  const gasSpeeds: GasSpeedType[] = ['slow', 'average', 'fast']
+  const gasSpeeds: any[] = ['slow', 'average', 'fast']
   const {
     activeWalletId,
-    activeNetwork = NetworkEnum.Testnet,
+    activeNetwork = 'testnet',
     fees,
     fiatRates,
   } = useAppSelector((state) => ({
@@ -55,7 +61,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     fiatRates: state.fiatRates,
   }))
   const [showFeeOptions, setShowFeeOptions] = useState(false)
-  const [speedMode, setSpeedMode] = useState<GasSpeedType>('average')
+  const [speedMode, setSpeedMode] = useState<FeeLabel>(FeeLabel.Average)
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
@@ -74,7 +80,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
       setError('Enter a valid amount')
       return false
-    } else if (new BigNumber(amountInput.value).gt(balance!)) {
+    } else if (new BigNumber(amountInput.value).gt(new BigNumber(balance))) {
       setError('Lower amount. This exceeds available balance.')
       return false
     } else if (!chain || !chains[chain].isValidAddress(addressInput.value)) {
@@ -90,11 +96,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       setFee(new BigNumber(route.params.customFee))
       setCustomFee(route.params.customFee)
       setAvailableAmount(
-        calculateAvailableAmnt(
-          code,
-          route.params.customFee,
-          balance.toNumber(),
-        ),
+        calculateAvailableAmnt(code, route.params.customFee, balance),
       )
     }
   }, [balance, code, route.params.customFee])
@@ -113,18 +115,26 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       return
     }
 
-    gasFee = fees[activeNetwork]?.[activeWalletId]?.[chain]?.[speedMode]?.fee
+    gasFee =
+      fees[activeNetwork as Network]?.[activeWalletId]?.[chain]?.[speedMode]
+        ?.fee
 
     if (!gasFee) {
       setError('Please refresh your wallet')
       return
     }
-    setFee(new BigNumber(gasFee))
+    const calculatedFee =
+      typeof gasFee === 'number'
+        ? new BigNumber(gasFee)
+        : new BigNumber(
+            gasFee.maxPriorityFeePerGas + gasFee.suggestedBaseFeePerGas,
+          )
+    setFee(calculatedFee)
     setAvailableAmount(
       calculateAvailableAmnt(
         code,
-        gasUnitToCurrency(code, gasFee).toNumber(),
-        balance.toNumber(),
+        getSendFee(code, calculatedFee.toNumber()).toNumber(),
+        balance,
       ),
     )
   }, [code, speedMode, fees, activeWalletId, activeNetwork, chain, balance])
@@ -134,8 +144,8 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       navigation.navigate('SendReviewScreen', {
         screenTitle: `Send ${code} Review`,
         sendTransaction: {
-          amount: new BigNumber(amountInput.value),
-          gasFee: fee,
+          amount: new BigNumber(amountInput.value).toNumber(),
+          gasFee: fee.toNumber(),
           destinationAddress: addressInput.value,
           asset: code,
         },
@@ -166,14 +176,15 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
 
       if (showAmountsInFiat) {
         setAmountInNative(
-          fiatToCrypto(new BigNumber(text), fiatRates[code!]).toNumber(),
+          new BigNumber(
+            fiatToCrypto(new BigNumber(text), fiatRates[code!]),
+          ).toNumber(),
         )
         setAmountInFiat(new BigNumber(text).toNumber())
       } else {
         setAmountInFiat(
-          cryptoToFiat(
-            new BigNumber(text).toNumber(),
-            fiatRates[code],
+          new BigNumber(
+            cryptoToFiat(new BigNumber(text).toNumber(), fiatRates[code]),
           ).toNumber(),
         )
         setAmountInNative(new BigNumber(text).toNumber())
@@ -216,7 +227,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
       <View style={styles.headerBlock}>
         <View style={styles.sendWrapper}>
           <View style={styles.row}>
-            <View style={{ flex: 1 }}>
+            <Box flex={1}>
               <View style={styles.row}>
                 <Text variant="secondaryInputLabel">SEND</Text>
                 <Button
@@ -243,7 +254,7 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
                 autoCorrect={false}
                 returnKeyType="done"
               />
-            </View>
+            </Box>
             <View style={styles.asset}>
               <AssetIcon asset={code} chain={cryptoassets[code].chain} />
               <Text style={styles.assetName}>{code}</Text>
@@ -297,15 +308,12 @@ const SendScreen = ({ navigation, route }: SendScreenProps) => {
           </Pressable>
           {customFee ? (
             <Text style={styles.speedValue}>
-              {`(Custom / ${dpUI(
-                gasUnitToCurrency(code, new BigNumber(customFee)),
-                9,
-              )} ${code})`}
+              {`(Custom / ${dpUI(getSendFee(code, customFee), 9)} ${code})`}
             </Text>
           ) : (
             <Text style={styles.speedValue}>
               {`(${speedMode} / ${dpUI(
-                gasUnitToCurrency(code, new BigNumber(fee)),
+                getSendFee(code, fee.toNumber()),
                 9,
               )} ${code})`}
             </Text>
@@ -391,20 +399,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginBottom: 10,
   },
-  amountInFiatBtn: {
-    borderColor: '#000',
-    borderWidth: 1,
-    borderRadius: 50,
-    paddingHorizontal: 10,
-  },
   amount: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 18,
-  },
-  nativeStyle: {
-    borderColor: '#38FFFB',
   },
   sendInput: {
     fontFamily: 'Montserrat-Regular',
@@ -465,12 +464,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '70%',
     alignItems: 'center',
-  },
-  speedLabel: {
-    alignSelf: 'flex-start',
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 12,
   },
   speedValue: {
     alignSelf: 'flex-start',

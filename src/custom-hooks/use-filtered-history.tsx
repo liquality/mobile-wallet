@@ -1,9 +1,8 @@
 import { useAppSelector } from '../hooks'
-import { HistoryItem } from '@liquality/core/dist/types'
-import { MOCKED_HISTORY_ITEMS } from './activity-flat-list-mock'
 import Fuse from 'fuse.js'
 import { ActionEnum, TimeLimitEnum } from '../types'
 import moment from 'moment'
+import { HistoryItem } from '@liquality/wallet-core/dist/store/types'
 
 const FUSE_OPTIONS = {
   includeScore: true,
@@ -96,8 +95,6 @@ const useFilteredHistory = () => {
       historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
     }
 
-    // TODO: Remove this
-    historyItems = MOCKED_HISTORY_ITEMS
     return historyItems
   })
 

@@ -9,7 +9,7 @@ module.exports = (async () => {
       getTransformOptions: async () => ({
         transform: {
           experimentalImportSupport: false,
-          inlineRequires: false,
+          inlineRequires: true,
         },
       }),
       babelTransformerPath: require.resolve('react-native-svg-transformer'),
@@ -18,5 +18,6 @@ module.exports = (async () => {
       assetExts: assetExts.filter((ext) => ext !== 'svg'),
       sourceExts: [...sourceExts, 'svg'],
     },
+    resetCache: true,
   }
 })()

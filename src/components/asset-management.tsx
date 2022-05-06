@@ -7,8 +7,8 @@ import AssetIcon from './asset-icon'
 import Switch from './ui/switch'
 import SearchBox from './ui/search-box'
 import { useAppSelector } from '../hooks'
-import { NetworkEnum } from '@liquality/core/dist/types'
 import { customConfig } from '../core/config'
+import { Network } from '@liquality/wallet-core/dist/store/types'
 
 const AssetManagement = ({
   enabledAssetCodes,
@@ -63,7 +63,7 @@ const AssetManagement = ({
     //TODO we still need to handle custom tokens
     let myAssets: Asset[] = []
 
-    if (activeNetwork === NetworkEnum.Testnet) {
+    if (activeNetwork === Network.Testnet) {
       myAssets = customConfig.defaultAssets[activeNetwork].reduce(
         (assetList: Asset[], asset) => {
           if (cryptoassets.hasOwnProperty(asset)) {

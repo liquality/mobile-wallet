@@ -4,17 +4,16 @@ import Svg, { Circle, Line } from 'react-native-svg'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClone } from '@fortawesome/pro-light-svg-icons'
 import Clipboard from '@react-native-clipboard/clipboard'
-import { HistoryItem, StateType } from '@liquality/core/dist/types'
 import { formatDate } from '../utils'
 import {
   dpUI,
-  gasUnitToCurrency,
   prettyFiatBalance,
-} from '../core/utils/coin-formatter'
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import { useAppSelector } from '../hooks'
 import Label from './ui/label'
+import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
 
 type ConfirmationBlockProps = {
   address?: string
@@ -22,7 +21,7 @@ type ConfirmationBlockProps = {
   fee?: number
   confirmations: number
   asset: string
-  fiatRates: StateType['fiatRates']
+  fiatRates: any['fiatRates']
 }
 
 const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
@@ -52,7 +51,7 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
             fee &&
             asset &&
             `${dpUI(
-              new BigNumber(gasUnitToCurrency(asset, new BigNumber(fee))),
+              new BigNumber(getSendFee(asset, fee)),
               9,
             )} ${asset}/ $${prettyFiatBalance(
               unitToCurrency(cryptoassets[asset], fee).toNumber(),
@@ -105,7 +104,7 @@ type TimelineInfo = {
 
 type TransactionDetailsProps = {
   type: 'SWAP' | 'SEND'
-  historyItem: HistoryItem
+  historyItem: any
 }
 const TransactionDetails: React.FC<TransactionDetailsProps> = (
   props,
@@ -316,12 +315,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#9C4DF9',
   },
-  address: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '600',
-    fontSize: 10,
-    color: '#9D4DFA',
-  },
   amount: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
@@ -332,29 +325,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  step: {
-    width: 8,
-    height: 8,
-    borderRadius: 50,
-    backgroundColor: '#2CD2CF',
-  },
-  separator: {
-    flex: 0.49,
-    width: 1,
-    height: 20,
-    borderStyle: 'dotted',
-    borderWidth: 1,
-    borderColor: '#2CD2CF',
-  },
   start: {
     width: 10,
     height: 1,
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: '#2CD2CF',
-  },
-  list: {
-    marginTop: 15,
   },
   emptyBlock: {
     width: '45%',
@@ -368,10 +344,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '4%',
     marginHorizontal: 15,
-  },
-  centered: {
-    justifyContent: 'flex-start',
-    alignItems: 'center',
   },
   copyBtn: {
     marginLeft: 5,

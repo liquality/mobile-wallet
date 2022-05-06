@@ -7,11 +7,11 @@ import {
   ScrollView,
 } from 'react-native'
 import { RootStackParamList } from '../../types'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 import Button from '../../theme/button'
-type TermsProps = StackScreenProps<RootStackParamList, 'TermsScreen'>
+type TermsProps = NativeStackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation, route }: TermsProps) => {
   const [scrolledToEnd, setScrolledToEnd] = useState(false)

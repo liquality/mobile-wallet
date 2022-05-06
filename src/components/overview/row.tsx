@@ -1,7 +1,7 @@
-import { AssetDataElementType, StackPayload } from '../../types'
-import React, { FC } from 'react'
-import { chainDefaultColors } from '../../core/config'
+import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { AssetDataElementType, StackPayload } from '../../types'
+import { chainDefaultColors } from '../../core/config'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   faChevronRight,
@@ -9,8 +9,13 @@ import {
   faPlus,
 } from '@fortawesome/pro-light-svg-icons'
 import AssetIcon from '../asset-icon'
-import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
-import GasIndicator from '../ui/gas-indicator'
+import {
+  formatFiat,
+  prettyBalance,
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
+import AssetListSwipeableRow from '../asset-list-swipeable-row'
+import { BigNumber } from '@liquality/types'
+import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
 
 const DEFAULT_COLOR = '#EFEFEF'
 
@@ -21,76 +26,87 @@ type RowProps = {
   isNested: boolean
 }
 
-const Row: FC<RowProps> = (props) => {
+const Row: React.FC<RowProps> = (props) => {
   const { item, toggleRow, onAssetSelected, isNested } = props
-  const { name, address, balance, balanceInUSD, fees, chain } = item
+  const { name, address, balanceInUSD, chain } = item
   const chainColor = chain ? chainDefaultColors[chain] : DEFAULT_COLOR
 
+  const handlePressOnRow = () => {
+    if (isNested) {
+      toggleRow(item.id)
+    } else {
+      onAssetSelected({
+        assetData: item,
+        screenTitle: item.code,
+      })
+    }
+  }
+
   return (
-    <View style={[styles.row, { borderLeftColor: chainColor }]}>
-      <View style={styles.col1}>
-        <Pressable onPress={() => toggleRow(item.id)}>
-          <FontAwesomeIcon
-            size={15}
-            icon={item.showAssets ? faMinus : faPlus}
-            color={isNested ? '#A8AEB7' : '#FFF'}
-            style={styles.plusSign}
-          />
-        </Pressable>
-        <AssetIcon chain={item.chain} />
-      </View>
-      <View style={styles.col2}>
-        <Text style={styles.code}>{name}</Text>
-        <Text style={styles.address}>
-          {`${address?.substring(0, 4)}...${address?.substring(
-            address?.length - 4,
-          )}`}
-        </Text>
-      </View>
-      {isNested ? (
-        <View style={styles.col3}>
-          <Text style={styles.TotalBalanceInUSD}>
-            Total ${balanceInUSD && formatFiat(balanceInUSD)}
-          </Text>
-          <View style={styles.gas}>
-            <GasIndicator balance={balance!.toNumber()} gasFees={fees!} />
-          </View>
-        </View>
-      ) : (
-        <View style={styles.col3}>
-          <Text style={styles.balance}>
-            {item.balance &&
-              item.code &&
-              `${prettyBalance(item.balance, item.code)} ${item.code}`}
-          </Text>
-          <Text style={styles.balanceInUSD}>
-            ${balanceInUSD && formatFiat(balanceInUSD)}
-          </Text>
-        </View>
-      )}
-      <View style={styles.col4}>
-        {isNested ? (
-          <FontAwesomeIcon size={20} icon={faChevronRight} color={'#FFF'} />
-        ) : (
-          <Pressable
-            onPress={() =>
-              onAssetSelected({
-                assetData: {
-                  ...item,
-                  address: item.address,
-                },
-                screenTitle: item.code,
-              })
-            }>
+    <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
+      <Pressable
+        style={[styles.row, { borderLeftColor: chainColor }]}
+        onPress={handlePressOnRow}>
+        <View style={styles.col1}>
+          <Pressable onPress={() => toggleRow(item.id)}>
             <FontAwesomeIcon
-              size={20}
-              icon={faChevronRight}
-              color={'#A8AEB7'}
+              size={15}
+              icon={item.showAssets ? faMinus : faPlus}
+              color={isNested ? '#A8AEB7' : '#FFF'}
+              style={styles.plusSign}
             />
           </Pressable>
+          <AssetIcon chain={item.chain} />
+        </View>
+        <View style={styles.col2}>
+          <Text style={styles.code}>{name}</Text>
+          <Text style={styles.address}>
+            {address && shortenAddress(address)}
+          </Text>
+        </View>
+        {isNested ? (
+          <View style={styles.col3}>
+            <Text style={styles.TotalBalanceInUSD}>
+              {`Total ${
+                balanceInUSD && formatFiat(new BigNumber(balanceInUSD))
+              }`}
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.col3}>
+            <Text style={styles.balance}>
+              {item.balance &&
+                item.code &&
+                `${prettyBalance(new BigNumber(item.balance), item.code)} ${
+                  item.code
+                }`}
+            </Text>
+            <Text style={styles.balanceInUSD}>
+              {`${balanceInUSD && formatFiat(new BigNumber(balanceInUSD))}`}
+            </Text>
+          </View>
         )}
-      </View>
-    </View>
+        <View style={styles.col4}>
+          {isNested ? (
+            <FontAwesomeIcon size={20} icon={faChevronRight} color={'#FFF'} />
+          ) : (
+            <Pressable
+              onPress={() =>
+                onAssetSelected({
+                  assetData: item,
+                  screenTitle: item.code,
+                })
+              }>
+              <FontAwesomeIcon
+                size={20}
+                icon={faChevronRight}
+                color={'#A8AEB7'}
+              />
+            </Pressable>
+          )}
+        </View>
+      </Pressable>
+    </AssetListSwipeableRow>
   )
 }
 
@@ -102,6 +118,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D9DFE5',
     borderLeftWidth: 3,
     paddingVertical: 10,
+    height: 60,
   },
   col1: {
     flex: 0.15,
@@ -110,11 +127,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   col2: {
-    flex: 0.2,
+    flex: 0.25,
     justifyContent: 'center',
   },
   col3: {
-    flex: 0.55,
+    flex: 0.5,
     justifyContent: 'center',
     alignItems: 'flex-end',
   },

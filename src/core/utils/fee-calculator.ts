@@ -6,7 +6,7 @@ import {
   isEthereumChain,
   unitToCurrency,
 } from '@liquality/cryptoassets'
-import { prettyBalance } from './coin-formatter'
+import { prettyBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 
 const isERC20 = (asset: string) => {
   return cryptoassets[asset]?.type === 'erc20'
@@ -75,7 +75,7 @@ export const calculateAvailableAmnt = (
   }
 
   if (isERC20(_asset)) {
-    return prettyBalance(new BigNumber(_balance), _asset)
+    return prettyBalance(new BigNumber(_balance), _asset).toString()
   } else {
     const available = BigNumber.max(
       new BigNumber(_balance).minus(
@@ -84,6 +84,6 @@ export const calculateAvailableAmnt = (
       0,
     )
 
-    return prettyBalance(available, _asset)
+    return prettyBalance(available, _asset).toString()
   }
 }

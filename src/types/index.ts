@@ -1,12 +1,11 @@
 import { Dispatch, ReactElement, SetStateAction } from 'react'
-import { BigNumber } from '@liquality/types'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
+import { BigNumber } from '@liquality/types'
 import {
-  HistoryItem,
-  NetworkEnum,
-  SwapTransactionType,
-} from '@liquality/core/dist/types'
+  FeeLabel,
+  SwapHistoryItem,
+} from '@liquality/wallet-core/dist/store/types'
 
 export type AssetDataElementType = {
   id: string
@@ -14,13 +13,13 @@ export type AssetDataElementType = {
   code: string
   chain: ChainId
   address?: string
-  balance?: BigNumber
-  balanceInUSD?: BigNumber
+  balance: number
+  balanceInUSD?: number
   color?: string
   assets?: Array<AssetDataElementType>
   showAssets?: boolean
   fees?: FeeDetails
-  activeNetwork?: NetworkEnum
+  activeNetwork?: any
 }
 
 export type SwapAssetPairType = {
@@ -29,13 +28,13 @@ export type SwapAssetPairType = {
 }
 
 export type SwapInfoType = {
-  swapProviderType: string
   fromAsset: AssetDataElementType
   toAsset: AssetDataElementType
-  fromAmount: BigNumber
-  toAmount: BigNumber
-  fromNetworkFee: BigNumber
-  toNetworkFee: BigNumber
+  fromAmount: number
+  toAmount: number
+  quote: any
+  fromNetworkFee: NetworkFeeType
+  toNetworkFee: NetworkFeeType
 }
 
 export type StackPayload = {
@@ -52,15 +51,15 @@ export type StackPayload = {
   customFee?: number
   showPopup?: boolean
   sendTransaction?: {
-    amount?: BigNumber
-    gasFee?: BigNumber
+    amount?: number
+    gasFee?: number
     destinationAddress?: string
     asset?: string
   }
-  sendTransactionConfirmation?: HistoryItem
+  sendTransactionConfirmation?: any
   swapAssetPair?: SwapAssetPairType
   swapTransaction?: SwapInfoType
-  swapTransactionConfirmation?: Partial<SwapTransactionType>
+  swapTransactionConfirmation?: SwapHistoryItem
   action?: ActionEnum
   selectedAssetCodes?: string[]
   onSelectAssetCodes?: (selectedAssetCodes: string[]) => void
@@ -137,3 +136,16 @@ export enum ActivityStatusEnum {
   NEEDS_ATTENTION = 'Needs Attention',
   FAILED = 'Failed',
 }
+
+export type NetworkFeeType = {
+  speed: FeeLabel
+  value: number
+}
+
+export interface CustomFeeDetails extends FeeDetails {
+  custom: {
+    fee: number
+  }
+}
+
+export type GasFees = Record<'slow' | 'average' | 'fast' | 'custom', BigNumber>

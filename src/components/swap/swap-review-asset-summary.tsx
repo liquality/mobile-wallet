@@ -2,14 +2,7 @@ import { BigNumber } from '@liquality/types'
 import { AssetDataElementType } from '../../types'
 import React, { FC, useState } from 'react'
 import Clipboard from '@react-native-clipboard/clipboard'
-import {
-  Alert,
-  Dimensions,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import Label from '../ui/label'
 import { chainDefaultColors } from '../../core/config'
 import {
@@ -17,9 +10,14 @@ import {
   chains,
   unitToCurrency,
 } from '@liquality/cryptoassets'
-import { cryptoToFiat, formatFiat } from '../../core/utils/coin-formatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCheck, faClone } from '@fortawesome/pro-light-svg-icons'
+import {
+  cryptoToFiat,
+  formatFiat,
+  prettyFiatBalance,
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
+import { getSendFee } from '@liquality/wallet-core/src/utils/fees'
 
 type SwapReviewAssetSummaryProps = {
   type: 'SEND' | 'RECEIVE'
@@ -59,18 +57,22 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
         <Text style={[styles.font, styles.amount]}>
           {amount &&
             `$${formatFiat(
-              cryptoToFiat(amount.toNumber(), fiatRates[asset.code]),
+              cryptoToFiat(
+                amount.toNumber(),
+                fiatRates[asset.code],
+              ) as BigNumber,
             )}`}
         </Text>
       </View>
       <Label text="NETWORK FEE" variant="light" />
       <View style={styles.row}>
-        <Text style={[styles.font, styles.amount]}>{`${networkFee} ${
+        <Text style={[styles.font, styles.amount]}>{`${networkFee.toNumber()} ${
           chains[cryptoassets[asset.code].chain].fees.unit
         }`}</Text>
-        <Text style={[styles.font, styles.amount]}>{`$${formatFiat(
-          cryptoToFiat(networkFee.toNumber(), fiatRates[asset.code]),
-        )}`}</Text>
+        <Text style={[styles.font, styles.amount]}>{`${prettyFiatBalance(
+          getSendFee(asset.code, networkFee.toNumber()).toNumber(),
+          fiatRates[asset.code],
+        ).toString()}`}</Text>
       </View>
       <Label text="AMOUNT + FEES" variant="light" />
       <View style={styles.row}>
@@ -80,12 +82,10 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
         <Text style={[styles.font, styles.amountStrong]}>{`$${formatFiat(
           cryptoToFiat(
             amount
-              .plus(
-                unitToCurrency(cryptoassets[asset.code], networkFee.toNumber()),
-              )
+              .plus(getSendFee(asset.code, networkFee.toNumber()))
               .toNumber(),
             fiatRates[asset.code],
-          ),
+          ) as BigNumber,
         )}`}</Text>
       </View>
       <Label
@@ -113,14 +113,6 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: Dimensions.get('screen').width,
-    backgroundColor: '#FFF',
-  },
-  scrollView: {
-    padding: 20,
-  },
   font: {
     fontFamily: 'Montserrat-Regular',
   },
@@ -154,10 +146,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     marginBottom: 15,
-  },
-  buttonWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
   },
   icon: {
     marginVertical: 5,

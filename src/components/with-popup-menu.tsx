@@ -5,11 +5,11 @@ import { faLock, faPlug } from '@fortawesome/pro-light-svg-icons'
 import BackupIcon from '../assets/icons/backup.svg'
 import LedgerIcon from '../assets/icons/ledger.svg'
 import ManageAssetsIcon from '../assets/icons/manage-assets.svg'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../types'
 
 type FctType = (...args: any) => any
-type Props = StackScreenProps<
+type Props = NativeStackScreenProps<
   RootStackParamList,
   'OverviewScreen' | 'AssetScreen' | 'AssetChooserScreen'
 >
@@ -31,11 +31,7 @@ const WithPopupMenu = <T extends FctType>(
     }
 
     return (
-      <Pressable
-        style={styles.container}
-        onPress={() =>
-          navigation.setParams({ showPopup: !route?.params?.showPopup })
-        }>
+      <View style={styles.container}>
         <Component navigation={navigation} route={route} />
         {route?.params?.showPopup && (
           <View style={styles.modalContainer}>
@@ -67,7 +63,7 @@ const WithPopupMenu = <T extends FctType>(
             </Pressable>
           </View>
         )}
-      </Pressable>
+      </View>
     )
   }
 }
@@ -75,11 +71,12 @@ const WithPopupMenu = <T extends FctType>(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#D9DFE5',
   },
   modalContainer: {
     zIndex: 5,
     position: 'absolute',
-    backgroundColor: '#FFF',
+    backgroundColor: '#D9DFE5',
     borderWidth: 1,
     borderColor: '#D9DFE5',
     top: 0,
@@ -94,12 +91,6 @@ const styles = StyleSheet.create({
     borderColor: '#D9DFE5',
     paddingHorizontal: 20,
     paddingVertical: 5,
-  },
-  menuLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    fontSize: 12,
-    color: '#000D35',
   },
   icon: {
     marginRight: 10,

@@ -12,14 +12,13 @@ import {
   Platform,
   Dimensions,
 } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
-import Wallet from '@liquality/core/dist/wallet'
 import Button from '../../theme/button'
 
-type UnlockWalletScreenProps = StackScreenProps<
+type UnlockWalletScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'UnlockWalletScreen'
 >
@@ -67,7 +66,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
   }
 
   const validateSeedPhrase = () => {
-    return Wallet.validateSeedPhrase(chosenSeedWords.join(' ').trim())
+    return true
   }
 
   const onContinue = () => {
@@ -203,25 +202,6 @@ const styles = StyleSheet.create({
   columnWrapperStyle: {
     marginBottom: 20,
     justifyContent: 'space-between',
-  },
-  word: {
-    flex: 0.2,
-    width: 60,
-    height: 23,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
-    backgroundColor: '#fff',
-    borderColor: '#D9DFE5',
-    borderWidth: 1,
-  },
-  pressedWord: {
-    color: '#A8AEB7',
-  },
-  wordText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#9D4DFA',
   },
   seedWordLengthOptions: {
     flexDirection: 'row',

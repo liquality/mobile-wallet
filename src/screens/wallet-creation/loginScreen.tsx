@@ -8,17 +8,20 @@ import {
   KeyboardAvoidingView,
   Dimensions,
 } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, UseInputStateReturnType } from '../../types'
 import Header from '../header'
-import { restoreWallet } from '../../store/store'
+import { createWallet, restoreWallet } from '../../store/store'
 import { useDispatch } from 'react-redux'
-import { onOpenSesame } from '../../utils'
 import Text from '../../theme/text'
 import Button from '../../theme/button'
 import Box from '../../theme/box'
+import { MNEMONIC, PASSWORD } from '@env'
 
-type LoginScreenProps = StackScreenProps<RootStackParamList, 'LoginScreen'>
+type LoginScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'LoginScreen'
+>
 const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {
@@ -111,7 +114,8 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               isLoading={loading}
               onPress={async () => {
                 setLoading(true)
-                await onOpenSesame(dispatch, navigation)
+                await createWallet(PASSWORD, MNEMONIC)
+                navigation.navigate('MainNavigator')
               }}
               isBorderless
               isActive={true}

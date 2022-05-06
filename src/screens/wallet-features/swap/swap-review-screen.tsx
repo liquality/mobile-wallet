@@ -1,17 +1,18 @@
 import React, { FC, useState } from 'react'
 import { Dimensions, StyleSheet, View, ScrollView, Alert } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClock, faExchange } from '@fortawesome/pro-light-svg-icons'
 import { RootStackParamList, SwapInfoType } from '../../../types'
 import Warning from '../../../components/ui/warning'
-import SwapRates from '../../../components/swap-rates'
-import { performSwap } from '../../../store/store'
 import { useAppSelector } from '../../../hooks'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
 import Button from '../../../theme/button'
+import { BigNumber } from '@liquality/types'
+import { performSwap } from '../../../store/store'
+import { Log } from '../../../utils'
 
-type SwapReviewScreenProps = StackScreenProps<
+type SwapReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SwapReviewScreen'
 >
@@ -33,21 +34,25 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         toAsset,
         fromAmount,
         toAmount,
+        quote,
         fromNetworkFee,
         toNetworkFee,
-        swapProviderType,
       }: SwapInfoType = swapTransaction
+
       try {
         const transaction = await performSwap(
-          swapProviderType?.toUpperCase(),
           fromAsset,
           toAsset,
-          fromAmount,
-          toAmount,
-          fromNetworkFee,
-          toNetworkFee,
-          activeNetwork,
+          new BigNumber(fromAmount),
+          new BigNumber(toAmount),
+          quote,
+          fromNetworkFee.value,
+          toNetworkFee.value,
+          fromNetworkFee.speed,
+          toNetworkFee.speed,
         )
+
+        Log(`Transaction: ${JSON.stringify(transaction)}`, 'info')
         if (transaction) {
           navigation.navigate('SwapConfirmationScreen', {
             swapTransactionConfirmation: transaction,
@@ -55,19 +60,18 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           })
         } else {
           setIsLoading(false)
-          Alert.alert('Failed to perform swap')
+          Alert.alert('Swap Response null')
         }
       } catch (error) {
         setIsLoading(false)
+        Log(`Failed to perform swap: ${error}`, 'error')
         Alert.alert('Failed to perform swap')
       }
     } else {
       setIsLoading(false)
-      Alert.alert('Can not perform swap')
+      Alert.alert('Invalid params. Please try again')
     }
   }
-
-  const handleSelectQuote = () => {}
 
   if (!swapTransaction) {
     return <View style={styles.container} />
@@ -86,23 +90,23 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
     <ScrollView contentContainerStyle={styles.container}>
       <SwapReviewAssetSummary
         type={'SEND'}
-        amount={fromAmount}
+        amount={new BigNumber(fromAmount)}
         asset={fromAsset}
         fiatRates={fiatRates}
-        networkFee={fromNetworkFee}
+        networkFee={new BigNumber(fromNetworkFee.value)}
       />
       <SwapReviewAssetSummary
         type={'RECEIVE'}
-        amount={toAmount}
+        amount={new BigNumber(toAmount)}
         asset={toAsset}
         fiatRates={fiatRates}
-        networkFee={toNetworkFee}
+        networkFee={new BigNumber(toNetworkFee.value)}
       />
-      <SwapRates
+      {/* <SwapRates
         fromAsset={fromAsset.code}
         toAsset={toAsset.code}
         selectQuote={handleSelectQuote}
-      />
+      /> */}
       <Warning
         text1="Max slippage is 0.5%."
         text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6

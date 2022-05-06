@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import {
   dpUI,
-  gasUnitToCurrency,
   prettyFiatBalance,
-} from '../../../core/utils/coin-formatter'
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
+
 import { useAppSelector } from '../../../hooks'
 import { sendTransaction } from '../../../store/store'
 import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
+import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
 
-type SendReviewScreenProps = StackScreenProps<
+type SendReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SendReviewScreen'
 >
@@ -43,9 +44,9 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         activeNetwork,
         to: destinationAddress,
         value: new BigNumber(
-          currencyToUnit(cryptoassets[asset], amount.toNumber()).toNumber(),
+          currencyToUnit(cryptoassets[asset], amount).toNumber(),
         ),
-        fee: gasFee.toNumber(),
+        fee: gasFee,
       })
 
       navigation.navigate('SendConfirmationScreen', {
@@ -76,24 +77,22 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <Text variant="mainInputLabel">SEND</Text>
         <View style={styles.row}>
           <Text style={styles.amountInNative}>
-            {amount && `${amount.dp(6)} ${asset}`}
+            {amount && `${new BigNumber(amount).dp(6)} ${asset}`}
           </Text>
           <Text style={styles.amountInFiat}>
-            {amount && `$${prettyFiatBalance(amount.toNumber(), rate)}`}
+            {amount && `$${prettyFiatBalance(amount, rate)}`}
           </Text>
         </View>
         <Text variant="mainInputLabel">NETWORK FEE</Text>
         <View style={styles.row}>
           <Text style={styles.feeAmountInNative}>
-            {asset &&
-              gasFee &&
-              dpUI(gasUnitToCurrency(asset, gasFee), 9).toString()}
+            {asset && gasFee && dpUI(getSendFee(asset, gasFee), 9).toString()}
           </Text>
           <Text style={styles.feeAmountInFiat}>
             {gasFee &&
               asset &&
               `$${prettyFiatBalance(
-                gasUnitToCurrency(asset, gasFee).toNumber(),
+                getSendFee(asset, gasFee).toNumber(),
                 rate,
               )}`}
           </Text>
@@ -105,14 +104,18 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
             {amount &&
               gasFee &&
               asset &&
-              `${amount.plus(gasUnitToCurrency(asset, gasFee)).dp(9)} ${asset}`}
+              `${new BigNumber(amount)
+                .plus(getSendFee(asset, gasFee))
+                .dp(9)} ${asset}`}
           </Text>
           <Text style={styles.totalAmount}>
             {amount &&
               gasFee &&
               asset &&
               `$${prettyFiatBalance(
-                amount.plus(gasUnitToCurrency(asset, gasFee)).toNumber(),
+                new BigNumber(amount)
+                  .plus(getSendFee(asset, gasFee))
+                  .toNumber(),
                 rate,
               )}`}
           </Text>
@@ -195,9 +198,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 18,
     color: '#1D1E21',
-  },
-  sendToLabel: {
-    marginTop: 40,
   },
   address: {
     fontFamily: 'Montserrat-Regular',

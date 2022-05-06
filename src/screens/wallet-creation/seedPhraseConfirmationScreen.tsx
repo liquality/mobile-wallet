@@ -9,12 +9,12 @@ import {
   Alert,
 } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import Header from '../header'
 import ButtonFooter from '../../components/button-footer'
 import Button from '../../theme/button'
 
-type SeedPhraseConfirmationProps = StackScreenProps<
+type SeedPhraseConfirmationProps = NativeStackScreenProps<
   RootStackParamList,
   'SeedPhraseConfirmationScreen'
 >
@@ -243,34 +243,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#2CD2CF',
-  },
-  actionBtn: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
-    backgroundColor: '#F8FAFF',
-    borderColor: '#9D4DFA',
-    borderWidth: 1,
-    height: 36,
-  },
-  cancelBtn: {
-    backgroundColor: '#F8FAFF',
-    borderColor: '#9D4DFA',
-  },
-  backText: {
-    color: '#9D4DFA',
-  },
-  nextBtn: {
-    backgroundColor: '#9D4DFA',
-    borderColor: '#9D4DFA',
-    borderWidth: 1,
-    marginLeft: 10,
-  },
-  continueText: {
-    color: '#F8FAFF',
-  },
-  disabled: {
-    opacity: 0.5,
   },
 })
 

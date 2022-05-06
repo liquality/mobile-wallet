@@ -1,24 +1,23 @@
 import * as React from 'react'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import { ImageBackground, Pressable, StyleSheet, View } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import {
-  faArrowDown,
-  faArrowUp,
-  faExchange,
-} from '@fortawesome/pro-light-svg-icons'
 import { useAppSelector, useWalletState } from '../../../hooks'
-import { formatFiat } from '../../../core/utils/coin-formatter'
+import { formatFiat } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import ActivityFlatList from '../../../components/activity-flat-list'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ActionEnum, RootStackParamList, StackPayload } from '../../../types'
-import { fetchTransactionUpdates, populateWallet } from '../../../store/store'
+import { populateWallet } from '../../../store/store'
 import ErrorBoundary from 'react-native-error-boundary'
 import Text from '../../../theme/text'
 import ErrorFallback from '../../../components/error-fallback'
+import Box from '../../../theme/box'
+import RoundButton from '../../../theme/round-button'
 
-type OverviewProps = StackScreenProps<RootStackParamList, 'OverviewScreen'>
+type OverviewProps = NativeStackScreenProps<
+  RootStackParamList,
+  'OverviewScreen'
+>
 
 const OverviewScreen = ({ navigation }: OverviewProps) => {
   enum ViewKind {
@@ -74,9 +73,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   )
 
   useEffect(() => {
-    populateWallet().then(() => {
-      fetchTransactionUpdates()
-    })
+    populateWallet()
   }, [activeNetwork])
 
   if (error) {
@@ -100,7 +97,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
             <Fragment>
               <View style={styles.totalValueSection}>
                 <Text style={styles.totalValue} numberOfLines={1}>
-                  {formatFiat(totalFiatBalance)}
+                  {formatFiat(totalFiatBalance).toString()}
                 </Text>
                 <Text style={styles.currency}>USD</Text>
               </View>
@@ -108,41 +105,27 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
                 {assetCount}
                 {assetCount === 1 ? ' Asset' : ' Assets'}
               </Text>
-              <View style={styles.btnContainer}>
-                <View style={styles.btnWrapper}>
-                  <Pressable style={styles.btn} onPress={handleSendBtnPress}>
-                    <FontAwesomeIcon
-                      icon={faArrowUp}
-                      color={'#FFFFFF'}
-                      style={styles.smallIcon}
-                    />
-                  </Pressable>
-                  <Text style={styles.btnText}>Send</Text>
-                </View>
-                <View style={styles.btnWrapper}>
-                  <Pressable
-                    style={[styles.btn, styles.swapBtn]}
-                    onPress={handleSwapBtnPress}>
-                    <FontAwesomeIcon
-                      size={30}
-                      icon={faExchange}
-                      color={'#9D4DFA'}
-                      style={styles.smallIcon}
-                    />
-                  </Pressable>
-                  <Text style={styles.btnText}>Swap</Text>
-                </View>
-                <View style={styles.btnWrapper}>
-                  <Pressable style={styles.btn} onPress={handleReceiveBtnPress}>
-                    <FontAwesomeIcon
-                      icon={faArrowDown}
-                      color={'#FFFFFF'}
-                      style={styles.smallIcon}
-                    />
-                  </Pressable>
-                  <Text style={styles.btnText}>Receive</Text>
-                </View>
-              </View>
+
+              <Box flexDirection="row" justifyContent="center" marginTop="l">
+                <RoundButton
+                  onPress={handleSendBtnPress}
+                  label="Send"
+                  type="SEND"
+                  variant="smallPrimary"
+                />
+                <RoundButton
+                  onPress={handleSwapBtnPress}
+                  label="Swap"
+                  type="SWAP"
+                  variant="largePrimary"
+                />
+                <RoundButton
+                  onPress={handleReceiveBtnPress}
+                  label="Receive"
+                  type="RECEIVE"
+                  variant="smallPrimary"
+                />
+              </Box>
             </Fragment>
           )}
         </ImageBackground>
@@ -164,7 +147,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
             <Text style={styles.headerText}>ACTIVITY</Text>
           </Pressable>
         </View>
-        <View style={styles.contentBlock}>
+        <Box flex={1}>
           {selectedView === ViewKind.ACTIVITY &&
             (assets.length > 0 ? (
               <ActivityFlatList navigate={navigation.navigate} />
@@ -176,7 +159,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           {selectedView === ViewKind.ASSETS && (
             <AssetFlatList assets={assets} onAssetSelected={onAssetSelected} />
           )}
-        </View>
+        </Box>
       </ErrorBoundary>
     </View>
   )
@@ -185,14 +168,13 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 1,
     backgroundColor: '#FFFFFF',
   },
   overviewBlock: {
     justifyContent: 'center',
     width: '100%',
     height: 225,
-    paddingBottom: 20,
+    paddingVertical: 10,
   },
   assets: {
     fontFamily: 'Montserrat-Regular',
@@ -223,41 +205,6 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
     paddingLeft: 5,
     textAlignVertical: 'bottom',
-  },
-  btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  btnWrapper: {
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  btn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 40,
-    height: 40,
-    marginHorizontal: 7,
-    marginTop: 17,
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: '#FFFFFF',
-  },
-  swapBtn: {
-    backgroundColor: '#FFFFFF',
-    width: 57,
-    height: 57,
-  },
-  btnText: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#FFFFFF',
-    fontWeight: '500',
-    fontSize: 13,
-    marginTop: 11,
-  },
-  smallIcon: {
-    margin: 15,
   },
   tabsBlock: {
     flexDirection: 'row',

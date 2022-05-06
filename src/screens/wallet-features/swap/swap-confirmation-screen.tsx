@@ -7,7 +7,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native'
-import { StackScreenProps } from '@react-navigation/stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import TransactionDetails from '../../../components/transaction-details'
 import {
@@ -15,7 +15,6 @@ import {
   assets as cryptoassets,
   chains,
 } from '@liquality/cryptoassets'
-import { cryptoToFiat, formatFiat } from '../../../core/utils/coin-formatter'
 import { useAppSelector } from '../../../hooks'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
@@ -27,11 +26,15 @@ import Label from '../../../components/ui/label'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import ProgressBar from '../../../components/animations/progress-bar'
 import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
-import { HistoryItem } from '@liquality/core/dist/types'
-import SwapRates from '../../../components/swap-rates'
 import Button from '../../../theme/button'
+import {
+  HistoryItem,
+  TransactionType,
+} from '@liquality/wallet-core/dist/store/types'
+import { cryptoToFiat } from '@liquality/wallet-core/dist/utils/coinFormatter'
+import { BigNumber } from '@liquality/types'
 
-type SwapConfirmationScreenProps = StackScreenProps<
+type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SwapConfirmationScreen'
 >
@@ -43,8 +46,8 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   const { fiatRates, history = [] } = useAppSelector((state) => {
     const { activeNetwork, activeWalletId, history: historyObject } = state
     let historyItems: HistoryItem[] = []
-    if (activeNetwork && activeWalletId && historyObject) {
-      historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
+    if (historyObject?.[activeNetwork]?.[activeWalletId]) {
+      historyItems = historyObject?.[activeNetwork]?.[activeWalletId] || []
     }
     return {
       fiatRates: state.fiatRates,
@@ -74,7 +77,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     secret,
     secretHash,
     claimFee,
-  } = historyItem?.swapTransaction || {}
+  } = transaction || {}
 
   const formatDate = (ms: string | number): string => {
     const date = new Date(ms)
@@ -116,15 +119,14 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   useEffect(() => {
     const historyItems = history.filter(
       (item) =>
-        item.type === 'SWAP' &&
-        item.swapTransaction?.fromFundHash === transaction?.fromFundHash,
+        item.type === TransactionType.Swap && item.id === transaction?.id,
     )
     if (historyItems.length > 0) {
       setHistoryItem(historyItems[0])
     }
-  }, [fromFundHash, history, transaction?.fromFundHash])
+  }, [fromFundHash, history, transaction?.id])
 
-  if (!historyItem?.swapTransaction) {
+  if (!historyItem) {
     return <View style={styles.container} />
   }
 
@@ -136,7 +138,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.content}>
             {historyItem?.status === 'SUCCESS'
               ? 'Completed'
-              : historyItem?.statusMessage || historyItem?.status}
+              : historyItem?.status}
           </Text>
         </View>
         {historyItem?.status !== 'SUCCESS' && (
@@ -148,11 +150,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
         {historyItem?.status === 'SUCCESS' ? (
           <SuccessIcon />
         ) : (
-          <ProgressCircle
-            radius={17}
-            current={historyItem?.currentStep || 0}
-            total={historyItem?.totalSteps || 0}
-          />
+          <ProgressCircle radius={17} current={2} total={4} />
         )}
       </View>
       <View style={styles.block}>
@@ -177,10 +175,9 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.content}>
             {createdAt && `Initiated ${formatDate(Date.parse(createdAt))}`}
           </Text>
-          {historyItem?.status === 'SUCCESS' &&
-          historyItem?.swapTransaction?.endTime ? (
+          {historyItem?.status === 'SUCCESS' && historyItem?.endTime ? (
             <Text style={styles.content}>{`${'Completed'} ${formatDate(
-              historyItem?.swapTransaction?.endTime,
+              historyItem?.endTime,
             )}`}</Text>
           ) : (
             <Text style={styles.content}>
@@ -195,16 +192,17 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.content}>
             {fromAmount &&
               from &&
-              `${unitToCurrency(cryptoassets[from], fromAmount)} ${from}`}
+              `${unitToCurrency(
+                cryptoassets[from],
+                new BigNumber(fromAmount),
+              )} ${from}`}
           </Text>
           <Text style={styles.content}>
             {fromAmount &&
               from &&
-              `$${formatFiat(
-                cryptoToFiat(
-                  unitToCurrency(cryptoassets[from], fromAmount).toNumber(),
-                  fiatRates?.[from] || 0,
-                ).toNumber(),
+              `$${cryptoToFiat(
+                unitToCurrency(cryptoassets[from], new BigNumber(fromAmount)),
+                fiatRates?.[from] || 0,
               )}`}
           </Text>
         </View>
@@ -215,28 +213,29 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.content}>
             {to &&
               toAmount &&
-              `${unitToCurrency(cryptoassets[to], toAmount)} ${to}`}
+              `${unitToCurrency(
+                cryptoassets[to],
+                new BigNumber(toAmount),
+              )} ${to}`}
           </Text>
           <Text style={styles.content}>
             {to &&
               toAmount &&
-              `$${formatFiat(
-                cryptoToFiat(
-                  unitToCurrency(cryptoassets[to], toAmount).toNumber(),
-                  fiatRates?.[to] || 0,
-                ).toNumber(),
+              `$${cryptoToFiat(
+                unitToCurrency(cryptoassets[to], new BigNumber(toAmount)),
+                fiatRates?.[to] || 0,
               )}`}
           </Text>
         </View>
       </View>
-      {from && to && (
+      {/* {from && to && (
         <SwapRates
           fromAsset={from}
           toAsset={to}
           selectQuote={() => ({})}
           style={{ paddingHorizontal: 20 }}
         />
-      )}
+      )} */}
       <View style={styles.border}>
         <Text style={styles.label}>NETWORK SPEED/FEE</Text>
         <Text style={styles.content}>

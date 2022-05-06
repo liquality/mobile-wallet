@@ -1,24 +1,24 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { IStorage, StateType } from '@liquality/core/dist/types'
+import { CustomRootState } from '../reducers'
 
 /**
  * Implementation of the StorageManagerI interface for mobile
  */
-export default class StorageManager implements IStorage<StateType> {
-  private excludedProps: Array<keyof StateType>
+export default class StorageManager {
+  private excludedProps: Array<keyof CustomRootState>
   private storageKey: string
 
-  constructor(storageKey: string, excludedProps: Array<keyof StateType>) {
+  constructor(storageKey: string, excludedProps: Array<keyof CustomRootState>) {
     this.storageKey = storageKey
     this.excludedProps = excludedProps
   }
 
-  public async write(data: StateType): Promise<boolean | Error> {
+  public async write(data: CustomRootState): Promise<boolean | Error> {
     if (!data || Object.keys(data).length === 0) {
       return new Error('Empty data')
     }
     try {
-      this.excludedProps.forEach((prop: keyof StateType) => {
+      this.excludedProps.forEach((prop: keyof CustomRootState) => {
         if (data.hasOwnProperty(prop)) {
           delete data[prop]
         }
@@ -34,12 +34,12 @@ export default class StorageManager implements IStorage<StateType> {
     }
   }
 
-  public async read(): Promise<StateType> {
+  public async read(): Promise<CustomRootState> {
     try {
       const result = await AsyncStorage.getItem(this.storageKey)
-      return JSON.parse(result || '') as StateType
+      return JSON.parse(result || '') as CustomRootState
     } catch (e) {
-      return {}
+      throw new Error('Failed to read from storage')
     }
   }
 }
