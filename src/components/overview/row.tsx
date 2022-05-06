@@ -9,7 +9,10 @@ import {
   faPlus,
 } from '@fortawesome/pro-light-svg-icons'
 import AssetIcon from '../asset-icon'
-import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
+import {
+  formatFiat,
+  prettyBalance,
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
 
@@ -73,11 +76,10 @@ const Row: React.FC<RowProps> = (props) => {
         {isNested ? (
           <View style={styles.col3}>
             <Text style={styles.TotalBalanceInUSD}>
-              Total ${balanceInUSD && formatFiat(balanceInUSD)}
+              {`Total ${
+                balanceInUSD && formatFiat(new BigNumber(balanceInUSD))
+              }`}
             </Text>
-            {/* <View style={styles.gas}>
-              <GasIndicator balance={balance || 0} gasFees={fees} />
-            </View> */}
           </View>
         ) : (
           <View style={styles.col3}>
@@ -89,7 +91,7 @@ const Row: React.FC<RowProps> = (props) => {
                 }`}
             </Text>
             <Text style={styles.balanceInUSD}>
-              ${balanceInUSD && formatFiat(balanceInUSD)}
+              {`${balanceInUSD && formatFiat(new BigNumber(balanceInUSD))}`}
             </Text>
           </View>
         )}

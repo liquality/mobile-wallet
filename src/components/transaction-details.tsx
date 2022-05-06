@@ -7,13 +7,13 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { formatDate } from '../utils'
 import {
   dpUI,
-  gasUnitToCurrency,
   prettyFiatBalance,
-} from '../core/utils/coin-formatter'
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import { useAppSelector } from '../hooks'
 import Label from './ui/label'
+import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
 
 type ConfirmationBlockProps = {
   address?: string
@@ -51,7 +51,7 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
             fee &&
             asset &&
             `${dpUI(
-              new BigNumber(gasUnitToCurrency(asset, new BigNumber(fee))),
+              new BigNumber(getSendFee(asset, fee)),
               9,
             )} ${asset}/ $${prettyFiatBalance(
               unitToCurrency(cryptoassets[asset], fee).toNumber(),

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import { ImageBackground, Pressable, StyleSheet, View } from 'react-native'
 import { useAppSelector, useWalletState } from '../../../hooks'
-import { formatFiat } from '../../../core/utils/coin-formatter'
+import { formatFiat } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -97,7 +97,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
             <Fragment>
               <View style={styles.totalValueSection}>
                 <Text style={styles.totalValue} numberOfLines={1}>
-                  {formatFiat(totalFiatBalance)}
+                  {formatFiat(totalFiatBalance).toString()}
                 </Text>
                 <Text style={styles.currency}>USD</Text>
               </View>

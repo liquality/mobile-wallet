@@ -4,15 +4,16 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import {
   dpUI,
-  gasUnitToCurrency,
   prettyFiatBalance,
-} from '../../../core/utils/coin-formatter'
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
+
 import { useAppSelector } from '../../../hooks'
 import { sendTransaction } from '../../../store/store'
 import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
+import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
 
 type SendReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -85,18 +86,13 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <Text variant="mainInputLabel">NETWORK FEE</Text>
         <View style={styles.row}>
           <Text style={styles.feeAmountInNative}>
-            {asset &&
-              gasFee &&
-              dpUI(
-                gasUnitToCurrency(asset, new BigNumber(gasFee)),
-                9,
-              ).toString()}
+            {asset && gasFee && dpUI(getSendFee(asset, gasFee), 9).toString()}
           </Text>
           <Text style={styles.feeAmountInFiat}>
             {gasFee &&
               asset &&
               `$${prettyFiatBalance(
-                gasUnitToCurrency(asset, new BigNumber(gasFee)).toNumber(),
+                getSendFee(asset, gasFee).toNumber(),
                 rate,
               )}`}
           </Text>
@@ -109,7 +105,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
               gasFee &&
               asset &&
               `${new BigNumber(amount)
-                .plus(gasUnitToCurrency(asset, new BigNumber(gasFee)))
+                .plus(getSendFee(asset, gasFee))
                 .dp(9)} ${asset}`}
           </Text>
           <Text style={styles.totalAmount}>
@@ -118,7 +114,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
               asset &&
               `$${prettyFiatBalance(
                 new BigNumber(amount)
-                  .plus(gasUnitToCurrency(asset, new BigNumber(gasFee)))
+                  .plus(getSendFee(asset, gasFee))
                   .toNumber(),
                 rate,
               )}`}

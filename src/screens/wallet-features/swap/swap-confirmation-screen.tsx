@@ -15,7 +15,6 @@ import {
   assets as cryptoassets,
   chains,
 } from '@liquality/cryptoassets'
-import { cryptoToFiat, formatFiat } from '../../../core/utils/coin-formatter'
 import { useAppSelector } from '../../../hooks'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
@@ -32,6 +31,8 @@ import {
   HistoryItem,
   TransactionType,
 } from '@liquality/wallet-core/dist/store/types'
+import { cryptoToFiat } from '@liquality/wallet-core/dist/utils/coinFormatter'
+import { BigNumber } from '@liquality/types'
 
 type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -191,16 +192,20 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.content}>
             {fromAmount &&
               from &&
-              `${unitToCurrency(cryptoassets[from], fromAmount)} ${from}`}
+              `${unitToCurrency(
+                cryptoassets[from],
+                new BigNumber(fromAmount),
+              )} ${from}`}
           </Text>
           <Text style={styles.content}>
             {fromAmount &&
               from &&
-              `$${formatFiat(
-                cryptoToFiat(
-                  unitToCurrency(cryptoassets[from], fromAmount).toNumber(),
-                  fiatRates?.[from] || 0,
+              `$${cryptoToFiat(
+                unitToCurrency(
+                  cryptoassets[from],
+                  new BigNumber(fromAmount),
                 ).toNumber(),
+                fiatRates?.[from] || 0,
               )}`}
           </Text>
         </View>
@@ -211,16 +216,20 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.content}>
             {to &&
               toAmount &&
-              `${unitToCurrency(cryptoassets[to], toAmount)} ${to}`}
+              `${unitToCurrency(
+                cryptoassets[to],
+                new BigNumber(toAmount),
+              )} ${to}`}
           </Text>
           <Text style={styles.content}>
             {to &&
               toAmount &&
-              `$${formatFiat(
-                cryptoToFiat(
-                  unitToCurrency(cryptoassets[to], toAmount).toNumber(),
-                  fiatRates?.[to] || 0,
+              `$${cryptoToFiat(
+                unitToCurrency(
+                  cryptoassets[to],
+                  new BigNumber(toAmount),
                 ).toNumber(),
+                fiatRates?.[to] || 0,
               )}`}
           </Text>
         </View>

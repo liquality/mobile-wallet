@@ -1,6 +1,10 @@
 import React, { FC, useCallback, useEffect, useState } from 'react'
-import { StyleSheet, View, TextInput, Pressable } from 'react-native'
-import { ChainId, chains } from '@liquality/cryptoassets'
+import { Pressable, StyleSheet, TextInput, View } from 'react-native'
+import {
+  assets as cryptoassets,
+  ChainId,
+  chains,
+} from '@liquality/cryptoassets'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
@@ -16,15 +20,15 @@ import {
   cryptoToFiat,
   dpUI,
   fiatToCrypto,
-  gasUnitToCurrency,
-} from '../../../core/utils/coin-formatter'
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
-import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { chainDefaultColors } from '../../../core/config'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
+import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
+import { FeeLabel, Network } from '@liquality/wallet-core/dist/store/types'
 
 const useInputState = (
   initialValue: string,
@@ -57,7 +61,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     fiatRates: state.fiatRates,
   }))
   const [showFeeOptions, setShowFeeOptions] = useState(false)
-  const [speedMode, setSpeedMode] = useState<any>('average')
+  const [speedMode, setSpeedMode] = useState<FeeLabel>(FeeLabel.Average)
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
@@ -111,17 +115,25 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       return
     }
 
-    gasFee = fees[activeNetwork]?.[activeWalletId]?.[chain]?.[speedMode]?.fee
+    gasFee =
+      fees[activeNetwork as Network]?.[activeWalletId]?.[chain]?.[speedMode]
+        ?.fee
 
     if (!gasFee) {
       setError('Please refresh your wallet')
       return
     }
-    setFee(new BigNumber(gasFee))
+    const calculatedFee =
+      typeof gasFee === 'number'
+        ? new BigNumber(gasFee)
+        : new BigNumber(
+            gasFee.maxPriorityFeePerGas + gasFee.suggestedBaseFeePerGas,
+          )
+    setFee(calculatedFee)
     setAvailableAmount(
       calculateAvailableAmnt(
         code,
-        gasUnitToCurrency(code, gasFee).toNumber(),
+        getSendFee(code, calculatedFee.toNumber()).toNumber(),
         balance,
       ),
     )
@@ -164,14 +176,15 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
       if (showAmountsInFiat) {
         setAmountInNative(
-          fiatToCrypto(new BigNumber(text), fiatRates[code!]).toNumber(),
+          new BigNumber(
+            fiatToCrypto(new BigNumber(text), fiatRates[code!]),
+          ).toNumber(),
         )
         setAmountInFiat(new BigNumber(text).toNumber())
       } else {
         setAmountInFiat(
-          cryptoToFiat(
-            new BigNumber(text).toNumber(),
-            fiatRates[code],
+          new BigNumber(
+            cryptoToFiat(new BigNumber(text).toNumber(), fiatRates[code]),
           ).toNumber(),
         )
         setAmountInNative(new BigNumber(text).toNumber())
@@ -295,15 +308,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           </Pressable>
           {customFee ? (
             <Text style={styles.speedValue}>
-              {`(Custom / ${dpUI(
-                gasUnitToCurrency(code, new BigNumber(customFee)),
-                9,
-              )} ${code})`}
+              {`(Custom / ${dpUI(getSendFee(code, customFee), 9)} ${code})`}
             </Text>
           ) : (
             <Text style={styles.speedValue}>
               {`(${speedMode} / ${dpUI(
-                gasUnitToCurrency(code, new BigNumber(fee)),
+                getSendFee(code, fee.toNumber()),
                 9,
               )} ${code})`}
             </Text>

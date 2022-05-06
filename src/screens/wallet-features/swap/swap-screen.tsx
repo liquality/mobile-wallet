@@ -31,7 +31,6 @@ import {
 } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
-import { prettyBalance } from '../../../core/utils/coin-formatter'
 import { useAppSelector } from '../../../hooks'
 import { sortQuotes } from '../../../utils'
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
@@ -39,6 +38,7 @@ import Button from '../../../theme/button'
 import Box from '../../../theme/box'
 import SwapFeeSelector from '../../../components/ui/swap-fee-selector'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
+import { prettyBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 
 export type SwapEventType = {
   fromAmount?: BigNumber

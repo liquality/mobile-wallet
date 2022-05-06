@@ -10,7 +10,7 @@ import {
   cryptoToFiat,
   fiatToCrypto,
   formatFiat,
-} from '../../core/utils/coin-formatter'
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { SwapEventType } from '../../screens/wallet-features/swap/swap-screen'
 import Button from '../../theme/button'
 

@@ -1,6 +1,9 @@
 import React from 'react'
 import { ImageBackground, Pressable, StyleSheet, View } from 'react-native'
-import { formatFiat, prettyBalance } from '../../../core/utils/coin-formatter'
+import {
+  formatFiat,
+  prettyBalance,
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AssetDataElementType, RootStackParamList } from '../../../types'
@@ -45,11 +48,15 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         style={styles.overviewBlock}
         source={require('../../../assets/bg/action-block-bg.png')}>
         <Box flexDirection="row" justifyContent="center" alignItems="flex-end">
-          <Text style={styles.balanceInUSD}>${formatFiat(balanceInUSD!)}</Text>
+          <Text style={styles.balanceInUSD}>
+            {balanceInUSD && formatFiat(new BigNumber(balanceInUSD)).toString()}
+          </Text>
         </Box>
         <Box flexDirection="row" justifyContent="center" alignItems="flex-end">
           <Text style={styles.balanceInNative} numberOfLines={1}>
-            {prettyBalance(new BigNumber(balance), code!)}
+            {balance &&
+              code &&
+              prettyBalance(new BigNumber(balance), code).toString()}
           </Text>
           <Text style={styles.nativeCurrency}>{code}</Text>
         </Box>

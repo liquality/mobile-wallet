@@ -1,6 +1,9 @@
 import React, { FC } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { formatFiat, prettyBalance } from '../../core/utils/coin-formatter'
+import {
+  formatFiat,
+  prettyBalance,
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faChevronRight } from '@fortawesome/pro-light-svg-icons'
 import { AssetDataElementType, StackPayload } from '../../types'
@@ -60,7 +63,8 @@ const SubRow: FC<SubRowProps> = (props) => {
               }`}
           </Text>
           <Text style={styles.balanceInUSD}>
-            ${item.balanceInUSD && formatFiat(item.balanceInUSD)}
+            {item.balanceInUSD &&
+              formatFiat(new BigNumber(item.balanceInUSD)).toString()}
           </Text>
         </View>
         <View style={styles.col3}>

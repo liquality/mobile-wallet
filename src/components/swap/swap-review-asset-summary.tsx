@@ -15,10 +15,9 @@ import { faCheck, faClone } from '@fortawesome/pro-light-svg-icons'
 import {
   cryptoToFiat,
   formatFiat,
-  formatFiatUI,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
-import { getTxFee } from '../../core/utils/coin-formatter'
+import { getSendFee } from '@liquality/wallet-core/src/utils/fees'
 
 type SwapReviewAssetSummaryProps = {
   type: 'SEND' | 'RECEIVE'
@@ -58,7 +57,10 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
         <Text style={[styles.font, styles.amount]}>
           {amount &&
             `$${formatFiat(
-              cryptoToFiat(amount.toNumber(), fiatRates[asset.code]),
+              cryptoToFiat(
+                amount.toNumber(),
+                fiatRates[asset.code],
+              ) as BigNumber,
             )}`}
         </Text>
       </View>
@@ -67,12 +69,10 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
         <Text style={[styles.font, styles.amount]}>{`${networkFee.toNumber()} ${
           chains[cryptoassets[asset.code].chain].fees.unit
         }`}</Text>
-        <Text style={[styles.font, styles.amount]}>{`${formatFiatUI(
-          prettyFiatBalance(
-            getTxFee(asset.code, networkFee.toNumber()).toNumber(),
-            fiatRates[asset.code],
-          ),
-        )}`}</Text>
+        <Text style={[styles.font, styles.amount]}>{`${prettyFiatBalance(
+          getSendFee(asset.code, networkFee.toNumber()).toNumber(),
+          fiatRates[asset.code],
+        ).toString()}`}</Text>
       </View>
       <Label text="AMOUNT + FEES" variant="light" />
       <View style={styles.row}>
@@ -81,9 +81,11 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
         )} ${asset.code}`}</Text>
         <Text style={[styles.font, styles.amountStrong]}>{`$${formatFiat(
           cryptoToFiat(
-            amount.plus(getTxFee(asset.code, networkFee.toNumber())).toNumber(),
+            amount
+              .plus(getSendFee(asset.code, networkFee.toNumber()))
+              .toNumber(),
             fiatRates[asset.code],
-          ),
+          ) as BigNumber,
         )}`}</Text>
       </View>
       <Label

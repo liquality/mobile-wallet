@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
 import { useAppSelector } from '../../hooks'
 import { FeeDetails } from '@liquality/types/lib/fees'
-import { cryptoToFiat, formatFiat } from '../../core/utils/coin-formatter'
+import {
+  cryptoToFiat,
+  formatFiat,
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { calculateGasFee } from '../../core/utils/fee-calculator'
 import AssetIcon from '../../components/asset-icon'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
