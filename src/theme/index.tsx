@@ -29,6 +29,7 @@ const theme = createTheme({
     cardPrimaryBackground: palette.purplePrimary,
     buttonPrimaryBackground: palette.purplePrimary,
     mainBorderColor: palette.gray,
+    link: palette.blueVioletPrimary,
   },
   spacing: {
     s: 5,
@@ -125,6 +126,13 @@ const theme = createTheme({
       fontSize: 12,
       lineHeight: 14,
       color: 'tertiaryForeground',
+    },
+    link: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '400',
+      fontSize: 12,
+      lineHeight: 16,
+      color: 'link',
     },
     error: {
       fontFamily: 'Montserrat-Light',

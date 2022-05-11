@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
   View,
-  Text,
   StyleSheet,
   Pressable,
   ScrollView,
@@ -33,6 +32,12 @@ import {
 } from '@liquality/wallet-core/dist/store/types'
 import { cryptoToFiat } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
+import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
+import { SwapProvider } from '@liquality/wallet-core/dist/swaps/SwapProvider'
+import { retrySwap } from '../../../store/store'
+import RefundedIcon from '../../../assets/icons/activity-status/refunded.svg'
+import Text from '../../../theme/text'
+import Box from '../../../theme/box'
 
 type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -44,7 +49,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   navigation,
 }) => {
   const { fiatRates, history = [] } = useAppSelector((state) => {
-    const { activeNetwork, activeWalletId, history: historyObject } = state
+    const { history: historyObject, activeNetwork, activeWalletId } = state
     let historyItems: HistoryItem[] = []
     if (historyObject?.[activeNetwork]?.[activeWalletId]) {
       historyItems = historyObject?.[activeNetwork]?.[activeWalletId] || []
@@ -53,12 +58,15 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
       fiatRates: state.fiatRates,
       history: historyItems,
       activeNetwork,
+      activeWalletId,
     }
   })
   const transaction = route.params.swapTransactionConfirmation
   const [isExpanded, setIsExpanded] = useState(false)
   const [isSecretRevealed, setIsSecretRevealed] = useState(false)
   const [historyItem, setHistoryItem] = useState<HistoryItem>()
+  const [swapProvider, setSwapProvider] = useState<SwapProvider>()
+
   const {
     fromAmount,
     from,
@@ -77,6 +85,8 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     secret,
     secretHash,
     claimFee,
+    provider,
+    network,
   } = transaction || {}
 
   const formatDate = (ms: string | number): string => {
@@ -116,6 +126,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     })
   }
 
+  const handleRetrySwapPress = async () => {
+    if (transaction) await retrySwap(transaction)
+  }
+
   useEffect(() => {
     const historyItems = history.filter(
       (item) =>
@@ -124,39 +138,62 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     if (historyItems.length > 0) {
       setHistoryItem(historyItems[0])
     }
-  }, [fromFundHash, history, transaction?.id])
+
+    if (network && provider) {
+      setSwapProvider(getSwapProvider(network, provider))
+    }
+  }, [network, fromFundHash, history, provider, transaction?.id])
 
   if (!historyItem) {
-    return <View style={styles.container} />
+    return <Box style={styles.container} />
   }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={[styles.block, styles.row]}>
-        <View>
-          <Text style={styles.label}>STATUS</Text>
+      <Box
+        paddingHorizontal="xl"
+        marginBottom={'xl'}
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="flex-end">
+        <Box>
+          <Text variant="secondaryInputLabel">STATUS</Text>
           <Text style={styles.content}>
-            {historyItem?.status === 'SUCCESS'
-              ? 'Completed'
-              : historyItem?.status}
+            {from &&
+              to &&
+              swapProvider?.statuses[historyItem?.status].label
+                .replace('{from}', from)
+                .replace('{to}', to)}
           </Text>
-        </View>
-        {historyItem?.status !== 'SUCCESS' && (
+        </Box>
+        {!['SUCCESS', 'REFUNDED'].includes(historyItem?.status) && (
           <Pressable onPress={handleSpeedUpTransaction}>
-            <Text style={[styles.textButton, styles.link]}>Speed Up</Text>
+            <Text variant="link">Speed Up</Text>
           </Pressable>
         )}
 
         {historyItem?.status === 'SUCCESS' ? (
           <SuccessIcon />
+        ) : historyItem?.status === 'REFUNDED' ? (
+          <RefundedIcon />
         ) : (
-          <ProgressCircle radius={17} current={2} total={4} />
+          <ProgressCircle
+            radius={17}
+            current={swapProvider?.statuses[historyItem.status].step + 1}
+            total={swapProvider?.totalSteps}
+          />
         )}
-      </View>
-      <View style={styles.block}>
-        <Text style={styles.label}>Trade Time</Text>
-        {historyItem?.status !== 'SUCCESS' && (
-          <View style={styles.row}>
+      </Box>
+      <Box
+        justifyContent="space-between"
+        paddingHorizontal="xl"
+        marginBottom="xl">
+        <Text variant="secondaryInputLabel">Trade Time</Text>
+        {!['SUCCESS', 'REFUNDED'].includes(historyItem?.status) && (
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="flex-end">
             <FontAwesomeIcon icon={faClock} size={15} color="#9C55F6" />
             <Text style={styles.content}>
               {createdAt && elapsedTime(createdAt)}
@@ -169,13 +206,17 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
             <Text style={styles.content}>
               {expiresAt && remainingTime(expiresAt)}
             </Text>
-          </View>
+          </Box>
         )}
-        <View style={styles.row}>
+        <Box
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="flex-end">
           <Text style={styles.content}>
             {createdAt && `Initiated ${formatDate(Date.parse(createdAt))}`}
           </Text>
-          {historyItem?.status === 'SUCCESS' && historyItem?.endTime ? (
+          {['SUCCESS', 'REFUNDED'].includes(historyItem?.status) &&
+          historyItem?.endTime ? (
             <Text style={styles.content}>{`${'Completed'} ${formatDate(
               historyItem?.endTime,
             )}`}</Text>
@@ -184,11 +225,16 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               {expiresAt && `${'Expires'} ${formatDate(expiresAt)}`}
             </Text>
           )}
-        </View>
-      </View>
-      <View style={[styles.block, styles.row]}>
+        </Box>
+      </Box>
+      <Box
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="flex-end"
+        paddingHorizontal="xl"
+        marginBottom="xl">
         <View>
-          <Text style={styles.label}>SENT</Text>
+          <Text variant="secondaryInputLabel">SENT</Text>
           <Text style={styles.content}>
             {fromAmount &&
               from &&
@@ -207,7 +253,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           </Text>
         </View>
         <View>
-          <Text style={styles.label}>
+          <Text variant="secondaryInputLabel">
             {historyItem?.status === 'SUCCESS' ? 'RECEIVED' : 'PENDING RECEIPT'}
           </Text>
           <Text style={styles.content}>
@@ -227,7 +273,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               )}`}
           </Text>
         </View>
-      </View>
+      </Box>
       {/* {from && to && (
         <SwapRates
           fromAsset={from}
@@ -237,7 +283,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
         />
       )} */}
       <View style={styles.border}>
-        <Text style={styles.label}>NETWORK SPEED/FEE</Text>
+        <Text variant="secondaryInputLabel">NETWORK SPEED/FEE</Text>
         <Text style={styles.content}>
           {from &&
             `${from} Fee: ${fee} ${chains[cryptoassets[from].chain].fees.unit}`}
@@ -252,7 +298,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
       {historyItem && (
         <TransactionDetails type="SWAP" historyItem={historyItem} />
       )}
-      <View>
+      <Box>
         <Pressable
           style={styles.expandable}
           onPress={() => setIsExpanded(!isExpanded)}>
@@ -310,15 +356,11 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
             </View>
             <View style={styles.cell}>
               <Label text={`Your ${from} address`} variant="light" />
-              <Text style={[styles.transactionInfo, styles.link]}>
-                {fromCounterPartyAddress}
-              </Text>
+              <Text variant="link">{fromCounterPartyAddress}</Text>
             </View>
             <View style={styles.cell}>
               <Label text="Finished At" variant="light" />
-              <Text style={[styles.transactionInfo, styles.link]}>
-                {toCounterPartyAddress}
-              </Text>
+              <Text variant="link">{toCounterPartyAddress}</Text>
             </View>
             <View style={styles.cell}>
               <Label text="Secret" variant="light" />
@@ -327,9 +369,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               ) : (
                 <Pressable
                   onPress={() => setIsSecretRevealed(!isSecretRevealed)}>
-                  <Text style={[styles.transactionInfo, styles.link]}>
-                    Click to reveal secret
-                  </Text>
+                  <Text variant="link">Click to reveal secret</Text>
                 </Pressable>
               )}
             </View>
@@ -345,23 +385,26 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               <Text style={styles.transactionInfo}>{fromFundTx?.hash}</Text>
             </View>
             <View style={styles.cell}>
-              <View style={styles.action}>
+              <Box
+                flexDirection="row"
+                justifyContent="space-between"
+                alignItems="center">
                 <Text>Actions</Text>
                 {historyItem?.status !== 'SUCCESS' && (
                   <Button
                     type="tertiary"
                     variant="s"
                     label="Retry"
-                    onPress={() => true}
+                    onPress={handleRetrySwapPress}
                     isBorderless={false}
                     isActive={true}
                   />
                 )}
-              </View>
+              </Box>
             </View>
           </>
         )}
-      </View>
+      </Box>
     </ScrollView>
   )
 }
@@ -371,16 +414,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingVertical: 15,
   },
-  block: {
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-  },
   border: {
     justifyContent: 'space-between',
     minHeight: 60,
@@ -389,12 +422,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: '#D9DFE5',
-  },
-  label: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 18,
   },
   content: {
     fontFamily: 'Montserrat-Regular',
@@ -420,20 +447,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 12,
-  },
-  action: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  link: {
-    color: '#9D4DFA',
-  },
-  textButton: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    fontSize: 12,
-    lineHeight: 16,
   },
 })
 

@@ -153,33 +153,43 @@ export const calculateFees = async (
     fee.toNumber(),
   )
 
-  if (!swapProvider?.fromTxType || !swapProvider?.toTxType)
-    throw new Error('Failed to fetch a swap provider')
+  if (
+    (txSource === 'from' && swapProvider?.fromTxType) ||
+    (txSource === 'to' && swapProvider?.toTxType)
+  ) {
+    const params: EstimateFeeRequest<string, SwapQuote> = {
+      network: activeNetwork,
+      walletId: activeWalletId,
+      asset,
+      txType:
+        txSource === 'from' ? swapProvider.fromTxType : swapProvider.toTxType,
+      quote: selectedQuote,
+      feePrices,
+      max,
+    }
 
-  const params: EstimateFeeRequest<string, SwapQuote> = {
-    network: activeNetwork,
-    walletId: activeWalletId,
-    asset,
-    txType:
-      txSource === 'from' ? swapProvider.fromTxType : swapProvider.toTxType,
-    quote: selectedQuote,
-    feePrices,
-    max,
-  }
-  Log(JSON.stringify(params), 'info')
-  const totalFees = await swapProvider.estimateFees(params).catch((e: any) => {
-    Log(`Failed to calculate totalFees: ${e}`, 'error')
-  })
-  // {"0":"0","26.171984565000002":"0.00431837745322500033","26.210744674":"0.00432477287121","26.254814469000003":"0.0043320443873850005"}
+    const totalFees = await swapProvider
+      .estimateFees(params)
+      .catch((e: any) => {
+        Log(`Failed to calculate totalFees: ${e}`, 'error')
+      })
 
-  if (!totalFees) throw new Error('Failed to calculate totalFees')
+    if (!totalFees) throw new Error('Failed to calculate totalFees')
 
-  for (const [speed, fee] of Object.entries(assetFees)) {
-    //TODO why are we doing this when fees[speed] is always 0
-    // fees[speed] = fees[speed].plus(totalFees[feePrice])
-    fees = {
-      ...fees,
-      [speed]: totalFees[fee.toNumber()].plus(fee),
+    for (const [speed, fee] of Object.entries(assetFees)) {
+      //TODO why are we doing this when fees[speed] is always 0
+      // fees[speed] = fees[speed].plus(totalFees[feePrice])
+      fees = {
+        ...fees,
+        [speed]: totalFees[fee.toNumber()].plus(fee),
+      }
+    }
+  } else {
+    for (const [speed, fee] of Object.entries(assetFees)) {
+      fees = {
+        ...fees,
+        [speed]: fee,
+      }
     }
   }
 
