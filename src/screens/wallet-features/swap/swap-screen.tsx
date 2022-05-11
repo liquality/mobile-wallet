@@ -366,8 +366,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             )}
             <Warning
               text1="Max slippage is 0.5%."
-              text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6
-          hours at 20:45 GMT"
+              text2={`If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at ${new Date(
+                new Date().getTime() + 3 * 60 * 60 * 1000,
+              ).toTimeString()}`}
               icon={faClock}
             />
           </>

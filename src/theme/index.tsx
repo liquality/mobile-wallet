@@ -127,6 +127,19 @@ const theme = createTheme({
       lineHeight: 14,
       color: 'tertiaryForeground',
     },
+    warningBold: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '500',
+      fontSize: 10,
+      lineHeight: 16,
+    },
+    warningLight: {
+      fontFamily: 'Montserrat-Light',
+      fontWeight: '300',
+      fontSize: 10,
+      lineHeight: 16,
+      paddingLeft: 's',
+    },
     link: {
       fontFamily: 'Montserrat-Regular',
       fontWeight: '400',
