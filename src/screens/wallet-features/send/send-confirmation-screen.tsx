@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
-import TransactionDetails from '../../../components/transaction-details'
+import SendTransactionDetails from '../../../components/send/send-transaction-details'
 import { chains, unitToCurrency } from '@liquality/cryptoassets'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { formatDate } from '../../../utils'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
 import { useAppSelector } from '../../../hooks'
+import { HistoryItem } from '@liquality/wallet-core/dist/store/types'
 
 type SendConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -21,14 +22,14 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
 }) => {
   const transaction = route.params.sendTransactionConfirmation!
   const { from, startTime } = transaction
-  const { value: amount, feePrice } = transaction?.sendTransaction!
+  const {
+    tx: { feePrice, fee: amount },
+  } = transaction
   const [historyItem, setHistoryItem] = useState<any>(transaction)
   const { history = [] } = useAppSelector((state) => {
     const { activeNetwork, activeWalletId, history: historyObject } = state
-    let historyItems: any[] = []
-    if (activeNetwork && activeWalletId && historyObject) {
-      historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
-    }
+    let historyItems: HistoryItem[] =
+      historyObject?.[activeNetwork]?.[activeWalletId] || []
     return {
       history: historyItems,
       activeNetwork,
@@ -49,15 +50,11 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   }
 
   useEffect(() => {
-    const historyItems = history.filter(
-      (item) =>
-        item.type === 'SEND' &&
-        item.sendTransaction?.hash === transaction.sendTransaction?.hash,
-    )
+    const historyItems = history.filter((item) => item.id === transaction.id)
     if (historyItems.length > 0) {
       setHistoryItem(historyItems[0])
     }
-  }, [history, transaction.sendTransaction?.hash])
+  }, [history, transaction?.id])
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -114,7 +111,7 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
           </Pressable>
         )}
       </View>
-      <TransactionDetails type="SEND" historyItem={historyItem} />
+      <SendTransactionDetails historyItem={historyItem} />
     </ScrollView>
   )
 }

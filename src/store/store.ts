@@ -27,6 +27,11 @@ import {
   SwapHistoryItem,
   TransactionType,
 } from '@liquality/wallet-core/dist/store/types'
+import {
+  getSwapTimeline,
+  TimelineStep,
+} from '@liquality/wallet-core/dist/utils/timeline'
+import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -514,6 +519,20 @@ export const getQuotes = async (
     toAccountId: toAccount.id,
     amount: amount.toString(),
   })
+}
+
+export const getTimeline = async (
+  historyItem: SwapHistoryItem,
+): Promise<TimelineStep[]> => {
+  return await getSwapTimeline(
+    historyItem,
+    (options: { walletId: WalletId; network: Network; asset: Asset }) =>
+      wallet.getters.client({
+        network: options.network,
+        walletId: options.walletId,
+        asset: options.asset,
+      }),
+  )
 }
 
 //Infer the types from the rootReducer

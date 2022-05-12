@@ -21,7 +21,7 @@ import MessageBanner from '../../../components/ui/message-banner'
 import AmountTextInputBlock from '../../../components/ui/amount-text-input-block'
 import Label from '../../../components/ui/label'
 import Warning from '../../../components/ui/warning'
-import SwapRates from '../../../components/swap-rates'
+import SwapRates from '../../../components/swap/swap-rates'
 import { getQuotes, updateMarketData } from '../../../store/store'
 import {
   ActionEnum,

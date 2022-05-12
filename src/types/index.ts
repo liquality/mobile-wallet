@@ -4,6 +4,7 @@ import { FeeDetails } from '@liquality/types/lib/fees'
 import { BigNumber } from '@liquality/types'
 import {
   FeeLabel,
+  SendHistoryItem,
   SwapHistoryItem,
 } from '@liquality/wallet-core/dist/store/types'
 
@@ -56,7 +57,7 @@ export type StackPayload = {
     destinationAddress?: string
     asset?: string
   }
-  sendTransactionConfirmation?: any
+  sendTransactionConfirmation?: SendHistoryItem
   swapAssetPair?: SwapAssetPairType
   swapTransaction?: SwapInfoType
   swapTransactionConfirmation?: SwapHistoryItem

@@ -9,20 +9,20 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native'
-import Label from './ui/label'
-import Logo from '../assets/icons/infinity.svg'
-import LiqualityBoost from '../assets/icons/swap-providers/liqualityboost.svg'
-import Sovryn from '../assets/icons/swap-providers/sovryn.svg'
-import Thorchain from '../assets/icons/swap-providers/thorchain.svg'
+import Label from '../ui/label'
+import Logo from '../../assets/icons/infinity.svg'
+import LiqualityBoost from '../../assets/icons/swap-providers/liqualityboost.svg'
+import Sovryn from '../../assets/icons/swap-providers/sovryn.svg'
+import Thorchain from '../../assets/icons/swap-providers/thorchain.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTimes, faCheck } from '@fortawesome/pro-light-svg-icons'
 import SwapTypesInfo from './swap-types-info'
-import Button from '../theme/button'
+import Button from '../../theme/button'
 import { unitToCurrency } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
 import { dpUI } from '@liquality/wallet-core/dist/utils/coinFormatter'
-import Box from '../theme/box'
-import Text from '../theme/text'
+import Box from '../../theme/box'
+import Text from '../../theme/text'
 
 const ListHeader: FC = () => {
   const styles = StyleSheet.create({

@@ -147,6 +147,20 @@ const theme = createTheme({
       lineHeight: 16,
       color: 'link',
     },
+    boldLink: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '600',
+      fontSize: 12,
+      lineHeight: 16,
+      color: 'link',
+    },
+    timelineLabel: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '300',
+      fontSize: 12,
+      lineHeight: 18,
+      marginRight: 's',
+    },
     error: {
       fontFamily: 'Montserrat-Light',
       color: 'danger',

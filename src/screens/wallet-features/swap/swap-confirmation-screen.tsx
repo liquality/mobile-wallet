@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
-import TransactionDetails from '../../../components/transaction-details'
+import SwapTransactionDetails from '../../../components/swap/swap-transaction-details'
 import {
   unitToCurrency,
   assets as cryptoassets,
@@ -28,6 +28,7 @@ import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
 import Button from '../../../theme/button'
 import {
   HistoryItem,
+  SwapHistoryItem,
   TransactionType,
 } from '@liquality/wallet-core/dist/store/types'
 import { cryptoToFiat } from '@liquality/wallet-core/dist/utils/coinFormatter'
@@ -64,7 +65,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   const transaction = route.params.swapTransactionConfirmation
   const [isExpanded, setIsExpanded] = useState(false)
   const [isSecretRevealed, setIsSecretRevealed] = useState(false)
-  const [historyItem, setHistoryItem] = useState<HistoryItem>()
+  const [historyItem, setHistoryItem] = useState<SwapHistoryItem>()
   const [swapProvider, setSwapProvider] = useState<SwapProvider>()
 
   const {
@@ -136,7 +137,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
         item.type === TransactionType.Swap && item.id === transaction?.id,
     )
     if (historyItems.length > 0) {
-      setHistoryItem(historyItems[0])
+      setHistoryItem(historyItems[0] as SwapHistoryItem)
     }
 
     if (network && provider) {
@@ -295,9 +296,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
             }`}
         </Text>
       </View>
-      {historyItem && (
-        <TransactionDetails type="SWAP" historyItem={historyItem} />
-      )}
+      {historyItem && <SwapTransactionDetails historyItem={historyItem} />}
       <Box>
         <Pressable
           style={styles.expandable}

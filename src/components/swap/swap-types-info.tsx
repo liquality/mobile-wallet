@@ -7,12 +7,12 @@ import {
   Text,
   View,
 } from 'react-native'
-import Label from './ui/label'
+import Label from '../ui/label'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTimes } from '@fortawesome/pro-light-svg-icons'
-import Uniswap from '../assets/icons/swap-providers/uniswap.svg'
-import LiqualityBoost from '../assets/icons/swap-providers/liqualityboost.svg'
-import Liquality from '../assets/icons/swap-providers/liquality.svg'
+import Uniswap from '../../assets/icons/swap-providers/uniswap.svg'
+import LiqualityBoost from '../../assets/icons/swap-providers/liqualityboost.svg'
+import Liquality from '../../assets/icons/swap-providers/liquality.svg'
 
 type SwapTypesInfoProps = {
   swapProviders: any[]
