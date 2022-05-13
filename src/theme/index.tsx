@@ -9,6 +9,7 @@ const palette = {
   blueVioletSecondary: '#F8FAFF',
   purplePrimary: '#5A31F4',
   red: '#F12274',
+  transparentBlack: 'rgba(0,0,0,0.5)',
 }
 
 const theme = createTheme({
@@ -30,6 +31,7 @@ const theme = createTheme({
     buttonPrimaryBackground: palette.purplePrimary,
     mainBorderColor: palette.gray,
     link: palette.blueVioletPrimary,
+    transparentBlack: palette.transparentBlack,
   },
   spacing: {
     s: 5,
@@ -49,9 +51,12 @@ const theme = createTheme({
   textVariants: {
     header: {
       fontFamily: 'Montserrat-Regular',
-      fontSize: 28,
-      lineHeight: 24,
-      color: 'mainForeground',
+      fontSize: 12,
+      fontWeight: '700',
+      lineHeight: 18,
+      marginVertical: 's',
+      marginRight: 's',
+      color: 'secondaryForeground',
     },
     tabHeader: {
       fontFamily: 'Montserrat-Regular',
