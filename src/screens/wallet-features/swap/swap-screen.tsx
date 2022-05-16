@@ -318,6 +318,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           quotes={quotes}
           selectQuote={handleSelectQuote}
           selectedQuote={selectedQuote}
+          clickable
           style={{ paddingHorizontal: 20 }}
         />
       )}

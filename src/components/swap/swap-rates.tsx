@@ -17,14 +17,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTimes, faCheck } from '@fortawesome/pro-light-svg-icons'
 import SwapTypesInfo from './swap-types-info'
 import Button from '../../theme/button'
-import { unitToCurrency } from '@liquality/cryptoassets'
-import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
 import { dpUI } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import Box from '../../theme/box'
 import Text from '../../theme/text'
 import ListHeader from './list-header'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import { capitalizeFirstLetter } from '../../utils'
+import { calculateQuoteRate } from '@liquality/wallet-core/dist/utils/quotes'
 
 type SwapRatesProps = {
   fromAsset: string
@@ -49,15 +48,6 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
   const [selectedItem, setSelectedItem] = useState<SwapQuote>(selectedQuote)
   const [isRatesModalVisible, setIsRatesModalVisible] = useState(false)
   const [isSwapTypesModalVisible, setIsSwapTypesModalVisible] = useState(false)
-
-  const calculateQuoteRate = (quote: any) => {
-    const fromAmount = unitToCurrency(
-      cryptoassets[quote.from],
-      quote.fromAmount,
-    )
-    const toAmount = unitToCurrency(cryptoassets[quote.to], quote.toAmount)
-    return toAmount.div(fromAmount)
-  }
 
   const getSwapProviderIcon = (marketQuotes: SwapQuote): React.ReactElement => {
     switch (marketQuotes.provider) {

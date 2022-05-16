@@ -83,8 +83,6 @@ const SwapTransactionDetails: React.FC<SwapTransactionDetailsProps> = (
       </Box>
 
       {timeline.map((item, index) => {
-        const isStepCompleted =
-          typeof item.pending !== 'undefined' && !item.pending
         return (
           <Box
             flexDirection="row"
@@ -112,15 +110,15 @@ const SwapTransactionDetails: React.FC<SwapTransactionDetailsProps> = (
               {index === 0 && (
                 <>
                   <View style={styles.start} />
-                  <Separator completed={isStepCompleted} />
+                  <Separator completed={item.completed} />
                 </>
               )}
-              {index !== 0 && <Separator completed={isStepCompleted} />}
-              <Step completed={isStepCompleted} />
+              {index !== 0 && <Separator completed={item.completed} />}
+              <Step completed={item.completed} />
               {index === timeline.length - 1 ? (
                 <View style={styles.start} />
               ) : (
-                <Separator completed={isStepCompleted} />
+                <Separator completed={item.completed} />
               )}
             </Box>
             {index % 2 === 1 ? (
