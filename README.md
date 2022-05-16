@@ -63,8 +63,8 @@ cd android/fastlane && fastlane android alpha
 ## Analytics
 
 ## Troubleshoot
-1. FBReactNativeSpec - Command PhaseScriptExecution failed with a nonzero exit code
-https://github.com/react-native-community/upgrade-support/issues/161
+1. FBReactNativeSpec - Command PhaseScriptExecution failed with a nonzero exit code<br>
+https://github.com/react-native-community/upgrade-support/issues/161<br>
 In node_modules/react-native/scripts/find-node.sh, comment out this code block:
 ```
 if [[ -s "$HOME/.nvm/nvm.sh" ]]; then
