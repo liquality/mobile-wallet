@@ -62,5 +62,21 @@ cd android/fastlane && fastlane android alpha
 
 ## Analytics
 
+## Troubleshoot
+1. FBReactNativeSpec - Command PhaseScriptExecution failed with a nonzero exit code
+https://github.com/react-native-community/upgrade-support/issues/161
+In node_modules/react-native/scripts/find-node.sh, comment out this code block:
+```
+if [[ -s "$HOME/.nvm/nvm.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "$HOME/.nvm/nvm.sh" --no-use
+  nvm use 2> /dev/null || nvm use default
+elif [[ -x "$(command -v brew)" && -s "$(brew --prefix nvm)/nvm.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "$(brew --prefix nvm)/nvm.sh" --no-use
+  nvm use 2> /dev/null || nvm use default
+fi
+```
+
 ## License
 [MIT](./LICENSE.md)
