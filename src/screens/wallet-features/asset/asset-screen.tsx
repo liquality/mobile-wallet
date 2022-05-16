@@ -152,34 +152,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#000',
   },
-  activityActionBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#F8FAFF',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
-  },
-  activityBtns: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  filterLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    color: '#1D1E21',
-    marginLeft: 5,
-  },
-  exportLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    color: '#646F85',
-    marginLeft: 5,
-  },
-  headerText: {
-    fontSize: 13,
-    fontWeight: '600',
-  },
   contentBlock: {
     flex: 0.6,
   },

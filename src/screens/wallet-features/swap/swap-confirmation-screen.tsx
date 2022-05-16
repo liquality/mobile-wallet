@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  View,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-  Dimensions,
-} from 'react-native'
+import { View, StyleSheet, Pressable, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import SwapTransactionDetails from '../../../components/swap/swap-transaction-details'
@@ -16,14 +10,9 @@ import {
 } from '@liquality/cryptoassets'
 import { useAppSelector } from '../../../hooks'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import {
-  faAngleDown,
-  faAngleRight,
-  faClock,
-} from '@fortawesome/pro-light-svg-icons'
+import { faAngleDown, faAngleRight } from '@fortawesome/pro-light-svg-icons'
 import Label from '../../../components/ui/label'
 import ProgressCircle from '../../../components/animations/progress-circle'
-import ProgressBar from '../../../components/animations/progress-bar'
 import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
 import Button from '../../../theme/button'
 import {
@@ -31,7 +20,10 @@ import {
   SwapHistoryItem,
   TransactionType,
 } from '@liquality/wallet-core/dist/store/types'
-import { cryptoToFiat } from '@liquality/wallet-core/dist/utils/coinFormatter'
+import {
+  cryptoToFiat,
+  dpUI,
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
 import { SwapProvider } from '@liquality/wallet-core/dist/swaps/SwapProvider'
@@ -39,6 +31,9 @@ import { retrySwap } from '../../../store/store'
 import RefundedIcon from '../../../assets/icons/activity-status/refunded.svg'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
+import { calculateQuoteRate } from '@liquality/wallet-core/dist/utils/quotes'
+import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
+import SwapRates from '../../../components/swap/swap-rates'
 
 type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -69,19 +64,18 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   const [swapProvider, setSwapProvider] = useState<SwapProvider>()
 
   const {
+    id,
     fromAmount,
     from,
     to,
     toAmount,
-    createdAt,
-    expiresAt,
+    startTime,
     fee,
-    fromFundTx,
+    toFundHash,
     fromFundHash,
     fromCounterPartyAddress,
     toCounterPartyAddress,
-    orderId,
-    rate,
+    receiveTxHash,
     minConf,
     secret,
     secretHash,
@@ -97,30 +91,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     }/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
   }
 
-  const elapsedTime = (date: string) => {
-    const startTime = Date.parse(date)
-    const elapsed = Date.now() - startTime
-    const minutes = Math.floor(elapsed / (1000 * 60))
-    const hours = Math.floor(minutes / 60)
-    const remainingMinutes = minutes % 60
-    return `${hours}:${remainingMinutes}hr`
-  }
-
-  const remainingTime = (expirationTime: number) => {
-    const remainder = expirationTime - Date.now()
-    const minutes = Math.floor(remainder / (1000 * 60))
-    const hours = Math.floor(minutes / 60)
-    const remainingMinutes = minutes % 60
-    return `${hours}:${remainingMinutes}hr`
-  }
-
   const handleSpeedUpTransaction = () => {
-    //display gas fee selector
-    // if (from && activeNetwork && fromFundHash) {
-    //   speedUpTransaction(from, activeNetwork, fromFundHash, newFee)
-    // } else {
-    //   Alert.alert('Failed to speed up transaction')
-    // }
     navigation.navigate('CustomFeeScreen', {
       assetData: route.params.assetData,
       screenTitle: 'NETWORK SPEED/FEE',
@@ -131,6 +102,9 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     if (transaction) await retrySwap(transaction)
   }
 
+  const computeRate = (swapQuote: SwapQuote) => {
+    return dpUI(calculateQuoteRate(swapQuote))
+  }
   useEffect(() => {
     const historyItems = history.filter(
       (item) =>
@@ -186,49 +160,6 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
         )}
       </Box>
       <Box
-        justifyContent="space-between"
-        paddingHorizontal="xl"
-        marginBottom="xl">
-        <Text variant="secondaryInputLabel">Trade Time</Text>
-        {!['SUCCESS', 'REFUNDED'].includes(historyItem?.status) && (
-          <Box
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="flex-end">
-            <FontAwesomeIcon icon={faClock} size={15} color="#9C55F6" />
-            <Text style={styles.content}>
-              {createdAt && elapsedTime(createdAt)}
-            </Text>
-            <ProgressBar
-              width={Dimensions.get('screen').width - 150}
-              total={100}
-              current={10}
-            />
-            <Text style={styles.content}>
-              {expiresAt && remainingTime(expiresAt)}
-            </Text>
-          </Box>
-        )}
-        <Box
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="flex-end">
-          <Text style={styles.content}>
-            {createdAt && `Initiated ${formatDate(Date.parse(createdAt))}`}
-          </Text>
-          {['SUCCESS', 'REFUNDED'].includes(historyItem?.status) &&
-          historyItem?.endTime ? (
-            <Text style={styles.content}>{`${'Completed'} ${formatDate(
-              historyItem?.endTime,
-            )}`}</Text>
-          ) : (
-            <Text style={styles.content}>
-              {expiresAt && `${'Expires'} ${formatDate(expiresAt)}`}
-            </Text>
-          )}
-        </Box>
-      </Box>
-      <Box
         flexDirection="row"
         justifyContent="space-between"
         alignItems="flex-end"
@@ -275,14 +206,17 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           </Text>
         </View>
       </Box>
-      {/* {from && to && (
+      {from && to && (
         <SwapRates
           fromAsset={from}
           toAsset={to}
+          quotes={[]}
+          selectedQuote={historyItem}
           selectQuote={() => ({})}
+          clickable={false}
           style={{ paddingHorizontal: 20 }}
         />
-      )} */}
+      )}
       <View style={styles.border}>
         <Text variant="secondaryInputLabel">NETWORK SPEED/FEE</Text>
         <Text style={styles.content}>
@@ -309,87 +243,190 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
         </Pressable>
         {isExpanded && (
           <>
-            <View style={styles.cell}>
-              <Label text="Counter-party" variant="light" />
-              <Text style={styles.transactionInfo}>
-                {fromCounterPartyAddress}
-              </Text>
-            </View>
-            <View style={styles.cell}>
+            {!!fromCounterPartyAddress && (
+              <Box
+                borderTopWidth={1}
+                borderTopColor="mainBorderColor"
+                paddingHorizontal={'xl'}
+                paddingVertical={'m'}>
+                <Label text="Counter-party" variant="light" />
+                <Text style={styles.transactionInfo}>
+                  {fromCounterPartyAddress}
+                </Text>
+              </Box>
+            )}
+            <Box
+              borderTopWidth={1}
+              borderTopColor="mainBorderColor"
+              paddingHorizontal={'xl'}
+              paddingVertical={'m'}>
               <Label text="Order Id" variant="light" />
-              <Text style={styles.transactionInfo}>{orderId}</Text>
-            </View>
-            <View style={styles.cell}>
-              <Label text="Started At" variant="light" />
-              <Text style={styles.transactionInfo}>{createdAt}</Text>
-            </View>
-            <View style={styles.cell}>
+              <Text style={styles.transactionInfo}>{id}</Text>
+            </Box>
+            {!!startTime && (
+              <Box
+                borderTopWidth={1}
+                borderTopColor="mainBorderColor"
+                paddingHorizontal={'xl'}
+                paddingVertical={'m'}>
+                <Label text="Started At" variant="light" />
+                <Text style={styles.transactionInfo}>
+                  {formatDate(startTime)}
+                </Text>
+              </Box>
+            )}
+            <Box
+              borderTopWidth={1}
+              borderTopColor="mainBorderColor"
+              paddingHorizontal={'xl'}
+              paddingVertical={'m'}>
               <Label text="Finished At" variant="light" />
               <Text style={styles.transactionInfo}>
-                {expiresAt && formatDate(expiresAt)}
+                {historyItem?.endTime && formatDate(historyItem?.endTime)}
               </Text>
-            </View>
-            <View style={styles.cell}>
-              <Label text="Rate" variant="light" />
-              <Text
-                style={
-                  styles.transactionInfo
-                }>{`1${from} = ${rate} ${to}`}</Text>
-            </View>
-            <View style={styles.cell}>
+            </Box>
+            {transaction && (
+              <Box
+                borderTopWidth={1}
+                borderTopColor="mainBorderColor"
+                paddingHorizontal={'xl'}
+                paddingVertical={'m'}>
+                <Label text="Rate" variant="light" />
+                <Text style={styles.transactionInfo}>{`1${from} = ${computeRate(
+                  transaction,
+                )} ${to}`}</Text>
+              </Box>
+            )}
+            <Box
+              borderTopWidth={1}
+              borderTopColor="mainBorderColor"
+              paddingHorizontal={'xl'}
+              paddingVertical={'m'}>
               <Label text="Status" variant="light" />
               <Text style={styles.transactionInfo}>{historyItem?.status}</Text>
-            </View>
-            <View style={styles.cell}>
+            </Box>
+            <Box
+              borderTopWidth={1}
+              borderTopColor="mainBorderColor"
+              paddingHorizontal={'xl'}
+              paddingVertical={'m'}>
               <Label text="Buy" variant="light" />
               <Text style={styles.transactionInfo}>{`${toAmount} ${to}`}</Text>
-            </View>
-            <View style={styles.cell}>
+            </Box>
+            <Box
+              borderTopWidth={1}
+              borderTopColor="mainBorderColor"
+              paddingHorizontal={'xl'}
+              paddingVertical={'m'}>
               <Label text="Sell" variant="light" />
               <Text
                 style={styles.transactionInfo}>{`${fromAmount} ${from}`}</Text>
-            </View>
-            <View style={styles.cell}>
-              <Label text="Minimum Confirmations" variant="light" />
-              <Text style={styles.transactionInfo}>{minConf}</Text>
-            </View>
-            <View style={styles.cell}>
-              <Label text={`Your ${from} address`} variant="light" />
-              <Text variant="link">{fromCounterPartyAddress}</Text>
-            </View>
-            <View style={styles.cell}>
-              <Label text="Finished At" variant="light" />
-              <Text variant="link">{toCounterPartyAddress}</Text>
-            </View>
-            <View style={styles.cell}>
-              <Label text="Secret" variant="light" />
-              {isSecretRevealed ? (
-                <Text style={styles.transactionInfo}>{secret}</Text>
-              ) : (
-                <Pressable
-                  onPress={() => setIsSecretRevealed(!isSecretRevealed)}>
-                  <Text variant="link">Click to reveal secret</Text>
-                </Pressable>
-              )}
-            </View>
-            <View style={styles.cell}>
-              <Label text="Secret Hash" variant="light" />
-              <Text style={styles.transactionInfo}>{secretHash}</Text>
-            </View>
-            <View style={styles.cell}>
+            </Box>
+            {!!minConf && (
+              <Box
+                borderTopWidth={1}
+                borderTopColor="mainBorderColor"
+                paddingHorizontal={'xl'}
+                paddingVertical={'m'}>
+                <Label text="Minimum Confirmations" variant="light" />
+                <Text style={styles.transactionInfo}>{minConf}</Text>
+              </Box>
+            )}
+            {!!fromCounterPartyAddress && (
+              <Box
+                borderTopWidth={1}
+                borderTopColor="mainBorderColor"
+                paddingHorizontal={'xl'}
+                paddingVertical={'m'}>
+                <Label text={`Your ${from} address`} variant="light" />
+                <Text variant="link">{fromCounterPartyAddress}</Text>
+              </Box>
+            )}
+            {!!toCounterPartyAddress && (
+              <Box
+                borderTopWidth={1}
+                borderTopColor="mainBorderColor"
+                paddingHorizontal={'xl'}
+                paddingVertical={'m'}>
+                <Label text={`Your ${to} address`} variant="light" />
+                <Text variant="link">{toCounterPartyAddress}</Text>
+              </Box>
+            )}
+            {!!secret && (
+              <Box
+                borderTopWidth={1}
+                borderTopColor="mainBorderColor"
+                paddingHorizontal={'xl'}
+                paddingVertical={'m'}>
+                <Label text="Secret" variant="light" />
+                {isSecretRevealed ? (
+                  <Text style={styles.transactionInfo}>{secret}</Text>
+                ) : (
+                  <Pressable
+                    onPress={() => setIsSecretRevealed(!isSecretRevealed)}>
+                    <Text variant="link">Click to reveal secret</Text>
+                  </Pressable>
+                )}
+              </Box>
+            )}
+            {!!secretHash && (
+              <Box
+                borderTopWidth={1}
+                borderTopColor="mainBorderColor"
+                paddingHorizontal={'xl'}
+                paddingVertical={'m'}>
+                <Label text="Secret Hash" variant="light" />
+                <Text style={styles.transactionInfo}>{secretHash}</Text>
+              </Box>
+            )}
+            <Box
+              borderTopWidth={1}
+              borderTopColor="mainBorderColor"
+              paddingHorizontal={'xl'}
+              paddingVertical={'m'}>
               <Label
                 text={`Your ${from} funding transaction`}
                 variant="light"
               />
-              <Text style={styles.transactionInfo}>{fromFundTx?.hash}</Text>
-            </View>
-            <View style={styles.cell}>
+              <Text style={styles.transactionInfo}>{fromFundHash}</Text>
+            </Box>
+            {!!toFundHash && (
               <Box
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="center">
-                <Text>Actions</Text>
-                {historyItem?.status !== 'SUCCESS' && (
+                borderTopWidth={1}
+                borderTopColor="mainBorderColor"
+                paddingHorizontal={'xl'}
+                paddingVertical={'m'}>
+                <Label
+                  text={`Your ${to} funding transaction`}
+                  variant="light"
+                />
+                <Text style={styles.transactionInfo}>{toFundHash}</Text>
+              </Box>
+            )}
+            {!!receiveTxHash && (
+              <Box
+                borderTopWidth={1}
+                borderTopColor="mainBorderColor"
+                paddingHorizontal={'xl'}
+                paddingVertical={'m'}>
+                <Label
+                  text={`Your ${to} receive transaction`}
+                  variant="light"
+                />
+                <Text style={styles.transactionInfo}>{receiveTxHash}</Text>
+              </Box>
+            )}
+            {!['SUCCESS', 'REFUNDED'].includes(historyItem?.status) && (
+              <Box
+                borderTopWidth={1}
+                borderTopColor="mainBorderColor"
+                paddingHorizontal={'xl'}
+                paddingVertical={'m'}>
+                <Box
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  alignItems="center">
+                  <Text>Actions</Text>
                   <Button
                     type="tertiary"
                     variant="s"
@@ -398,9 +435,9 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
                     isBorderless={false}
                     isActive={true}
                   />
-                )}
+                </Box>
               </Box>
-            </View>
+            )}
           </>
         )}
       </Box>
@@ -428,12 +465,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#646F85',
     marginTop: 5,
-  },
-  cell: {
-    borderTopWidth: 1,
-    borderTopColor: '#D9DFE5',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
   },
   expandable: {
     flexDirection: 'row',

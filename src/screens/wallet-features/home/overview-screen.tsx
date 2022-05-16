@@ -228,9 +228,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     fontWeight: '600',
   },
-  contentBlock: {
-    flex: 1,
-  },
   noActivityMessageBlock: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '400',

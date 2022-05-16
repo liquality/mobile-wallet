@@ -23,6 +23,8 @@ import { dpUI } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import Box from '../../theme/box'
 import Text from '../../theme/text'
 import ListHeader from './list-header'
+import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
+import { capitalizeFirstLetter } from '../../utils'
 
 type SwapRatesProps = {
   fromAsset: string
@@ -30,13 +32,21 @@ type SwapRatesProps = {
   quotes: any[]
   selectedQuote: any
   selectQuote: (quote: any) => void
+  clickable: boolean
   style?: StyleProp<ViewStyle>
 }
 
 const SwapRates: FC<SwapRatesProps> = (props) => {
-  const { selectQuote, style, quotes, selectedQuote, fromAsset, toAsset } =
-    props
-  const [selectedItem, setSelectedItem] = useState<any>(selectedQuote)
+  const {
+    selectQuote,
+    style,
+    quotes,
+    selectedQuote,
+    fromAsset,
+    toAsset,
+    clickable,
+  } = props
+  const [selectedItem, setSelectedItem] = useState<SwapQuote>(selectedQuote)
   const [isRatesModalVisible, setIsRatesModalVisible] = useState(false)
   const [isSwapTypesModalVisible, setIsSwapTypesModalVisible] = useState(false)
 
@@ -49,7 +59,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
     return toAmount.div(fromAmount)
   }
 
-  const getSwapProviderIcon = (marketQuotes: any): React.ReactElement => {
+  const getSwapProviderIcon = (marketQuotes: SwapQuote): React.ReactElement => {
     switch (marketQuotes.provider) {
       case 'liquality':
         return <Logo width={15} height={15} style={styles.icon} />
@@ -116,11 +126,21 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
           <Button
             type="tertiary"
             variant="s"
-            label="Liquality"
-            onPress={() => setIsRatesModalVisible(true)}
+            label={
+              selectedItem
+                ? capitalizeFirstLetter(selectedItem.provider)
+                : 'Liquality'
+            }
+            onPress={() => {
+              if (clickable) setIsRatesModalVisible(true)
+            }}
             isBorderless={false}
             isActive={true}>
-            <Logo width={20} style={styles.icon} />
+            {selectedItem ? (
+              getSwapProviderIcon(selectedItem)
+            ) : (
+              <Logo width={20} style={styles.icon} />
+            )}
           </Button>
           {selectedQuote && (
             <Box flexDirection="row" marginTop="s">

@@ -119,7 +119,9 @@ const ActivityFlatList = ({
                 new BigNumber(amount),
               ).toNumber()} ${from}`}
           </Text>
-          <Text variant="amountLabel">{`$${amountInUsd}`}</Text>
+          {!!amountInUsd && (
+            <Text variant="amountLabel">{`$${amountInUsd}`}</Text>
+          )}
         </Box>
         <Box flex={0.1} justifyContent="center" alignItems="center">
           {status === 'REFUNDED' && <RefundedIcon />}

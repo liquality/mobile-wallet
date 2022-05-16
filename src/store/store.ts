@@ -535,6 +535,15 @@ export const getTimeline = async (
   )
 }
 
+export const getBalances = () => {
+  const total = wallet.getters.totalFiatBalance.toString()
+  const numberOfAccounts = wallet.getters.accountsData.length
+
+  return {
+    total,
+    numberOfAccounts,
+  }
+}
 //Infer the types from the rootReducer
 export type AppDispatch = typeof store.dispatch
 
