@@ -9,6 +9,7 @@ const palette = {
   blueVioletSecondary: '#F8FAFF',
   purplePrimary: '#5A31F4',
   red: '#F12274',
+  transparentBlack: 'rgba(0,0,0,0.5)',
 }
 
 const theme = createTheme({
@@ -29,6 +30,8 @@ const theme = createTheme({
     cardPrimaryBackground: palette.purplePrimary,
     buttonPrimaryBackground: palette.purplePrimary,
     mainBorderColor: palette.gray,
+    link: palette.blueVioletPrimary,
+    transparentBlack: palette.transparentBlack,
   },
   spacing: {
     s: 5,
@@ -48,9 +51,12 @@ const theme = createTheme({
   textVariants: {
     header: {
       fontFamily: 'Montserrat-Regular',
-      fontSize: 28,
-      lineHeight: 24,
-      color: 'mainForeground',
+      fontSize: 12,
+      fontWeight: '700',
+      lineHeight: 18,
+      marginVertical: 's',
+      marginRight: 's',
+      color: 'secondaryForeground',
     },
     tabHeader: {
       fontFamily: 'Montserrat-Regular',
@@ -125,6 +131,40 @@ const theme = createTheme({
       fontSize: 12,
       lineHeight: 14,
       color: 'tertiaryForeground',
+    },
+    warningBold: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '500',
+      fontSize: 10,
+      lineHeight: 16,
+    },
+    warningLight: {
+      fontFamily: 'Montserrat-Light',
+      fontWeight: '300',
+      fontSize: 10,
+      lineHeight: 16,
+      paddingLeft: 's',
+    },
+    link: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '400',
+      fontSize: 12,
+      lineHeight: 16,
+      color: 'link',
+    },
+    boldLink: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '600',
+      fontSize: 12,
+      lineHeight: 16,
+      color: 'link',
+    },
+    timelineLabel: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '300',
+      fontSize: 12,
+      lineHeight: 18,
+      marginRight: 's',
     },
     error: {
       fontFamily: 'Montserrat-Light',

@@ -14,7 +14,7 @@ import { currencyToUnit } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
 import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
 import { AssetDataElementType, GasFees } from '../types'
-import { WalletOptions, Notification } from '@liquality/wallet-core/dist/types'
+import { Notification, WalletOptions } from '@liquality/wallet-core/dist/types'
 import { decrypt, encrypt, Log, pbkdf2 } from '../utils'
 import {
   getFeeAsset,
@@ -27,6 +27,11 @@ import {
   SwapHistoryItem,
   TransactionType,
 } from '@liquality/wallet-core/dist/store/types'
+import {
+  getSwapTimeline,
+  TimelineStep,
+} from '@liquality/wallet-core/dist/utils/timeline'
+import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -72,7 +77,8 @@ export const initWallet = async (initialState?: CustomRootState) => {
     },
   }
   wallet = setupWallet(walletOptions)
-  wallet.original.subscribe((mutation, newState) => {
+  wallet.original.subscribe((mutation) => {
+    Log('mutation:' + mutation, 'info')
     if (mutation.type === 'NEW_SWAP') {
       const { network, walletId } = mutation.payload
       const historyItems = store.getState().history
@@ -119,10 +125,10 @@ export const initWallet = async (initialState?: CustomRootState) => {
         },
       })
     } else {
-      store.dispatch({
-        type: 'UPDATE_WALLET',
-        payload: newState,
-      })
+      // store.dispatch({
+      //   type: 'UPDATE_WALLET',
+      //   payload: newState,
+      // })
     }
   })
 }
@@ -209,6 +215,40 @@ export const populateWallet = async (): Promise<void> => {
     .catch((e) => {
       Log(`Failed to update fiat rates: ${e}`, 'error')
     })
+
+  store.dispatch({
+    type: 'UPDATE_WALLET',
+    payload: wallet.state,
+  })
+
+  await retryPendingSwaps()
+}
+
+export const retrySwap = async (transaction: SwapHistoryItem) => {
+  await wallet.dispatch.retrySwap({
+    swap: transaction,
+  })
+}
+
+export const retryPendingSwaps = async () => {
+  const { activeNetwork, activeWalletId } = store.getState()
+  const allTransactions =
+    store.getState().history?.[activeNetwork]?.[activeWalletId] || []
+
+  const promises = allTransactions
+    .filter(
+      (transaction) =>
+        transaction.type === TransactionType.Swap &&
+        transaction.status?.toLowerCase() !== 'success',
+    )
+    .map((transaction) =>
+      wallet.dispatch.retrySwap({
+        swap: transaction as SwapHistoryItem,
+      }),
+    )
+  if (promises.length > 0) {
+    await Promise.all(promises).catch((e) => Log(e, 'error'))
+  }
 }
 
 export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {
@@ -331,14 +371,6 @@ export const restoreWallet = async (
 }
 
 /**
- * Retrieves active swap providers from the wallet
- */
-export const initSwaps = (): Partial<Record<any, any>> => {
-  // return wallet.getSwapProviders()
-  return {}
-}
-
-/**
  * Performs a swap
  * @param from
  * @param to
@@ -388,15 +420,6 @@ export const performSwap = async (
 
   return await wallet.dispatch.newSwap(params)
 }
-
-/**
- * Retrieves the swap statuses we can display in the transaction timeline in transaction.details
- * @param swapProviderType
- */
-// export const getSwapStatuses = (swapProviderType: any) => {
-//   // return wallet.getSwapProvider(swapProviderType).statuses
-//   return {}
-// }
 
 /**
  * Performs a send operation
@@ -494,6 +517,29 @@ export const getQuotes = async (
   })
 }
 
+export const getTimeline = async (
+  historyItem: SwapHistoryItem,
+): Promise<TimelineStep[]> => {
+  return await getSwapTimeline(
+    historyItem,
+    (options: { walletId: WalletId; network: Network; asset: Asset }) =>
+      wallet.getters.client({
+        network: options.network,
+        walletId: options.walletId,
+        asset: options.asset,
+      }),
+  )
+}
+
+export const getBalances = () => {
+  const total = wallet.getters.totalFiatBalance.toString()
+  const numberOfAccounts = wallet.getters.accountsData.length
+
+  return {
+    total,
+    numberOfAccounts,
+  }
+}
 //Infer the types from the rootReducer
 export type AppDispatch = typeof store.dispatch
 

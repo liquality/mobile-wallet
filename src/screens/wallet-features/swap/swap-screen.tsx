@@ -21,7 +21,7 @@ import MessageBanner from '../../../components/ui/message-banner'
 import AmountTextInputBlock from '../../../components/ui/amount-text-input-block'
 import Label from '../../../components/ui/label'
 import Warning from '../../../components/ui/warning'
-import SwapRates from '../../../components/swap-rates'
+import SwapRates from '../../../components/swap/swap-rates'
 import { getQuotes, updateMarketData } from '../../../store/store'
 import {
   ActionEnum,
@@ -318,6 +318,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           quotes={quotes}
           selectQuote={handleSelectQuote}
           selectedQuote={selectedQuote}
+          clickable
           style={{ paddingHorizontal: 20 }}
         />
       )}
@@ -366,8 +367,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             )}
             <Warning
               text1="Max slippage is 0.5%."
-              text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6
-          hours at 20:45 GMT"
+              text2={`If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at ${new Date(
+                new Date().getTime() + 3 * 60 * 60 * 1000,
+              ).toTimeString()}`}
               icon={faClock}
             />
           </>

@@ -3,8 +3,9 @@ import React, { FC, useEffect, useState } from 'react'
 import { useAppSelector } from '../../hooks'
 import Text from '../../theme/text'
 import { GasFees } from '../../types'
-import { calculateFees } from '../../utils'
 import FeeSelector from './fee-selector'
+import { fetchFeesForAsset } from '../../store/store'
+import { Alert } from 'react-native'
 
 type SwapFeeSelectorProps = {
   asset: string
@@ -23,14 +24,9 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
   }))
 
   useEffect(() => {
-    calculateFees(
-      activeNetwork,
-      activeWalletId,
-      selectedQuote,
-      asset,
-      true,
-      type,
-    ).then(setGasFees)
+    fetchFeesForAsset(asset)
+      .then(setGasFees)
+      .catch(() => Alert.alert('Failed to fetch gas fees'))
   }, [activeNetwork, activeWalletId, asset, networkFee, selectedQuote, type])
 
   //TODO add an ErrorBoundary component

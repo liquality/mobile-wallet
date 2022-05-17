@@ -52,7 +52,6 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           toNetworkFee.speed,
         )
 
-        Log(`Transaction: ${JSON.stringify(transaction)}`, 'info')
         if (transaction) {
           navigation.navigate('SwapConfirmationScreen', {
             swapTransactionConfirmation: transaction,

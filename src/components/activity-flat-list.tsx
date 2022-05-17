@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Pressable, StyleSheet } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   faChevronRight,
@@ -14,11 +14,14 @@ import {
 } from '@liquality/wallet-core/dist/store/types'
 
 import ProgressCircle from './animations/progress-circle'
-import { downloadAssetAcitivity, formatDate } from '../utils'
 import SuccessIcon from '../assets/icons/activity-status/completed.svg'
 import RefundedIcon from '../assets/icons/activity-status/refunded.svg'
 import ActivityFilter from './activity-filter'
 import { useFilteredHistory } from '../custom-hooks'
+import Text from '../theme/text'
+import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
+import Box from '../theme/box'
+import { downloadAssetAcitivity, formatDate } from '../utils'
 
 const ActivityFlatList = ({
   navigate,
@@ -47,11 +50,19 @@ const ActivityFlatList = ({
   }
 
   const renderActivity = ({ item }: { item: HistoryItem }) => {
-    const { id, type, startTime, from, to, status } = item
-    let transactionLabel, transactionTime, amount, amountInUsd
+    const { id, type, startTime, from, to, status, network, provider } = item
+    let transactionLabel,
+      transactionTime,
+      amount,
+      amountInUsd,
+      totalSteps = 1,
+      currentStep = 2
     if (item.type === TransactionType.Swap) {
       amount = item.fromAmount
       amountInUsd = item.fromAmountUsd
+      const swapProvider = getSwapProvider(network, provider)
+      totalSteps = swapProvider.totalSteps
+      currentStep = swapProvider.statuses[status].step + 1
     } else if (item.type === TransactionType.Send) {
       amount = item.amount
       amountInUsd = item.amount
@@ -66,8 +77,18 @@ const ActivityFlatList = ({
     }
 
     return (
-      <View style={styles.row} key={id}>
-        <View style={styles.col1}>
+      <Box
+        flexDirection="row"
+        justifyContent="flex-start"
+        alignItems="center"
+        paddingVertical="m"
+        style={styles.row}
+        key={id}>
+        <Box
+          flex={0.1}
+          flexDirection="row"
+          alignItems="center"
+          paddingHorizontal="s">
           {type === TransactionType.Swap && (
             <FontAwesomeIcon
               size={23}
@@ -79,31 +100,41 @@ const ActivityFlatList = ({
           {type === TransactionType.Send && (
             <FontAwesomeIcon size={23} icon={faLongArrowUp} color={'#FF287D'} />
           )}
-        </View>
-        <View style={styles.col2}>
+        </Box>
+        <Box flex={0.3} justifyContent="center">
           <Text style={styles.transaction}>{transactionLabel}</Text>
-          <Text style={styles.time}>
+          <Text variant="amountLabel">
             {transactionTime && formatDate(transactionTime)}
           </Text>
-        </View>
-        <View style={styles.col3}>
-          <Text style={styles.amount}>
+        </Box>
+        <Box
+          flex={0.4}
+          justifyContent="center"
+          alignItems="flex-end"
+          paddingRight="l">
+          <Text variant="amount">
             {amount &&
               `${unitToCurrency(
                 cryptoassets[from],
                 new BigNumber(amount),
               ).toNumber()} ${from}`}
           </Text>
-          <Text style={styles.status}>{`$${amountInUsd}`}</Text>
-        </View>
-        <View style={styles.col4}>
+          {!!amountInUsd && (
+            <Text variant="amountLabel">{`$${amountInUsd}`}</Text>
+          )}
+        </Box>
+        <Box flex={0.1} justifyContent="center" alignItems="center">
           {status === 'REFUNDED' && <RefundedIcon />}
           {status === 'SUCCESS' && <SuccessIcon />}
           {!['SUCCESS', 'REFUNDED'].includes(status) && (
-            <ProgressCircle radius={17} current={2} total={4} />
+            <ProgressCircle
+              radius={17}
+              current={currentStep}
+              total={totalSteps}
+            />
           )}
-        </View>
-        <View style={styles.col5}>
+        </Box>
+        <Box flex={0.1} justifyContent="center" alignItems="center">
           <Pressable onPress={() => handleChevronPress(item)}>
             <FontAwesomeIcon
               size={20}
@@ -111,8 +142,8 @@ const ActivityFlatList = ({
               color={'#A8AEB7'}
             />
           </Pressable>
-        </View>
-      </View>
+        </Box>
+      </Box>
     )
   }
 
@@ -138,38 +169,8 @@ const ActivityFlatList = ({
 
 const styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#D9DFE5',
-    paddingVertical: 10,
-  },
-  col1: {
-    flex: 0.1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 5,
-  },
-  col2: {
-    flex: 0.3,
-    justifyContent: 'center',
-  },
-  col3: {
-    flex: 0.4,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    paddingRight: 15,
-  },
-  col4: {
-    flex: 0.1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  col5: {
-    flex: 0.1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   transaction: {
     fontFamily: 'Montserrat-Regular',
@@ -177,23 +178,6 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 13,
     marginBottom: 5,
-  },
-  time: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#646F85',
-    fontSize: 12,
-  },
-  amount: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '600',
-    color: '#000',
-    fontSize: 13,
-    marginBottom: 5,
-  },
-  status: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#646F85',
-    fontSize: 12,
   },
 })
 
