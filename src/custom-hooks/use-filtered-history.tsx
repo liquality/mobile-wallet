@@ -91,10 +91,17 @@ const useFilteredHistory = () => {
   const items = useAppSelector((state) => {
     const { activeNetwork, activeWalletId, history: historyObject } = state
     let historyItems: HistoryItem[] = []
-    if (activeNetwork && activeWalletId && historyObject) {
+    if (
+      activeNetwork &&
+      activeWalletId &&
+      historyObject &&
+      historyObject?.[activeNetwork]?.[activeWalletId]
+    ) {
       historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
     }
 
+    // TODO: Remove this
+    // historyItems = MOCKED_HISTORY_ITEMS
     return historyItems
   })
 
@@ -179,10 +186,8 @@ const useFilteredHistory = () => {
       ) {
         return false
       }
-      if (endDate && moment(item.startTime).format('YYYY-MM-DD') > endDate) {
-        return false
-      }
-      return true
+
+      return !(endDate && moment(item.startTime).format('YYYY-MM-DD') > endDate)
     })
   }
 

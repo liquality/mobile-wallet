@@ -5,10 +5,10 @@ import {
   createWallet,
   fetchFeesForAsset,
   fetchSwapProvider,
-} from './store/store'
+} from '../store/store'
 import { MNEMONIC, PASSWORD } from '@env'
 import { BigNumber } from '@liquality/types'
-import { GasFees } from './types'
+import { GasFees } from '../types'
 import {
   EstimateFeeRequest,
   SwapQuote,

@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { FlatList, Pressable, StyleSheet } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
@@ -5,23 +6,22 @@ import {
   faExchange,
   faLongArrowUp,
 } from '@fortawesome/pro-light-svg-icons'
-
-import * as React from 'react'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
-import ProgressCircle from './animations/progress-circle'
-import { formatDate } from '../utils'
-import SuccessIcon from '../assets/icons/activity-status/completed.svg'
-import RefundedIcon from '../assets/icons/activity-status/refunded.svg'
 import { BigNumber } from '@liquality/types'
 import {
   HistoryItem,
   TransactionType,
 } from '@liquality/wallet-core/dist/store/types'
+
+import ProgressCircle from './animations/progress-circle'
+import SuccessIcon from '../assets/icons/activity-status/completed.svg'
+import RefundedIcon from '../assets/icons/activity-status/refunded.svg'
 import ActivityFilter from './activity-filter'
 import { useFilteredHistory } from '../custom-hooks'
 import Text from '../theme/text'
 import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
 import Box from '../theme/box'
+import { downloadAssetAcitivity, formatDate } from '../utils'
 
 const ActivityFlatList = ({
   navigate,
@@ -147,12 +147,22 @@ const ActivityFlatList = ({
     )
   }
 
+  const handleExport = React.useCallback(() => {
+    downloadAssetAcitivity(history as HistoryItem[])
+
+    // This is for better performance
+    // i.e, history.length is the only thing that matters
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history.length])
+
   return (
     <FlatList
       data={history}
       renderItem={renderActivity}
       keyExtractor={(item, index) => `history-item-${index}`}
-      ListHeaderComponent={<ActivityFilter numOfResults={history.length} />}
+      ListHeaderComponent={
+        <ActivityFilter numOfResults={history.length} onExport={handleExport} />
+      }
     />
   )
 }
