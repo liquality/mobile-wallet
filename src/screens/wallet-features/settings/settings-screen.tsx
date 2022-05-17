@@ -70,7 +70,7 @@ const SettingsScreen = () => {
     delete walletState.keySalt
 
     // Thsi is not in web app, newly added
-    delete walletState.wallets.mnemonic
+    delete walletState.wallets
 
     downloadWalletLogs(walletState)
   }, [reduxState])
