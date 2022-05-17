@@ -235,23 +235,19 @@ export const retryPendingSwaps = async () => {
   const allTransactions =
     store.getState().history?.[activeNetwork]?.[activeWalletId] || []
 
-  if (allTransactions.length > 0) {
-    const promises = []
-    for (const transaction of allTransactions) {
-      if (
+  const promises = allTransactions
+    .filter(
+      (transaction) =>
         transaction.type === TransactionType.Swap &&
-        transaction.status?.toLowerCase() !== 'success'
-      )
-        promises.push(
-          wallet.dispatch.retrySwap({
-            swap: transaction,
-          }),
-        )
-    }
-
-    if (promises.length > 0) {
-      await Promise.all(promises).catch((e) => Log(e, 'error'))
-    }
+        transaction.status?.toLowerCase() !== 'success',
+    )
+    .map((transaction) =>
+      wallet.dispatch.retrySwap({
+        swap: transaction as SwapHistoryItem,
+      }),
+    )
+  if (promises.length > 0) {
+    await Promise.all(promises).catch((e) => Log(e, 'error'))
   }
 }
 

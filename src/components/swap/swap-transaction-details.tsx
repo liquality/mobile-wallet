@@ -2,7 +2,6 @@ import { Pressable, StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Svg, { Circle, Line } from 'react-native-svg'
 import { formatDate } from '../../utils'
-import { v4 as uuidv4 } from 'uuid'
 import { useAppSelector } from '../../hooks'
 import Label from '../ui/label'
 import { TimelineStep } from '@liquality/wallet-core/dist/utils/timeline'
@@ -10,7 +9,7 @@ import { SwapHistoryItem } from '@liquality/wallet-core/dist/store/types'
 import { getTimeline } from '../../store/store'
 import Box from '../../theme/box'
 import Text from '../../theme/text'
-import ConfirmationBlock from './confirmation-block'
+import Timeline from './timeline'
 
 export const EmptyBlock = () => <View style={styles.emptyBlock} />
 
@@ -82,62 +81,11 @@ const SwapTransactionDetails: React.FC<SwapTransactionDetailsProps> = (
         )}
       </Box>
 
-      {timeline.map((item, index) => {
-        return (
-          <Box
-            flexDirection="row"
-            justifyContent="center"
-            alignItems="center"
-            key={uuidv4()}>
-            {index % 2 === 0 && historyItem ? (
-              <ConfirmationBlock
-                address={historyItem.fromAddress}
-                status={item.title}
-                confirmations={item.tx?.confirmations || 0}
-                fee={item.tx?.fee}
-                asset={historyItem.from}
-                fiatRates={fiatRates}
-                url={item.tx?.explorerLink}
-              />
-            ) : (
-              <EmptyBlock />
-            )}
-            <Box
-              justifyContent="flex-start"
-              alignItems="center"
-              width="4%"
-              marginHorizontal="l">
-              {index === 0 && (
-                <>
-                  <View style={styles.start} />
-                  <Separator completed={item.completed} />
-                </>
-              )}
-              {index !== 0 && <Separator completed={item.completed} />}
-              <Step completed={item.completed} />
-              {index === timeline.length - 1 ? (
-                <View style={styles.start} />
-              ) : (
-                <Separator completed={item.completed} />
-              )}
-            </Box>
-            {index % 2 === 1 ? (
-              <ConfirmationBlock
-                address={historyItem.toAddress}
-                status={item.title}
-                confirmations={item.tx?.confirmations || 0}
-                fee={item.tx?.fee}
-                asset={historyItem.to}
-                fiatRates={fiatRates}
-                url={item.tx?.explorerLink}
-              />
-            ) : (
-              <EmptyBlock />
-            )}
-          </Box>
-        )
-      })}
-
+      <Timeline
+        timeline={timeline}
+        historyItem={historyItem}
+        fiatRates={fiatRates}
+      />
       {['SUCCESS', 'REFUNDED'].includes(historyItem.status?.toUpperCase()) && (
         <Box justifyContent="center" alignItems="center">
           <Label text="Completed" variant="strong" />
@@ -151,13 +99,6 @@ const SwapTransactionDetails: React.FC<SwapTransactionDetailsProps> = (
 }
 
 const styles = StyleSheet.create({
-  start: {
-    width: 10,
-    height: 1,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: '#2CD2CF',
-  },
   emptyBlock: {
     width: '45%',
   },

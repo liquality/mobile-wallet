@@ -177,19 +177,11 @@ export const calculateFees = async (
     if (!totalFees) throw new Error('Failed to calculate totalFees')
 
     for (const [speed, fee] of Object.entries(assetFees)) {
-      //TODO why are we doing this when fees[speed] is always 0
-      // fees[speed] = fees[speed].plus(totalFees[feePrice])
-      fees = {
-        ...fees,
-        [speed]: totalFees[fee.toNumber()].plus(fee),
-      }
+      fees[speed as keyof GasFees] = totalFees[fee.toNumber()].plus(fee)
     }
   } else {
     for (const [speed, fee] of Object.entries(assetFees)) {
-      fees = {
-        ...fees,
-        [speed]: fee,
-      }
+      fees[speed as keyof GasFees] = fee
     }
   }
 
