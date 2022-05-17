@@ -27,3 +27,11 @@ jest.mock('react-native-modal-filter-picker', () => {
   const RN = require('react-native')
   return RN.View
 })
+
+jest.mock('react-native-fs', () => {
+  return {}
+})
+
+jest.mock('react-native-share', () => {
+  return {}
+})

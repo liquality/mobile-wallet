@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   Alert,
   Pressable,
@@ -7,27 +7,23 @@ import {
   Text,
   View,
 } from 'react-native'
+import { useDispatch } from 'react-redux'
+
 import SettingsSwitch from '../../../components/ui/switch'
 import { DarkModeEnum } from '../../../types'
-import { useDispatch } from 'react-redux'
 import { useAppSelector } from '../../../hooks'
 import WhatsNew from '../../../components/ui/whats-new'
 import Button from '../../../theme/button'
+import { downloadWalletLogs } from '../../../utils'
 
 const SettingsScreen = () => {
+  const reduxState = useAppSelector((state) => state)
   const {
     activeNetwork,
     analytics,
     notifications = false,
     version = 'Version 0.2.1',
-  } = useAppSelector((state) => ({
-    activeNetwork: state.activeNetwork,
-    injectEthereum: state.injectEthereum,
-    injectEthereumChain: state.injectEthereumChain,
-    analytics: state.analytics,
-    notifications: state.notifications,
-    version: state.version,
-  }))
+  } = reduxState
   const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(false)
   const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
   const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
@@ -67,6 +63,18 @@ const SettingsScreen = () => {
     setIsAnalyticsEnabled(!!analytics?.acceptedDate)
   }, [activeNetwork, analytics])
 
+  const handleDownload = useCallback(() => {
+    const walletState = { ...reduxState }
+
+    delete walletState.encryptedWallets
+    delete walletState.keySalt
+
+    // Thsi is not in web app, newly added
+    delete walletState.wallets.mnemonic
+
+    downloadWalletLogs(walletState)
+  }, [reduxState])
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -89,7 +97,7 @@ const SettingsScreen = () => {
               type="primary"
               variant="m"
               label="Download"
-              onPress={() => ({})}
+              onPress={handleDownload}
               isBorderless={false}
               isActive={true}
             />

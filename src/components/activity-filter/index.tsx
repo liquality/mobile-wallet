@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { FC, useCallback, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
@@ -20,7 +20,10 @@ import SorterPicker, { SORT_OPTIONS } from './sorter-picker'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { ActionEnum, ActivityStatusEnum, TimeLimitEnum } from '../../types'
 
-const ActivityFilter = ({ numOfResults = 1 }: { numOfResults: number }) => {
+const ActivityFilter: FC<{
+  numOfResults: number
+  onExport: () => void
+}> = ({ numOfResults = 1, onExport }) => {
   const [expanded, setExpanded] = useState(false)
   const [moreExpanded, setMoreExpanded] = useState(false)
   const [isSortPickerOpen, setIsSortPickerOpen] = useState(false)
@@ -130,7 +133,7 @@ const ActivityFilter = ({ numOfResults = 1 }: { numOfResults: number }) => {
           <Text style={styles.resetLabel}>Reset</Text>
         </Pressable>
         <View style={styles.spacer} />
-        <Pressable style={styles.iconBtn}>
+        <Pressable style={styles.iconBtn} onPress={onExport}>
           <FontAwesomeIcon size={16} icon={faArrowToBottom} color={'#646F85'} />
           <Text style={styles.exportLabel}>Export</Text>
         </Pressable>
