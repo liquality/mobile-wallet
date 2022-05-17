@@ -23,6 +23,7 @@ import {
 import {
   cryptoToFiat,
   dpUI,
+  prettyBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
@@ -311,7 +312,12 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               paddingHorizontal={'xl'}
               paddingVertical={'m'}>
               <Label text="Buy" variant="light" />
-              <Text style={styles.transactionInfo}>{`${toAmount} ${to}`}</Text>
+              {!!toAmount && !!to && (
+                <Text style={styles.transactionInfo}>{`${prettyBalance(
+                  new BigNumber(toAmount),
+                  to,
+                )} ${to}`}</Text>
+              )}
             </Box>
             <Box
               borderTopWidth={1}
@@ -319,8 +325,12 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               paddingHorizontal={'xl'}
               paddingVertical={'m'}>
               <Label text="Sell" variant="light" />
-              <Text
-                style={styles.transactionInfo}>{`${fromAmount} ${from}`}</Text>
+              {!!fromAmount && !!from && (
+                <Text style={styles.transactionInfo}>{`${prettyBalance(
+                  new BigNumber(fromAmount),
+                  from,
+                )} ${from}`}</Text>
+              )}
             </Box>
             {!!minConf && (
               <Box
