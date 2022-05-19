@@ -1,10 +1,9 @@
 import { Dispatch, ReactElement, SetStateAction } from 'react'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
-import { BigNumber } from '@liquality/types'
+import { BigNumber, Transaction } from '@liquality/types'
 import {
   FeeLabel,
-  SendHistoryItem,
   SwapHistoryItem,
 } from '@liquality/wallet-core/dist/store/types'
 
@@ -52,12 +51,14 @@ export type StackPayload = {
   customFee?: number
   showPopup?: boolean
   sendTransaction?: {
-    amount?: number
-    gasFee?: number
-    destinationAddress?: string
-    asset?: string
+    amount: number
+    gasFee: number
+    speedLabel: FeeLabel
+    destinationAddress: string
+    asset: string
+    memo?: string
   }
-  sendTransactionConfirmation?: SendHistoryItem
+  sendTransactionConfirmation?: Transaction
   swapAssetPair?: SwapAssetPairType
   swapTransaction?: SwapInfoType
   swapTransactionConfirmation?: SwapHistoryItem

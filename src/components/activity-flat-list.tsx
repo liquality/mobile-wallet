@@ -6,7 +6,7 @@ import {
   faExchange,
   faLongArrowUp,
 } from '@fortawesome/pro-light-svg-icons'
-import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import {
   HistoryItem,
@@ -36,12 +36,12 @@ const ActivityFlatList = ({
     : historyItems.filter((item) => !!item.id)
 
   const handleChevronPress = (historyItem: HistoryItem) => {
-    if (historyItem.type === 'SWAP') {
+    if (historyItem.type === TransactionType.Swap) {
       navigate('SwapConfirmationScreen', {
         swapTransactionConfirmation: historyItem,
         screenTitle: `Swap ${historyItem.from} to ${historyItem.to} Details`,
       })
-    } else if (historyItem.type === 'SEND') {
+    } else if (historyItem.type === TransactionType.Send) {
       navigate('SendConfirmationScreen', {
         sendTransactionConfirmation: historyItem,
         screenTitle: `Send ${historyItem.from} Details`,

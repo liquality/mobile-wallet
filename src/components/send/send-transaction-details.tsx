@@ -1,15 +1,15 @@
 import { SendHistoryItem } from '@liquality/wallet-core/dist/store/types'
-import React from 'react'
+import React, { memo } from 'react'
 import { useAppSelector } from '../../hooks'
 import Box from '../../theme/box'
 import Text from '../../theme/text'
 import { formatDate } from '../../utils'
 import Label from '../ui/label'
-import { StyleSheet, View } from 'react-native'
 import { v4 as uuidv4 } from 'uuid'
 import ConfirmationBlock from '../swap/confirmation-block'
-import { EmptyBlock, Separator } from '../swap/swap-transaction-details'
+import { EmptyBlock, Separator, Step } from '../swap/swap-transaction-details'
 import { getTransactionExplorerLink } from '@liquality/wallet-core/dist/utils/asset'
+import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
 
 type SendTransactionDetailsProps = {
   historyItem: SendHistoryItem
@@ -32,6 +32,11 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
 
   return (
     <Box justifyContent="space-between" paddingHorizontal="xl" marginTop="xl">
+      <Box flexDirection="row" justifyContent="center">
+        <Text variant="timelineLabel">TRANSACTION ID</Text>
+        <Text variant="link">{shortenAddress(historyItem.id)}</Text>
+      </Box>
+
       <Box justifyContent="center" alignItems="center">
         <Text variant="timelineLabel">{formatDate(historyItem.startTime)}</Text>
         <Label text="Sent" variant="strong" />
@@ -43,8 +48,8 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
         alignItems="center"
         key={uuidv4()}>
         <ConfirmationBlock
-          address={historyItem.toAddress}
-          status="From"
+          address={historyItem.from}
+          status={`From: ${shortenAddress(historyItem.tx._raw.from)}`}
           confirmations={historyItem.tx?.confirmations || 0}
           fee={historyItem.tx?.fee}
           asset={historyItem.from}
@@ -60,8 +65,15 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
           alignItems="center"
           width="4%"
           marginHorizontal="l">
-          <View style={styles.start} />
-          <Separator completed />
+          <Box
+            width={10}
+            height={1}
+            borderStyle="solid"
+            borderWidth={1}
+            borderColor="progressDotColor"
+          />
+          <Separator completed={historyItem.status === 'SUCCESS'} />
+          <Step completed={historyItem.status === 'SUCCESS'} />
         </Box>
         <EmptyBlock />
       </Box>
@@ -70,9 +82,26 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
         justifyContent="center"
         alignItems="center"
         key={uuidv4()}>
+        <EmptyBlock />
+        <Box
+          justifyContent="flex-start"
+          alignItems="center"
+          width="4%"
+          marginHorizontal="l">
+          <Separator completed={historyItem.status === 'SUCCESS'} />
+          <Step completed={historyItem.status === 'SUCCESS'} />
+          <Separator completed={historyItem.status === 'SUCCESS'} />
+          <Box
+            width={10}
+            height={1}
+            borderStyle="solid"
+            borderWidth={1}
+            borderColor="progressDotColor"
+          />
+        </Box>
         <ConfirmationBlock
           address={historyItem.toAddress}
-          status="From"
+          status={`To: ${shortenAddress(historyItem.toAddress)}`}
           confirmations={historyItem.tx?.confirmations || 0}
           fee={historyItem.tx?.fee}
           asset={historyItem.from}
@@ -83,15 +112,6 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
             historyItem.network,
           )}
         />
-        <Box
-          justifyContent="flex-start"
-          alignItems="center"
-          width="4%"
-          marginHorizontal="l">
-          <View style={styles.start} />
-          <Separator completed />
-        </Box>
-        <EmptyBlock />
       </Box>
 
       {['SUCCESS', 'REFUNDED'].includes(historyItem.status?.toUpperCase()) && (
@@ -106,14 +126,4 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
   )
 }
 
-const styles = StyleSheet.create({
-  start: {
-    width: 10,
-    height: 1,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: '#2CD2CF',
-  },
-})
-
-export default SendTransactionDetails
+export default memo(SendTransactionDetails)

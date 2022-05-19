@@ -8,7 +8,7 @@ import FeeSelector from './fee-selector'
 type SendFeeSelectorProps = {
   asset: string
   handleCustomPress: (...args: unknown[]) => void
-  networkFee: MutableRefObject<NetworkFeeType>
+  networkFee: MutableRefObject<NetworkFeeType | undefined>
 }
 
 const SendFeeSelector: FC<SendFeeSelectorProps> = (props) => {

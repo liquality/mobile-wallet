@@ -10,6 +10,7 @@ const palette = {
   purplePrimary: '#5A31F4',
   red: '#F12274',
   transparentBlack: 'rgba(0,0,0,0.5)',
+  turquoise: '#2CD2CF',
 }
 
 const theme = createTheme({
@@ -32,6 +33,7 @@ const theme = createTheme({
     mainBorderColor: palette.gray,
     link: palette.blueVioletPrimary,
     transparentBlack: palette.transparentBlack,
+    progressDotColor: palette.turquoise,
   },
   spacing: {
     s: 5,
@@ -63,6 +65,12 @@ const theme = createTheme({
       fontSize: 13,
       fontWeight: '600',
       color: 'mainForeground',
+    },
+    content: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '300',
+      fontSize: 12,
+      color: 'tertiaryForeground',
     },
     slogan1: {
       fontFamily: 'Montserrat-Light',

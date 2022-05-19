@@ -21,8 +21,8 @@ type SendReviewScreenProps = NativeStackScreenProps<
 >
 
 const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
-  const { asset, destinationAddress, gasFee, amount } =
-    route.params.sendTransaction || {}
+  const { asset, destinationAddress, gasFee, amount, memo, speedLabel } =
+    route.params.sendTransaction!
   const [rate, setRate] = useState<number>(0)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -47,6 +47,8 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
           currencyToUnit(cryptoassets[asset], amount).toNumber(),
         ),
         fee: gasFee,
+        feeLabel: speedLabel,
+        memo: memo || '',
       })
 
       navigation.navigate('SendConfirmationScreen', {
@@ -73,58 +75,55 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text variant="mainInputLabel">SEND</Text>
-        <View style={styles.row}>
-          <Text style={styles.amountInNative}>
-            {amount && `${new BigNumber(amount).dp(6)} ${asset}`}
-          </Text>
-          <Text style={styles.amountInFiat}>
-            {amount && `$${prettyFiatBalance(amount, rate)}`}
-          </Text>
-        </View>
-        <Text variant="mainInputLabel">NETWORK FEE</Text>
-        <View style={styles.row}>
-          <Text style={styles.feeAmountInNative}>
-            {asset && gasFee && dpUI(getSendFee(asset, gasFee), 9).toString()}
-          </Text>
-          <Text style={styles.feeAmountInFiat}>
-            {gasFee &&
-              asset &&
-              `$${prettyFiatBalance(
-                getSendFee(asset, gasFee).toNumber(),
-                rate,
-              )}`}
-          </Text>
-        </View>
-
-        <Text variant="mainInputLabel">AMOUNT + FEES</Text>
-        <View style={styles.row}>
-          <Text style={styles.totalAmount}>
-            {amount &&
-              gasFee &&
-              asset &&
-              `${new BigNumber(amount)
-                .plus(getSendFee(asset, gasFee))
-                .dp(9)} ${asset}`}
-          </Text>
-          <Text style={styles.totalAmount}>
-            {amount &&
-              gasFee &&
-              asset &&
-              `$${prettyFiatBalance(
-                new BigNumber(amount)
-                  .plus(getSendFee(asset, gasFee))
-                  .toNumber(),
-                rate,
-              )}`}
-          </Text>
-        </View>
-
-        <Text variant="mainInputLabel">SEND TO</Text>
-        <Text style={styles.address}>{destinationAddress}</Text>
-        {!!error && <Text variant="error">{error}</Text>}
+      <Text variant="secondaryInputLabel">SEND</Text>
+      <View style={styles.row}>
+        <Text style={styles.amountInNative}>
+          {amount && `${new BigNumber(amount).dp(6)} ${asset}`}
+        </Text>
+        <Text style={styles.amountInFiat}>
+          {amount && `$${prettyFiatBalance(amount, rate)}`}
+        </Text>
       </View>
+      <Text variant="secondaryInputLabel">NETWORK FEE</Text>
+      <View style={styles.row}>
+        <Text style={styles.feeAmountInNative}>
+          {asset && gasFee && dpUI(getSendFee(asset, gasFee), 9).toString()}
+        </Text>
+        <Text style={styles.feeAmountInFiat}>
+          {gasFee &&
+            asset &&
+            `$${prettyFiatBalance(getSendFee(asset, gasFee).toNumber(), rate)}`}
+        </Text>
+      </View>
+
+      <Text variant="secondaryInputLabel">AMOUNT + FEES</Text>
+      <View style={styles.row}>
+        <Text style={styles.totalAmount}>
+          {amount &&
+            gasFee &&
+            asset &&
+            `${new BigNumber(amount)
+              .plus(getSendFee(asset, gasFee))
+              .dp(9)} ${asset}`}
+        </Text>
+        <Text style={styles.totalAmount}>
+          {amount &&
+            gasFee &&
+            asset &&
+            `$${prettyFiatBalance(
+              new BigNumber(amount).plus(getSendFee(asset, gasFee)).toNumber(),
+              rate,
+            )}`}
+        </Text>
+      </View>
+
+      <Text variant="secondaryInputLabel">SEND TO</Text>
+      <Text style={styles.address}>{destinationAddress}</Text>
+
+      <Text variant="secondaryInputLabel">MEMO (OPTIONAL)</Text>
+      <Text style={styles.address}>{memo}</Text>
+
+      {!!error && <Text variant="error">{error}</Text>}
       <View>
         <View style={styles.row}>
           <Button

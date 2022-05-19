@@ -7,7 +7,7 @@ import {
 import thunk from 'redux-thunk'
 import rootReducer, { CustomRootState } from '../reducers'
 import StorageManager from '../core/storage-manager'
-import { BigNumber, FeeDetail } from '@liquality/types'
+import { BigNumber, FeeDetail, Transaction } from '@liquality/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit } from '@liquality/cryptoassets'
@@ -32,6 +32,7 @@ import {
   TimelineStep,
 } from '@liquality/wallet-core/dist/utils/timeline'
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
+import { Alert } from 'react-native'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -78,7 +79,6 @@ export const initWallet = async (initialState?: CustomRootState) => {
   }
   wallet = setupWallet(walletOptions)
   wallet.original.subscribe((mutation) => {
-    Log('mutation:' + mutation, 'info')
     if (mutation.type === 'NEW_SWAP') {
       const { network, walletId } = mutation.payload
       const historyItems = store.getState().history
@@ -124,6 +124,26 @@ export const initWallet = async (initialState?: CustomRootState) => {
           history: historyCopy,
         },
       })
+    } else if (mutation.type === 'NEW_TRASACTION') {
+      const { network, walletId } = mutation.payload
+      const historyItems = store.getState().history
+      if (historyItems[network as Network]?.[walletId]) {
+        const containsTransaction = historyItems[network as Network]![
+          walletId
+        ].find((item) => item.id === mutation.payload.transaction.id)
+        if (!containsTransaction) {
+          historyItems[network as Network]![walletId].push({
+            type: TransactionType.Send,
+            walletId,
+            network,
+            ...mutation.payload.transaction,
+          })
+          store.dispatch({
+            type: 'NEW_TRANSACTION',
+            payload: { history: historyItems },
+          })
+        }
+      }
     } else {
       // store.dispatch({
       //   type: 'UPDATE_WALLET',
@@ -239,7 +259,7 @@ export const retryPendingSwaps = async () => {
     .filter(
       (transaction) =>
         transaction.type === TransactionType.Swap &&
-        transaction.status?.toLowerCase() !== 'success',
+        !['SUCCESS', 'REFUNDED'].includes(transaction.status),
     )
     .map((transaction) =>
       wallet.dispatch.retrySwap({
@@ -431,28 +451,53 @@ export const sendTransaction = async (options: {
   to: string
   value: BigNumber
   fee: number
-}): Promise<any> => {
+  feeLabel: FeeLabel
+  memo: string
+}): Promise<Transaction> => {
   if (!options || Object.keys(options).length === 0) {
     throw new Error(`Failed to send transaction: ${options}`)
   }
 
-  const { activeWalletId, activeNetwork, accounts } = wallet.state
-  const { asset, to, value, fee } = options
+  const { activeWalletId, activeNetwork, fiatRates } = wallet.state
+  const { asset, to, value, fee, feeLabel, memo } = options
+  const toAccount = wallet.getters.networkAccounts.find(
+    (account) => account.assets && account.assets.includes(asset),
+  )
 
-  //TODO populate the undefined values
+  if (!toAccount) {
+    Alert.alert('Invalid account')
+    return
+  }
+
+  //TODO fee vs gas
   return await wallet.dispatch.sendTransaction({
     network: activeNetwork,
     walletId: activeWalletId,
-    accountId: accounts[activeWalletId][activeNetwork][0]?.id,
+    accountId: toAccount.id,
     asset,
     to,
     amount: value,
     fee,
-    data: undefined,
-    feeLabel: undefined,
-    fiatRate: undefined,
-    gas: undefined,
+    data: memo,
+    feeLabel,
+    fiatRate: fiatRates[asset],
   })
+}
+
+export const fetchConfirmationByHash = async (
+  asset: string,
+  hash: string,
+): Promise<number | undefined> => {
+  const { activeWalletId, activeNetwork } = wallet.state
+  const transaction = await wallet.getters
+    .client({
+      network: activeNetwork,
+      walletId: activeWalletId,
+      asset,
+    })
+    .chain.getTransactionByHash(hash)
+
+  return transaction.confirmations
 }
 
 /**
