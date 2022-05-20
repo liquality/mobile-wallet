@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, ScrollView, Pressable } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../../types'
-import SendTransactionDetails from '../../../components/send/send-transaction-details'
 import { chains, unitToCurrency } from '@liquality/cryptoassets'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
-import { formatDate } from '../../../utils'
-import ProgressCircle from '../../../components/animations/progress-circle'
-import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
-import { useAppSelector } from '../../../hooks'
-import Text from '../../../theme/text'
 import {
   HistoryItem,
   SendHistoryItem,
   TransactionType,
 } from '@liquality/wallet-core/dist/store/types'
+import { RootStackParamList } from '../../../types'
+import SendTransactionDetails from '../../../components/send/send-transaction-details'
+import ProgressCircle from '../../../components/animations/progress-circle'
+import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
+import { useAppSelector } from '../../../hooks'
+import Text from '../../../theme/text'
 import Box from '../../../theme/box'
 import { fetchConfirmationByHash } from '../../../store/store'
+import { formatDate } from '../../../utils'
 
 type SendConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -135,7 +135,7 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
         <Box>
           <Text variant="header">NETWORK SPEED/FEE</Text>
           <Text variant="content">
-            {`${historyItem.from} Fee: ${historyItem.tx.feePrice}x ${
+            {`${historyItem.from} Fee: ${historyItem.tx.fee} x ${
               chains[cryptoassets[historyItem.from].chain].fees.unit
             }`}
           </Text>

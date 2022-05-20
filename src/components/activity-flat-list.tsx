@@ -53,7 +53,6 @@ const ActivityFlatList = ({
   const renderActivity = ({ item }: { item: HistoryItem }) => {
     const { id, type, startTime, from, to, status, network, provider } = item
     let transactionLabel,
-      transactionTime,
       amount,
       amountInUsd,
       totalSteps = 1,
@@ -77,10 +76,8 @@ const ActivityFlatList = ({
 
     if (type === TransactionType.Send) {
       transactionLabel = `Send ${from}`
-      transactionTime = startTime
     } else if (type === TransactionType.Swap) {
       transactionLabel = `${from} to ${to}`
-      transactionTime = startTime
     }
 
     return (
@@ -112,7 +109,7 @@ const ActivityFlatList = ({
         <Box flex={0.3} justifyContent="center">
           <Text variant="label">{transactionLabel}</Text>
           <Text variant="amountLabel">
-            {transactionTime && formatDate(transactionTime)}
+            {startTime && formatDate(startTime)}
           </Text>
         </Box>
         <Box

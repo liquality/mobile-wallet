@@ -32,13 +32,16 @@ import {
   TimelineStep,
 } from '@liquality/wallet-core/dist/utils/timeline'
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
-import { Alert } from 'react-native'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
 
 //-------------------------1. CREATE AN INSTANCE OF THE STORAGE MANAGER--------------------------------------------------------
-const excludedProps: Array<keyof any> = ['key', 'wallets', 'unlockedAt']
+const excludedProps: Array<keyof CustomRootState> = [
+  'key',
+  'wallets',
+  'unlockedAt',
+]
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
 let wallet: Awaited<ReturnType<typeof setupWallet>>
 
@@ -465,8 +468,7 @@ export const sendTransaction = async (options: {
   )
 
   if (!toAccount) {
-    Alert.alert('Invalid account')
-    return
+    throw new Error('Invalid account')
   }
 
   //TODO fee vs gas
@@ -481,6 +483,7 @@ export const sendTransaction = async (options: {
     data: memo,
     feeLabel,
     fiatRate: fiatRates[asset],
+    gas: undefined,
   })
 }
 

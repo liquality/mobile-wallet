@@ -14,6 +14,7 @@ import {
   SwapQuote,
 } from '@liquality/wallet-core/dist/swaps/types'
 import { Network } from '@liquality/wallet-core/dist/store/types'
+import dayjs from 'dayjs'
 
 // const IV_STRING = '0123456789abcdef0123456789abcdef'
 
@@ -67,11 +68,8 @@ export const sortQuotes = (quotes: SwapQuote[]): SwapQuote[] => {
   })
 }
 
-export const formatDate = (ms: string | number): string => {
-  const date = new Date(ms)
-  return `${
-    date.getMonth() + 1
-  }/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+export const formatDate = (ms: number): string => {
+  return dayjs(ms).format('DD/MM/YYYY, HH:mm a')
 }
 
 export const pbkdf2 = async (
