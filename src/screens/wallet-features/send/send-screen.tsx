@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
-import { Pressable, StyleSheet, TextInput, View } from 'react-native'
+import { Pressable, StyleSheet, TextInput } from 'react-native'
 import {
   assets as cryptoassets,
   ChainId,
@@ -34,6 +34,9 @@ import Box from '../../../theme/box'
 import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
 import SendFeeSelector from '../../../components/ui/send-fee-selector'
 import { fetchFeesForAsset } from '../../../store/store'
+import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
+import ButtonFooter from '../../../components/button-footer'
+import { isNumber } from '../../../utils'
 
 const useInputState = (
   initialValue: string,
@@ -71,15 +74,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const [amountInNative, setAmountInNative] = useState<number>(0)
   const [showAmountsInFiat, setShowAmountsInFiat] = useState<boolean>(false)
   const [isCameraVisible, setIsCameraVisible] = useState(false)
+  const [networkSpeed, setNetworkSpeed] = useState<FeeLabel>(FeeLabel.Average)
   const [error, setError] = useState('')
   const amountInput = useInputState('0')
   const addressInput = useInputState('')
   const memoInput = useInputState('')
   const networkFee = useRef<NetworkFeeType>()
-
-  const isNumber = (value: string): boolean => {
-    return /^\d+(.\d*)?$/.test(value)
-  }
 
   const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
@@ -268,9 +268,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             marginBottom="m">
             <Box flexDirection="row">
               <Text variant="amountLabel">Available</Text>
-              <Text variant="amount">
-                {availableAmount} {code}
-              </Text>
+              <Text variant="amount">{` ${availableAmount} ${code}`}</Text>
             </Box>
             <Button
               label="Max"
@@ -350,7 +348,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             </Text>
           ) : (
             <Text style={styles.speedValue}>
-              {`(${networkFee.current?.speed || 'average'} / ${dpUI(
+              {`(${networkSpeed} / ${dpUI(
                 getSendFee(code, networkFee.current?.value || fee.toNumber()),
                 9,
               )} ${code})`}
@@ -362,11 +360,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             asset={code}
             handleCustomPress={handleCustomPress}
             networkFee={networkFee}
+            changeNetworkSpeed={setNetworkSpeed}
           />
         )}
         {!!error && <Text variant="error">{error}</Text>}
       </Box>
-      <View style={styles.actionBlock}>
+      <ButtonFooter>
         <Button
           type="secondary"
           variant="m"
@@ -383,7 +382,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           isBorderless={false}
           isActive={true}
         />
-      </View>
+      </ButtonFooter>
     </Box>
   )
 }
@@ -428,12 +427,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontWeight: '400',
     fontSize: 12,
-  },
-  actionBlock: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'flex-end',
-    flex: 0.2,
   },
   feeOptionsButton: {
     flexDirection: 'row',

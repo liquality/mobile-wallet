@@ -3,22 +3,35 @@ import { Alert, Pressable, StyleSheet, Text } from 'react-native'
 import { FeeDetails } from '@liquality/types'
 import Box from '../../theme/box'
 import { GasFees, NetworkFeeType } from '../../types'
+import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
 
-const gasSpeeds: Array<keyof FeeDetails> = ['slow', 'average', 'fast']
+const gasSpeeds: Array<FeeLabel> = [
+  FeeLabel.Slow,
+  FeeLabel.Average,
+  FeeLabel.Fast,
+]
 type FeeSelectorProps = {
   assetSymbol: string
   handleCustomPress: (...args: unknown[]) => void
-  networkFee: MutableRefObject<NetworkFeeType>
+  networkFee: MutableRefObject<NetworkFeeType | undefined>
+  changeNetworkSpeed?: (speed: FeeLabel) => void
   gasFees: GasFees
 }
 
 const FeeSelector: FC<FeeSelectorProps> = (props) => {
-  const { assetSymbol, handleCustomPress, networkFee, gasFees } = props
+  const {
+    assetSymbol,
+    handleCustomPress,
+    networkFee,
+    gasFees,
+    changeNetworkSpeed,
+  } = props
   const [customFee, setCustomFee] = useState()
   const [speedMode, setSpeedMode] = useState<keyof FeeDetails>('average')
 
-  const handleGasTogglePress = (speed: keyof FeeDetails) => {
+  const handleGasTogglePress = (speed: FeeLabel) => {
     if (gasFees) {
+      if (changeNetworkSpeed) changeNetworkSpeed(speed)
       setCustomFee(undefined)
       setSpeedMode(speed)
       networkFee.current = { speed, value: gasFees[speed].toNumber() }

@@ -2,6 +2,7 @@ import React, { Children } from 'react'
 import { View, StyleSheet } from 'react-native'
 
 type ButtonFooterProps = {
+  children: React.ReactElement[]
   unpositioned?: boolean
 }
 
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    paddingBottom: 30,
+    paddingBottom: 10,
   },
   container_absolute: {
     position: 'absolute',
