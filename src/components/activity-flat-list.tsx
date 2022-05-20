@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FlatList, Pressable, StyleSheet } from 'react-native'
+import { FlatList, Pressable } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   faChevronRight,
@@ -22,6 +22,7 @@ import Text from '../theme/text'
 import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
 import Box from '../theme/box'
 import { downloadAssetAcitivity, formatDate } from '../utils'
+import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 
 const ActivityFlatList = ({
   navigate,
@@ -58,14 +59,20 @@ const ActivityFlatList = ({
       totalSteps = 1,
       currentStep = 2
     if (item.type === TransactionType.Swap) {
-      amount = item.fromAmount
+      amount = unitToCurrency(
+        cryptoassets[from],
+        new BigNumber(item.fromAmount),
+      ).toNumber()
       amountInUsd = item.fromAmountUsd
       const swapProvider = getSwapProvider(network, provider)
       totalSteps = swapProvider.totalSteps
       currentStep = swapProvider.statuses[status].step + 1
     } else if (item.type === TransactionType.Send) {
-      amount = item.amount
-      amountInUsd = item.amount
+      amount = unitToCurrency(
+        cryptoassets[from],
+        new BigNumber(item.amount),
+      ).toNumber()
+      amountInUsd = prettyFiatBalance(amount, item.fiatRate)
     }
 
     if (type === TransactionType.Send) {
@@ -82,7 +89,8 @@ const ActivityFlatList = ({
         justifyContent="flex-start"
         alignItems="center"
         paddingVertical="m"
-        style={styles.row}
+        borderBottomWidth={1}
+        borderBottomColor="mainBorderColor"
         key={id}>
         <Box
           flex={0.1}
@@ -102,7 +110,7 @@ const ActivityFlatList = ({
           )}
         </Box>
         <Box flex={0.3} justifyContent="center">
-          <Text style={styles.transaction}>{transactionLabel}</Text>
+          <Text variant="label">{transactionLabel}</Text>
           <Text variant="amountLabel">
             {transactionTime && formatDate(transactionTime)}
           </Text>
@@ -112,13 +120,7 @@ const ActivityFlatList = ({
           justifyContent="center"
           alignItems="flex-end"
           paddingRight="l">
-          <Text variant="amount">
-            {amount &&
-              `${unitToCurrency(
-                cryptoassets[from],
-                new BigNumber(amount),
-              ).toNumber()} ${from}`}
-          </Text>
+          <Text variant="amount">{amount && `${amount} ${from}`}</Text>
           {!!amountInUsd && (
             <Text variant="amountLabel">{`$${amountInUsd}`}</Text>
           )}
@@ -166,19 +168,5 @@ const ActivityFlatList = ({
     />
   )
 }
-
-const styles = StyleSheet.create({
-  row: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
-  },
-  transaction: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '600',
-    color: '#000',
-    fontSize: 13,
-    marginBottom: 5,
-  },
-})
 
 export default ActivityFlatList

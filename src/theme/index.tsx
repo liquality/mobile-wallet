@@ -72,6 +72,13 @@ const theme = createTheme({
       fontSize: 12,
       color: 'tertiaryForeground',
     },
+    label: {
+      fontFamily: 'Montserrat-Regular',
+      fontSize: 13,
+      fontWeight: '600',
+      color: 'secondaryForeground',
+      marginBottom: 's',
+    },
     slogan1: {
       fontFamily: 'Montserrat-Light',
       color: 'mainForeground',
