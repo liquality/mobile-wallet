@@ -162,7 +162,7 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="SendConfirmationScreen"
       component={SendConfirmationScreen}
-      options={({ navigation }) => ({
+      options={({ navigation, route }) => ({
         headerRight: () => (
           <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
             <FontAwesomeIcon
@@ -173,6 +173,8 @@ export const AppStackNavigator = () => (
             />
           </Pressable>
         ),
+        title: route?.params?.screenTitle || 'Overview',
+        headerLeft: () => <View />,
       })}
     />
     <Stack.Screen
@@ -206,7 +208,7 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="SwapConfirmationScreen"
       component={SwapConfirmationScreen}
-      options={({ navigation }) => ({
+      options={({ navigation, route }) => ({
         headerRight: () => (
           <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
             <FontAwesomeIcon
@@ -217,6 +219,8 @@ export const AppStackNavigator = () => (
             />
           </Pressable>
         ),
+        title: route?.params?.screenTitle || 'Overview',
+        headerLeft: () => <View />,
       })}
     />
   </Stack.Navigator>

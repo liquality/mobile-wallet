@@ -56,6 +56,7 @@ export type StackPayload = {
     speedLabel: FeeLabel
     destinationAddress: string
     asset: string
+    color: string
     memo?: string
   }
   sendTransactionConfirmation?: Transaction

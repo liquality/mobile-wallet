@@ -54,6 +54,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     code = 'ETH',
     balance = 0,
     chain = ChainId.Ethereum,
+    color,
   } = route.params.assetData || {}
   const [customFee, setCustomFee] = useState<number>(0)
   const {
@@ -67,7 +68,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     fees: state.fees,
     fiatRates: state.fiatRates,
   }))
-  const [showFeeOptions, setShowFeeOptions] = useState(false)
+  const [showFeeOptions, setShowFeeOptions] = useState(true)
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
@@ -130,6 +131,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           destinationAddress: addressInput.value,
           asset: code,
           memo: memoInput.value,
+          color: color || '#EAB300',
         },
       })
     }
@@ -137,6 +139,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     addressInput.value,
     amountInput.value,
     code,
+    color,
     memoInput.value,
     navigation,
     validate,

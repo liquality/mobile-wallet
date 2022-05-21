@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { View, StyleSheet, Pressable, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
@@ -21,9 +21,9 @@ import {
   TransactionType,
 } from '@liquality/wallet-core/dist/store/types'
 import {
-  cryptoToFiat,
   dpUI,
   prettyBalance,
+  prettyFiatBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
@@ -35,6 +35,7 @@ import Box from '../../../theme/box'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/utils/quotes'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import SwapRates from '../../../components/swap/swap-rates'
+import { formatDate } from '../../../utils'
 
 type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -85,13 +86,6 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     network,
   } = transaction || {}
 
-  const formatDate = (ms: string | number): string => {
-    const date = new Date(ms)
-    return `${
-      date.getMonth() + 1
-    }/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
-  }
-
   const handleSpeedUpTransaction = () => {
     navigation.navigate('CustomFeeScreen', {
       assetData: route.params.assetData,
@@ -103,9 +97,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     if (transaction) await retrySwap(transaction)
   }
 
-  const computeRate = (swapQuote: SwapQuote) => {
+  const computeRate = useCallback((swapQuote: SwapQuote) => {
     return dpUI(calculateQuoteRate(swapQuote))
-  }
+  }, [])
+
   useEffect(() => {
     const historyItems = history.filter(
       (item) =>
@@ -120,8 +115,12 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
     }
   }, [network, fromFundHash, history, provider, transaction?.id])
 
-  if (!historyItem) {
-    return <Box style={styles.container} />
+  if (!historyItem || !swapProvider) {
+    return (
+      <Box style={styles.container}>
+        <Text>Loading...</Text>
+      </Box>
+    )
   }
 
   return (
@@ -179,7 +178,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.content}>
             {fromAmount &&
               from &&
-              `$${cryptoToFiat(
+              `$${prettyFiatBalance(
                 unitToCurrency(cryptoassets[from], new BigNumber(fromAmount)),
                 fiatRates?.[from] || 0,
               )}`}
@@ -200,7 +199,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           <Text style={styles.content}>
             {to &&
               toAmount &&
-              `$${cryptoToFiat(
+              `$${prettyFiatBalance(
                 unitToCurrency(cryptoassets[to], new BigNumber(toAmount)),
                 fiatRates?.[to] || 0,
               )}`}

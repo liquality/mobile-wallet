@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import {
@@ -14,6 +13,9 @@ import { BigNumber } from '@liquality/types'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
+import Box from '../../../theme/box'
+import ButtonFooter from '../../../components/button-footer'
+import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
 
 type SendReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -21,7 +23,7 @@ type SendReviewScreenProps = NativeStackScreenProps<
 >
 
 const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
-  const { asset, destinationAddress, gasFee, amount, memo, speedLabel } =
+  const { asset, destinationAddress, gasFee, amount, memo, speedLabel, color } =
     route.params.sendTransaction!
   const [rate, setRate] = useState<number>(0)
   const [error, setError] = useState('')
@@ -74,137 +76,111 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
   }, [fiatRates, asset])
 
   return (
-    <View style={styles.container}>
-      <Text variant="secondaryInputLabel">SEND</Text>
-      <View style={styles.row}>
-        <Text style={styles.amountInNative}>
-          {amount && `${new BigNumber(amount).dp(6)} ${asset}`}
-        </Text>
-        <Text style={styles.amountInFiat}>
-          {amount && `$${prettyFiatBalance(amount, rate)}`}
-        </Text>
-      </View>
-      <Text variant="secondaryInputLabel">NETWORK FEE</Text>
-      <View style={styles.row}>
-        <Text style={styles.feeAmountInNative}>
-          {asset && gasFee && dpUI(getSendFee(asset, gasFee), 9).toString()}
-        </Text>
-        <Text style={styles.feeAmountInFiat}>
-          {gasFee &&
-            asset &&
-            `$${prettyFiatBalance(getSendFee(asset, gasFee).toNumber(), rate)}`}
-        </Text>
-      </View>
+    <Box
+      flex={1}
+      backgroundColor="mainBackground"
+      paddingVertical="l"
+      paddingHorizontal="xl">
+      <Box marginTop="l">
+        <Text variant="secondaryInputLabel">SEND</Text>
+        <Box
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="flex-end"
+          marginBottom="m">
+          <Text variant="amountLarge" style={{ color }}>
+            {amount && `${new BigNumber(amount).dp(6)} ${asset}`}
+          </Text>
+          <Text variant="amount">
+            {amount && `$${prettyFiatBalance(amount, rate)}`}
+          </Text>
+        </Box>
+      </Box>
 
-      <Text variant="secondaryInputLabel">AMOUNT + FEES</Text>
-      <View style={styles.row}>
-        <Text style={styles.totalAmount}>
-          {amount &&
-            gasFee &&
-            asset &&
-            `${new BigNumber(amount)
-              .plus(getSendFee(asset, gasFee))
-              .dp(9)} ${asset}`}
-        </Text>
-        <Text style={styles.totalAmount}>
-          {amount &&
-            gasFee &&
-            asset &&
-            `$${prettyFiatBalance(
-              new BigNumber(amount).plus(getSendFee(asset, gasFee)).toNumber(),
-              rate,
-            )}`}
-        </Text>
-      </View>
+      <Box marginTop="l">
+        <Text variant="secondaryInputLabel">NETWORK FEE</Text>
+        <Box
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="flex-end"
+          marginBottom="m">
+          <Text variant="amount">
+            {asset &&
+              gasFee &&
+              `${dpUI(getSendFee(asset, gasFee), 9)} ${asset}`}
+          </Text>
+          <Text variant="amount">
+            {gasFee &&
+              asset &&
+              `$${prettyFiatBalance(
+                getSendFee(asset, gasFee).toNumber(),
+                rate,
+              )}`}
+          </Text>
+        </Box>
+      </Box>
 
-      <Text variant="secondaryInputLabel">SEND TO</Text>
-      <Text style={styles.address}>{destinationAddress}</Text>
+      <Box marginTop="l">
+        <Text variant="secondaryInputLabel">AMOUNT + FEES</Text>
+        <Box
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="flex-end"
+          marginBottom="m">
+          <Text variant="amount">
+            {amount &&
+              gasFee &&
+              asset &&
+              `${new BigNumber(amount)
+                .plus(getSendFee(asset, gasFee))
+                .dp(9)} ${asset}`}
+          </Text>
+          <Text variant="amount">
+            {amount &&
+              gasFee &&
+              asset &&
+              `$${prettyFiatBalance(
+                new BigNumber(amount)
+                  .plus(getSendFee(asset, gasFee))
+                  .toNumber(),
+                rate,
+              )}`}
+          </Text>
+        </Box>
+      </Box>
 
-      <Text variant="secondaryInputLabel">MEMO (OPTIONAL)</Text>
-      <Text style={styles.address}>{memo}</Text>
+      <Box marginTop="l">
+        <Text variant="secondaryInputLabel">SEND TO</Text>
+        <Text variant="address">{shortenAddress(destinationAddress)}</Text>
+      </Box>
+
+      <Box marginTop="l">
+        <Text variant="secondaryInputLabel">MEMO (OPTIONAL)</Text>
+        <Text variant="address">{memo}</Text>
+      </Box>
 
       {!!error && <Text variant="error">{error}</Text>}
-      <View>
-        <View style={styles.row}>
-          <Button
-            type="secondary"
-            variant="m"
-            label="Edit"
-            onPress={handleEditPress}
-            isBorderless={false}
-            isActive={true}
-          />
-          <Button
-            type="primary"
-            variant="m"
-            label={`Send ${asset}`}
-            onPress={handleSendPress}
-            isLoading={isLoading}
-            isBorderless={false}
-            isActive={true}
-          />
-        </View>
-      </View>
-    </View>
+      <ButtonFooter>
+        <Button
+          type="secondary"
+          variant="m"
+          label="Edit"
+          onPress={handleEditPress}
+          isBorderless={false}
+          isActive={true}
+        />
+        <Button
+          type="primary"
+          variant="m"
+          label={`Send ${asset}`}
+          onPress={handleSendPress}
+          isLoading={isLoading}
+          isBorderless={false}
+          isActive={true}
+        />
+      </ButtonFooter>
+    </Box>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    marginBottom: 10,
-  },
-  amountInNative: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    fontSize: 28,
-    lineHeight: 42,
-    color: '#EAB300',
-  },
-  amountInFiat: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#646F85',
-  },
-  feeAmountInNative: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#000D35',
-  },
-  feeAmountInFiat: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    fontSize: 12,
-    lineHeight: 14,
-    color: '#000D35',
-  },
-  totalAmount: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#1D1E21',
-  },
-  address: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#000D35',
-  },
-})
 
 export default SendReviewScreen

@@ -1,4 +1,4 @@
-import React, { FC, MutableRefObject, useState } from 'react'
+import React, { FC, MutableRefObject, useEffect, useState } from 'react'
 import { Alert, Pressable, StyleSheet, Text } from 'react-native'
 import { FeeDetails } from '@liquality/types'
 import Box from '../../theme/box'
@@ -39,6 +39,13 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
       Alert.alert('Invalid gas fees')
     }
   }
+
+  useEffect(() => {
+    networkFee.current = {
+      speed: FeeLabel.Average,
+      value: gasFees.average.toNumber(),
+    }
+  }, [gasFees.average, networkFee])
 
   return (
     <Box

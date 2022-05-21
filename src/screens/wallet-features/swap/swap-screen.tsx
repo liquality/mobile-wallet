@@ -155,8 +155,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     //TODO why do we have to check against the liquality type
     const liqualityMarket = marketData?.[activeNetwork]?.find(
       (pair) => pair.from === fromAsset?.code && pair.to === toAsset?.code,
-      // && getSwapProviderConfig(this.activeNetwork, pair.provider).type ===
-      //   SwapProviderType.LIQUALITY,
     )
     return liqualityMarket && liqualityMarket.min
       ? new BigNumber(liqualityMarket.min)

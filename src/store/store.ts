@@ -23,6 +23,7 @@ import {
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import {
   FeeLabel,
+  HistoryItem,
   Network,
   SwapHistoryItem,
   TransactionType,
@@ -81,77 +82,39 @@ export const initWallet = async (initialState?: CustomRootState) => {
     },
   }
   wallet = setupWallet(walletOptions)
+
   wallet.original.subscribe((mutation) => {
     if (mutation.type === 'NEW_SWAP') {
       const { network, walletId } = mutation.payload
-      const historyItems = store.getState().history
-      if (historyItems[network as Network]?.[walletId]) {
-        const containsTransaction = historyItems[network as Network]![
-          walletId
-        ].find((item) => item.id === mutation.payload.swap.id)
-        if (!containsTransaction) {
-          historyItems[network as Network]![walletId].push({
-            type: TransactionType.Swap,
-            walletId,
-            network,
-            ...mutation.payload.swap,
-          })
-          store.dispatch({
-            type: 'NEW_TRANSACTION',
-            payload: { history: historyItems },
-          })
-        }
-      }
+      updateTransactionHistory(
+        mutation.payload.swap.id,
+        network,
+        walletId,
+        mutation.payload.swap,
+        'NEW_TRANSACTION',
+        TransactionType.Swap,
+      )
     } else if (mutation.type === 'UPDATE_HISTORY') {
       const { id, network, walletId } = mutation.payload
-      const historyCopy = store.getState().history
-      let historyItems = historyCopy?.[network as Network]?.[walletId]
-      if (historyItems) {
-        historyCopy[network as Network]![walletId] = historyItems.map(
-          (item) => {
-            if (item.id === id) {
-              return {
-                ...item,
-                ...mutation.payload.updates,
-              }
-            }
-
-            return item
-          },
-        )
-      }
-
-      store.dispatch({
-        type: 'TRANSACTION_UPDATE',
-        payload: {
-          history: historyCopy,
-        },
-      })
+      updateTransactionHistory(
+        id,
+        network,
+        walletId,
+        mutation.payload.updates,
+        'TRANSACTION_UPDATE',
+      )
     } else if (mutation.type === 'NEW_TRASACTION') {
       const { network, walletId } = mutation.payload
-      const historyItems = store.getState().history
-      if (historyItems[network as Network]?.[walletId]) {
-        const containsTransaction = historyItems[network as Network]![
-          walletId
-        ].find((item) => item.id === mutation.payload.transaction.id)
-        if (!containsTransaction) {
-          historyItems[network as Network]![walletId].push({
-            type: TransactionType.Send,
-            walletId,
-            network,
-            ...mutation.payload.transaction,
-          })
-          store.dispatch({
-            type: 'NEW_TRANSACTION',
-            payload: { history: historyItems },
-          })
-        }
-      }
+      updateTransactionHistory(
+        mutation.payload.transaction.id,
+        network,
+        walletId,
+        mutation.payload.transaction,
+        'NEW_TRANSACTION',
+        TransactionType.Send,
+      )
     } else {
-      // store.dispatch({
-      //   type: 'UPDATE_WALLET',
-      //   payload: newState,
-      // })
+      // TODO Perform other types of updates (balances, market data, fiat rates... )
     }
   })
 }
@@ -588,6 +551,57 @@ export const getBalances = () => {
     numberOfAccounts,
   }
 }
+
+const updateTransactionHistory = (
+  id: string,
+  network: string,
+  walletId: string,
+  historyItem: HistoryItem,
+  action: 'NEW_TRANSACTION' | 'TRANSACTION_UPDATE',
+  type?: TransactionType,
+) => {
+  const history = store.getState().history
+  let historyItems = history?.[network as Network]?.[walletId]
+
+  if (action === 'NEW_TRANSACTION') {
+    if (historyItems) {
+      const containsTransaction = historyItems.find((item) => item.id === id)
+      if (!containsTransaction) {
+        history[network as Network]![walletId].push({
+          type: type,
+          walletId,
+          network,
+          ...historyItem,
+        })
+        store.dispatch({
+          type: 'NEW_TRANSACTION',
+          payload: { history },
+        })
+      }
+    }
+  } else {
+    if (historyItems) {
+      history[network as Network]![walletId] = historyItems.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            ...historyItem,
+          }
+        }
+
+        return item
+      })
+    }
+
+    store.dispatch({
+      type: 'TRANSACTION_UPDATE',
+      payload: {
+        history,
+      },
+    })
+  }
+}
+
 //Infer the types from the rootReducer
 export type AppDispatch = typeof store.dispatch
 

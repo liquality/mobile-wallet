@@ -2,6 +2,7 @@ import { createTheme } from '@shopify/restyle'
 
 const palette = {
   black: '#1D1E21',
+  black2: '#000D35',
   white: '#FFFFFF',
   gray: '#D9DFE5',
   darkGray: '#646F85',
@@ -34,6 +35,7 @@ const theme = createTheme({
     link: palette.blueVioletPrimary,
     transparentBlack: palette.transparentBlack,
     progressDotColor: palette.turquoise,
+    addressColor: palette.black2,
   },
   spacing: {
     s: 5,
@@ -110,6 +112,7 @@ const theme = createTheme({
       fontSize: 12,
       lineHeight: 18,
       color: 'secondaryForeground',
+      marginBottom: 's',
     },
     body: {
       fontFamily: 'Montserrat-Regular',
@@ -139,6 +142,12 @@ const theme = createTheme({
       fontSize: 12,
       lineHeight: 14,
       color: 'secondaryForeground',
+    },
+    amountLarge: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '300',
+      fontSize: 28,
+      lineHeight: 42,
     },
     amountLabel: {
       fontFamily: 'Montserrat-Light',
@@ -180,6 +189,13 @@ const theme = createTheme({
       fontSize: 12,
       lineHeight: 18,
       marginRight: 's',
+    },
+    address: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '300',
+      fontSize: 12,
+      lineHeight: 18,
+      color: 'addressColor',
     },
     error: {
       fontFamily: 'Montserrat-Light',

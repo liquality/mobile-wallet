@@ -63,8 +63,11 @@ const SubRow: FC<SubRowProps> = (props) => {
               }`}
           </Text>
           <Text style={styles.balanceInUSD}>
-            {item.balanceInUSD &&
-              formatFiat(new BigNumber(item.balanceInUSD)).toString()}
+            {`$${
+              item.balanceInUSD
+                ? formatFiat(new BigNumber(item.balanceInUSD))
+                : 0
+            }`}
           </Text>
         </View>
         <View style={styles.col3}>
