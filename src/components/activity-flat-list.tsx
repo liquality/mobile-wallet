@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { FlatList, Pressable, StyleSheet } from 'react-native'
+import { FlatList, Pressable } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   faChevronRight,
   faExchange,
   faLongArrowUp,
 } from '@fortawesome/pro-light-svg-icons'
-import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import {
   HistoryItem,
@@ -22,6 +22,7 @@ import Text from '../theme/text'
 import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
 import Box from '../theme/box'
 import { downloadAssetAcitivity, formatDate } from '../utils'
+import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 
 const ActivityFlatList = ({
   navigate,
@@ -36,12 +37,12 @@ const ActivityFlatList = ({
     : historyItems.filter((item) => !!item.id)
 
   const handleChevronPress = (historyItem: HistoryItem) => {
-    if (historyItem.type === 'SWAP') {
+    if (historyItem.type === TransactionType.Swap) {
       navigate('SwapConfirmationScreen', {
         swapTransactionConfirmation: historyItem,
         screenTitle: `Swap ${historyItem.from} to ${historyItem.to} Details`,
       })
-    } else if (historyItem.type === 'SEND') {
+    } else if (historyItem.type === TransactionType.Send) {
       navigate('SendConfirmationScreen', {
         sendTransactionConfirmation: historyItem,
         screenTitle: `Send ${historyItem.from} Details`,
@@ -52,28 +53,31 @@ const ActivityFlatList = ({
   const renderActivity = ({ item }: { item: HistoryItem }) => {
     const { id, type, startTime, from, to, status, network, provider } = item
     let transactionLabel,
-      transactionTime,
       amount,
       amountInUsd,
       totalSteps = 1,
       currentStep = 2
     if (item.type === TransactionType.Swap) {
-      amount = item.fromAmount
+      amount = unitToCurrency(
+        cryptoassets[from],
+        new BigNumber(item.fromAmount),
+      ).toNumber()
       amountInUsd = item.fromAmountUsd
       const swapProvider = getSwapProvider(network, provider)
       totalSteps = swapProvider.totalSteps
       currentStep = swapProvider.statuses[status].step + 1
     } else if (item.type === TransactionType.Send) {
-      amount = item.amount
-      amountInUsd = item.amount
+      amount = unitToCurrency(
+        cryptoassets[from],
+        new BigNumber(item.amount),
+      ).toNumber()
+      amountInUsd = prettyFiatBalance(amount, item.fiatRate)
     }
 
     if (type === TransactionType.Send) {
       transactionLabel = `Send ${from}`
-      transactionTime = startTime
     } else if (type === TransactionType.Swap) {
       transactionLabel = `${from} to ${to}`
-      transactionTime = startTime
     }
 
     return (
@@ -82,7 +86,8 @@ const ActivityFlatList = ({
         justifyContent="flex-start"
         alignItems="center"
         paddingVertical="m"
-        style={styles.row}
+        borderBottomWidth={1}
+        borderBottomColor="mainBorderColor"
         key={id}>
         <Box
           flex={0.1}
@@ -102,9 +107,9 @@ const ActivityFlatList = ({
           )}
         </Box>
         <Box flex={0.3} justifyContent="center">
-          <Text style={styles.transaction}>{transactionLabel}</Text>
+          <Text variant="label">{transactionLabel}</Text>
           <Text variant="amountLabel">
-            {transactionTime && formatDate(transactionTime)}
+            {startTime && formatDate(startTime)}
           </Text>
         </Box>
         <Box
@@ -112,13 +117,7 @@ const ActivityFlatList = ({
           justifyContent="center"
           alignItems="flex-end"
           paddingRight="l">
-          <Text variant="amount">
-            {amount &&
-              `${unitToCurrency(
-                cryptoassets[from],
-                new BigNumber(amount),
-              ).toNumber()} ${from}`}
-          </Text>
+          <Text variant="amount">{amount && `${amount} ${from}`}</Text>
           {!!amountInUsd && (
             <Text variant="amountLabel">{`$${amountInUsd}`}</Text>
           )}
@@ -166,19 +165,5 @@ const ActivityFlatList = ({
     />
   )
 }
-
-const styles = StyleSheet.create({
-  row: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
-  },
-  transaction: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '600',
-    color: '#000',
-    fontSize: 13,
-    marginBottom: 5,
-  },
-})
 
 export default ActivityFlatList

@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native'
+import { StyleSheet, ScrollView, Pressable } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../../types'
-import SendTransactionDetails from '../../../components/send/send-transaction-details'
 import { chains, unitToCurrency } from '@liquality/cryptoassets'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
-import { formatDate } from '../../../utils'
+import {
+  HistoryItem,
+  SendHistoryItem,
+  TransactionType,
+} from '@liquality/wallet-core/dist/store/types'
+import { RootStackParamList } from '../../../types'
+import SendTransactionDetails from '../../../components/send/send-transaction-details'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
 import { useAppSelector } from '../../../hooks'
-import { HistoryItem } from '@liquality/wallet-core/dist/store/types'
+import Text from '../../../theme/text'
+import Box from '../../../theme/box'
+import { fetchConfirmationByHash } from '../../../store/store'
+import { formatDate } from '../../../utils'
 
 type SendConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -21,11 +28,7 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   navigation,
 }) => {
   const transaction = route.params.sendTransactionConfirmation!
-  const { from, startTime } = transaction
-  const {
-    tx: { feePrice, fee: amount },
-  } = transaction
-  const [historyItem, setHistoryItem] = useState<any>(transaction)
+  const [historyItem, setHistoryItem] = useState<SendHistoryItem>()
   const { history = [] } = useAppSelector((state) => {
     const { activeNetwork, activeWalletId, history: historyObject } = state
     let historyItems: HistoryItem[] =
@@ -37,12 +40,6 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   })
 
   const handleTransactionSpeedUp = () => {
-    //TODO display gas fee selector
-    // if (from && activeNetwork && hash) {
-    //   speedUpTransaction(from, activeNetwork, hash, newFee)
-    // } else {
-    //   Alert.alert('Failed to speed up transaction')
-    // }
     navigation.navigate('CustomFeeScreen', {
       assetData: route.params.assetData,
       screenTitle: 'NETWORK SPEED/FEE',
@@ -50,68 +47,106 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   }
 
   useEffect(() => {
-    const historyItems = history.filter((item) => item.id === transaction.id)
+    const hash = transaction.hash || transaction.tx?.hash
+    const historyItems = history.filter(
+      (item) => item.type === TransactionType.Send && item.tx.hash === hash,
+    )
     if (historyItems.length > 0) {
-      setHistoryItem(historyItems[0])
+      const selectedHistoryItem = historyItems[0] as SendHistoryItem
+      fetchConfirmationByHash(selectedHistoryItem.from, hash).then(
+        (confirmations) => {
+          selectedHistoryItem.tx.confirmations = confirmations
+          setHistoryItem(selectedHistoryItem)
+        },
+      )
     }
-  }, [history, transaction?.id])
+  }, [history, transaction])
+
+  if (!historyItem)
+    return (
+      <Box style={styles.container}>
+        <Text>Loading...</Text>
+      </Box>
+    )
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={[styles.block, styles.row]}>
-        <View>
-          <Text style={styles.label}>STATUS</Text>
-          <Text style={styles.content}>
+      <Box
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="flex-end"
+        paddingHorizontal="xl"
+        marginBottom="xl">
+        <Box>
+          <Text variant="header">STATUS</Text>
+          <Text variant="content">
             {historyItem.status === 'SUCCESS'
               ? `Completed / ${
-                  chains[cryptoassets[from].chain].safeConfirmations
+                  chains[cryptoassets[historyItem.from].chain].safeConfirmations
                 } confirmations`
               : `Pending / ${
-                  chains[cryptoassets[from].chain].safeConfirmations -
-                  (historyItem?.sendTransaction?.confirmations || 0)
+                  chains[cryptoassets[historyItem.from].chain]
+                    .safeConfirmations - (historyItem.tx.confirmations || 0)
                 } confirmations`}
           </Text>
-        </View>
+        </Box>
         {historyItem.status === 'SUCCESS' ? (
           <SuccessIcon />
         ) : (
           <ProgressCircle
             radius={17}
-            current={historyItem.sendTransaction?.confirmations || 0}
-            total={chains[cryptoassets[from].chain].safeConfirmations}
+            current={historyItem.tx.confirmations || 0}
+            total={
+              chains[cryptoassets[historyItem.from].chain].safeConfirmations
+            }
           />
         )}
-      </View>
-      <View style={styles.block}>
-        <Text style={styles.label}>TIME</Text>
-        <Text style={styles.content}>{formatDate(startTime)}</Text>
-      </View>
-      <View style={styles.block}>
-        <Text style={styles.label}>SENT</Text>
-        <Text style={styles.content}>
-          {amount &&
+      </Box>
+      <Box
+        justifyContent="space-between"
+        paddingHorizontal="xl"
+        marginBottom="xl">
+        <Text variant="header">TIME</Text>
+        <Text variant="content">{formatDate(historyItem.startTime)}</Text>
+      </Box>
+      <Box
+        justifyContent="space-between"
+        paddingHorizontal="xl"
+        marginBottom="xl">
+        <Text variant="header">SENT</Text>
+        <Text variant="content">
+          {historyItem.fee &&
             `${unitToCurrency(
-              cryptoassets[transaction?.from],
-              amount,
-            ).toNumber()} ${transaction?.from}`}
+              cryptoassets[historyItem.from],
+              historyItem.tx.value,
+            ).toNumber()} ${historyItem.from}`}
         </Text>
-      </View>
-      <View style={[styles.border, styles.row]}>
-        <View>
-          <Text style={styles.label}>NETWORK SPEED/FEE</Text>
-          <Text style={styles.content}>
-            {`${transaction?.from} Fee: ${feePrice}x ${
-              chains[cryptoassets[transaction?.from].chain].fees.unit
+      </Box>
+      <Box
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="flex-end"
+        paddingHorizontal="xl"
+        minHeight={60}
+        paddingVertical="m"
+        borderTopWidth={1}
+        borderBottomWidth={1}
+        borderColor="mainBorderColor">
+        <Box>
+          <Text variant="header">NETWORK SPEED/FEE</Text>
+          <Text variant="content">
+            {`${historyItem.from} Fee: ${historyItem.tx.fee} x ${
+              chains[cryptoassets[historyItem.from].chain].fees.unit
             }`}
           </Text>
-        </View>
+        </Box>
         {historyItem.status !== 'SUCCESS' && (
           <Pressable onPress={handleTransactionSpeedUp}>
-            <Text style={styles.link}>Speed Up</Text>
+            <Text variant="link">Speed Up</Text>
           </Pressable>
         )}
-      </View>
-      <SendTransactionDetails historyItem={historyItem} />
+      </Box>
+      {historyItem && <SendTransactionDetails historyItem={historyItem} />}
     </ScrollView>
   )
 }
@@ -121,44 +156,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
     paddingVertical: 15,
-  },
-  block: {
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-  },
-  border: {
-    justifyContent: 'space-between',
-    minHeight: 60,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#D9DFE5',
-  },
-  label: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 18,
-  },
-  content: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    fontSize: 12,
-    color: '#646F85',
-  },
-  link: {
-    fontFamily: 'Montserrat-Regular',
-    fontSize: 12,
-    fontWeight: '500',
-    lineHeight: 18,
-    color: '#9D4DFA',
   },
 })
 

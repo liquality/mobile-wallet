@@ -39,6 +39,7 @@ import Box from '../../../theme/box'
 import SwapFeeSelector from '../../../components/ui/swap-fee-selector'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import { prettyBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
+import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -87,6 +88,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [minimumValue, setMinimumValue] = useState<BigNumber>(new BigNumber(0))
   const [bestQuote, setBestQuote] = useState<BigNumber>(new BigNumber(0))
   const [quotes, setQuotes] = useState<any[]>([])
+  const [fromNetworkSpeed, setFromNetworkSpeed] = useState<FeeLabel>(
+    FeeLabel.Average,
+  )
+  const [toNetworkSpeed, setToNetworkSpeed] = useState<FeeLabel>(
+    FeeLabel.Average,
+  )
   const [state, dispatch] = useReducer(reducer, {})
 
   const toggleFeeSelectors = () => {
@@ -148,8 +155,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     //TODO why do we have to check against the liquality type
     const liqualityMarket = marketData?.[activeNetwork]?.find(
       (pair) => pair.from === fromAsset?.code && pair.to === toAsset?.code,
-      // && getSwapProviderConfig(this.activeNetwork, pair.provider).type ===
-      //   SwapProviderType.LIQUALITY,
     )
     return liqualityMarket && liqualityMarket.min
       ? new BigNumber(liqualityMarket.min)
@@ -336,7 +341,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           <Label text="NETWORK SPEED/FEE" variant="strong" />
           {fromAsset?.code && toAsset?.code && (
             <Label
-              text={`${fromAsset?.code} avg / ${toAsset?.code} avg`}
+              text={`${fromAsset?.code} ${fromNetworkSpeed} / ${toAsset?.code} ${toNetworkSpeed}`}
               variant="light"
             />
           )}
@@ -354,6 +359,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                 networkFee={fromNetworkFee}
                 selectedQuote={selectedQuote}
                 type={'from'}
+                changeNetworkSpeed={setFromNetworkSpeed}
               />
             )}
             {toAsset?.code && (
@@ -363,6 +369,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                 networkFee={toNetworkFee}
                 selectedQuote={selectedQuote}
                 type={'to'}
+                changeNetworkSpeed={setToNetworkSpeed}
               />
             )}
             <Warning

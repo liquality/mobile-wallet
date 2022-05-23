@@ -91,9 +91,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
           <Text variant="tabHeader">ACTIVITY</Text>
         </Pressable>
       </View>
-      <View style={styles.contentBlock}>
-        <ActivityFlatList navigate={navigation.navigate} selectedAsset={code} />
-      </View>
+      <ActivityFlatList navigate={navigation.navigate} selectedAsset={code} />
     </Box>
   )
 }
@@ -151,9 +149,6 @@ const styles = StyleSheet.create({
   headerFocused: {
     borderBottomWidth: 1,
     borderBottomColor: '#000',
-  },
-  contentBlock: {
-    flex: 0.6,
   },
 })
 

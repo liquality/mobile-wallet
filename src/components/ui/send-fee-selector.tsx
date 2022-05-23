@@ -1,18 +1,22 @@
 import React, { FC, MutableRefObject, useEffect, useState } from 'react'
 import { Alert } from 'react-native'
+import ErrorBoundary from 'react-native-error-boundary'
 import { useAppSelector } from '../../hooks'
 import { fetchFeesForAsset } from '../../store/store'
 import { GasFees, NetworkFeeType } from '../../types'
 import FeeSelector from './fee-selector'
+import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
+import ErrorFallback from '../error-fallback'
 
 type SendFeeSelectorProps = {
   asset: string
   handleCustomPress: (...args: unknown[]) => void
-  networkFee: MutableRefObject<NetworkFeeType>
+  networkFee: MutableRefObject<NetworkFeeType | undefined>
+  changeNetworkSpeed: (speed: FeeLabel) => void
 }
 
 const SendFeeSelector: FC<SendFeeSelectorProps> = (props) => {
-  const { asset, handleCustomPress, networkFee } = props
+  const { asset, handleCustomPress, networkFee, changeNetworkSpeed } = props
   const { activeNetwork, activeWalletId } = useAppSelector((state) => ({
     activeNetwork: state.activeNetwork,
     activeWalletId: state.activeWalletId,
@@ -28,12 +32,15 @@ const SendFeeSelector: FC<SendFeeSelectorProps> = (props) => {
   if (!gasFees) return null
 
   return (
-    <FeeSelector
-      assetSymbol={asset}
-      handleCustomPress={handleCustomPress}
-      networkFee={networkFee}
-      gasFees={gasFees}
-    />
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <FeeSelector
+        assetSymbol={asset}
+        handleCustomPress={handleCustomPress}
+        networkFee={networkFee}
+        gasFees={gasFees}
+        changeNetworkSpeed={changeNetworkSpeed}
+      />
+    </ErrorBoundary>
   )
 }
 

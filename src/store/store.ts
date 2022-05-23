@@ -7,7 +7,7 @@ import {
 import thunk from 'redux-thunk'
 import rootReducer, { CustomRootState } from '../reducers'
 import StorageManager from '../core/storage-manager'
-import { BigNumber, FeeDetail } from '@liquality/types'
+import { BigNumber, FeeDetail, Transaction } from '@liquality/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit } from '@liquality/cryptoassets'
@@ -23,6 +23,7 @@ import {
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import {
   FeeLabel,
+  HistoryItem,
   Network,
   SwapHistoryItem,
   TransactionType,
@@ -37,7 +38,11 @@ import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
 
 //-------------------------1. CREATE AN INSTANCE OF THE STORAGE MANAGER--------------------------------------------------------
-const excludedProps: Array<keyof any> = ['key', 'wallets', 'unlockedAt']
+const excludedProps: Array<keyof CustomRootState> = [
+  'key',
+  'wallets',
+  'unlockedAt',
+]
 const storageManager = new StorageManager('@liquality-storage', excludedProps)
 let wallet: Awaited<ReturnType<typeof setupWallet>>
 
@@ -77,58 +82,39 @@ export const initWallet = async (initialState?: CustomRootState) => {
     },
   }
   wallet = setupWallet(walletOptions)
+
   wallet.original.subscribe((mutation) => {
-    Log('mutation:' + mutation, 'info')
     if (mutation.type === 'NEW_SWAP') {
       const { network, walletId } = mutation.payload
-      const historyItems = store.getState().history
-      if (historyItems[network as Network]?.[walletId]) {
-        const containsTransaction = historyItems[network as Network]![
-          walletId
-        ].find((item) => item.id === mutation.payload.swap.id)
-        if (!containsTransaction) {
-          historyItems[network as Network]![walletId].push({
-            type: TransactionType.Swap,
-            walletId,
-            network,
-            ...mutation.payload.swap,
-          })
-          store.dispatch({
-            type: 'NEW_TRANSACTION',
-            payload: { history: historyItems },
-          })
-        }
-      }
+      updateTransactionHistory(
+        mutation.payload.swap.id,
+        network,
+        walletId,
+        mutation.payload.swap,
+        'NEW_TRANSACTION',
+        TransactionType.Swap,
+      )
     } else if (mutation.type === 'UPDATE_HISTORY') {
       const { id, network, walletId } = mutation.payload
-      const historyCopy = store.getState().history
-      let historyItems = historyCopy?.[network as Network]?.[walletId]
-      if (historyItems) {
-        historyCopy[network as Network]![walletId] = historyItems.map(
-          (item) => {
-            if (item.id === id) {
-              return {
-                ...item,
-                ...mutation.payload.updates,
-              }
-            }
-
-            return item
-          },
-        )
-      }
-
-      store.dispatch({
-        type: 'TRANSACTION_UPDATE',
-        payload: {
-          history: historyCopy,
-        },
-      })
+      updateTransactionHistory(
+        id,
+        network,
+        walletId,
+        mutation.payload.updates,
+        'TRANSACTION_UPDATE',
+      )
+    } else if (mutation.type === 'NEW_TRASACTION') {
+      const { network, walletId } = mutation.payload
+      updateTransactionHistory(
+        mutation.payload.transaction.id,
+        network,
+        walletId,
+        mutation.payload.transaction,
+        'NEW_TRANSACTION',
+        TransactionType.Send,
+      )
     } else {
-      // store.dispatch({
-      //   type: 'UPDATE_WALLET',
-      //   payload: newState,
-      // })
+      // TODO Perform other types of updates (balances, market data, fiat rates... )
     }
   })
 }
@@ -239,7 +225,7 @@ export const retryPendingSwaps = async () => {
     .filter(
       (transaction) =>
         transaction.type === TransactionType.Swap &&
-        transaction.status?.toLowerCase() !== 'success',
+        !['SUCCESS', 'REFUNDED'].includes(transaction.status),
     )
     .map((transaction) =>
       wallet.dispatch.retrySwap({
@@ -431,28 +417,53 @@ export const sendTransaction = async (options: {
   to: string
   value: BigNumber
   fee: number
-}): Promise<any> => {
+  feeLabel: FeeLabel
+  memo: string
+}): Promise<Transaction> => {
   if (!options || Object.keys(options).length === 0) {
     throw new Error(`Failed to send transaction: ${options}`)
   }
 
-  const { activeWalletId, activeNetwork, accounts } = wallet.state
-  const { asset, to, value, fee } = options
+  const { activeWalletId, activeNetwork, fiatRates } = wallet.state
+  const { asset, to, value, fee, feeLabel, memo } = options
+  const toAccount = wallet.getters.networkAccounts.find(
+    (account) => account.assets && account.assets.includes(asset),
+  )
 
-  //TODO populate the undefined values
+  if (!toAccount) {
+    throw new Error('Invalid account')
+  }
+
+  //TODO fee vs gas
   return await wallet.dispatch.sendTransaction({
     network: activeNetwork,
     walletId: activeWalletId,
-    accountId: accounts[activeWalletId][activeNetwork][0]?.id,
+    accountId: toAccount.id,
     asset,
     to,
     amount: value,
     fee,
-    data: undefined,
-    feeLabel: undefined,
-    fiatRate: undefined,
+    data: memo,
+    feeLabel,
+    fiatRate: fiatRates[asset],
     gas: undefined,
   })
+}
+
+export const fetchConfirmationByHash = async (
+  asset: string,
+  hash: string,
+): Promise<number | undefined> => {
+  const { activeWalletId, activeNetwork } = wallet.state
+  const transaction = await wallet.getters
+    .client({
+      network: activeNetwork,
+      walletId: activeWalletId,
+      asset,
+    })
+    .chain.getTransactionByHash(hash)
+
+  return transaction.confirmations
 }
 
 /**
@@ -540,6 +551,57 @@ export const getBalances = () => {
     numberOfAccounts,
   }
 }
+
+const updateTransactionHistory = (
+  id: string,
+  network: string,
+  walletId: string,
+  historyItem: HistoryItem,
+  action: 'NEW_TRANSACTION' | 'TRANSACTION_UPDATE',
+  type?: TransactionType,
+) => {
+  const history = store.getState().history
+  let historyItems = history?.[network as Network]?.[walletId]
+
+  if (action === 'NEW_TRANSACTION') {
+    if (historyItems) {
+      const containsTransaction = historyItems.find((item) => item.id === id)
+      if (!containsTransaction) {
+        history[network as Network]![walletId].push({
+          type: type,
+          walletId,
+          network,
+          ...historyItem,
+        })
+        store.dispatch({
+          type: 'NEW_TRANSACTION',
+          payload: { history },
+        })
+      }
+    }
+  } else {
+    if (historyItems) {
+      history[network as Network]![walletId] = historyItems.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            ...historyItem,
+          }
+        }
+
+        return item
+      })
+    }
+
+    store.dispatch({
+      type: 'TRANSACTION_UPDATE',
+      payload: {
+        history,
+      },
+    })
+  }
+}
+
 //Infer the types from the rootReducer
 export type AppDispatch = typeof store.dispatch
 

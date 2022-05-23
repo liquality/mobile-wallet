@@ -67,8 +67,8 @@ const Row: React.FC<RowProps> = (props) => {
         {isNested ? (
           <View style={styles.col3}>
             <Text style={styles.TotalBalanceInUSD}>
-              {`Total ${
-                balanceInUSD && formatFiat(new BigNumber(balanceInUSD))
+              {`Total $${
+                balanceInUSD ? formatFiat(new BigNumber(balanceInUSD)) : 0
               }`}
             </Text>
           </View>
@@ -82,7 +82,7 @@ const Row: React.FC<RowProps> = (props) => {
                 }`}
             </Text>
             <Text style={styles.balanceInUSD}>
-              {`${balanceInUSD && formatFiat(new BigNumber(balanceInUSD))}`}
+              {`$${balanceInUSD ? formatFiat(new BigNumber(balanceInUSD)) : 0}`}
             </Text>
           </View>
         )}
@@ -170,10 +170,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontSize: 12,
     marginBottom: 5,
-  },
-  gas: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
   },
 })
 

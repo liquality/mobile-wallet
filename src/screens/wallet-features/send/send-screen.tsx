@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useEffect, useState } from 'react'
-import { Pressable, StyleSheet, TextInput, View } from 'react-native'
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { Pressable, StyleSheet, TextInput } from 'react-native'
 import {
   assets as cryptoassets,
   ChainId,
@@ -7,7 +7,11 @@ import {
 } from '@liquality/cryptoassets'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { RootStackParamList, UseInputStateReturnType } from '../../../types'
+import {
+  NetworkFeeType,
+  RootStackParamList,
+  UseInputStateReturnType,
+} from '../../../types'
 import {
   faAngleDown,
   faAngleRight,
@@ -28,7 +32,11 @@ import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
 import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
-import { FeeLabel, Network } from '@liquality/wallet-core/dist/store/types'
+import SendFeeSelector from '../../../components/ui/send-fee-selector'
+import { fetchFeesForAsset } from '../../../store/store'
+import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
+import ButtonFooter from '../../../components/button-footer'
+import { isNumber } from '../../../utils'
 
 const useInputState = (
   initialValue: string,
@@ -46,9 +54,9 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     code = 'ETH',
     balance = 0,
     chain = ChainId.Ethereum,
+    color,
   } = route.params.assetData || {}
   const [customFee, setCustomFee] = useState<number>(0)
-  const gasSpeeds: any[] = ['slow', 'average', 'fast']
   const {
     activeWalletId,
     activeNetwork = 'testnet',
@@ -60,21 +68,19 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     fees: state.fees,
     fiatRates: state.fiatRates,
   }))
-  const [showFeeOptions, setShowFeeOptions] = useState(false)
-  const [speedMode, setSpeedMode] = useState<FeeLabel>(FeeLabel.Average)
+  const [showFeeOptions, setShowFeeOptions] = useState(true)
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
   const [amountInNative, setAmountInNative] = useState<number>(0)
   const [showAmountsInFiat, setShowAmountsInFiat] = useState<boolean>(false)
   const [isCameraVisible, setIsCameraVisible] = useState(false)
+  const [networkSpeed, setNetworkSpeed] = useState<FeeLabel>(FeeLabel.Average)
   const [error, setError] = useState('')
-  const amountInput = useInputState('')
+  const amountInput = useInputState('0')
   const addressInput = useInputState('')
-
-  const isNumber = (value: string): boolean => {
-    return /^\d+(.\d*)?$/.test(value)
-  }
+  const memoInput = useInputState('')
+  const networkFee = useRef<NetworkFeeType>()
 
   const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
@@ -102,56 +108,42 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   }, [balance, code, route.params.customFee])
 
   useEffect(() => {
-    let gasFee
-    if (
-      !fees ||
-      !activeNetwork ||
-      !activeWalletId ||
-      !chain ||
-      !code ||
-      !balance
-    ) {
-      setError('Please refresh your wallet')
-      return
-    }
-
-    gasFee =
-      fees[activeNetwork as Network]?.[activeWalletId]?.[chain]?.[speedMode]
-        ?.fee
-
-    if (!gasFee) {
-      setError('Please refresh your wallet')
-      return
-    }
-    const calculatedFee =
-      typeof gasFee === 'number'
-        ? new BigNumber(gasFee)
-        : new BigNumber(
-            gasFee.maxPriorityFeePerGas + gasFee.suggestedBaseFeePerGas,
-          )
-    setFee(calculatedFee)
-    setAvailableAmount(
-      calculateAvailableAmnt(
-        code,
-        getSendFee(code, calculatedFee.toNumber()).toNumber(),
-        balance,
-      ),
-    )
-  }, [code, speedMode, fees, activeWalletId, activeNetwork, chain, balance])
+    fetchFeesForAsset(code).then((gasFee) => {
+      setFee(gasFee.average)
+      setAvailableAmount(
+        calculateAvailableAmnt(
+          code,
+          getSendFee(code, gasFee.average.toNumber()).toNumber(),
+          balance,
+        ),
+      )
+    })
+  }, [code, fees, activeWalletId, activeNetwork, chain, balance])
 
   const handleReviewPress = useCallback(() => {
-    if (validate()) {
+    if (validate() && networkFee?.current?.value) {
       navigation.navigate('SendReviewScreen', {
         screenTitle: `Send ${code} Review`,
         sendTransaction: {
           amount: new BigNumber(amountInput.value).toNumber(),
-          gasFee: fee.toNumber(),
+          gasFee: networkFee.current.value,
+          speedLabel: networkFee.current?.speed,
           destinationAddress: addressInput.value,
           asset: code,
+          memo: memoInput.value,
+          color: color || '#EAB300',
         },
       })
     }
-  }, [addressInput.value, amountInput.value, code, fee, navigation, validate])
+  }, [
+    addressInput.value,
+    amountInput.value,
+    code,
+    color,
+    memoInput.value,
+    navigation,
+    validate,
+  ])
 
   const handleFiatBtnPress = useCallback(() => {
     if (showAmountsInFiat) {
@@ -220,15 +212,27 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   )
 
   return (
-    <View style={styles.container}>
+    <Box
+      flex={1}
+      paddingVertical="l"
+      paddingHorizontal="xl"
+      backgroundColor="mainBackground">
       {isCameraVisible && chain && (
         <QrCodeScanner chain={chain} onClose={handleCameraModalClose} />
       )}
-      <View style={styles.headerBlock}>
-        <View style={styles.sendWrapper}>
-          <View style={styles.row}>
+      <Box>
+        <Box>
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+            marginBottom="m">
             <Box flex={1}>
-              <View style={styles.row}>
+              <Box
+                flexDirection="row"
+                justifyContent="space-between"
+                alignItems="flex-end"
+                marginBottom="m">
                 <Text variant="secondaryInputLabel">SEND</Text>
                 <Button
                   label={
@@ -240,7 +244,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                   variant="s"
                   onPress={handleFiatBtnPress}
                 />
-              </View>
+              </Box>
               <TextInput
                 style={[
                   styles.sendInputCurrency,
@@ -255,18 +259,20 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 returnKeyType="done"
               />
             </Box>
-            <View style={styles.asset}>
+            <Box flexDirection="row" alignItems="flex-end">
               <AssetIcon asset={code} chain={cryptoassets[code].chain} />
               <Text style={styles.assetName}>{code}</Text>
-            </View>
-          </View>
-          <View style={styles.row}>
-            <View style={styles.balanceTextWrapper}>
-              <Text style={styles.availableBalanceLabel}>Available</Text>
-              <Text style={styles.amount}>
-                {availableAmount} {code}
-              </Text>
-            </View>
+            </Box>
+          </Box>
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+            marginBottom="m">
+            <Box flexDirection="row">
+              <Text variant="amountLabel">Available</Text>
+              <Text variant="amount">{` ${availableAmount} ${code}`}</Text>
+            </Box>
             <Button
               label="Max"
               type="tertiary"
@@ -275,28 +281,61 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 amountInput.onChangeText(availableAmount.toString())
               }
             />
-          </View>
-          <View style={styles.sendToWrapper}>
+          </Box>
+          <Box marginTop={'xl'}>
             <Text variant="secondaryInputLabel">SEND TO</Text>
-            <View style={styles.row}>
+            <Box
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="flex-end"
+              marginBottom="m">
               <TextInput
                 style={styles.sendToInput}
                 onChangeText={addressInput.onChangeText}
                 onFocus={() => setError('')}
                 value={addressInput.value}
+                placeholder="Address"
                 autoCorrect={false}
                 returnKeyType="done"
               />
               <Pressable onPress={handleQRCodeBtnPress}>
                 <FontAwesomeIcon icon={faQrcode} size={25} />
               </Pressable>
-            </View>
-          </View>
-          <View />
-        </View>
-      </View>
-      <View style={styles.contentBlock}>
-        <View style={styles.row}>
+            </Box>
+          </Box>
+          <Box marginTop={'xl'}>
+            <Text variant="secondaryInputLabel">MEMO (OPTIONAL)</Text>
+            <Box
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="flex-end"
+              marginBottom="m">
+              <TextInput
+                style={{
+                  marginTop: 5,
+                  borderColor: '#D9DFE5',
+                  borderWidth: 1,
+                  height: 150,
+                  width: '100%',
+                }}
+                onChangeText={memoInput.onChangeText}
+                onFocus={() => setError('')}
+                value={memoInput.value}
+                multiline
+                numberOfLines={15}
+                autoCorrect={false}
+                returnKeyType="done"
+              />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+      <Box flex={0.3}>
+        <Box
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="flex-end"
+          marginBottom="m">
           <Pressable
             onPress={handleFeeOptionsPress}
             style={styles.feeOptionsButton}>
@@ -312,53 +351,24 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             </Text>
           ) : (
             <Text style={styles.speedValue}>
-              {`(${speedMode} / ${dpUI(
-                getSendFee(code, fee.toNumber()),
+              {`(${networkSpeed} / ${dpUI(
+                getSendFee(code, networkFee.current?.value || fee.toNumber()),
                 9,
               )} ${code})`}
             </Text>
           )}
-        </View>
+        </Box>
         {showFeeOptions && (
-          <View style={[styles.row, styles.speedOptions]}>
-            <Text style={styles.speedAssetName}>{code}</Text>
-            <View style={styles.speedBtnsWrapper}>
-              {gasSpeeds.map((speed, idx) => (
-                <Pressable
-                  key={speed}
-                  style={[
-                    styles.speedBtn,
-                    idx === 0 && styles.speedLeftBtn,
-                    idx === 2 && styles.speedRightBtn,
-                    speedMode === speed &&
-                      !customFee &&
-                      styles.speedBtnSelected,
-                  ]}
-                  onPress={() => {
-                    setCustomFee(0)
-                    setSpeedMode(speed)
-                  }}>
-                  <Text
-                    style={[
-                      styles.speedBtnLabel,
-                      speedMode === speed &&
-                        !customFee &&
-                        styles.speedTxtSelected,
-                      styles.speedLeftBtn,
-                    ]}>
-                    {speed}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
-            <Pressable onPress={handleCustomPress}>
-              <Text style={styles.customFee}>Custom</Text>
-            </Pressable>
-          </View>
+          <SendFeeSelector
+            asset={code}
+            handleCustomPress={handleCustomPress}
+            networkFee={networkFee}
+            changeNetworkSpeed={setNetworkSpeed}
+          />
         )}
         {!!error && <Text variant="error">{error}</Text>}
-      </View>
-      <View style={styles.actionBlock}>
+      </Box>
+      <ButtonFooter>
         <Button
           type="secondary"
           variant="m"
@@ -375,36 +385,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           isBorderless={false}
           isActive={true}
         />
-      </View>
-    </View>
+      </ButtonFooter>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-  },
-  headerBlock: {
-    flex: 0.5,
-  },
-  sendWrapper: {
-    flexDirection: 'column',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    marginBottom: 10,
-  },
-  amount: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    fontSize: 12,
-    lineHeight: 18,
-  },
   sendInput: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
@@ -427,29 +413,11 @@ const styles = StyleSheet.create({
     height: 40,
     paddingRight: 5,
   },
-  asset: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-  },
   assetName: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
     fontSize: 24,
     lineHeight: 30,
-  },
-  balanceTextWrapper: {
-    flexDirection: 'row',
-  },
-  availableBalanceLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    fontSize: 12,
-    lineHeight: 15,
-    color: '#646F85',
-    marginRight: 5,
-  },
-  sendToWrapper: {
-    marginTop: 40,
   },
   sendToInput: {
     marginTop: 5,
@@ -457,73 +425,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     width: '90%',
   },
-  contentBlock: {
-    flex: 0.3,
-  },
-  speedOptions: {
-    alignSelf: 'center',
-    width: '70%',
-    alignItems: 'center',
-  },
   speedValue: {
     alignSelf: 'flex-start',
     fontFamily: 'Montserrat-Regular',
     fontWeight: '400',
     fontSize: 12,
-  },
-  speedBtnsWrapper: {
-    flexDirection: 'row',
-  },
-  speedBtn: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 26,
-    borderWidth: 1,
-    borderColor: '#D9DFE5',
-    paddingHorizontal: 10,
-  },
-  speedLeftBtn: {
-    borderBottomLeftRadius: 50,
-    borderTopLeftRadius: 50,
-    borderRightWidth: 0,
-  },
-  speedRightBtn: {
-    borderBottomRightRadius: 50,
-    borderTopRightRadius: 50,
-    borderLeftWidth: 0,
-  },
-  speedBtnLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    fontSize: 11,
-    textTransform: 'capitalize',
-    color: '#1D1E21',
-  },
-  speedBtnSelected: {
-    backgroundColor: '#F0F7F9',
-  },
-  speedTxtSelected: {
-    fontWeight: '600',
-  },
-  actionBlock: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'flex-end',
-    flex: 0.2,
-  },
-  speedAssetName: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 15,
-    color: '#3D4767',
-  },
-  customFee: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    fontSize: 12,
-    lineHeight: 15,
-    color: '#9D4DFA',
   },
   feeOptionsButton: {
     flexDirection: 'row',
@@ -531,4 +437,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 })
+
 export default SendScreen
