@@ -120,22 +120,8 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  */
 def enableHermes = project.ext.react.get("enableHermes", false);
 
-def areUploadKeystoreEnvsSet = System.getenv("LIQUALITY_APP_RELEASE_STORE_FILE") != null &&
-                                System.getenv("LIQUALITY_APP_RELEASE_STORE_PASSWORD") != null &&
-                                System.getenv("LIQUALITY_APP_RELEASE_KEY_ALIAS") != null &&
-                                System.getenv("LIQUALITY_APP_RELEASE_KEY_PASSWORD") != null
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystorePropertiesFileExists = keystorePropertiesFile.exists()
-def keystoreProperties = new Properties()
-if (!(keystorePropertiesFileExists || areUploadKeystoreEnvsSet)) {
-    throw new InvalidUserDataException('''\
-You must have a keystore.properties file in the <rn-root-folder>/android/ folder or set the environments variables:
-  LIQUALITY_APP_RELEASE_STORE_FILE
-  LIQUALITY_APP_RELEASE_STORE_PASSWORD
-  LIQUALITY_APP_RELEASE_KEY_ALIAS
-  LIQUALITY_APP_RELEASE_KEY_PASSWORD
-''')
-}
 keystorePropertiesFileExists && keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 /**
@@ -177,12 +163,7 @@ android {
             keyPassword 'android'
         }
         release {
-            if (areUploadKeystoreEnvsSet) {
-                storeFile rootProject.file(String.valueOf(System.getenv("LIQUALITY_APP_RELEASE_STORE_FILE")))
-                storePassword String.valueOf(System.getenv("LIQUALITY_APP_RELEASE_STORE_PASSWORD"))
-                keyAlias String.valueOf(System.getenv("LIQUALITY_APP_RELEASE_KEY_ALIAS"))
-                keyPassword String.valueOf(System.getenv("LIQUALITY_APP_RELEASE_KEY_PASSWORD"))
-            } else {
+            if (keystorePropertiesFileExists) {
                 storeFile rootProject.file(keystoreProperties['storeFile'])
                 storePassword keystoreProperties['storePassword']
                 keyAlias keystoreProperties['keyAlias']

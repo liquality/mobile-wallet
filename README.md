@@ -25,15 +25,6 @@
 # Android environment
 
 - Ensure you have JDK11 installed and setup
-- Generate key: `keytool -genkey -v -keystore my-release-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000`
-- Place keyfile in `./android/app/`
-- Create `keystore.properties` in `./android/` folder with contents:
-  ```
-  storePassword=<ENTER_PASSWORD_HERE>
-  keyPassword=<ENTER_PASSWORD_HERE>
-  keyAlias=my_key_alias
-  storeFile=my-release-key.keystore
-  ```
 
 ## Running the app
 
