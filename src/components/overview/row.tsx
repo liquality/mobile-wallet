@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { AssetDataElementType, StackPayload } from '../../types'
-import { chainDefaultColors } from '../../core/config'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import MinusSign from '../../assets/icons/minus-sign.svg'
 import PlusSign from '../../assets/icons/plus-icon.svg'
@@ -14,8 +13,6 @@ import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
 import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
 
-const DEFAULT_COLOR = '#EFEFEF'
-
 type RowProps = {
   item: AssetDataElementType
   toggleRow: (itemId: string) => void
@@ -25,8 +22,7 @@ type RowProps = {
 
 const Row: React.FC<RowProps> = (props) => {
   const { item, toggleRow, onAssetSelected, isNested } = props
-  const { name, address, balanceInUSD, chain } = item
-  const chainColor = chain ? chainDefaultColors[chain] : DEFAULT_COLOR
+  const { name, address, balanceInUSD } = item
 
   const handlePressOnRow = () => {
     if (isNested) {
@@ -42,7 +38,7 @@ const Row: React.FC<RowProps> = (props) => {
   return (
     <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
       <Pressable
-        style={[styles.row, { borderLeftColor: chainColor }]}
+        style={[styles.row, { borderLeftColor: item.color }]}
         onPress={handlePressOnRow}>
         <View style={styles.col1}>
           <Pressable onPress={() => toggleRow(item.id)}>
@@ -175,4 +171,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Row
+export default memo(Row)

@@ -10,7 +10,7 @@ import StorageManager from '../core/storage-manager'
 import { BigNumber, FeeDetail, Transaction } from '@liquality/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
-import { currencyToUnit } from '@liquality/cryptoassets'
+import { chains, currencyToUnit } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
 import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
 import { AssetDataElementType, GasFees } from '../types'
@@ -33,6 +33,7 @@ import {
   TimelineStep,
 } from '@liquality/wallet-core/dist/utils/timeline'
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
+import { v4 as uuidv4 } from 'uuid'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -542,13 +543,50 @@ export const getTimeline = async (
   )
 }
 
-export const getBalances = () => {
-  const total = wallet.getters.totalFiatBalance.toString()
+export const getWalletSummary = () => {
+  const totalFiatBalance = wallet.getters.totalFiatBalance.toString()
   const numberOfAccounts = wallet.getters.accountsData.length
+  const { fees, activeNetwork, activeWalletId } = wallet.state
+  const accountData = []
+
+  for (let account of wallet.getters.accountsData) {
+    const nativeAsset = chains[account.chain].nativeAsset
+    const chainData: AssetDataElementType = {
+      id: uuidv4(),
+      chain: account.chain,
+      name: account.name,
+      code: nativeAsset,
+      balance: new BigNumber(account.balances?.[nativeAsset] || 0).toNumber(),
+      balanceInUSD: new BigNumber(account.totalFiatBalance).toNumber(),
+      address: account.addresses[0], //TODO why pick only the first address
+      color: account.color,
+      assets: [],
+      showAssets: false,
+      fees: fees?.[activeNetwork]?.[activeWalletId]?.[account.chain],
+    }
+
+    chainData.assets = account.assets.map((asset) => {
+      const balance = new BigNumber(account.balances?.[asset] || 0).toNumber()
+      return {
+        id: asset,
+        name: cryptoassets[asset].name,
+        code: asset,
+        chain: account.chain,
+        color: account.color,
+        balance,
+        balanceInUSD: new BigNumber(
+          account.fiatBalances[asset] || '0',
+        ).toNumber(),
+      }
+    })
+
+    accountData.push(chainData)
+  }
 
   return {
-    total,
+    totalFiatBalance,
     numberOfAccounts,
+    accountData,
   }
 }
 

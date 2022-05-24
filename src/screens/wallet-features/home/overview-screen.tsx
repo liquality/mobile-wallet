@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Fragment, useCallback, useEffect, useState } from 'react'
+import { Fragment, memo, useCallback, useEffect, useState } from 'react'
 import { ImageBackground, Pressable, StyleSheet, View } from 'react-native'
 import { useAppSelector, useWalletState } from '../../../hooks'
 import { formatFiat } from '@liquality/wallet-core/dist/utils/coinFormatter'
@@ -13,6 +13,7 @@ import Text from '../../../theme/text'
 import ErrorFallback from '../../../components/error-fallback'
 import Box from '../../../theme/box'
 import RoundButton from '../../../theme/round-button'
+import { BigNumber } from '@liquality/types'
 
 type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
@@ -97,7 +98,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
             <Fragment>
               <View style={styles.totalValueSection}>
                 <Text style={styles.totalValue} numberOfLines={1}>
-                  {formatFiat(totalFiatBalance).toString()}
+                  {formatFiat(new BigNumber(totalFiatBalance)).toString()}
                 </Text>
                 <Text style={styles.currency}>USD</Text>
               </View>
@@ -248,4 +249,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default OverviewScreen
+export default memo(OverviewScreen)

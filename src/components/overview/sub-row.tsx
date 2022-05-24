@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, memo } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import {
   formatFiat,
@@ -7,7 +7,6 @@ import {
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import { AssetDataElementType, StackPayload } from '../../types'
 import AssetIcon from '../asset-icon'
-import { chainDefaultColors } from '../../core/config'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
 
@@ -17,13 +16,8 @@ type SubRowProps = {
   onAssetSelected: (params: StackPayload) => void
 }
 
-const DEFAULT_COLOR = '#EFEFEF'
-
 const SubRow: FC<SubRowProps> = (props) => {
   const { parentItem, item, onAssetSelected } = props
-  const chainColor = parentItem.chain
-    ? chainDefaultColors[parentItem.chain]
-    : DEFAULT_COLOR
 
   const handlePressOnRow = () => {
     onAssetSelected({
@@ -47,7 +41,7 @@ const SubRow: FC<SubRowProps> = (props) => {
         style={[
           styles.row,
           styles.subElement,
-          { borderLeftColor: chainColor },
+          { borderLeftColor: parentItem.color },
         ]}>
         <View style={styles.col1}>
           <AssetIcon size={25} asset={item.code} />
@@ -135,4 +129,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default SubRow
+export default memo(SubRow)
