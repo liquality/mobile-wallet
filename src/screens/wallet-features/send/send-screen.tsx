@@ -6,17 +6,14 @@ import {
   chains,
 } from '@liquality/cryptoassets'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   NetworkFeeType,
   RootStackParamList,
   UseInputStateReturnType,
 } from '../../../types'
-import {
-  faAngleDown,
-  faAngleRight,
-  faQrcode,
-} from '@fortawesome/pro-light-svg-icons'
+import AngleDown from '../../../assets/icons/angle-down.svg'
+import AngleRight from '../../../assets/icons/angle-right.svg'
+import QRCode from '../../../assets/icons/qr-code.svg'
 import { useAppSelector } from '../../../hooks'
 import { BigNumber } from '@liquality/types'
 import { calculateAvailableAmnt } from '../../../core/utils/fee-calculator'
@@ -299,7 +296,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 returnKeyType="done"
               />
               <Pressable onPress={handleQRCodeBtnPress}>
-                <FontAwesomeIcon icon={faQrcode} size={25} />
+                <QRCode />
               </Pressable>
             </Box>
           </Box>
@@ -339,10 +336,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           <Pressable
             onPress={handleFeeOptionsPress}
             style={styles.feeOptionsButton}>
-            <FontAwesomeIcon
-              icon={showFeeOptions ? faAngleDown : faAngleRight}
-              size={15}
-            />
+            {showFeeOptions ? (
+              <AngleDown style={styles.dropdown} />
+            ) : (
+              <AngleRight style={styles.dropdown} />
+            )}
+
             <Text variant="secondaryInputLabel">NETWORK SPEED/FEE</Text>
           </Pressable>
           {customFee ? (
@@ -435,6 +434,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  dropdown: {
+    marginRight: 5,
+    marginBottom: 5,
   },
 })
 

@@ -8,15 +8,12 @@ import React, {
 } from 'react'
 import { Alert, Dimensions, Pressable, StyleSheet, Text } from 'react-native'
 import { ChainId } from '@liquality/cryptoassets/src/types'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import {
-  faAngleDown,
-  faAngleRight,
-  faArrowDown,
-  faChevronRight,
-  faClock,
-} from '@fortawesome/pro-light-svg-icons'
+import ChevronRight from '../../../assets/icons/activity-status/chevron-right.svg'
+import AngleDown from '../../../assets/icons/angle-down.svg'
+import AngleRight from '../../../assets/icons/angle-right.svg'
+import ArrowDown from '../../../assets/icons/arrow-down.svg'
+import Clock from '../../../assets/icons/clock.svg'
 import MessageBanner from '../../../components/ui/message-banner'
 import AmountTextInputBlock from '../../../components/ui/amount-text-input-block'
 import Label from '../../../components/ui/label'
@@ -256,7 +253,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           dispatch={dispatch}
         />
         <Pressable style={styles.chevronBtn} onPress={handleFromAssetPress}>
-          <FontAwesomeIcon icon={faChevronRight} size={15} color="#A8AEB7" />
+          <ChevronRight width={15} height={15} />
         </Pressable>
       </Box>
       <Box
@@ -297,7 +294,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         </Box>
       </Box>
       <Box alignItems="center" marginVertical="m" paddingHorizontal="xl">
-        <FontAwesomeIcon icon={faArrowDown} color="#A8AEB7" />
+        <ArrowDown />
       </Box>
       <Box
         flexDirection="row"
@@ -312,7 +309,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           minimumValue={bestQuote}
         />
         <Pressable style={styles.chevronBtn} onPress={handleToAssetPress}>
-          <FontAwesomeIcon icon={faChevronRight} color="#A8AEB7" />
+          <ChevronRight width={15} height={15} />
         </Pressable>
       </Box>
 
@@ -334,10 +331,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         marginVertical="m"
         paddingHorizontal="xl">
         <Pressable onPress={toggleFeeSelectors} style={styles.feeOptionsButton}>
-          <FontAwesomeIcon
-            icon={areFeeSelectorsVisible ? faAngleDown : faAngleRight}
-            size={15}
-          />
+          {areFeeSelectorsVisible ? (
+            <AngleDown style={styles.dropdown} />
+          ) : (
+            <AngleRight style={styles.dropdown} />
+          )}
           <Label text="NETWORK SPEED/FEE" variant="strong" />
           {fromAsset?.code && toAsset?.code && (
             <Label
@@ -376,9 +374,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               text1="Max slippage is 0.5%."
               text2={`If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at ${new Date(
                 new Date().getTime() + 3 * 60 * 60 * 1000,
-              ).toTimeString()}`}
-              icon={faClock}
-            />
+              ).toTimeString()}`}>
+              <Clock width={15} height={15} style={styles.icon} />
+            </Warning>
           </>
         )}
       <Box
@@ -428,6 +426,13 @@ const styles = StyleSheet.create({
   chevronBtn: {
     marginLeft: 15,
     marginBottom: 10,
+  },
+  icon: {
+    alignSelf: 'flex-start',
+    marginRight: 5,
+  },
+  dropdown: {
+    marginRight: 5,
   },
 })
 

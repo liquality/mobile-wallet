@@ -1,11 +1,9 @@
 import * as React from 'react'
 import { FlatList, Pressable } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import {
-  faChevronRight,
-  faExchange,
-  faLongArrowUp,
-} from '@fortawesome/pro-light-svg-icons'
+import ChevronRight from '../assets/icons/activity-status/chevron-right.svg'
+import PendingSwap from '../assets/icons/activity-status/pending-swap.svg'
+import CompletedSwap from '../assets/icons/activity-status/completed-swap.svg'
+import Send from '../assets/icons/activity-status/send.svg'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import {
@@ -94,16 +92,14 @@ const ActivityFlatList = ({
           flexDirection="row"
           alignItems="center"
           paddingHorizontal="s">
-          {type === TransactionType.Swap && (
-            <FontAwesomeIcon
-              size={23}
-              icon={faExchange}
-              secondaryColor={'#FF287D'}
-              color={'#2CD2CF'}
-            />
-          )}
-          {type === TransactionType.Send && (
-            <FontAwesomeIcon size={23} icon={faLongArrowUp} color={'#FF287D'} />
+          {type === TransactionType.Swap ? (
+            ['SUCCESS', 'REFUNDED'].includes(status) ? (
+              <CompletedSwap width={23} height={24} />
+            ) : (
+              <PendingSwap width={23} height={24} />
+            )
+          ) : (
+            <Send width={16} height={18} />
           )}
         </Box>
         <Box flex={0.3} justifyContent="center">
@@ -123,11 +119,11 @@ const ActivityFlatList = ({
           )}
         </Box>
         <Box flex={0.1} justifyContent="center" alignItems="center">
-          {status === 'REFUNDED' && <RefundedIcon />}
-          {status === 'SUCCESS' && <SuccessIcon />}
+          {status === 'REFUNDED' && <RefundedIcon width={28} height={28} />}
+          {status === 'SUCCESS' && <SuccessIcon width={28} height={28} />}
           {!['SUCCESS', 'REFUNDED'].includes(status) && (
             <ProgressCircle
-              radius={17}
+              radius={14}
               current={currentStep}
               total={totalSteps}
             />
@@ -135,11 +131,7 @@ const ActivityFlatList = ({
         </Box>
         <Box flex={0.1} justifyContent="center" alignItems="center">
           <Pressable onPress={() => handleChevronPress(item)}>
-            <FontAwesomeIcon
-              size={20}
-              icon={faChevronRight}
-              color={'#A8AEB7'}
-            />
+            <ChevronRight width={12} height={12} />
           </Pressable>
         </Box>
       </Box>

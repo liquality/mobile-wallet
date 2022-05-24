@@ -4,8 +4,7 @@ import {
   formatFiat,
   prettyBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faChevronRight } from '@fortawesome/pro-light-svg-icons'
+import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import { AssetDataElementType, StackPayload } from '../../types'
 import AssetIcon from '../asset-icon'
 import { chainDefaultColors } from '../../core/config'
@@ -81,11 +80,7 @@ const SubRow: FC<SubRowProps> = (props) => {
                 screenTitle: item.code,
               })
             }>
-            <FontAwesomeIcon
-              size={20}
-              icon={faChevronRight}
-              color={'#A8AEB7'}
-            />
+            <ChevronRight width={12} height={12} />
           </Pressable>
         </View>
       </Pressable>

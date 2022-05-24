@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, ScrollView, Pressable } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { chains, unitToCurrency } from '@liquality/cryptoassets'
-import { assets as cryptoassets } from '@liquality/cryptoassets'
+import {
+  chains,
+  unitToCurrency,
+  assets as cryptoassets,
+} from '@liquality/cryptoassets'
 import {
   HistoryItem,
   SendHistoryItem,

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faArrowLeft } from '@fortawesome/pro-light-svg-icons'
+import ChevronLeft from '../../assets/icons/chevron-left.svg'
 
 import { useAppSelector } from '../../hooks'
 
@@ -21,7 +20,7 @@ const OverviewHeaderLeft = ({
     <View style={styles.container}>
       {includeBackBtn && (
         <Pressable style={styles.backBtn} onPress={goBack}>
-          <FontAwesomeIcon icon={faArrowLeft} />
+          <ChevronLeft width={12} height={12} />
         </Pressable>
       )}
       <Text style={styles.overviewText}>{screenTitle.toUpperCase()}</Text>

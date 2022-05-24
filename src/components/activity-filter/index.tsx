@@ -1,14 +1,12 @@
 import React, { FC, useCallback, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import {
-  faChevronRight,
-  faChevronDown,
-  faTimes,
-  faArrowToBottom,
-  faPlus,
-  faMinus,
-} from '@fortawesome/pro-light-svg-icons'
+import ChevronRightIcon from '../../assets/icons/activity-status/chevron-right.svg'
+import AngleRightIcon from '../../assets/icons/angle-right.svg'
+import AngleDownIcon from '../../assets/icons/angle-down.svg'
+import PlusSign from '../../assets/icons/plus-icon.svg'
+import MinusSign from '../../assets/icons/minus-sign.svg'
+import TimeIcon from '../../assets/icons/times.svg'
+import ExportIcon from '../../assets/icons/export-icon.svg'
 
 import TimeLimitOptions from './time-limit-options'
 import ActionTypeToggles from './action-type-toggles'
@@ -118,23 +116,19 @@ const ActivityFilter: FC<{
         <Pressable
           style={styles.iconBtn}
           onPress={() => setExpanded(!expanded)}>
-          <FontAwesomeIcon
-            size={10}
-            icon={expanded ? faChevronDown : faChevronRight}
-            color={'#1D1E21'}
-          />
+          {expanded ? <AngleDownIcon /> : <AngleRightIcon />}
           <Text style={styles.filterLabel}>
             Filter ({numOfResults} {numOfResults === 1 ? ' Result' : ' Results'}
             )
           </Text>
         </Pressable>
         <Pressable style={styles.resetBtn} onPress={handleClearFilter}>
-          <FontAwesomeIcon size={16} icon={faTimes} color={'#646F85'} />
+          <TimeIcon />
           <Text style={styles.resetLabel}>Reset</Text>
         </Pressable>
         <View style={styles.spacer} />
         <Pressable style={styles.iconBtn} onPress={onExport}>
-          <FontAwesomeIcon size={16} icon={faArrowToBottom} color={'#646F85'} />
+          <ExportIcon width={16} fill={'#646F85'} />
           <Text style={styles.exportLabel}>Export</Text>
         </Pressable>
       </View>
@@ -151,11 +145,11 @@ const ActivityFilter: FC<{
           <Pressable
             style={styles.moreExpandButton}
             onPress={() => setMoreExpanded(!moreExpanded)}>
-            <FontAwesomeIcon
-              size={10}
-              icon={moreExpanded ? faMinus : faPlus}
-              color={'#1D1E21'}
-            />
+            {moreExpanded ? (
+              <MinusSign fill="#1D1E21" width={10} />
+            ) : (
+              <PlusSign fill="#1D1E21" width={10} />
+            )}
             <Text style={styles.filterLabel}>
               {moreExpanded ? 'less ' : 'more '} filter options
             </Text>
@@ -193,11 +187,7 @@ const ActivityFilter: FC<{
                   )?.label
                 }
               </Text>
-              <FontAwesomeIcon
-                size={16}
-                icon={faChevronRight}
-                color={'#646F85'}
-              />
+              <ChevronRightIcon width={16} height={16} />
             </Pressable>
             <SorterPicker
               isOpen={isSortPickerOpen}

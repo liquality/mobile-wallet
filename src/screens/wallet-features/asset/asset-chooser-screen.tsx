@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Alert, StyleSheet, TextInput, View } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faSearch } from '@fortawesome/pro-light-svg-icons'
+import SearchIcon from '../../../assets/icons/search.svg'
 
 import {
   ActionEnum,
@@ -119,7 +118,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.searchBox}>
-        <FontAwesomeIcon icon={faSearch} />
+        <SearchIcon />
         <TextInput
           style={styles.sendInput}
           placeholder={'Search for a Currency'}

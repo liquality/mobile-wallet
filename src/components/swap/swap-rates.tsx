@@ -13,8 +13,6 @@ import Logo from '../../assets/icons/infinity.svg'
 import LiqualityBoost from '../../assets/icons/swap-providers/liqualityboost.svg'
 import Sovryn from '../../assets/icons/swap-providers/sovryn.svg'
 import Thorchain from '../../assets/icons/swap-providers/thorchain.svg'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faTimes, faCheck } from '@fortawesome/pro-light-svg-icons'
 import SwapTypesInfo from './swap-types-info'
 import Button from '../../theme/button'
 import { dpUI } from '@liquality/wallet-core/dist/utils/coinFormatter'
@@ -24,6 +22,8 @@ import ListHeader from './list-header'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import { capitalizeFirstLetter } from '../../utils'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/utils/quotes'
+import TimesIcon from '../../assets/icons/times.svg'
+import CheckIcon from '../../assets/icons/swap-check.svg'
 
 type SwapRatesProps = {
   fromAsset: string
@@ -93,7 +93,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
           {getSwapProviderIcon(item)}
           <Text style={styles.text}>{item.provider}</Text>
           {selectedItem?.provider === item.provider && (
-            <FontAwesomeIcon icon={faCheck} color={'#2CD2CF'} />
+            <CheckIcon stroke={'#2CD2CF'} />
           )}
         </View>
       </Pressable>
@@ -169,7 +169,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
                 <View style={styles.header}>
                   <Text variant="header">{`${quotes?.length} AVAILABLE QUOTES`}</Text>
                   <Pressable onPress={() => setIsRatesModalVisible(false)}>
-                    <FontAwesomeIcon icon={faTimes} color={'#000'} />
+                    <TimesIcon fill={'#000'} />
                   </Pressable>
                 </View>
                 <Text style={[styles.text, styles.padded]}>

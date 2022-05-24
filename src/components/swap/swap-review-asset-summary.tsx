@@ -10,14 +10,14 @@ import {
   chains,
   unitToCurrency,
 } from '@liquality/cryptoassets'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCheck, faClone } from '@fortawesome/pro-light-svg-icons'
 import {
   cryptoToFiat,
   formatFiat,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { getSendFee } from '@liquality/wallet-core/src/utils/fees'
+import CopyIcon from '../../assets/icons/copy.svg'
+import CheckIcon from '../../assets/icons/swap-check.svg'
 
 type SwapReviewAssetSummaryProps = {
   type: 'SEND' | 'RECEIVE'
@@ -100,12 +100,16 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
           )}`}
         </Text>
         <Pressable onPress={handleCopyPress}>
-          <FontAwesomeIcon
-            icon={isCopied ? faCheck : faClone}
-            size={10}
-            color={'#9D4DFA'}
-            style={styles.icon}
-          />
+          {isCopied ? (
+            <CheckIcon
+              width={15}
+              height={15}
+              stroke={'#9D4DFA'}
+              style={styles.icon}
+            />
+          ) : (
+            <CopyIcon width={10} stroke={'#9D4DFA'} />
+          )}
         </Pressable>
       </View>
     </View>

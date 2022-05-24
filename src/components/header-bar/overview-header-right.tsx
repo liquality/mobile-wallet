@@ -1,7 +1,6 @@
 import React from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faBars } from '@fortawesome/pro-light-svg-icons'
+import Bars from '../../assets/icons/menu-bars.svg'
 
 const OverviewHeaderRight = ({
   onPress,
@@ -11,7 +10,7 @@ const OverviewHeaderRight = ({
   return (
     <View style={styles.container}>
       <Pressable onPress={onPress}>
-        <FontAwesomeIcon icon={faBars} size={25} />
+        <Bars width={25} height={25} />
       </Pressable>
     </View>
   )

@@ -1,8 +1,8 @@
 import React, { FC, useState } from 'react'
 import { Dimensions, StyleSheet, View, ScrollView, Alert } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faClock, faExchange } from '@fortawesome/pro-light-svg-icons'
+import Clock from '../../../assets/icons/clock.svg'
+import Exchange from '../../../assets/icons/exchange.svg'
 import { RootStackParamList, SwapInfoType } from '../../../types'
 import Warning from '../../../components/ui/warning'
 import { useAppSelector } from '../../../hooks'
@@ -109,9 +109,9 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
       <Warning
         text1="Max slippage is 0.5%."
         text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6
-          hours at 20:45 GMT"
-        icon={faClock}
-      />
+          hours at 20:45 GMT">
+        <Clock width={15} height={15} style={styles.icon} />
+      </Warning>
       <View style={styles.buttonWrapper}>
         <Button
           type="secondary"
@@ -129,12 +129,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           isBorderless={false}
           isActive={true}
           isLoading={isLoading}>
-          <FontAwesomeIcon
-            icon={faExchange}
-            size={15}
-            color={'#FFFFFF'}
-            style={styles.icon}
-          />
+          <Exchange style={styles.icon} />
         </Button>
       </View>
     </ScrollView>
@@ -152,8 +147,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   icon: {
-    marginVertical: 5,
-    marginHorizontal: 5,
+    alignSelf: 'flex-start',
+    marginRight: 5,
+    // marginVertical: 5,
+    // marginHorizontal: 5,
   },
 })
 

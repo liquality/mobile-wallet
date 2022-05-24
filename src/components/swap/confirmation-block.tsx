@@ -3,14 +3,13 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { Linking, Pressable, StyleSheet } from 'react-native'
 import Box from '../../theme/box'
 import Text from '../../theme/text'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faClone } from '@fortawesome/pro-light-svg-icons'
 import {
   prettyBalance,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import CopyIcon from '../../assets/icons/copy.svg'
 
 type ConfirmationBlockProps = {
   address?: string
@@ -47,7 +46,7 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
           <Text variant="boldLink">{status}</Text>
         </Pressable>
         <Pressable style={styles.copyBtn} onPress={handleCopyAddressPress}>
-          <FontAwesomeIcon icon={faClone} color={'#9C4DF9'} size={10} />
+          <CopyIcon width={10} stroke={'#9D4DFA'} />
         </Pressable>
       </Box>
       <Box flexDirection="row" justifyContent="center" alignItems="center">

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faLock, faPlug } from '@fortawesome/pro-light-svg-icons'
+import Lock from '../assets/icons/lock.svg'
 import BackupIcon from '../assets/icons/backup.svg'
 import LedgerIcon from '../assets/icons/ledger.svg'
 import ManageAssetsIcon from '../assets/icons/manage-assets.svg'
@@ -35,10 +34,6 @@ const WithPopupMenu = <T extends FctType>(
         <Component navigation={navigation} route={route} />
         {route?.params?.showPopup && (
           <View style={styles.modalContainer}>
-            <Pressable style={styles.menuItem}>
-              <FontAwesomeIcon icon={faPlug} style={styles.icon} />
-              <Text>Connected Sites</Text>
-            </Pressable>
             <Pressable
               style={styles.menuItem}
               onPress={handleManageAssetsBtnPress}>
@@ -46,8 +41,8 @@ const WithPopupMenu = <T extends FctType>(
               <Text>Manage Assets</Text>
             </Pressable>
             <Pressable style={styles.menuItem}>
-              <FontAwesomeIcon icon={faLock} style={styles.icon} />
-              <Text>Account Details</Text>
+              <Lock style={styles.icon} />
+              <Text>Manage account</Text>
             </Pressable>
             <Pressable style={styles.menuItem}>
               <LedgerIcon style={styles.icon} />
@@ -58,7 +53,7 @@ const WithPopupMenu = <T extends FctType>(
               <Text>Backup Seed</Text>
             </Pressable>
             <Pressable style={styles.menuItem} onPress={handleLockPress}>
-              <FontAwesomeIcon icon={faLock} style={styles.icon} />
+              <Lock style={styles.icon} />
               <Text>Lock</Text>
             </Pressable>
           </View>
@@ -71,12 +66,12 @@ const WithPopupMenu = <T extends FctType>(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#D9DFE5',
+    backgroundColor: '#FFF',
   },
   modalContainer: {
     zIndex: 5,
     position: 'absolute',
-    backgroundColor: '#D9DFE5',
+    backgroundColor: '#FFF',
     borderWidth: 1,
     borderColor: '#D9DFE5',
     top: 0,
@@ -94,6 +89,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 10,
+    width: 15,
   },
 })
 

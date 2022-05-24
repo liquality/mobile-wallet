@@ -1,20 +1,16 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import {
-  faExchange,
-  faArrowDown,
-  faArrowUp,
-} from '@fortawesome/pro-light-svg-icons'
-
+import SendIcon from '../../assets/icons/activity-status/send.svg'
+import SwapIcon from '../../assets/icons/exchange-red.svg'
+import ReceiveIcon from '../../assets/icons/receive.svg'
 import { ActionEnum } from '../../types'
 import { capitalizeFirstLetter } from '../../utils'
 
 const ITEMS = Object.values(ActionEnum)
-const ICON_MAP = {
-  [ActionEnum.SEND]: faArrowUp,
-  [ActionEnum.SWAP]: faExchange,
-  [ActionEnum.RECEIVE]: faArrowDown,
+const ICON_MAP: Record<ActionEnum, typeof SendIcon> = {
+  [ActionEnum.SEND]: SendIcon,
+  [ActionEnum.SWAP]: SwapIcon,
+  [ActionEnum.RECEIVE]: ReceiveIcon,
 }
 
 const ActionTypeToggles: FC<{
@@ -36,7 +32,7 @@ const ActionTypeToggles: FC<{
           <Text style={styles.label}>
             {capitalizeFirstLetter(key.toLowerCase())}
           </Text>
-          <FontAwesomeIcon icon={ICON_MAP[key]} {...commonIconProps} />
+          {ICON_MAP[key]({ ...commonIconProps })}
         </Pressable>
       )
     },
@@ -86,7 +82,8 @@ const styles = StyleSheet.create({
 
 const commonIconProps = {
   style: styles.icon,
-  size: 16,
+  width: 16,
+  height: 16,
   color: '#646F85',
 }
 

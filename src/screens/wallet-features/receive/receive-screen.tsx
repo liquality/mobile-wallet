@@ -9,13 +9,13 @@ import {
 } from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faClone, faCheck } from '@fortawesome/pro-light-svg-icons'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AssetDataElementType, RootStackParamList } from '../../../types'
 import AssetIcon from '../../../components/asset-icon'
 import Button from '../../../theme/button'
 import { useAppSelector } from '../../../hooks'
+import CheckIcon from '../../../assets/icons/swap-check.svg'
+import CopyIcon from '../../../assets/icons/copy.svg'
 
 type ReceiveScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -93,7 +93,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
         <View style={styles.addressWrapper}>
           <Text style={styles.address}>{address}</Text>
           <Pressable onPress={handleCopyAddressPress}>
-            <FontAwesomeIcon icon={faClone} color={'#1CE4C3'} size={10} />
+            <CopyIcon width={10} stroke={'#9D4DFA'} />
           </Pressable>
         </View>
       </View>
@@ -131,12 +131,21 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
           onPress={handleCopyAddressPress}
           isBorderless={false}
           isActive={true}>
-          <FontAwesomeIcon
-            icon={buttonPressed ? faCheck : faClone}
-            size={15}
-            color={'#FFFFFF'}
-            style={styles.icon}
-          />
+          {buttonPressed ? (
+            <CheckIcon
+              width={15}
+              height={15}
+              stroke={'#FFFFFF'}
+              style={styles.icon}
+            />
+          ) : (
+            <CopyIcon
+              width={15}
+              height={15}
+              stroke={'#FFFFFF'}
+              style={styles.icon}
+            />
+          )}
         </Button>
       </View>
     </View>

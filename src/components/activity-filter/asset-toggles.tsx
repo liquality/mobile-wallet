@@ -1,14 +1,13 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
-import { faCheck } from '@fortawesome/pro-solid-svg-icons'
 
 import { capitalizeFirstLetter } from '../../utils'
 import SectionTitle from './section-title'
 import { useAppSelector } from '../../hooks'
 import AssetIcon from '../asset-icon'
 import { useNavigation } from '@react-navigation/native'
+import SwapCheck from '../../assets/icons/swap-check.svg'
 
 const getItemsFromAssets = (assets: Array<string>): any[] => {
   if (assets.length < 6) {
@@ -69,12 +68,7 @@ const AssetToggles: FC<{
               <AssetIcon chain={cryptoassets[assetCode].chain} size={32} />
             )}
             {isSelected && (
-              <FontAwesomeIcon
-                style={styles.check}
-                size={20}
-                icon={faCheck}
-                color={'#2CD2CF'}
-              />
+              <SwapCheck style={styles.check} width={20} height={20} />
             )}
           </View>
           <Text style={styles.label}>

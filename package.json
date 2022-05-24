@@ -24,10 +24,6 @@
   },
   "dependencies": {
     "@ethersproject/shims": "^5.6.0",
-    "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/pro-light-svg-icons": "^5.15.4",
-    "@fortawesome/pro-solid-svg-icons": "^5.15.4",
-    "@fortawesome/react-native-fontawesome": "^0.2.7",
     "@liquality/cryptoassets": "^1.2.14",
     "@liquality/types": "^1.4.5",
     "@liquality/wallet-core": "^1.4.35",

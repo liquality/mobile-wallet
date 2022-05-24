@@ -2,12 +2,9 @@ import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { AssetDataElementType, StackPayload } from '../../types'
 import { chainDefaultColors } from '../../core/config'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import {
-  faChevronRight,
-  faMinus,
-  faPlus,
-} from '@fortawesome/pro-light-svg-icons'
+import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
+import MinusSign from '../../assets/icons/minus-sign.svg'
+import PlusSign from '../../assets/icons/plus-icon.svg'
 import AssetIcon from '../asset-icon'
 import {
   formatFiat,
@@ -49,12 +46,21 @@ const Row: React.FC<RowProps> = (props) => {
         onPress={handlePressOnRow}>
         <View style={styles.col1}>
           <Pressable onPress={() => toggleRow(item.id)}>
-            <FontAwesomeIcon
-              size={15}
-              icon={item.showAssets ? faMinus : faPlus}
-              color={isNested ? '#A8AEB7' : '#FFF'}
-              style={styles.plusSign}
-            />
+            {item.showAssets ? (
+              <MinusSign
+                width={15}
+                height={15}
+                fill={isNested ? '#A8AEB7' : '#FFF'}
+                style={styles.plusSign}
+              />
+            ) : (
+              <PlusSign
+                width={15}
+                height={15}
+                fill={isNested ? '#A8AEB7' : '#FFF'}
+                style={styles.plusSign}
+              />
+            )}
           </Pressable>
           <AssetIcon chain={item.chain} />
         </View>
@@ -88,7 +94,7 @@ const Row: React.FC<RowProps> = (props) => {
         )}
         <View style={styles.col4}>
           {isNested ? (
-            <FontAwesomeIcon size={20} icon={faChevronRight} color={'#FFF'} />
+            <ChevronRight width={12} height={12} />
           ) : (
             <Pressable
               onPress={() =>
@@ -97,11 +103,7 @@ const Row: React.FC<RowProps> = (props) => {
                   screenTitle: item.code,
                 })
               }>
-              <FontAwesomeIcon
-                size={20}
-                icon={faChevronRight}
-                color={'#A8AEB7'}
-              />
+              <ChevronRight width={12} height={12} />
             </Pressable>
           )}
         </View>

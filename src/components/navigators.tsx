@@ -1,8 +1,8 @@
 import React, { createContext } from 'react'
 import { View, StyleSheet, Text, Pressable } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCheck, faUserCog } from '@fortawesome/pro-light-svg-icons'
+import UserCog from '../assets/icons/user-cog.svg'
+import SwapCheck from '../assets/icons/swap-check.svg'
 import Infinity from '../assets/icons/infinity.svg'
 import Entry from '../screens/wallet-creation/entryScreen'
 import TermsScreen from '../screens/wallet-creation/termsScreen'
@@ -165,12 +165,7 @@ export const AppStackNavigator = () => (
       options={({ navigation, route }) => ({
         headerRight: () => (
           <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
-            <FontAwesomeIcon
-              icon={faCheck}
-              size={20}
-              color={'#5F5F5F'}
-              style={styles.checkIcon}
-            />
+            <SwapCheck style={styles.checkIcon} width={20} height={20} />
           </Pressable>
         ),
         title: route?.params?.screenTitle || 'Overview',
@@ -211,12 +206,7 @@ export const AppStackNavigator = () => (
       options={({ navigation, route }) => ({
         headerRight: () => (
           <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
-            <FontAwesomeIcon
-              icon={faCheck}
-              size={20}
-              color={'#5F5F5F'}
-              style={styles.checkIcon}
-            />
+            <SwapCheck style={styles.checkIcon} width={20} height={20} />
           </Pressable>
         ),
         title: route?.params?.screenTitle || 'Overview',
@@ -236,7 +226,7 @@ export const MainNavigator = () => (
         return (
           <View style={[styles.iconWrapper, focused && styles.tabFocused]}>
             {route.name === 'SettingsScreen' ? (
-              <FontAwesomeIcon icon={faUserCog} size={size} color="#5F5F5F" />
+              <UserCog width={size} height={size} />
             ) : (
               <Infinity height={size} />
             )}

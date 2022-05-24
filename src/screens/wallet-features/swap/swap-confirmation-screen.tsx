@@ -9,8 +9,8 @@ import {
   chains,
 } from '@liquality/cryptoassets'
 import { useAppSelector } from '../../../hooks'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faAngleDown, faAngleRight } from '@fortawesome/pro-light-svg-icons'
+import AngleDown from '../../../assets/icons/angle-down.svg'
+import AngleRight from '../../../assets/icons/angle-right.svg'
 import Label from '../../../components/ui/label'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
@@ -235,10 +235,11 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
         <Pressable
           style={styles.expandable}
           onPress={() => setIsExpanded(!isExpanded)}>
-          <FontAwesomeIcon
-            icon={isExpanded ? faAngleDown : faAngleRight}
-            size={15}
-          />
+          {isExpanded ? (
+            <AngleDown style={styles.dropdown} />
+          ) : (
+            <AngleRight style={styles.dropdown} />
+          )}
           <Label text="ADVANCED" variant="strong" />
         </Pressable>
         {isExpanded && (
@@ -486,6 +487,9 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 12,
+  },
+  dropdown: {
+    marginRight: 5,
   },
 })
 
