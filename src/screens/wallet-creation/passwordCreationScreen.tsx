@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react'
-import { View, StyleSheet, ImageBackground, TextInput } from 'react-native'
+import { View, StyleSheet, TextInput, Dimensions } from 'react-native'
 
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -7,6 +7,8 @@ import Header from '../header'
 import ButtonFooter from '../../components/button-footer'
 import Button from '../../theme/button'
 import Text from '../../theme/text'
+import Box from '../../theme/box'
+import GradientBackground from '../../components/gradient-background'
 
 type PasswordCreationProps = NativeStackScreenProps<
   RootStackParamList,
@@ -57,9 +59,12 @@ const PasswordCreationScreen = ({
     return isError
   }
   return (
-    <ImageBackground
-      style={styles.container}
-      source={require('../../assets/bg/bg.png')}>
+    <Box style={styles.container}>
+      <GradientBackground
+        width={Dimensions.get('screen').width}
+        height={Dimensions.get('screen').height}
+        isFullPage
+      />
       <Header showText={true} />
       <View style={styles.prompt}>
         <Text variant="mainInputLabel">Create Password</Text>
@@ -121,7 +126,7 @@ const PasswordCreationScreen = ({
           isActive={!!passwordInput.value && !!passwordConfirmationInput.value}
         />
       </ButtonFooter>
-    </ImageBackground>
+    </Box>
   )
 }
 

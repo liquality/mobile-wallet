@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Fragment, memo, useCallback, useEffect, useState } from 'react'
-import { ImageBackground, Pressable, StyleSheet, View } from 'react-native'
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
 import { useAppSelector, useWalletState } from '../../../hooks'
 import { formatFiat } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
@@ -14,6 +14,7 @@ import ErrorFallback from '../../../components/error-fallback'
 import Box from '../../../theme/box'
 import RoundButton from '../../../theme/round-button'
 import { BigNumber } from '@liquality/types'
+import GradientBackground from '../../../components/gradient-background'
 
 type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
@@ -89,9 +90,11 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   return (
     <View style={styles.container}>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <ImageBackground
-          style={styles.overviewBlock}
-          source={require('../../../assets/bg/action-block-bg.png')}>
+        <Box style={styles.overviewBlock}>
+          <GradientBackground
+            width={Dimensions.get('screen').width}
+            height={225}
+          />
           {loading ? (
             <Text style={styles.loading}>Loading...</Text>
           ) : (
@@ -129,7 +132,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
               </Box>
             </Fragment>
           )}
-        </ImageBackground>
+        </Box>
         <View style={styles.tabsBlock}>
           <Pressable
             style={[
@@ -217,7 +220,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
     borderBottomWidth: 1,
+    borderTopWidth: 1,
     borderBottomColor: '#D9DFE5',
+    borderTopColor: '#D9DFE5',
   },
   headerFocused: {
     borderBottomWidth: 1,

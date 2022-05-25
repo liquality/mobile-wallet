@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, ImageBackground, FlatList } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Dimensions } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 import Button from '../../theme/button'
+import Box from '../../theme/box'
+import GradientBackground from '../../components/gradient-background'
 type WalletBackupProps = NativeStackScreenProps<
   RootStackParamList,
   'SeedPhraseScreen'
@@ -33,9 +35,12 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
   }, [])
 
   return (
-    <ImageBackground
-      style={styles.container}
-      source={require('../../assets/bg/bg.png')}>
+    <Box style={styles.container}>
+      <GradientBackground
+        width={Dimensions.get('screen').width}
+        height={Dimensions.get('screen').height}
+        isFullPage
+      />
       <Header showText={true} />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Backup your Wallet</Text>
@@ -78,7 +83,7 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
           />
         </ButtonFooter>
       </View>
-    </ImageBackground>
+    </Box>
   )
 }
 

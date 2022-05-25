@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, Image, ImageBackground } from 'react-native'
+import { View, Text, StyleSheet, Image, Dimensions } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import Confetti from '../../components/confetti'
+import Box from '../../theme/box'
+import GradientBackground from '../../components/gradient-background'
 
 type CongratulationsProps = NativeStackScreenProps<
   RootStackParamList,
@@ -22,9 +24,12 @@ const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
   })
 
   return (
-    <ImageBackground
-      style={styles.container}
-      source={require('../../assets/bg/bg.png')}>
+    <Box style={styles.container}>
+      <GradientBackground
+        width={Dimensions.get('screen').width}
+        height={Dimensions.get('screen').height}
+        isFullPage
+      />
       <Confetti />
       <View style={styles.message}>
         <Text style={styles.messageText}>Congrats!</Text>
@@ -33,7 +38,7 @@ const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
           source={require('../../assets/icons/checkmark.png')}
         />
       </View>
-    </ImageBackground>
+    </Box>
   )
 }
 

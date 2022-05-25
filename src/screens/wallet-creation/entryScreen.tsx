@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { View, StyleSheet, ImageBackground } from 'react-native'
+import { View, StyleSheet, Dimensions } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import Header from '../header'
@@ -8,6 +8,7 @@ import Button from '../../theme/button'
 import Box from '../../theme/box'
 import { createWallet } from '../../store/store'
 import { MNEMONIC, PASSWORD } from '@env'
+import GradientBackground from '../../components/gradient-background'
 
 type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
@@ -29,9 +30,12 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
   }
 
   return (
-    <ImageBackground
-      style={styles.container}
-      source={require('../../assets/bg/bg.png')}>
+    <Box style={styles.container}>
+      <GradientBackground
+        width={Dimensions.get('screen').width}
+        height={Dimensions.get('screen').height}
+        isFullPage
+      />
       <Header width={135} height={83} style={styles.header} showText={false} />
       <Box flex={0.4} justifyContent="flex-start" alignItems="center">
         <Text variant="slogan1">one</Text>
@@ -63,7 +67,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
           isActive
         />
       </Box>
-    </ImageBackground>
+    </Box>
   )
 }
 

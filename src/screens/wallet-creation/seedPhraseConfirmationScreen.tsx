@@ -4,15 +4,17 @@ import {
   Text,
   StyleSheet,
   Pressable,
-  ImageBackground,
   FlatList,
   Alert,
+  Dimensions,
 } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import Header from '../header'
 import ButtonFooter from '../../components/button-footer'
 import Button from '../../theme/button'
+import Box from '../../theme/box'
+import GradientBackground from '../../components/gradient-background'
 
 type SeedPhraseConfirmationProps = NativeStackScreenProps<
   RootStackParamList,
@@ -103,9 +105,12 @@ const SeedPhraseConfirmationScreen = ({
   }, [route.params.seedWords])
 
   return (
-    <ImageBackground
-      style={styles.container}
-      source={require('../../assets/bg/bg.png')}>
+    <Box style={styles.container}>
+      <GradientBackground
+        width={Dimensions.get('screen').width}
+        height={Dimensions.get('screen').height}
+        isFullPage
+      />
       <Header showText={true} />
       <View style={styles.prompt}>
         <Text style={styles.promptText}>Confirm Seed Phrase</Text>
@@ -162,7 +167,7 @@ const SeedPhraseConfirmationScreen = ({
           />
         </ButtonFooter>
       </View>
-    </ImageBackground>
+    </Box>
   )
 }
 

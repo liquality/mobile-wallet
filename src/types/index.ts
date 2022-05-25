@@ -78,7 +78,7 @@ export type RootStackParamList = {
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   LoadingScreen: StackPayload
-  OverviewScreen: undefined
+  OverviewScreen: StackPayload
   AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
   AssetManagementScreen: StackPayload

@@ -1,5 +1,5 @@
-import React from 'react'
-import { ImageBackground, Pressable, StyleSheet, View } from 'react-native'
+import React, { useCallback } from 'react'
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
 import {
   formatFiat,
   prettyBalance,
@@ -11,6 +11,7 @@ import { BigNumber } from '@liquality/types'
 import RoundButton from '../../../theme/round-button'
 import Box from '../../../theme/box'
 import Text from '../../../theme/text'
+import GradientBackground from '../../../components/gradient-background'
 
 type AssetScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -21,32 +22,34 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const { code, address, balance, balanceInUSD }: AssetDataElementType =
     route.params.assetData!
 
-  const handleSendPress = () => {
+  const handleSendPress = useCallback(() => {
     navigation.navigate('SendScreen', {
       assetData: route.params.assetData,
       screenTitle: `Send ${code}`,
     })
-  }
+  }, [code, navigation, route.params.assetData])
 
-  const handleReceivePress = () => {
+  const handleReceivePress = useCallback(() => {
     navigation.navigate('ReceiveScreen', {
       assetData: route.params.assetData,
       screenTitle: `Receive ${code}`,
     })
-  }
+  }, [code, navigation, route.params.assetData])
 
-  const handleSwapPress = () => {
+  const handleSwapPress = useCallback(() => {
     navigation.navigate('SwapScreen', {
       swapAssetPair: route.params.swapAssetPair,
       screenTitle: 'Swap',
     })
-  }
+  }, [navigation, route.params.swapAssetPair])
 
   return (
-    <Box flex={1} backgroundColor="mainBackground">
-      <ImageBackground
-        style={styles.overviewBlock}
-        source={require('../../../assets/bg/action-block-bg.png')}>
+    <Box flex={1} backgroundColor="mainBackground" borderWidth={1}>
+      <Box style={styles.overviewBlock}>
+        <GradientBackground
+          width={Dimensions.get('screen').width}
+          height={225}
+        />
         <Box flexDirection="row" justifyContent="center" alignItems="flex-end">
           <Text style={styles.balanceInUSD}>
             {balanceInUSD && formatFiat(new BigNumber(balanceInUSD)).toString()}
@@ -85,7 +88,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             variant="smallPrimary"
           />
         </Box>
-      </ImageBackground>
+      </Box>
       <View style={styles.tabBlack}>
         <Pressable style={[styles.leftHeader, styles.headerFocused]}>
           <Text variant="tabHeader">ACTIVITY</Text>
