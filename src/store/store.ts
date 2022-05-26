@@ -114,8 +114,61 @@ export const initWallet = async (initialState?: CustomRootState) => {
         'NEW_TRANSACTION',
         TransactionType.Send,
       )
-    } else {
+    } else if (mutation.type === 'UPDATE_FIAT_RATES') {
+      store.dispatch({
+        type: 'UPDATE_FIAT_RATES',
+        payload: {
+          fiatRates: mutation.payload.fiatRates,
+        },
+      })
+    } else if (mutation.type === 'UPDATE_MARKET_DATA') {
+      store.dispatch({
+        type: 'UPDATE_MARKET_DATA',
+        payload: {
+          marketData: mutation.payload.marketData,
+        },
+      })
+    } else if (mutation.type === 'UPDATE_BALANCE') {
       // TODO Perform other types of updates (balances, market data, fiat rates... )
+      const { accountId, asset, balance, network, walletId } = mutation.payload
+      const newAccounts = store?.getState()?.accounts
+      if (newAccounts?.[walletId as WalletId]?.[network as Network]) {
+        newAccounts[walletId as WalletId][network as Network] = newAccounts?.[
+          walletId as WalletId
+        ]?.[network as Network].map((account) => {
+          if (account.id === accountId) {
+            return {
+              ...account,
+              balances: {
+                ...account.balances,
+                [asset]: balance,
+              },
+            }
+          }
+        })
+        store.dispatch({
+          type: 'UPDATE_ACCOUNTS',
+          payload: {
+            accounts: newAccounts,
+          },
+        })
+      }
+
+      // const t = {
+      //   payload: {
+      //     accountId: '0c06cda6-aba4-4ed2-b8ac-75d007ecf4bf',
+      //     asset: 'BTC',
+      //     balance: '32432',
+      //     network: 'testnet',
+      //     walletId: '43bf54a1-1747-4286-b648-1f15844d3bdc',
+      //   },
+      //   type: 'UPDATE_BALANCE',
+      // }
+      // store.getState().accounts[]
+      // store.dispatch({
+      //   type: 'UPDATE_WALLET',
+      //   payload: { history },
+      // })
     }
   })
 }
@@ -169,15 +222,15 @@ export const populateWallet = async (): Promise<void> => {
     'UST',
   ]
 
-  await wallet.dispatch
-    .changeActiveNetwork({
-      network: activeNetwork || 'testnet',
-    })
-    .catch((e) => {
-      Log(`Failed to change active network: ${e}`, 'error')
-    })
+  // await wallet.dispatch
+  //   .changeActiveNetwork({
+  //     network: activeNetwork || 'testnet',
+  //   })
+  //   .catch((e) => {
+  //     Log(`Failed to change active network: ${e}`, 'error')
+  //   })
 
-  await wallet.dispatch
+  wallet.dispatch
     .updateMarketData({
       network: activeNetwork,
     })
@@ -185,7 +238,7 @@ export const populateWallet = async (): Promise<void> => {
       Log(`Failed to update market data: ${e}`, 'error')
     })
 
-  await wallet.dispatch
+  wallet.dispatch
     .updateBalances({
       network: activeNetwork,
       walletId: activeWalletId,
@@ -195,7 +248,7 @@ export const populateWallet = async (): Promise<void> => {
       Log(`Failed update balances: ${e}`, 'error')
     })
 
-  await wallet.dispatch
+  wallet.dispatch
     .updateFiatRates({
       assets: enabledAssets,
     })
@@ -203,12 +256,7 @@ export const populateWallet = async (): Promise<void> => {
       Log(`Failed to update fiat rates: ${e}`, 'error')
     })
 
-  store.dispatch({
-    type: 'UPDATE_WALLET',
-    payload: wallet.state,
-  })
-
-  await retryPendingSwaps()
+  retryPendingSwaps()
 }
 
 export const retrySwap = async (transaction: SwapHistoryItem) => {
@@ -561,7 +609,6 @@ export const getWalletSummary = () => {
       address: account.addresses[0], //TODO why pick only the first address
       color: account.color,
       assets: [],
-      showAssets: false,
       fees: fees?.[activeNetwork]?.[activeWalletId]?.[account.chain],
     }
 

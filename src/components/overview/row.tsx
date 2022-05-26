@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { AssetDataElementType, StackPayload } from '../../types'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
@@ -15,25 +15,43 @@ import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
 
 type RowProps = {
   item: AssetDataElementType
-  toggleRow: (itemId: string) => void
+  toggleRow: () => void
   onAssetSelected: (params: StackPayload) => void
   isNested: boolean
+  isExpanded: boolean
 }
 
 const Row: React.FC<RowProps> = (props) => {
-  const { item, toggleRow, onAssetSelected, isNested } = props
-  const { name, address, balanceInUSD } = item
+  const { item, toggleRow, onAssetSelected, isNested, isExpanded } = props
+  const { name } = item
+  const [prettyNativeBalance, setPrettyNativeBalance] = useState('')
+  const [prettyFiatBalance, setPrettyFiatBalance] = useState('')
+  const [shortAddress, setShortAddress] = useState('')
 
-  const handlePressOnRow = () => {
+  const handlePressOnRow = useCallback(() => {
     if (isNested) {
-      toggleRow(item.id)
+      toggleRow()
     } else {
       onAssetSelected({
         assetData: item,
         screenTitle: item.code,
       })
     }
-  }
+  }, [isNested, item, onAssetSelected, toggleRow])
+
+  const handleToggleRow = useCallback(() => {
+    toggleRow()
+  }, [toggleRow])
+
+  useEffect(() => {
+    setPrettyNativeBalance(
+      `${prettyBalance(new BigNumber(item.balance), item.code)} ${item.code}`,
+    )
+    setPrettyFiatBalance(
+      `${item.balanceInUSD ? formatFiat(new BigNumber(item.balanceInUSD)) : 0}`,
+    )
+    if (item.address) setShortAddress(shortenAddress(item.address))
+  }, [item.address, item.balance, item.balanceInUSD, item.code])
 
   return (
     <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
@@ -41,8 +59,8 @@ const Row: React.FC<RowProps> = (props) => {
         style={[styles.row, { borderLeftColor: item.color }]}
         onPress={handlePressOnRow}>
         <View style={styles.col1}>
-          <Pressable onPress={() => toggleRow(item.id)}>
-            {item.showAssets ? (
+          <Pressable onPress={handleToggleRow}>
+            {isExpanded ? (
               <MinusSign
                 width={15}
                 height={15}
@@ -62,29 +80,21 @@ const Row: React.FC<RowProps> = (props) => {
         </View>
         <View style={styles.col2}>
           <Text style={styles.code}>{name}</Text>
-          <Text style={styles.address}>
-            {address && shortenAddress(address)}
-          </Text>
+          <Text style={styles.address}>{shortAddress}</Text>
         </View>
         {isNested ? (
           <View style={styles.col3}>
             <Text style={styles.TotalBalanceInUSD}>
-              {`Total $${
-                balanceInUSD ? formatFiat(new BigNumber(balanceInUSD)) : 0
-              }`}
+              {`Total $${prettyFiatBalance}`}
             </Text>
           </View>
         ) : (
           <View style={styles.col3}>
             <Text style={styles.balance}>
-              {item.balance &&
-                item.code &&
-                `${prettyBalance(new BigNumber(item.balance), item.code)} ${
-                  item.code
-                }`}
+              {prettyNativeBalance && prettyNativeBalance}
             </Text>
             <Text style={styles.balanceInUSD}>
-              {`$${balanceInUSD ? formatFiat(new BigNumber(balanceInUSD)) : 0}`}
+              {prettyFiatBalance && prettyFiatBalance}
             </Text>
           </View>
         )}

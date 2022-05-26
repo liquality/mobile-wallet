@@ -21,10 +21,10 @@ const rootReducer: Reducer<CustomRootState, PayloadAction<CustomRootState>> = (
   action,
 ): any => {
   switch (action.type) {
-    case 'UPDATE_ACCOUNT':
+    case 'UPDATE_ACCOUNTS':
       return {
         ...state,
-        accounts: {},
+        accounts: action.payload.accounts,
       }
     case 'INIT_STORE':
       return {
@@ -44,6 +44,11 @@ const rootReducer: Reducer<CustomRootState, PayloadAction<CustomRootState>> = (
       return {
         ...state,
         ...action.payload,
+      }
+    case 'UPDATE_FIAT_RATES':
+      return {
+        ...state,
+        fiatRates: [...action.payload.fiatRates],
       }
     case 'UPDATE_MARKET_DATA':
       const marketData = action.payload.marketData || {}

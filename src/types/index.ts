@@ -17,7 +17,6 @@ export type AssetDataElementType = {
   balanceInUSD?: number
   color?: string
   assets?: Array<AssetDataElementType>
-  showAssets?: boolean
   fees?: FeeDetails
   activeNetwork?: any
 }

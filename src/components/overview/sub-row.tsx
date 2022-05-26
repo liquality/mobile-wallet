@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react'
+import React, { FC, memo, useCallback, useEffect, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import {
   formatFiat,
@@ -18,8 +18,10 @@ type SubRowProps = {
 
 const SubRow: FC<SubRowProps> = (props) => {
   const { parentItem, item, onAssetSelected } = props
+  const [prettyNativeBalance, setPrettyNativeBalance] = useState('')
+  const [prettyFiatBalance, setPrettyFiatBalance] = useState('')
 
-  const handlePressOnRow = () => {
+  const handlePressOnRow = useCallback(() => {
     onAssetSelected({
       assetData: {
         ...item,
@@ -27,7 +29,16 @@ const SubRow: FC<SubRowProps> = (props) => {
       },
       screenTitle: item.code,
     })
-  }
+  }, [item, onAssetSelected, parentItem.address])
+
+  useEffect(() => {
+    setPrettyNativeBalance(
+      `${prettyBalance(new BigNumber(item.balance), item.code)} ${item.code}`,
+    )
+    setPrettyFiatBalance(
+      `${item.balanceInUSD ? formatFiat(new BigNumber(item.balanceInUSD)) : 0}`,
+    )
+  }, [item.address, item.balance, item.balanceInUSD, item.code])
 
   return (
     <AssetListSwipeableRow
@@ -48,32 +59,11 @@ const SubRow: FC<SubRowProps> = (props) => {
           <Text style={styles.name}>{item.name}</Text>
         </View>
         <View style={styles.col2}>
-          <Text style={styles.balance}>
-            {item.balance &&
-              item.code &&
-              `${prettyBalance(new BigNumber(item.balance), item.code)} ${
-                item.code
-              }`}
-          </Text>
-          <Text style={styles.balanceInUSD}>
-            {`$${
-              item.balanceInUSD
-                ? formatFiat(new BigNumber(item.balanceInUSD))
-                : 0
-            }`}
-          </Text>
+          <Text style={styles.balance}>{prettyNativeBalance}</Text>
+          <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
         </View>
         <View style={styles.col3}>
-          <Pressable
-            onPress={() =>
-              onAssetSelected({
-                assetData: {
-                  ...item,
-                  address: parentItem.address,
-                },
-                screenTitle: item.code,
-              })
-            }>
+          <Pressable onPress={handlePressOnRow}>
             <ChevronRight width={12} height={12} />
           </Pressable>
         </View>
