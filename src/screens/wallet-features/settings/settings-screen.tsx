@@ -15,6 +15,7 @@ import { useAppSelector } from '../../../hooks'
 import WhatsNew from '../../../components/ui/whats-new'
 import Button from '../../../theme/button'
 import { downloadWalletLogs } from '../../../utils'
+import { version as appVersion } from './../../../../package.json'
 
 const SettingsScreen = () => {
   const reduxState = useAppSelector((state) => state)
@@ -177,6 +178,9 @@ const SettingsScreen = () => {
         </View>
       </ScrollView>
       {isWhatsNewVisible && <WhatsNew onAction={setIsWhatsNewVisible} />}
+      <View style={styles.row}>
+        <Text style={styles.appVersion}>Version: {appVersion}</Text>
+      </View>
     </View>
   )
 }
@@ -192,6 +196,7 @@ const styles = StyleSheet.create({
     borderColor: '#D9DFE5',
     paddingVertical: 10,
     paddingHorizontal: 20,
+    width: '100%',
   },
   action: {
     flexDirection: 'row',
@@ -252,6 +257,16 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 26,
     color: '#1D1E21',
+  },
+  appVersion: {
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '300',
+    fontSize: 12,
+    lineHeight: 18,
+    color: '#646F85',
+    textAlign: 'center',
+    marginBottom: 5,
+    marginTop: 5,
   },
 })
 
