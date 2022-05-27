@@ -15,7 +15,7 @@ import { useAppSelector } from '../../../hooks'
 import WhatsNew from '../../../components/ui/whats-new'
 import Button from '../../../theme/button'
 import { downloadWalletLogs } from '../../../utils'
-import { version as appVersion } from './../../../../package.json'
+import DeviceInfo from 'react-native-device-info'
 
 const SettingsScreen = () => {
   const reduxState = useAppSelector((state) => state)
@@ -179,7 +179,9 @@ const SettingsScreen = () => {
       </ScrollView>
       {isWhatsNewVisible && <WhatsNew onAction={setIsWhatsNewVisible} />}
       <View style={styles.row}>
-        <Text style={styles.appVersion}>Version: {appVersion}</Text>
+        <Text style={styles.appVersion}>
+          Version: {DeviceInfo.getVersion()}{' '}
+        </Text>
       </View>
     </View>
   )
