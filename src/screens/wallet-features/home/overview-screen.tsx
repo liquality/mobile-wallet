@@ -13,6 +13,8 @@ import Text from '../../../theme/text'
 import ErrorFallback from '../../../components/error-fallback'
 import Box from '../../../theme/box'
 import RoundButton from '../../../theme/round-button'
+import PushNotificationIOS from '@react-native-community/push-notification-ios'
+
 
 type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
@@ -76,6 +78,15 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     populateWallet()
   }, [activeNetwork])
 
+  useEffect(() => {
+    PushNotificationIOS.requestPermissions({
+      alert: true,
+      badge: true,
+      sound: true,
+      critical: true,
+    })
+  }, [])
+ 
   if (error) {
     return (
       <ErrorFallback
