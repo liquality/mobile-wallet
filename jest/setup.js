@@ -35,3 +35,11 @@ jest.mock('react-native-fs', () => {
 jest.mock('react-native-share', () => {
   return {}
 })
+
+jest.mock('@react-native-community/push-notification-ios', () => ({
+  checkPermissions: jest.fn(),
+  requestPermissions: jest.fn(),
+  addEventListener: jest.fn(),
+  addNotificationRequest: jest.fn(),
+  cancelLocalNotifications: jest.fn(),
+}));

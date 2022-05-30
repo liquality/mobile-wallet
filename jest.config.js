@@ -7,12 +7,14 @@ const config = {
   },
   transformIgnorePatterns: [
     'node_modules/(?!(react-native|@react-native|react-native-reanimated|@liquality)/)',
+
   ],
   moduleNameMapper: {
     '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$':
       'jest-transform-stub',
     '\\.svg': '<rootDir>/__mocks__/svgMock.js',
   },
+  
 }
 
 module.exports = config
