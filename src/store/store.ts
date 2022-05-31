@@ -88,13 +88,6 @@ export const initWallet = async (initialState?: CustomRootState) => {
   wallet.original.subscribe((mutation) => {
     if (mutation.type === 'NEW_SWAP') {
       const { network, walletId } = mutation.payload
-      showNotification(
-        'New Swap',
-        'Initiated swap from ' +
-          mutation.payload.swap.from +
-          ' to ' +
-          mutation.payload.swap.to,
-      )
       updateTransactionHistory(
         mutation.payload.swap.id,
         network,

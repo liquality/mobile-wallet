@@ -19,4 +19,9 @@ public class MainActivity extends ReactActivity {
     SplashScreen.show(this);
     super.onCreate(savedInstanceState);
   }
+
+  @Override
+  public void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+  }
 }

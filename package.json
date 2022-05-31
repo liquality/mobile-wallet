@@ -75,6 +75,7 @@
     "react-native-level-fs": "^3.0.1",
     "react-native-modal-filter-picker": "^2.1.0",
     "react-native-os": "^1.2.6",
+    "react-native-push-notification": "^8.1.1",
     "react-native-qrcode-svg": "^6.1.1",
     "react-native-randombytes": "^3.6.1",
     "react-native-reanimated": "^2.5.0",

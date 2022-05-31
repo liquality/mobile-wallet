@@ -43,3 +43,11 @@ jest.mock('@react-native-community/push-notification-ios', () => ({
   addNotificationRequest: jest.fn(),
   cancelLocalNotifications: jest.fn(),
 }))
+
+jest.mock('react-native-push-notification', () => ({
+  checkPermissions: jest.fn(),
+  requestPermissions: jest.fn(),
+  addEventListener: jest.fn(),
+  addNotificationRequest: jest.fn(),
+  cancelLocalNotifications: jest.fn(),
+}));

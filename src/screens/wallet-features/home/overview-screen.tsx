@@ -15,7 +15,6 @@ import Box from '../../../theme/box'
 import RoundButton from '../../../theme/round-button'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
 
-
 type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
   'OverviewScreen'
@@ -86,7 +85,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
       critical: true,
     })
   }, [])
- 
+
   if (error) {
     return (
       <ErrorFallback
