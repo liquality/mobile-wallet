@@ -21,7 +21,7 @@ export const useWalletState = () => {
   const [totalFiatBalance, setTotalFiatBalance] = useState<string>('0')
   const { accounts, walletId, activeNetwork, fiatRates, fees } = useAppSelector(
     (state) => ({
-      accounts: state.accounts,
+      accounts: state.accounts?.[state.activeWalletId]?.[state.activeNetwork],
       walletId: state.activeWalletId,
       activeNetwork: state.activeNetwork,
       fiatRates: state.fiatRates,

@@ -48,7 +48,7 @@ const rootReducer: Reducer<CustomRootState, PayloadAction<CustomRootState>> = (
     case 'UPDATE_FIAT_RATES':
       return {
         ...state,
-        fiatRates: [...action.payload.fiatRates],
+        fiatRates: action.payload.fiatRates,
       }
     case 'UPDATE_MARKET_DATA':
       const marketData = action.payload.marketData || {}

@@ -144,6 +144,8 @@ export const initWallet = async (initialState?: CustomRootState) => {
                 [asset]: balance,
               },
             }
+          } else {
+            return account
           }
         })
         store.dispatch({
@@ -206,6 +208,7 @@ export const createWallet = async (
  */
 export const populateWallet = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet.state
+  //TODO read this list for a config file
   const enabledAssets = [
     'BTC',
     'ETH',
@@ -218,8 +221,6 @@ export const populateWallet = async (): Promise<void> => {
     'PWETH',
     'ARBETH',
     'SOL',
-    'LUNA',
-    'UST',
   ]
 
   // await wallet.dispatch
@@ -230,14 +231,14 @@ export const populateWallet = async (): Promise<void> => {
   //     Log(`Failed to change active network: ${e}`, 'error')
   //   })
 
-  wallet.dispatch
-    .updateMarketData({
-      network: activeNetwork,
-    })
-    .catch((e) => {
-      Log(`Failed to update market data: ${e}`, 'error')
-    })
-
+  // await wallet.dispatch
+  //   .updateMarketData({
+  //     network: activeNetwork,
+  //   })
+  //   .catch((e) => {
+  //     Log(`Failed to update market data: ${e}`, 'error')
+  //   })
+  //
   wallet.dispatch
     .updateBalances({
       network: activeNetwork,
