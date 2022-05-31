@@ -82,6 +82,7 @@ export type RootStackParamList = {
   AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
   AssetManagementScreen: StackPayload
+  BackupSeedScreen: StackPayload
   AssetToggleScreen: StackPayload
   ReceiveScreen: StackPayload
   SendScreen: StackPayload
