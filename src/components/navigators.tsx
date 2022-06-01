@@ -29,7 +29,6 @@ import WithPopupMenu from './with-popup-menu'
 import SettingsHeaderRight from './header-bar/settings-header-right'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
-import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-screen'
 
 import AssetToggleScreen from '../screens/wallet-features/asset/asset-toggle-screen'
 import SwapScreen from '../screens/wallet-features/swap/swap-screen'
@@ -37,6 +36,7 @@ import SwapReviewScreen from '../screens/wallet-features/swap/swap-review-screen
 import SwapConfirmationScreen from '../screens/wallet-features/swap/swap-confirmation-screen'
 import { TransitionPresets } from '@react-navigation/stack'
 import LoginScreen from '../screens/wallet-creation/loginScreen'
+import BackupWarningScreen from '../screens/wallet-features/backup/backup-warning-screen'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
@@ -187,8 +187,8 @@ export const AppStackNavigator = () => (
       })}
     />
     <Stack.Screen
-      name="BackupSeedScreen"
-      component={BackupSeedScreen}
+      name="BackupWarningScreen"
+      component={BackupWarningScreen}
       options={() => ({
         headerRight: () => <View />,
       })}

@@ -1,10 +1,8 @@
-import React, { FC, useCallback, useEffect, useState } from 'react'
-import { Alert } from 'react-native'
-import AssetManagement from '../../../components/asset-management'
-import { useAppDispatch, useAppSelector } from '../../../hooks'
+import React, { FC } from 'react'
+import { Text, View } from 'react-native'
 
-const AssetManagementScreen: FC = () => {
-  const dispatch = useAppDispatch()
+const BackupSeedScreen: FC = () => {
+  /*   const dispatch = useAppDispatch()
   const [myEnabledAssets, setMyEnabledAssets] = useState<string[]>([])
   const { activeNetwork, activeWalletId, enabledAssets } = useAppSelector(
     (state) => ({
@@ -12,46 +10,13 @@ const AssetManagementScreen: FC = () => {
       enabledAssets: state.enabledAssets,
       activeWalletId: state.activeWalletId,
     }),
-  )
-
-  const handleEnableFeature = useCallback(
-    (asset: string) => {
-      if (!activeWalletId || !activeNetwork) {
-        Alert.alert('Please reload your wallet')
-        return
-      }
-
-      dispatch({
-        type: 'TOGGLE_ASSET',
-        payload: {
-          enabledAssets: {
-            ...enabledAssets,
-            [activeNetwork]: {
-              [activeWalletId]: myEnabledAssets.includes(asset)
-                ? myEnabledAssets.filter((item) => item !== asset)
-                : myEnabledAssets.concat(asset),
-            },
-          },
-        },
-      })
-    },
-    [activeNetwork, activeWalletId, dispatch, enabledAssets, myEnabledAssets],
-  )
-
-  useEffect(() => {
-    if (!activeWalletId || !activeNetwork) {
-      Alert.alert('Please reload your wallet')
-      return
-    }
-    setMyEnabledAssets(enabledAssets?.[activeNetwork]?.[activeWalletId] || [])
-  }, [activeNetwork, activeWalletId, enabledAssets])
+  ) */
 
   return (
-    <AssetManagement
-      enabledAssetCodes={enabledAssets?.[activeNetwork!]?.[activeWalletId!]}
-      onEnableFeature={handleEnableFeature}
-    />
+    <View>
+      <Text>Backup SEED PHRASE HERE</Text>
+    </View>
   )
 }
 
-export default AssetManagementScreen
+export default BackupSeedScreen

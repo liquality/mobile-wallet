@@ -32,8 +32,8 @@ const WithPopupMenu = <T extends FctType>(
 
     const handleBackupSeedBtnPress = () => {
       navigation.setParams({ showPopup: !route?.params?.showPopup })
-      navigation.navigate('BackupSeedScreen', {
-        screenTitle: 'Backup Seed',
+      navigation.navigate('BackupWarningScreen', {
+        screenTitle: 'Warning',
       })
     }
 
