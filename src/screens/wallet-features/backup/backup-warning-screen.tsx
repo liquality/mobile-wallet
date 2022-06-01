@@ -1,61 +1,96 @@
-import React, { FC } from 'react'
+import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-/* import { useAppDispatch, useAppSelector } from '../../../hooks'
- */
+import { useNavigation } from '@react-navigation/core'
+import Eye from '../../../assets/icons/eye.svg'
 import Button from '../../../theme/button'
 
-const BackupWarningScreen: FC = () => {
-  /*   const [myEnabledAssets, setMyEnabledAssets] = useState<string[]>([])
-  const { activeNetwork, activeWalletId, enabledAssets } = useAppSelector(
-    (state) => ({
-      activeNetwork: state.activeNetwork,
-      enabledAssets: state.enabledAssets,
-      activeWalletId: state.activeWalletId,
-    }),
-  ) */
+const BackupWarningScreen = ({}) => {
+  const navigation = useNavigation()
 
   const handleBackupSeedBtnPress = () => {
-    /*    navigation.setParams({ showPopup: !route?.params?.showPopup })
-    navigation.navigate('BackupWarningScreen', {
-      screenTitle: 'Warning',
-    }) */
+    navigation.navigate('BackupLoginScreen', {
+      backupSeed: true,
+    })
   }
 
   return (
-    <View style={styles.overviewBlock}>
-      <Text style={styles.balanceInUSD}>Warning</Text>
-      <Button
-        type="primary"
-        variant="l"
-        label="Go to Seed"
-        onPress={handleBackupSeedBtnPress}
-        isBorderless={false}
-        isActive={true}
-      />
+    <View style={styles.container}>
+      <Text style={styles.warningBackupSeedTitle}>Show Seed Phrase?</Text>
+      <Text style={styles.warningBackupSeedSubtitle}>
+        Anyone who has this seed phrase can steal your funds.
+      </Text>
+      <Eye />
+
+      <Text style={styles.warningBackupSeedNoCamera}>
+        View it in private without any cameras around.
+      </Text>
+      <View style={styles.actionBlock}>
+        <Button
+          style={styles.btn}
+          type="secondary"
+          variant="m"
+          label="Cancel"
+          onPress={navigation.goBack}
+          isBorderless={false}
+          isActive={true}
+        />
+        <Button
+          type="primary"
+          variant="m"
+          label="I have privacy"
+          onPress={handleBackupSeedBtnPress}
+          isBorderless={false}
+        />
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  overviewBlock: {
-    justifyContent: 'center',
-    width: '100%',
-    height: 225,
-    paddingVertical: 10,
+  container: {
+    flex: 1,
+    backgroundColor: '#FFF',
+    alignItems: 'center',
+    padding: 15,
   },
-  balanceInUSD: {
-    color: 'red',
+  btn: {
+    marginRight: 30,
+    marginLeft: 30,
+  },
+  actionBlock: {
+    flex: 0.7,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    paddingBottom: 20,
+  },
+  warningBackupSeedTitle: {
     fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    fontSize: 24,
-    textAlignVertical: 'bottom',
+    color: 'black',
+    fontWeight: '600',
+    fontSize: 35,
+    textAlign: 'center',
+    marginVertical: 'l',
+    marginTop: 20,
+    marginBottom: 10,
   },
-  balanceInNative: {
-    color: '#FFFFFF',
+  warningBackupSeedSubtitle: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '500',
-    fontSize: 36,
-    textAlignVertical: 'bottom',
+    color: 'black',
+    fontSize: 20,
+    textAlign: 'center',
+    marginVertical: 'l',
+    marginBottom: 70,
+  },
+  warningBackupSeedNoCamera: {
+    fontFamily: 'Montserrat-Regular',
+    color: 'black',
+    fontSize: 18,
+    textAlign: 'center',
+    marginVertical: 'l',
+    marginTop: 70,
+    width: '70%',
   },
 })
 

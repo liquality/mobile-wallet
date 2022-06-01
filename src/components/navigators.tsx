@@ -37,6 +37,8 @@ import SwapConfirmationScreen from '../screens/wallet-features/swap/swap-confirm
 import { TransitionPresets } from '@react-navigation/stack'
 import LoginScreen from '../screens/wallet-creation/loginScreen'
 import BackupWarningScreen from '../screens/wallet-features/backup/backup-warning-screen'
+import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-screen'
+import BackupLoginScreen from '../screens/wallet-features/backup/backup-login-screen'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
@@ -189,6 +191,20 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="BackupWarningScreen"
       component={BackupWarningScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
+    />
+    <Stack.Screen
+      name="BackupSeedScreen"
+      component={BackupSeedScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
+    />
+    <Stack.Screen
+      name="BackupLoginScreen"
+      component={BackupLoginScreen}
       options={() => ({
         headerRight: () => <View />,
       })}
