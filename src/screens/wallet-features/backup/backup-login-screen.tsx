@@ -152,7 +152,6 @@ const styles = StyleSheet.create({
     borderBottomColor: '#38FFFB',
     borderBottomWidth: 1,
   },
-
   keyboard: {
     flex: 1,
     justifyContent: 'space-between',

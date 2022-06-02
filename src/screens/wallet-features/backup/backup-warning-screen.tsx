@@ -19,11 +19,12 @@ const BackupWarningScreen = ({}) => {
       <Text style={styles.warningBackupSeedSubtitle}>
         Anyone who has this seed phrase can steal your funds.
       </Text>
-      <Eye />
-
-      <Text style={styles.warningBackupSeedNoCamera}>
-        View it in private without any cameras around.
-      </Text>
+      <View style={styles.eyeIcon}>
+        <Eye />
+        <Text style={styles.warningBackupSeedNoCamera}>
+          View it in private without any cameras around.
+        </Text>
+      </View>
       <View style={styles.actionBlock}>
         <Button
           style={styles.btn}
@@ -50,19 +51,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
-    alignItems: 'center',
     padding: 15,
+  },
+  eyeIcon: {
+    alignItems: 'center',
   },
   btn: {
     marginRight: 30,
     marginLeft: 30,
   },
   actionBlock: {
-    flex: 0.7,
+    flex: 1.1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    paddingBottom: 20,
+    padding: 15,
   },
   warningBackupSeedTitle: {
     fontFamily: 'Montserrat-Regular',
@@ -70,7 +73,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 35,
     textAlign: 'center',
-    marginVertical: 'l',
     marginTop: 20,
     marginBottom: 10,
   },
@@ -80,7 +82,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 20,
     textAlign: 'center',
-    marginVertical: 'l',
     marginBottom: 70,
   },
   warningBackupSeedNoCamera: {
@@ -88,7 +89,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 18,
     textAlign: 'center',
-    marginVertical: 'l',
     marginTop: 70,
     width: '70%',
   },
