@@ -1,6 +1,12 @@
 import * as React from 'react'
 import { Fragment, useCallback, useEffect, useState } from 'react'
-import { ImageBackground, Pressable, StyleSheet, View } from 'react-native'
+import {
+  ImageBackground,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native'
 import { useAppSelector, useWalletState } from '../../../hooks'
 import { formatFiat } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
@@ -78,12 +84,16 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   }, [activeNetwork])
 
   useEffect(() => {
-    PushNotificationIOS.requestPermissions({
-      alert: true,
-      badge: true,
-      sound: true,
-      critical: true,
-    })
+    if (Platform.OS === 'ios') {
+      PushNotificationIOS.requestPermissions({
+        alert: true,
+        badge: true,
+        sound: true,
+        critical: true,
+      })
+    }
+    //Android considers push notifications as a normal permission
+    //and automatically collects this permission on the first app session
   }, [])
 
   if (error) {
