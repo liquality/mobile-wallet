@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Platform,
   Dimensions,
   TouchableOpacity,
+  Animated,
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
@@ -16,42 +17,73 @@ import ButtonFooter from '../../../components/button-footer'
 import Button from '../../../theme/button'
 import Eye from '../../../assets/icons/eye.svg'
 import { setupWallet } from '@liquality/wallet-core'
-import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions' // Default options
+import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions'
 
 type BackupSeedScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'UnlockWalletScreen'
+  'BackupSeedScreen'
 >
 
 const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
-  //const [seedPhraseLength, setPhraseLength] = useState(12)
   const [revealedWord, setRevealedWord] = useState(0)
 
   const wallet = setupWallet({
     ...defaultOptions,
   })
 
+  const fadeAnim = useRef(new Animated.Value(0)).current
+  const fadeIn = () => {
+    // Will change fadeAnim value to 1 in 5 seconds
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 2000,
+      useNativeDriver: false,
+    }).start()
+  }
+  const fadeOut = () => {
+    // Will change fadeAnim value to 0 in 3 seconds
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 3000,
+      useNativeDriver: false,
+    }).start()
+  }
+
   const renderSeedWord = ({ item }: { item: { id: number; word: string } }) => {
     return (
       <TouchableOpacity
         onPressOut={() => setRevealedWord(0)}
-        onLongPress={() => setRevealedWord(item.id)}
+        onPress={() => onClickToRevealWord(item.id)}
         activeOpacity={1}
         style={styles.missingWordView}>
         <Text style={styles.wordOrderText}>{Number(item.id)}</Text>
+
         <View style={styles.missingWordText}>
           {revealedWord === item.id ? (
-            <Text>{item.word}</Text>
+            <Animated.Text
+              style={[
+                styles.missingWordText,
+                {
+                  // Bind opacity to animated value
+                  opacity: fadeAnim,
+                },
+              ]}>
+              {item.word}
+            </Animated.Text>
           ) : (
-            <Text style={styles.placeHolderText}>.</Text>
+            <Text style={styles.placeHolderText}>hej</Text>
           )}
         </View>
       </TouchableOpacity>
     )
   }
 
-  const onContinue = () => {
-    navigation.navigate('MainNavigator')
+  const onClickToRevealWord = (wordId: number) => {
+    setRevealedWord(wordId)
+    fadeIn()
+    setTimeout(() => {
+      fadeOut()
+    }, 2000)
   }
 
   const seedList = wallet.state.wallets[0].mnemonic.split(' ')
@@ -77,7 +109,7 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
           <View style={styles.seedPhrase}>
             <View style={styles.seedWordLengthOptions}>
               <Text style={styles.explainHidden}>
-                Hidden for security. Tap and hold to reveal phrase.
+                Hidden for security. Tap to reveal phrase.
               </Text>
               {/*  
               We might want to implement toggle between 12-24 words in the future, so keeping this code here  
@@ -125,7 +157,7 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
                 type="primary"
                 variant="m"
                 label="I saved the seed"
-                onPress={onContinue}
+                onPress={() => navigation.navigate('OverviewScreen')}
                 isBorderless={false}
               />
             </ButtonFooter>
@@ -144,7 +176,6 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1.1,
-    justifyContent: 'flex-end',
     alignItems: 'center',
     width: Dimensions.get('window').width,
   },
@@ -154,6 +185,7 @@ const styles = StyleSheet.create({
   explainHidden: {
     fontFamily: 'Montserrat-Regular',
     marginTop: 10,
+    marginBottom: 10,
     fontSize: 13,
     fontWeight: '500',
   },
@@ -171,7 +203,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontFamily: 'Montserrat-SemiBold',
-    marginTop: 20,
+    marginTop: 10,
     marginBottom: 18,
     alignSelf: 'center',
     textAlign: 'center',
@@ -185,7 +217,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
   },
   flatList: {
-    marginTop: 15,
+    marginTop: 5,
     marginHorizontal: 20,
   },
   columnWrapperStyle: {
@@ -224,6 +256,12 @@ const styles = StyleSheet.create({
   },
   placeHolderText: {
     color: 'white',
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 8,
+    lineHeight: 17,
+    borderBottomWidth: 1,
+    borderBottomColor: '#2CD2CF',
+    width: '100%',
   },
   wordOrderText: {
     fontSize: 12,
@@ -234,7 +272,7 @@ const styles = StyleSheet.create({
   missingWordText: {
     fontFamily: 'Montserrat-Regular',
     fontSize: 16,
-    lineHeight: 20,
+    lineHeight: 17,
     borderBottomWidth: 1,
     borderBottomColor: '#2CD2CF',
     width: '100%',
