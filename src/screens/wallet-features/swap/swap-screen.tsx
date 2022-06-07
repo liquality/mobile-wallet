@@ -238,9 +238,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       flex={1}
       width={Dimensions.get('window').width}
       backgroundColor="mainBackground">
-      {!!error && (
+      {error ? (
         <MessageBanner text1="Error" text2={error} onAction={() => ({})} />
-      )}
+      ) : null}
       <Box
         flexDirection="row"
         justifyContent="center"
@@ -285,7 +285,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         </Box>
         <Box flexDirection="row">
           <Label text="Available" variant="light" />
-          {fromAsset?.balance && fromAsset?.code && (
+          {fromAsset?.balance && fromAsset?.code ? (
             <Text style={[styles.font, styles.amount]}>
               {fromAsset?.balance &&
                 `${prettyBalance(
@@ -293,7 +293,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                   fromAsset.code,
                 )} ${fromAsset.code}`}
             </Text>
-          )}
+          ) : null}
         </Box>
       </Box>
       <Box alignItems="center" marginVertical="m" paddingHorizontal="xl">
@@ -316,7 +316,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         </Pressable>
       </Box>
 
-      {fromAsset?.code && toAsset?.code && (
+      {fromAsset?.code && toAsset?.code ? (
         <SwapRates
           fromAsset={fromAsset.code}
           toAsset={toAsset.code}
@@ -326,7 +326,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           clickable
           style={{ paddingHorizontal: 20 }}
         />
-      )}
+      ) : null}
       <Box
         flexDirection="row"
         justifyContent="space-between"
@@ -339,48 +339,48 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             size={15}
           />
           <Label text="NETWORK SPEED/FEE" variant="strong" />
-          {fromAsset?.code && toAsset?.code && (
+          {fromAsset?.code && toAsset?.code ? (
             <Label
               text={`${fromAsset?.code} ${fromNetworkSpeed} / ${toAsset?.code} ${toNetworkSpeed}`}
               variant="light"
             />
-          )}
+          ) : null}
         </Pressable>
       </Box>
       {areFeeSelectorsVisible &&
-        fromNetworkFee &&
-        toNetworkFee &&
-        selectedQuote && (
-          <>
-            {fromAsset?.code && (
-              <SwapFeeSelector
-                asset={fromAsset?.code}
-                handleCustomPress={() => ({})}
-                networkFee={fromNetworkFee}
-                selectedQuote={selectedQuote}
-                type={'from'}
-                changeNetworkSpeed={setFromNetworkSpeed}
-              />
-            )}
-            {toAsset?.code && (
-              <SwapFeeSelector
-                asset={toAsset?.code}
-                handleCustomPress={() => ({})}
-                networkFee={toNetworkFee}
-                selectedQuote={selectedQuote}
-                type={'to'}
-                changeNetworkSpeed={setToNetworkSpeed}
-              />
-            )}
-            <Warning
-              text1="Max slippage is 0.5%."
-              text2={`If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at ${new Date(
-                new Date().getTime() + 3 * 60 * 60 * 1000,
-              ).toTimeString()}`}
-              icon={faClock}
+      fromNetworkFee &&
+      toNetworkFee &&
+      selectedQuote ? (
+        <>
+          {fromAsset?.code ? (
+            <SwapFeeSelector
+              asset={fromAsset?.code}
+              handleCustomPress={() => ({})}
+              networkFee={fromNetworkFee}
+              selectedQuote={selectedQuote}
+              type={'from'}
+              changeNetworkSpeed={setFromNetworkSpeed}
             />
-          </>
-        )}
+          ) : null}
+          {toAsset?.code ? (
+            <SwapFeeSelector
+              asset={toAsset?.code}
+              handleCustomPress={() => ({})}
+              networkFee={toNetworkFee}
+              selectedQuote={selectedQuote}
+              type={'to'}
+              changeNetworkSpeed={setToNetworkSpeed}
+            />
+          ) : null}
+          <Warning
+            text1="Max slippage is 0.5%."
+            text2={`If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at ${new Date(
+              new Date().getTime() + 3 * 60 * 60 * 1000,
+            ).toTimeString()}`}
+            icon={faClock}
+          />
+        </>
+      ) : null}
       <Box
         position="absolute"
         bottom={20}
