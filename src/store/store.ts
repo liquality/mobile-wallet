@@ -372,6 +372,52 @@ export const restoreWallet = async (
  * @param fromGasSpeed
  * @param toGasSpeed
  */
+//TODO: Johanna, put this in background actions?
+
+export const veryIntensiveTask = async (taskDataArguments) => {
+  // Example of an infinite loop task
+  const {
+    fromAsset,
+    toAsset,
+    fromAmount,
+    toAmount,
+    quoteSelected,
+    fromNetworkFeeValue,
+    toNetworkFeeValue,
+    fromNetworkFeeSpeed,
+    toNetworkFeeSpeed,
+  } = taskDataArguments
+  //console.log(taskDataArguments, 'TASK ARGUMENTS')
+  const { activeWalletId, activeNetwork } = wallet.state
+
+  const quote: SwapQuote = {
+    ...quoteSelected,
+    from: fromAsset.code,
+    to: toAsset.code,
+    fromAmount: new BigNumber(
+      currencyToUnit(cryptoassets[fromAsset.code], fromAmount.toNumber()),
+    ),
+    toAmount: new BigNumber(
+      currencyToUnit(cryptoassets[toAsset.code], toAmount.toNumber()),
+    ),
+    fee: fromNetworkFeeValue,
+    claimFee: toNetworkFeeValue,
+  }
+
+  const params = {
+    network: activeNetwork,
+    walletId: activeWalletId,
+    quote,
+    fee: fromNetworkFeeValue,
+    claimFee: toNetworkFeeValue,
+    feeLabel: fromNetworkFeeSpeed,
+    claimFeeLabel: toNetworkFeeSpeed,
+  }
+
+  //console.log(params, 'Full params on walletcore send')
+  return await wallet.dispatch.newSwap(params)
+}
+
 export const performSwap = async (
   from: AssetDataElementType,
   to: AssetDataElementType,
