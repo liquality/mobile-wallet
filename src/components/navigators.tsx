@@ -2,7 +2,7 @@ import React, { createContext } from 'react'
 import { View, StyleSheet, Text, Pressable } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCheck, faUserCog } from '@fortawesome/pro-light-svg-icons'
+import { faCheck, faUserCog, faTimes } from '@fortawesome/pro-light-svg-icons'
 import Infinity from '../assets/icons/infinity.svg'
 import Entry from '../screens/wallet-creation/entryScreen'
 import TermsScreen from '../screens/wallet-creation/termsScreen'
@@ -39,6 +39,7 @@ import LoginScreen from '../screens/wallet-creation/loginScreen'
 import BackupWarningScreen from '../screens/wallet-features/backup/backup-warning-screen'
 import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-screen'
 import BackupLoginScreen from '../screens/wallet-features/backup/backup-login-screen'
+import { getFocusedRouteNameFromRoute } from '@react-navigation/core'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
@@ -108,7 +109,7 @@ export const AppStackNavigator = () => (
       title: '',
       headerLeft: (props: HeaderBackButtonProps) => (
         <OverviewHeaderLeft
-          includeBackBtn={!!props.canGoBack}
+          includeBackBtn={!props.canGoBack}
           goBack={navigation.goBack}
           screenTitle={route?.params?.screenTitle || 'Overview'}
         />
@@ -191,17 +192,35 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="BackupWarningScreen"
       component={BackupWarningScreen}
-      options={() => ({})}
+      options={({ navigation }) => ({
+        headerShown: true,
+        headerTitle: '',
+        headerLeft: () => <Text style={styles.settingsTitle}>WARNING</Text>,
+        headerRight: () => (
+          <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
+            <FontAwesomeIcon
+              icon={faTimes}
+              size={30}
+              color={'#5F5F5F'}
+              style={styles.checkIcon}
+            />
+          </Pressable>
+        ),
+      })}
     />
     <Stack.Screen
       name="BackupSeedScreen"
       component={BackupSeedScreen}
-      options={() => ({})}
+      options={({}) => ({
+        headerShown: false,
+      })}
     />
     <Stack.Screen
       name="BackupLoginScreen"
       component={BackupLoginScreen}
-      options={() => ({})}
+      options={({}) => ({
+        headerShown: false,
+      })}
     />
     <Stack.Screen
       name="AssetToggleScreen"
@@ -249,6 +268,17 @@ export const MainNavigator = () => (
   <Tab.Navigator
     initialRouteName="AppStackNavigator"
     screenOptions={({ route }) => ({
+      tabBarStyle: ((route) => {
+        const routeName = getFocusedRouteNameFromRoute(route) ?? ''
+        if (
+          routeName === 'BackupLoginScreen' ||
+          routeName === 'BackupSeedScreen'
+        ) {
+          return { display: 'none' }
+        }
+
+        return {}
+      })(route),
       headerShown: false,
       title: '',
       tabBarIcon: ({ focused, size }) => {
@@ -289,6 +319,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#D9DFE5',
   },
   tabFocused: {
+    backgroundColor: 'white',
     borderTopColor: '#000',
   },
   checkIcon: {

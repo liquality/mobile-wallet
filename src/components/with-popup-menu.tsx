@@ -34,6 +34,7 @@ const WithPopupMenu = <T extends FctType>(
       //navigation.setParams({ showPopup: !route?.params?.showPopup })
       navigation.navigate('BackupWarningScreen', {
         screenTitle: 'Warning',
+        includeBackBtn: false,
       })
     }
 

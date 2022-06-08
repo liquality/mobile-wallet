@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   View,
   Text,
@@ -26,28 +26,28 @@ type BackupSeedScreenProps = NativeStackScreenProps<
 
 const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
   const [revealedWord, setRevealedWord] = useState(0)
-  const fadeAnim = useRef(new Animated.Value(0)).current
 
   const wallet = setupWallet({
     ...defaultOptions,
   })
 
-  const fadeIn = useCallback(() => {
+  const fadeAnim = useRef(new Animated.Value(0)).current
+  const fadeIn = () => {
     // Will change fadeAnim value to 1 in 5 seconds
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 2000,
       useNativeDriver: false,
     }).start()
-  }, [fadeAnim])
-
-  const fadeOut = useCallback(() => {
+  }
+  const fadeOut = () => {
+    // Will change fadeAnim value to 0 in 3 seconds
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 3000,
       useNativeDriver: false,
     }).start()
-  }, [fadeAnim])
+  }
 
   const renderSeedWord = ({ item }: { item: { id: number; word: string } }) => {
     return (
@@ -78,16 +78,13 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
     )
   }
 
-  const onClickToRevealWord = useCallback(
-    (wordId: number) => {
-      setRevealedWord(wordId)
-      fadeIn()
-      setTimeout(() => {
-        fadeOut()
-      }, 2000)
-    },
-    [fadeIn, fadeOut],
-  )
+  const onClickToRevealWord = (wordId: number) => {
+    setRevealedWord(wordId)
+    fadeIn()
+    setTimeout(() => {
+      fadeOut()
+    }, 2000)
+  }
 
   const seedList = wallet.state.wallets[0].mnemonic.split(' ')
   return (
@@ -152,7 +149,7 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
                 type="secondary"
                 variant="m"
                 label="Cancel"
-                onPress={() => navigation.navigate('SettingsScreen')}
+                onPress={() => navigation.navigate('OverviewScreen')}
                 isBorderless={false}
                 isActive={true}
               />
@@ -178,13 +175,11 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   main: {
-    flex: 1.1,
+    flex: 0.9,
     alignItems: 'center',
     width: Dimensions.get('window').width,
   },
-  eyeIcon: {
-    alignItems: 'center',
-  },
+  eyeIcon: { marginTop: 50, alignItems: 'center' },
   explainHidden: {
     fontFamily: 'Montserrat-Regular',
     marginTop: 10,
@@ -224,7 +219,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   columnWrapperStyle: {
-    marginBottom: 35,
+    marginBottom: 50,
+    marginTop: 0,
     justifyContent: 'space-between',
   },
   seedWordLengthOptions: {
