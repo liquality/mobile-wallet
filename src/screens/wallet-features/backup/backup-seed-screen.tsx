@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useCallback } from 'react'
 import {
   View,
   Text,
@@ -26,28 +26,28 @@ type BackupSeedScreenProps = NativeStackScreenProps<
 
 const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
   const [revealedWord, setRevealedWord] = useState(0)
+  const fadeAnim = useRef(new Animated.Value(0)).current
 
   const wallet = setupWallet({
     ...defaultOptions,
   })
 
-  const fadeAnim = useRef(new Animated.Value(0)).current
-  const fadeIn = () => {
+  const fadeIn = useCallback(() => {
     // Will change fadeAnim value to 1 in 5 seconds
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 2000,
       useNativeDriver: false,
     }).start()
-  }
-  const fadeOut = () => {
-    // Will change fadeAnim value to 0 in 3 seconds
+  }, [fadeAnim])
+
+  const fadeOut = useCallback(() => {
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 3000,
       useNativeDriver: false,
     }).start()
-  }
+  }, [fadeAnim])
 
   const renderSeedWord = ({ item }: { item: { id: number; word: string } }) => {
     return (
@@ -78,13 +78,16 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
     )
   }
 
-  const onClickToRevealWord = (wordId: number) => {
-    setRevealedWord(wordId)
-    fadeIn()
-    setTimeout(() => {
-      fadeOut()
-    }, 2000)
-  }
+  const onClickToRevealWord = useCallback(
+    (wordId: number) => {
+      setRevealedWord(wordId)
+      fadeIn()
+      setTimeout(() => {
+        fadeOut()
+      }, 2000)
+    },
+    [fadeIn, fadeOut],
+  )
 
   const seedList = wallet.state.wallets[0].mnemonic.split(' ')
   return (
@@ -149,7 +152,7 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
                 type="secondary"
                 variant="m"
                 label="Cancel"
-                onPress={navigation.goBack}
+                onPress={() => navigation.navigate('SettingsScreen')}
                 isBorderless={false}
                 isActive={true}
               />

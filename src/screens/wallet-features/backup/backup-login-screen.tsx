@@ -50,7 +50,9 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
           },
         })
         setLoading(false)
-        navigation.navigate('BackupSeedScreen')
+        navigation.navigate('BackupSeedScreen', {
+          screenTitle: 'Seed Phrase',
+        })
       })
     }
   }
@@ -126,7 +128,9 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
               onPress={async () => {
                 setLoading(true)
                 await createWallet(PASSWORD, MNEMONIC)
-                navigation.navigate('BackupSeedScreen')
+                navigation.navigate('BackupSeedScreen', {
+                  screenTitle: 'Seed Phrase',
+                })
               }}
               isBorderless
               isActive={true}

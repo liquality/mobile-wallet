@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 import Eye from '../../../assets/icons/eye.svg'
@@ -7,11 +7,12 @@ import Button from '../../../theme/button'
 const BackupWarningScreen = ({}) => {
   const navigation = useNavigation()
 
-  const handleBackupSeedBtnPress = () => {
+  const handleBackupSeedBtnPress = useCallback(() => {
     navigation.navigate('BackupLoginScreen', {
       backupSeed: true,
+      screenTitle: 'Sign in',
     })
-  }
+  }, [navigation])
 
   return (
     <View style={styles.container}>

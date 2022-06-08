@@ -191,23 +191,17 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="BackupWarningScreen"
       component={BackupWarningScreen}
-      options={() => ({
-        headerRight: () => <View />,
-      })}
+      options={() => ({})}
     />
     <Stack.Screen
       name="BackupSeedScreen"
       component={BackupSeedScreen}
-      options={() => ({
-        headerRight: () => <View />,
-      })}
+      options={() => ({})}
     />
     <Stack.Screen
       name="BackupLoginScreen"
       component={BackupLoginScreen}
-      options={() => ({
-        headerRight: () => <View />,
-      })}
+      options={() => ({})}
     />
     <Stack.Screen
       name="AssetToggleScreen"
