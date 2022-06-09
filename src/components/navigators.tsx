@@ -271,13 +271,19 @@ export const MainNavigator = () => (
       tabBarStyle: ((route) => {
         const routeName = getFocusedRouteNameFromRoute(route) ?? ''
         if (
+          routeName === 'BackupWarningScreen' ||
           routeName === 'BackupLoginScreen' ||
           routeName === 'BackupSeedScreen'
         ) {
-          return { display: 'none' }
+          return {
+            display: 'none',
+          }
         }
-
-        return {}
+        //Maybe not ideal solution but there is bug in rn-navigation workaround here: https://github.com/react-navigation/react-navigation/issues/6779#issuecomment-583272325
+        return {
+          bottom: 0,
+          position: 'absolute',
+        }
       })(route),
       headerShown: false,
       title: '',
@@ -317,9 +323,10 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: '#D9DFE5',
+    backgroundColor: '#FFF',
   },
   tabFocused: {
-    backgroundColor: 'white',
+    backgroundColor: '#FFF',
     borderTopColor: '#000',
   },
   checkIcon: {
