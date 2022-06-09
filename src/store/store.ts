@@ -33,6 +33,7 @@ import {
   TimelineStep,
 } from '@liquality/wallet-core/dist/utils/timeline'
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
+import { showNotification } from './pushNotification'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -73,6 +74,7 @@ export const initWallet = async (initialState?: CustomRootState) => {
       activeNetwork: Network.Testnet,
     },
     createNotification: (notification: Notification): any => {
+      showNotification(notification.title, notification.message)
       Log(notification.message, 'info')
     },
     crypto: {
@@ -96,6 +98,7 @@ export const initWallet = async (initialState?: CustomRootState) => {
       )
     } else if (mutation.type === 'UPDATE_HISTORY') {
       const { id, network, walletId } = mutation.payload
+
       updateTransactionHistory(
         id,
         network,
@@ -105,6 +108,7 @@ export const initWallet = async (initialState?: CustomRootState) => {
       )
     } else if (mutation.type === 'NEW_TRASACTION') {
       const { network, walletId } = mutation.payload
+
       updateTransactionHistory(
         mutation.payload.transaction.id,
         network,

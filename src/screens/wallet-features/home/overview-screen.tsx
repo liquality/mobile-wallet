@@ -1,6 +1,12 @@
 import * as React from 'react'
 import { Fragment, useCallback, useEffect, useState } from 'react'
-import { ImageBackground, Pressable, StyleSheet, View } from 'react-native'
+import {
+  ImageBackground,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native'
 import { useAppSelector, useWalletState } from '../../../hooks'
 import { formatFiat } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
@@ -13,6 +19,7 @@ import Text from '../../../theme/text'
 import ErrorFallback from '../../../components/error-fallback'
 import Box from '../../../theme/box'
 import RoundButton from '../../../theme/round-button'
+import PushNotificationIOS from '@react-native-community/push-notification-ios'
 
 type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
@@ -75,6 +82,19 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   useEffect(() => {
     populateWallet()
   }, [activeNetwork])
+
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      PushNotificationIOS.requestPermissions({
+        alert: true,
+        badge: true,
+        sound: true,
+        critical: true,
+      })
+    }
+    //Android considers push notifications as a normal permission
+    //and automatically collects this permission on the first app session
+  }, [])
 
   if (error) {
     return (
