@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Dimensions,
 } from 'react-native'
+
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import Header from '../../header'
@@ -17,6 +18,7 @@ import Text from '../../../theme/text'
 import Button from '../../../theme/button'
 import Box from '../../../theme/box'
 import { MNEMONIC, PASSWORD } from '@env'
+import CheckBox from '../../../components/checkbox'
 
 type LoginScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -26,6 +28,7 @@ const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {
   const [value, setValue] = useState<string>(initialValue)
+
   return { value, onChangeText: setValue }
 }
 
@@ -34,11 +37,15 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
   const passwordInput = useInputState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [userHasChecked, setUserHasChecked] = useState<boolean>(false)
+
   const dispatch = useDispatch()
 
   const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
       setError('Passwords must be at least 8 characters')
+    } else if (!userHasChecked) {
+      setError('Please check that you understand the risks')
     } else {
       setLoading(true)
       //TODO find a better way to handle threads
@@ -55,6 +62,10 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
         })
       })
     }
+  }
+
+  const handleCheckBox = () => {
+    setUserHasChecked(!userHasChecked)
   }
 
   return (
@@ -91,16 +102,14 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
             </View>
             {!!error && <Text variant="errorLight">{error}</Text>}
           </Box>
+          <CheckBox
+            selected={userHasChecked}
+            onPress={handleCheckBox}
+            textStyle={styles.checkBoxText}
+            style={styles.checkBoxStyle}
+            text="I have privacy and understand the risk."
+          />
           <Box flex={0.3} width="90%" justifyContent="flex-end">
-            {/*      <Button
-              type="primary"
-              variant="l"
-              label="Unlock"
-              isLoading={loading}
-              onPress={onUnlock}
-              isBorderless
-              isActive={!!passwordInput.value}
-            /> */}
             <View style={styles.actionBlock}>
               <Button
                 type="secondary"
@@ -126,11 +135,13 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
               label="Open Sesame"
               isLoading={loading}
               onPress={async () => {
-                setLoading(true)
-                await createWallet(PASSWORD, MNEMONIC)
-                navigation.navigate('BackupSeedScreen', {
-                  screenTitle: 'Seed Phrase',
-                })
+                if (userHasChecked) {
+                  setLoading(true)
+                  await createWallet(PASSWORD, MNEMONIC)
+                  navigation.navigate('BackupSeedScreen', {
+                    screenTitle: 'Seed Phrase',
+                  })
+                } else setError('Please check that you understand the risks')
               }}
               isBorderless
               isActive={true}
@@ -167,6 +178,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     paddingBottom: 20,
+  },
+  checkBoxText: {
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '600',
+    color: 'white',
+    fontSize: 14,
+    marginLeft: 10,
+  },
+  checkBoxStyle: {
+    marginTop: 50,
   },
 })
 export default BackupLoginScreen
