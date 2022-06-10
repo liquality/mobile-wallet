@@ -9,9 +9,8 @@ import { useAppSelector } from '../../../hooks'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
 import Button from '../../../theme/button'
 import { BigNumber } from '@liquality/types'
-import { veryIntensiveTask } from '../../../store/store'
+import { performSwap } from '../../../store/store'
 import { Log } from '../../../utils'
-import BackgroundService from 'react-native-background-actions'
 
 type SwapReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -40,37 +39,8 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         toNetworkFee,
       }: SwapInfoType = swapTransaction
 
-      let fromNetworkFeeValue = fromNetworkFee.value
-      let toNetworkFeeValue = toNetworkFee.value
-      let fromNetworkFeeSpeed = fromNetworkFee.speed
-      let toNetworkFeeSpeed = toNetworkFee.speed
-      let quoteSelected = quote
-
-      const options = {
-        taskName: 'Example',
-        taskTitle: 'ExampleTask title',
-        taskDesc: 'ExampleTask description',
-        taskIcon: {
-          name: 'ic_launcher',
-          type: 'mipmap',
-        },
-        color: '#ff00ff',
-        linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
-        parameters: {
-          fromAsset,
-          toAsset,
-          fromAmount,
-          toAmount,
-          quoteSelected,
-          fromNetworkFeeValue,
-          toNetworkFeeValue,
-          fromNetworkFeeSpeed,
-          toNetworkFeeSpeed,
-        },
-      }
-
       try {
-        /*     const transaction = await performSwap(
+        const transaction = await performSwap(
           fromAsset,
           toAsset,
           new BigNumber(fromAmount),
@@ -80,8 +50,8 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           toNetworkFee.value,
           fromNetworkFee.speed,
           toNetworkFee.speed,
-        ) */
-        const transaction = BackgroundService.start(
+        )
+        /*         const transaction = BackgroundService.start(
           veryIntensiveTask,
           options,
         ).then(() => {
@@ -92,7 +62,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
             // console.log('Should be stopped now')
             BackgroundService.stop()
           })
-        })
+        }) */
 
         // console.log(transaction, 'WATS TRANSACTION var ')
         if (transaction) {

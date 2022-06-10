@@ -1,0 +1,9 @@
+{
+   "Simulator Target Bundle":"io.liquality.app",
+   "aps":{
+      "sound":"default",
+      "alert":"Test",
+      "badge":1,
+      "content-available":1
+   }
+}
