@@ -51,20 +51,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           fromNetworkFee.speed,
           toNetworkFee.speed,
         )
-        /*         const transaction = BackgroundService.start(
-          veryIntensiveTask,
-          options,
-        ).then(() => {
-          //console.log('BACKGROUND SERVICE STARTED')
-          BackgroundService.updateNotification({
-            taskDesc: 'New ExampleTask description',
-          }).then(() => {
-            // console.log('Should be stopped now')
-            BackgroundService.stop()
-          })
-        }) */
 
-        // console.log(transaction, 'WATS TRANSACTION var ')
         if (transaction) {
           navigation.navigate('SwapConfirmationScreen', {
             swapTransactionConfirmation: transaction,

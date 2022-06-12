@@ -34,7 +34,6 @@ import {
 } from '@liquality/wallet-core/dist/utils/timeline'
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
 import { showNotification } from './pushNotification'
-import BackgroundService from 'react-native-background-actions'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -422,11 +421,11 @@ export const restoreWallet = async (
 
 //checkpendingactions.dispatch from wallet core (let it run for a minute call intensivetask )
 //Should I wait for about 1 min before I call checkPendingActions?
-const veryIntensiveTask = async () => {
-  // Example of an infinite loop task
 
-  await wallet.dispatch.checkPendingActions({
-    walletId: wallet.state.activeWalletId,
+export const checkPendingActionsInBackground = async () => {
+  const { activeWalletId } = wallet.state
+  return await wallet.dispatch.checkPendingActions({
+    walletId: activeWalletId,
   })
 }
 
@@ -466,39 +465,6 @@ export const performSwap = async (
     claimFeeLabel: toGasSpeed,
   }
 
-  const options = {
-    taskName: 'Example',
-    taskTitle: 'ExampleTask title',
-    taskDesc: 'ExampleTask description',
-    taskIcon: {
-      name: 'ic_launcher',
-      type: 'mipmap',
-    },
-    color: '#ff00ff',
-    linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
-    parameters: {
-      network: activeNetwork,
-      walletId: activeWalletId,
-      quote,
-      fee: fromNetworkFee,
-      claimFee: toNetworkFee,
-      feeLabel: fromGasSpeed,
-      claimFeeLabel: toGasSpeed,
-    },
-  }
-
-  BackgroundService.start(veryIntensiveTask, options)
-    .then(() => {
-      //console.log('backggroundservice started!!')
-      BackgroundService.updateNotification({
-        taskDesc: 'New ExampleTask description',
-      })
-    })
-    .then(() => {
-      // Only Android, iOS will ignore this call
-      // iOS will also run everything here in the background until .stop() is called
-      BackgroundService.stop()
-    })
   return await wallet.dispatch.newSwap(params)
 }
 
