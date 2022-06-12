@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { StyleSheet, ScrollView, Pressable } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
@@ -6,20 +6,16 @@ import {
   unitToCurrency,
   assets as cryptoassets,
 } from '@liquality/cryptoassets'
-import {
-  HistoryItem,
-  SendHistoryItem,
-  TransactionType,
-} from '@liquality/wallet-core/dist/store/types'
+import { SendHistoryItem } from '@liquality/wallet-core/dist/store/types'
 import { RootStackParamList } from '../../../types'
 import SendTransactionDetails from '../../../components/send/send-transaction-details'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
-import { useAppSelector } from '../../../hooks'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
-import { fetchConfirmationByHash } from '../../../store/store'
 import { formatDate } from '../../../utils'
+import { useRecoilValue } from 'recoil'
+import { historyStateFamily } from '../../../atoms'
 
 type SendConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -31,16 +27,9 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   navigation,
 }) => {
   const transaction = route.params.sendTransactionConfirmation!
-  const [historyItem, setHistoryItem] = useState<SendHistoryItem>()
-  const { history = [] } = useAppSelector((state) => {
-    const { activeNetwork, activeWalletId, history: historyObject } = state
-    let historyItems: HistoryItem[] =
-      historyObject?.[activeNetwork]?.[activeWalletId] || []
-    return {
-      history: historyItems,
-      activeNetwork,
-    }
-  })
+  const historyItem = useRecoilValue(
+    historyStateFamily(transaction.id),
+  ) as SendHistoryItem
 
   const handleTransactionSpeedUp = () => {
     navigation.navigate('CustomFeeScreen', {
@@ -49,21 +38,13 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
     })
   }
 
-  useEffect(() => {
-    const hash = transaction.hash || transaction.tx?.hash
-    const historyItems = history.filter(
-      (item) => item.type === TransactionType.Send && item.tx.hash === hash,
-    )
-    if (historyItems.length > 0) {
-      const selectedHistoryItem = historyItems[0] as SendHistoryItem
-      fetchConfirmationByHash(selectedHistoryItem.from, hash).then(
-        (confirmations) => {
-          selectedHistoryItem.tx.confirmations = confirmations
-          setHistoryItem(selectedHistoryItem)
-        },
-      )
-    }
-  }, [history, transaction])
+  // useEffect(() => {
+  //   const hash = transaction.hash || transaction.tx?.hash
+  //
+  //   fetchConfirmationByHash(historyItem.from, hash).then((confirmations) => {
+  //     historyItem.tx.confirmations = confirmations
+  //   })
+  // }, [transaction])
 
   if (!historyItem)
     return (

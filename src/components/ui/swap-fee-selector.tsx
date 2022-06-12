@@ -1,6 +1,5 @@
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import React, { FC, useEffect, useState } from 'react'
-import { useAppSelector } from '../../hooks'
 import Text from '../../theme/text'
 import { GasFees } from '../../types'
 import FeeSelector from './fee-selector'
@@ -30,16 +29,12 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
     changeNetworkSpeed,
   } = props
   const [gasFees, setGasFees] = useState<GasFees>()
-  const { activeNetwork, activeWalletId } = useAppSelector((state) => ({
-    activeNetwork: state.activeNetwork,
-    activeWalletId: state.activeWalletId,
-  }))
 
   useEffect(() => {
     fetchFeesForAsset(asset)
       .then(setGasFees)
       .catch(() => Alert.alert('Failed to fetch gas fees'))
-  }, [activeNetwork, activeWalletId, asset, networkFee, selectedQuote, type])
+  }, [asset, networkFee, selectedQuote, type])
 
   //TODO add an ErrorBoundary component
   if (!gasFees)

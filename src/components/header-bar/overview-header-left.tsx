@@ -1,8 +1,10 @@
 import React from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text } from 'react-native'
 import ChevronLeft from '../../assets/icons/chevron-left.svg'
 
-import { useAppSelector } from '../../hooks'
+import { networkState } from '../../atoms'
+import { useRecoilValue } from 'recoil'
+import Box from '../../theme/box'
 
 const OverviewHeaderLeft = ({
   includeBackBtn,
@@ -13,11 +15,9 @@ const OverviewHeaderLeft = ({
   goBack: () => void
   screenTitle: string
 }): React.ReactElement => {
-  const { activeNetwork = '' } = useAppSelector((state) => ({
-    activeNetwork: state.activeNetwork,
-  }))
+  const activeNetwork = useRecoilValue(networkState)
   return (
-    <View style={styles.container}>
+    <Box flexDirection="row">
       {includeBackBtn && (
         <Pressable style={styles.backBtn} onPress={goBack}>
           <ChevronLeft width={12} height={12} />
@@ -25,14 +25,11 @@ const OverviewHeaderLeft = ({
       )}
       <Text style={styles.overviewText}>{screenTitle.toUpperCase()}</Text>
       <Text style={styles.chainText}>({activeNetwork.toUpperCase()})</Text>
-    </View>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-  },
   overviewText: {
     fontFamily: 'Montserrat-Regular',
     fontSize: 14,

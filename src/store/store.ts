@@ -7,13 +7,13 @@ import {
 import thunk from 'redux-thunk'
 import rootReducer, { CustomRootState } from '../reducers'
 import StorageManager from '../core/storage-manager'
-import { BigNumber, FeeDetail, Transaction } from '@liquality/types'
+import { BigNumber, FeeDetail } from '@liquality/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { chains, currencyToUnit } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
-import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
-import { AssetDataElementType, GasFees } from '../types'
+import { getSwapProvider } from '@liquality/wallet-core/dist/factory'
+import { AccountType, GasFees } from '../types'
 import { Notification, WalletOptions } from '@liquality/wallet-core/dist/types'
 import { decrypt, encrypt, Log, pbkdf2 } from '../utils'
 import {
@@ -22,9 +22,13 @@ import {
 } from '@liquality/wallet-core/dist/utils/asset'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import {
+  Account,
   FeeLabel,
+  FiatRates,
   HistoryItem,
+  MarketData,
   Network,
+  SendHistoryItem,
   SwapHistoryItem,
   TransactionType,
 } from '@liquality/wallet-core/dist/store/types'
@@ -34,6 +38,7 @@ import {
 } from '@liquality/wallet-core/dist/utils/timeline'
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
 import { v4 as uuidv4 } from 'uuid'
+import { AtomEffect } from 'recoil'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -82,97 +87,7 @@ export const initWallet = async (initialState?: CustomRootState) => {
       encrypt: encrypt,
     },
   }
-  wallet = setupWallet(walletOptions)
-
-  wallet.original.subscribe((mutation) => {
-    if (mutation.type === 'NEW_SWAP') {
-      const { network, walletId } = mutation.payload
-      updateTransactionHistory(
-        mutation.payload.swap.id,
-        network,
-        walletId,
-        mutation.payload.swap,
-        'NEW_TRANSACTION',
-        TransactionType.Swap,
-      )
-    } else if (mutation.type === 'UPDATE_HISTORY') {
-      const { id, network, walletId } = mutation.payload
-      updateTransactionHistory(
-        id,
-        network,
-        walletId,
-        mutation.payload.updates,
-        'TRANSACTION_UPDATE',
-      )
-    } else if (mutation.type === 'NEW_TRASACTION') {
-      const { network, walletId } = mutation.payload
-      updateTransactionHistory(
-        mutation.payload.transaction.id,
-        network,
-        walletId,
-        mutation.payload.transaction,
-        'NEW_TRANSACTION',
-        TransactionType.Send,
-      )
-    } else if (mutation.type === 'UPDATE_FIAT_RATES') {
-      store.dispatch({
-        type: 'UPDATE_FIAT_RATES',
-        payload: {
-          fiatRates: mutation.payload.fiatRates,
-        },
-      })
-    } else if (mutation.type === 'UPDATE_MARKET_DATA') {
-      store.dispatch({
-        type: 'UPDATE_MARKET_DATA',
-        payload: {
-          marketData: mutation.payload.marketData,
-        },
-      })
-    } else if (mutation.type === 'UPDATE_BALANCE') {
-      // TODO Perform other types of updates (balances, market data, fiat rates... )
-      const { accountId, asset, balance, network, walletId } = mutation.payload
-      const newAccounts = store?.getState()?.accounts
-      if (newAccounts?.[walletId as WalletId]?.[network as Network]) {
-        newAccounts[walletId as WalletId][network as Network] = newAccounts?.[
-          walletId as WalletId
-        ]?.[network as Network].map((account) => {
-          if (account.id === accountId) {
-            return {
-              ...account,
-              balances: {
-                ...account.balances,
-                [asset]: balance,
-              },
-            }
-          } else {
-            return account
-          }
-        })
-        store.dispatch({
-          type: 'UPDATE_ACCOUNTS',
-          payload: {
-            accounts: newAccounts,
-          },
-        })
-      }
-
-      // const t = {
-      //   payload: {
-      //     accountId: '0c06cda6-aba4-4ed2-b8ac-75d007ecf4bf',
-      //     asset: 'BTC',
-      //     balance: '32432',
-      //     network: 'testnet',
-      //     walletId: '43bf54a1-1747-4286-b648-1f15844d3bdc',
-      //   },
-      //   type: 'UPDATE_BALANCE',
-      // }
-      // store.getState().accounts[]
-      // store.dispatch({
-      //   type: 'UPDATE_WALLET',
-      //   payload: { history },
-      // })
-    }
-  })
+  return setupWallet(walletOptions)
 }
 
 //-------------------------4. PERFORM ACTIONS ON THE WALLET-------------------------------------------------------------
@@ -194,13 +109,14 @@ export const isNewInstallation = async (): Promise<boolean> => {
 export const createWallet = async (
   password: string,
   mnemonic: string,
-): Promise<any> => {
+): Promise<CustomRootState> => {
   await initWallet()
   await wallet.dispatch.createWallet({
     key: password,
     mnemonic: mnemonic,
     imported: true,
   })
+  return wallet.state
 }
 
 /**
@@ -223,22 +139,14 @@ export const populateWallet = async (): Promise<void> => {
     'SOL',
   ]
 
-  // await wallet.dispatch
-  //   .changeActiveNetwork({
-  //     network: activeNetwork || 'testnet',
-  //   })
-  //   .catch((e) => {
-  //     Log(`Failed to change active network: ${e}`, 'error')
-  //   })
+  wallet.dispatch
+    .updateFiatRates({
+      assets: enabledAssets,
+    })
+    .catch((e) => {
+      Log(`Failed to update fiat rates: ${e}`, 'error')
+    })
 
-  // await wallet.dispatch
-  //   .updateMarketData({
-  //     network: activeNetwork,
-  //   })
-  //   .catch((e) => {
-  //     Log(`Failed to update market data: ${e}`, 'error')
-  //   })
-  //
   wallet.dispatch
     .updateBalances({
       network: activeNetwork,
@@ -247,14 +155,6 @@ export const populateWallet = async (): Promise<void> => {
     })
     .catch((e) => {
       Log(`Failed update balances: ${e}`, 'error')
-    })
-
-  wallet.dispatch
-    .updateFiatRates({
-      assets: enabledAssets,
-    })
-    .catch((e) => {
-      Log(`Failed to update fiat rates: ${e}`, 'error')
     })
 
   retryPendingSwaps()
@@ -419,8 +319,8 @@ export const restoreWallet = async (
  * @param toGasSpeed
  */
 export const performSwap = async (
-  from: AssetDataElementType,
-  to: AssetDataElementType,
+  from: AccountType,
+  to: AccountType,
   fromAmount: BigNumber,
   toAmount: BigNumber,
   selectedQuote: any,
@@ -469,7 +369,7 @@ export const sendTransaction = async (options: {
   fee: number
   feeLabel: FeeLabel
   memo: string
-}): Promise<Transaction> => {
+}): Promise<SendHistoryItem> => {
   if (!options || Object.keys(options).length === 0) {
     throw new Error(`Failed to send transaction: ${options}`)
   }
@@ -592,101 +492,147 @@ export const getTimeline = async (
   )
 }
 
-export const getWalletSummary = () => {
-  const totalFiatBalance = wallet.getters.totalFiatBalance.toString()
-  const numberOfAccounts = wallet.getters.accountsData.length
-  const { fees, activeNetwork, activeWalletId } = wallet.state
-  const accountData = []
-
-  for (let account of wallet.getters.accountsData) {
-    const nativeAsset = chains[account.chain].nativeAsset
-    const chainData: AssetDataElementType = {
-      id: uuidv4(),
-      chain: account.chain,
-      name: account.name,
-      code: nativeAsset,
-      balance: new BigNumber(account.balances?.[nativeAsset] || 0).toNumber(),
-      balanceInUSD: new BigNumber(account.totalFiatBalance).toNumber(),
-      address: account.addresses[0], //TODO why pick only the first address
-      color: account.color,
-      assets: [],
-      fees: fees?.[activeNetwork]?.[activeWalletId]?.[account.chain],
-    }
-
-    chainData.assets = account.assets.map((asset) => {
-      const balance = new BigNumber(account.balances?.[asset] || 0).toNumber()
-      return {
-        id: asset,
-        name: cryptoassets[asset].name,
-        code: asset,
-        chain: account.chain,
-        color: account.color,
-        balance,
-        balanceInUSD: new BigNumber(
-          account.fiatBalances[asset] || '0',
-        ).toNumber(),
-      }
-    })
-
-    accountData.push(chainData)
-  }
-
-  return {
-    totalFiatBalance,
-    numberOfAccounts,
-    accountData,
-  }
-}
-
-const updateTransactionHistory = (
-  id: string,
-  network: string,
-  walletId: string,
-  historyItem: HistoryItem,
-  action: 'NEW_TRANSACTION' | 'TRANSACTION_UPDATE',
-  type?: TransactionType,
-) => {
-  const history = store.getState().history
-  let historyItems = history?.[network as Network]?.[walletId]
-
-  if (action === 'NEW_TRANSACTION') {
-    if (historyItems) {
-      const containsTransaction = historyItems.find((item) => item.id === id)
-      if (!containsTransaction) {
-        history[network as Network]![walletId].push({
-          type: type,
-          walletId,
-          network,
-          ...historyItem,
-        })
-        store.dispatch({
-          type: 'NEW_TRANSACTION',
-          payload: { history },
-        })
-      }
-    }
-  } else {
-    if (historyItems) {
-      history[network as Network]![walletId] = historyItems.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            ...historyItem,
-          }
+export const accountsEffect: () => AtomEffect<AccountType[]> =
+  () =>
+  ({ setSelf }) => {
+    wallet.original.subscribe((mutation) => {
+      const { type } = mutation
+      if (type === 'CREATE_ACCOUNT') {
+        const { account }: { account: Account } = mutation.payload
+        const nativeAsset = chains[account.chain].nativeAsset
+        const newAccount: AccountType = {
+          id: uuidv4(),
+          chain: account.chain,
+          name: account.name,
+          code: nativeAsset,
+          address: account.addresses[0], //TODO why pick only the first address
+          color: account.color,
+          assets: {},
+          balance: 0,
         }
 
-        return item
-      })
-    }
-
-    store.dispatch({
-      type: 'TRANSACTION_UPDATE',
-      payload: {
-        history,
-      },
+        for (const asset of account.assets) {
+          newAccount.assets[asset] = {
+            id: asset,
+            name: cryptoassets[asset].name,
+            code: asset,
+            chain: account.chain,
+            color: account.color,
+            balance: 0,
+            assets: {},
+          }
+        }
+        setSelf(newAccount)
+      }
     })
   }
-}
+
+export const walletEffect: () => AtomEffect<typeof wallet> =
+  () =>
+  ({ setSelf, trigger }) => {
+    if (trigger === 'get') {
+      setSelf(wallet)
+    }
+  }
+
+export const balanceEffect: (asset: string) => AtomEffect<number> =
+  (asset) =>
+  ({ setSelf, trigger }) => {
+    // Initialize atom value to the remote storage state
+    if (trigger === 'get') {
+      // Avoid expensive initialization
+      setSelf(0) // Call synchronously to initialize
+    }
+
+    // Subscribe to remote storage changes and update the atom value
+    wallet.original.subscribe((mutation) => {
+      const { type, payload } = mutation
+      if (type === 'UPDATE_BALANCE') {
+        if (payload.asset === asset) {
+          setSelf(Number(payload.balance))
+        }
+      }
+    })
+  }
+
+export const addressEffect: (accountId: string) => AtomEffect<string> =
+  (accountId) =>
+  ({ setSelf, trigger }) => {
+    // Initialize atom value to the remote storage state
+    if (trigger === 'get') {
+      // Avoid expensive initialization
+      setSelf('') // Call synchronously to initialize
+    }
+
+    // Subscribe to remote storage changes and update the atom value
+    wallet.original.subscribe((mutation) => {
+      const { type, payload } = mutation
+      if (type === 'UPDATE_ACCOUNT_ADDRESSES') {
+        if (payload.accountId === accountId) {
+          setSelf(payload.addresses[0])
+        }
+      }
+    })
+  }
+
+export const fiatRateEffect: () => AtomEffect<FiatRates> =
+  () =>
+  ({ setSelf, trigger }) => {
+    if (trigger === 'get') {
+      setSelf(wallet.state.fiatRates)
+    }
+
+    wallet.original.subscribe((mutation) => {
+      const { type, payload } = mutation
+
+      if (type === 'UPDATE_FIAT_RATES') {
+        setSelf(payload.fiatRates)
+      }
+    })
+  }
+
+export const marketDataEffect: () => AtomEffect<MarketData[]> =
+  () =>
+  ({ setSelf, trigger }) => {
+    if (trigger === 'get') {
+      const marketData = wallet.state.marketData[wallet.state.activeNetwork]
+      if (marketData) setSelf(marketData)
+    }
+
+    wallet.original.subscribe((mutation) => {
+      const { type, payload } = mutation
+
+      if (type === 'UPDATE_MARKET_DATA') {
+        setSelf(payload.marketData)
+      }
+    })
+  }
+
+export const enabledAssetsEffect: () => AtomEffect<string[]> =
+  () =>
+  ({ setSelf, trigger }) => {
+    if (trigger === 'get') {
+      const { activeNetwork, activeWalletId } = wallet.state
+      setSelf(
+        wallet.state?.enabledAssets?.[activeNetwork]?.[activeWalletId] || [],
+      )
+    }
+  }
+
+export const transactionHistoryEffect: (
+  transactionId: string,
+) => AtomEffect<HistoryItem> =
+  (transactionId) =>
+  ({ setSelf }) => {
+    wallet.original.subscribe((mutation) => {
+      const { type, payload } = mutation
+
+      if (type === 'UPDATE_HISTORY') {
+        const { id, updates } = payload
+        if (id === transactionId) setSelf(updates)
+      }
+    })
+  }
 
 //Infer the types from the rootReducer
 export type AppDispatch = typeof store.dispatch

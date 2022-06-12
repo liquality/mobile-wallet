@@ -1,27 +1,31 @@
-import React, { FC } from 'react'
+import React, { useCallback } from 'react'
 import { FlatList } from 'react-native'
-import { AssetDataElementType, StackPayload } from '../../types'
+import { AccountType } from '../../types'
 import WrappedRow from './wrapped-row'
 
 type AssetFlatListPropsType = {
-  assets: Array<AssetDataElementType>
-  onAssetSelected: (params: StackPayload) => void
+  assets?: AccountType[]
+  accounts: { id: string; name: string }[]
 }
 
-const AssetFlatList: FC<AssetFlatListPropsType> = (props) => {
-  const { assets, onAssetSelected } = props
+const AssetFlatList = (props: AssetFlatListPropsType) => {
+  const { accounts } = props
 
-  const renderAsset = ({ item }: { item: AssetDataElementType }) => {
-    return <WrappedRow item={item} onAssetSelected={onAssetSelected} />
-  }
+  const renderAsset = useCallback(
+    ({ item }: { item: { id: string; name: string } }) => {
+      return <WrappedRow item={item} />
+    },
+    [],
+  )
 
   return (
     <FlatList
-      data={assets}
+      data={accounts}
       renderItem={renderAsset}
       keyExtractor={(item) => item.id}
     />
   )
 }
 
+AssetFlatList.whyDidYouRender = true
 export default React.memo(AssetFlatList)

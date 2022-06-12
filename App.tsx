@@ -15,6 +15,7 @@ import {
 import LoginScreen from './src/screens/wallet-creation/loginScreen'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Log } from './src/utils'
+import { RecoilRoot } from 'recoil'
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
@@ -59,16 +60,18 @@ const App: FC = () => {
 
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <View style={backgroundStyle} testID={'app-test'}>
-          <StatusBar barStyle={'dark-content'} />
-          <GestureHandlerRootView style={backgroundStyle}>
-            <NavigationContainer>
-              <AppNavigator initialRouteName={initialRouteName} />
-            </NavigationContainer>
-          </GestureHandlerRootView>
-        </View>
-      </ThemeProvider>
+      <RecoilRoot>
+        <ThemeProvider theme={theme}>
+          <View style={backgroundStyle} testID={'app-test'}>
+            <StatusBar barStyle={'dark-content'} />
+            <GestureHandlerRootView style={backgroundStyle}>
+              <NavigationContainer>
+                <AppNavigator initialRouteName={initialRouteName} />
+              </NavigationContainer>
+            </GestureHandlerRootView>
+          </View>
+        </ThemeProvider>
+      </RecoilRoot>
     </Provider>
   )
 }

@@ -8,7 +8,11 @@ import {
   Dimensions,
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList, UseInputStateReturnType } from '../../types'
+import {
+  AccountType,
+  RootStackParamList,
+  UseInputStateReturnType,
+} from '../../types'
 import Header from '../header'
 import { createWallet, restoreWallet } from '../../store/store'
 import { useDispatch } from 'react-redux'
@@ -17,6 +21,14 @@ import Button from '../../theme/button'
 import Box from '../../theme/box'
 import { MNEMONIC, PASSWORD } from '@env'
 import GradientBackground from '../../components/gradient-background'
+import { chains } from '@liquality/cryptoassets'
+import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
+import { useRecoilCallback, useSetRecoilState } from 'recoil'
+import {
+  accountInfoStateFamily,
+  accountsIdsState,
+  networkState,
+} from '../../atoms'
 
 type LoginScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -35,6 +47,14 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
+  const setAccountsIds = useSetRecoilState(accountsIdsState)
+  const setActiveNetwork = useSetRecoilState(networkState)
+  const addAccount = useRecoilCallback(
+    ({ set }) =>
+      (accountId: string, account: AccountType) => {
+        set(accountInfoStateFamily(accountId), account)
+      },
+  )
 
   const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
@@ -53,6 +73,52 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
         navigation.navigate('MainNavigator')
       })
     }
+  }
+
+  const onSesamePress = async () => {
+    setLoading(true)
+    const { accounts, activeWalletId, activeNetwork } = await createWallet(
+      PASSWORD,
+      MNEMONIC,
+    )
+    const accountsIds: { id: string; name: string }[] = []
+    accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
+      const nativeAsset = chains[account.chain].nativeAsset
+      accountsIds.push({
+        id: account.id,
+        name: nativeAsset,
+      })
+      const newAccount: AccountType = {
+        id: account.id,
+        chain: account.chain,
+        name: account.name,
+        code: nativeAsset,
+        address: account.addresses[0], //TODO why pick only the first address
+        color: account.color,
+        assets: {},
+        balance: 0,
+      }
+
+      for (const asset of account.assets) {
+        newAccount.assets[asset] = {
+          id: asset,
+          name: cryptoassets[asset].name,
+          code: asset,
+          chain: account.chain,
+          color: account.color,
+          balance: 0,
+          assets: {},
+        }
+      }
+
+      addAccount(account.id, newAccount)
+    })
+
+    setAccountsIds(accountsIds)
+    setActiveNetwork(activeNetwork)
+
+    setLoading(false)
+    navigation.navigate('MainNavigator')
   }
 
   return (
@@ -115,11 +181,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               variant="l"
               label="Open Sesame"
               isLoading={loading}
-              onPress={async () => {
-                setLoading(true)
-                await createWallet(PASSWORD, MNEMONIC)
-                navigation.navigate('MainNavigator')
-              }}
+              onPress={onSesamePress}
               isBorderless
               isActive={true}
             />

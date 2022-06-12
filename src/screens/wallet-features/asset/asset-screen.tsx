@@ -6,12 +6,18 @@ import {
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { AssetDataElementType, RootStackParamList } from '../../../types'
+import { AccountType, RootStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import RoundButton from '../../../theme/round-button'
 import Box from '../../../theme/box'
 import Text from '../../../theme/text'
 import GradientBackground from '../../../components/gradient-background'
+import { useRecoilValue } from 'recoil'
+import {
+  addressStateFamily,
+  balanceStateFamily,
+  swapPairState,
+} from '../../../atoms'
 
 type AssetScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -19,8 +25,10 @@ type AssetScreenProps = NativeStackScreenProps<
 >
 
 const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
-  const { code, address, balance, balanceInUSD }: AssetDataElementType =
-    route.params.assetData!
+  const { id, code, balanceInUSD }: AccountType = route.params.assetData!
+  const swapPair = useRecoilValue(swapPairState)
+  const address = useRecoilValue(addressStateFamily(id))
+  const balance = useRecoilValue(balanceStateFamily(code))
 
   const handleSendPress = useCallback(() => {
     navigation.navigate('SendScreen', {
@@ -38,10 +46,10 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
 
   const handleSwapPress = useCallback(() => {
     navigation.navigate('SwapScreen', {
-      swapAssetPair: route.params.swapAssetPair,
+      swapAssetPair: swapPair,
       screenTitle: 'Swap',
     })
-  }, [navigation, route.params.swapAssetPair])
+  }, [navigation, swapPair])
 
   return (
     <Box flex={1} backgroundColor="mainBackground" borderWidth={1}>

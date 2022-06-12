@@ -22,13 +22,12 @@ import SwapRates from '../../../components/swap/swap-rates'
 import { getQuotes, updateMarketData } from '../../../store/store'
 import {
   ActionEnum,
-  AssetDataElementType,
+  AccountType,
   NetworkFeeType,
   RootStackParamList,
 } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
-import { useAppSelector } from '../../../hooks'
 import { sortQuotes } from '../../../utils'
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
 import Button from '../../../theme/button'
@@ -37,6 +36,8 @@ import SwapFeeSelector from '../../../components/ui/swap-fee-selector'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import { prettyBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
+import { useRecoilValue } from 'recoil'
+import { marketDataState } from '../../../atoms'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -68,15 +69,12 @@ type SwapScreenProps = NativeStackScreenProps<RootStackParamList, 'SwapScreen'>
 const SwapScreen: FC<SwapScreenProps> = (props) => {
   const { navigation, route } = props
   const { swapAssetPair } = route.params
-  const { marketData = {}, activeNetwork } = useAppSelector((state) => ({
-    marketData: state.marketData,
-    activeNetwork: state.activeNetwork,
-  }))
+  const marketData = useRecoilValue(marketDataState)
   const [areFeeSelectorsVisible, setFeeSelectorsVisible] = useState(true)
-  const [fromAsset, setFromAsset] = useState<AssetDataElementType | undefined>(
+  const [fromAsset, setFromAsset] = useState<AccountType | undefined>(
     swapAssetPair?.fromAsset,
   )
-  const [toAsset, setToAsset] = useState<AssetDataElementType>()
+  const [toAsset, setToAsset] = useState<AccountType>()
   const [selectedQuote, setSelectedQuote] = useState<SwapQuote>()
   const [error, setError] = useState('')
   const fromNetworkFee = useRef<NetworkFeeType>()
@@ -121,6 +119,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     setSelectedQuote(quote)
   }
 
+  const handleCancelPress = useCallback(() => {
+    navigation.navigate('OverviewScreen')
+  }, [navigation])
+
   const handleReviewBtnPress = async () => {
     if (
       !fromAsset ||
@@ -150,13 +152,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
   const min = useCallback((): BigNumber => {
     //TODO why do we have to check against the liquality type
-    const liqualityMarket = marketData?.[activeNetwork]?.find(
+    const liqualityMarket = marketData?.find(
       (pair) => pair.from === fromAsset?.code && pair.to === toAsset?.code,
     )
     return liqualityMarket && liqualityMarket.min
       ? new BigNumber(liqualityMarket.min)
       : new BigNumber(0)
-  }, [activeNetwork, fromAsset?.code, marketData, toAsset?.code])
+  }, [fromAsset?.code, marketData, toAsset?.code])
 
   const handleMinPress = () => {
     setMaximumValue(new BigNumber(0))
@@ -388,7 +390,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             type="secondary"
             variant="m"
             label="Cancel"
-            onPress={() => navigation.navigate('OverviewScreen')}
+            onPress={handleCancelPress}
             isBorderless={false}
             isActive={true}
           />

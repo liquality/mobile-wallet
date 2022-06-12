@@ -4,10 +4,11 @@ import { assets as cryptoassets } from '@liquality/cryptoassets'
 
 import { capitalizeFirstLetter } from '../../utils'
 import SectionTitle from './section-title'
-import { useAppSelector } from '../../hooks'
 import AssetIcon from '../asset-icon'
 import { useNavigation } from '@react-navigation/native'
 import SwapCheck from '../../assets/icons/swap-check.svg'
+import { useRecoilValue } from 'recoil'
+import { enabledAssetsState } from '../../atoms'
 
 const getItemsFromAssets = (assets: Array<string>): any[] => {
   if (assets.length < 6) {
@@ -21,17 +22,7 @@ const AssetToggles: FC<{
   value: string[]
   onChange: (assets: string[]) => void
 }> = ({ value, onChange }) => {
-  const { activeNetwork, activeWalletId, enabledAssets } = useAppSelector(
-    (state) => ({
-      activeNetwork: state.activeNetwork,
-      enabledAssets: state.enabledAssets,
-      activeWalletId: state.activeWalletId,
-    }),
-  )
-  const assetCodes =
-    !activeWalletId || !activeNetwork
-      ? []
-      : enabledAssets?.[activeNetwork]?.[activeWalletId] || []
+  const assetCodes = useRecoilValue(enabledAssetsState)
   const items = getItemsFromAssets([...assetCodes, ...assetCodes])
   const navigation = useNavigation()
 

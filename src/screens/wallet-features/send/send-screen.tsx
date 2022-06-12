@@ -14,7 +14,6 @@ import {
 import AngleDown from '../../../assets/icons/angle-down.svg'
 import AngleRight from '../../../assets/icons/angle-right.svg'
 import QRCode from '../../../assets/icons/qr-code.svg'
-import { useAppSelector } from '../../../hooks'
 import { BigNumber } from '@liquality/types'
 import { calculateAvailableAmnt } from '../../../core/utils/fee-calculator'
 import {
@@ -34,6 +33,8 @@ import { fetchFeesForAsset } from '../../../store/store'
 import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
 import ButtonFooter from '../../../components/button-footer'
 import { isNumber } from '../../../utils'
+import { useRecoilValue } from 'recoil'
+import { fiatRatesState } from '../../../atoms'
 
 const useInputState = (
   initialValue: string,
@@ -54,17 +55,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     color,
   } = route.params.assetData || {}
   const [customFee, setCustomFee] = useState<number>(0)
-  const {
-    activeWalletId,
-    activeNetwork = 'testnet',
-    fees,
-    fiatRates,
-  } = useAppSelector((state) => ({
-    activeWalletId: state.activeWalletId,
-    activeNetwork: state.activeNetwork,
-    fees: state.fees,
-    fiatRates: state.fiatRates,
-  }))
+  const fiatRates = useRecoilValue(fiatRatesState)
   const [showFeeOptions, setShowFeeOptions] = useState(true)
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
@@ -115,7 +106,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         ),
       )
     })
-  }, [code, fees, activeWalletId, activeNetwork, chain, balance])
+  }, [code, chain, balance])
 
   const handleReviewPress = useCallback(() => {
     if (validate() && networkFee?.current?.value) {

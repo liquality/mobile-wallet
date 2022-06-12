@@ -4,7 +4,7 @@ import { Animated, Dimensions } from 'react-native'
 import AnimatedBox from './animated-box'
 import { useNavigation } from '@react-navigation/core'
 import { Easing } from 'react-native-reanimated'
-import { AssetDataElementType } from '../types'
+import { AccountType } from '../types'
 
 type renderActionsType = (
   progressAnimatedValue: Animated.AnimatedInterpolation,
@@ -14,7 +14,7 @@ type renderActionsType = (
 type AssetListSwipeableRowProps = {
   children: React.ReactElement
   assetSymbol: string
-  assetData: AssetDataElementType
+  assetData: AccountType
 }
 
 const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {

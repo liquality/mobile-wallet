@@ -1,32 +1,44 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { AssetDataElementType, StackPayload } from '../../types'
+import { AccountType, StackPayload } from '../../types'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import MinusSign from '../../assets/icons/minus-sign.svg'
 import PlusSign from '../../assets/icons/plus-icon.svg'
 import AssetIcon from '../asset-icon'
 import {
+  cryptoToFiat,
   formatFiat,
   prettyBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
 import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
+import { useRecoilValue } from 'recoil'
+import {
+  addressStateFamily,
+  balanceStateFamily,
+  fiatRatesState,
+} from '../../atoms'
+import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
 
 type RowProps = {
-  item: AssetDataElementType
+  item: AccountType
   toggleRow: () => void
   onAssetSelected: (params: StackPayload) => void
   isNested: boolean
   isExpanded: boolean
 }
 
-const Row: React.FC<RowProps> = (props) => {
+const Row = (props: RowProps) => {
   const { item, toggleRow, onAssetSelected, isNested, isExpanded } = props
   const { name } = item
-  const [prettyNativeBalance, setPrettyNativeBalance] = useState('')
-  const [prettyFiatBalance, setPrettyFiatBalance] = useState('')
+  const [prettyFiatBalance, setPrettyFiatBalance] = useState('0')
+  const [prettyNativeBalance, setPrettyNativeBalance] = useState('0')
   const [shortAddress, setShortAddress] = useState('')
+  const balance = useRecoilValue(balanceStateFamily(item.code))
+  const address = useRecoilValue(addressStateFamily(item.id))
+  const fiatRates = useRecoilValue(fiatRatesState)
 
   const handlePressOnRow = useCallback(() => {
     if (isNested) {
@@ -44,14 +56,21 @@ const Row: React.FC<RowProps> = (props) => {
   }, [toggleRow])
 
   useEffect(() => {
+    const fiatBalance = fiatRates[item.code]
+      ? cryptoToFiat(
+          unitToCurrency(
+            cryptoassets[getNativeAsset(item.code)],
+            balance,
+          ).toNumber(),
+          fiatRates[item.code],
+        )
+      : 0
     setPrettyNativeBalance(
-      `${prettyBalance(new BigNumber(item.balance), item.code)} ${item.code}`,
+      `${prettyBalance(new BigNumber(balance), item.code)} ${item.code}`,
     )
-    setPrettyFiatBalance(
-      `${item.balanceInUSD ? formatFiat(new BigNumber(item.balanceInUSD)) : 0}`,
-    )
-    if (item.address) setShortAddress(shortenAddress(item.address))
-  }, [item.address, item.balance, item.balanceInUSD, item.code])
+    setPrettyFiatBalance(`$${formatFiat(new BigNumber(fiatBalance))}`)
+    if (address) setShortAddress(shortenAddress(address))
+  }, [address, balance, fiatRates, item.code])
 
   return (
     <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
@@ -85,17 +104,13 @@ const Row: React.FC<RowProps> = (props) => {
         {isNested ? (
           <View style={styles.col3}>
             <Text style={styles.TotalBalanceInUSD}>
-              {`Total $${prettyFiatBalance}`}
+              {`Total ${prettyFiatBalance}`}
             </Text>
           </View>
         ) : (
           <View style={styles.col3}>
-            <Text style={styles.balance}>
-              {prettyNativeBalance && prettyNativeBalance}
-            </Text>
-            <Text style={styles.balanceInUSD}>
-              {prettyFiatBalance && prettyFiatBalance}
-            </Text>
+            <Text style={styles.balance}>{prettyNativeBalance}</Text>
+            <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
           </View>
         )}
         <View style={styles.col4}>

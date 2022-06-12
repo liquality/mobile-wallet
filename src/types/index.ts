@@ -1,11 +1,14 @@
 import { Dispatch, ReactElement, SetStateAction } from 'react'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
-import { BigNumber, Transaction } from '@liquality/types'
+import { BigNumber } from '@liquality/types'
 import {
   FeeLabel,
+  Network,
+  SendHistoryItem,
   SwapHistoryItem,
 } from '@liquality/wallet-core/dist/store/types'
+import { Asset } from '@liquality/wallet-core/src/store/types'
 
 export type AssetDataElementType = {
   id: string
@@ -21,14 +24,28 @@ export type AssetDataElementType = {
   activeNetwork?: any
 }
 
+export interface AccountType {
+  id: string
+  name: string
+  code: string
+  chain: ChainId
+  address?: string
+  balance: number
+  balanceInUSD?: number
+  color?: string
+  assets: Record<Asset, AccountType>
+  fees?: FeeDetails
+  activeNetwork?: Network
+}
+
 export type SwapAssetPairType = {
-  fromAsset?: AssetDataElementType
-  toAsset?: AssetDataElementType
+  fromAsset?: AccountType
+  toAsset?: AccountType
 }
 
 export type SwapInfoType = {
-  fromAsset: AssetDataElementType
-  toAsset: AssetDataElementType
+  fromAsset: AccountType
+  toAsset: AccountType
   fromAmount: number
   toAmount: number
   quote: any
@@ -45,7 +62,7 @@ export type StackPayload = {
   seedPhrase?: string
   mnemonic?: string
   imported?: boolean
-  assetData?: AssetDataElementType
+  assetData?: AccountType
   screenTitle?: string
   customFee?: number
   showPopup?: boolean
@@ -58,7 +75,7 @@ export type StackPayload = {
     color: string
     memo?: string
   }
-  sendTransactionConfirmation?: Transaction
+  sendTransactionConfirmation?: SendHistoryItem
   swapAssetPair?: SwapAssetPairType
   swapTransaction?: SwapInfoType
   swapTransactionConfirmation?: SwapHistoryItem

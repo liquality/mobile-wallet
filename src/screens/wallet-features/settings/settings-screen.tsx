@@ -11,13 +11,14 @@ import { useDispatch } from 'react-redux'
 
 import SettingsSwitch from '../../../components/ui/switch'
 import { DarkModeEnum } from '../../../types'
-import { useAppSelector } from '../../../hooks'
 import WhatsNew from '../../../components/ui/whats-new'
 import Button from '../../../theme/button'
 import { downloadWalletLogs } from '../../../utils'
+import { useRecoilValue } from 'recoil'
+import { walletState } from '../../../atoms'
 
 const SettingsScreen = () => {
-  const reduxState = useAppSelector((state) => state)
+  const reduxState = useRecoilValue(walletState).state
   const {
     activeNetwork,
     analytics,
@@ -64,15 +65,15 @@ const SettingsScreen = () => {
   }, [activeNetwork, analytics])
 
   const handleDownload = useCallback(() => {
-    const walletState = { ...reduxState }
+    const walletStateCopy = { ...reduxState }
 
-    delete walletState.encryptedWallets
-    delete walletState.keySalt
+    delete walletStateCopy.encryptedWallets
+    delete walletStateCopy.keySalt
 
     // Thsi is not in web app, newly added
-    delete walletState.wallets
+    delete walletStateCopy.wallets
 
-    downloadWalletLogs(walletState)
+    downloadWalletLogs(walletStateCopy)
   }, [reduxState])
 
   return (

@@ -10,12 +10,13 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { AssetDataElementType, RootStackParamList } from '../../../types'
+import { AccountType, RootStackParamList } from '../../../types'
 import AssetIcon from '../../../components/asset-icon'
 import Button from '../../../theme/button'
-import { useAppSelector } from '../../../hooks'
 import CheckIcon from '../../../assets/icons/swap-check.svg'
 import CopyIcon from '../../../assets/icons/copy.svg'
+import { useRecoilValue } from 'recoil'
+import { networkState } from '../../../atoms'
 
 type ReceiveScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -24,11 +25,8 @@ type ReceiveScreenProps = NativeStackScreenProps<
 
 const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   const [buttonPressed, setButtonPressed] = useState<boolean>(false)
-  const { name, address, chain, code }: AssetDataElementType =
-    route.params.assetData!
-  const { activeNetwork } = useAppSelector((state) => ({
-    activeNetwork: state.activeNetwork,
-  }))
+  const { name, address, chain, code }: AccountType = route.params.assetData!
+  const activeNetwork = useRecoilValue(networkState)
 
   //TODO Read this from a config file
   const getFaucetUrl = (asset: string): { name: string; url: string } => {

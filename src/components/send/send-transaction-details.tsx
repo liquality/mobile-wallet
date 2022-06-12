@@ -1,6 +1,5 @@
 import { SendHistoryItem } from '@liquality/wallet-core/dist/store/types'
 import React, { memo } from 'react'
-import { useAppSelector } from '../../hooks'
 import Box from '../../theme/box'
 import Text from '../../theme/text'
 import { formatDate } from '../../utils'
@@ -10,6 +9,8 @@ import ConfirmationBlock from '../swap/confirmation-block'
 import { EmptyBlock, Separator, Step } from '../swap/swap-transaction-details'
 import { getTransactionExplorerLink } from '@liquality/wallet-core/dist/utils/asset'
 import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
+import { useRecoilValue } from 'recoil'
+import { fiatRatesState } from '../../atoms'
 
 type SendTransactionDetailsProps = {
   historyItem: SendHistoryItem
@@ -18,9 +19,7 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
   props,
 ): React.ReactElement => {
   const { historyItem } = props
-  const { fiatRates } = useAppSelector((state) => ({
-    fiatRates: state.fiatRates,
-  }))
+  const fiatRates = useRecoilValue(fiatRatesState)
 
   if (!historyItem) {
     return (

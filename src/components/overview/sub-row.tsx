@@ -1,18 +1,27 @@
 import React, { FC, memo, useCallback, useEffect, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import {
+  cryptoToFiat,
   formatFiat,
   prettyBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
-import { AssetDataElementType, StackPayload } from '../../types'
+import { AccountType, StackPayload } from '../../types'
 import AssetIcon from '../asset-icon'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
+import { useRecoilValue } from 'recoil'
+import {
+  addressStateFamily,
+  balanceStateFamily,
+  fiatRatesState,
+} from '../../atoms'
+import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
 
 type SubRowProps = {
-  parentItem: AssetDataElementType
-  item: AssetDataElementType
+  parentItem: AccountType
+  item: AccountType
   onAssetSelected: (params: StackPayload) => void
 }
 
@@ -20,6 +29,9 @@ const SubRow: FC<SubRowProps> = (props) => {
   const { parentItem, item, onAssetSelected } = props
   const [prettyNativeBalance, setPrettyNativeBalance] = useState('')
   const [prettyFiatBalance, setPrettyFiatBalance] = useState('')
+  const balance = useRecoilValue(balanceStateFamily(item.code))
+  const address = useRecoilValue(addressStateFamily(item.id))
+  const fiatRates = useRecoilValue(fiatRatesState)
 
   const handlePressOnRow = useCallback(() => {
     onAssetSelected({
@@ -32,19 +44,26 @@ const SubRow: FC<SubRowProps> = (props) => {
   }, [item, onAssetSelected, parentItem.address])
 
   useEffect(() => {
+    const fiatBalance = fiatRates[item.code]
+      ? cryptoToFiat(
+          unitToCurrency(
+            cryptoassets[getNativeAsset(item.code)],
+            balance,
+          ).toNumber(),
+          fiatRates[item.code],
+        )
+      : 0
     setPrettyNativeBalance(
-      `${prettyBalance(new BigNumber(item.balance), item.code)} ${item.code}`,
+      `${prettyBalance(new BigNumber(balance), item.code)} ${item.code}`,
     )
-    setPrettyFiatBalance(
-      `${item.balanceInUSD ? formatFiat(new BigNumber(item.balanceInUSD)) : 0}`,
-    )
-  }, [item.address, item.balance, item.balanceInUSD, item.code])
+    setPrettyFiatBalance(`$${formatFiat(new BigNumber(fiatBalance))}`)
+  }, [balance, fiatRates, item.code])
 
   return (
     <AssetListSwipeableRow
       assetData={{
         ...item,
-        address: parentItem.address,
+        address: address,
       }}
       assetSymbol={item.code}>
       <Pressable

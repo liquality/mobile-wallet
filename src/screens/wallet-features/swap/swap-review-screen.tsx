@@ -5,12 +5,14 @@ import Clock from '../../../assets/icons/clock.svg'
 import Exchange from '../../../assets/icons/exchange.svg'
 import { RootStackParamList, SwapInfoType } from '../../../types'
 import Warning from '../../../components/ui/warning'
-import { useAppSelector } from '../../../hooks'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
 import Button from '../../../theme/button'
 import { BigNumber } from '@liquality/types'
 import { performSwap } from '../../../store/store'
 import { Log } from '../../../utils'
+import { useRecoilCallback, useRecoilValue } from 'recoil'
+import { HistoryItem } from '@liquality/wallet-core/dist/store/types'
+import { fiatRatesState, historyStateFamily } from '../../../atoms'
 
 type SwapReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -20,15 +22,18 @@ type SwapReviewScreenProps = NativeStackScreenProps<
 const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   const { navigation, route } = props
   const swapTransaction = route.params.swapTransaction
-  const { fiatRates = {}, activeNetwork } = useAppSelector((state) => ({
-    fiatRates: state.fiatRates,
-    activeNetwork: state.activeNetwork,
-  }))
+  const fiatRates = useRecoilValue(fiatRatesState)
+  const addTransaction = useRecoilCallback(
+    ({ set }) =>
+      (transactionId: string, historyItem: HistoryItem) => {
+        set(historyStateFamily(transactionId), historyItem)
+      },
+  )
   const [isLoading, setIsLoading] = useState(false)
 
   const handleInitiateSwap = async () => {
     setIsLoading(true)
-    if (swapTransaction && activeNetwork) {
+    if (swapTransaction) {
       const {
         fromAsset,
         toAsset,
@@ -53,6 +58,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         )
 
         if (transaction) {
+          addTransaction(transaction.id, transaction)
           navigation.navigate('SwapConfirmationScreen', {
             swapTransactionConfirmation: transaction,
             screenTitle: `Swap ${fromAsset.code} to ${toAsset.code} Details`,
@@ -149,8 +155,6 @@ const styles = StyleSheet.create({
   icon: {
     alignSelf: 'flex-start',
     marginRight: 5,
-    // marginVertical: 5,
-    // marginHorizontal: 5,
   },
 })
 

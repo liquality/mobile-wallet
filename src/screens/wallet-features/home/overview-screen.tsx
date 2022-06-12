@@ -1,22 +1,21 @@
 import * as React from 'react'
 import { Fragment, memo, useCallback, useEffect, useState } from 'react'
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
-import { useAppSelector, useWalletState } from '../../../hooks'
-import { formatFiat } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ActionEnum, RootStackParamList, StackPayload } from '../../../types'
+import { ActionEnum, RootStackParamList } from '../../../types'
 import { populateWallet } from '../../../store/store'
 import ErrorBoundary from 'react-native-error-boundary'
 import Text from '../../../theme/text'
 import ErrorFallback from '../../../components/error-fallback'
 import Box from '../../../theme/box'
 import RoundButton from '../../../theme/round-button'
-import { BigNumber } from '@liquality/types'
 import GradientBackground from '../../../components/gradient-background'
+import { useRecoilValue } from 'recoil'
+import { accountsIdsState, totalFiatBalanceState } from '../../../atoms'
 
-type OverviewProps = NativeStackScreenProps<
+export type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
   'OverviewScreen'
 >
@@ -27,11 +26,8 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     ACTIVITY,
   }
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
-  const { assets, assetCount, totalFiatBalance, loading, error } =
-    useWalletState()
-  const { activeNetwork } = useAppSelector((state) => ({
-    activeNetwork: state.activeNetwork,
-  }))
+  const accountsIds = useRecoilValue(accountsIdsState)
+  const totalFiatBalance = useRecoilValue(totalFiatBalanceState)
 
   const handleSendBtnPress = useCallback(() => {
     navigation.navigate('AssetChooserScreen', {
@@ -54,38 +50,9 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     })
   }, [navigation])
 
-  const onAssetSelected = useCallback(
-    (params: StackPayload) => {
-      const fromAsset = params.assetData
-      let toAsset = params.assetData
-      if (fromAsset?.code === 'ETH') {
-        toAsset = assets.filter((item) => item.code === 'BTC')[0]
-      } else {
-        toAsset = assets.filter((item) => item.code === 'ETH')[0]?.assets?.[0]
-      }
-      navigation.navigate('AssetScreen', {
-        ...params,
-        swapAssetPair: {
-          fromAsset,
-          toAsset,
-        },
-      })
-    },
-    [assets, navigation],
-  )
-
   useEffect(() => {
     populateWallet()
-  }, [activeNetwork])
-
-  if (error) {
-    return (
-      <ErrorFallback
-        error={new Error('Failed to load assets')}
-        resetError={() => navigation.navigate('LoginScreen')}
-      />
-    )
-  }
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -95,19 +62,19 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
             width={Dimensions.get('screen').width}
             height={225}
           />
-          {loading ? (
+          {accountsIds.length === 0 ? (
             <Text style={styles.loading}>Loading...</Text>
           ) : (
             <Fragment>
               <View style={styles.totalValueSection}>
                 <Text style={styles.totalValue} numberOfLines={1}>
-                  {formatFiat(new BigNumber(totalFiatBalance)).toString()}
+                  {totalFiatBalance}
                 </Text>
                 <Text style={styles.currency}>USD</Text>
               </View>
               <Text style={styles.assets}>
-                {assetCount}
-                {assetCount === 1 ? ' Asset' : ' Assets'}
+                {accountsIds.length}
+                {accountsIds.length === 1 ? ' Asset' : ' Assets'}
               </Text>
 
               <Box flexDirection="row" justifyContent="center" marginTop="l">
@@ -153,15 +120,15 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
         </View>
         <Box flex={1}>
           {selectedView === ViewKind.ACTIVITY &&
-            (assets.length > 0 ? (
+            (accountsIds.length > 0 ? (
               <ActivityFlatList navigate={navigation.navigate} />
             ) : (
               <Text style={styles.noActivityMessageBlock}>
                 Once you start using your wallet you will see the activity here.
               </Text>
             ))}
-          {selectedView === ViewKind.ASSETS && (
-            <AssetFlatList assets={assets} onAssetSelected={onAssetSelected} />
+          {selectedView === ViewKind.ASSETS && accountsIds && (
+            <AssetFlatList accounts={accountsIds} />
           )}
         </Box>
       </ErrorBoundary>
@@ -253,5 +220,7 @@ const styles = StyleSheet.create({
     lineHeight: 28,
   },
 })
+
+OverviewScreen.whyDidYouRender = true
 
 export default memo(OverviewScreen)

@@ -1,8 +1,9 @@
-import { useAppSelector } from '../hooks'
 import Fuse from 'fuse.js'
 import { ActionEnum, TimeLimitEnum } from '../types'
 import moment from 'moment'
 import { HistoryItem } from '@liquality/wallet-core/dist/store/types'
+import { useRecoilValue } from 'recoil'
+import { activityFilterState, historyItemsState } from '../atoms'
 
 const FUSE_OPTIONS = {
   includeScore: true,
@@ -88,24 +89,8 @@ type TimeLimitInSecondsKeyType =
   | TimeLimitEnum.LAST_MONTH
 
 const useFilteredHistory = () => {
-  const items = useAppSelector((state) => {
-    const { activeNetwork, activeWalletId, history: historyObject } = state
-    let historyItems: HistoryItem[] = []
-    if (
-      activeNetwork &&
-      activeWalletId &&
-      historyObject &&
-      historyObject?.[activeNetwork]?.[activeWalletId]
-    ) {
-      historyItems = historyObject?.[activeNetwork]?.[activeWalletId]
-    }
-
-    // TODO: Remove this
-    // historyItems = MOCKED_HISTORY_ITEMS
-    return historyItems
-  })
-
-  const activityFilter = useAppSelector((state) => state.assetFilter)
+  const items = useRecoilValue(historyItemsState)
+  const activityFilter = useRecoilValue(activityFilterState)
   const {
     timeLimit,
     actionTypes,

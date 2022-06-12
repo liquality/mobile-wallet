@@ -1,5 +1,5 @@
 import { BigNumber } from '@liquality/types'
-import { AssetDataElementType } from '../../types'
+import { AccountType } from '../../types'
 import React, { FC, useState } from 'react'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
@@ -22,7 +22,7 @@ import CheckIcon from '../../assets/icons/swap-check.svg'
 type SwapReviewAssetSummaryProps = {
   type: 'SEND' | 'RECEIVE'
   amount: BigNumber
-  asset: AssetDataElementType
+  asset: AccountType
   fiatRates: Record<string, number>
   networkFee: BigNumber
 }

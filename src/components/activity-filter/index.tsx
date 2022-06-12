@@ -15,8 +15,9 @@ import ActivityStatusToggles from './activity-status-toggles'
 import AssetToggles from './asset-toggles'
 import SectionTitle from './section-title'
 import SorterPicker, { SORT_OPTIONS } from './sorter-picker'
-import { useAppDispatch, useAppSelector } from '../../hooks'
 import { ActionEnum, ActivityStatusEnum, TimeLimitEnum } from '../../types'
+import { useRecoilState } from 'recoil'
+import { activityFilterState } from '../../atoms'
 
 const ActivityFilter: FC<{
   numOfResults: number
@@ -25,32 +26,18 @@ const ActivityFilter: FC<{
   const [expanded, setExpanded] = useState(false)
   const [moreExpanded, setMoreExpanded] = useState(false)
   const [isSortPickerOpen, setIsSortPickerOpen] = useState(false)
-  const assetFilter = useAppSelector((state) => state.assetFilter)
-  const dispatch = useAppDispatch()
+  const [assetFilter, setAssetFilter] = useRecoilState(activityFilterState)
 
   const handleUpdateFilter = useCallback(
     (payload: any) => {
-      dispatch({
-        type: 'UPDATE_ASSET_FILTER',
-        payload: {
-          assetFilter: {
-            ...assetFilter,
-            ...payload,
-          },
-        },
-      })
+      setAssetFilter((currVal) => ({ ...currVal, ...payload }))
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [assetFilter],
   )
 
   const handleClearFilter = useCallback(() => {
-    dispatch({
-      type: 'UPDATE_ASSET_FILTER',
-      payload: {
-        assetFilter: {},
-      },
-    })
+    setAssetFilter({})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

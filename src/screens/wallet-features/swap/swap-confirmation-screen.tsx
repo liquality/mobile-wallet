@@ -8,7 +8,6 @@ import {
   assets as cryptoassets,
   chains,
 } from '@liquality/cryptoassets'
-import { useAppSelector } from '../../../hooks'
 import AngleDown from '../../../assets/icons/angle-down.svg'
 import AngleRight from '../../../assets/icons/angle-right.svg'
 import Label from '../../../components/ui/label'
@@ -16,17 +15,12 @@ import ProgressCircle from '../../../components/animations/progress-circle'
 import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
 import Button from '../../../theme/button'
 import {
-  HistoryItem,
-  SwapHistoryItem,
-  TransactionType,
-} from '@liquality/wallet-core/dist/store/types'
-import {
   dpUI,
   prettyBalance,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
-import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
+import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swap'
 import { SwapProvider } from '@liquality/wallet-core/dist/swaps/SwapProvider'
 import { retrySwap } from '../../../store/store'
 import RefundedIcon from '../../../assets/icons/activity-status/refunded.svg'
@@ -36,6 +30,8 @@ import { calculateQuoteRate } from '@liquality/wallet-core/dist/utils/quotes'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import SwapRates from '../../../components/swap/swap-rates'
 import { formatDate } from '../../../utils'
+import { useRecoilValue } from 'recoil'
+import { fiatRatesState, historyStateFamily } from '../../../atoms'
 
 type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -46,23 +42,11 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   route,
   navigation,
 }) => {
-  const { fiatRates, history = [] } = useAppSelector((state) => {
-    const { history: historyObject, activeNetwork, activeWalletId } = state
-    let historyItems: HistoryItem[] = []
-    if (historyObject?.[activeNetwork]?.[activeWalletId]) {
-      historyItems = historyObject?.[activeNetwork]?.[activeWalletId] || []
-    }
-    return {
-      fiatRates: state.fiatRates,
-      history: historyItems,
-      activeNetwork,
-      activeWalletId,
-    }
-  })
   const transaction = route.params.swapTransactionConfirmation
+  const fiatRates = useRecoilValue(fiatRatesState)
+  const historyItem = useRecoilValue(historyStateFamily(transaction!.id!))
   const [isExpanded, setIsExpanded] = useState(false)
   const [isSecretRevealed, setIsSecretRevealed] = useState(false)
-  const [historyItem, setHistoryItem] = useState<SwapHistoryItem>()
   const [swapProvider, setSwapProvider] = useState<SwapProvider>()
 
   const {
@@ -102,18 +86,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   }, [])
 
   useEffect(() => {
-    const historyItems = history.filter(
-      (item) =>
-        item.type === TransactionType.Swap && item.id === transaction?.id,
-    )
-    if (historyItems.length > 0) {
-      setHistoryItem(historyItems[0] as SwapHistoryItem)
-    }
-
     if (network && provider) {
       setSwapProvider(getSwapProvider(network, provider))
     }
-  }, [network, fromFundHash, history, provider, transaction?.id])
+  }, [network, provider])
 
   if (!historyItem || !swapProvider) {
     return (

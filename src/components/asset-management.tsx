@@ -2,13 +2,13 @@ import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import { Alert, FlatList, StyleSheet, Text, View } from 'react-native'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
-
 import AssetIcon from './asset-icon'
 import Switch from './ui/switch'
 import SearchBox from './ui/search-box'
-import { useAppSelector } from '../hooks'
 import { customConfig } from '../core/config'
 import { Network } from '@liquality/wallet-core/dist/store/types'
+import { useRecoilValue } from 'recoil'
+import { networkState } from '../atoms'
 
 const AssetManagement = ({
   enabledAssetCodes,
@@ -20,13 +20,7 @@ const AssetManagement = ({
   const DEFAULT_COLOR = '#EFEFEF'
   const [data, setData] = useState<Asset[]>([])
   const [assets, setAssets] = useState<Asset[]>([])
-  const { activeNetwork, activeWalletId, enabledAssets } = useAppSelector(
-    (state) => ({
-      activeNetwork: state.activeNetwork,
-      enabledAssets: state.enabledAssets,
-      activeWalletId: state.activeWalletId,
-    }),
-  )
+  const activeNetwork = useRecoilValue(networkState)
 
   const renderAsset = useCallback(
     ({ item }: { item: Asset }) => {
@@ -55,7 +49,7 @@ const AssetManagement = ({
   )
 
   useEffect(() => {
-    if (!activeWalletId || !activeNetwork) {
+    if (!activeNetwork) {
       Alert.alert('Please reload your wallet')
       return
     }
@@ -81,7 +75,7 @@ const AssetManagement = ({
     }
     setAssets(myAssets)
     setData(myAssets)
-  }, [activeNetwork, activeWalletId, enabledAssets])
+  }, [activeNetwork])
 
   return (
     <View style={styles.container}>
