@@ -30,6 +30,14 @@ const WithPopupMenu = <T extends FctType>(
       })
     }
 
+    const handleBackupSeedBtnPress = () => {
+      //navigation.setParams({ showPopup: !route?.params?.showPopup })
+      navigation.navigate('BackupWarningScreen', {
+        screenTitle: 'Warning',
+        includeBackBtn: false,
+      })
+    }
+
     return (
       <View style={styles.container}>
         <Component navigation={navigation} route={route} />
@@ -53,7 +61,9 @@ const WithPopupMenu = <T extends FctType>(
               <LedgerIcon style={styles.icon} />
               <Text>Ledger</Text>
             </Pressable>
-            <Pressable style={styles.menuItem}>
+            <Pressable
+              style={styles.menuItem}
+              onPress={handleBackupSeedBtnPress}>
               <BackupIcon style={styles.icon} />
               <Text>Backup Seed</Text>
             </Pressable>
