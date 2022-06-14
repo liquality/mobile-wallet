@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import {
   Alert,
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -16,19 +17,16 @@ import WhatsNew from '../../../components/ui/whats-new'
 import Button from '../../../theme/button'
 import { downloadWalletLogs } from '../../../utils'
 import DeviceInfo from 'react-native-device-info'
+import { useNavigation } from '@react-navigation/core'
 
 const SettingsScreen = () => {
   const reduxState = useAppSelector((state) => state)
-  const {
-    activeNetwork,
-    analytics,
-    notifications = false,
-    version = 'Version 0.2.1',
-  } = reduxState
+  const { activeNetwork, analytics = false } = reduxState
   const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(false)
   const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
   const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
   const dispatch = useDispatch()
+  const navigation = useNavigation()
 
   const toggleAnalyticsOptin = () => {
     setIsAnalyticsEnabled(!isAnalyticsEnabled)
@@ -43,7 +41,7 @@ const SettingsScreen = () => {
     })
   }
 
-  const toggleNotifications = () => {
+  /*   const toggleNotifications = () => {
     dispatch({
       type: 'NOTIFICATIONS_UPDATE',
       payload: {
@@ -51,7 +49,7 @@ const SettingsScreen = () => {
       },
     })
   }
-
+ */
   const toggleNetwork = (network: any) => {
     toggleNetwork(network)
   }
@@ -93,11 +91,29 @@ const SettingsScreen = () => {
         </View>
         <View style={styles.row}>
           <View style={styles.action}>
+            <Text style={styles.label}>Backup Seed Phrase</Text>
+
+            <Pressable
+              onPress={() =>
+                navigation.navigate('BackupWarningScreen', {
+                  screenTitle: 'Warning',
+                  includeBackBtn: false,
+                })
+              }>
+              <Text style={[styles.label, styles.link]}>show</Text>
+            </Pressable>
+          </View>
+          <Text style={styles.description}>
+            Always keep your seed phrase safe.
+          </Text>
+        </View>
+        <View style={styles.row}>
+          <View style={styles.action}>
             <Text style={styles.label}>Wallet Logs</Text>
             <Button
-              type="primary"
-              variant="m"
-              label="Download"
+              type="tertiary"
+              variant="s"
+              label="Download logs"
               onPress={handleDownload}
               isBorderless={false}
               isActive={true}
@@ -111,9 +127,19 @@ const SettingsScreen = () => {
         <View style={styles.row}>
           <View style={styles.action}>
             <Text style={styles.label}>Notifications</Text>
-            <SettingsSwitch
+            {/*  <SettingsSwitch
               isFeatureEnabled={notifications}
               enableFeature={toggleNotifications}
+            /> */}
+            <Button
+              type="tertiary"
+              variant="s"
+              label="Settings"
+              onPress={() => {
+                Linking.openSettings()
+              }}
+              isBorderless={false}
+              isActive={true}
             />
           </View>
           <Text style={styles.description}>
@@ -170,7 +196,9 @@ const SettingsScreen = () => {
             </View>
           </View>
           <View style={styles.info}>
-            <Text style={[styles.label, styles.version]}>{version}</Text>
+            <Text style={[styles.label, styles.version]}>
+              Version: {DeviceInfo.getVersion()}
+            </Text>
             <Pressable onPress={() => setIsWhatsNewVisible(true)}>
               <Text style={[styles.label, styles.link]}>What's new</Text>
             </Pressable>
@@ -178,11 +206,6 @@ const SettingsScreen = () => {
         </View>
       </ScrollView>
       {isWhatsNewVisible && <WhatsNew onAction={setIsWhatsNewVisible} />}
-      <View style={styles.row}>
-        <Text style={styles.appVersion}>
-          Version: {DeviceInfo.getVersion()}{' '}
-        </Text>
-      </View>
     </View>
   )
 }
