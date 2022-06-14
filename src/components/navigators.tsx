@@ -278,12 +278,12 @@ export const MainNavigator = () => (
           return {
             display: 'none',
           }
-        }
-        //Maybe not ideal solution but there is bug in rn-navigation workaround here: https://github.com/react-navigation/react-navigation/issues/6779#issuecomment-583272325
-        return {
-          bottom: 0,
-          position: 'absolute',
-        }
+        } else if (routeName === 'OverviewScreen')
+          //Maybe not ideal solution but there is bug in rn-navigation workaround here: https://github.com/react-navigation/react-navigation/issues/6779#issuecomment-583272325
+          return {
+            bottom: 0,
+            position: 'absolute',
+          }
       })(route),
       headerShown: false,
       title: '',
