@@ -86,15 +86,7 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
             type="primary"
             variant="m"
             label="I Accept"
-            onPress={() =>
-              navigation.navigate(
-                route?.params?.nextScreen || 'UnlockWalletScreen',
-                {
-                  termsAcceptedAt: Date.now(),
-                  previousScreen: 'Entry',
-                },
-              )
-            }
+            onPress={() => setShowAnalyticsModal(true)}
             isBorderless={true}
             //isActive={scrolledToEnd}
           />

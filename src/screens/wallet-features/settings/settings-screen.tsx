@@ -22,7 +22,11 @@ import { useNavigation } from '@react-navigation/core'
 const SettingsScreen = () => {
   const reduxState = useAppSelector((state) => state)
   const { activeNetwork, analytics = false } = reduxState
-  const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(false)
+  const isAnalyticsEnabledFromStart =
+    analytics.acceptedDate === undefined ? false : true
+  const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(
+    isAnalyticsEnabledFromStart,
+  )
   const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
   const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
   const dispatch = useDispatch()
@@ -40,7 +44,7 @@ const SettingsScreen = () => {
       },
     })
   }
-
+  //console.log(isAnalyticsEnabledFromStart, 'from start')
   /*   const toggleNotifications = () => {
     dispatch({
       type: 'NOTIFICATIONS_UPDATE',
