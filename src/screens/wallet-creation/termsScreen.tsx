@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
@@ -11,10 +11,12 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 import Button from '../../theme/button'
+import AnalyticsModal from './AnalyticsModal'
 type TermsProps = NativeStackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation, route }: TermsProps) => {
   //const [scrolledToEnd, setScrolledToEnd] = useState(false)
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
 
   return (
     <ImageBackground
@@ -97,6 +99,12 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
             //isActive={scrolledToEnd}
           />
         </ButtonFooter>
+        {showAnalyticsModal ? (
+          <AnalyticsModal
+            nextScreen={route?.params?.nextScreen || 'UnlockWalletScreen'}
+            onAction={setShowAnalyticsModal}
+          />
+        ) : null}
       </View>
     </ImageBackground>
   )
