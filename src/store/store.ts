@@ -35,6 +35,7 @@ import {
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
 import { showNotification } from './pushNotification'
 
+
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
 
