@@ -11,7 +11,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 import Button from '../../theme/button'
-import AnalyticsModal from './AnalyticsModal'
+import AnalyticsModal from './optInAnalyticsModal'
 type TermsProps = NativeStackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation, route }: TermsProps) => {

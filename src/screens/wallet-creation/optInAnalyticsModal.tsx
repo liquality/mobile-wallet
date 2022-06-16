@@ -1,5 +1,5 @@
 import { Modal, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Button from '../../theme/button'
 import { useNavigation } from '@react-navigation/core'
 import CheckBox from '../../components/checkbox'
@@ -22,7 +22,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
   const { analytics = false } = reduxState
   const dispatch = useDispatch()
 
-  const handleOkButtonPress = () => {
+  const handleOkButtonPress = useCallback(() => {
     onAction(false)
     dispatch({
       type: 'ANALYTICS_UPDATE',
@@ -37,11 +37,12 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
       termsAcceptedAt: Date.now(),
       previousScreen: 'Entry',
     })
-  }
-  const handleCheckBox = () => {
+  }, [analytics, dispatch, userHasChecked, navigation, nextScreen, onAction])
+
+  const handleCheckBox = useCallback(() => {
     setUserHasChecked(!userHasChecked)
-  }
-  //console.log(analytics, 'Whats analytis?')
+  }, [userHasChecked])
+
   return (
     <Modal
       animationType="fade"
@@ -68,7 +69,6 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
 
           <Button
             type="secondary"
-            style={styles.okBtn}
             variant="l"
             label="OK"
             onPress={handleOkButtonPress}
@@ -131,11 +131,6 @@ const styles = StyleSheet.create({
   checkBoxStyle: {
     marginTop: 10,
     marginBottom: 20,
-  },
-  okBtn: {
-    flex: 1,
-    display: 'block',
-    width: 10,
   },
 })
 

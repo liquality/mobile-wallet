@@ -421,7 +421,7 @@ PODS:
   - RNScreens (3.13.1):
     - React-Core
     - React-RCTImage
-  - RNShare (7.6.1):
+  - RNShare (7.6.2):
     - React-Core
   - RNSVG (12.3.0):
     - React-Core
@@ -436,7 +436,7 @@ PODS:
   - vision-camera-code-scanner (0.1.6):
     - GoogleMLKit/BarcodeScanning
     - React-Core
-  - VisionCamera (2.13.3):
+  - VisionCamera (2.13.5):
     - React
     - React-callinvoker
     - React-Core
@@ -687,13 +687,13 @@ SPEC CHECKSUMS:
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: 46cdb89ca59ab7181334f4ed05a70e82ddb36751
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
-  RNShare: d0257bcf7aaf75d9502cea73496661c8d68f3cfc
+  RNShare: da0fd52f08c7b9f1ca31aef98a4890e98fc2c4c5
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   TcpSockets: 14306fb79f9750ea7d2ddd02d8bed182abb01797
   vision-camera-code-scanner: 75a4ac3c9ce9b4605f5d87cc0f0001bb64bfb4de
-  VisionCamera: a4b6e0f84d07c2253f54b96e6d3ee13ebe6536e1
+  VisionCamera: 35380426f35706ae2900e37d508fa0f71a8b7407
   Yoga: d6b6a80659aa3e91aaba01d0012e7edcbedcbecd
 
 PODFILE CHECKSUM: 0d05ed3c7bb9581f74a1748a17a5dead4584749e
