@@ -72,6 +72,7 @@ export const walletState = atom<Awaited<ReturnType<typeof setupWallet>>>({
 
 export const activityFilterState = atom<CustomRootState['assetFilter']>({
   key: 'ActivityFilter',
+  default: {},
 })
 
 //---------- ATOM FAMILIES----------------
@@ -81,7 +82,7 @@ export const accountInfoStateFamily = atomFamily<AccountType, string>({
 
 export const balanceStateFamily = atomFamily<number, string>({
   key: 'AssetBalance',
-  default: 0,
+  default: -1,
   effects: (asset) => [balanceEffect(asset)],
 })
 

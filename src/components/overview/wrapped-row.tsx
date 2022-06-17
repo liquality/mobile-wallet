@@ -19,6 +19,7 @@ import {
 } from '../../atoms'
 import { useNavigation, useRoute } from '@react-navigation/core'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
+import { runOnUI } from 'react-native-reanimated'
 
 const WrappedRow: FC<{
   item: { id: string; name: string }
@@ -42,17 +43,8 @@ const WrappedRow: FC<{
   const route = useRoute<OverviewProps['route']>()
 
   const toggleRow = useCallback(() => {
-    setIsExpanded(!isExpanded)
+    runOnUI(setIsExpanded)(!isExpanded)
   }, [isExpanded])
-
-  // const onAssetSelected = useCallback(
-  //   (params: StackPayload) => {
-  //     navigation.navigate('AssetScreen', {
-  //       ...params,
-  //     })
-  //   },
-  //   [navigation],
-  // )
 
   const onAssetSelected = useCallback(() => {
     let fromAsset: AccountType, toAsset: AccountType
@@ -68,48 +60,29 @@ const WrappedRow: FC<{
         setSwapPair((previousValue) => ({ ...previousValue, toAsset }))
       }
 
-      navigation.navigate(screenMap[route.params.action], {
-        swapAssetPair: swapPair,
-        screenTitle: `${route.params.action} ${item.name}`,
+      runOnUI(navigation.navigate)({
+        name: screenMap[route.params.action],
+        params: {
+          swapAssetPair: swapPair,
+          screenTitle: `${route.params.action} ${item.name}`,
+        },
       })
-      // if (!route.params.swapAssetPair) {
-      //   const fromAsset = params.assetData
-      //   let toAsset = params.assetData
-      //
-      //   if (fromAsset?.code === 'ETH') {
-      //     toAsset = assets.filter((asset) => asset.code === 'BTC')[0]
-      //   } else {
-      //     toAsset = assets.filter((asset) => asset.code === 'ETH')[0]
-      //   }
-      //   navigation.navigate(screenMap[route.params.action], {
-      //     swapAssetPair: {
-      //       fromAsset,
-      //       toAsset,
-      //     },
-      //     screenTitle: `${route.params.action} ${params.assetData?.code}`,
-      //   })
-      // } else {
-      //   const swapAssetPair: SwapAssetPairType = route.params.swapAssetPair
-      //   if (!route.params.swapAssetPair.toAsset) {
-      //     swapAssetPair.toAsset = params.assetData
-      //   } else {
-      //     swapAssetPair.fromAsset = params.assetData
-      //   }
-      //   navigation.navigate(screenMap[route.params.action], {
-      //     swapAssetPair,
-      //     screenTitle: `${route.params.action} ${params.assetData?.code}`,
-      //   })
-      // }
     } else if (route?.params?.action === ActionEnum.SEND) {
       if (account)
-        navigation.navigate(screenMap[route.params.action], {
-          assetData: account,
-          screenTitle: `${route.params.action} ${item.name}`,
+        runOnUI(navigation.navigate)({
+          name: screenMap[route.params.action],
+          params: {
+            assetData: account,
+            screenTitle: `${route.params.action} ${item.name}`,
+          },
         })
     } else {
-      navigation.navigate('AssetScreen', {
-        ...route.params,
-        assetData: account,
+      runOnUI(navigation.navigate)({
+        name: 'AssetScreen',
+        params: {
+          ...route.params,
+          assetData: account,
+        },
       })
     }
   }, [

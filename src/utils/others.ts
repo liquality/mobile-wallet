@@ -61,6 +61,26 @@ export const pbkdf2 = async (
   return global.Buffer.from(generatedValue).toString('hex')
 }
 
+export const pbkdf2Sync = (
+  password: string,
+  salt: string,
+  iterations: number,
+  length: number,
+  digest: string,
+): string => {
+  Log(digest, 'info')
+  const generatedValue = NativeModules.Aes.pbkdf2Sync(
+    password,
+    salt,
+    iterations,
+    length,
+    digest,
+  )
+
+  return global.Buffer.from(generatedValue).toString('hex')
+}
+
+global.pbkdf2Sync = pbkdf2Sync
 export const encrypt = async (
   value: string,
   derivedKey: string,

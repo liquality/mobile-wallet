@@ -39,6 +39,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
   const addTransaction = useRecoilCallback(
     ({ set }) =>
       (transactionId: string, historyItem: HistoryItem) => {
+        // console.log('history item: ', JSON.stringify(historyItem))
         set(historyIdsState, (currVal) => [...currVal, transactionId])
         set(historyStateFamily(transactionId), historyItem)
       },

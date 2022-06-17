@@ -27,5 +27,4 @@ const AssetFlatList = (props: AssetFlatListPropsType) => {
   )
 }
 
-AssetFlatList.whyDidYouRender = true
 export default React.memo(AssetFlatList)

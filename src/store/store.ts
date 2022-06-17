@@ -74,6 +74,8 @@ export const store = configureStore({
 
 //-------------------------3. REGISTER THE CALLBACKS / SUBSCRIBE TO MEANINGFULL EVENTS-----------------------------
 export const initWallet = async (initialState?: CustomRootState) => {
+  // console.time('Tracing')
+  // const start = dayjs().unix()
   const walletOptions: WalletOptions = {
     initialState: initialState || {
       activeNetwork: Network.Testnet,
@@ -87,7 +89,23 @@ export const initWallet = async (initialState?: CustomRootState) => {
       encrypt: encrypt,
     },
   }
-  return setupWallet(walletOptions)
+  wallet = setupWallet(walletOptions)
+  // wallet.original.subscribe((mutation) => {
+  //   if (mutation.type === 'CREATE_WALLET') {
+  //     console.log(mutation.type, dayjs().unix() - start, 'seconds')
+  //   } else if (mutation.type === 'UPDATE_BALANCE') {
+  //     console.log(
+  //       mutation.type,
+  //       mutation.payload.asset,
+  //       dayjs().unix() - start,
+  //       'seconds',
+  //     )
+  //   } else if (mutation.type === 'UPDATE_ACCOUNT_ADDRESSES') {
+  //     console.log(mutation.type, dayjs().unix() - start, 'seconds')
+  //   }
+  // })
+
+  return wallet
 }
 
 //-------------------------4. PERFORM ACTIONS ON THE WALLET-------------------------------------------------------------
@@ -623,13 +641,23 @@ export const transactionHistoryEffect: (
   transactionId: string,
 ) => AtomEffect<HistoryItem> =
   (transactionId) =>
-  ({ setSelf }) => {
+  ({ setSelf, trigger }) => {
+    if (trigger === 'get') {
+      const item = wallet.getters.activity.find(
+        (activity) => activity.id === transactionId,
+      )
+      if (item) setSelf(item)
+    }
+
     wallet.original.subscribe((mutation) => {
       const { type, payload } = mutation
 
+      // console.log('updates: ', type, mutation)
       if (type === 'UPDATE_HISTORY') {
         const { id, updates } = payload
-        if (id === transactionId) setSelf(updates)
+        // console.log('updates: ', id, transactionId)
+        if (id === transactionId)
+          setSelf((historyItem) => ({ ...historyItem, ...updates }))
       }
     })
   }

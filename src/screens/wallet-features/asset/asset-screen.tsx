@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react'
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
 import {
-  formatFiat,
   prettyBalance,
+  prettyFiatBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -16,8 +16,10 @@ import { useRecoilValue } from 'recoil'
 import {
   addressStateFamily,
   balanceStateFamily,
+  fiatRatesState,
   swapPairState,
 } from '../../../atoms'
+import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 
 type AssetScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -25,10 +27,11 @@ type AssetScreenProps = NativeStackScreenProps<
 >
 
 const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
-  const { id, code, balanceInUSD }: AccountType = route.params.assetData!
+  const { id, code }: AccountType = route.params.assetData!
   const swapPair = useRecoilValue(swapPairState)
   const address = useRecoilValue(addressStateFamily(id))
   const balance = useRecoilValue(balanceStateFamily(code))
+  const fiatRates = useRecoilValue(fiatRatesState)
 
   const handleSendPress = useCallback(() => {
     navigation.navigate('SendScreen', {
@@ -52,57 +55,73 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   }, [navigation, swapPair])
 
   return (
-    <Box flex={1} backgroundColor="mainBackground" borderWidth={1}>
-      <Box style={styles.overviewBlock}>
-        <GradientBackground
-          width={Dimensions.get('screen').width}
-          height={225}
-        />
-        <Box flexDirection="row" justifyContent="center" alignItems="flex-end">
-          <Text style={styles.balanceInUSD}>
-            {balanceInUSD && formatFiat(new BigNumber(balanceInUSD)).toString()}
+    <Box flex={1} backgroundColor="mainBackground">
+      <React.Suspense
+        fallback={
+          <View>
+            <Text>Loading asset screen...</Text>
+          </View>
+        }>
+        <Box style={styles.overviewBlock}>
+          <GradientBackground
+            width={Dimensions.get('screen').width}
+            height={225}
+          />
+          <Box
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="flex-end">
+            <Text style={styles.balanceInUSD}>
+              {`$${prettyFiatBalance(
+                unitToCurrency(cryptoassets[code], new BigNumber(balance)),
+                fiatRates?.[code] || 0,
+              )}`}
+            </Text>
+          </Box>
+          <Box
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="flex-end">
+            <Text style={styles.balanceInNative} numberOfLines={1}>
+              {balance &&
+                code &&
+                prettyBalance(new BigNumber(balance), code).toString()}
+            </Text>
+            <Text style={styles.nativeCurrency}>{code}</Text>
+          </Box>
+          <Text style={styles.address}>
+            {`${address?.substring(0, 4)}...${address?.substring(
+              address?.length - 4,
+            )}`}
           </Text>
+          <Box flexDirection="row" justifyContent="center" marginTop="l">
+            <RoundButton
+              onPress={handleSendPress}
+              label="Send"
+              type="SEND"
+              variant="smallPrimary"
+            />
+            <RoundButton
+              onPress={handleSwapPress}
+              label="Swap"
+              type="SWAP"
+              variant="largePrimary"
+            />
+            <RoundButton
+              onPress={handleReceivePress}
+              label="Receive"
+              type="RECEIVE"
+              variant="smallPrimary"
+            />
+          </Box>
         </Box>
-        <Box flexDirection="row" justifyContent="center" alignItems="flex-end">
-          <Text style={styles.balanceInNative} numberOfLines={1}>
-            {balance &&
-              code &&
-              prettyBalance(new BigNumber(balance), code).toString()}
-          </Text>
-          <Text style={styles.nativeCurrency}>{code}</Text>
-        </Box>
-        <Text style={styles.address}>
-          {`${address?.substring(0, 4)}...${address?.substring(
-            address?.length - 4,
-          )}`}
-        </Text>
-        <Box flexDirection="row" justifyContent="center" marginTop="l">
-          <RoundButton
-            onPress={handleSendPress}
-            label="Send"
-            type="SEND"
-            variant="smallPrimary"
-          />
-          <RoundButton
-            onPress={handleSwapPress}
-            label="Swap"
-            type="SWAP"
-            variant="largePrimary"
-          />
-          <RoundButton
-            onPress={handleReceivePress}
-            label="Receive"
-            type="RECEIVE"
-            variant="smallPrimary"
-          />
-        </Box>
-      </Box>
-      <View style={styles.tabBlack}>
-        <Pressable style={[styles.leftHeader, styles.headerFocused]}>
-          <Text variant="tabHeader">ACTIVITY</Text>
-        </Pressable>
-      </View>
-      <ActivityFlatList navigate={navigation.navigate} selectedAsset={code} />
+        <View style={styles.tabBlack}>
+          <Pressable style={[styles.leftHeader, styles.headerFocused]}>
+            <Text variant="tabHeader">ACTIVITY</Text>
+          </Pressable>
+        </View>
+        <ActivityFlatList selectedAsset={code} />
+      </React.Suspense>
     </Box>
   )
 }

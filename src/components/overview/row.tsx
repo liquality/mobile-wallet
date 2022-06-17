@@ -1,5 +1,11 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import { AccountType, StackPayload } from '../../types'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import MinusSign from '../../assets/icons/minus-sign.svg'
@@ -74,61 +80,68 @@ const Row = (props: RowProps) => {
 
   return (
     <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
-      <Pressable
-        style={[styles.row, { borderLeftColor: item.color }]}
-        onPress={handlePressOnRow}>
-        <View style={styles.col1}>
-          <Pressable onPress={handleToggleRow}>
-            {isExpanded ? (
-              <MinusSign
-                width={15}
-                height={15}
-                fill={isNested ? '#A8AEB7' : '#FFF'}
-                style={styles.plusSign}
-              />
-            ) : (
-              <PlusSign
-                width={15}
-                height={15}
-                fill={isNested ? '#A8AEB7' : '#FFF'}
-                style={styles.plusSign}
-              />
-            )}
-          </Pressable>
+      {balance < 0 || !address ? (
+        <View style={[styles.row, { borderLeftColor: item.color }]}>
           <AssetIcon chain={item.chain} />
+          <ActivityIndicator />
         </View>
-        <View style={styles.col2}>
-          <Text style={styles.code}>{name}</Text>
-          <Text style={styles.address}>{shortAddress}</Text>
-        </View>
-        {isNested ? (
-          <View style={styles.col3}>
-            <Text style={styles.TotalBalanceInUSD}>
-              {`Total ${prettyFiatBalance}`}
-            </Text>
-          </View>
-        ) : (
-          <View style={styles.col3}>
-            <Text style={styles.balance}>{prettyNativeBalance}</Text>
-            <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
-          </View>
-        )}
-        <View style={styles.col4}>
-          {isNested ? (
-            <ChevronRight width={12} height={12} />
-          ) : (
-            <Pressable
-              onPress={() =>
-                onAssetSelected({
-                  assetData: item,
-                  screenTitle: item.code,
-                })
-              }>
-              <ChevronRight width={12} height={12} />
+      ) : (
+        <Pressable
+          style={[styles.row, { borderLeftColor: item.color }]}
+          onPress={handlePressOnRow}>
+          <View style={styles.col1}>
+            <Pressable onPress={handleToggleRow}>
+              {isExpanded ? (
+                <MinusSign
+                  width={15}
+                  height={15}
+                  fill={isNested ? '#A8AEB7' : '#FFF'}
+                  style={styles.plusSign}
+                />
+              ) : (
+                <PlusSign
+                  width={15}
+                  height={15}
+                  fill={isNested ? '#A8AEB7' : '#FFF'}
+                  style={styles.plusSign}
+                />
+              )}
             </Pressable>
+            <AssetIcon chain={item.chain} />
+          </View>
+          <View style={styles.col2}>
+            <Text style={styles.code}>{name}</Text>
+            <Text style={styles.address}>{shortAddress}</Text>
+          </View>
+          {isNested ? (
+            <View style={styles.col3}>
+              <Text style={styles.TotalBalanceInUSD}>
+                {`Total ${prettyFiatBalance}`}
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.col3}>
+              <Text style={styles.balance}>{prettyNativeBalance}</Text>
+              <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
+            </View>
           )}
-        </View>
-      </Pressable>
+          <View style={styles.col4}>
+            {isNested ? (
+              <ChevronRight width={12} height={12} />
+            ) : (
+              <Pressable
+                onPress={() =>
+                  onAssetSelected({
+                    assetData: item,
+                    screenTitle: item.code,
+                  })
+                }>
+                <ChevronRight width={12} height={12} />
+              </Pressable>
+            )}
+          </View>
+        </Pressable>
+      )}
     </AssetListSwipeableRow>
   )
 }

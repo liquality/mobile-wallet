@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../types'
+import { AccountType, RootStackParamList } from '../../types'
 import Header from '../header'
 import Text from '../../theme/text'
 import Button from '../../theme/button'
@@ -9,12 +9,28 @@ import Box from '../../theme/box'
 import { createWallet } from '../../store/store'
 import { MNEMONIC, PASSWORD } from '@env'
 import GradientBackground from '../../components/gradient-background'
+import { chains } from '@liquality/cryptoassets'
+import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
+import { useRecoilCallback, useSetRecoilState } from 'recoil'
+import {
+  accountInfoStateFamily,
+  accountsIdsState,
+  networkState,
+} from '../../atoms'
 
 type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
 const Entry: FC<EntryProps> = (props): JSX.Element => {
   const { navigation } = props
   const [loading, setLoading] = useState(false)
+  const setAccountsIds = useSetRecoilState(accountsIdsState)
+  const setActiveNetwork = useSetRecoilState(networkState)
+  const addAccount = useRecoilCallback(
+    ({ set }) =>
+      (accountId: string, account: AccountType) => {
+        set(accountInfoStateFamily(accountId), account)
+      },
+  )
 
   const handleImportPress = () => navigation.navigate('WalletImportNavigator')
 
@@ -25,7 +41,47 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
 
   const handleOpenSesamePress = async () => {
     setLoading(true)
-    await createWallet(PASSWORD, MNEMONIC)
+    const { accounts, activeWalletId, activeNetwork } = await createWallet(
+      PASSWORD,
+      MNEMONIC,
+    )
+    const accountsIds: { id: string; name: string }[] = []
+    accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
+      const nativeAsset = chains[account.chain].nativeAsset
+      accountsIds.push({
+        id: account.id,
+        name: nativeAsset,
+      })
+      const newAccount: AccountType = {
+        id: account.id,
+        chain: account.chain,
+        name: account.name,
+        code: nativeAsset,
+        address: account.addresses[0], //TODO why pick only the first address
+        color: account.color,
+        assets: {},
+        balance: 0,
+      }
+
+      for (const asset of account.assets) {
+        newAccount.assets[asset] = {
+          id: asset,
+          name: cryptoassets[asset].name,
+          code: asset,
+          chain: account.chain,
+          color: account.color,
+          balance: 0,
+          assets: {},
+        }
+      }
+
+      addAccount(account.id, newAccount)
+    })
+
+    setAccountsIds(accountsIds)
+    setActiveNetwork(activeNetwork)
+
+    setLoading(false)
     navigation.navigate('MainNavigator')
   }
 

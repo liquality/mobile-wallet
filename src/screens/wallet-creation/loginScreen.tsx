@@ -15,7 +15,6 @@ import {
 } from '../../types'
 import Header from '../header'
 import { createWallet, restoreWallet } from '../../store/store'
-import { useDispatch } from 'react-redux'
 import Text from '../../theme/text'
 import Button from '../../theme/button'
 import Box from '../../theme/box'
@@ -46,7 +45,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const passwordInput = useInputState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const dispatch = useDispatch()
   const setAccountsIds = useSetRecoilState(accountsIdsState)
   const setActiveNetwork = useSetRecoilState(networkState)
   const addAccount = useRecoilCallback(
@@ -61,17 +59,9 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       setError('Passwords must be at least 8 characters')
     } else {
       setLoading(true)
-      //TODO find a better way to handle threads
-      restoreWallet(passwordInput.value).then((walletState) => {
-        dispatch({
-          type: 'RESTORE_WALLET',
-          payload: {
-            ...walletState,
-          },
-        })
-        setLoading(false)
-        navigation.navigate('MainNavigator')
-      })
+      await restoreWallet(passwordInput.value)
+      setLoading(false)
+      navigation.navigate('MainNavigator')
     }
   }
 

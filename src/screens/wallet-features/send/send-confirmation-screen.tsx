@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, ScrollView, Pressable } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
@@ -16,6 +16,7 @@ import Box from '../../../theme/box'
 import { formatDate } from '../../../utils'
 import { useRecoilValue } from 'recoil'
 import { historyStateFamily } from '../../../atoms'
+import { fetchConfirmationByHash } from '../../../store/store'
 
 type SendConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -27,6 +28,7 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   navigation,
 }) => {
   const transaction = route.params.sendTransactionConfirmation!
+  const [, setConfirmations] = useState(0)
   const historyItem = useRecoilValue(
     historyStateFamily(transaction.id),
   ) as SendHistoryItem
@@ -38,13 +40,11 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
     })
   }
 
-  // useEffect(() => {
-  //   const hash = transaction.hash || transaction.tx?.hash
-  //
-  //   fetchConfirmationByHash(historyItem.from, hash).then((confirmations) => {
-  //     historyItem.tx.confirmations = confirmations
-  //   })
-  // }, [transaction])
+  useEffect(() => {
+    const hash = transaction.hash || transaction.tx?.hash
+
+    fetchConfirmationByHash(historyItem.from, hash).then(setConfirmations)
+  }, [historyItem.from, transaction])
 
   if (!historyItem)
     return (

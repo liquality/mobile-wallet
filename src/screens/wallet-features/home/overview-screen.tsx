@@ -14,7 +14,6 @@ import RoundButton from '../../../theme/round-button'
 import GradientBackground from '../../../components/gradient-background'
 import { useRecoilValue } from 'recoil'
 import { accountsIdsState, totalFiatBalanceState } from '../../../atoms'
-
 export type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
   'OverviewScreen'
@@ -56,82 +55,90 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
 
   return (
     <View style={styles.container}>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Box style={styles.overviewBlock}>
-          <GradientBackground
-            width={Dimensions.get('screen').width}
-            height={225}
-          />
-          {accountsIds.length === 0 ? (
-            <Text style={styles.loading}>Loading...</Text>
-          ) : (
-            <Fragment>
-              <View style={styles.totalValueSection}>
-                <Text style={styles.totalValue} numberOfLines={1}>
-                  {totalFiatBalance}
-                </Text>
-                <Text style={styles.currency}>USD</Text>
-              </View>
-              <Text style={styles.assets}>
-                {accountsIds.length}
-                {accountsIds.length === 1 ? ' Asset' : ' Assets'}
-              </Text>
-
-              <Box flexDirection="row" justifyContent="center" marginTop="l">
-                <RoundButton
-                  onPress={handleSendBtnPress}
-                  label="Send"
-                  type="SEND"
-                  variant="smallPrimary"
-                />
-                <RoundButton
-                  onPress={handleSwapBtnPress}
-                  label="Swap"
-                  type="SWAP"
-                  variant="largePrimary"
-                />
-                <RoundButton
-                  onPress={handleReceiveBtnPress}
-                  label="Receive"
-                  type="RECEIVE"
-                  variant="smallPrimary"
-                />
-              </Box>
-            </Fragment>
-          )}
-        </Box>
-        <View style={styles.tabsBlock}>
-          <Pressable
-            style={[
-              styles.tabHeader,
-              selectedView === ViewKind.ASSETS && styles.headerFocused,
-            ]}
-            onPress={() => setSelectedView(ViewKind.ASSETS)}>
-            <Text style={styles.headerText}>ASSET</Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.tabHeader,
-              selectedView === ViewKind.ACTIVITY && styles.headerFocused,
-            ]}
-            onPress={() => setSelectedView(ViewKind.ACTIVITY)}>
-            <Text style={styles.headerText}>ACTIVITY</Text>
-          </Pressable>
-        </View>
-        <Box flex={1}>
-          {selectedView === ViewKind.ACTIVITY &&
-            (accountsIds.length > 0 ? (
-              <ActivityFlatList navigate={navigation.navigate} />
+      <React.Suspense
+        fallback={
+          <View>
+            <Text>Loading...</Text>
+          </View>
+        }>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <Box style={styles.overviewBlock}>
+            <GradientBackground
+              width={Dimensions.get('screen').width}
+              height={225}
+            />
+            {accountsIds.length === 0 ? (
+              <Text style={styles.loading}>Loading...</Text>
             ) : (
-              <Text style={styles.noActivityMessageBlock}>
-                Once you start using your wallet you will see the activity here.
-              </Text>
-            ))}
-          {selectedView === ViewKind.ASSETS && accountsIds && (
-            <AssetFlatList accounts={accountsIds} />
-          )}
-        </Box>
-      </ErrorBoundary>
+              <Fragment>
+                <View style={styles.totalValueSection}>
+                  <Text style={styles.totalValue} numberOfLines={1}>
+                    {totalFiatBalance}
+                  </Text>
+                  <Text style={styles.currency}>USD</Text>
+                </View>
+                <Text style={styles.assets}>
+                  {accountsIds.length}
+                  {accountsIds.length === 1 ? ' Asset' : ' Assets'}
+                </Text>
+
+                <Box flexDirection="row" justifyContent="center" marginTop="l">
+                  <RoundButton
+                    onPress={handleSendBtnPress}
+                    label="Send"
+                    type="SEND"
+                    variant="smallPrimary"
+                  />
+                  <RoundButton
+                    onPress={handleSwapBtnPress}
+                    label="Swap"
+                    type="SWAP"
+                    variant="largePrimary"
+                  />
+                  <RoundButton
+                    onPress={handleReceiveBtnPress}
+                    label="Receive"
+                    type="RECEIVE"
+                    variant="smallPrimary"
+                  />
+                </Box>
+              </Fragment>
+            )}
+          </Box>
+          <View style={styles.tabsBlock}>
+            <Pressable
+              style={[
+                styles.tabHeader,
+                selectedView === ViewKind.ASSETS && styles.headerFocused,
+              ]}
+              onPress={() => setSelectedView(ViewKind.ASSETS)}>
+              <Text style={styles.headerText}>ASSET</Text>
+            </Pressable>
+            <Pressable
+              style={[
+                styles.tabHeader,
+                selectedView === ViewKind.ACTIVITY && styles.headerFocused,
+              ]}
+              onPress={() => setSelectedView(ViewKind.ACTIVITY)}>
+              <Text style={styles.headerText}>ACTIVITY</Text>
+            </Pressable>
+          </View>
+          <Box flex={1}>
+            {selectedView === ViewKind.ACTIVITY &&
+              (accountsIds.length > 0 ? (
+                <ActivityFlatList />
+              ) : (
+                <Text style={styles.noActivityMessageBlock}>
+                  Once you start using your wallet you will see the activity
+                  here.
+                </Text>
+              ))}
+            {selectedView === ViewKind.ASSETS && accountsIds && (
+              <AssetFlatList accounts={accountsIds} />
+            )}
+          </Box>
+        </ErrorBoundary>
+      </React.Suspense>
     </View>
   )
 }
@@ -220,7 +227,5 @@ const styles = StyleSheet.create({
     lineHeight: 28,
   },
 })
-
-OverviewScreen.whyDidYouRender = true
 
 export default memo(OverviewScreen)

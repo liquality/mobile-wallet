@@ -34,7 +34,7 @@ import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
 import ButtonFooter from '../../../components/button-footer'
 import { isNumber } from '../../../utils'
 import { useRecoilValue } from 'recoil'
-import { fiatRatesState } from '../../../atoms'
+import { balanceStateFamily, fiatRatesState } from '../../../atoms'
 
 const useInputState = (
   initialValue: string,
@@ -50,12 +50,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   //TODO is there a better way to deal with this?
   const {
     code = 'ETH',
-    balance = 0,
     chain = ChainId.Ethereum,
     color,
   } = route.params.assetData || {}
   const [customFee, setCustomFee] = useState<number>(0)
   const fiatRates = useRecoilValue(fiatRatesState)
+  const balance = useRecoilValue(balanceStateFamily(code))
   const [showFeeOptions, setShowFeeOptions] = useState(true)
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
