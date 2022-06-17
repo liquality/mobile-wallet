@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
+import { faAngleRight, faSignOut } from '@fortawesome/pro-light-svg-icons'
 
 import SettingsSwitch from '../../../components/ui/switch'
 import { DarkModeEnum } from '../../../types'
@@ -18,6 +19,7 @@ import Button from '../../../theme/button'
 import { downloadWalletLogs } from '../../../utils'
 import DeviceInfo from 'react-native-device-info'
 import { useNavigation } from '@react-navigation/core'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 const SettingsScreen = () => {
   const reduxState = useAppSelector((state) => state)
@@ -44,7 +46,6 @@ const SettingsScreen = () => {
       },
     })
   }
-  //console.log(isAnalyticsEnabledFromStart, 'from start')
   /*   const toggleNotifications = () => {
     dispatch({
       type: 'NOTIFICATIONS_UPDATE',
@@ -54,6 +55,10 @@ const SettingsScreen = () => {
     })
   }
  */
+
+  const handleLockPress = () => {
+    navigation.navigate('LoginScreen')
+  }
   const toggleNetwork = (network: any) => {
     toggleNetwork(network)
   }
@@ -83,75 +88,6 @@ const SettingsScreen = () => {
       <ScrollView>
         <View style={styles.row}>
           <View style={styles.action}>
-            <Text style={styles.label}>Analytics</Text>
-            <SettingsSwitch
-              isFeatureEnabled={isAnalyticsEnabled}
-              enableFeature={toggleAnalyticsOptin}
-            />
-          </View>
-          <Text style={styles.description}>
-            Share where you click. No identifying data is collected.
-          </Text>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.action}>
-            <Text style={styles.label}>Backup Seed Phrase</Text>
-
-            <Pressable
-              onPress={() =>
-                navigation.navigate('BackupWarningScreen', {
-                  screenTitle: 'Warning',
-                  includeBackBtn: false,
-                })
-              }>
-              <Text style={[styles.label, styles.link]}>show</Text>
-            </Pressable>
-          </View>
-          <Text style={styles.description}>
-            Always keep your seed phrase safe.
-          </Text>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.action}>
-            <Text style={styles.label}>Wallet Logs</Text>
-            <Button
-              type="tertiary"
-              variant="s"
-              label="Download logs"
-              onPress={handleDownload}
-              isBorderless={false}
-              isActive={true}
-            />
-          </View>
-          <Text style={styles.description}>
-            The wallet logs contain your public information such as addresses
-            and transactions.
-          </Text>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.action}>
-            <Text style={styles.label}>Notifications</Text>
-            {/*  <SettingsSwitch
-              isFeatureEnabled={notifications}
-              enableFeature={toggleNotifications}
-            /> */}
-            <Button
-              type="tertiary"
-              variant="s"
-              label="Settings"
-              onPress={() => {
-                Linking.openSettings()
-              }}
-              isBorderless={false}
-              isActive={true}
-            />
-          </View>
-          <Text style={styles.description}>
-            Get informed about transaction status and funds received.
-          </Text>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.action}>
             <View>
               <Text style={styles.label}>Networks</Text>
               <View style={styles.btnOptions}>
@@ -175,7 +111,110 @@ const SettingsScreen = () => {
                 </Pressable>
               </View>
             </View>
-            <View>
+          </View>
+        </View>
+
+        {/*     
+  This feature is not included in MVP, but will have to be done at some point so keeping it here
+  <View style={styles.rowDesign}>
+          <View style={styles.action}>
+            <View style={styles.btnContainer}>
+              <View>
+                <Text style={styles.label}>Sync Devices</Text>
+                <Text style={styles.description}>
+                  Be up to date on all devices.
+                </Text>
+              </View>
+              <View style={styles.btnOptions}>
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate('BackupWarningScreen', {
+                      screenTitle: 'Warning',
+                      includeBackBtn: false,
+                    })
+                  }>
+                  <FontAwesomeIcon icon={faAngleRight} size={40} />
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </View> */}
+
+        <View style={styles.rowDesign}>
+          <View style={styles.action}>
+            <View style={styles.btnContainer}>
+              <View>
+                <Text style={styles.label}>Back-up Seed Phrase</Text>
+                <Text style={styles.description}>
+                  Always keep your seed phrase safe.
+                </Text>
+              </View>
+              <View style={styles.btnOptions}>
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate('BackupWarningScreen', {
+                      screenTitle: 'Warning',
+                      includeBackBtn: false,
+                    })
+                  }>
+                  <FontAwesomeIcon icon={faAngleRight} size={40} />
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View style={styles.row}>
+          <View style={styles.action}>
+            <Text style={styles.label}>Wallet Logs</Text>
+            <Button
+              type="tertiary"
+              variant="s"
+              label="Download logs"
+              onPress={handleDownload}
+              isBorderless={false}
+              isActive={true}
+            />
+          </View>
+          <Text style={styles.description}>
+            The wallet logs contain your public information such as addresses
+            and transactions.
+          </Text>
+        </View>
+        <View style={styles.row}>
+          <View style={styles.action}>
+            <Text style={styles.label}>Analytics</Text>
+            <SettingsSwitch
+              isFeatureEnabled={isAnalyticsEnabled}
+              enableFeature={toggleAnalyticsOptin}
+            />
+          </View>
+          <Text style={styles.description}>
+            Share where you click. No identifying data is collected.
+          </Text>
+        </View>
+        <View style={styles.row}>
+          <View style={styles.action}>
+            <Text style={styles.label}>Notifications</Text>
+            {/*  <SettingsSwitch
+              isFeatureEnabled={notifications}
+              enableFeature={toggleNotifications}
+            /> */}
+
+            <Pressable
+              onPress={() => {
+                Linking.openSettings()
+              }}>
+              <Text style={[styles.label, styles.link]}>manage</Text>
+            </Pressable>
+          </View>
+          <Text style={styles.description}>
+            Get informed about transaction status and funds received.
+          </Text>
+        </View>
+
+        <View style={styles.rowDesign}>
+          <View style={styles.action}>
+            <View style={styles.btnContainer}>
               <Text style={styles.label}>Design</Text>
               <View style={styles.btnOptions}>
                 <Pressable
@@ -199,6 +238,39 @@ const SettingsScreen = () => {
               </View>
             </View>
           </View>
+        </View>
+
+        <View style={styles.rowDesign}>
+          <View style={styles.action}>
+            <View style={styles.btnContainer}>
+              <View>
+                <Text style={styles.label}>About Liquality</Text>
+              </View>
+              <View style={styles.toLiqualityWebsite}>
+                <Pressable
+                  onPress={() => Linking.openURL('https://liquality.io/')}>
+                  <FontAwesomeIcon icon={faAngleRight} size={40} />
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View style={styles.lockInfo}>
+            <Pressable onPress={handleLockPress}>
+              <FontAwesomeIcon
+                icon={faSignOut}
+                size={20}
+                color={'#5F5F5F'}
+                style={styles.signOutIcon}
+              />
+            </Pressable>
+            <Text style={styles.label}>Lock</Text>
+          </View>
+        </View>
+
+        <View style={styles.lastRow}>
           <View style={styles.info}>
             <Text style={[styles.label, styles.version]}>
               Version: {DeviceInfo.getVersion()}
@@ -227,12 +299,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: '100%',
   },
+  lastRow: {
+    borderColor: '#D9DFE5',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    width: '100%',
+  },
+  rowDesign: {
+    borderTopWidth: 1,
+    borderColor: '#D9DFE5',
+    paddingVertical: 0,
+    paddingHorizontal: 20,
+    width: '100%',
+  },
   action: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
   },
+
   label: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '500',
@@ -240,10 +326,20 @@ const styles = StyleSheet.create({
     color: '#000D35',
     marginRight: 5,
   },
+  btnContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
   btnOptions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
+  },
+  toLiqualityWebsite: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   btn: {
     borderWidth: 1,
@@ -272,7 +368,13 @@ const styles = StyleSheet.create({
   },
   info: {
     flexDirection: 'row',
-    marginTop: 40,
+    marginTop: 20,
+  },
+  lockInfo: {
+    flexDirection: 'row',
+  },
+  signOutIcon: {
+    marginRight: 10,
   },
   description: {
     fontFamily: 'Montserrat-Regular',
@@ -286,16 +388,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 26,
     color: '#1D1E21',
-  },
-  appVersion: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '300',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#646F85',
-    textAlign: 'center',
-    marginBottom: 5,
-    marginTop: 5,
   },
 })
 
