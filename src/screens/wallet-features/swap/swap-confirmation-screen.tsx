@@ -26,7 +26,7 @@ import {
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
-import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swap'
+import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
 import { SwapProvider } from '@liquality/wallet-core/dist/swaps/SwapProvider'
 import { retrySwap } from '../../../store/store'
 import RefundedIcon from '../../../assets/icons/activity-status/refunded.svg'
