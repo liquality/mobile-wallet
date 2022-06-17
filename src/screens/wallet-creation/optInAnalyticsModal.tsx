@@ -15,7 +15,6 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
   onAction,
   nextScreen,
 }) => {
-  //console.log(nextScreen, 'WHAT IS NEXTSCREEN')
   const navigation = useNavigation()
   const [userHasChecked, setUserHasChecked] = useState<boolean>(true)
   const reduxState = useAppSelector((state) => state)

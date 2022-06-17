@@ -46,19 +46,18 @@ const SettingsScreen = () => {
       },
     })
   }
-  /*   const toggleNotifications = () => {
-    dispatch({
-      type: 'NOTIFICATIONS_UPDATE',
-      payload: {
-        notifications: !notifications,
-      },
-    })
-  }
- */
 
-  const handleLockPress = () => {
+  const handleLockPress = useCallback(() => {
     navigation.navigate('LoginScreen')
-  }
+  }, [navigation])
+
+  const handleBackupSeedPress = useCallback(() => {
+    navigation.navigate('BackupWarningScreen', {
+      screenTitle: 'Warning',
+      includeBackBtn: false,
+    })
+  }, [navigation])
+
   const toggleNetwork = (network: any) => {
     toggleNetwork(network)
   }
@@ -150,13 +149,7 @@ const SettingsScreen = () => {
                 </Text>
               </View>
               <View style={styles.btnOptions}>
-                <Pressable
-                  onPress={() =>
-                    navigation.navigate('BackupWarningScreen', {
-                      screenTitle: 'Warning',
-                      includeBackBtn: false,
-                    })
-                  }>
+                <Pressable onPress={handleBackupSeedPress}>
                   <FontAwesomeIcon icon={faAngleRight} size={40} />
                 </Pressable>
               </View>
@@ -195,11 +188,6 @@ const SettingsScreen = () => {
         <View style={styles.row}>
           <View style={styles.action}>
             <Text style={styles.label}>Notifications</Text>
-            {/*  <SettingsSwitch
-              isFeatureEnabled={notifications}
-              enableFeature={toggleNotifications}
-            /> */}
-
             <Pressable
               onPress={() => {
                 Linking.openSettings()
