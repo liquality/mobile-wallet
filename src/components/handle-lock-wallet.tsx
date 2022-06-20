@@ -1,51 +1,47 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AppState } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
-
-import SplashScreen from 'react-native-splash-screen'
-import { isNewInstallation } from '../store/store'
-import { Log } from '../utils'
 
 const HandleLockWallet = ({}) => {
   const navigation = useNavigation()
   const appState = useRef(AppState.currentState)
   const [, setAppStateVisible] = useState(appState.current)
 
-  useEffect(() => {
-    isNewInstallation()
-      .then((isNew) => {
-        if (isNew) {
-          setInitialRouteName('WalletCreationNavigator')
-        } else {
-          setInitialRouteName('LoginScreen')
-        }
-      })
-      .catch((e) => Log(`Failed to start the app: ${e}`, 'error'))
-    SplashScreen.hide()
+  const handleLockPress = useCallback(() => {
+    //For some reason there is unexpected behaviour when navigating to loginscreen directly
+    //Therefore first navigating to settings and handling case in settings-screen solved this issue
+    //perhaps not best/cleanest solution but works as expected
+    navigation.navigate('SettingsScreen', {
+      shouldLogOut: true,
+    })
+  }, [navigation])
 
+  useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (
         appState.current.match(/inactive|background/) &&
         nextAppState === 'active'
       ) {
-        //console.log('App has come to the foreground!')
+        //App has come to the foreground
       }
 
+      //To fetch current appstate use appState.current
       appState.current = nextAppState
       setAppStateVisible(appState.current)
-      //console.log('AppState CURRENT:', appState.current)
       if (
         appState.current === 'background' ||
         appState.current === 'inactive'
       ) {
-        navigation.navigate('LoginScreen')
+        setTimeout(() => {
+          handleLockPress()
+        }, 5000)
       }
     })
 
     return () => {
       subscription.remove()
     }
-  }, [navigation])
+  }, [navigation, handleLockPress])
 
   return null
 }
