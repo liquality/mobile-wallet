@@ -1,8 +1,8 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
-import { AppState, StatusBar, View } from 'react-native'
+import React, { FC, useEffect, useState } from 'react'
+import { StatusBar, View } from 'react-native'
 import { Provider } from 'react-redux'
 import SplashScreen from 'react-native-splash-screen'
-import { NavigationContainer, useNavigation } from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native'
 
 import { createSwitchNavigator } from '@react-navigation/compat'
 import { ThemeProvider } from '@shopify/restyle'
@@ -16,6 +16,7 @@ import {
 import LoginScreen from './src/screens/wallet-creation/loginScreen'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Log } from './src/utils'
+import HandleLockWallet from './src/components/handle-lock-wallet'
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
@@ -37,8 +38,6 @@ const App: FC = () => {
   const [initialRouteName, setInitialRouteName] = useState(
     'WalletCreationNavigator',
   )
-  const appState = useRef(AppState.currentState)
-  const [, setAppStateVisible] = useState(appState.current)
   // const navigation = useNavigation()
   const backgroundStyle = {
     flex: 1,
@@ -55,30 +54,6 @@ const App: FC = () => {
       })
       .catch((e) => Log(`Failed to start the app: ${e}`, 'error'))
     SplashScreen.hide()
-
-    const subscription = AppState.addEventListener('change', (nextAppState) => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
-        //setInitialRouteName('LoginScreen')
-        //console.log('App has come to the foreground!')
-      }
-
-      appState.current = nextAppState
-      setAppStateVisible(appState.current)
-      //console.log('AppState CURRENT:', appState.current)
-      if (
-        appState.current === 'background' ||
-        appState.current === 'inactive'
-      ) {
-        //setInitialRouteName('LoginScreen')
-      }
-    })
-
-    return () => {
-      subscription.remove()
-    }
   }, [])
 
   if (!initialRouteName) {
@@ -92,6 +67,7 @@ const App: FC = () => {
           <StatusBar barStyle={'dark-content'} />
           <GestureHandlerRootView style={backgroundStyle}>
             <NavigationContainer>
+              <HandleLockWallet />
               <AppNavigator initialRouteName={initialRouteName} />
             </NavigationContainer>
           </GestureHandlerRootView>
