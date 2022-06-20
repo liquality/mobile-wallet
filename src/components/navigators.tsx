@@ -26,7 +26,6 @@ import CustomFeeScreen from '../screens/wallet-features/custom-fee-screen'
 import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
 import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
-import SettingsHeaderRight from './header-bar/settings-header-right'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
 
@@ -303,13 +302,13 @@ export const MainNavigator = () => (
     <Tab.Screen
       name="SettingsScreen"
       component={SettingsScreen}
-      options={({ navigation }) => ({
+      options={({}) => ({
         headerShown: true,
         headerTitle: '',
         headerLeft: () => <Text style={styles.settingsTitle}>SETTINGS</Text>,
-        headerRight: () => (
+        /*    headerRight: () => (
           <SettingsHeaderRight navigate={navigation.navigate} />
-        ),
+        ), */
       })}
     />
   </Tab.Navigator>
