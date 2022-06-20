@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
-import { useAppSelector } from '../../hooks'
+import { useAppSelector } from '../../../hooks'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import {
   cryptoToFiat,
   formatFiat,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
-import { calculateGasFee } from '../../core/utils/fee-calculator'
-import AssetIcon from '../../components/asset-icon'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+
+import { calculateGasFee } from '../../../core/utils/fee-calculator'
+import AssetIcon from '../../../components/asset-icon'
 import {
   AssetDataElementType,
   RootStackParamList,
   UseInputStateReturnType,
-} from '../../types'
-import { ChainId } from '@liquality/cryptoassets'
-import Button from '../../theme/button'
+} from '../../../types'
+import Button from '../../../theme/button'
 
-type CustomFeeScreenProps = NativeStackScreenProps<
+type CustomFeeEIP1559ScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'SendScreen'
+  'CustomFeeEIP1559Screen'
 >
 type SpeedMode = keyof FeeDetails
 const useInputState = (
@@ -29,12 +29,14 @@ const useInputState = (
   return { value, onChangeText: setValue }
 }
 
-const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
+const CustomFeeEIP1559Screen = ({
+  navigation,
+  route,
+}: CustomFeeEIP1559ScreenProps) => {
   const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
   const [gasFees, setGasFees] = useState<FeeDetails>()
   const [error, setError] = useState('')
-  const { code, chain = ChainId.Ethereum }: AssetDataElementType =
-    route.params.assetData!
+  const { code }: AssetDataElementType = route.params.assetData!
   const {
     activeWalletId = '',
     activeNetwork = 'testnet',
@@ -47,7 +49,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     fiatRates: state.fiatRates,
   }))
   const customFeeInput = useInputState(
-    `${fees?.[activeNetwork]?.[activeWalletId]?.[chain].average.fee || '0'}`,
+    `${fees?.[activeNetwork]?.[activeWalletId]?.[code].average.fee || '0'}`,
   )
 
   const handleApplyPress = () => {
@@ -58,14 +60,14 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   }
 
   useEffect(() => {
-    const _feeDetails = fees?.[activeNetwork]?.[activeWalletId]?.[chain]
+    const _feeDetails = fees?.[activeNetwork]?.[activeWalletId]?.[code]
     if (!_feeDetails) {
       setError('Gas fees missing')
       return
     }
 
     setGasFees(_feeDetails)
-  }, [fees, activeWalletId, activeNetwork, chain])
+  }, [fees, activeWalletId, activeNetwork, code])
 
   if (!gasFees) {
     return (
@@ -300,4 +302,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default CustomFeeScreen
+export default CustomFeeEIP1559Screen

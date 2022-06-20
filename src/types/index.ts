@@ -93,6 +93,7 @@ export type RootStackParamList = {
   SendConfirmationScreen: StackPayload
   SwapConfirmationScreen: StackPayload
   CustomFeeScreen: StackPayload
+  CustomFeeEIP1559Screen: StackPayload
   SwapScreen: StackPayload
   SwapReviewScreen: StackPayload
   WalletImportNavigator: undefined

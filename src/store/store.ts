@@ -34,6 +34,7 @@ import {
 } from '@liquality/wallet-core/dist/utils/timeline'
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
 import { showNotification } from './pushNotification'
+import createDebugger from 'redux-flipper'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -61,10 +62,14 @@ const persistenceMiddleware: Middleware<
   }
 }
 
+const middlewares = [persistenceMiddleware, thunk]
+
 export const store = configureStore({
   reducer: rootReducer,
   preloadedState: {},
-  middleware: new MiddlewareArray().concat([persistenceMiddleware, thunk]),
+  middleware: new MiddlewareArray().concat(
+    __DEV__ ? [...middlewares, createDebugger()] : middlewares,
+  ),
 })
 
 //-------------------------3. REGISTER THE CALLBACKS / SUBSCRIBE TO MEANINGFULL EVENTS-----------------------------

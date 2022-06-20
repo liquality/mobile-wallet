@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, ScrollView, Pressable } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { chains, unitToCurrency } from '@liquality/cryptoassets'
+import { ChainId, chains, unitToCurrency } from '@liquality/cryptoassets'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import {
   HistoryItem,
   SendHistoryItem,
   TransactionType,
 } from '@liquality/wallet-core/dist/store/types'
-import { RootStackParamList } from '../../../types'
+import { AssetDataElementType, RootStackParamList } from '../../../types'
 import SendTransactionDetails from '../../../components/send/send-transaction-details'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
@@ -29,7 +29,7 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
 }) => {
   const transaction = route.params.sendTransactionConfirmation!
   const [historyItem, setHistoryItem] = useState<SendHistoryItem>()
-  const { history = [] } = useAppSelector((state) => {
+  const { history = [], activeNetwork } = useAppSelector((state) => {
     const { activeNetwork, activeWalletId, history: historyObject } = state
     let historyItems: HistoryItem[] =
       historyObject?.[activeNetwork]?.[activeWalletId] || []
@@ -40,10 +40,23 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   })
 
   const handleTransactionSpeedUp = () => {
-    navigation.navigate('CustomFeeScreen', {
-      assetData: route.params.assetData,
-      screenTitle: 'NETWORK SPEED/FEE',
-    })
+    const { assetData } = route.params
+    if (!assetData) {
+      return
+    }
+
+    const { chain }: AssetDataElementType = assetData
+    const isEIP1559Fees =
+      chain === ChainId.Ethereum ||
+      (chain === ChainId.Polygon && activeNetwork !== 'mainnet')
+
+    navigation.navigate(
+      isEIP1559Fees ? 'CustomFeeEIP1559Screen' : 'CustomFeeScreen',
+      {
+        assetData: assetData,
+        screenTitle: 'NETWORK SPEED/FEE',
+      },
+    )
   }
 
   useEffect(() => {

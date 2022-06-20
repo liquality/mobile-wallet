@@ -22,7 +22,10 @@ import { HeaderBackButtonProps } from '@react-navigation/elements'
 import ReceiveScreen from '../screens/wallet-features/receive/receive-screen'
 import SendScreen from '../screens/wallet-features/send/send-screen'
 import SendReviewScreen from '../screens/wallet-features/send/send-review-screen'
-import CustomFeeScreen from '../screens/wallet-features/custom-fee-screen'
+import {
+  CustomFeeScreen,
+  CustomFeeEIP1559Screen,
+} from '../screens/wallet-features/custom-fee'
 import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
 import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
@@ -160,6 +163,13 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="CustomFeeScreen"
       component={CustomFeeScreen}
+      options={() => ({
+        headerRight: () => <View />,
+      })}
+    />
+    <Stack.Screen
+      name="CustomFeeEIP1559Screen"
+      component={CustomFeeEIP1559Screen}
       options={() => ({
         headerRight: () => <View />,
       })}
