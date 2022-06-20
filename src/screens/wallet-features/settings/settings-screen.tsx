@@ -67,13 +67,13 @@ const SettingsScreen = ({ route }) => {
       Alert.alert('Please reload your app')
     }
 
-    //Here for handle-lock-wallet.tsx
-    if (route.params.shouldLogOut) {
+    //Used for handle-lock-wallet.tsx
+    if (route?.params?.shouldLogOut) {
       handleLockPress()
     }
 
     setIsAnalyticsEnabled(!!analytics?.acceptedDate)
-  }, [activeNetwork, analytics, handleLockPress, route.params.shouldLogOut])
+  }, [activeNetwork, analytics, handleLockPress, route?.params?.shouldLogOut])
 
   const handleDownload = useCallback(() => {
     const walletState = { ...reduxState }

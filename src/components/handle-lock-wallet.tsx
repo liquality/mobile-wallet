@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AppState } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const HandleLockWallet = ({}) => {
   const navigation = useNavigation()
@@ -17,26 +18,34 @@ const HandleLockWallet = ({}) => {
   }, [navigation])
 
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', (nextAppState) => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
-        //App has come to the foreground
-      }
+    const subscription = AppState.addEventListener(
+      'change',
+      async (nextAppState) => {
+        if (
+          appState.current.match(/inactive|background/) &&
+          nextAppState === 'active'
+        ) {
+          var end = new Date().getTime()
+          const started = await AsyncStorage.getItem('inactiveUserTime')
 
-      //To fetch current appstate use appState.current
-      appState.current = nextAppState
-      setAppStateVisible(appState.current)
-      if (
-        appState.current === 'background' ||
-        appState.current === 'inactive'
-      ) {
-        setTimeout(() => {
-          handleLockPress()
-        }, 5000)
-      }
-    })
+          var time = end - Number(started)
+          if (time > 30000) {
+            handleLockPress()
+          }
+        }
+
+        //To fetch current appstate use appState.current
+        appState.current = nextAppState
+        setAppStateVisible(appState.current)
+        if (
+          appState.current === 'background' ||
+          appState.current === 'inactive'
+        ) {
+          var start = new Date().getTime().toString()
+          await AsyncStorage.setItem('inactiveUserTime', start)
+        }
+      },
+    )
 
     return () => {
       subscription.remove()
