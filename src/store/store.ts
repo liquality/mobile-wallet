@@ -12,7 +12,7 @@ import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
-import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swap'
+import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
 import { AssetDataElementType, GasFees } from '../types'
 import { Notification, WalletOptions } from '@liquality/wallet-core/dist/types'
 import { decrypt, encrypt, Log, pbkdf2 } from '../utils'
@@ -34,6 +34,7 @@ import {
 } from '@liquality/wallet-core/dist/utils/timeline'
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
 import { showNotification } from './pushNotification'
+import { random } from 'lodash-es'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -117,8 +118,66 @@ export const initWallet = async (initialState?: CustomRootState) => {
         'NEW_TRANSACTION',
         TransactionType.Send,
       )
+    } else if (mutation.type === 'UNLOCK_WALLET') {
     } else {
+      const { activeNetwork, activeWalletId } = wallet.state
+      const enabledAssets = [
+        'BTC',
+        'ETH',
+        'DAI',
+        'RBTC',
+        'BNB',
+        'NEAR',
+        'SOV',
+        'MATIC',
+        'PWETH',
+        'ARBETH',
+        'SOL',
+        'LUNA',
+        'UST',
+      ]
+
       // TODO Perform other types of updates (balances, market data, fiat rates... )
+      //MOB-78 implementation
+      asyncLoop(
+        () => {
+          wallet.dispatch.updateBalances({
+            network: activeNetwork,
+            walletId: activeWalletId,
+            assets: enabledAssets,
+          })
+        },
+        () => random(400000, 600000),
+      ).catch((e) => {
+        Log(` ${e}`, '1ERRrror')
+      })
+
+      asyncLoop(
+        () => {
+          wallet.dispatch.updateFiatRates({
+            assets: enabledAssets,
+          })
+        },
+        () => random(400000, 600000),
+      ).catch((e) => {
+        Log(` ${e}`, '2ERRrror')
+      })
+
+      asyncLoop(
+        () => {
+          wallet.dispatch.updateMarketData({ network: activeNetwork })
+        },
+        () => random(400000, 600000),
+      ).catch((e) => {
+        Log(` ${e}`, '3ERRrror')
+      })
+
+      /*    setInterval(() => {
+           console.log('Updated fiat rates')
+           wallet.dispatch.updateFiatRates({
+             assets: enabledAssets,
+           })
+         }, 50000) */
     }
   })
 }
@@ -604,6 +663,14 @@ const updateTransactionHistory = (
       },
     })
   }
+}
+const wait = (millis: number) =>
+  new Promise<void>((resolve) => setTimeout(() => resolve(), millis))
+
+function asyncLoop(fn: Function, delay: Function) {
+  return wait(delay())
+    .then(() => fn())
+    .then(() => asyncLoop(fn, delay))
 }
 
 //Infer the types from the rootReducer
