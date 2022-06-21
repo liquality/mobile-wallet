@@ -272,7 +272,8 @@ export const MainNavigator = () => (
         if (
           routeName === 'BackupWarningScreen' ||
           routeName === 'BackupLoginScreen' ||
-          routeName === 'BackupSeedScreen'
+          routeName === 'BackupSeedScreen' ||
+          routeName === 'LoginScreen'
         ) {
           return {
             display: 'none',
