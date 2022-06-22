@@ -17,6 +17,11 @@ import { formatDate } from '../../../utils'
 import { useRecoilValue } from 'recoil'
 import { historyStateFamily } from '../../../atoms'
 
+type SendConfirmationScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'SendConfirmationScreen'
+>
+
 const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
   (props) => {
     const { navigation, route } = props
@@ -115,11 +120,6 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
     )
   },
 )
-
-type SendConfirmationScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  'SendConfirmationScreen'
->
 
 const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   route,

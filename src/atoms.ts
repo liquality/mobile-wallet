@@ -1,4 +1,4 @@
-import { atom, atomFamily, selector, selectorFamily } from 'recoil'
+import { atom, atomFamily, selector } from 'recoil'
 import { AccountType, SwapAssetPairType } from './types'
 import { BigNumber } from '@liquality/types'
 import {
@@ -8,8 +8,8 @@ import {
 import {
   addressEffect,
   balanceEffect,
+  enabledAssets,
   enabledAssetsEffect,
-  fetchConfirmationByHash,
   fiatRateEffect,
   marketDataEffect,
   transactionHistoryEffect,
@@ -103,7 +103,7 @@ export const historyStateFamily = atomFamily<HistoryItem, string>({
 export const accountListState = selector<AccountType[]>({
   key: 'AccountList',
   get: ({ get }) => {
-    const accountsIds = get(accountsIdsState)
+    const accountsIds = get(enabledAccountsIdsState)
     return accountsIds.map((item) => get(accountInfoStateFamily(item.id)))
   },
 })
@@ -116,25 +116,13 @@ export const historyItemsState = selector<HistoryItem[]>({
   },
 })
 
-//TODO add types here
-export const sendHistoryStateFamily = selectorFamily({
-  key: 'SendTransactionHistory',
-  get:
-    (transactionId) =>
-    async ({ get }) => {
-      const historyItem = get(historyStateFamily(transactionId))
-      const confirmations = await fetchConfirmationByHash(
-        historyItem.from,
-        historyItem.hash || historyItem.tx?.hash,
-      )
-      return {
-        ...historyItem,
-        tx: {
-          ...historyItem.tx,
-          confirmations,
-        },
-      }
-    },
+export const enabledAccountsIdsState = selector<{ id: string; name: Asset }[]>({
+  key: 'EnabledAccountIdsState',
+  get: ({ get }) => {
+    return get(accountsIdsState).filter((item) =>
+      enabledAssets.includes(item.name),
+    )
+  },
 })
 
 export const totalFiatBalanceState = selector<string>({

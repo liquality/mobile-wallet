@@ -13,7 +13,7 @@ import Box from '../../../theme/box'
 import RoundButton from '../../../theme/round-button'
 import GradientBackground from '../../../components/gradient-background'
 import { useRecoilValue } from 'recoil'
-import { accountsIdsState, totalFiatBalanceState } from '../../../atoms'
+import { enabledAccountsIdsState, totalFiatBalanceState } from '../../../atoms'
 export type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
   'OverviewScreen'
@@ -25,7 +25,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     ACTIVITY,
   }
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
-  const accountsIds = useRecoilValue(accountsIdsState)
+  const accountsIds = useRecoilValue(enabledAccountsIdsState)
   const totalFiatBalance = useRecoilValue(totalFiatBalanceState)
 
   const handleSendBtnPress = useCallback(() => {

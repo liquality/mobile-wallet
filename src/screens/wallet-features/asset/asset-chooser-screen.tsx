@@ -7,7 +7,7 @@ import { AccountType, RootStackParamList } from '../../../types'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import { useInputState } from '../../../hooks'
 import { useRecoilValue } from 'recoil'
-import { accountListState } from '../../../atoms'
+import { accountListState, enabledAccountsIdsState } from '../../../atoms'
 
 type AssetChooserProps = NativeStackScreenProps<
   RootStackParamList,
@@ -15,9 +15,11 @@ type AssetChooserProps = NativeStackScreenProps<
 >
 
 const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
+  const accountIds = useRecoilValue(enabledAccountsIdsState)
   const accountList = useRecoilValue(accountListState)
   const searchInput = useInputState('')
-  const [data, setData] = useState<Array<AccountType>>([])
+  const [data, setData] =
+    useState<Array<{ id: string; name: string }>>(accountIds)
 
   const filterByTerm = useCallback((): void => {
     const term = searchInput.value
@@ -26,7 +28,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
       return setData(accountList || ([] as AccountType[]))
     }
 
-    const filteredResults: AccountType[] = accountList
+    const filteredResults: { id: string; name: string }[] = accountList
       .filter((item) => item != null)
       .map((item) => {
         const subs = Object.values(item.assets).filter(
@@ -41,6 +43,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
         }
       })
       .filter((item) => item.name)
+      .map((item) => ({ id: item.id, name: item.name }))
 
     setData(filteredResults || [])
   }, [accountList, searchInput.value])
@@ -57,6 +60,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
           onEndEditing={filterByTerm}
           value={searchInput.value}
           autoCorrect={false}
+          autoCapitalize="none"
           returnKeyType="done"
         />
       </View>

@@ -44,6 +44,21 @@ import { AtomEffect } from 'recoil'
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
 
+//TODO read this list for a config file
+export const enabledAssets = [
+  // 'BTC',
+  'ETH',
+  // 'DAI',
+  'RBTC',
+  // 'BNB',
+  // 'NEAR',
+  // 'SOV',
+  // 'MATIC',
+  // 'PWETH',
+  // 'ARBETH',
+  // 'SOL',
+]
+
 //-------------------------1. CREATE AN INSTANCE OF THE STORAGE MANAGER--------------------------------------------------------
 const excludedProps: Array<keyof CustomRootState> = [
   'key',
@@ -142,20 +157,6 @@ export const createWallet = async (
  */
 export const populateWallet = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet.state
-  //TODO read this list for a config file
-  const enabledAssets = [
-    // 'BTC',
-    'ETH',
-    // 'DAI',
-    // 'RBTC',
-    // 'BNB',
-    // 'NEAR',
-    // 'SOV',
-    // 'MATIC',
-    // 'PWETH',
-    // 'ARBETH',
-    // 'SOL',
-  ]
 
   wallet.dispatch
     .updateFiatRates({
@@ -655,7 +656,6 @@ export const transactionHistoryEffect: (
       // console.log('updates: ', type, mutation)
       if (type === 'UPDATE_HISTORY') {
         const { id, updates } = payload
-        // console.log('updates: ', id, transactionId)
         if (id === transactionId) {
           const historyItem = wallet.getters.activity.find(
             (activity) => activity.id === transactionId,
