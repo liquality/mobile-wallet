@@ -34,7 +34,6 @@ import {
 } from '@liquality/wallet-core/dist/utils/timeline'
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
 import { showNotification } from './pushNotification'
-import { random } from 'lodash-es'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -120,58 +119,57 @@ export const initWallet = async (initialState?: CustomRootState) => {
       )
     } else if (mutation.type === 'UNLOCK_WALLET') {
     } else {
-      const { activeNetwork, activeWalletId } = wallet.state
-      const enabledAssets = [
-        'BTC',
-        'ETH',
-        'DAI',
-        'RBTC',
-        'BNB',
-        'NEAR',
-        'SOV',
-        'MATIC',
-        'PWETH',
-        'ARBETH',
-        'SOL',
-        'LUNA',
-        'UST',
-      ]
-
-      // TODO Perform other types of updates (balances, market data, fiat rates... )
-      //MOB-78 implementation
-      asyncLoop(
-        () => {
-          wallet.dispatch.updateBalances({
-            network: activeNetwork,
-            walletId: activeWalletId,
-            assets: enabledAssets,
-          })
-        },
-        () => random(400000, 600000),
-      ).catch((e) => {
-        Log(` ${e}`, '1ERRrror')
-      })
-
-      asyncLoop(
-        () => {
-          wallet.dispatch.updateFiatRates({
-            assets: enabledAssets,
-          })
-        },
-        () => random(400000, 600000),
-      ).catch((e) => {
-        Log(` ${e}`, '2ERRrror')
-      })
-
-      asyncLoop(
-        () => {
-          wallet.dispatch.updateMarketData({ network: activeNetwork })
-        },
-        () => random(400000, 600000),
-      ).catch((e) => {
-        Log(` ${e}`, '3ERRrror')
-      })
-
+      /*     const { activeNetwork, activeWalletId } = wallet.state
+       const enabledAssets = [
+         'BTC',
+         'ETH',
+         'DAI',
+         'RBTC',
+         'BNB',
+         'NEAR',
+         'SOV',
+         'MATIC',
+         'PWETH',
+         'ARBETH',
+         'SOL',
+         'LUNA',
+         'UST',
+       ]
+ 
+       // TODO Perform other types of updates (balances, market data, fiat rates... )
+       //MOB-78 implementation
+          asyncLoop(
+               () => {
+                 wallet.dispatch.updateBalances({
+                   network: activeNetwork,
+                   walletId: activeWalletId,
+                   assets: enabledAssets,
+                 })
+               },
+               () => random(400000, 600000),
+             ).catch((e) => {
+               Log(` ${e}`, '1ERRrror')
+             })
+       
+             asyncLoop(
+               () => {
+                 wallet.dispatch.updateFiatRates({
+                   assets: enabledAssets,
+                 })
+               },
+               () => random(400000, 600000),
+             ).catch((e) => {
+               Log(` ${e}`, '2ERRrror')
+             })
+       
+             asyncLoop(
+               () => {
+                 wallet.dispatch.updateMarketData({ network: activeNetwork })
+               },
+               () => random(400000, 600000),
+             ).catch((e) => {
+               Log(` ${e}`, '3ERRrror')
+             }) */
       /*    setInterval(() => {
            console.log('Updated fiat rates')
            wallet.dispatch.updateFiatRates({
@@ -271,6 +269,51 @@ export const populateWallet = async (): Promise<void> => {
   })
 
   await retryPendingSwaps()
+}
+
+export const updateBalancesLoop = async (): Promise<void> => {
+  const { activeNetwork, activeWalletId } = wallet?.state
+  const enabledAssets = [
+    'BTC',
+    'ETH',
+    'DAI',
+    'RBTC',
+    'BNB',
+    'NEAR',
+    'SOV',
+    'MATIC',
+    'PWETH',
+    'ARBETH',
+    'SOL',
+    'LUNA',
+    'UST',
+  ]
+
+  await wallet.dispatch
+    .updateBalances({
+      network: activeNetwork,
+      walletId: activeWalletId,
+      assets: enabledAssets,
+    })
+    .catch((e) => {
+      Log(`Failed update balances: ${e}`, 'error')
+    })
+
+  await wallet.dispatch
+    .updateFiatRates({
+      assets: enabledAssets,
+    })
+    .catch((e) => {
+      Log(`Failed to update fiat rates: ${e}`, 'error')
+    })
+
+  await wallet.dispatch
+    .updateMarketData({
+      network: activeNetwork,
+    })
+    .catch((e) => {
+      Log(`Failed to update market data: ${e}`, 'error')
+    })
 }
 
 export const retrySwap = async (transaction: SwapHistoryItem) => {
@@ -664,7 +707,7 @@ const updateTransactionHistory = (
     })
   }
 }
-const wait = (millis: number) =>
+/* const wait = (millis: number) =>
   new Promise<void>((resolve) => setTimeout(() => resolve(), millis))
 
 function asyncLoop(fn: Function, delay: Function) {
@@ -672,7 +715,7 @@ function asyncLoop(fn: Function, delay: Function) {
     .then(() => fn())
     .then(() => asyncLoop(fn, delay))
 }
-
+ */
 //Infer the types from the rootReducer
 export type AppDispatch = typeof store.dispatch
 

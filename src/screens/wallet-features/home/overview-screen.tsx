@@ -81,7 +81,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
 
   useEffect(() => {
     populateWallet()
-  }, [activeNetwork])
+  }, [activeNetwork, totalFiatBalance, assets, assetCount])
 
   useEffect(() => {
     if (Platform.OS === 'ios') {
