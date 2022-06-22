@@ -1,4 +1,4 @@
-import { atom, atomFamily, selector } from 'recoil'
+import { atom, atomFamily, selector, selectorFamily } from 'recoil'
 import { AccountType, SwapAssetPairType } from './types'
 import { BigNumber } from '@liquality/types'
 import {
@@ -9,6 +9,7 @@ import {
   addressEffect,
   balanceEffect,
   enabledAssetsEffect,
+  fetchConfirmationByHash,
   fiatRateEffect,
   marketDataEffect,
   transactionHistoryEffect,
@@ -94,6 +95,7 @@ export const addressStateFamily = atomFamily<string, string>({
 
 export const historyStateFamily = atomFamily<HistoryItem, string>({
   key: 'TransactionHistory',
+  default: {},
   effects: (transactionId) => [transactionHistoryEffect(transactionId)],
 })
 
@@ -112,6 +114,27 @@ export const historyItemsState = selector<HistoryItem[]>({
     const historyIds = get(historyIdsState)
     return historyIds.map((id) => get(historyStateFamily(id)))
   },
+})
+
+//TODO add types here
+export const sendHistoryStateFamily = selectorFamily({
+  key: 'SendTransactionHistory',
+  get:
+    (transactionId) =>
+    async ({ get }) => {
+      const historyItem = get(historyStateFamily(transactionId))
+      const confirmations = await fetchConfirmationByHash(
+        historyItem.from,
+        historyItem.hash || historyItem.tx?.hash,
+      )
+      return {
+        ...historyItem,
+        tx: {
+          ...historyItem.tx,
+          confirmations,
+        },
+      }
+    },
 })
 
 export const totalFiatBalanceState = selector<string>({

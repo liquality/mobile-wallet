@@ -36,11 +36,11 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const fiatRates = useRecoilValue(fiatRatesState)
   const activeNetwork = useRecoilValue(networkState)
+  const ids = useRecoilValue(historyIdsState)
   const addTransaction = useRecoilCallback(
     ({ set }) =>
       (transactionId: string, historyItem: HistoryItem) => {
-        // console.log('history item: ', JSON.stringify(historyItem))
-        set(historyIdsState, (currVal) => [...currVal, transactionId])
+        set(historyIdsState, [...ids, transactionId])
         set(historyStateFamily(transactionId), historyItem)
       },
   )
@@ -64,6 +64,8 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         feeLabel: speedLabel,
         memo: memo || '',
       })
+
+      delete transaction.tx._raw
 
       addTransaction(transaction.id, transaction)
 

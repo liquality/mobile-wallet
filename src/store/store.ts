@@ -39,6 +39,7 @@ import {
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
 import { v4 as uuidv4 } from 'uuid'
 import { AtomEffect } from 'recoil'
+// import dayjs from 'dayjs'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -74,7 +75,6 @@ export const store = configureStore({
 
 //-------------------------3. REGISTER THE CALLBACKS / SUBSCRIBE TO MEANINGFULL EVENTS-----------------------------
 export const initWallet = async (initialState?: CustomRootState) => {
-  // console.time('Tracing')
   // const start = dayjs().unix()
   const walletOptions: WalletOptions = {
     initialState: initialState || {
@@ -144,17 +144,17 @@ export const populateWallet = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet.state
   //TODO read this list for a config file
   const enabledAssets = [
-    'BTC',
+    // 'BTC',
     'ETH',
-    'DAI',
-    'RBTC',
-    'BNB',
-    'NEAR',
-    'SOV',
-    'MATIC',
-    'PWETH',
-    'ARBETH',
-    'SOL',
+    // 'DAI',
+    // 'RBTC',
+    // 'BNB',
+    // 'NEAR',
+    // 'SOV',
+    // 'MATIC',
+    // 'PWETH',
+    // 'ARBETH',
+    // 'SOL',
   ]
 
   wallet.dispatch
@@ -656,8 +656,23 @@ export const transactionHistoryEffect: (
       if (type === 'UPDATE_HISTORY') {
         const { id, updates } = payload
         // console.log('updates: ', id, transactionId)
-        if (id === transactionId)
-          setSelf((historyItem) => ({ ...historyItem, ...updates }))
+        if (id === transactionId) {
+          const historyItem = wallet.getters.activity.find(
+            (activity) => activity.id === transactionId,
+          )
+          if (historyItem) {
+            fetchConfirmationByHash(
+              historyItem.from,
+              historyItem.hash || historyItem.tx?.hash,
+            ).then((confirmations) => {
+              setSelf({
+                ...historyItem,
+                tx: { ...historyItem.tx, confirmations },
+                ...updates,
+              })
+            })
+          }
+        }
       }
     })
   }
