@@ -19,7 +19,6 @@ import {
 } from '../../atoms'
 import { useNavigation, useRoute } from '@react-navigation/core'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
-import { runOnUI } from 'react-native-reanimated'
 
 const WrappedRow: FC<{
   item: { id: string; name: string }
@@ -43,58 +42,69 @@ const WrappedRow: FC<{
   const route = useRoute<OverviewProps['route']>()
 
   const toggleRow = useCallback(() => {
-    runOnUI(setIsExpanded)(!isExpanded)
+    setIsExpanded(!isExpanded)
   }, [isExpanded])
 
-  const onAssetSelected = useCallback(() => {
-    let fromAsset: AccountType, toAsset: AccountType
-    if (route?.params?.action === ActionEnum.SWAP) {
-      //if swapAssetPair is falsy then the user is either coming from the overview or the asset screen, otherwise, the user is coming from the swap screen
-      if (!swapPair.fromAsset && !swapPair.toAsset) {
-        fromAsset = accounts.filter((asset) => asset.code === 'BTC')[0]
-        toAsset = accounts.filter((asset) => asset.code === 'ETH')[0]
-        setSwapPair({ fromAsset, toAsset })
-      } else if (!swapPair.fromAsset) {
-        setSwapPair((previousValue) => ({ ...previousValue, fromAsset }))
-      } else {
-        setSwapPair((previousValue) => ({ ...previousValue, toAsset }))
-      }
+  const onAssetSelected = useCallback(
+    (selectedAccount: AccountType) => {
+      // Make sure account assets have the same id (account id) as their parent
+      selectedAccount.id = account.id
+      let fromAsset: AccountType, toAsset: AccountType
+      const defaultAsset = selectedAccount.code === 'ETH' ? 'BTC' : 'ETH'
+      toAsset = accounts.filter((asset) => asset.code === defaultAsset)[0]
+      if (route?.params?.action === ActionEnum.SWAP) {
+        if (!swapPair.fromAsset && !swapPair.toAsset) {
+          fromAsset = selectedAccount
+          setSwapPair({ fromAsset, toAsset })
+        } else if (!swapPair.fromAsset) {
+          setSwapPair((previousValue) => ({
+            ...previousValue,
+            fromAsset: selectedAccount,
+          }))
+        } else {
+          setSwapPair((previousValue) => ({
+            ...previousValue,
+            toAsset: selectedAccount,
+          }))
+        }
 
-      runOnUI(navigation.navigate)({
-        name: screenMap[route.params.action],
-        params: {
-          swapAssetPair: swapPair,
-          screenTitle: `${route.params.action} ${item.name}`,
-        },
-      })
-    } else if (route?.params?.action === ActionEnum.SEND) {
-      if (account)
-        runOnUI(navigation.navigate)({
+        navigation.navigate({
           name: screenMap[route.params.action],
           params: {
-            assetData: account,
+            swapAssetPair: swapPair,
             screenTitle: `${route.params.action} ${item.name}`,
           },
         })
-    } else {
-      runOnUI(navigation.navigate)({
-        name: 'AssetScreen',
-        params: {
-          ...route.params,
-          assetData: account,
-        },
-      })
-    }
-  }, [
-    account,
-    accounts,
-    item.name,
-    navigation,
-    route.params,
-    screenMap,
-    setSwapPair,
-    swapPair,
-  ])
+      } else if (route?.params?.action === ActionEnum.SEND) {
+        navigation.navigate({
+          name: screenMap[route.params.action],
+          params: {
+            assetData: selectedAccount,
+            screenTitle: `${route.params.action} ${item.name}`,
+          },
+        })
+      } else {
+        setSwapPair({ fromAsset: selectedAccount, toAsset })
+        navigation.navigate({
+          name: 'AssetScreen',
+          params: {
+            ...route.params,
+            assetData: selectedAccount,
+          },
+        })
+      }
+    },
+    [
+      account.id,
+      accounts,
+      item.name,
+      navigation,
+      route.params,
+      screenMap,
+      setSwapPair,
+      swapPair,
+    ],
+  )
 
   if (!account)
     return (
@@ -108,7 +118,7 @@ const WrappedRow: FC<{
         key={item.id}
         item={account}
         toggleRow={toggleRow}
-        onAssetSelected={onAssetSelected}
+        onAssetSelected={() => onAssetSelected(account)}
         isNested={isNested}
         isExpanded={isExpanded}
       />
@@ -120,7 +130,7 @@ const WrappedRow: FC<{
               key={subItem.id}
               parentItem={account}
               item={subItem}
-              onAssetSelected={onAssetSelected}
+              onAssetSelected={() => onAssetSelected(subItem)}
             />
           )
         })}

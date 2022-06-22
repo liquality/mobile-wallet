@@ -12,8 +12,12 @@ import ErrorFallback from '../../../components/error-fallback'
 import Box from '../../../theme/box'
 import RoundButton from '../../../theme/round-button'
 import GradientBackground from '../../../components/gradient-background'
-import { useRecoilValue } from 'recoil'
-import { enabledAccountsIdsState, totalFiatBalanceState } from '../../../atoms'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import {
+  enabledAccountsIdsState,
+  swapPairState,
+  totalFiatBalanceState,
+} from '../../../atoms'
 export type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
   'OverviewScreen'
@@ -27,6 +31,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
   const accountsIds = useRecoilValue(enabledAccountsIdsState)
   const totalFiatBalance = useRecoilValue(totalFiatBalanceState)
+  const setSwapPair = useSetRecoilState(swapPairState)
 
   const handleSendBtnPress = useCallback(() => {
     navigation.navigate('AssetChooserScreen', {
@@ -43,11 +48,12 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   }, [navigation])
 
   const handleSwapBtnPress = useCallback(() => {
+    setSwapPair({})
     navigation.navigate('AssetChooserScreen', {
       screenTitle: 'Select asset for swap',
       action: ActionEnum.SWAP,
     })
-  }, [navigation])
+  }, [navigation, setSwapPair])
 
   useEffect(() => {
     populateWallet()

@@ -46,7 +46,7 @@ type Awaited<T> = T extends PromiseLike<infer U> ? U : T
 
 //TODO read this list for a config file
 export const enabledAssets = [
-  // 'BTC',
+  'BTC',
   'ETH',
   // 'DAI',
   'RBTC',
@@ -583,7 +583,6 @@ export const addressEffect: (accountId: string) => AtomEffect<string> =
       setSelf('') // Call synchronously to initialize
     }
 
-    // Subscribe to remote storage changes and update the atom value
     wallet.original.subscribe((mutation) => {
       const { type, payload } = mutation
       if (type === 'UPDATE_ACCOUNT_ADDRESSES') {
