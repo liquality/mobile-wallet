@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, StyleSheet, Pressable, ScrollView, AppState } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
+import { View, StyleSheet, Pressable, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import SwapTransactionDetails from '../../../components/swap/swap-transaction-details'
@@ -28,10 +28,7 @@ import {
 import { BigNumber } from '@liquality/types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swap'
 import { SwapProvider } from '@liquality/wallet-core/dist/swaps/SwapProvider'
-import {
-  checkPendingActionsInBackground,
-  retrySwap,
-} from '../../../store/store'
+import { retrySwap } from '../../../store/store'
 import RefundedIcon from '../../../assets/icons/activity-status/refunded.svg'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
@@ -39,22 +36,7 @@ import { calculateQuoteRate } from '@liquality/wallet-core/dist/utils/quotes'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import SwapRates from '../../../components/swap/swap-rates'
 import { formatDate } from '../../../utils'
-import BackgroundService from 'react-native-background-actions'
 
-const options = {
-  taskName: 'Example',
-  taskTitle: 'ExampleTask title',
-  taskDesc: 'ExampleTask description',
-  taskIcon: {
-    name: 'ic_launcher',
-    type: 'mipmap',
-  },
-  color: '#ff00ff',
-  linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
-  parameters: {
-    delay: 1000,
-  },
-}
 type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SwapConfirmationScreen'
@@ -82,49 +64,6 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   const [isSecretRevealed, setIsSecretRevealed] = useState(false)
   const [historyItem, setHistoryItem] = useState<SwapHistoryItem>()
   const [swapProvider, setSwapProvider] = useState<SwapProvider>()
-  const appState = useRef(AppState.currentState)
-  const [appStateVisible, setAppStateVisible] = useState(appState.current)
-
-  const performBackgroundTask = async () => {
-    await checkPendingActionsInBackground()
-  }
-
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (nextAppState) => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
-        //App has come to the foreground again
-        BackgroundService.stop()
-      }
-
-      appState.current = nextAppState
-      setAppStateVisible(appState.current)
-      if (
-        appState.current === 'inactive' ||
-        appState.current === 'background'
-      ) {
-        //Now we are in the background/inactive state
-        BackgroundService.start(performBackgroundTask, options)
-          .then(() => {
-            BackgroundService.updateNotification({
-              taskDesc: 'New ExampleTask description',
-              taskTitle: appStateVisible,
-            })
-          })
-          .then(() => {
-            // Only Android, iOS will ignore this call
-            // iOS will also run everything here in the background until .stop() is called
-            BackgroundService.stop()
-          })
-      }
-    })
-
-    return () => {
-      subscription.remove()
-    }
-  }, [appStateVisible])
 
   const {
     id,

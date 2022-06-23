@@ -99,6 +99,7 @@ export const initWallet = async (initialState?: CustomRootState) => {
       )
     } else if (mutation.type === 'UPDATE_HISTORY') {
       const { id, network, walletId } = mutation.payload
+
       updateTransactionHistory(
         id,
         network,

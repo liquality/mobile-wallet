@@ -21,7 +21,7 @@ import DeviceInfo from 'react-native-device-info'
 import { useNavigation } from '@react-navigation/core'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ route }) => {
   const reduxState = useAppSelector((state) => state)
   const { activeNetwork, analytics = false } = reduxState
   const isAnalyticsEnabledFromStart =
@@ -67,8 +67,13 @@ const SettingsScreen = () => {
       Alert.alert('Please reload your app')
     }
 
+    //Used for handle-lock-wallet.tsx
+    if (route?.params?.shouldLogOut) {
+      handleLockPress()
+    }
+
     setIsAnalyticsEnabled(!!analytics?.acceptedDate)
-  }, [activeNetwork, analytics])
+  }, [activeNetwork, analytics, handleLockPress, route?.params?.shouldLogOut])
 
   const handleDownload = useCallback(() => {
     const walletState = { ...reduxState }
