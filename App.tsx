@@ -38,7 +38,6 @@ const App: FC = () => {
   const [initialRouteName, setInitialRouteName] = useState(
     'WalletCreationNavigator',
   )
-  // const navigation = useNavigation()
   const backgroundStyle = {
     flex: 1,
   }
