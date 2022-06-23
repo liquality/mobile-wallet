@@ -10,6 +10,7 @@ async function fixBrowserCheck(path) {
 }
 
 ;(async () => {
+  //Fix solana
   const solanaWeb3Package = await fs.readFile(
     'node_modules/@solana/web3.js/package.json',
     { encoding: 'utf8' },
@@ -21,6 +22,20 @@ async function fixBrowserCheck(path) {
   await fs.writeFile(
     'node_modules/@solana/web3.js/package.json',
     fixedSolanaWeb3Package,
+  )
+
+  //Fix ethers pbkdf2
+  const ethersPbkdf2Web3Package = await fs.readFile(
+    'node_modules/@ethersproject/pbkdf2/package.json',
+    { encoding: 'utf8' },
+  )
+  const fixedEthersPbkdf2Package = ethersPbkdf2Web3Package.replaceAll(
+    'browser-pbkdf2.js',
+    'pbkdf2.js',
+  )
+  await fs.writeFile(
+    'node_modules/@ethersproject/pbkdf2/package.json',
+    fixedEthersPbkdf2Package,
   )
 
   try {

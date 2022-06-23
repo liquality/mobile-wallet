@@ -12,7 +12,7 @@ import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
-import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
+import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swap'
 import { AssetDataElementType, GasFees } from '../types'
 import { Notification, WalletOptions } from '@liquality/wallet-core/dist/types'
 import { decrypt, encrypt, Log, pbkdf2 } from '../utils'
@@ -74,6 +74,7 @@ export const initWallet = async (initialState?: CustomRootState) => {
       activeNetwork: Network.Testnet,
     },
     createNotification: (notification: Notification): any => {
+      //When swap is completed show push notification with msg
       showNotification(notification.title, notification.message)
       Log(notification.message, 'info')
     },
@@ -98,7 +99,6 @@ export const initWallet = async (initialState?: CustomRootState) => {
       )
     } else if (mutation.type === 'UPDATE_HISTORY') {
       const { id, network, walletId } = mutation.payload
-
       updateTransactionHistory(
         id,
         network,
@@ -372,55 +372,6 @@ export const restoreWallet = async (
  * @param fromGasSpeed
  * @param toGasSpeed
  */
-//TODO: Johanna, put this in background actions?
-
-/* export const veryIntensiveTask = async (taskDataArguments) => {
-  // Example of an infinite loop task
-  //checkpendingactions.dispatch from wallet core (let it run for a minute call intensivetask )
-  const {
-    fromAsset,
-    toAsset,
-    fromAmount,
-    toAmount,
-    quoteSelected,
-    fromNetworkFeeValue,
-    toNetworkFeeValue,
-    fromNetworkFeeSpeed,
-    toNetworkFeeSpeed,
-  } = taskDataArguments
-  //console.log(taskDataArguments, 'TASK ARGUMENTS')
-  const { activeWalletId, activeNetwork } = wallet.state
-
-  const quote: SwapQuote = {
-    ...quoteSelected,
-    from: fromAsset.code,
-    to: toAsset.code,
-    fromAmount: new BigNumber(
-      currencyToUnit(cryptoassets[fromAsset.code], fromAmount.toNumber()),
-    ),
-    toAmount: new BigNumber(
-      currencyToUnit(cryptoassets[toAsset.code], toAmount.toNumber()),
-    ),
-    fee: fromNetworkFeeValue,
-    claimFee: toNetworkFeeValue,
-  }
-
-  const params = {
-    network: activeNetwork,
-    walletId: activeWalletId,
-    quote,
-    fee: fromNetworkFeeValue,
-    claimFee: toNetworkFeeValue,
-    feeLabel: fromNetworkFeeSpeed,
-    claimFeeLabel: toNetworkFeeSpeed,
-  }
-
-  //console.log(params, 'Full params on walletcore send')
-  return await wallet.dispatch.newSwap(params)
-} */
-
-//checkpendingactions.dispatch from wallet core (let it run for a minute call intensivetask )
-//Should I wait for about 1 min before I call checkPendingActions?
 
 export const checkPendingActionsInBackground = async () => {
   const { activeWalletId } = wallet.state

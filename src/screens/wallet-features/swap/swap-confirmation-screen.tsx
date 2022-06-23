@@ -26,7 +26,7 @@ import {
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
-import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
+import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swap'
 import { SwapProvider } from '@liquality/wallet-core/dist/swaps/SwapProvider'
 import {
   checkPendingActionsInBackground,
@@ -85,11 +85,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   const appState = useRef(AppState.currentState)
   const [appStateVisible, setAppStateVisible] = useState(appState.current)
 
-  const veryIntensiveTask = async () => {
-    /*    setInterval(function () {
-      console.log('this should fire every 5 s !!!!')
-    }, 5000) */
-
+  const performBackgroundTask = async () => {
     await checkPendingActionsInBackground()
   }
 
@@ -99,18 +95,18 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
         appState.current.match(/inactive|background/) &&
         nextAppState === 'active'
       ) {
-        //console.log('App has come to the foreground!')
+        //App has come to the foreground again
+        BackgroundService.stop()
       }
 
       appState.current = nextAppState
       setAppStateVisible(appState.current)
-      // console.log('AppState', appState.current)
       if (
         appState.current === 'inactive' ||
         appState.current === 'background'
       ) {
-        // console.log('Now we are in the background/inactive state!')
-        BackgroundService.start(veryIntensiveTask, options)
+        //Now we are in the background/inactive state
+        BackgroundService.start(performBackgroundTask, options)
           .then(() => {
             BackgroundService.updateNotification({
               taskDesc: 'New ExampleTask description',
