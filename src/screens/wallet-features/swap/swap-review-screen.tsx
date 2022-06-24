@@ -12,7 +12,11 @@ import { performSwap } from '../../../store/store'
 import { Log } from '../../../utils'
 import { useRecoilCallback, useRecoilValue } from 'recoil'
 import { SwapHistoryItem } from '@liquality/wallet-core/dist/store/types'
-import { fiatRatesState, historyStateFamily } from '../../../atoms'
+import {
+  fiatRatesState,
+  historyIdsState,
+  historyStateFamily,
+} from '../../../atoms'
 
 type SwapReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -23,9 +27,11 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   const { navigation, route } = props
   const swapTransaction = route.params.swapTransaction
   const fiatRates = useRecoilValue(fiatRatesState)
+  const ids = useRecoilValue(historyIdsState)
   const addTransaction = useRecoilCallback(
     ({ set }) =>
       (transactionId: string, historyItem: SwapHistoryItem) => {
+        set(historyIdsState, [...ids, transactionId])
         set(historyStateFamily(transactionId), historyItem)
       },
   )
@@ -57,7 +63,6 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           toNetworkFee.speed,
         )
 
-        // console.log('Transaction------> ', transaction)
         if (transaction) {
           delete transaction.quote
           delete transaction.fromFundTx._raw

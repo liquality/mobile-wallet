@@ -307,13 +307,12 @@ export const toggleAsset = async (
  * Updates the config and populate the wallet accordingly
  */
 export const updateWallet = async (): Promise<void> => {
-  const { activeNetwork, activeWalletId, enabledAssets } = wallet.state
-  if (enabledAssets)
-    await wallet.dispatch.updateBalances({
-      network: activeNetwork,
-      walletId: activeWalletId,
-      assets: enabledAssets,
-    })
+  const { activeNetwork, activeWalletId } = wallet.state
+  await wallet.dispatch.updateBalances({
+    network: activeNetwork,
+    walletId: activeWalletId,
+    assets: enabledAssets,
+  })
 }
 
 /**
@@ -668,7 +667,6 @@ export const transactionHistoryEffect: (
           const historyItem = wallet.getters.activity.find(
             (activity) => activity.id === transactionId,
           )
-          // console.log('History item: ', historyItem)
           if (historyItem) {
             if (historyItem.type === 'SEND') {
               fetchConfirmationByHash(

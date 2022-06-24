@@ -44,6 +44,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
 }) => {
   const transaction = route.params.swapTransactionConfirmation
   const fiatRates = useRecoilValue(fiatRatesState)
+
   const historyItem = useRecoilValue(historyStateFamily(transaction!.id!))
   const [isExpanded, setIsExpanded] = useState(false)
   const [isSecretRevealed, setIsSecretRevealed] = useState(false)

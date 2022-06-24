@@ -46,7 +46,6 @@ const ActivityFlatList = ({ selectedAsset }: { selectedAsset?: string }) => {
   }
 
   const renderActivity = ({ item }: { item: HistoryItem }) => {
-    // console.log('history item afl: ', JSON.stringify(item))
     const { id, type, startTime, from, to, status, network, provider } = item
     let transactionLabel,
       amount,
