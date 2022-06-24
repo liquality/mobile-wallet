@@ -117,6 +117,8 @@ export const initWallet = async (initialState?: CustomRootState) => {
   //     )
   //   } else if (mutation.type === 'UPDATE_ACCOUNT_ADDRESSES') {
   //     console.log(mutation.type, dayjs().unix() - start, 'seconds')
+  //   } else if (mutation.type === 'UPDATE_HISTORY') {
+  //     console.log('UPDATE_HISTORY: ', mutation.payload)
   //   }
   // })
 
@@ -157,6 +159,14 @@ export const createWallet = async (
  */
 export const populateWallet = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet.state
+
+  await wallet.dispatch
+    .updateMarketData({
+      network: activeNetwork,
+    })
+    .catch((e) => {
+      Log(`Failed to update market data: ${e}`, 'error')
+    })
 
   wallet.dispatch
     .updateFiatRates({
@@ -244,7 +254,7 @@ export const fetchSwapProvider = (providerId: string) => {
 }
 
 export const updateMarketData = async (): Promise<void> => {
-  const { activeNetwork } = store.getState()
+  const { activeNetwork } = wallet.state
 
   await wallet.dispatch
     .updateMarketData({
@@ -474,7 +484,7 @@ export const getQuotes = async (
   from: string,
   to: string,
   amount: BigNumber,
-): Promise<SwapQuote[]> => {
+): Promise<SwapQuote[] | void> => {
   const { activeNetwork } = wallet.state
   const networkAccounts = wallet.getters.networkAccounts
 
@@ -652,24 +662,31 @@ export const transactionHistoryEffect: (
     wallet.original.subscribe((mutation) => {
       const { type, payload } = mutation
 
-      // console.log('updates: ', type, mutation)
       if (type === 'UPDATE_HISTORY') {
         const { id, updates } = payload
         if (id === transactionId) {
           const historyItem = wallet.getters.activity.find(
             (activity) => activity.id === transactionId,
           )
+          // console.log('History item: ', historyItem)
           if (historyItem) {
-            fetchConfirmationByHash(
-              historyItem.from,
-              historyItem.hash || historyItem.tx?.hash,
-            ).then((confirmations) => {
+            if (historyItem.type === 'SEND') {
+              fetchConfirmationByHash(
+                historyItem.from,
+                historyItem.hash || historyItem.tx?.hash,
+              ).then((confirmations) => {
+                setSelf({
+                  ...historyItem,
+                  tx: { ...historyItem.tx, confirmations },
+                  ...updates,
+                })
+              })
+            } else {
               setSelf({
                 ...historyItem,
-                tx: { ...historyItem.tx, confirmations },
                 ...updates,
               })
-            })
+            }
           }
         }
       }

@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native'
-import { AccountType, StackPayload } from '../../types'
+import { AccountType } from '../../types'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import MinusSign from '../../assets/icons/minus-sign.svg'
 import PlusSign from '../../assets/icons/plus-icon.svg'
@@ -31,7 +31,7 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
 type RowProps = {
   item: AccountType
   toggleRow: () => void
-  onAssetSelected: (params: StackPayload) => void
+  onAssetSelected: () => void
   isNested: boolean
   isExpanded: boolean
 }
@@ -50,12 +50,9 @@ const Row = (props: RowProps) => {
     if (isNested) {
       toggleRow()
     } else {
-      onAssetSelected({
-        assetData: item,
-        screenTitle: item.code,
-      })
+      onAssetSelected()
     }
-  }, [isNested, item, onAssetSelected, toggleRow])
+  }, [isNested, onAssetSelected, toggleRow])
 
   const handleToggleRow = useCallback(() => {
     toggleRow()
@@ -126,19 +123,7 @@ const Row = (props: RowProps) => {
             </View>
           )}
           <View style={styles.col4}>
-            {isNested ? (
-              <ChevronRight width={12} height={12} />
-            ) : (
-              <Pressable
-                onPress={() =>
-                  onAssetSelected({
-                    assetData: item,
-                    screenTitle: item.code,
-                  })
-                }>
-                <ChevronRight width={12} height={12} />
-              </Pressable>
-            )}
+            {!isNested ? <ChevronRight width={12} height={12} /> : null}
           </View>
         </Pressable>
       )}

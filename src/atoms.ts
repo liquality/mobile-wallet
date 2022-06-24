@@ -1,4 +1,4 @@
-import { atom, atomFamily, selector } from 'recoil'
+import { atom, atomFamily, selector, selectorFamily } from 'recoil'
 import { AccountType, SwapAssetPairType } from './types'
 import { BigNumber } from '@liquality/types'
 import {
@@ -100,11 +100,30 @@ export const historyStateFamily = atomFamily<HistoryItem, string>({
 })
 
 //--------------ATOM SELECTORS--------------
+export const accountInfoState = selectorFamily<AccountType, string>({
+  key: 'AccountInfoState',
+  get:
+    (accountId) =>
+    ({ get }) => {
+      const address = get(addressStateFamily(accountId))
+      const account = get(accountInfoStateFamily(accountId))
+      account.address = address
+      for (let assetsKey in account.assets) {
+        account.assets[assetsKey].address = address
+      }
+      return account
+    },
+})
 export const accountListState = selector<AccountType[]>({
   key: 'AccountList',
   get: ({ get }) => {
     const accountsIds = get(enabledAccountsIdsState)
-    return accountsIds.map((item) => get(accountInfoStateFamily(item.id)))
+    return accountsIds.map((item) => {
+      const address = get(addressStateFamily(item.id))
+      const account = get(accountInfoStateFamily(item.id))
+      account.address = address
+      return account
+    })
   },
 })
 

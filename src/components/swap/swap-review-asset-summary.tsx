@@ -18,6 +18,8 @@ import {
 import { getSendFee } from '@liquality/wallet-core/src/utils/fees'
 import CopyIcon from '../../assets/icons/copy.svg'
 import CheckIcon from '../../assets/icons/swap-check.svg'
+import { useRecoilValue } from 'recoil'
+import { addressStateFamily } from '../../atoms'
 
 type SwapReviewAssetSummaryProps = {
   type: 'SEND' | 'RECEIVE'
@@ -30,10 +32,11 @@ type SwapReviewAssetSummaryProps = {
 const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
   const { asset, fiatRates, networkFee, amount, type } = props
   const [isCopied, setIsCopied] = useState(false)
+  const address = useRecoilValue(addressStateFamily(asset.id))
 
   const handleCopyPress = () => {
-    if (asset.address) {
-      Clipboard.setString(asset.address)
+    if (address) {
+      Clipboard.setString(address)
       setIsCopied(true)
     } else {
       Alert.alert('Unable to copy address')
@@ -95,8 +98,8 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
       <View style={styles.box}>
         <Text style={[styles.font, styles.address]}>
           External Wallet -{' '}
-          {`${asset.address?.substring(0, 4)}...${asset.address?.substring(
-            asset.address?.length - 4,
+          {`${address?.substring(0, 4)}...${address?.substring(
+            address?.length - 4,
           )}`}
         </Text>
         <Pressable onPress={handleCopyPress}>

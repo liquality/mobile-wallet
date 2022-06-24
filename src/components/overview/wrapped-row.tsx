@@ -12,11 +12,7 @@ import SubRow from './sub-row'
 import Box from '../../theme/box'
 import Text from '../../theme/text'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import {
-  accountInfoStateFamily,
-  accountListState,
-  swapPairState,
-} from '../../atoms'
+import { accountInfoState, accountListState, swapPairState } from '../../atoms'
 import { useNavigation, useRoute } from '@react-navigation/core'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
 
@@ -25,7 +21,7 @@ const WrappedRow: FC<{
 }> = (props) => {
   const { item } = props
   const [isExpanded, setIsExpanded] = useState(false)
-  const account = useRecoilValue(accountInfoStateFamily(item.id))
+  const account = useRecoilValue(accountInfoState(item.id))
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
   const assets = Object.values(account?.assets || {}) || []
   const accounts = useRecoilValue(accountListState)
@@ -49,9 +45,11 @@ const WrappedRow: FC<{
     (selectedAccount: AccountType) => {
       // Make sure account assets have the same id (account id) as their parent
       selectedAccount.id = account.id
+      selectedAccount.address = account.address
       let fromAsset: AccountType, toAsset: AccountType
       const defaultAsset = selectedAccount.code === 'ETH' ? 'BTC' : 'ETH'
       toAsset = accounts.filter((asset) => asset.code === defaultAsset)[0]
+
       if (route?.params?.action === ActionEnum.SWAP) {
         if (!swapPair.fromAsset && !swapPair.toAsset) {
           fromAsset = selectedAccount
@@ -95,6 +93,7 @@ const WrappedRow: FC<{
       }
     },
     [
+      account.address,
       account.id,
       accounts,
       item.name,

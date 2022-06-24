@@ -97,7 +97,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     setSwapPair((prevVal) => ({ ...prevVal, fromAsset: undefined }))
     navigation.navigate('AssetChooserScreen', {
       screenTitle: 'Select asset for Swap',
-      swapAssetPair: swapPair,
+      swapAssetPair: { ...swapPair, fromAsset: undefined },
       action: ActionEnum.SWAP,
     })
   }
@@ -106,7 +106,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     setSwapPair((prevVal) => ({ ...prevVal, toAsset: undefined }))
     navigation.navigate('AssetChooserScreen', {
       screenTitle: 'Select asset for Swap',
-      swapAssetPair: swapPair,
+      swapAssetPair: { ...swapPair, toAsset: undefined },
       action: ActionEnum.SWAP,
     })
   }
@@ -131,6 +131,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       Alert.alert('Invalid arguments for swap')
       return
     }
+
+    //TODO Update wallet-core so it does not return objects with functions in them
+    delete selectedQuote.min
+    delete selectedQuote.max
 
     navigation.navigate('SwapReviewScreen', {
       swapTransaction: {

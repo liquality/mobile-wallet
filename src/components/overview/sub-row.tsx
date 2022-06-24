@@ -6,7 +6,7 @@ import {
   prettyBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
-import { AccountType, StackPayload } from '../../types'
+import { AccountType } from '../../types'
 import AssetIcon from '../asset-icon'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
@@ -22,7 +22,7 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
 type SubRowProps = {
   parentItem: AccountType
   item: AccountType
-  onAssetSelected: (params: StackPayload) => void
+  onAssetSelected: () => void
 }
 
 const SubRow: FC<SubRowProps> = (props) => {
@@ -34,14 +34,8 @@ const SubRow: FC<SubRowProps> = (props) => {
   const fiatRates = useRecoilValue(fiatRatesState)
 
   const handlePressOnRow = useCallback(() => {
-    onAssetSelected({
-      assetData: {
-        ...item,
-        address: parentItem.address,
-      },
-      screenTitle: item.code,
-    })
-  }, [item, onAssetSelected, parentItem.address])
+    onAssetSelected()
+  }, [onAssetSelected])
 
   useEffect(() => {
     const fiatBalance = fiatRates[item.code]
@@ -82,9 +76,7 @@ const SubRow: FC<SubRowProps> = (props) => {
           <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
         </View>
         <View style={styles.col3}>
-          <Pressable onPress={handlePressOnRow}>
-            <ChevronRight width={12} height={12} />
-          </Pressable>
+          <ChevronRight width={12} height={12} />
         </View>
       </Pressable>
     </AssetListSwipeableRow>
