@@ -5,17 +5,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import BackgroundService from 'react-native-background-actions'
 import { checkPendingActionsInBackground } from '../store/store'
 
-//These options are needed for android
+//BackgroundService.start() expect these options
 const options = {
   taskName: 'Example',
-  taskTitle: 'ExampleTask title',
-  taskDesc: 'ExampleTask description',
+  taskTitle: 'ExampleTask title', //Android Required
+  taskDesc: 'ExampleTask description', //Android Required
+  // Android Required
   taskIcon: {
     name: 'ic_launcher',
     type: 'mipmap',
   },
-  color: '#ff00ff',
-  linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
   parameters: {
     delay: 1000,
   },
@@ -64,18 +63,11 @@ const HandleLockWallet = ({}) => {
           //Now we are in the background/inactive state
           var start = new Date().getTime().toString()
           await AsyncStorage.setItem('inactiveUserTime', start)
-          BackgroundService.start(performBackgroundTask, options)
-            .then(() => {
-              BackgroundService.updateNotification({
-                taskDesc: 'Background task, needed for android',
-                taskTitle: 'Background task',
-              })
-            })
-            .then(() => {
-              // Only Android, iOS will ignore this call
-              // iOS will also run everything here in the background until .stop() is called
-              BackgroundService.stop()
-            })
+          BackgroundService.start(performBackgroundTask, options).then(() => {
+            // Only Android, iOS will ignore this call
+            // iOS will also run everything here in the background until .stop() is called
+            BackgroundService.stop()
+          })
         }
       },
     )
