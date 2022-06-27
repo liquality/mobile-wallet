@@ -10,7 +10,7 @@ import StorageManager from '../core/storage-manager'
 import { BigNumber, FeeDetail } from '@liquality/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
-import { chains, currencyToUnit } from '@liquality/cryptoassets'
+import { currencyToUnit } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
 import { getSwapProvider } from '@liquality/wallet-core/dist/factory'
 import { AccountType, GasFees } from '../types'
@@ -22,7 +22,6 @@ import {
 } from '@liquality/wallet-core/dist/utils/asset'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import {
-  Account,
   FeeLabel,
   FiatRates,
   HistoryItem,
@@ -37,8 +36,8 @@ import {
   TimelineStep,
 } from '@liquality/wallet-core/dist/utils/timeline'
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
-import { v4 as uuidv4 } from 'uuid'
-import { AtomEffect } from 'recoil'
+import { AtomEffect, DefaultValue } from 'recoil'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 // import dayjs from 'dayjs'
 
 // Unwrap the type returned by a promise
@@ -65,7 +64,7 @@ const excludedProps: Array<keyof CustomRootState> = [
   'wallets',
   'unlockedAt',
 ]
-const storageManager = new StorageManager('@liquality-storage', excludedProps)
+const storageManager = new StorageManager(excludedProps)
 let wallet: Awaited<ReturnType<typeof setupWallet>>
 
 //-------------------------2. CONFIGURE THE STORE---------------------------------------------------------------------
@@ -74,7 +73,7 @@ const persistenceMiddleware: Middleware<
   any
 > = ({ getState }) => {
   return (next) => async (action) => {
-    await storageManager.write({
+    await storageManager.write('@local-storage', {
       ...getState(),
       ...action.payload,
     })
@@ -127,7 +126,7 @@ export const initWallet = async (initialState?: CustomRootState) => {
 
 //-------------------------4. PERFORM ACTIONS ON THE WALLET-------------------------------------------------------------
 export const isNewInstallation = async (): Promise<boolean> => {
-  const result = await storageManager.read()
+  const result = await storageManager.read('wallet')
   if (result) {
     store.dispatch({ type: 'INIT_STORE', payload: result })
     return false
@@ -151,6 +150,7 @@ export const createWallet = async (
     mnemonic: mnemonic,
     imported: true,
   })
+  await storageManager.write('wallet', wallet.state)
   return wallet.state
 }
 
@@ -319,19 +319,12 @@ export const updateWallet = async (): Promise<void> => {
  * Restores an already created wallet from local storage
  * @param password
  */
-export const restoreWallet = async (
-  password: string,
-): Promise<CustomRootState> => {
-  const result = await storageManager.read()
+export const restoreWallet = async (password: string): Promise<void> => {
+  const result = await storageManager.read<RootState>('wallet')
   await initWallet(result)
   await wallet.dispatch.unlockWallet({
     key: password,
   })
-
-  return {
-    ...wallet.state,
-    history: result.history,
-  }
 }
 
 /**
@@ -520,59 +513,17 @@ export const getTimeline = async (
   )
 }
 
-export const accountsEffect: () => AtomEffect<AccountType[]> =
-  () =>
-  ({ setSelf }) => {
-    wallet.original.subscribe((mutation) => {
-      const { type } = mutation
-      if (type === 'CREATE_ACCOUNT') {
-        const { account }: { account: Account } = mutation.payload
-        const nativeAsset = chains[account.chain].nativeAsset
-        const newAccount: AccountType = {
-          id: uuidv4(),
-          chain: account.chain,
-          name: account.name,
-          code: nativeAsset,
-          address: account.addresses[0], //TODO why pick only the first address
-          color: account.color,
-          assets: {},
-          balance: 0,
-        }
-
-        for (const asset of account.assets) {
-          newAccount.assets[asset] = {
-            id: asset,
-            name: cryptoassets[asset].name,
-            code: asset,
-            chain: account.chain,
-            color: account.color,
-            balance: 0,
-            assets: {},
-          }
-        }
-        setSelf(newAccount)
-      }
-    })
-  }
-
-export const walletEffect: () => AtomEffect<typeof wallet> =
-  () =>
-  ({ setSelf, trigger }) => {
-    if (trigger === 'get') {
-      setSelf(wallet)
-    }
-  }
+// export const walletEffect: () => AtomEffect<typeof wallet> =
+//   () =>
+//   ({ setSelf, trigger }) => {
+//     if (trigger === 'get') {
+//       setSelf(wallet)
+//     }
+//   }
 
 export const balanceEffect: (asset: string) => AtomEffect<number> =
   (asset) =>
-  ({ setSelf, trigger }) => {
-    // Initialize atom value to the remote storage state
-    if (trigger === 'get') {
-      // Avoid expensive initialization
-      setSelf(0) // Call synchronously to initialize
-    }
-
-    // Subscribe to remote storage changes and update the atom value
+  ({ setSelf }) => {
     wallet.original.subscribe((mutation) => {
       const { type, payload } = mutation
       if (type === 'UPDATE_BALANCE') {
@@ -585,13 +536,7 @@ export const balanceEffect: (asset: string) => AtomEffect<number> =
 
 export const addressEffect: (accountId: string) => AtomEffect<string> =
   (accountId) =>
-  ({ setSelf, trigger }) => {
-    // Initialize atom value to the remote storage state
-    if (trigger === 'get') {
-      // Avoid expensive initialization
-      setSelf('') // Call synchronously to initialize
-    }
-
+  ({ setSelf }) => {
     wallet.original.subscribe((mutation) => {
       const { type, payload } = mutation
       if (type === 'UPDATE_ACCOUNT_ADDRESSES') {
@@ -604,11 +549,7 @@ export const addressEffect: (accountId: string) => AtomEffect<string> =
 
 export const fiatRateEffect: () => AtomEffect<FiatRates> =
   () =>
-  ({ setSelf, trigger }) => {
-    if (trigger === 'get') {
-      setSelf(wallet.state.fiatRates)
-    }
-
+  ({ setSelf }) => {
     wallet.original.subscribe((mutation) => {
       const { type, payload } = mutation
 
@@ -620,12 +561,7 @@ export const fiatRateEffect: () => AtomEffect<FiatRates> =
 
 export const marketDataEffect: () => AtomEffect<MarketData[]> =
   () =>
-  ({ setSelf, trigger }) => {
-    if (trigger === 'get') {
-      const marketData = wallet.state.marketData[wallet.state.activeNetwork]
-      if (marketData) setSelf(marketData)
-    }
-
+  ({ setSelf }) => {
     wallet.original.subscribe((mutation) => {
       const { type, payload } = mutation
 
@@ -688,6 +624,27 @@ export const transactionHistoryEffect: (
           }
         }
       }
+    })
+  }
+
+export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
+  (key) =>
+  ({ setSelf, onSet, trigger }) => {
+    if (trigger === 'get') {
+      setSelf(
+        AsyncStorage.getItem(key).then((savedValue) => {
+          // console.log('Getting ' + key + ' ', savedValue)
+          return savedValue ? JSON.parse(savedValue) : new DefaultValue()
+        }),
+      )
+    }
+
+    onSet((newValue, _, isReset) => {
+      if (newValue instanceof DefaultValue && trigger === 'get') return
+      // console.log('Setting ' + key + ' ', newValue)
+      isReset
+        ? AsyncStorage.removeItem(key)
+        : newValue && AsyncStorage.setItem(key, JSON.stringify(newValue))
     })
   }
 

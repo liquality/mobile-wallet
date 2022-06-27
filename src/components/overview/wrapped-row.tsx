@@ -1,18 +1,13 @@
-import React, {
-  FC,
-  Fragment,
-  memo,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react'
+import React, { FC, Fragment, useCallback, useMemo, useState } from 'react'
 import { AccountType, ActionEnum, RootStackParamList } from '../../types'
 import Row from './row'
 import SubRow from './sub-row'
-import Box from '../../theme/box'
-import Text from '../../theme/text'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { accountInfoState, accountListState, swapPairState } from '../../atoms'
+import {
+  accountForAssetState,
+  accountInfoStateFamily,
+  swapPairState,
+} from '../../atoms'
 import { useNavigation, useRoute } from '@react-navigation/core'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
 
@@ -21,10 +16,11 @@ const WrappedRow: FC<{
 }> = (props) => {
   const { item } = props
   const [isExpanded, setIsExpanded] = useState(false)
-  const account = useRecoilValue(accountInfoState(item.id))
+  const ethAccount = useRecoilValue(accountForAssetState('ETH'))
+  const btcAccount = useRecoilValue(accountForAssetState('BTC'))
+  const account = useRecoilValue(accountInfoStateFamily(item.id))
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
   const assets = Object.values(account?.assets || {}) || []
-  const accounts = useRecoilValue(accountListState)
   const isNested = assets.length > 0 && item.name !== 'BTC'
   const screenMap: Record<ActionEnum, keyof RootStackParamList> = useMemo(
     () => ({
@@ -47,8 +43,7 @@ const WrappedRow: FC<{
       selectedAccount.id = account.id
       selectedAccount.address = account.address
       let fromAsset: AccountType, toAsset: AccountType
-      const defaultAsset = selectedAccount.code === 'ETH' ? 'BTC' : 'ETH'
-      toAsset = accounts.filter((asset) => asset.code === defaultAsset)[0]
+      toAsset = selectedAccount.code === 'ETH' ? btcAccount : ethAccount
 
       if (route?.params?.action === ActionEnum.SWAP) {
         if (!swapPair.fromAsset && !swapPair.toAsset) {
@@ -95,7 +90,8 @@ const WrappedRow: FC<{
     [
       account.address,
       account.id,
-      accounts,
+      btcAccount,
+      ethAccount,
       item.name,
       navigation,
       route.params,
@@ -105,12 +101,8 @@ const WrappedRow: FC<{
     ],
   )
 
-  if (!account)
-    return (
-      <Box>
-        <Text>Loading...</Text>
-      </Box>
-    )
+  if (!account || !account.code) return null
+
   return (
     <Fragment key={item.id}>
       <Row
@@ -137,4 +129,4 @@ const WrappedRow: FC<{
   )
 }
 
-export default memo(WrappedRow)
+export default WrappedRow

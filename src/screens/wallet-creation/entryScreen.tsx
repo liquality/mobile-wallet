@@ -16,7 +16,9 @@ import {
   accountInfoStateFamily,
   accountsIdsState,
   networkState,
+  walletState,
 } from '../../atoms'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
@@ -25,6 +27,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
   const [loading, setLoading] = useState(false)
   const setAccountsIds = useSetRecoilState(accountsIdsState)
   const setActiveNetwork = useSetRecoilState(networkState)
+  const setWallet = useSetRecoilState(walletState)
   const addAccount = useRecoilCallback(
     ({ set }) =>
       (accountId: string, account: AccountType) => {
@@ -41,10 +44,10 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
 
   const handleOpenSesamePress = async () => {
     setLoading(true)
-    const { accounts, activeWalletId, activeNetwork } = await createWallet(
-      PASSWORD,
-      MNEMONIC,
-    )
+    await AsyncStorage.clear()
+    const wallet = await createWallet(PASSWORD, MNEMONIC)
+    setWallet(wallet)
+    const { accounts, activeWalletId, activeNetwork } = wallet
     const accountsIds: { id: string; name: string }[] = []
     accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
       const nativeAsset = chains[account.chain].nativeAsset

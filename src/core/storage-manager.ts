@@ -6,14 +6,16 @@ import { CustomRootState } from '../reducers'
  */
 export default class StorageManager {
   private excludedProps: Array<keyof CustomRootState>
-  private storageKey: string
 
-  constructor(storageKey: string, excludedProps: Array<keyof CustomRootState>) {
-    this.storageKey = storageKey
+  constructor(excludedProps: Array<keyof CustomRootState>) {
     this.excludedProps = excludedProps
   }
 
-  public async write(data: CustomRootState): Promise<boolean | Error> {
+  public async write(
+    storageKey: string,
+    state: CustomRootState,
+  ): Promise<boolean | Error> {
+    const data = { ...state }
     if (!data || Object.keys(data).length === 0) {
       return new Error('Empty data')
     }
@@ -24,7 +26,7 @@ export default class StorageManager {
         }
       })
       if (Object.keys(data).length > 0) {
-        await AsyncStorage.setItem(this.storageKey, JSON.stringify(data))
+        await AsyncStorage.setItem(storageKey, JSON.stringify(data))
         return true
       } else {
         return Error('Can not write sensitive data')
@@ -34,10 +36,10 @@ export default class StorageManager {
     }
   }
 
-  public async read(): Promise<CustomRootState> {
+  public async read<T>(storageKey: string): Promise<T> {
     try {
-      const result = await AsyncStorage.getItem(this.storageKey)
-      return JSON.parse(result || '') as CustomRootState
+      const result = await AsyncStorage.getItem(storageKey)
+      return JSON.parse(result || '') as T
     } catch (e) {
       throw new Error('Failed to read from storage')
     }

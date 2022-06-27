@@ -11,9 +11,9 @@ import {
   enabledAssets,
   enabledAssetsEffect,
   fiatRateEffect,
+  localStorageEffect,
   marketDataEffect,
   transactionHistoryEffect,
-  walletEffect,
 } from './store/store'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
 import { Asset } from '@liquality/wallet-core/src/store/types'
@@ -24,19 +24,19 @@ import {
   MarketData,
   Network,
 } from '@liquality/wallet-core/dist/store/types'
-import { setupWallet } from '@liquality/wallet-core'
 import { CustomRootState } from './reducers'
 
 //------------ATOMS---------------------
 export const accountsIdsState = atom<{ id: string; name: Asset }[]>({
   key: 'AccountsIds',
   default: [],
+  effects: [localStorageEffect('accountIds')],
 })
 
 export const fiatRatesState = atom<FiatRates>({
   key: 'AssetFiatRate',
   default: {},
-  effects: [fiatRateEffect()],
+  effects: [localStorageEffect<FiatRates>('fiatRates'), fiatRateEffect()],
 })
 
 export const networkState = atom<Network>({
@@ -52,7 +52,7 @@ export const swapPairState = atom<SwapAssetPairType>({
 export const marketDataState = atom<MarketData[]>({
   key: 'MarketData',
   default: [],
-  effects: [marketDataEffect()],
+  effects: [localStorageEffect<MarketData[]>('marketData'), marketDataEffect()],
 })
 
 export const historyIdsState = atom<string[]>({
@@ -66,9 +66,9 @@ export const enabledAssetsState = atom<string[]>({
   effects: [enabledAssetsEffect()],
 })
 
-export const walletState = atom<Awaited<ReturnType<typeof setupWallet>>>({
+export const walletState = atom<CustomRootState>({
   key: 'Wallet',
-  effects: [walletEffect()],
+  // effects: [localStorageEffect('wallet')],
 })
 
 export const activityFilterState = atom<CustomRootState['assetFilter']>({
@@ -79,24 +79,32 @@ export const activityFilterState = atom<CustomRootState['assetFilter']>({
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<AccountType, string>({
   key: 'AccountInfo',
+  default: {},
+  effects: (accountId) => [localStorageEffect(`account-info-${accountId}`)],
 })
 
 export const balanceStateFamily = atomFamily<number, string>({
   key: 'AssetBalance',
-  default: -1,
-  effects: (asset) => [balanceEffect(asset)],
+  default: 0,
+  effects: (asset) => [localStorageEffect(asset), balanceEffect(asset)],
 })
 
 export const addressStateFamily = atomFamily<string, string>({
   key: 'AccountAddress',
   default: '',
-  effects: (accountId) => [addressEffect(accountId)],
+  effects: (accountId) => [
+    localStorageEffect(`address-${accountId}`),
+    addressEffect(accountId),
+  ],
 })
 
 export const historyStateFamily = atomFamily<HistoryItem, string>({
   key: 'TransactionHistory',
   default: {},
-  effects: (transactionId) => [transactionHistoryEffect(transactionId)],
+  effects: (transactionId) => [
+    localStorageEffect(transactionId),
+    transactionHistoryEffect(transactionId),
+  ],
 })
 
 //--------------ATOM SELECTORS--------------
@@ -125,6 +133,22 @@ export const accountListState = selector<AccountType[]>({
       return account
     })
   },
+})
+
+export const accountForAssetState = selectorFamily<
+  AccountType | undefined,
+  string
+>({
+  key: 'AccountForAsset',
+  get:
+    (asset) =>
+    ({ get }) => {
+      const accountsIds = get(enabledAccountsIdsState)
+      const filteredAccounts = accountsIds
+        .map((item) => get(accountInfoStateFamily(item.id)))
+        .filter((account) => account.code === asset)
+      return filteredAccounts.length > 0 ? filteredAccounts[0] : undefined
+    },
 })
 
 export const historyItemsState = selector<HistoryItem[]>({

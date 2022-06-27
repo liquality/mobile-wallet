@@ -4,7 +4,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import { useEffect } from 'react'
 import { createWallet } from '../../store/store'
-import { useDispatch } from 'react-redux'
+import { useSetRecoilState } from 'recoil'
+import { walletState } from '../../atoms'
 
 type LoadingScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -12,25 +13,15 @@ type LoadingScreenProps = NativeStackScreenProps<
 >
 
 const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
-  const dispatch = useDispatch()
+  const setWallet = useSetRecoilState(walletState)
 
   useEffect(() => {
-    createWallet(route.params.password || '', route.params.mnemonic || '')
-      .then((walletState) => {
-        dispatch({
-          type: 'SETUP_WALLET',
-          payload: walletState,
-        })
+    createWallet(route.params.password || '', route.params.mnemonic || '').then(
+      (wallet) => {
+        setWallet(wallet)
         navigation.navigate('CongratulationsScreen')
-      })
-      .catch(() => {
-        dispatch({
-          type: 'ERROR',
-          payload: {
-            errorMessage: 'Unable to create wallet. Try again!',
-          },
-        })
-      })
+      },
+    )
   })
   return <Spinner />
 }
