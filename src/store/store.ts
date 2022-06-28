@@ -120,63 +120,7 @@ export const initWallet = async (initialState?: CustomRootState) => {
       )
     } else if (mutation.type === 'UNLOCK_WALLET') {
     } else {
-      /*     const { activeNetwork, activeWalletId } = wallet.state
-       const enabledAssets = [
-         'BTC',
-         'ETH',
-         'DAI',
-         'RBTC',
-         'BNB',
-         'NEAR',
-         'SOV',
-         'MATIC',
-         'PWETH',
-         'ARBETH',
-         'SOL',
-         'LUNA',
-         'UST',
-       ]
- 
-       // TODO Perform other types of updates (balances, market data, fiat rates... )
-       //MOB-78 implementation
-          asyncLoop(
-               () => {
-                 wallet.dispatch.updateBalances({
-                   network: activeNetwork,
-                   walletId: activeWalletId,
-                   assets: enabledAssets,
-                 })
-               },
-               () => random(400000, 600000),
-             ).catch((e) => {
-               Log(` ${e}`, '1ERRrror')
-             })
-       
-             asyncLoop(
-               () => {
-                 wallet.dispatch.updateFiatRates({
-                   assets: enabledAssets,
-                 })
-               },
-               () => random(400000, 600000),
-             ).catch((e) => {
-               Log(` ${e}`, '2ERRrror')
-             })
-       
-             asyncLoop(
-               () => {
-                 wallet.dispatch.updateMarketData({ network: activeNetwork })
-               },
-               () => random(400000, 600000),
-             ).catch((e) => {
-               Log(` ${e}`, '3ERRrror')
-             }) */
-      /*    setInterval(() => {
-           console.log('Updated fiat rates')
-           wallet.dispatch.updateFiatRates({
-             assets: enabledAssets,
-           })
-         }, 50000) */
+      // TODO Perform other types of updates (balances, market data, fiat rates... )
     }
   })
 }
@@ -716,15 +660,7 @@ const updateTransactionHistory = (
     })
   }
 }
-/* const wait = (millis: number) =>
-  new Promise<void>((resolve) => setTimeout(() => resolve(), millis))
 
-function asyncLoop(fn: Function, delay: Function) {
-  return wait(delay())
-    .then(() => fn())
-    .then(() => asyncLoop(fn, delay))
-}
- */
 //Infer the types from the rootReducer
 export type AppDispatch = typeof store.dispatch
 
