@@ -194,7 +194,6 @@ export const populateWallet = async (): Promise<void> => {
     .updateBalances({
       network: activeNetwork,
       walletId: activeWalletId,
-      assets: enabledAssets,
     })
     .catch((e) => {
       Log(`Failed update balances: ${e}`, 'error')
@@ -218,27 +217,11 @@ export const populateWallet = async (): Promise<void> => {
 
 export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet?.state
-  const enabledAssets = [
-    'BTC',
-    'ETH',
-    'DAI',
-    'RBTC',
-    'BNB',
-    'NEAR',
-    'SOV',
-    'MATIC',
-    'PWETH',
-    'ARBETH',
-    'SOL',
-    'LUNA',
-    'UST',
-  ]
 
   await wallet.dispatch
     .updateBalances({
       network: activeNetwork,
       walletId: activeWalletId,
-      assets: enabledAssets,
     })
     .catch((e) => {
       Log(`Failed update balances: ${e}`, 'error')
@@ -246,7 +229,7 @@ export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
 
   await wallet.dispatch
     .updateFiatRates({
-      assets: enabledAssets,
+      assets: wallet.getters.allNetworkAssets,
     })
     .catch((e) => {
       Log(`Failed to update fiat rates: ${e}`, 'error')
@@ -384,7 +367,6 @@ export const updateWallet = async (): Promise<void> => {
     await wallet.dispatch.updateBalances({
       network: activeNetwork,
       walletId: activeWalletId,
-      assets: enabledAssets,
     })
 }
 
