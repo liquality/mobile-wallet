@@ -64,6 +64,7 @@ export type StackPayload = {
   imported?: boolean
   assetData?: AccountType
   screenTitle?: string
+  includeBackBtn?: boolean
   customFee?: number
   showPopup?: boolean
   sendTransaction?: {
@@ -98,6 +99,9 @@ export type RootStackParamList = {
   AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
   AssetManagementScreen: StackPayload
+  BackupWarningScreen: undefined
+  BackupSeedScreen: undefined
+  BackupLoginScreen: undefined
   AssetToggleScreen: StackPayload
   ReceiveScreen: StackPayload
   SendScreen: StackPayload

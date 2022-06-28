@@ -26,15 +26,20 @@ import CustomFeeScreen from '../screens/wallet-features/custom-fee-screen'
 import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
 import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
-import SettingsHeaderRight from './header-bar/settings-header-right'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
+
 import AssetToggleScreen from '../screens/wallet-features/asset/asset-toggle-screen'
 import SwapScreen from '../screens/wallet-features/swap/swap-screen'
 import SwapReviewScreen from '../screens/wallet-features/swap/swap-review-screen'
 import SwapConfirmationScreen from '../screens/wallet-features/swap/swap-confirmation-screen'
 import { TransitionPresets } from '@react-navigation/stack'
 import LoginScreen from '../screens/wallet-creation/loginScreen'
+import BackupWarningScreen from '../screens/wallet-features/backup/backup-warning-screen'
+import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-screen'
+import BackupLoginScreen from '../screens/wallet-features/backup/backup-login-screen'
+import { getFocusedRouteNameFromRoute } from '@react-navigation/core'
+import TimesIcon from '../assets/icons/times.svg'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
@@ -104,7 +109,7 @@ export const AppStackNavigator = () => (
       title: '',
       headerLeft: (props: HeaderBackButtonProps) => (
         <OverviewHeaderLeft
-          includeBackBtn={!!props.canGoBack}
+          includeBackBtn={!props.canGoBack}
           goBack={navigation.goBack}
           screenTitle={route?.params?.screenTitle || 'Overview'}
         />
@@ -180,6 +185,39 @@ export const AppStackNavigator = () => (
       })}
     />
     <Stack.Screen
+      name="BackupWarningScreen"
+      component={BackupWarningScreen}
+      options={({ navigation }) => ({
+        headerShown: true,
+        headerTitle: '',
+        headerLeft: () => <Text style={styles.settingsTitle}>WARNING</Text>,
+        headerRight: () => (
+          <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
+            <TimesIcon
+              width={30}
+              height={30}
+              color={'#5F5F5F'}
+              style={styles.checkIcon}
+            />
+          </Pressable>
+        ),
+      })}
+    />
+    <Stack.Screen
+      name="BackupSeedScreen"
+      component={BackupSeedScreen}
+      options={({}) => ({
+        headerShown: false,
+      })}
+    />
+    <Stack.Screen
+      name="BackupLoginScreen"
+      component={BackupLoginScreen}
+      options={({}) => ({
+        headerShown: false,
+      })}
+    />
+    <Stack.Screen
       name="AssetToggleScreen"
       component={AssetToggleScreen}
       options={() => ({
@@ -220,6 +258,23 @@ export const MainNavigator = () => (
   <Tab.Navigator
     initialRouteName="AppStackNavigator"
     screenOptions={({ route }) => ({
+      tabBarStyle: ((route) => {
+        const routeName = getFocusedRouteNameFromRoute(route) ?? ''
+        if (
+          routeName === 'BackupWarningScreen' ||
+          routeName === 'BackupLoginScreen' ||
+          routeName === 'BackupSeedScreen'
+        ) {
+          return {
+            display: 'none',
+          }
+        } else if (routeName === 'OverviewScreen')
+          //Maybe not ideal solution but there is bug in rn-navigation workaround here: https://github.com/react-navigation/react-navigation/issues/6779#issuecomment-583272325
+          return {
+            bottom: 0,
+            position: 'absolute',
+          }
+      })(route),
       headerShown: false,
       title: '',
       tabBarIcon: ({ focused, size }) => {
@@ -238,13 +293,13 @@ export const MainNavigator = () => (
     <Tab.Screen
       name="SettingsScreen"
       component={SettingsScreen}
-      options={({ navigation }) => ({
+      options={({}) => ({
         headerShown: true,
         headerTitle: '',
         headerLeft: () => <Text style={styles.settingsTitle}>SETTINGS</Text>,
-        headerRight: () => (
+        /*    headerRight: () => (
           <SettingsHeaderRight navigate={navigation.navigate} />
-        ),
+        ), */
       })}
     />
   </Tab.Navigator>
@@ -258,8 +313,10 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: '#D9DFE5',
+    backgroundColor: '#FFF',
   },
   tabFocused: {
+    backgroundColor: '#FFF',
     borderTopColor: '#000',
   },
   checkIcon: {

@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import Lock from '../assets/icons/lock.svg'
-import BackupIcon from '../assets/icons/backup.svg'
+import LockIcon from '../assets/icons/lock.svg'
 import LedgerIcon from '../assets/icons/ledger.svg'
 import ManageAssetsIcon from '../assets/icons/manage-assets.svg'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -48,19 +47,16 @@ const WithPopupMenu = <T extends FctType>(
               <Text>Manage Assets</Text>
             </Pressable>
             <Pressable style={styles.menuItem}>
-              <Lock style={styles.icon} />
-              <Text>Manage account</Text>
+              <LockIcon style={styles.icon} />
+              <Text>Manage Assets</Text>
             </Pressable>
             <Pressable style={styles.menuItem}>
               <LedgerIcon style={styles.icon} />
               <Text>Ledger</Text>
             </Pressable>
-            <Pressable style={styles.menuItem}>
-              <BackupIcon style={styles.icon} />
-              <Text>Backup Seed</Text>
-            </Pressable>
+
             <Pressable style={styles.menuItem} onPress={handleLockPress}>
-              <Lock style={styles.icon} />
+              <LockIcon style={styles.icon} />
               <Text>Lock</Text>
             </Pressable>
           </View>

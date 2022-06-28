@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
     borderBottomColor: '#38FFFB',
     borderBottomWidth: 1,
+    padding: 10,
   },
 })
 export default PasswordCreationScreen

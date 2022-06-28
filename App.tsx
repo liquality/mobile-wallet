@@ -3,6 +3,7 @@ import { StatusBar, View } from 'react-native'
 import { Provider } from 'react-redux'
 import SplashScreen from 'react-native-splash-screen'
 import { NavigationContainer } from '@react-navigation/native'
+
 import { createSwitchNavigator } from '@react-navigation/compat'
 import { ThemeProvider } from '@shopify/restyle'
 import { store, isNewInstallation } from './src/store/store'
@@ -17,6 +18,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Log } from './src/utils'
 import { RecoilRoot } from 'recoil'
 import FlipperAsyncStorage from 'rn-flipper-async-storage-advanced'
+import HandleLockWalletAndBackgroundTasks from './src/components/handle-lock-wallet-and-background-tasks'
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
@@ -68,6 +70,7 @@ const App: FC = () => {
             <StatusBar barStyle={'dark-content'} />
             <GestureHandlerRootView style={backgroundStyle}>
               <NavigationContainer>
+                <HandleLockWalletAndBackgroundTasks />
                 <AppNavigator initialRouteName={initialRouteName} />
               </NavigationContainer>
             </GestureHandlerRootView>

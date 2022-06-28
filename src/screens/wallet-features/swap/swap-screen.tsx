@@ -234,9 +234,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       flex={1}
       width={Dimensions.get('window').width}
       backgroundColor="mainBackground">
-      {!!error && (
+      {error ? (
         <MessageBanner text1="Error" text2={error} onAction={() => ({})} />
-      )}
+      ) : null}
       <Box
         flexDirection="row"
         justifyContent="center"
@@ -312,7 +312,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         </Pressable>
       </Box>
 
-      {swapPair.fromAsset?.code && swapPair.toAsset?.code && (
+      {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
         <SwapRates
           fromAsset={swapPair.fromAsset.code}
           toAsset={swapPair.toAsset.code}
@@ -322,7 +322,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           clickable
           style={{ paddingHorizontal: 20 }}
         />
-      )}
+      ) : null}
       <Box
         flexDirection="row"
         justifyContent="space-between"
@@ -336,48 +336,48 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             <AngleRight style={styles.dropdown} />
           )}
           <Label text="NETWORK SPEED/FEE" variant="strong" />
-          {swapPair.fromAsset?.code && swapPair.toAsset?.code && (
+          {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
             <Label
               text={`${swapPair.fromAsset?.code} ${fromNetworkSpeed} / ${swapPair.toAsset?.code} ${toNetworkSpeed}`}
               variant="light"
             />
-          )}
+          ) : null}
         </Pressable>
       </Box>
       {areFeeSelectorsVisible &&
-        fromNetworkFee &&
-        toNetworkFee &&
-        selectedQuote && (
-          <>
-            {swapPair.fromAsset?.code && (
-              <SwapFeeSelector
-                asset={swapPair.fromAsset?.code}
-                handleCustomPress={() => ({})}
-                networkFee={fromNetworkFee}
-                selectedQuote={selectedQuote}
-                type={'from'}
-                changeNetworkSpeed={setFromNetworkSpeed}
-              />
-            )}
-            {swapPair.toAsset?.code && (
-              <SwapFeeSelector
-                asset={swapPair.toAsset?.code}
-                handleCustomPress={() => ({})}
-                networkFee={toNetworkFee}
-                selectedQuote={selectedQuote}
-                type={'to'}
-                changeNetworkSpeed={setToNetworkSpeed}
-              />
-            )}
-            <Warning
-              text1="Max slippage is 0.5%."
-              text2={`If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at ${new Date(
-                new Date().getTime() + 3 * 60 * 60 * 1000,
-              ).toTimeString()}`}>
-              <Clock width={15} height={15} style={styles.icon} />
-            </Warning>
-          </>
-        )}
+      fromNetworkFee &&
+      toNetworkFee &&
+      selectedQuote ? (
+        <>
+          {swapPair.fromAsset?.code ? (
+            <SwapFeeSelector
+              asset={swapPair.fromAsset?.code}
+              handleCustomPress={() => ({})}
+              networkFee={fromNetworkFee}
+              selectedQuote={selectedQuote}
+              type={'from'}
+              changeNetworkSpeed={setFromNetworkSpeed}
+            />
+          ) : null}
+          {swapPair.toAsset?.code ? (
+            <SwapFeeSelector
+              asset={swapPair.toAsset?.code}
+              handleCustomPress={() => ({})}
+              networkFee={toNetworkFee}
+              selectedQuote={selectedQuote}
+              type={'to'}
+              changeNetworkSpeed={setToNetworkSpeed}
+            />
+          ) : null}
+          <Warning
+            text1="Max slippage is 0.5%."
+            text2={`If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at ${new Date(
+              new Date().getTime() + 3 * 60 * 60 * 1000,
+            ).toTimeString()}`}>
+            <Clock width={15} height={15} style={styles.icon} />
+          </Warning>
+        </>
+      ) : null}
       <Box
         position="absolute"
         bottom={20}

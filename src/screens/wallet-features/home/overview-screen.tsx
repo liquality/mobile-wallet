@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { FC, Fragment, useCallback, useEffect, useState } from 'react'
-import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
+import { Dimensions, Platform, Pressable, StyleSheet, View } from 'react-native'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -19,6 +19,7 @@ import {
   totalFiatBalanceState,
 } from '../../../atoms'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import PushNotificationIOS from '@react-native-community/push-notification-ios'
 
 type SummaryBlockProps = {
   navigation: OverviewProps['navigation']
@@ -51,6 +52,32 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
       action: ActionEnum.SWAP,
     })
   }, [navigation, setSwapPair])
+
+  useEffect(() => {
+    populateWallet()
+  }, [totalFiatBalance])
+
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      PushNotificationIOS.requestPermissions({
+        alert: true,
+        badge: true,
+        sound: true,
+        critical: true,
+      })
+    }
+    //Android considers push notifications as a normal permission
+    //and automatically collects this permission on the first app session
+  }, [])
+
+  if (error) {
+    return (
+      <ErrorFallback
+        error={new Error('Failed to load assets')}
+        resetError={() => navigation.navigate('LoginScreen')}
+      />
+    )
+  }
 
   return (
     <Box style={styles.overviewBlock}>

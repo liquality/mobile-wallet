@@ -12,8 +12,8 @@ import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
-import { getSwapProvider } from '@liquality/wallet-core/dist/factory'
 import { AccountType, GasFees } from '../types'
+import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swap'
 import { Notification, WalletOptions } from '@liquality/wallet-core/dist/types'
 import { decrypt, encrypt, Log, pbkdf2 } from '../utils'
 import {
@@ -39,6 +39,7 @@ import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
 import { AtomEffect, DefaultValue } from 'recoil'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 // import dayjs from 'dayjs'
+import { showNotification } from './pushNotification'
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -95,6 +96,8 @@ export const initWallet = async (initialState?: CustomRootState) => {
       activeNetwork: Network.Testnet,
     },
     createNotification: (notification: Notification): any => {
+      //When swap is completed show push notification with msg
+      showNotification(notification.title, notification.message)
       Log(notification.message, 'info')
     },
     crypto: {
@@ -180,13 +183,55 @@ export const populateWallet = async (): Promise<void> => {
     .updateBalances({
       network: activeNetwork,
       walletId: activeWalletId,
-      assets: enabledAssets,
     })
     .catch((e) => {
       Log(`Failed update balances: ${e}`, 'error')
     })
 
   retryPendingSwaps()
+}
+
+export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
+  const { activeNetwork, activeWalletId } = wallet?.state
+  /*   const enabledAssets = ['BTC',
+      'ETH',
+      'DAI',
+      'RBTC',
+      'BNB',
+      'NEAR',
+      'SOV',
+      'MATIC',
+      'PWETH',
+      'ARBETH',
+      'SOL',
+      'LUNA',
+      'UST',
+    ] */
+
+  await wallet.dispatch
+    .updateBalances({
+      network: activeNetwork,
+      walletId: activeWalletId,
+    })
+    .catch((e) => {
+      Log(`Failed update balances: ${e}`, 'error')
+    })
+
+  await wallet.dispatch
+    .updateFiatRates({
+      assets: wallet.getters.allNetworkAssets,
+    })
+    .catch((e) => {
+      Log(`Failed to update fiat rates: ${e}`, 'error')
+    })
+
+  await wallet.dispatch
+    .updateMarketData({
+      network: activeNetwork,
+    })
+    .catch((e) => {
+      Log(`Failed to update market data: ${e}`, 'error')
+    })
 }
 
 export const retrySwap = async (transaction: SwapHistoryItem) => {
@@ -311,7 +356,6 @@ export const updateWallet = async (): Promise<void> => {
   await wallet.dispatch.updateBalances({
     network: activeNetwork,
     walletId: activeWalletId,
-    assets: enabledAssets,
   })
 }
 
@@ -324,6 +368,13 @@ export const restoreWallet = async (password: string): Promise<void> => {
   await initWallet(result)
   await wallet.dispatch.unlockWallet({
     key: password,
+  })
+}
+
+export const checkPendingActionsInBackground = async () => {
+  const { activeWalletId } = wallet.state
+  return await wallet.dispatch.checkPendingActions({
+    walletId: activeWalletId,
   })
 }
 

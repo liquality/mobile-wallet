@@ -207,6 +207,24 @@ const theme = createTheme({
       marginHorizontal: 'xl',
       height: 25,
     },
+    errorLight: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: 'bold',
+      fontSize: 12,
+      marginTop: 's',
+      paddingLeft: 's',
+      paddingVertical: 's',
+      marginHorizontal: 'xl',
+      height: 25,
+      color: 'mainForeground',
+    },
+    loginToSeePhraseTitle: {
+      fontFamily: 'MontserratAlternates-Light',
+      color: 'mainForeground',
+      fontSize: 35,
+      textAlign: 'center',
+      marginVertical: 'l',
+    },
   },
   buttonVariants: {
     l: {
