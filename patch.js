@@ -38,6 +38,20 @@ async function fixBrowserCheck(path) {
     fixedEthersPbkdf2Package,
   )
 
+  //Fix xmlhttprequest file
+  const xmlHttpRequestFile = await fs.readFile(
+    'node_modules/xmlhttprequest/lib/XMLHttpRequest.js',
+    { encoding: 'utf8' },
+  )
+  const fixedXmlHttpRequestFile = xmlHttpRequestFile.replaceAll(
+    'var spawn = require("child_process").spawn;',
+    'var spawn = () => {}',
+  )
+  await fs.writeFile(
+    'node_modules/xmlhttprequest/lib/XMLHttpRequest.js',
+    fixedXmlHttpRequestFile,
+  )
+
   try {
     await fs.rename(
       'node_modules/superstruct/lib/index.cjs',
