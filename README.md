@@ -26,6 +26,16 @@
 
 - Ensure you have JDK11 installed and setup
 
+# IOS environment
+
+- Ensure you have latest version of Xcode and Command-Line-Tools
+- To simulate background fetch in iOS emulator, build and run the /ios/LiqualityMobile.xcworkspace directly in Xcode and navigate to the 'Signing and capabilities' –> 'Background Modes' → to make sure that the following are checked:
+
+* Audio, Airplay and Picture in Picture
+* Background fetch
+* Remote notifications
+* Background processing
+
 ## Running the app
 
 - For iOS

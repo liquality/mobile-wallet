@@ -6,8 +6,9 @@ const config = {
     '\\.js$': '<rootDir>/node_modules/react-native/jest/preprocessor.js',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|react-native-reanimated|@liquality|lodash-es)/)',
+    'node_modules/(?!(react-native|@react-native|react-native-reanimated|@liquality|react-native-background-actions)/)',
   ],
+
   moduleNameMapper: {
     '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$':
       'jest-transform-stub',

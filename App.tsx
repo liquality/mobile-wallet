@@ -16,7 +16,7 @@ import {
 import LoginScreen from './src/screens/wallet-creation/loginScreen'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Log } from './src/utils'
-import HandleLockWallet from './src/components/handle-lock-wallet'
+import HandleLockWalletAndBackgroundTasks from './src/components/handle-lock-wallet-and-background-tasks'
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
@@ -38,7 +38,6 @@ const App: FC = () => {
   const [initialRouteName, setInitialRouteName] = useState(
     'WalletCreationNavigator',
   )
-  // const navigation = useNavigation()
   const backgroundStyle = {
     flex: 1,
   }
@@ -67,7 +66,7 @@ const App: FC = () => {
           <StatusBar barStyle={'dark-content'} />
           <GestureHandlerRootView style={backgroundStyle}>
             <NavigationContainer>
-              <HandleLockWallet />
+              <HandleLockWalletAndBackgroundTasks />
               <AppNavigator initialRouteName={initialRouteName} />
             </NavigationContainer>
           </GestureHandlerRootView>

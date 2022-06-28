@@ -2,16 +2,31 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AppState } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { updateBalancesLoop } from '../store/store'
+import { updateBalanceRatesMarketLoop } from '../store/store'
 import { Log } from '../utils'
 import { useInterval } from '../hooks'
+import BackgroundService from 'react-native-background-actions'
+import { checkPendingActionsInBackground } from '../store/store'
 
-const HandleLockWallet = ({}) => {
+//BackgroundService.start() expect these options
+const options = {
+  taskName: 'Example',
+  taskTitle: 'ExampleTask title', //Android Required
+  taskDesc: 'ExampleTask description', //Android Required
+  // Android Required
+  taskIcon: {
+    name: 'ic_launcher',
+    type: 'mipmap',
+  },
+  parameters: {
+    delay: 1000,
+  },
+}
+const HandleLockWalletAndBackgroundTasks = ({}) => {
   const navigation = useNavigation()
   const appState = useRef(AppState.currentState)
   const [, setAppStateVisible] = useState(appState.current)
   const [isRunning] = useState(true)
-  const [count, setCount] = useState(1)
 
   const handleLockPress = useCallback(() => {
     //For some reason there is unexpected behaviour when navigating to loginscreen directly
@@ -22,15 +37,15 @@ const HandleLockWallet = ({}) => {
     })
   }, [navigation])
 
-  const interval = 30000
+  //Update balances, rates and market data every 2 minutes
+  const interval = 120000
   useInterval(
     () => {
       try {
-        updateBalancesLoop()
+        updateBalanceRatesMarketLoop()
       } catch (err: unknown) {
         Log(`Could not update balances in loop: ${err}`, 'error')
       }
-      setCount(count + 1)
     },
     isRunning ? interval : null,
   )
@@ -43,6 +58,9 @@ const HandleLockWallet = ({}) => {
           appState.current.match(/inactive|background/) &&
           nextAppState === 'active'
         ) {
+          //App has come to the foreground again
+          BackgroundService.stop()
+
           var end = new Date().getTime()
           const started = await AsyncStorage.getItem('inactiveUserTime')
 
@@ -59,8 +77,14 @@ const HandleLockWallet = ({}) => {
           appState.current === 'background' ||
           appState.current === 'inactive'
         ) {
+          //Now we are in the background/inactive state
           var start = new Date().getTime().toString()
           await AsyncStorage.setItem('inactiveUserTime', start)
+          BackgroundService.start(performBackgroundTask, options).then(() => {
+            // Only Android, iOS will ignore this call
+            // iOS will also run everything here in the background until .stop() is called
+            BackgroundService.stop()
+          })
         }
       },
     )
@@ -70,7 +94,11 @@ const HandleLockWallet = ({}) => {
     }
   }, [navigation, handleLockPress])
 
+  const performBackgroundTask = async () => {
+    await checkPendingActionsInBackground()
+  }
+
   return null
 }
 
-export default HandleLockWallet
+export default HandleLockWalletAndBackgroundTasks
