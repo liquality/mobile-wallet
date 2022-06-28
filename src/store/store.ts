@@ -105,20 +105,20 @@ export const initWallet = async (initialState?: CustomRootState) => {
   }
   wallet = setupWallet(walletOptions)
   // wallet.original.subscribe((mutation) => {
-  //   if (mutation.type === 'CREATE_WALLET') {
-  //     console.log(mutation.type, dayjs().unix() - start, 'seconds')
-  //   } else if (mutation.type === 'UPDATE_BALANCE') {
-  //     console.log(
-  //       mutation.type,
-  //       mutation.payload.asset,
-  //       dayjs().unix() - start,
-  //       'seconds',
-  //     )
-  //   } else if (mutation.type === 'UPDATE_ACCOUNT_ADDRESSES') {
-  //     console.log(mutation.type, dayjs().unix() - start, 'seconds')
-  //   } else if (mutation.type === 'UPDATE_HISTORY') {
-  //     console.log('UPDATE_HISTORY: ', mutation.payload)
-  //   }
+  // if (mutation.type === 'CREATE_WALLET') {
+  //   console.log(mutation.type, dayjs().unix() - start, 'seconds')
+  // } else if (mutation.type === 'UPDATE_BALANCE') {
+  //   console.log(
+  //     mutation.type,
+  //     mutation.payload.asset,
+  //     dayjs().unix() - start,
+  //     'seconds',
+  //   )
+  // } else if (mutation.type === 'UPDATE_ACCOUNT_ADDRESSES') {
+  //   console.log(mutation.type, dayjs().unix() - start, 'seconds')
+  // } else if (mutation.type === 'UPDATE_HISTORY') {
+  //   console.log('UPDATE_HISTORY: ', mutation.payload)
+  // }
   // })
 
   return wallet
@@ -584,7 +584,7 @@ export const enabledAssetsEffect: () => AtomEffect<string[]> =
 
 export const transactionHistoryEffect: (
   transactionId: string,
-) => AtomEffect<HistoryItem> =
+) => AtomEffect<Partial<HistoryItem>> =
   (transactionId) =>
   ({ setSelf, trigger }) => {
     if (trigger === 'get') {
@@ -633,7 +633,6 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
     if (trigger === 'get') {
       setSelf(
         AsyncStorage.getItem(key).then((savedValue) => {
-          // console.log('Getting ' + key + ' ', savedValue)
           return savedValue ? JSON.parse(savedValue) : new DefaultValue()
         }),
       )
@@ -641,7 +640,6 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
 
     onSet((newValue, _, isReset) => {
       if (newValue instanceof DefaultValue && trigger === 'get') return
-      // console.log('Setting ' + key + ' ', newValue)
       isReset
         ? AsyncStorage.removeItem(key)
         : newValue && AsyncStorage.setItem(key, JSON.stringify(newValue))

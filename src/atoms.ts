@@ -77,7 +77,7 @@ export const activityFilterState = atom<CustomRootState['assetFilter']>({
 })
 
 //---------- ATOM FAMILIES----------------
-export const accountInfoStateFamily = atomFamily<AccountType, string>({
+export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',
   default: {},
   effects: (accountId) => [localStorageEffect(`account-info-${accountId}`)],
@@ -98,7 +98,7 @@ export const addressStateFamily = atomFamily<string, string>({
   ],
 })
 
-export const historyStateFamily = atomFamily<HistoryItem, string>({
+export const historyStateFamily = atomFamily<Partial<HistoryItem>, string>({
   key: 'TransactionHistory',
   default: {},
   effects: (transactionId) => [
@@ -108,13 +108,16 @@ export const historyStateFamily = atomFamily<HistoryItem, string>({
 })
 
 //--------------ATOM SELECTORS--------------
-export const accountInfoState = selectorFamily<AccountType, string>({
+export const accountInfoState = selectorFamily<Partial<AccountType>, string>({
   key: 'AccountInfoState',
   get:
     (accountId) =>
     ({ get }) => {
       const address = get(addressStateFamily(accountId))
       const account = get(accountInfoStateFamily(accountId))
+      if (account?.code) {
+        account.balance = get(balanceStateFamily(account.code))
+      }
       account.address = address
       for (let assetsKey in account.assets) {
         account.assets[assetsKey].address = address
@@ -122,7 +125,7 @@ export const accountInfoState = selectorFamily<AccountType, string>({
       return account
     },
 })
-export const accountListState = selector<AccountType[]>({
+export const accountListState = selector<Partial<AccountType>[]>({
   key: 'AccountList',
   get: ({ get }) => {
     const accountsIds = get(enabledAccountsIdsState)
@@ -136,7 +139,7 @@ export const accountListState = selector<AccountType[]>({
 })
 
 export const accountForAssetState = selectorFamily<
-  AccountType | undefined,
+  Partial<AccountType> | undefined,
   string
 >({
   key: 'AccountForAsset',

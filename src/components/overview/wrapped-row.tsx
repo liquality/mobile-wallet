@@ -6,18 +6,25 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import {
   accountForAssetState,
   accountInfoStateFamily,
+  addressStateFamily,
+  balanceStateFamily,
   swapPairState,
 } from '../../atoms'
 import { useNavigation, useRoute } from '@react-navigation/core'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
+import AssetIcon from '../asset-icon'
+import { assets as cryptoassets } from '@liquality/cryptoassets'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
 const WrappedRow: FC<{
   item: { id: string; name: string }
 }> = (props) => {
   const { item } = props
   const [isExpanded, setIsExpanded] = useState(false)
-  const ethAccount = useRecoilValue(accountForAssetState('ETH'))
+  const ethAccount = useRecoilValue(accountForAssetState('BTC'))
   const btcAccount = useRecoilValue(accountForAssetState('BTC'))
+  const address = useRecoilValue(addressStateFamily(item.id))
+  const balance = useRecoilValue(balanceStateFamily(item.name))
   const account = useRecoilValue(accountInfoStateFamily(item.id))
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
   const assets = Object.values(account?.assets || {}) || []
@@ -103,6 +110,13 @@ const WrappedRow: FC<{
 
   if (!account || !account.code) return null
 
+  if (!balance || !address)
+    return (
+      <View style={styles.row}>
+        <AssetIcon chain={cryptoassets[item.name].chain} />
+        <ActivityIndicator />
+      </View>
+    )
   return (
     <Fragment key={item.id}>
       <Row
@@ -128,5 +142,18 @@ const WrappedRow: FC<{
     </Fragment>
   )
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#D9DFE5',
+    borderLeftWidth: 3,
+    paddingVertical: 10,
+    height: 60,
+  },
+})
 
 export default WrappedRow

@@ -14,7 +14,7 @@ import {
   UseInputStateReturnType,
 } from '../../types'
 import Header from '../header'
-import { createWallet, restoreWallet } from '../../store/store'
+import { createWallet, enabledAssets, restoreWallet } from '../../store/store'
 import Text from '../../theme/text'
 import Button from '../../theme/button'
 import Box from '../../theme/box'
@@ -26,8 +26,11 @@ import { useRecoilCallback, useSetRecoilState } from 'recoil'
 import {
   accountInfoStateFamily,
   accountsIdsState,
+  addressStateFamily,
+  balanceStateFamily,
   networkState,
 } from '../../atoms'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type LoginScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -50,6 +53,8 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const addAccount = useRecoilCallback(
     ({ set }) =>
       (accountId: string, account: AccountType) => {
+        set(balanceStateFamily(account.code), 0)
+        set(addressStateFamily(accountId), '')
         set(accountInfoStateFamily(accountId), account)
       },
   )
@@ -67,6 +72,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
 
   const onSesamePress = async () => {
     setLoading(true)
+    await AsyncStorage.clear()
     const { accounts, activeWalletId, activeNetwork } = await createWallet(
       PASSWORD,
       MNEMONIC,
@@ -74,6 +80,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     const accountsIds: { id: string; name: string }[] = []
     accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
       const nativeAsset = chains[account.chain].nativeAsset
+      if (!enabledAssets.includes(nativeAsset)) return
       accountsIds.push({
         id: account.id,
         name: nativeAsset,

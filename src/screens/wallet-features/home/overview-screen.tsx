@@ -18,6 +18,7 @@ import {
   swapPairState,
   totalFiatBalanceState,
 } from '../../../atoms'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type SummaryBlockProps = {
   navigation: OverviewProps['navigation']
@@ -143,7 +144,13 @@ export type OverviewProps = NativeStackScreenProps<
 
 const OverviewScreen = ({ navigation }: OverviewProps) => {
   useEffect(() => {
-    populateWallet()
+    AsyncStorage.getItem('BTC').then((result) => {
+      if (result) {
+        setTimeout(populateWallet, 3000)
+      } else {
+        populateWallet()
+      }
+    })
   }, [])
 
   return (

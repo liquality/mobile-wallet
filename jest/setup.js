@@ -32,3 +32,7 @@ jest.mock('react-native-fs', () => {
 jest.mock('react-native-share', () => {
   return {}
 })
+
+jest.mock('rn-flipper-async-storage-advanced', () => {
+  return {}
+})
