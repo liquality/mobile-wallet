@@ -217,6 +217,20 @@ export const populateWallet = async (): Promise<void> => {
 
 export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet?.state
+  /*   const enabledAssets = ['BTC',
+      'ETH',
+      'DAI',
+      'RBTC',
+      'BNB',
+      'NEAR',
+      'SOV',
+      'MATIC',
+      'PWETH',
+      'ARBETH',
+      'SOL',
+      'LUNA',
+      'UST',
+    ] */
 
   await wallet.dispatch
     .updateBalances({
