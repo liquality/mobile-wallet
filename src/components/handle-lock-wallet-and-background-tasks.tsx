@@ -2,6 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AppState } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { updateBalanceRatesMarketLoop } from '../store/store'
+import { Log } from '../utils'
+import { useInterval } from '../hooks'
 import BackgroundService from 'react-native-background-actions'
 import { checkPendingActionsInBackground } from '../store/store'
 
@@ -19,10 +22,11 @@ const options = {
     delay: 1000,
   },
 }
-const HandleLockWallet = ({}) => {
+const HandleLockWalletAndBackgroundTasks = ({}) => {
   const navigation = useNavigation()
   const appState = useRef(AppState.currentState)
   const [, setAppStateVisible] = useState(appState.current)
+  const [isRunning] = useState(true)
 
   const handleLockPress = useCallback(() => {
     //For some reason there is unexpected behaviour when navigating to loginscreen directly
@@ -32,6 +36,19 @@ const HandleLockWallet = ({}) => {
       shouldLogOut: true,
     })
   }, [navigation])
+
+  //Update balances, rates and market data every 2 minutes
+  const interval = 120000
+  useInterval(
+    () => {
+      try {
+        updateBalanceRatesMarketLoop()
+      } catch (err: unknown) {
+        Log(`Could not update balances in loop: ${err}`, 'error')
+      }
+    },
+    isRunning ? interval : null,
+  )
 
   useEffect(() => {
     const subscription = AppState.addEventListener(
@@ -84,4 +101,4 @@ const HandleLockWallet = ({}) => {
   return null
 }
 
-export default HandleLockWallet
+export default HandleLockWalletAndBackgroundTasks

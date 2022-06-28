@@ -67,7 +67,7 @@ const SettingsScreen = ({ route }) => {
       Alert.alert('Please reload your app')
     }
 
-    //Used for handle-lock-wallet.tsx
+    //Used for handle-lock-wallet-and-background-tasks.tsx
     if (route?.params?.shouldLogOut) {
       handleLockPress()
     }
