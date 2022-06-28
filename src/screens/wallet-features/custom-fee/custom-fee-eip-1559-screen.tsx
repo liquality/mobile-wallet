@@ -60,6 +60,8 @@ const CustomFeeEIP1559Screen = ({
   }
 
   useEffect(() => {
+    //console.log('CustomFeeScreen EIP 1559 !')
+
     const _feeDetails = fees?.[activeNetwork]?.[activeWalletId]?.[code]
     if (!_feeDetails) {
       setError('Gas fees missing')
@@ -76,6 +78,8 @@ const CustomFeeEIP1559Screen = ({
       </View>
     )
   }
+
+  //console.log('THIS IS EIP 559 SCREEN')
   return (
     <View style={styles.container}>
       <View>

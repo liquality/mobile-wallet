@@ -32,7 +32,9 @@ const BackupWarningScreen = ({}) => {
           type="secondary"
           variant="m"
           label="Cancel"
-          onPress={navigation.goBack}
+          onPress={() => {
+            navigation.navigate('SettingsScreen')
+          }}
           isBorderless={false}
           isActive={true}
         />

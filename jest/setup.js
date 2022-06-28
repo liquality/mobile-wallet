@@ -53,3 +53,11 @@ jest.mock('react-native-push-notification', () => ({
   cancelLocalNotifications: jest.fn(),
 }))
 jest.mock('react-native-device-info', () => mockRNDeviceInfo)
+
+jest.mock('react-native-background-actions', () => ({
+  on: jest.fn(),
+  stop: jest.fn(),
+  start: jest.fn(),
+  updateNotification: jest.fn(),
+  isRunning: jest.fn(),
+}))

@@ -12,7 +12,7 @@ import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
-import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
+import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swap'
 import { AssetDataElementType, GasFees } from '../types'
 import { Notification, WalletOptions } from '@liquality/wallet-core/dist/types'
 import { decrypt, encrypt, Log, pbkdf2 } from '../utils'
@@ -79,6 +79,7 @@ export const initWallet = async (initialState?: CustomRootState) => {
       activeNetwork: Network.Testnet,
     },
     createNotification: (notification: Notification): any => {
+      //When swap is completed show push notification with msg
       showNotification(notification.title, notification.message)
       Log(notification.message, 'info')
     },
@@ -377,6 +378,14 @@ export const restoreWallet = async (
  * @param fromGasSpeed
  * @param toGasSpeed
  */
+
+export const checkPendingActionsInBackground = async () => {
+  const { activeWalletId } = wallet.state
+  return await wallet.dispatch.checkPendingActions({
+    walletId: activeWalletId,
+  })
+}
+
 export const performSwap = async (
   from: AssetDataElementType,
   to: AssetDataElementType,

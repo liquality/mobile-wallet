@@ -19,7 +19,7 @@ import RefundedIcon from '../assets/icons/activity-status/refunded.svg'
 import ActivityFilter from './activity-filter'
 import { useFilteredHistory } from '../custom-hooks'
 import Text from '../theme/text'
-import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swapProvider'
+import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swap'
 import Box from '../theme/box'
 import { downloadAssetAcitivity, formatDate } from '../utils'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
@@ -79,6 +79,8 @@ const ActivityFlatList = ({
     } else if (type === TransactionType.Swap) {
       transactionLabel = `${from} to ${to}`
     }
+
+    //console.log('In activity flatlist')
 
     return (
       <Box

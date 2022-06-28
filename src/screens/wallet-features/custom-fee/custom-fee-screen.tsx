@@ -58,6 +58,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
 
   useEffect(() => {
     const _feeDetails = fees?.[activeNetwork]?.[activeWalletId]?.[code]
+    //console.log('CustomFeeScreen !')
     if (!_feeDetails) {
       setError('Gas fees missing')
       return

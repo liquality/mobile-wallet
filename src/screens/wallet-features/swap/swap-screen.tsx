@@ -355,7 +355,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           {fromAsset?.code ? (
             <SwapFeeSelector
               asset={fromAsset?.code}
-              handleCustomPress={() => ({})}
+              handleCustomPress={() => {
+                //console.log('custom press!')
+              }}
               networkFee={fromNetworkFee}
               selectedQuote={selectedQuote}
               type={'from'}
@@ -365,7 +367,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           {toAsset?.code ? (
             <SwapFeeSelector
               asset={toAsset?.code}
-              handleCustomPress={() => ({})}
+              handleCustomPress={() => {
+                //console.log('custom press!22')
+                navigation.navigate('CustomFeeScreen')
+              }}
               networkFee={toNetworkFee}
               selectedQuote={selectedQuote}
               type={'to'}

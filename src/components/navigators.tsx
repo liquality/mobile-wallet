@@ -29,7 +29,6 @@ import {
 import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
 import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
-import SettingsHeaderRight from './header-bar/settings-header-right'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
 
@@ -288,12 +287,12 @@ export const MainNavigator = () => (
           return {
             display: 'none',
           }
-        }
-        //Maybe not ideal solution but there is bug in rn-navigation workaround here: https://github.com/react-navigation/react-navigation/issues/6779#issuecomment-583272325
-        return {
-          bottom: 0,
-          position: 'absolute',
-        }
+        } else if (routeName === 'OverviewScreen')
+          //Maybe not ideal solution but there is bug in rn-navigation workaround here: https://github.com/react-navigation/react-navigation/issues/6779#issuecomment-583272325
+          return {
+            bottom: 0,
+            position: 'absolute',
+          }
       })(route),
       headerShown: false,
       title: '',
@@ -313,13 +312,13 @@ export const MainNavigator = () => (
     <Tab.Screen
       name="SettingsScreen"
       component={SettingsScreen}
-      options={({ navigation }) => ({
+      options={({}) => ({
         headerShown: true,
         headerTitle: '',
         headerLeft: () => <Text style={styles.settingsTitle}>SETTINGS</Text>,
-        headerRight: () => (
+        /*    headerRight: () => (
           <SettingsHeaderRight navigate={navigation.navigate} />
-        ),
+        ), */
       })}
     />
   </Tab.Navigator>

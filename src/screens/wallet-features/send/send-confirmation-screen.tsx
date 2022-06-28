@@ -41,6 +41,8 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
 
   const handleTransactionSpeedUp = () => {
     const { assetData } = route.params
+
+    //console.log('ON PRESS')
     if (!assetData) {
       return
     }
@@ -60,6 +62,7 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
   }
 
   useEffect(() => {
+    //console.log('Im in send-confirmation-screen.tsx!')
     const hash = transaction.hash || transaction.tx?.hash
     const historyItems = history.filter(
       (item) => item.type === TransactionType.Send && item.tx.hash === hash,
@@ -153,11 +156,11 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
             }`}
           </Text>
         </Box>
-        {historyItem.status !== 'SUCCESS' && (
-          <Pressable onPress={handleTransactionSpeedUp}>
-            <Text variant="link">Speed Up</Text>
-          </Pressable>
-        )}
+        {/*   {historyItem.status !== 'SUCCESS' && ( */}
+        <Pressable onPress={handleTransactionSpeedUp}>
+          <Text variant="link">Speed Up</Text>
+        </Pressable>
+        {/* )} */}
       </Box>
       {historyItem && <SendTransactionDetails historyItem={historyItem} />}
     </ScrollView>

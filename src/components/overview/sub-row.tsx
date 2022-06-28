@@ -27,6 +27,7 @@ const SubRow: FC<SubRowProps> = (props) => {
     : DEFAULT_COLOR
 
   const handlePressOnRow = () => {
+    //console.log('PRESS ON ROW')
     onAssetSelected({
       assetData: {
         ...item,
