@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import Lock from '../assets/icons/lock.svg'
 import BackupIcon from '../assets/icons/backup.svg'
@@ -31,7 +31,14 @@ const WithPopupMenu = <T extends FctType>(
 
     return (
       <View style={styles.container}>
-        <Component navigation={navigation} route={route} />
+        <Suspense
+          fallback={
+            <View>
+              <Text>Loading...</Text>
+            </View>
+          }>
+          <Component navigation={navigation} route={route} />
+        </Suspense>
         {route?.params?.showPopup && (
           <View style={styles.modalContainer}>
             <Pressable

@@ -188,21 +188,21 @@ export const AppStackNavigator = () => (
     />
     <Stack.Screen
       name="SwapScreen"
-      component={SwapScreen}
+      component={WithPopupMenu(SwapScreen)}
       options={() => ({
         headerRight: () => <View />,
       })}
     />
     <Stack.Screen
       name="SwapReviewScreen"
-      component={SwapReviewScreen}
+      component={WithPopupMenu(SwapReviewScreen)}
       options={() => ({
         headerRight: () => <View />,
       })}
     />
     <Stack.Screen
       name="SwapConfirmationScreen"
-      component={SwapConfirmationScreen}
+      component={WithPopupMenu(SwapConfirmationScreen)}
       options={({ navigation, route }) => ({
         headerRight: () => (
           <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
