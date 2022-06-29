@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ImageBackground,
   KeyboardAvoidingView,
   FlatList,
   Platform,
@@ -18,6 +17,8 @@ import Button from '../../../theme/button'
 import Eye from '../../../assets/icons/eye.svg'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions'
+import GradientBackground from '../../../components/gradient-background'
+import Box from '../../../theme/box'
 
 type BackupSeedScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -88,9 +89,12 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
 
   const seedList = wallet.state.wallets[0].mnemonic.split(' ')
   return (
-    <ImageBackground
-      style={styles.container}
-      source={require('../../../assets/bg/bg.png')}>
+    <Box style={styles.container}>
+      <GradientBackground
+        width={Dimensions.get('screen').width}
+        height={Dimensions.get('screen').height}
+        isFullPage
+      />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'height'}
         style={[styles.keyboard, StyleSheet.absoluteFillObject]}>
@@ -164,7 +168,7 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
           </View>
         </View>
       </KeyboardAvoidingView>
-    </ImageBackground>
+    </Box>
   )
 }
 

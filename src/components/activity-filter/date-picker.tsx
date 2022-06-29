@@ -1,7 +1,6 @@
 import React, { FC } from 'react'
-import { faTimes } from '@fortawesome/pro-light-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { Modal, View, Pressable, StyleSheet, Dimensions } from 'react-native'
+import TimesIcon from '../../assets/icons/times.svg'
 import { Calendar, DateData } from 'react-native-calendars'
 import { Theme } from 'react-native-calendars/src/types'
 import Label from '../ui/label'
@@ -73,7 +72,7 @@ const DatePicker: FC<Props> = ({ title, open, date, onChange, onClose }) => (
         <View style={styles.modalHeader}>
           <Label text={title} variant="strong" />
           <Pressable style={styles.close} onPress={onClose}>
-            <FontAwesomeIcon icon={faTimes} color={'#000'} />
+            <TimesIcon />
           </Pressable>
         </View>
         <Calendar

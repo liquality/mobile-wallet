@@ -3,8 +3,8 @@ import React, { useCallback, useState } from 'react'
 import Button from '../../theme/button'
 import { useNavigation } from '@react-navigation/core'
 import CheckBox from '../../components/checkbox'
-import { useAppSelector } from '../../hooks'
-import { useDispatch } from 'react-redux'
+import { useRecoilState } from 'recoil'
+import { optInAnalyticsState } from '../../atoms'
 
 type AnalyticsModalProps = {
   onAction: (params: boolean) => void
@@ -17,26 +17,26 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
 }) => {
   const navigation = useNavigation()
   const [userHasChecked, setUserHasChecked] = useState<boolean>(true)
-  const reduxState = useAppSelector((state) => state)
-  const { analytics = false } = reduxState
-  const dispatch = useDispatch()
+  const [analytics, setAnalytics] = useRecoilState(optInAnalyticsState)
 
   const handleOkButtonPress = useCallback(() => {
     onAction(false)
-    dispatch({
-      type: 'ANALYTICS_UPDATE',
-      payload: {
-        analytics: {
-          ...analytics,
-          acceptedDate: userHasChecked ? Date.now() : undefined,
-        },
-      },
+    setAnalytics({
+      ...analytics,
+      acceptedDate: userHasChecked ? Date.now() : undefined,
     })
     navigation.navigate(nextScreen, {
       termsAcceptedAt: Date.now(),
       previousScreen: 'Entry',
     })
-  }, [analytics, dispatch, userHasChecked, navigation, nextScreen, onAction])
+  }, [
+    onAction,
+    setAnalytics,
+    analytics,
+    userHasChecked,
+    navigation,
+    nextScreen,
+  ])
 
   const handleCheckBox = useCallback(() => {
     setUserHasChecked(!userHasChecked)

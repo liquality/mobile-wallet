@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ImageBackground,
   FlatList,
   KeyboardAvoidingView,
   Dimensions,
@@ -14,6 +13,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 import Button from '../../theme/button'
+import Box from '../../theme/box'
+import GradientBackground from '../../components/gradient-background'
 import { generateMnemonic } from 'bip39'
 
 type WalletBackupProps = NativeStackScreenProps<
@@ -46,9 +47,12 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
   }, [])
 
   return (
-    <ImageBackground
-      style={styles.container}
-      source={require('../../assets/bg/bg.png')}>
+    <Box style={styles.container}>
+      <GradientBackground
+        width={Dimensions.get('screen').width}
+        height={Dimensions.get('screen').height}
+        isFullPage
+      />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'height'}
         style={[styles.keyboard, StyleSheet.absoluteFillObject]}>
@@ -98,7 +102,7 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
           </View>
         </View>
       </KeyboardAvoidingView>
-    </ImageBackground>
+    </Box>
   )
 }
 

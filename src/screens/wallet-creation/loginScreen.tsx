@@ -2,21 +2,35 @@ import React, { useState } from 'react'
 import {
   View,
   StyleSheet,
-  ImageBackground,
   TextInput,
   Platform,
   KeyboardAvoidingView,
   Dimensions,
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList, UseInputStateReturnType } from '../../types'
+import {
+  AccountType,
+  RootStackParamList,
+  UseInputStateReturnType,
+} from '../../types'
 import Header from '../header'
 import { createWallet, restoreWallet } from '../../store/store'
-import { useDispatch } from 'react-redux'
 import Text from '../../theme/text'
 import Button from '../../theme/button'
 import Box from '../../theme/box'
 import { MNEMONIC, PASSWORD } from '@env'
+import GradientBackground from '../../components/gradient-background'
+import { chains } from '@liquality/cryptoassets'
+import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
+import { useRecoilCallback, useSetRecoilState } from 'recoil'
+import {
+  accountInfoStateFamily,
+  accountsIdsState,
+  addressStateFamily,
+  balanceStateFamily,
+  networkState,
+} from '../../atoms'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type LoginScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -34,31 +48,82 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const passwordInput = useInputState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const dispatch = useDispatch()
+  const setAccountsIds = useSetRecoilState(accountsIdsState)
+  const setActiveNetwork = useSetRecoilState(networkState)
+  const addAccount = useRecoilCallback(
+    ({ set }) =>
+      (accountId: string, account: AccountType) => {
+        set(balanceStateFamily(account.code), 0)
+        set(addressStateFamily(accountId), '')
+        set(accountInfoStateFamily(accountId), account)
+      },
+  )
 
   const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
       setError('Passwords must be at least 8 characters')
     } else {
       setLoading(true)
-      //TODO find a better way to handle threads
-      restoreWallet(passwordInput.value).then((walletState) => {
-        dispatch({
-          type: 'RESTORE_WALLET',
-          payload: {
-            ...walletState,
-          },
-        })
-        setLoading(false)
-        navigation.navigate('MainNavigator')
-      })
+      await restoreWallet(passwordInput.value)
+      setLoading(false)
+      navigation.navigate('MainNavigator')
     }
   }
 
+  const onSesamePress = async () => {
+    setLoading(true)
+    await AsyncStorage.clear()
+    const { accounts, activeWalletId, activeNetwork } = await createWallet(
+      PASSWORD,
+      MNEMONIC,
+    )
+    const accountsIds: { id: string; name: string }[] = []
+    accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
+      const nativeAsset = chains[account.chain].nativeAsset
+      accountsIds.push({
+        id: account.id,
+        name: nativeAsset,
+      })
+      const newAccount: AccountType = {
+        id: account.id,
+        chain: account.chain,
+        name: account.name,
+        code: nativeAsset,
+        address: account.addresses[0], //TODO why pick only the first address
+        color: account.color,
+        assets: {},
+        balance: 0,
+      }
+
+      for (const asset of account.assets) {
+        newAccount.assets[asset] = {
+          id: asset,
+          name: cryptoassets[asset].name,
+          code: asset,
+          chain: account.chain,
+          color: account.color,
+          balance: 0,
+          assets: {},
+        }
+      }
+
+      addAccount(account.id, newAccount)
+    })
+
+    setAccountsIds(accountsIds)
+    setActiveNetwork(activeNetwork)
+
+    setLoading(false)
+    navigation.navigate('MainNavigator')
+  }
+
   return (
-    <ImageBackground
-      style={styles.container}
-      source={require('../../assets/bg/bg.png')}>
+    <Box style={styles.container}>
+      <GradientBackground
+        width={Dimensions.get('screen').width}
+        height={Dimensions.get('screen').height}
+        isFullPage
+      />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'height'}
         style={styles.keyboard}>
@@ -112,18 +177,14 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               variant="l"
               label="Open Sesame"
               isLoading={loading}
-              onPress={async () => {
-                setLoading(true)
-                await createWallet(PASSWORD, MNEMONIC)
-                navigation.navigate('MainNavigator')
-              }}
+              onPress={onSesamePress}
               isBorderless
               isActive={true}
             />
           </Box>
         </Box>
       </KeyboardAvoidingView>
-    </ImageBackground>
+    </Box>
   )
 }
 

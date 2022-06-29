@@ -1,9 +1,10 @@
-import React, { FC, useRef } from 'react'
+import React, { FC, memo, useCallback, useRef } from 'react'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { Animated, Dimensions } from 'react-native'
 import AnimatedBox from './animated-box'
 import { useNavigation } from '@react-navigation/core'
 import { Easing } from 'react-native-reanimated'
+import { AccountType } from '../types'
 
 type renderActionsType = (
   progressAnimatedValue: Animated.AnimatedInterpolation,
@@ -13,7 +14,7 @@ type renderActionsType = (
 type AssetListSwipeableRowProps = {
   children: React.ReactElement
   assetSymbol: string
-  assetData: any
+  assetData: AccountType
 }
 
 const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
@@ -26,26 +27,26 @@ const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
     ref.current?.close()
   }
 
-  const handleSendBtnPress = () => {
+  const handleSendBtnPress = useCallback(() => {
     navigation.navigate('SendScreen', {
       assetData,
       screenTitle: `Send ${assetSymbol}`,
     })
-  }
+  }, [assetData, assetSymbol, navigation])
 
-  const handleReceiveBtnPress = () => {
+  const handleReceiveBtnPress = useCallback(() => {
     navigation.navigate('ReceiveScreen', {
       assetData,
       screenTitle: `Receive ${assetSymbol}`,
     })
-  }
+  }, [assetData, assetSymbol, navigation])
 
-  const handleSwapBtnPress = () => {
+  const handleSwapBtnPress = useCallback(() => {
     navigation.navigate('SwapScreen', {
       assetData,
       screenTitle: 'Swap',
     })
-  }
+  }, [assetData, navigation])
 
   const renderLeftActions: renderActionsType = (progress, dragX) => {
     const trans = dragX.interpolate({
@@ -99,4 +100,4 @@ const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
   )
 }
 
-export default AssetListSwipeableRow
+export default memo(AssetListSwipeableRow)

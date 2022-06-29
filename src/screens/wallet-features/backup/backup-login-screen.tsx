@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import {
   View,
   StyleSheet,
-  ImageBackground,
   TextInput,
   Platform,
   KeyboardAvoidingView,
@@ -19,6 +18,7 @@ import Button from '../../../theme/button'
 import Box from '../../../theme/box'
 import { MNEMONIC, PASSWORD } from '@env'
 import CheckBox from '../../../components/checkbox'
+import GradientBackground from '../../../components/gradient-background'
 
 type LoginScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -69,9 +69,12 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
   }
 
   return (
-    <ImageBackground
-      style={styles.container}
-      source={require('../../../assets/bg/bg.png')}>
+    <Box style={styles.container}>
+      <GradientBackground
+        width={Dimensions.get('screen').width}
+        height={Dimensions.get('screen').height}
+        isFullPage
+      />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'height'}
         style={styles.keyboard}>
@@ -149,7 +152,7 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
           </Box>
         </Box>
       </KeyboardAvoidingView>
-    </ImageBackground>
+    </Box>
   )
 }
 

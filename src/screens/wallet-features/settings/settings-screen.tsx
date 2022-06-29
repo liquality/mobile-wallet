@@ -9,23 +9,24 @@ import {
   View,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { faAngleRight, faSignOut } from '@fortawesome/pro-light-svg-icons'
+import AngleRightIcon from '../../../assets/icons/angle-right.svg'
+import SignoutIcon from '../../../assets/icons/logout.svg'
 
 import SettingsSwitch from '../../../components/ui/switch'
 import { DarkModeEnum } from '../../../types'
-import { useAppSelector } from '../../../hooks'
 import WhatsNew from '../../../components/ui/whats-new'
 import Button from '../../../theme/button'
 import { downloadWalletLogs } from '../../../utils'
+import { useRecoilValue } from 'recoil'
+import { networkState, optInAnalyticsState, walletState } from '../../../atoms'
 import DeviceInfo from 'react-native-device-info'
 import { useNavigation } from '@react-navigation/core'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 const SettingsScreen = ({ route }) => {
-  const reduxState = useAppSelector((state) => state)
-  const { activeNetwork, analytics = false } = reduxState
-  const isAnalyticsEnabledFromStart =
-    analytics.acceptedDate === undefined ? false : true
+  const walletStateCopy = useRecoilValue(walletState)
+  const analytics = useRecoilValue(optInAnalyticsState)
+  const activeNetwork = useRecoilValue(networkState)
+  const isAnalyticsEnabledFromStart = analytics?.acceptedDate !== undefined
   const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(
     isAnalyticsEnabledFromStart,
   )
@@ -76,16 +77,16 @@ const SettingsScreen = ({ route }) => {
   }, [activeNetwork, analytics, handleLockPress, route?.params?.shouldLogOut])
 
   const handleDownload = useCallback(() => {
-    const walletState = { ...reduxState }
+    const walletStateDownload = { ...walletStateCopy }
 
-    delete walletState.encryptedWallets
-    delete walletState.keySalt
+    delete walletStateDownload.encryptedWallets
+    delete walletStateDownload.keySalt
 
     // Thsi is not in web app, newly added
-    delete walletState.wallets
+    delete walletStateDownload.wallets
 
-    downloadWalletLogs(walletState)
-  }, [reduxState])
+    downloadWalletLogs(walletStateDownload)
+  }, [walletStateCopy])
 
   return (
     <View style={styles.container}>
@@ -118,7 +119,7 @@ const SettingsScreen = ({ route }) => {
           </View>
         </View>
 
-        {/*     
+        {/*
   This feature is not included in MVP, but will have to be done at some point so keeping it here
   <View style={styles.rowDesign}>
           <View style={styles.action}>
@@ -155,7 +156,7 @@ const SettingsScreen = ({ route }) => {
               </View>
               <View style={styles.btnOptions}>
                 <Pressable onPress={handleBackupSeedPress}>
-                  <FontAwesomeIcon icon={faAngleRight} size={40} />
+                  <AngleRightIcon width={40} height={40} />
                 </Pressable>
               </View>
             </View>
@@ -242,7 +243,7 @@ const SettingsScreen = ({ route }) => {
               <View style={styles.toLiqualityWebsite}>
                 <Pressable
                   onPress={() => Linking.openURL('https://liquality.io/')}>
-                  <FontAwesomeIcon icon={faAngleRight} size={40} />
+                  <AngleRightIcon width={40} height={40} />
                 </Pressable>
               </View>
             </View>
@@ -252,9 +253,9 @@ const SettingsScreen = ({ route }) => {
         <View style={styles.row}>
           <View style={styles.lockInfo}>
             <Pressable onPress={handleLockPress}>
-              <FontAwesomeIcon
-                icon={faSignOut}
-                size={20}
+              <SignoutIcon
+                width={20}
+                height={20}
                 color={'#5F5F5F'}
                 style={styles.signOutIcon}
               />

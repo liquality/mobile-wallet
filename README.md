@@ -4,10 +4,6 @@
 
 - Install [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)
 - Go to the project root folder and run `nvm use`. This will make sure the right version of Node is used.
-- Add the FontAwesome Pro key to .npmrc
-  ```
-  echo 'FONTAWESOME_NPM_AUTH_TOKEN=INSERT_THE_FONTAWESOME_TOKEN_HERE' >> .npmrc
-  ```
 - Add a mnemonic and password for easy testing. Create `.env` file:
   ```
   MNEMONIC="your seed phrase"
@@ -15,7 +11,7 @@
   ```
 - Install npm dependencies
   ```
-  npm i
+  yarn install
   ```
 - Install Cocoapods dependencies
   ```
@@ -40,11 +36,11 @@
 
 - For iOS
   ```
-  npm run ios
+  yarn run ios
   ```
 - For Android
   ```
-  npm run android
+  yarn run android
   ```
 
 ## Using Node modules
@@ -55,13 +51,13 @@ The shim file is generated in the postinstall step
 ## Linting
 
 ```
-npm run lint
+yarn run lint
 ```
 
 ## Running Tests
 
 ```
-npm run test
+yarn run test
 ```
 
 ## Deploying to Testflight

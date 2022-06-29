@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useCallback } from 'react'
 import { Pressable, StyleSheet, TextInput, View, Text } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faSearch, faTimes } from '@fortawesome/pro-light-svg-icons'
+import SearchIcon from '../../assets/icons/search.svg'
+import TimesIcon from '../../assets/icons/times.svg'
 import Fuse from 'fuse.js'
 import { useInputState } from '../../hooks'
 
@@ -40,7 +40,7 @@ const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
 
   return (
     <View style={styles.searchBox}>
-      <FontAwesomeIcon icon={faSearch} style={styles.icon} />
+      <SearchIcon style={styles.icon} />
       <TextInput
         style={styles.sendInput}
         placeholder={'Search for a Currency'}
@@ -53,7 +53,7 @@ const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
       />
       {searchInput.value.length > 0 && (
         <Pressable style={styles.clearBtn} onPress={handleClearBtnPress}>
-          <FontAwesomeIcon icon={faTimes} color={'#646F85'} />
+          <TimesIcon fill={'#646F85'} />
           <Text style={styles.clearBtnText}>Reset</Text>
         </Pressable>
       )}

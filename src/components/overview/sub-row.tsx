@@ -1,46 +1,63 @@
-import React, { FC } from 'react'
+import React, { FC, memo, useCallback, useEffect, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import {
+  cryptoToFiat,
   formatFiat,
   prettyBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faChevronRight } from '@fortawesome/pro-light-svg-icons'
-import { AssetDataElementType, StackPayload } from '../../types'
+import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
+import { AccountType } from '../../types'
 import AssetIcon from '../asset-icon'
-import { chainDefaultColors } from '../../core/config'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
+import { useRecoilValue } from 'recoil'
+import {
+  addressStateFamily,
+  balanceStateFamily,
+  fiatRatesState,
+} from '../../atoms'
+import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
 
 type SubRowProps = {
-  parentItem: AssetDataElementType
-  item: AssetDataElementType
-  onAssetSelected: (params: StackPayload) => void
+  parentItem: AccountType
+  item: AccountType
+  onAssetSelected: () => void
 }
-
-const DEFAULT_COLOR = '#EFEFEF'
 
 const SubRow: FC<SubRowProps> = (props) => {
   const { parentItem, item, onAssetSelected } = props
-  const chainColor = parentItem.chain
-    ? chainDefaultColors[parentItem.chain]
-    : DEFAULT_COLOR
+  const [prettyNativeBalance, setPrettyNativeBalance] = useState('')
+  const [prettyFiatBalance, setPrettyFiatBalance] = useState('')
+  const balance = useRecoilValue(balanceStateFamily(item.code))
+  const address = useRecoilValue(addressStateFamily(item.id))
+  const fiatRates = useRecoilValue(fiatRatesState)
 
-  const handlePressOnRow = () => {
-    onAssetSelected({
-      assetData: {
-        ...item,
-        address: parentItem.address,
-      },
-      screenTitle: item.code,
-    })
-  }
+  const handlePressOnRow = useCallback(() => {
+    onAssetSelected()
+  }, [onAssetSelected])
+
+  useEffect(() => {
+    const fiatBalance = fiatRates[item.code]
+      ? cryptoToFiat(
+          unitToCurrency(
+            cryptoassets[getNativeAsset(item.code)],
+            balance,
+          ).toNumber(),
+          fiatRates[item.code],
+        )
+      : 0
+    setPrettyNativeBalance(
+      `${prettyBalance(new BigNumber(balance), item.code)} ${item.code}`,
+    )
+    setPrettyFiatBalance(`$${formatFiat(new BigNumber(fiatBalance))}`)
+  }, [balance, fiatRates, item.code])
 
   return (
     <AssetListSwipeableRow
       assetData={{
         ...item,
-        address: parentItem.address,
+        address: address,
       }}
       assetSymbol={item.code}>
       <Pressable
@@ -48,45 +65,18 @@ const SubRow: FC<SubRowProps> = (props) => {
         style={[
           styles.row,
           styles.subElement,
-          { borderLeftColor: chainColor },
+          { borderLeftColor: parentItem.color },
         ]}>
         <View style={styles.col1}>
           <AssetIcon size={25} asset={item.code} />
           <Text style={styles.name}>{item.name}</Text>
         </View>
         <View style={styles.col2}>
-          <Text style={styles.balance}>
-            {item.balance &&
-              item.code &&
-              `${prettyBalance(new BigNumber(item.balance), item.code)} ${
-                item.code
-              }`}
-          </Text>
-          <Text style={styles.balanceInUSD}>
-            {`$${
-              item.balanceInUSD
-                ? formatFiat(new BigNumber(item.balanceInUSD))
-                : 0
-            }`}
-          </Text>
+          <Text style={styles.balance}>{prettyNativeBalance}</Text>
+          <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
         </View>
         <View style={styles.col3}>
-          <Pressable
-            onPress={() =>
-              onAssetSelected({
-                assetData: {
-                  ...item,
-                  address: parentItem.address,
-                },
-                screenTitle: item.code,
-              })
-            }>
-            <FontAwesomeIcon
-              size={20}
-              icon={faChevronRight}
-              color={'#A8AEB7'}
-            />
-          </Pressable>
+          <ChevronRight width={12} height={12} />
         </View>
       </Pressable>
     </AssetListSwipeableRow>
@@ -140,4 +130,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default SubRow
+export default memo(SubRow)

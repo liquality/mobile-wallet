@@ -1,27 +1,25 @@
 import React, { useState } from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-  ImageBackground,
-  ScrollView,
-} from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 import Button from '../../theme/button'
+import Box from '../../theme/box'
+import GradientBackground from '../../components/gradient-background'
 import AnalyticsModal from './optInAnalyticsModal'
 type TermsProps = NativeStackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation, route }: TermsProps) => {
-  //const [scrolledToEnd, setScrolledToEnd] = useState(false)
   const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
 
   return (
-    <ImageBackground
-      style={styles.container}
-      source={require('../../assets/bg/bg.png')}>
+    <Box style={styles.container}>
+      <GradientBackground
+        width={Dimensions.get('screen').width}
+        height={Dimensions.get('screen').height}
+        isFullPage
+      />
       <Header showText={true} />
       <View style={styles.containerWrapper}>
         <Text style={styles.termsTitle}>Terms & Privacy</Text>
@@ -29,9 +27,9 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
         <ScrollView
           contentContainerStyle={styles.termsSection}
           scrollEventThrottle={1000}
-          /*    
-          No mandatory scrolling to activate button, 
-          but keeping the code if we need it in the future again    
+          /*
+          No mandatory scrolling to activate button,
+          but keeping the code if we need it in the future again
           onScroll={({ nativeEvent }) => {
             if (
               !scrolledToEnd &&
@@ -92,13 +90,20 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
           />
         </ButtonFooter>
         {showAnalyticsModal ? (
-          <AnalyticsModal
-            nextScreen={route?.params?.nextScreen || 'UnlockWalletScreen'}
-            onAction={setShowAnalyticsModal}
-          />
+          <React.Suspense
+            fallback={
+              <View>
+                <Text>Loading</Text>
+              </View>
+            }>
+            <AnalyticsModal
+              nextScreen={route?.params?.nextScreen || 'UnlockWalletScreen'}
+              onAction={setShowAnalyticsModal}
+            />
+          </React.Suspense>
         ) : null}
       </View>
-    </ImageBackground>
+    </Box>
   )
 }
 

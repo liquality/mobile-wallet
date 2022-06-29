@@ -7,9 +7,6 @@ import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-
 jest.mock('@react-native-clipboard/clipboard', () => mockClipboard)
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
 jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage)
-jest.mock('@fortawesome/react-native-fontawesome', () => ({
-  FontAwesomeIcon: '',
-}))
 jest.mock('react-native-qrcode-svg', () => {
   const RN = require('react-native')
   return RN.View
@@ -61,3 +58,6 @@ jest.mock('react-native-background-actions', () => ({
   updateNotification: jest.fn(),
   isRunning: jest.fn(),
 }))
+jest.mock('rn-flipper-async-storage-advanced', () => {
+  return {}
+})

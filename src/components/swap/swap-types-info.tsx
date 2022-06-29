@@ -8,8 +8,7 @@ import {
   View,
 } from 'react-native'
 import Label from '../ui/label'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faTimes } from '@fortawesome/pro-light-svg-icons'
+import TimesIcon from '../../assets/icons/times.svg'
 import Uniswap from '../../assets/icons/swap-providers/uniswap.svg'
 import LiqualityBoost from '../../assets/icons/swap-providers/liqualityboost.svg'
 import Liquality from '../../assets/icons/swap-providers/liquality.svg'
@@ -60,7 +59,7 @@ const SwapTypesInfo: FC<SwapTypesInfoProps> = (props) => {
             <View style={styles.header}>
               <Label text="Learn about swap types" variant="strong" />
               <Pressable onPress={toggleModal}>
-                <FontAwesomeIcon icon={faTimes} color={'#000'} />
+                <TimesIcon fill={'#000'} />
               </Pressable>
             </View>
             <ScrollView>

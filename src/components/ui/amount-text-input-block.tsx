@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react'
-import { useAppSelector, useInputState } from '../../hooks'
+import { useInputState } from '../../hooks'
 import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
 import AssetIcon from '../asset-icon'
 import { ChainId } from '@liquality/cryptoassets/src/types'
@@ -13,6 +13,8 @@ import {
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { SwapEventType } from '../../screens/wallet-features/swap/swap-screen'
 import Button from '../../theme/button'
+import { useRecoilValue } from 'recoil'
+import { fiatRatesState } from '../../atoms'
 
 type AmountTextInputBlockProps = {
   type: 'FROM' | 'TO'
@@ -38,9 +40,7 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
     dispatch,
     type,
   } = props
-  const { fiatRates } = useAppSelector((state) => ({
-    fiatRates: state.fiatRates,
-  }))
+  const fiatRates = useRecoilValue(fiatRatesState)
   const { value, onChangeText } = useInputState('0')
   const color = chainDefaultColors[chain]
   const [isAmountNative, setIsAmountNative] = useState<boolean>(true)

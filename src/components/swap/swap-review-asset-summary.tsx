@@ -1,5 +1,5 @@
 import { BigNumber } from '@liquality/types'
-import { AssetDataElementType } from '../../types'
+import { AccountType } from '../../types'
 import React, { FC, useState } from 'react'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
@@ -10,19 +10,21 @@ import {
   chains,
   unitToCurrency,
 } from '@liquality/cryptoassets'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCheck, faClone } from '@fortawesome/pro-light-svg-icons'
 import {
   cryptoToFiat,
   formatFiat,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { getSendFee } from '@liquality/wallet-core/src/utils/fees'
+import CopyIcon from '../../assets/icons/copy.svg'
+import CheckIcon from '../../assets/icons/swap-check.svg'
+import { useRecoilValue } from 'recoil'
+import { addressStateFamily } from '../../atoms'
 
 type SwapReviewAssetSummaryProps = {
   type: 'SEND' | 'RECEIVE'
   amount: BigNumber
-  asset: AssetDataElementType
+  asset: AccountType
   fiatRates: Record<string, number>
   networkFee: BigNumber
 }
@@ -30,10 +32,11 @@ type SwapReviewAssetSummaryProps = {
 const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
   const { asset, fiatRates, networkFee, amount, type } = props
   const [isCopied, setIsCopied] = useState(false)
+  const address = useRecoilValue(addressStateFamily(asset.id))
 
   const handleCopyPress = () => {
-    if (asset.address) {
-      Clipboard.setString(asset.address)
+    if (address) {
+      Clipboard.setString(address)
       setIsCopied(true)
     } else {
       Alert.alert('Unable to copy address')
@@ -95,17 +98,21 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
       <View style={styles.box}>
         <Text style={[styles.font, styles.address]}>
           External Wallet -{' '}
-          {`${asset.address?.substring(0, 4)}...${asset.address?.substring(
-            asset.address?.length - 4,
+          {`${address?.substring(0, 4)}...${address?.substring(
+            address?.length - 4,
           )}`}
         </Text>
         <Pressable onPress={handleCopyPress}>
-          <FontAwesomeIcon
-            icon={isCopied ? faCheck : faClone}
-            size={10}
-            color={'#9D4DFA'}
-            style={styles.icon}
-          />
+          {isCopied ? (
+            <CheckIcon
+              width={15}
+              height={15}
+              stroke={'#9D4DFA'}
+              style={styles.icon}
+            />
+          ) : (
+            <CopyIcon width={10} stroke={'#9D4DFA'} />
+          )}
         </Pressable>
       </View>
     </View>

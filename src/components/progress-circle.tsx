@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCheck } from '@fortawesome/pro-light-svg-icons'
+import Check from '../assets/icons/swap-check.svg'
 
 const ProgressCircle = ({
   size,
@@ -41,7 +40,7 @@ const ProgressCircle = ({
   return (
     <View style={styles.progressCircle}>
       {completed === total ? (
-        <FontAwesomeIcon size={20} icon={faCheck} color={'#2CD2CF'} />
+        <Check width={20} height={20} fill={'#2CD2CF'} />
       ) : (
         <Text style={styles.text}>
           {completed}/{total}

@@ -17,6 +17,7 @@ module.exports = {
     'arrow-parens': 2,
     'no-multiple-empty-lines': 'error',
 
+    'react-native/jsx-bracket-same-line': 0,
     'react-native/no-unused-styles': 'warn',
     'react-native/no-inline-styles': 'warn',
     'react-native/no-single-element-style-arrays': 'warn',

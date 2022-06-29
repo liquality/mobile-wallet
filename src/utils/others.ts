@@ -1,12 +1,7 @@
-import { InteractionManager, NativeModules } from 'react-native'
+import { NativeModules } from 'react-native'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { AES } from 'crypto-js'
-import {
-  createWallet,
-  fetchFeesForAsset,
-  fetchSwapProvider,
-} from '../store/store'
-import { MNEMONIC, PASSWORD } from '@env'
+import { fetchFeesForAsset, fetchSwapProvider } from '../store/store'
 import { BigNumber } from '@liquality/types'
 import { GasFees } from '../types'
 import {
@@ -15,30 +10,6 @@ import {
 } from '@liquality/wallet-core/dist/swaps/types'
 import { Network } from '@liquality/wallet-core/dist/store/types'
 import dayjs from 'dayjs'
-
-// const IV_STRING = '0123456789abcdef0123456789abcdef'
-
-export const onOpenSesame = async (dispatch: any, navigation: any) => {
-  InteractionManager.runAfterInteractions(() => {
-    createWallet(PASSWORD, MNEMONIC)
-      .then((walletState) => {
-        dispatch({
-          type: 'SETUP_WALLET',
-          payload: walletState,
-        })
-      })
-      .catch(() => {
-        dispatch({
-          type: 'ERROR',
-          payload: {
-            errorMessage: 'Unable to create wallet. Try again!',
-          } as any,
-        })
-      })
-  }).done(() => {
-    navigation.navigate('MainNavigator')
-  })
-}
 
 export const sortQuotes = (quotes: SwapQuote[]): SwapQuote[] => {
   if (!quotes) {
@@ -90,6 +61,26 @@ export const pbkdf2 = async (
   return global.Buffer.from(generatedValue).toString('hex')
 }
 
+export const pbkdf2Sync = (
+  password: string,
+  salt: string,
+  iterations: number,
+  length: number,
+  digest: string,
+): string => {
+  Log(digest, 'info')
+  const generatedValue = NativeModules.Aes.pbkdf2Sync(
+    password,
+    salt,
+    iterations,
+    length,
+    digest,
+  )
+
+  return global.Buffer.from(generatedValue).toString('hex')
+}
+
+global.pbkdf2Sync = pbkdf2Sync
 export const encrypt = async (
   value: string,
   derivedKey: string,

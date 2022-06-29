@@ -1,16 +1,22 @@
 import React, { FC, useState } from 'react'
 import { Dimensions, StyleSheet, View, ScrollView, Alert } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faClock, faExchange } from '@fortawesome/pro-light-svg-icons'
+import Clock from '../../../assets/icons/clock.svg'
+import Exchange from '../../../assets/icons/exchange.svg'
 import { RootStackParamList, SwapInfoType } from '../../../types'
 import Warning from '../../../components/ui/warning'
-import { useAppSelector } from '../../../hooks'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
 import Button from '../../../theme/button'
 import { BigNumber } from '@liquality/types'
 import { performSwap } from '../../../store/store'
 import { Log } from '../../../utils'
+import { useRecoilCallback, useRecoilValue } from 'recoil'
+import { SwapHistoryItem } from '@liquality/wallet-core/dist/store/types'
+import {
+  fiatRatesState,
+  historyIdsState,
+  historyStateFamily,
+} from '../../../atoms'
 
 type SwapReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -20,15 +26,20 @@ type SwapReviewScreenProps = NativeStackScreenProps<
 const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   const { navigation, route } = props
   const swapTransaction = route.params.swapTransaction
-  const { fiatRates = {}, activeNetwork } = useAppSelector((state) => ({
-    fiatRates: state.fiatRates,
-    activeNetwork: state.activeNetwork,
-  }))
+  const fiatRates = useRecoilValue(fiatRatesState)
+  const ids = useRecoilValue(historyIdsState)
+  const addTransaction = useRecoilCallback(
+    ({ set }) =>
+      (transactionId: string, historyItem: SwapHistoryItem) => {
+        set(historyIdsState, [...ids, transactionId])
+        set(historyStateFamily(transactionId), historyItem)
+      },
+  )
   const [isLoading, setIsLoading] = useState(false)
 
   const handleInitiateSwap = async () => {
     setIsLoading(true)
-    if (swapTransaction && activeNetwork) {
+    if (swapTransaction) {
       const {
         fromAsset,
         toAsset,
@@ -53,6 +64,10 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         )
 
         if (transaction) {
+          delete transaction.quote
+          delete transaction.fromFundTx._raw
+
+          addTransaction(transaction.id, transaction)
           navigation.navigate('SwapConfirmationScreen', {
             swapTransactionConfirmation: transaction,
             screenTitle: `Swap ${fromAsset.code} to ${toAsset.code} Details`,
@@ -109,9 +124,9 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
       <Warning
         text1="Max slippage is 0.5%."
         text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6
-          hours at 20:45 GMT"
-        icon={faClock}
-      />
+          hours at 20:45 GMT">
+        <Clock width={15} height={15} style={styles.icon} />
+      </Warning>
       <View style={styles.buttonWrapper}>
         <Button
           type="secondary"
@@ -129,12 +144,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           isBorderless={false}
           isActive={true}
           isLoading={isLoading}>
-          <FontAwesomeIcon
-            icon={faExchange}
-            size={15}
-            color={'#FFFFFF'}
-            style={styles.icon}
-          />
+          <Exchange style={styles.icon} />
         </Button>
       </View>
     </ScrollView>
@@ -152,8 +162,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   icon: {
-    marginVertical: 5,
-    marginHorizontal: 5,
+    alignSelf: 'flex-start',
+    marginRight: 5,
   },
 })
 

@@ -1,9 +1,6 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCircle } from '@fortawesome/pro-light-svg-icons'
-import { faCircle as faSolidCircle } from '@fortawesome/pro-solid-svg-icons'
-
+import Circle from '../../assets/icons/circle.svg'
 import { TimeLimitEnum } from '../../types'
 
 const ITEMS = Object.values(TimeLimitEnum)
@@ -19,11 +16,17 @@ const TimeLimitOptions: FC<{
         onPress={() => {
           onChange(key)
         }}>
-        <FontAwesomeIcon
-          icon={value === key ? faSolidCircle : faCircle}
-          color={value === key ? '#2CD2CF' : '#646F85'}
-          {...commonIconProps}
-        />
+        {value === key ? (
+          <Circle width={16} height={16} fill="#2CD2CF" {...commonIconProps} />
+        ) : (
+          <Circle
+            width={16}
+            height={16}
+            stroke="#646F85"
+            fill="#FFFFFF"
+            {...commonIconProps}
+          />
+        )}
         <Text style={styles.label}>{key}</Text>
       </Pressable>
     ),
@@ -58,7 +61,6 @@ const styles = StyleSheet.create({
 
 const commonIconProps = {
   style: styles.icon,
-  size: 18,
 }
 
 export default TimeLimitOptions

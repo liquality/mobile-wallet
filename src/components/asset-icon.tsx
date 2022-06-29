@@ -9,6 +9,7 @@ import PolygonChainIcon from '../assets/icons/crypto/polygon_chain.svg'
 import ArbitrumChainIcon from '../assets/icons/crypto/arbitrum.svg'
 import TerraChainIcon from '../assets/icons/crypto/terra_chain.svg'
 import FuseChainIcon from '../assets/icons/crypto/fuse.svg'
+import AvalancheChainIcon from '../assets/icons/crypto/avax.svg'
 
 import ETHIcon from '../assets/icons/crypto/eth.svg'
 import BTCIcon from '../assets/icons/crypto/bitcoin_chain.svg'
@@ -22,6 +23,7 @@ import Nearcon from '../assets/icons/crypto/near.svg'
 import MaticIcon from '../assets/icons/crypto/matic.svg'
 import PwethIcon from '../assets/icons/crypto/pweth.svg'
 import ArbitrumIcon from '../assets/icons/crypto/arbeth.svg'
+import AvalancheIcon from '../assets/icons/crypto/avax.svg'
 import BlankIcon from '../assets/icons/crypto/blank.svg'
 
 import { ChainId } from '@liquality/cryptoassets/src/types'
@@ -65,6 +67,10 @@ const AssetIcon: FC<AssetIconType> = (props) => {
       return <TerraChainIcon width={size} height={size} style={styles.icon} />
     } else if (chain?.toLowerCase() === ChainId.Fuse) {
       return <FuseChainIcon width={size} height={size} style={styles.icon} />
+    } else if (chain?.toLowerCase() === ChainId.Avalanche) {
+      return (
+        <AvalancheChainIcon width={size} height={size} style={styles.icon} />
+      )
     }
   } else {
     if (asset?.toLowerCase() === 'eth') {
@@ -106,6 +112,15 @@ const AssetIcon: FC<AssetIconType> = (props) => {
     } else if (asset?.toLowerCase() === 'arbeth') {
       return (
         <ArbitrumIcon
+          viewBox="0 0 32 32"
+          width={size}
+          height={size}
+          style={styles.icon}
+        />
+      )
+    } else if (asset?.toLowerCase() === 'avax') {
+      return (
+        <AvalancheIcon
           viewBox="0 0 32 32"
           width={size}
           height={size}

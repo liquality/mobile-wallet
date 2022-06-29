@@ -6,18 +6,14 @@ import {
   chains,
 } from '@liquality/cryptoassets'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
   NetworkFeeType,
   RootStackParamList,
   UseInputStateReturnType,
 } from '../../../types'
-import {
-  faAngleDown,
-  faAngleRight,
-  faQrcode,
-} from '@fortawesome/pro-light-svg-icons'
-import { useAppSelector } from '../../../hooks'
+import AngleDown from '../../../assets/icons/angle-down.svg'
+import AngleRight from '../../../assets/icons/angle-right.svg'
+import QRCode from '../../../assets/icons/qr-code.svg'
 import { BigNumber } from '@liquality/types'
 import { calculateAvailableAmnt } from '../../../core/utils/fee-calculator'
 import {
@@ -37,6 +33,8 @@ import { fetchFeesForAsset } from '../../../store/store'
 import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
 import ButtonFooter from '../../../components/button-footer'
 import { isNumber } from '../../../utils'
+import { useRecoilValue } from 'recoil'
+import { balanceStateFamily, fiatRatesState } from '../../../atoms'
 
 const useInputState = (
   initialValue: string,
@@ -52,22 +50,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   //TODO is there a better way to deal with this?
   const {
     code = 'ETH',
-    balance = 0,
     chain = ChainId.Ethereum,
     color,
   } = route.params.assetData || {}
   const [customFee, setCustomFee] = useState<number>(0)
-  const {
-    activeWalletId,
-    activeNetwork = 'testnet',
-    fees,
-    fiatRates,
-  } = useAppSelector((state) => ({
-    activeWalletId: state.activeWalletId,
-    activeNetwork: state.activeNetwork,
-    fees: state.fees,
-    fiatRates: state.fiatRates,
-  }))
+  const fiatRates = useRecoilValue(fiatRatesState)
+  const balance = useRecoilValue(balanceStateFamily(code))
   const [showFeeOptions, setShowFeeOptions] = useState(true)
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
@@ -118,7 +106,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         ),
       )
     })
-  }, [code, fees, activeWalletId, activeNetwork, chain, balance])
+  }, [code, chain, balance])
 
   const handleReviewPress = useCallback(() => {
     if (validate() && networkFee?.current?.value) {
@@ -299,7 +287,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 returnKeyType="done"
               />
               <Pressable onPress={handleQRCodeBtnPress}>
-                <FontAwesomeIcon icon={faQrcode} size={25} />
+                <QRCode />
               </Pressable>
             </Box>
           </Box>
@@ -339,10 +327,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           <Pressable
             onPress={handleFeeOptionsPress}
             style={styles.feeOptionsButton}>
-            <FontAwesomeIcon
-              icon={showFeeOptions ? faAngleDown : faAngleRight}
-              size={15}
-            />
+            {showFeeOptions ? (
+              <AngleDown style={styles.dropdown} />
+            ) : (
+              <AngleRight style={styles.dropdown} />
+            )}
+
             <Text variant="secondaryInputLabel">NETWORK SPEED/FEE</Text>
           </Pressable>
           {customFee ? (
@@ -435,6 +425,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  dropdown: {
+    marginRight: 5,
+    marginBottom: 5,
   },
 })
 

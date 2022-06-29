@@ -8,30 +8,21 @@ import React, {
 } from 'react'
 import { Alert, Dimensions, Pressable, StyleSheet, Text } from 'react-native'
 import { ChainId } from '@liquality/cryptoassets/src/types'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import {
-  faAngleDown,
-  faAngleRight,
-  faArrowDown,
-  faChevronRight,
-  faClock,
-} from '@fortawesome/pro-light-svg-icons'
+import ChevronRight from '../../../assets/icons/activity-status/chevron-right.svg'
+import AngleDown from '../../../assets/icons/angle-down.svg'
+import AngleRight from '../../../assets/icons/angle-right.svg'
+import ArrowDown from '../../../assets/icons/arrow-down.svg'
+import Clock from '../../../assets/icons/clock.svg'
 import MessageBanner from '../../../components/ui/message-banner'
 import AmountTextInputBlock from '../../../components/ui/amount-text-input-block'
 import Label from '../../../components/ui/label'
 import Warning from '../../../components/ui/warning'
 import SwapRates from '../../../components/swap/swap-rates'
 import { getQuotes, updateMarketData } from '../../../store/store'
-import {
-  ActionEnum,
-  AssetDataElementType,
-  NetworkFeeType,
-  RootStackParamList,
-} from '../../../types'
+import { ActionEnum, NetworkFeeType, RootStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
-import { useAppSelector } from '../../../hooks'
 import { sortQuotes } from '../../../utils'
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
 import Button from '../../../theme/button'
@@ -40,6 +31,12 @@ import SwapFeeSelector from '../../../components/ui/swap-fee-selector'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import { prettyBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import {
+  balanceStateFamily,
+  marketDataState,
+  swapPairState,
+} from '../../../atoms'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -69,17 +66,13 @@ export const reducer: Reducer<SwapEventType, PayloadAction<SwapEventType>> = (
 type SwapScreenProps = NativeStackScreenProps<RootStackParamList, 'SwapScreen'>
 
 const SwapScreen: FC<SwapScreenProps> = (props) => {
-  const { navigation, route } = props
-  const { swapAssetPair } = route.params
-  const { marketData = {}, activeNetwork } = useAppSelector((state) => ({
-    marketData: state.marketData,
-    activeNetwork: state.activeNetwork,
-  }))
-  const [areFeeSelectorsVisible, setFeeSelectorsVisible] = useState(true)
-  const [fromAsset, setFromAsset] = useState<AssetDataElementType | undefined>(
-    swapAssetPair?.fromAsset,
+  const { navigation } = props
+  const marketData = useRecoilValue(marketDataState)
+  const [swapPair, setSwapPair] = useRecoilState(swapPairState)
+  const fromBalance = useRecoilValue(
+    balanceStateFamily(swapPair.fromAsset?.code),
   )
-  const [toAsset, setToAsset] = useState<AssetDataElementType>()
+  const [areFeeSelectorsVisible, setFeeSelectorsVisible] = useState(true)
   const [selectedQuote, setSelectedQuote] = useState<SwapQuote>()
   const [error, setError] = useState('')
   const fromNetworkFee = useRef<NetworkFeeType>()
@@ -101,21 +94,19 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const handleFromAssetPress = () => {
+    setSwapPair((prevVal) => ({ ...prevVal, fromAsset: undefined }))
     navigation.navigate('AssetChooserScreen', {
       screenTitle: 'Select asset for Swap',
-      swapAssetPair: {
-        toAsset,
-      },
+      swapAssetPair: { ...swapPair, fromAsset: undefined },
       action: ActionEnum.SWAP,
     })
   }
 
   const handleToAssetPress = () => {
+    setSwapPair((prevVal) => ({ ...prevVal, toAsset: undefined }))
     navigation.navigate('AssetChooserScreen', {
       screenTitle: 'Select asset for Swap',
-      swapAssetPair: {
-        fromAsset,
-      },
+      swapAssetPair: { ...swapPair, toAsset: undefined },
       action: ActionEnum.SWAP,
     })
   }
@@ -124,10 +115,14 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     setSelectedQuote(quote)
   }
 
+  const handleCancelPress = useCallback(() => {
+    navigation.navigate('OverviewScreen')
+  }, [navigation])
+
   const handleReviewBtnPress = async () => {
     if (
-      !fromAsset ||
-      !toAsset ||
+      !swapPair.fromAsset ||
+      !swapPair.toAsset ||
       !state.fromAmount ||
       !selectedQuote ||
       !fromNetworkFee.current ||
@@ -137,29 +132,35 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       return
     }
 
+    //TODO Update wallet-core so it does not return objects with functions in them
+    delete selectedQuote.min
+    delete selectedQuote.max
+
     navigation.navigate('SwapReviewScreen', {
       swapTransaction: {
-        fromAsset,
-        toAsset,
+        fromAsset: swapPair.fromAsset,
+        toAsset: swapPair.toAsset,
         fromAmount: state.fromAmount.toNumber(),
         toAmount: bestQuote.toNumber(),
         quote: selectedQuote,
         fromNetworkFee: fromNetworkFee.current,
         toNetworkFee: toNetworkFee.current,
       },
-      screenTitle: `Swap ${fromAsset.code} to ${toAsset.code} review`,
+      screenTitle: `Swap ${swapPair.fromAsset.code} to ${swapPair.toAsset.code} review`,
     })
   }
 
   const min = useCallback((): BigNumber => {
     //TODO why do we have to check against the liquality type
-    const liqualityMarket = marketData?.[activeNetwork]?.find(
-      (pair) => pair.from === fromAsset?.code && pair.to === toAsset?.code,
+    const liqualityMarket = marketData?.find(
+      (pair) =>
+        pair.from === swapPair.fromAsset?.code &&
+        pair.to === swapPair.toAsset?.code,
     )
     return liqualityMarket && liqualityMarket.min
       ? new BigNumber(liqualityMarket.min)
       : new BigNumber(0)
-  }, [activeNetwork, fromAsset?.code, marketData, toAsset?.code])
+  }, [swapPair.fromAsset?.code, marketData, swapPair.toAsset?.code])
 
   const handleMinPress = () => {
     setMaximumValue(new BigNumber(0))
@@ -167,14 +168,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const handleMaxPress = () => {
-    if (
-      swapAssetPair &&
-      swapAssetPair.fromAsset &&
-      swapAssetPair.fromAsset.code
-    ) {
+    if (swapPair && swapPair.fromAsset && swapPair.fromAsset.code) {
       const amnt = unitToCurrency(
-        cryptoassets[swapAssetPair.fromAsset.code],
-        swapAssetPair.fromAsset?.balance || 0,
+        cryptoassets[swapPair.fromAsset.code],
+        fromBalance || 0,
       )
       setMaximumValue(new BigNumber(amnt))
     }
@@ -183,8 +180,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const updateBestQuote = useCallback(
     async (amount: BigNumber) => {
       let bestQuoteAmount = new BigNumber(0)
-      if (fromAsset?.code && toAsset?.code) {
-        const quoteList = await getQuotes(fromAsset.code, toAsset.code, amount)
+      if (swapPair.fromAsset?.code && swapPair.toAsset?.code) {
+        const quoteList = await getQuotes(
+          swapPair.fromAsset.code,
+          swapPair.toAsset.code,
+          amount,
+        )
 
         if (quoteList.length === 0) {
           setError(
@@ -197,7 +198,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             setSelectedQuote(sortedQuotes[0])
             bestQuoteAmount = new BigNumber(
               unitToCurrency(
-                cryptoassets[toAsset.code],
+                cryptoassets[swapPair.toAsset.code],
                 new BigNumber(sortedQuotes[0].toAmount || 0),
               ),
             )
@@ -210,7 +211,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       }
       setBestQuote(bestQuoteAmount)
     },
-    [fromAsset?.code, toAsset?.code],
+    [swapPair.fromAsset?.code, swapPair.toAsset?.code],
   )
 
   useEffect(() => {
@@ -218,14 +219,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }, [])
 
   useEffect(() => {
-    if (swapAssetPair) {
-      setFromAsset(swapAssetPair.fromAsset)
-      setToAsset(swapAssetPair.toAsset)
-    }
-
     const minimum = min()
     setMinimumValue(minimum)
-  }, [swapAssetPair, min])
+  }, [swapPair, min])
 
   useEffect(() => {
     setError('')
@@ -249,14 +245,14 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         <AmountTextInputBlock
           type="FROM"
           label="SEND"
-          chain={fromAsset?.chain || ChainId.Bitcoin}
-          assetSymbol={fromAsset?.code || 'BTC'}
+          chain={swapPair.fromAsset?.chain || ChainId.Bitcoin}
+          assetSymbol={swapPair.fromAsset?.code || 'BTC'}
           maximumValue={maximumValue}
           minimumValue={minimumValue}
           dispatch={dispatch}
         />
         <Pressable style={styles.chevronBtn} onPress={handleFromAssetPress}>
-          <FontAwesomeIcon icon={faChevronRight} size={15} color="#A8AEB7" />
+          <ChevronRight width={15} height={15} />
         </Pressable>
       </Box>
       <Box
@@ -285,19 +281,19 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         </Box>
         <Box flexDirection="row">
           <Label text="Available" variant="light" />
-          {fromAsset?.balance && fromAsset?.code ? (
+          {fromBalance && swapPair.fromAsset?.code ? (
             <Text style={[styles.font, styles.amount]}>
-              {fromAsset?.balance &&
+              {fromBalance &&
                 `${prettyBalance(
-                  new BigNumber(fromAsset.balance),
-                  fromAsset.code,
-                )} ${fromAsset.code}`}
+                  new BigNumber(fromBalance),
+                  swapPair.fromAsset.code,
+                )} ${swapPair.fromAsset.code}`}
             </Text>
           ) : null}
         </Box>
       </Box>
       <Box alignItems="center" marginVertical="m" paddingHorizontal="xl">
-        <FontAwesomeIcon icon={faArrowDown} color="#A8AEB7" />
+        <ArrowDown />
       </Box>
       <Box
         flexDirection="row"
@@ -307,19 +303,19 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         <AmountTextInputBlock
           type="TO"
           label="RECEIVE"
-          chain={toAsset?.chain || ChainId.Ethereum}
-          assetSymbol={toAsset?.code || 'ETH'}
+          chain={swapPair.toAsset?.chain || ChainId.Ethereum}
+          assetSymbol={swapPair.toAsset?.code || 'ETH'}
           minimumValue={bestQuote}
         />
         <Pressable style={styles.chevronBtn} onPress={handleToAssetPress}>
-          <FontAwesomeIcon icon={faChevronRight} color="#A8AEB7" />
+          <ChevronRight width={15} height={15} />
         </Pressable>
       </Box>
 
-      {fromAsset?.code && toAsset?.code ? (
+      {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
         <SwapRates
-          fromAsset={fromAsset.code}
-          toAsset={toAsset.code}
+          fromAsset={swapPair.fromAsset.code}
+          toAsset={swapPair.toAsset.code}
           quotes={quotes}
           selectQuote={handleSelectQuote}
           selectedQuote={selectedQuote}
@@ -334,14 +330,15 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         marginVertical="m"
         paddingHorizontal="xl">
         <Pressable onPress={toggleFeeSelectors} style={styles.feeOptionsButton}>
-          <FontAwesomeIcon
-            icon={areFeeSelectorsVisible ? faAngleDown : faAngleRight}
-            size={15}
-          />
+          {areFeeSelectorsVisible ? (
+            <AngleDown style={styles.dropdown} />
+          ) : (
+            <AngleRight style={styles.dropdown} />
+          )}
           <Label text="NETWORK SPEED/FEE" variant="strong" />
-          {fromAsset?.code && toAsset?.code ? (
+          {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
             <Label
-              text={`${fromAsset?.code} ${fromNetworkSpeed} / ${toAsset?.code} ${toNetworkSpeed}`}
+              text={`${swapPair.fromAsset?.code} ${fromNetworkSpeed} / ${swapPair.toAsset?.code} ${toNetworkSpeed}`}
               variant="light"
             />
           ) : null}
@@ -352,9 +349,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       toNetworkFee &&
       selectedQuote ? (
         <>
-          {fromAsset?.code ? (
+          {swapPair.fromAsset?.code ? (
             <SwapFeeSelector
-              asset={fromAsset?.code}
+              asset={swapPair.fromAsset?.code}
               handleCustomPress={() => ({})}
               networkFee={fromNetworkFee}
               selectedQuote={selectedQuote}
@@ -362,9 +359,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               changeNetworkSpeed={setFromNetworkSpeed}
             />
           ) : null}
-          {toAsset?.code ? (
+          {swapPair.toAsset?.code ? (
             <SwapFeeSelector
-              asset={toAsset?.code}
+              asset={swapPair.toAsset?.code}
               handleCustomPress={() => ({})}
               networkFee={toNetworkFee}
               selectedQuote={selectedQuote}
@@ -376,9 +373,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             text1="Max slippage is 0.5%."
             text2={`If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at ${new Date(
               new Date().getTime() + 3 * 60 * 60 * 1000,
-            ).toTimeString()}`}
-            icon={faClock}
-          />
+            ).toTimeString()}`}>
+            <Clock width={15} height={15} style={styles.icon} />
+          </Warning>
         </>
       ) : null}
       <Box
@@ -390,7 +387,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             type="secondary"
             variant="m"
             label="Cancel"
-            onPress={() => navigation.navigate('OverviewScreen')}
+            onPress={handleCancelPress}
             isBorderless={false}
             isActive={true}
           />
@@ -428,6 +425,13 @@ const styles = StyleSheet.create({
   chevronBtn: {
     marginLeft: 15,
     marginBottom: 10,
+  },
+  icon: {
+    alignSelf: 'flex-start',
+    marginRight: 5,
+  },
+  dropdown: {
+    marginRight: 5,
   },
 })
 

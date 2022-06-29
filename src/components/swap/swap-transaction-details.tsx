@@ -2,7 +2,6 @@ import { Pressable, StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Svg, { Circle, Line } from 'react-native-svg'
 import { formatDate } from '../../utils'
-import { useAppSelector } from '../../hooks'
 import Label from '../ui/label'
 import { TimelineStep } from '@liquality/wallet-core/dist/utils/timeline'
 import { SwapHistoryItem } from '@liquality/wallet-core/dist/store/types'
@@ -10,6 +9,8 @@ import { getTimeline } from '../../store/store'
 import Box from '../../theme/box'
 import Text from '../../theme/text'
 import Timeline from './timeline'
+import { useRecoilValue } from 'recoil'
+import { fiatRatesState } from '../../atoms'
 
 export const EmptyBlock = () => <View style={styles.emptyBlock} />
 
@@ -45,9 +46,7 @@ const SwapTransactionDetails: React.FC<SwapTransactionDetailsProps> = (
   props,
 ): React.ReactElement => {
   const { historyItem } = props
-  const { fiatRates } = useAppSelector((state) => ({
-    fiatRates: state.fiatRates,
-  }))
+  const fiatRates = useRecoilValue(fiatRatesState)
   const [timeline, setTimeline] = useState<TimelineStep[]>()
 
   const handleTransactionCancellation = () => {

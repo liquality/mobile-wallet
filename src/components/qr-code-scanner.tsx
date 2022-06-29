@@ -1,7 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react'
 import { View, StyleSheet, Modal, SafeAreaView, Pressable } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faTimes } from '@fortawesome/pro-light-svg-icons'
 import { ChainId, chains } from '@liquality/cryptoassets'
 import Svg, { Rect } from 'react-native-svg'
 import Error from '../components/ui/error'
@@ -16,6 +14,7 @@ import {
   scanBarcodes,
 } from 'vision-camera-code-scanner'
 import { runOnJS } from 'react-native-reanimated'
+import TimesIcon from '../assets/icons/times.svg'
 
 type QrCodeScannerPropsType = {
   onClose: (address: string) => void
@@ -71,11 +70,11 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.actionWrapper}>
           <Pressable onPress={handleCloseBtnPress}>
-            <FontAwesomeIcon
+            <TimesIcon
+              fill={'#FFF'}
               style={styles.icon}
-              icon={faTimes}
-              color={'#FFF'}
-              size={30}
+              width={30}
+              height={30}
             />
           </Pressable>
         </View>

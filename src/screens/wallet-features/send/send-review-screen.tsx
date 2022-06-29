@@ -5,8 +5,6 @@ import {
   dpUI,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
-
-import { useAppSelector } from '../../../hooks'
 import { sendTransaction } from '../../../store/store'
 import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
@@ -16,6 +14,14 @@ import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
 import Box from '../../../theme/box'
 import ButtonFooter from '../../../components/button-footer'
 import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
+import { useRecoilCallback, useRecoilValue } from 'recoil'
+import {
+  fiatRatesState,
+  historyIdsState,
+  historyStateFamily,
+  networkState,
+} from '../../../atoms'
+import { HistoryItem } from '@liquality/wallet-core/dist/store/types'
 
 type SendReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -28,10 +34,16 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
   const [rate, setRate] = useState<number>(0)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const { fiatRates, activeNetwork } = useAppSelector((state) => ({
-    fiatRates: state.fiatRates,
-    activeNetwork: state.activeNetwork,
-  }))
+  const fiatRates = useRecoilValue(fiatRatesState)
+  const activeNetwork = useRecoilValue(networkState)
+  const ids = useRecoilValue(historyIdsState)
+  const addTransaction = useRecoilCallback(
+    ({ set }) =>
+      (transactionId: string, historyItem: HistoryItem) => {
+        set(historyIdsState, [...ids, transactionId])
+        set(historyStateFamily(transactionId), historyItem)
+      },
+  )
 
   const handleSendPress = async () => {
     setIsLoading(true)
@@ -52,6 +64,10 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         feeLabel: speedLabel,
         memo: memo || '',
       })
+
+      delete transaction.tx._raw
+
+      addTransaction(transaction.id, transaction)
 
       navigation.navigate('SendConfirmationScreen', {
         screenTitle: `SEND ${asset} Transaction Details`,

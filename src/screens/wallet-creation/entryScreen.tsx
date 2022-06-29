@@ -1,19 +1,43 @@
 import React, { FC, useState } from 'react'
-import { View, StyleSheet, ImageBackground } from 'react-native'
+import { View, StyleSheet, Dimensions } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../types'
+import { AccountType, RootStackParamList } from '../../types'
 import Header from '../header'
 import Text from '../../theme/text'
 import Button from '../../theme/button'
 import Box from '../../theme/box'
 import { createWallet } from '../../store/store'
 import { MNEMONIC, PASSWORD } from '@env'
+import GradientBackground from '../../components/gradient-background'
+import { chains } from '@liquality/cryptoassets'
+import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
+import { useRecoilCallback, useSetRecoilState } from 'recoil'
+import {
+  accountInfoStateFamily,
+  accountsIdsState,
+  addressStateFamily,
+  balanceStateFamily,
+  networkState,
+  walletState,
+} from '../../atoms'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
 const Entry: FC<EntryProps> = (props): JSX.Element => {
   const { navigation } = props
   const [loading, setLoading] = useState(false)
+  const setAccountsIds = useSetRecoilState(accountsIdsState)
+  const setActiveNetwork = useSetRecoilState(networkState)
+  const setWallet = useSetRecoilState(walletState)
+  const addAccount = useRecoilCallback(
+    ({ set }) =>
+      (accountId: string, account: AccountType) => {
+        set(balanceStateFamily(account.code), 0)
+        set(addressStateFamily(accountId), '')
+        set(accountInfoStateFamily(accountId), account)
+      },
+  )
 
   const handleImportPress = () => navigation.navigate('WalletImportNavigator')
 
@@ -24,14 +48,57 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
 
   const handleOpenSesamePress = async () => {
     setLoading(true)
-    await createWallet(PASSWORD, MNEMONIC)
+    await AsyncStorage.clear()
+    const wallet = await createWallet(PASSWORD, MNEMONIC)
+    setWallet(wallet)
+    const { accounts, activeWalletId, activeNetwork } = wallet
+    const accountsIds: { id: string; name: string }[] = []
+    accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
+      const nativeAsset = chains[account.chain].nativeAsset
+      accountsIds.push({
+        id: account.id,
+        name: nativeAsset,
+      })
+      const newAccount: AccountType = {
+        id: account.id,
+        chain: account.chain,
+        name: account.name,
+        code: nativeAsset,
+        address: account.addresses[0], //TODO why pick only the first address
+        color: account.color,
+        assets: {},
+        balance: 0,
+      }
+
+      for (const asset of account.assets) {
+        newAccount.assets[asset] = {
+          id: asset,
+          name: cryptoassets[asset].name,
+          code: asset,
+          chain: account.chain,
+          color: account.color,
+          balance: 0,
+          assets: {},
+        }
+      }
+
+      addAccount(account.id, newAccount)
+    })
+
+    setAccountsIds(accountsIds)
+    setActiveNetwork(activeNetwork)
+
+    setLoading(false)
     navigation.navigate('MainNavigator')
   }
 
   return (
-    <ImageBackground
-      style={styles.container}
-      source={require('../../assets/bg/bg.png')}>
+    <Box style={styles.container}>
+      <GradientBackground
+        width={Dimensions.get('screen').width}
+        height={Dimensions.get('screen').height}
+        isFullPage
+      />
       <Header width={135} height={83} style={styles.header} showText={false} />
       <Box flex={0.4} justifyContent="flex-start" alignItems="center">
         <Text variant="slogan1">one</Text>
@@ -63,7 +130,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
           isActive
         />
       </Box>
-    </ImageBackground>
+    </Box>
   )
 }
 

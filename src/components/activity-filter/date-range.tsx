@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useState } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCalendar } from '@fortawesome/pro-light-svg-icons'
+import CalendarIcon from '../../assets/icons/calendar.svg'
 import SectionTitle from './section-title'
 import DatePicker from './date-picker'
 
@@ -45,13 +44,13 @@ const DateRange: FC<{
       <View style={styles.content}>
         <Pressable style={styles.button} onPress={handleOpenStartDate}>
           <Text style={styles.label}>{start || 'Start'}</Text>
-          {calendarIcon}
+          <CalendarIcon />
         </Pressable>
         <Pressable
           style={[styles.button, styles.secondButton]}
           onPress={handleOpenPickEndDate}>
           <Text style={styles.label}>{end || 'End'}</Text>
-          {calendarIcon}
+          <CalendarIcon />
         </Pressable>
         <DatePicker
           title="Start Date"
@@ -94,26 +93,11 @@ const styles = StyleSheet.create({
   secondButton: {
     marginLeft: 12,
   },
-  icon: {
-    marginLeft: 5,
-  },
   label: {
     fontFamily: 'Montserrat-Regular',
     color: '#1D1E21',
     fontSize: 13,
   },
-  day: {
-    textAlign: 'center',
-  },
 })
-
-const calendarIcon = (
-  <FontAwesomeIcon
-    icon={faCalendar}
-    style={styles.icon}
-    size={16}
-    color={'#646F85'}
-  />
-)
 
 export default DateRange
