@@ -67,12 +67,21 @@ export const enabledAssetsState = atom<string[]>({
 
 export const walletState = atom<CustomRootState>({
   key: 'Wallet',
+  default: {},
   // effects: [localStorageEffect('wallet')],
 })
 
 export const activityFilterState = atom<CustomRootState['assetFilter']>({
   key: 'ActivityFilter',
   default: {},
+})
+
+export const optInAnalyticsState = atom<
+  Partial<CustomRootState['analytics']> | undefined
+>({
+  key: 'OptInAnalytics',
+  default: undefined,
+  effects: [localStorageEffect('analytics')],
 })
 
 //---------- ATOM FAMILIES----------------

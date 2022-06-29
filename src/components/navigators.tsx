@@ -292,7 +292,7 @@ export const MainNavigator = () => (
     <Tab.Screen name="AppStackNavigator" component={AppStackNavigator} />
     <Tab.Screen
       name="SettingsScreen"
-      component={SettingsScreen}
+      component={WithPopupMenu(SettingsScreen)}
       options={({}) => ({
         headerShown: true,
         headerTitle: '',

@@ -1106,30 +1106,30 @@
     esm "^3.2.25"
     web3 "^1.4.0"
 
-"@chainify/bitcoin-ledger@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/bitcoin-ledger/-/bitcoin-ledger-1.2.4.tgz#cf5a106610ef279976bfa6982c1fdfb179d7234c"
-  integrity sha512-aew8fvtfODHJj/06qR/CJAr2W8n/f+72uEF7KExqZwNaTJqq/5X14k+K7wmrzyzSliWwxzUVoUN2dSA3IARrLA==
+"@chainify/bitcoin-ledger@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/bitcoin-ledger/-/bitcoin-ledger-1.2.7.tgz#894d57acaa45f98c681affa4c1bb53d6ca044ed3"
+  integrity sha512-dn8EDmu0ZfZ7z0ihikpP4FtunrI4WmZQiICHYO15lZktpAy94sCuB9n+zCNahNeXwiOLAfqSrZtgOKkh1qGieQ==
   dependencies:
-    "@chainify/bitcoin" "1.2.4"
-    "@chainify/client" "1.2.4"
-    "@chainify/errors" "1.2.4"
-    "@chainify/hw-ledger" "1.2.4"
-    "@chainify/types" "1.2.4"
-    "@chainify/utils" "1.2.4"
+    "@chainify/bitcoin" "1.2.7"
+    "@chainify/client" "1.2.7"
+    "@chainify/errors" "1.2.7"
+    "@chainify/hw-ledger" "1.2.7"
+    "@chainify/types" "1.2.7"
+    "@chainify/utils" "1.2.7"
     "@ledgerhq/hw-app-btc" "6.7.0"
     bip32 "2.0.6"
     bitcoinjs-lib "5.2.0"
 
-"@chainify/bitcoin@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/bitcoin/-/bitcoin-1.2.4.tgz#930a04f256ea7d241fafc479cb974366ef5a9aba"
-  integrity sha512-+fCKiGxAdSsfJnpn0hgWGH6x/QZE0FscF0tMJ+rjGbqJ2ZY1NcDRrACNKSedPXVgtk0Fheu5uKVUSZvzN3V25Q==
+"@chainify/bitcoin@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/bitcoin/-/bitcoin-1.2.7.tgz#09e99b699be196410fc5d373e4b350fcd6edea4a"
+  integrity sha512-5VUskr8huc97NS10/FYkq5suDTDqfbKrlCqoFoaj+672twt00J/LwR7zym1U+gVgP3NzV1/rq7MWUNIjFL/hCQ==
   dependencies:
-    "@chainify/client" "1.2.4"
-    "@chainify/errors" "1.2.4"
-    "@chainify/types" "1.2.4"
-    "@chainify/utils" "1.2.4"
+    "@chainify/client" "1.2.7"
+    "@chainify/errors" "1.2.7"
+    "@chainify/types" "1.2.7"
+    "@chainify/utils" "1.2.7"
     "@types/bip32" "^2.0.0"
     "@types/bip39" "^3.0.0"
     "@types/bitcoinjs-lib" "^5.0.0"
@@ -1144,35 +1144,35 @@
     lodash "^4.17.21"
     memoizee "^0.4.15"
 
-"@chainify/client@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/client/-/client-1.2.4.tgz#eaad28dbbfcaf5a0af30135abc6e52fc01fd66f2"
-  integrity sha512-mB0FHjd7V8dryDMBkVgGm0eVo+pE8xxD+GTueFgG81G4od5fQYVlvr6ba5KGKGFjZalpQ+HLiMZ+VHmbzr7qbA==
+"@chainify/client@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/client/-/client-1.2.7.tgz#9711c3001635f1b33dbbe545a7d8d92b3f61bdb4"
+  integrity sha512-oeFXmjBn/yTlKV+6m5feUHSVws/TJzZLr+/p0I+VBU1VAi6HSiXPgDwBdrcPM9NfilmVoUrkRZUokqFgzplUtw==
   dependencies:
-    "@chainify/errors" "1.2.4"
-    "@chainify/logger" "1.2.4"
-    "@chainify/types" "1.2.4"
-    "@chainify/utils" "1.2.4"
+    "@chainify/errors" "1.2.7"
+    "@chainify/logger" "1.2.7"
+    "@chainify/types" "1.2.7"
+    "@chainify/utils" "1.2.7"
     axios "^0.25.0"
 
-"@chainify/errors@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/errors/-/errors-1.2.4.tgz#b901eaa82d7bf5a1d3c41249ab6dffab318d2ff9"
-  integrity sha512-ip+BphHG0tqna7GbQDCYnjqH5OeEmcMwkdvrUTuwQ9kmtaeM7R+CeBpj6owffq5Fm+2tyTt2fqN6ZELYOIqa0g==
+"@chainify/errors@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/errors/-/errors-1.2.7.tgz#23f9679af096186799c1df6a0a54ec2b20bdcfe4"
+  integrity sha512-FgBzjJ85KDmzrwpoRd4j38VAvFGWs+WfanXR/XCxti2HkmRfS+gvQcZNsn8kymEzaRlGkmyWaaS9/S06C/A++A==
   dependencies:
     standard-error "^1.1.0"
 
-"@chainify/evm-ledger@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/evm-ledger/-/evm-ledger-1.2.4.tgz#c4d38aa720409a54559c860bb338a0eb8545cfa7"
-  integrity sha512-FcvADNiiHA79ROB8cVa8oHLx+p3PdL86PJ14FEmntDIWD5Jc1s1aB1QqToEYs4A3x/CzGosJp0sZDEnuHq/t8w==
+"@chainify/evm-ledger@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/evm-ledger/-/evm-ledger-1.2.7.tgz#52d1284959970e5ec673c069dc0f5f6d1c986f28"
+  integrity sha512-gicr+lBSX0p3/XMP6nIz6Kcd7YbEGyRIoikcUqOdjLG+E92FslJBKm3sDJGC4UOg6XTJjnvQnoGFvWD/Gz3SSA==
   dependencies:
-    "@chainify/client" "1.2.4"
-    "@chainify/errors" "1.2.4"
-    "@chainify/evm" "1.2.4"
-    "@chainify/hw-ledger" "1.2.4"
-    "@chainify/types" "1.2.4"
-    "@chainify/utils" "1.2.4"
+    "@chainify/client" "1.2.7"
+    "@chainify/errors" "1.2.7"
+    "@chainify/evm" "1.2.7"
+    "@chainify/hw-ledger" "1.2.7"
+    "@chainify/types" "1.2.7"
+    "@chainify/utils" "1.2.7"
     "@ethersproject/abstract-provider" "5.6.0"
     "@ethersproject/abstract-signer" "5.6.0"
     "@ethersproject/address" "5.6.0"
@@ -1184,16 +1184,16 @@
     "@ethersproject/transactions" "5.6.0"
     "@ledgerhq/hw-app-eth" "^6.26.0"
 
-"@chainify/evm@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/evm/-/evm-1.2.4.tgz#7c1a1f6da0614bdea09b177188d8d1c08f9455dd"
-  integrity sha512-51uIYXx6GjDEcgJFBjVqf4oSLmtsTThnrkoCXyDI807PbJtCCNPnCf/hvt95r9DEtFlYAnP7Wf12BzCv9U+AKA==
+"@chainify/evm@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/evm/-/evm-1.2.7.tgz#c949182b7dfdca778d558740ac24554dc26d71fd"
+  integrity sha512-/IczDUuQ95tsFzUV1GMN8R/f/4xyYQkvWhdFdK55jCOfbeO9YG8sBkPnXuaYYUIW/l3LhrmSI/J3hppKedFjHQ==
   dependencies:
-    "@chainify/client" "1.2.4"
-    "@chainify/errors" "1.2.4"
-    "@chainify/logger" "1.2.4"
-    "@chainify/types" "1.2.4"
-    "@chainify/utils" "1.2.4"
+    "@chainify/client" "1.2.7"
+    "@chainify/errors" "1.2.7"
+    "@chainify/logger" "1.2.7"
+    "@chainify/types" "1.2.7"
+    "@chainify/utils" "1.2.7"
     "@eth-optimism/sdk" "^1.1.5"
     "@ethersproject/abi" "5.6.0"
     "@ethersproject/abstract-provider" "5.6.0"
@@ -1204,87 +1204,87 @@
     "@ethersproject/solidity" "5.6.0"
     "@ethersproject/transactions" "5.6.0"
     "@ethersproject/wallet" "5.6.0"
+    "@liquality/fee-suggestions" "2.0.2"
     "@metamask/eth-sig-util" "^4.0.1"
-    "@rainbow-me/fee-suggestions" "^2.0.0"
     moralis "1.8.0"
 
-"@chainify/hw-ledger@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/hw-ledger/-/hw-ledger-1.2.4.tgz#6c9009b447cc349905a08d72440bba2d31d8a9e5"
-  integrity sha512-EjcXCm5VuSAmCGVKgnfgz6dzCIa7upyusGp+UHMAfSRq9mKQUAqLk/UC/JnRKV4o6PGIU2ZISQA2YkvyBY0koA==
+"@chainify/hw-ledger@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/hw-ledger/-/hw-ledger-1.2.7.tgz#8e74b28ee3e12182251c26d25ec1388af7ba10d6"
+  integrity sha512-15+P17vPSRnz33H1xcO7yNkxY2eb5Ii1y8CNGhXO+OyaM2Sd2djh3Te5urXQGA9ofypQNaUN+cMEluCT3gjnFQ==
   dependencies:
-    "@chainify/errors" "1.2.4"
-    "@chainify/logger" "1.2.4"
-    "@chainify/types" "1.2.4"
-    "@chainify/utils" "1.2.4"
+    "@chainify/errors" "1.2.7"
+    "@chainify/logger" "1.2.7"
+    "@chainify/types" "1.2.7"
+    "@chainify/utils" "1.2.7"
     "@ledgerhq/hw-transport" "6.27.1"
     "@ledgerhq/hw-transport-webhid" "6.27.1"
 
-"@chainify/logger@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/logger/-/logger-1.2.4.tgz#d2e66c3f68ade369e0b9db1673b5894e1f242ba3"
-  integrity sha512-4KZ1IATEvHzRVlwzPT9GhZU9Nz7l4f/ySmpKP6LXWWSU75x4Sxzp5IxeS33vscfkO5u8Dr2i3dHe2smVxKcjvg==
+"@chainify/logger@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/logger/-/logger-1.2.7.tgz#f42ad94d8b46cc7cfa636df64ec1a3ddf8cc80a4"
+  integrity sha512-UWc19VmVtpH1iTob3Xb4+TstU4BUQJsi5HFGW5sWfDFsPnpQNcQJU8EPMglJ5kPnsbto8fua7z8LV7CExB1xPA==
 
-"@chainify/near@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/near/-/near-1.2.4.tgz#09388042942a97a81c6b55faced37e24b7498891"
-  integrity sha512-4UY5yduZd3P/n8SPgSW3vuTdU2bUM6jR6W0x9w5zJDuxnRJnBtwXT0CDVbhCyxzedIEPKiF97tnxMQPLs7977A==
+"@chainify/near@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/near/-/near-1.2.7.tgz#7466a985d5f0988ae5168536d04efd08ddf50201"
+  integrity sha512-3YiVKqgKkonWuyeKGEhOF8FD+NeR52Dr28q1W6DYdw+hHMYNttpURTVdIJ0yQGwkzgTLwllQPQIiV/0qz3yBSA==
   dependencies:
-    "@chainify/client" "1.2.4"
-    "@chainify/errors" "1.2.4"
-    "@chainify/types" "1.2.4"
-    "@chainify/utils" "1.2.4"
+    "@chainify/client" "1.2.7"
+    "@chainify/errors" "1.2.7"
+    "@chainify/types" "1.2.7"
+    "@chainify/utils" "1.2.7"
     bn.js "^5.2.0"
     near-api-js "^0.44.2"
     near-seed-phrase "^0.2.0"
 
-"@chainify/solana@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/solana/-/solana-1.2.4.tgz#74c8079399779e01db1008c5068fe91ea3a68787"
-  integrity sha512-kuA3JaJuD3BRpvuDdquZFbjkcbI0h9l5sC8rVYO/zZfsLkmVMM56WMbzGiXTIDJhKZ4uSzRLBgNeUvkqYRYH8g==
+"@chainify/solana@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/solana/-/solana-1.2.7.tgz#00654324a2a02a0a83be37f896f589281af83d8f"
+  integrity sha512-WOW0b3vTu5J2cNDd9Tdtej1bZDOw5BTSGPrFBSrli9/fkpo8+FTvDs3J2v69FI0OrleDRel1M8S8esFuMLKkZQ==
   dependencies:
-    "@chainify/client" "1.2.4"
-    "@chainify/errors" "1.2.4"
-    "@chainify/logger" "1.2.4"
-    "@chainify/types" "1.2.4"
-    "@chainify/utils" "1.2.4"
+    "@chainify/client" "1.2.7"
+    "@chainify/errors" "1.2.7"
+    "@chainify/logger" "1.2.7"
+    "@chainify/types" "1.2.7"
+    "@chainify/utils" "1.2.7"
     "@solana/spl-token" "^0.2.0"
     "@solana/web3.js" "^1.37.2"
     bip39 "^3.0.4"
     ed25519-hd-key "^1.2.0"
     tweetnacl "^1.0.3"
 
-"@chainify/terra@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/terra/-/terra-1.2.4.tgz#69e1d7aaec2d185911a958fb62a6d7103750d025"
-  integrity sha512-o3K40ZcLl1wC1Ur5MI/bcOOjPqb4bZwMHn1ENjV9/1lByYCSbPpS9O3q4mlhZxZHN3M6QemzfcrQ3hWyaIXYRw==
+"@chainify/terra@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/terra/-/terra-1.2.7.tgz#35ec7b617d5bb4a1554ad1deee52fc64308b7725"
+  integrity sha512-/yP1ME8AHdJC1rsC0a9s1nh/bFk9mOVPrLT48LJc+kJJ38S8KUOSf4c74RW794AbGhsU0HQKhd7P6sYQh3OLiA==
   dependencies:
-    "@chainify/client" "1.2.4"
-    "@chainify/errors" "1.2.4"
-    "@chainify/logger" "1.2.4"
-    "@chainify/types" "1.2.4"
-    "@chainify/utils" "1.2.4"
+    "@chainify/client" "1.2.7"
+    "@chainify/errors" "1.2.7"
+    "@chainify/logger" "1.2.7"
+    "@chainify/types" "1.2.7"
+    "@chainify/utils" "1.2.7"
     "@terra-money/terra.js" "3.1.3"
     "@types/luxon" "^2.0.9"
     lodash "^4.17.21"
     luxon "^2.3.1"
 
-"@chainify/types@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/types/-/types-1.2.4.tgz#05311794eb42a730252a79e5b1d1d1ee02d760e6"
-  integrity sha512-VEuCRgOntb2FWMLM9w8kT7OcxeX04tPF1zlPqIinQ6sCVpJG1BFY4e4LmXsHWbHGQJvZLKDobvm3d6xdWhaI4g==
+"@chainify/types@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/types/-/types-1.2.7.tgz#94a1c58605366431d51ba226a9cc6fc6b3b95416"
+  integrity sha512-DY3owxto1nrXOb7Td/BldRjD3GW0zE5kpf1xv6n5nkzCs5sdhV1M3z4PrFhBn9EV+XS6IpoJsPU8U3aIWhC7XA==
   dependencies:
     "@ethersproject/bignumber" "5.6.0"
     "@liquality/cryptoassets" "^1.13.3"
     bignumber.js "^9.0.2"
 
-"@chainify/utils@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@chainify/utils/-/utils-1.2.4.tgz#eb7ef239722ad66968800011330d2f2dc9a762f1"
-  integrity sha512-tCrby6GyGsLfIVf4VBUn82qH81oPqm2r/H/wv7w97YKCPQ2yKEl20WXxoTV2BYgp+dfbbP3fCHrE/IgMD+Wdbw==
+"@chainify/utils@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@chainify/utils/-/utils-1.2.7.tgz#2474b176b8a8f17f5eef71ba29a946b1cfa9c0d6"
+  integrity sha512-gQYunWebDovQvlEI1aC4KuSsC8nkLKtO7PZDSqqGbfgdk1mt/BwmFXYJtDo6Mz8vX+6BqfccKW+bui91Qf96LA==
   dependencies:
-    "@chainify/errors" "1.2.4"
-    "@chainify/types" "1.2.4"
+    "@chainify/errors" "1.2.7"
+    "@chainify/types" "1.2.7"
     "@ethersproject/sha2" "5.6.0"
     bech32 "^2.0.0"
     bs58 "^5.0.0"
@@ -1778,7 +1778,7 @@
     bech32 "1.1.4"
     ws "7.4.6"
 
-"@ethersproject/providers@5.6.8", "@ethersproject/providers@^5.5.0", "@ethersproject/providers@^5.6.8":
+"@ethersproject/providers@5.6.8", "@ethersproject/providers@^5.6.8":
   version "5.6.8"
   resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.6.8.tgz#22e6c57be215ba5545d3a46cf759d265bb4e879d"
   integrity sha512-Wf+CseT/iOJjrGtAOf3ck9zS7AgPmr2fZ3N97r4+YXN3mBePTG2/bJ8DApl9mVwYL+RpYbNxMEkEp4mPGdwG/w==
@@ -2462,6 +2462,16 @@
     ethereumjs-util "^7.1.4"
     lodash "^4.17.11"
 
+"@liquality/fee-suggestions@2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@liquality/fee-suggestions/-/fee-suggestions-2.0.2.tgz#d908670ad4e4202f51e092781e56b97b6994682b"
+  integrity sha512-qIRe8SWvVqGkSHNwh8WdDhIplJX6ypKhWsNc8Ab1mCdzsldYgaimakR4VnoI0H/W20X+iiNhu1hqw/rfaYIzaQ==
+  dependencies:
+    "@ethersproject/providers" "5.6.0"
+    bignumber.js "^9.0.1"
+    ethers "5.6.0"
+    moving-averages "^4.0.6"
+
 "@liquality/types@^1.10.0":
   version "1.13.12"
   resolved "https://registry.yarnpkg.com/@liquality/types/-/types-1.13.12.tgz#d4ba6e774b597eb726e8434c570b63fd811a6e32"
@@ -2469,23 +2479,23 @@
   dependencies:
     bignumber.js "^9.0.1"
 
-"@liquality/wallet-core@^1.16.0":
-  version "1.16.1"
-  resolved "https://registry.yarnpkg.com/@liquality/wallet-core/-/wallet-core-1.16.1.tgz#8346f2748adef27e436bc37c88d1103af2e3d47d"
-  integrity sha512-gh3c36TE5muwe8KKF2VNhmx4Z3l6sa3fB2ASr0NqiHlql7J0A3Usa7EtMHfrdMm5m+bSOrdUOMYv72E9UHAlSg==
+"@liquality/wallet-core@^1.18.0":
+  version "1.18.0"
+  resolved "https://registry.yarnpkg.com/@liquality/wallet-core/-/wallet-core-1.18.0.tgz#df52ca4eda1439e428f94714405f7d12390798c0"
+  integrity sha512-Opb8Nrw79IeOm8/O7703pD11WmpmptA4r51huGUCqouUV3M90v18IPF+rEhK56yBH37FqJFA1OapycEwPxJ93g==
   dependencies:
     "@blobfishkate/sovryncontracts" "1.3.27"
-    "@chainify/bitcoin" "1.2.4"
-    "@chainify/bitcoin-ledger" "1.2.4"
-    "@chainify/client" "1.2.4"
-    "@chainify/errors" "1.2.4"
-    "@chainify/evm" "1.2.4"
-    "@chainify/evm-ledger" "1.2.4"
-    "@chainify/near" "1.2.4"
-    "@chainify/solana" "1.2.4"
-    "@chainify/terra" "1.2.4"
-    "@chainify/types" "1.2.4"
-    "@chainify/utils" "1.2.4"
+    "@chainify/bitcoin" "1.2.7"
+    "@chainify/bitcoin-ledger" "1.2.7"
+    "@chainify/client" "1.2.7"
+    "@chainify/errors" "1.2.7"
+    "@chainify/evm" "1.2.7"
+    "@chainify/evm-ledger" "1.2.7"
+    "@chainify/near" "1.2.7"
+    "@chainify/solana" "1.2.7"
+    "@chainify/terra" "1.2.7"
+    "@chainify/types" "1.2.7"
+    "@chainify/utils" "1.2.7"
     "@ethersproject/address" "5.6.0"
     "@ethersproject/providers" "5.6.0"
     "@hop-protocol/sdk" "0.0.1-beta.314"
@@ -2623,16 +2633,6 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
-
-"@rainbow-me/fee-suggestions@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@rainbow-me/fee-suggestions/-/fee-suggestions-2.0.0.tgz#6556697ce560d6963dca0c81cc719999c3ca2c36"
-  integrity sha512-1fD/nlq4e1Rgih2Vt/yxTMOjrN46ofYlwHrKQpEunwvzW9KrZB44p6XuoMyxVn2MX0QWcxA5uQKMtz4Psh4yrw==
-  dependencies:
-    "@ethersproject/providers" "^5.5.0"
-    bignumber.js "^9.0.1"
-    ethers "^5.4.2"
-    moving-averages "^4.0.6"
 
 "@react-native-async-storage/async-storage@^1.15.8":
   version "1.17.7"
@@ -6784,7 +6784,7 @@ ethers@5.6.0:
     "@ethersproject/web" "5.6.0"
     "@ethersproject/wordlists" "5.6.0"
 
-ethers@^5.4.2, ethers@^5.5.1, ethers@^5.6.8:
+ethers@^5.5.1, ethers@^5.6.8:
   version "5.6.9"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.6.9.tgz#4e12f8dfcb67b88ae7a78a9519b384c23c576a4d"
   integrity sha512-lMGC2zv9HC5EC+8r429WaWu3uWJUCgUCt8xxKCFqkrFuBDZXDYIdzDUECxzjf2BMF8IVBByY1EBoGSL3RTm8RA==

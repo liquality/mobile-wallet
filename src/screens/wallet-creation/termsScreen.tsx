@@ -11,7 +11,6 @@ import AnalyticsModal from './optInAnalyticsModal'
 type TermsProps = NativeStackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation, route }: TermsProps) => {
-  //const [scrolledToEnd, setScrolledToEnd] = useState(false)
   const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
 
   return (
@@ -91,10 +90,17 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
           />
         </ButtonFooter>
         {showAnalyticsModal ? (
-          <AnalyticsModal
-            nextScreen={route?.params?.nextScreen || 'UnlockWalletScreen'}
-            onAction={setShowAnalyticsModal}
-          />
+          <React.Suspense
+            fallback={
+              <View>
+                <Text>Loading</Text>
+              </View>
+            }>
+            <AnalyticsModal
+              nextScreen={route?.params?.nextScreen || 'UnlockWalletScreen'}
+              onAction={setShowAnalyticsModal}
+            />
+          </React.Suspense>
         ) : null}
       </View>
     </Box>

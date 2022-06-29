@@ -18,15 +18,15 @@ import WhatsNew from '../../../components/ui/whats-new'
 import Button from '../../../theme/button'
 import { downloadWalletLogs } from '../../../utils'
 import { useRecoilValue } from 'recoil'
-import { walletState } from '../../../atoms'
+import { networkState, optInAnalyticsState, walletState } from '../../../atoms'
 import DeviceInfo from 'react-native-device-info'
 import { useNavigation } from '@react-navigation/core'
 
 const SettingsScreen = ({ route }) => {
-  const reduxState = useRecoilValue(walletState).state
-  const { activeNetwork, analytics = false } = reduxState
-  const isAnalyticsEnabledFromStart =
-    analytics.acceptedDate === undefined ? false : true
+  const walletStateCopy = useRecoilValue(walletState)
+  const analytics = useRecoilValue(optInAnalyticsState)
+  const activeNetwork = useRecoilValue(networkState)
+  const isAnalyticsEnabledFromStart = analytics?.acceptedDate !== undefined
   const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(
     isAnalyticsEnabledFromStart,
   )
@@ -77,16 +77,16 @@ const SettingsScreen = ({ route }) => {
   }, [activeNetwork, analytics, handleLockPress, route?.params?.shouldLogOut])
 
   const handleDownload = useCallback(() => {
-    const walletStateCopy = { ...reduxState }
+    const walletStateDownload = { ...walletStateCopy }
 
-    delete walletStateCopy.encryptedWallets
-    delete walletStateCopy.keySalt
+    delete walletStateDownload.encryptedWallets
+    delete walletStateDownload.keySalt
 
     // Thsi is not in web app, newly added
-    delete walletStateCopy.wallets
+    delete walletStateDownload.wallets
 
-    downloadWalletLogs(walletStateCopy)
-  }, [reduxState])
+    downloadWalletLogs(walletStateDownload)
+  }, [walletStateCopy])
 
   return (
     <View style={styles.container}>
