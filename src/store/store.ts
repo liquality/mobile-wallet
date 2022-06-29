@@ -44,21 +44,6 @@ import { showNotification } from './pushNotification'
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
 
-//TODO read this list for a config file
-export const enabledAssets = [
-  'BTC',
-  'ETH',
-  // 'DAI',
-  'RBTC',
-  // 'BNB',
-  // 'NEAR',
-  // 'SOV',
-  // 'MATIC',
-  // 'PWETH',
-  // 'ARBETH',
-  // 'SOL',
-]
-
 //-------------------------1. CREATE AN INSTANCE OF THE STORAGE MANAGER--------------------------------------------------------
 const excludedProps: Array<keyof CustomRootState> = [
   'key',
@@ -173,7 +158,7 @@ export const populateWallet = async (): Promise<void> => {
 
   wallet.dispatch
     .updateFiatRates({
-      assets: enabledAssets,
+      assets: ['ETH', 'BTC'],
     })
     .catch((e) => {
       Log(`Failed to update fiat rates: ${e}`, 'error')

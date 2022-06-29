@@ -14,7 +14,7 @@ import RoundButton from '../../../theme/round-button'
 import GradientBackground from '../../../components/gradient-background'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
-  enabledAccountsIdsState,
+  accountsIdsState,
   swapPairState,
   totalFiatBalanceState,
 } from '../../../atoms'
@@ -27,7 +27,7 @@ type SummaryBlockProps = {
 
 const SummaryBlock: FC<SummaryBlockProps> = (props) => {
   const { navigation } = props
-  const accountsIds = useRecoilValue(enabledAccountsIdsState)
+  const accountsIds = useRecoilValue(accountsIdsState)
   const totalFiatBalance = useRecoilValue(totalFiatBalanceState)
   const setSwapPair = useSetRecoilState(swapPairState)
 
@@ -69,15 +69,6 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
     //Android considers push notifications as a normal permission
     //and automatically collects this permission on the first app session
   }, [])
-
-  if (error) {
-    return (
-      <ErrorFallback
-        error={new Error('Failed to load assets')}
-        resetError={() => navigation.navigate('LoginScreen')}
-      />
-    )
-  }
 
   return (
     <Box style={styles.overviewBlock}>
@@ -125,7 +116,7 @@ const ContentComponent = () => {
     ACTIVITY,
   }
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
-  const accountsIds = useRecoilValue(enabledAccountsIdsState)
+  const accountsIds = useRecoilValue(accountsIdsState)
 
   return (
     <Fragment>

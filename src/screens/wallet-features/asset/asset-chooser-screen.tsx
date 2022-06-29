@@ -7,7 +7,7 @@ import { AccountType, RootStackParamList } from '../../../types'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import { useInputState } from '../../../hooks'
 import { useRecoilValue } from 'recoil'
-import { accountListState, enabledAccountsIdsState } from '../../../atoms'
+import { accountListState, accountsIdsState } from '../../../atoms'
 
 type AssetChooserProps = NativeStackScreenProps<
   RootStackParamList,
@@ -15,7 +15,7 @@ type AssetChooserProps = NativeStackScreenProps<
 >
 
 const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
-  const accountIds = useRecoilValue(enabledAccountsIdsState)
+  const accountIds = useRecoilValue(accountsIdsState)
   const accountList = useRecoilValue(accountListState)
   const searchInput = useInputState('')
   const [data, setData] =

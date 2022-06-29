@@ -14,7 +14,7 @@ import {
   UseInputStateReturnType,
 } from '../../types'
 import Header from '../header'
-import { createWallet, enabledAssets, restoreWallet } from '../../store/store'
+import { createWallet, restoreWallet } from '../../store/store'
 import Text from '../../theme/text'
 import Button from '../../theme/button'
 import Box from '../../theme/box'
@@ -80,7 +80,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     const accountsIds: { id: string; name: string }[] = []
     accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
       const nativeAsset = chains[account.chain].nativeAsset
-      if (!enabledAssets.includes(nativeAsset)) return
       accountsIds.push({
         id: account.id,
         name: nativeAsset,

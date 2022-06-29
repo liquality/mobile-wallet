@@ -8,7 +8,6 @@ import {
 import {
   addressEffect,
   balanceEffect,
-  enabledAssets,
   enabledAssetsEffect,
   fiatRateEffect,
   localStorageEffect,
@@ -128,7 +127,7 @@ export const accountInfoState = selectorFamily<Partial<AccountType>, string>({
 export const accountListState = selector<Partial<AccountType>[]>({
   key: 'AccountList',
   get: ({ get }) => {
-    const accountsIds = get(enabledAccountsIdsState)
+    const accountsIds = get(accountsIdsState)
     return accountsIds.map((item) => {
       const address = get(addressStateFamily(item.id))
       const account = get(accountInfoStateFamily(item.id))
@@ -146,7 +145,7 @@ export const accountForAssetState = selectorFamily<
   get:
     (asset) =>
     ({ get }) => {
-      const accountsIds = get(enabledAccountsIdsState)
+      const accountsIds = get(accountsIdsState)
       const filteredAccounts = accountsIds
         .map((item) => get(accountInfoStateFamily(item.id)))
         .filter((account) => account.code === asset)
@@ -159,15 +158,6 @@ export const historyItemsState = selector<HistoryItem[]>({
   get: ({ get }) => {
     const historyIds = get(historyIdsState)
     return historyIds.map((id) => get(historyStateFamily(id)))
-  },
-})
-
-export const enabledAccountsIdsState = selector<{ id: string; name: Asset }[]>({
-  key: 'EnabledAccountIdsState',
-  get: ({ get }) => {
-    return get(accountsIdsState).filter((item) =>
-      enabledAssets.includes(item.name),
-    )
   },
 })
 
