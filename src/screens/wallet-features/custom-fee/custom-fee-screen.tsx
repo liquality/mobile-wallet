@@ -74,13 +74,14 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
       </View>
     )
   }
+
   return (
     <View style={styles.container}>
       <View>
         <View style={styles.block}>
           <View style={styles.row}>
             <AssetIcon asset={code} />
-            <Text style={styles.asset}>ETH</Text>
+            <Text style={styles.asset}>{code}</Text>
           </View>
           <Text style={[styles.label, styles.headerLabel]}>PRESETS</Text>
           <View style={styles.row}>
@@ -137,6 +138,8 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
           </Text>
           <View style={styles.row}>
             <Text style={styles.label}>Gas Price</Text>
+            <Text style={styles.label}>Gas Limit</Text>
+
             <Text style={styles.fiat}>
               {code &&
                 fiatRates &&
@@ -150,6 +153,15 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
             </Text>
           </View>
           <View style={styles.row}>
+            <Text style={styles.inputLabel}>GWEI</Text>
+            <TextInput
+              style={styles.gasInput}
+              onChangeText={customFeeInput.onChangeText}
+              value={customFeeInput.value}
+              autoCorrect={false}
+              autoCapitalize={'none'}
+              returnKeyType="done"
+            />
             <Text style={styles.inputLabel}>GWEI</Text>
             <TextInput
               style={styles.gasInput}
@@ -219,7 +231,9 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    // alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   col: {
     paddingLeft: 5,
@@ -280,7 +294,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderBottomColor: '#38FFFB',
     borderBottomWidth: 1,
-    width: '90%',
+    width: '30%',
   },
   actions: {
     justifyContent: 'space-around',
