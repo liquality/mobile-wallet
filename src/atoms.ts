@@ -84,6 +84,11 @@ export const optInAnalyticsState = atom<
   effects: [localStorageEffect('analytics')],
 })
 
+export const iDoneFetchingData = atom<boolean>({
+  key: 'DoneFetchingData',
+  default: false,
+})
+
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',

@@ -8,6 +8,7 @@ import {
   accountInfoStateFamily,
   addressStateFamily,
   balanceStateFamily,
+  iDoneFetchingData,
   swapPairState,
 } from '../../atoms'
 import { useNavigation, useRoute } from '@react-navigation/core'
@@ -26,6 +27,7 @@ const WrappedRow: FC<{
   const address = useRecoilValue(addressStateFamily(item.id))
   const balance = useRecoilValue(balanceStateFamily(item.name))
   const account = useRecoilValue(accountInfoStateFamily(item.id))
+  const isDoneFetching = useRecoilValue(iDoneFetchingData)
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
   const assets = Object.values(account?.assets || {}) || []
   const isNested = assets.length > 0 && item.name !== 'BTC'
@@ -108,7 +110,8 @@ const WrappedRow: FC<{
     ],
   )
 
-  if (!account || !account.code) return null
+  if (!account || !account.code || (isDoneFetching && (!balance || !address)))
+    return null
 
   if (!balance || !address)
     return (
