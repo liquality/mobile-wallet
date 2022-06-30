@@ -87,15 +87,17 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
                     }}>
                     <Text style={[styles.preset, styles.speed]}>{speed}</Text>
                     <Text style={[styles.preset, styles.amount]}>
-                      {gasFees &&
+                      {/*   {gasFees &&
                         code &&
                         `${calculateGasFee(
                           code,
                           gasFees[speed as keyof FeeDetails].toNumber(),
-                        )} ${code}`}
+                        )} ${code}`} */}
+                      NAN
                     </Text>
                     <Text style={[styles.preset, styles.fiat]}>
-                      {fiatRates &&
+                      USD
+                      {/*  {fiatRates &&
                         gasFees &&
                         code &&
                         `${formatFiat(
@@ -108,7 +110,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
                               fiatRates[code],
                             ),
                           ),
-                        )} USD`}
+                        )} USD`} */}
                     </Text>
                   </Pressable>
                 )
@@ -123,7 +125,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
           <View style={styles.row}>
             <Text style={styles.label}>Gas Price</Text>
             <Text style={styles.fiat}>
-              {code &&
+              {/*    {code &&
                 fiatRates &&
                 parseFloat(customFeeInput.value) > 0 &&
                 `$${formatFiat(
@@ -133,7 +135,8 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
                       fiatRates[code],
                     ),
                   ),
-                )}`}
+                )}`} */}
+              NAN
             </Text>
           </View>
           <View style={styles.row}>
@@ -152,15 +155,16 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
         <View style={[styles.block, styles.summary]}>
           <Text style={[styles.preset, styles.speed]}>New Speed/Fee</Text>
           <Text style={[styles.preset, styles.amount]}>
-            {code &&
+            {/*          {code &&
               parseFloat(customFeeInput.value) > 0 &&
               `${calculateGasFee(
                 code,
                 parseFloat(customFeeInput.value),
-              )} ${code}`}
+              )} ${code}`} */}
+            NAN
           </Text>
           <Text style={[styles.preset, styles.fiat]}>
-            {code &&
+            {/*    {code &&
               fiatRates &&
               parseFloat(customFeeInput.value) > 0 &&
               `$${formatFiat(
@@ -170,7 +174,8 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
                     fiatRates[code],
                   ),
                 ),
-              )}`}
+              )}`} */}
+            NAN
           </Text>
         </View>
       </View>
@@ -207,16 +212,19 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   col: {
     paddingLeft: 5,
     borderColor: '#d9dfe5',
     borderWidth: 1,
+    width: '25%',
   },
   middleCol: {
     borderLeftWidth: 0,
     borderRightWidth: 0,
+    width: '25%',
   },
   asset: {
     fontFamily: 'Montserrat-Regular',
