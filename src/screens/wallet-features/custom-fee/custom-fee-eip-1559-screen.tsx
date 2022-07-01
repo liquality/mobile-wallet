@@ -1,28 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
 import { FeeDetails } from '@liquality/types/lib/fees'
-import {
+/* import {
   cryptoToFiat,
   formatFiat,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
-import { calculateGasFee } from '../../core/utils/fee-calculator'
-import AssetIcon from '../../components/asset-icon'
+} from '@liquality/wallet-core/dist/utils/coinFormatter' */
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+
+/* import { calculateGasFee } from '../../../core/utils/fee-calculator'
+ */ import AssetIcon from '../../../components/asset-icon'
 import {
-  AccountType,
+  AssetDataElementType,
   GasFees,
   RootStackParamList,
   UseInputStateReturnType,
-} from '../../types'
-import Button from '../../theme/button'
+} from '../../../types'
+import Button from '../../../theme/button'
 import { useRecoilValue } from 'recoil'
-import { fiatRatesState } from '../../atoms'
-import { fetchFeesForAsset } from '../../store/store'
-import { BigNumber } from '@liquality/types'
+import { networkState } from '../../../atoms'
+import { setupWallet } from '@liquality/wallet-core'
+import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions' // Default options
 
-type CustomFeeScreenProps = NativeStackScreenProps<
+type CustomFeeEIP1559ScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'SendScreen'
+  'CustomFeeEIP1559Screen'
 >
 type SpeedMode = keyof FeeDetails
 const useInputState = (
@@ -32,12 +33,37 @@ const useInputState = (
   return { value, onChangeText: setValue }
 }
 
-const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
+const CustomFeeEIP1559Screen = ({
+  navigation,
+  route,
+}: CustomFeeEIP1559ScreenProps) => {
   const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
   const [gasFees, setGasFees] = useState<GasFees>()
-  const { code }: AccountType = route.params.assetData!
-  const fiatRates = useRecoilValue(fiatRatesState)
-  const customFeeInput = useInputState('0')
+  const [error, setError] = useState('')
+  const { code }: AssetDataElementType = route.params.assetData!
+
+  const wallet = setupWallet({
+    ...defaultOptions,
+  })
+
+  const activeNetwork = useRecoilValue(networkState)
+  //There should be walletid & fees in wallet state?
+  /*   accounts: state.accounts,
+  walletId: state.activeWalletId,
+  activeNetwork: state.activeNetwork,
+  fiatRates: state.fiatRates,
+  fees: state.fees,
+  history: state.history, */
+  const { activeWalletId, fees } = wallet.state
+  //const fiatRates = useRecoilValue(fiatRatesState)
+
+  /*   console.log('Active network:', activeNetwork)
+  console.log('Wallet state ID:', activeWalletId, 'and fees:', fees)
+  console.log('Fiat rates:', fiatRates) */
+
+  const customFeeInput = useInputState(
+    `${fees?.[activeNetwork]?.[activeWalletId]?.[code].average.fee || '0'}`,
+  )
 
   const handleApplyPress = () => {
     navigation.navigate('SendScreen', {
@@ -47,8 +73,14 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   }
 
   useEffect(() => {
-    fetchFeesForAsset(code).then(setGasFees)
-  }, [code])
+    const _feeDetails = fees?.[activeNetwork]?.[activeWalletId]?.[code]
+    if (!_feeDetails) {
+      setError('Gas fees missing')
+      return
+    }
+    //console.log(_feeDetails, 'wats feedetails?')
+    setGasFees(_feeDetails)
+  }, [fees, activeWalletId, activeNetwork, code])
 
   if (!gasFees) {
     return (
@@ -81,36 +113,34 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
                       setSpeedMode(speed as SpeedMode)
                       if (gasFees && code) {
                         customFeeInput.onChangeText(
-                          gasFees[speed as SpeedMode].toString(),
+                          gasFees[speed as SpeedMode].fee.toString(),
                         )
                       }
                     }}>
                     <Text style={[styles.preset, styles.speed]}>{speed}</Text>
                     <Text style={[styles.preset, styles.amount]}>
-                      {/*   {gasFees &&
+                      {/*    {gasFees &&
                         code &&
                         `${calculateGasFee(
                           code,
-                          gasFees[speed as keyof FeeDetails].toNumber(),
+                          gasFees[speed as keyof FeeDetails].fee,
                         )} ${code}`} */}
                       NAN
                     </Text>
                     <Text style={[styles.preset, styles.fiat]}>
-                      USD
-                      {/*  {fiatRates &&
+                      {/*    {fiatRates &&
                         gasFees &&
                         code &&
                         `${formatFiat(
-                          new BigNumber(
-                            cryptoToFiat(
-                              calculateGasFee(
-                                code,
-                                gasFees[speed as keyof FeeDetails].toNumber(),
-                              ),
-                              fiatRates[code],
+                          cryptoToFiat(
+                            calculateGasFee(
+                              code,
+                              gasFees[speed as keyof FeeDetails].fee,
                             ),
-                          ),
-                        )} USD`} */}
+                            fiatRates[code],
+                          ).toNumber(),
+                        )} USD`} */}{' '}
+                      NAN
                     </Text>
                   </Pressable>
                 )
@@ -125,18 +155,15 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
           <View style={styles.row}>
             <Text style={styles.label}>Gas Price</Text>
             <Text style={styles.fiat}>
-              {/*    {code &&
+              {/*      {code &&
                 fiatRates &&
                 parseFloat(customFeeInput.value) > 0 &&
                 `$${formatFiat(
-                  new BigNumber(
-                    cryptoToFiat(
-                      calculateGasFee(code, parseFloat(customFeeInput.value)),
-                      fiatRates[code],
-                    ),
-                  ),
+                  cryptoToFiat(
+                    calculateGasFee(code, parseFloat(customFeeInput.value)),
+                    fiatRates[code],
+                  ).toNumber(),
                 )}`} */}
-              NAN
             </Text>
           </View>
           <View style={styles.row}>
@@ -155,30 +182,27 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
         <View style={[styles.block, styles.summary]}>
           <Text style={[styles.preset, styles.speed]}>New Speed/Fee</Text>
           <Text style={[styles.preset, styles.amount]}>
-            {/*          {code &&
+            {/*    {code &&
               parseFloat(customFeeInput.value) > 0 &&
               `${calculateGasFee(
                 code,
                 parseFloat(customFeeInput.value),
               )} ${code}`} */}
-            NAN
           </Text>
           <Text style={[styles.preset, styles.fiat]}>
-            {/*    {code &&
+            {/*       {code &&
               fiatRates &&
               parseFloat(customFeeInput.value) > 0 &&
               `$${formatFiat(
-                new BigNumber(
-                  cryptoToFiat(
-                    calculateGasFee(code, parseFloat(customFeeInput.value)),
-                    fiatRates[code],
-                  ),
-                ),
+                cryptoToFiat(
+                  calculateGasFee(code, parseFloat(customFeeInput.value)),
+                  fiatRates[code],
+                ).toNumber(),
               )}`} */}
-            NAN
           </Text>
         </View>
       </View>
+      {!!error && <Text style={styles.error}>{error}</Text>}
 
       <View style={[styles.block, styles.row, styles.actions]}>
         <Button
@@ -212,19 +236,16 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   col: {
     paddingLeft: 5,
     borderColor: '#d9dfe5',
     borderWidth: 1,
-    width: '25%',
   },
   middleCol: {
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    width: '25%',
   },
   asset: {
     fontFamily: 'Montserrat-Regular',
@@ -296,4 +317,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default CustomFeeScreen
+export default CustomFeeEIP1559Screen

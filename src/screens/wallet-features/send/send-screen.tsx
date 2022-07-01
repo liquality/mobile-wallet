@@ -34,7 +34,11 @@ import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
 import ButtonFooter from '../../../components/button-footer'
 import { isNumber } from '../../../utils'
 import { useRecoilValue } from 'recoil'
-import { balanceStateFamily, fiatRatesState } from '../../../atoms'
+import {
+  balanceStateFamily,
+  fiatRatesState,
+  networkState,
+} from '../../../atoms'
 
 const useInputState = (
   initialValue: string,
@@ -69,6 +73,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const addressInput = useInputState('')
   const memoInput = useInputState('')
   const networkFee = useRef<NetworkFeeType>()
+  const activeNetwork = useRecoilValue(networkState)
 
   const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
@@ -179,10 +184,18 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   }
 
   const handleCustomPress = () => {
-    navigation.navigate('CustomFeeScreen', {
-      assetData: route.params.assetData,
-      screenTitle: 'NETWORK SPEED/FEE',
-    })
+    const isEIP1559Fees =
+      chain === ChainId.Ethereum ||
+      (chain === ChainId.Polygon && activeNetwork !== 'mainnet')
+
+    //console.log('PRESS!', isEIP1559Fees)
+    navigation.navigate(
+      isEIP1559Fees ? 'CustomFeeEIP1559Screen' : 'CustomFeeScreen',
+      {
+        assetData: route.params.assetData,
+        screenTitle: 'NETWORK SPEED/FEE',
+      },
+    )
   }
 
   const handleQRCodeBtnPress = () => {

@@ -68,7 +68,7 @@ export const enabledAssetsState = atom<string[]>({
 export const walletState = atom<CustomRootState>({
   key: 'Wallet',
   default: {},
-  // effects: [localStorageEffect('wallet')],
+  effects: [localStorageEffect('wallet')],
 })
 
 export const activityFilterState = atom<CustomRootState['assetFilter']>({
