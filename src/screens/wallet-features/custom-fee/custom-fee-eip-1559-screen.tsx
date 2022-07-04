@@ -30,6 +30,7 @@ const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {
   const [value, setValue] = useState<string>(initialValue)
+
   return { value, onChangeText: setValue }
 }
 
@@ -39,7 +40,9 @@ const CustomFeeEIP1559Screen = ({
 }: CustomFeeEIP1559ScreenProps) => {
   const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
   const [gasFees, setGasFees] = useState<GasFees>()
-  const [error, setError] = useState('')
+  const [setError] = useState('')
+  const [showBasic, setShowBasic] = useState<boolean>(true)
+
   const { code }: AssetDataElementType = route.params.assetData!
 
   const wallet = setupWallet({
@@ -80,7 +83,7 @@ const CustomFeeEIP1559Screen = ({
     }
     //console.log(_feeDetails, 'wats feedetails?')
     setGasFees(_feeDetails)
-  }, [fees, activeWalletId, activeNetwork, code])
+  }, [setError, fees, activeWalletId, activeNetwork, code])
 
   if (!gasFees) {
     return (
@@ -89,83 +92,124 @@ const CustomFeeEIP1559Screen = ({
       </View>
     )
   }
-  return (
-    <View style={styles.container}>
-      <View>
-        <View style={styles.block}>
-          <View style={styles.row}>
-            <AssetIcon asset={code} />
-            <Text style={styles.asset}>ETH</Text>
-          </View>
-          <Text style={[styles.label, styles.headerLabel]}>PRESETS</Text>
-          <View style={styles.row}>
-            {gasFees &&
-              Object.keys(gasFees).map((speed, index) => {
-                return (
-                  <Pressable
-                    style={[
-                      styles.col,
-                      index === 1 && styles.middleCol,
-                      speed === speedMode && styles.selected,
-                    ]}
-                    key={speed}
-                    onPress={() => {
-                      setSpeedMode(speed as SpeedMode)
-                      if (gasFees && code) {
-                        customFeeInput.onChangeText(
-                          gasFees[speed as SpeedMode].fee.toString(),
-                        )
-                      }
-                    }}>
-                    <Text style={[styles.preset, styles.speed]}>{speed}</Text>
-                    <Text style={[styles.preset, styles.amount]}>
-                      {/*    {gasFees &&
+
+  const renderShowBasic = () => {
+    return (
+      <View style={[styles.container, styles.fragmentContainer]}>
+        <Text style={[styles.label, styles.headerLabel]}>PRESETS</Text>
+        <View style={styles.row}>
+          {gasFees &&
+            Object.keys(gasFees).map((speed, index) => {
+              return (
+                <Pressable
+                  style={[
+                    styles.col,
+                    index === 1 && styles.middleCol,
+                    speed === speedMode && styles.selected,
+                  ]}
+                  key={speed}
+                  onPress={() => {
+                    setSpeedMode(speed as SpeedMode)
+                    if (gasFees && code) {
+                      customFeeInput.onChangeText(
+                        gasFees[speed as SpeedMode].toString(),
+                      )
+                    }
+                  }}>
+                  <Text style={[styles.preset, styles.speed]}>{speed}</Text>
+                  <Text style={[styles.preset, styles.amount]}>
+                    {/*   {gasFees &&
                         code &&
                         `${calculateGasFee(
                           code,
-                          gasFees[speed as keyof FeeDetails].fee,
+                          gasFees[speed as keyof FeeDetails].toNumber(),
                         )} ${code}`} */}
-                      NAN
-                    </Text>
-                    <Text style={[styles.preset, styles.fiat]}>
-                      {/*    {fiatRates &&
+                    NAN
+                  </Text>
+                  <Text style={[styles.preset, styles.fiat]}>
+                    USD
+                    {/*  {fiatRates &&
                         gasFees &&
                         code &&
                         `${formatFiat(
-                          cryptoToFiat(
-                            calculateGasFee(
-                              code,
-                              gasFees[speed as keyof FeeDetails].fee,
+                          new BigNumber(
+                            cryptoToFiat(
+                              calculateGasFee(
+                                code,
+                                gasFees[speed as keyof FeeDetails].toNumber(),
+                              ),
+                              fiatRates[code],
                             ),
-                            fiatRates[code],
-                          ).toNumber(),
-                        )} USD`} */}{' '}
-                      NAN
-                    </Text>
-                  </Pressable>
-                )
-              })}
-          </View>
+                          ),
+                        )} USD`} */}
+                  </Text>
+                </Pressable>
+              )
+            })}
         </View>
+      </View>
+    )
+  }
 
+  const renderShowCustomized = () => {
+    return (
+      <View style={[styles.container, styles.fragmentContainer]}>
         <View style={styles.block}>
           <Text style={[styles.label, styles.headerLabel]}>
-            CUSTOMIZED SETTINGS
+            CURRENT BASE FEE
+            <Text style={[styles.labelNormal, styles.headerLabel]}>
+              {' '}
+              PER GAS
+            </Text>
           </Text>
+
           <View style={styles.row}>
-            <Text style={styles.label}>Gas Price</Text>
-            <Text style={styles.fiat}>
-              {/*      {code &&
+            <Text style={[styles.label, styles.headerLabel]}>
+              MINER TIP
+              <Text style={[styles.labelNormal, styles.headerLabel]}>
+                {' '}
+                TO SPEED UP
+              </Text>
+            </Text>
+            <Text style={[styles.label, styles.headerLabel]}>
+              MAX FEE
+              <Text style={[styles.labelNormal, styles.headerLabel]}>
+                {' '}
+                PER GAS
+              </Text>
+            </Text>
+          </View>
+          <View style={styles.rowEndFiat}>
+            <Text style={[styles.fiat, styles.fiatFirst]}>
+              {/*    {code &&
                 fiatRates &&
                 parseFloat(customFeeInput.value) > 0 &&
                 `$${formatFiat(
-                  cryptoToFiat(
-                    calculateGasFee(code, parseFloat(customFeeInput.value)),
-                    fiatRates[code],
-                  ).toNumber(),
+                  new BigNumber(
+                    cryptoToFiat(
+                      calculateGasFee(code, parseFloat(customFeeInput.value)),
+                      fiatRates[code],
+                    ),
+                  ),
                 )}`} */}
+              $9.11
+            </Text>
+            <Text style={styles.fiat}>
+              {/*    {code &&
+                fiatRates &&
+                parseFloat(customFeeInput.value) > 0 &&
+                `$${formatFiat(
+                  new BigNumber(
+                    cryptoToFiat(
+                      calculateGasFee(code, parseFloat(customFeeInput.value)),
+                      fiatRates[code],
+                    ),
+                  ),
+                )}`} */}
+              $9.11
             </Text>
           </View>
+
           <View style={styles.row}>
             <Text style={styles.inputLabel}>GWEI</Text>
             <TextInput
@@ -176,51 +220,134 @@ const CustomFeeEIP1559Screen = ({
               autoCapitalize={'none'}
               returnKeyType="done"
             />
+            <Text style={styles.inputLabel}>GWEI</Text>
+            <TextInput
+              style={styles.gasInput}
+              onChangeText={customFeeInput.onChangeText}
+              value={customFeeInput.value}
+              autoCorrect={false}
+              autoCapitalize={'none'}
+              returnKeyType="done"
+            />
           </View>
+          <View style={styles.rowEndBtn}>
+            <Button
+              label="Low"
+              type="tertiary"
+              variant="s"
+              onPress={handleApplyPress}
+            />
+            <Button
+              label="Med"
+              type="tertiary"
+              variant="s"
+              onPress={handleApplyPress}
+            />
+            <Button
+              label="High"
+              type="tertiary"
+              variant="s"
+              onPress={handleApplyPress}
+            />
+          </View>
+        </View>
+        <Text style={[styles.label, styles.headerLabel]}>GAS LIMIT</Text>
+
+        <View style={styles.row}>
+          <TextInput
+            style={styles.gasInput}
+            onChangeText={customFeeInput.onChangeText}
+            value={customFeeInput.value}
+            autoCorrect={false}
+            autoCapitalize={'none'}
+            returnKeyType="done"
+          />
         </View>
 
         <View style={[styles.block, styles.summary]}>
           <Text style={[styles.preset, styles.speed]}>New Speed/Fee</Text>
           <Text style={[styles.preset, styles.amount]}>
-            {/*    {code &&
+            {/*          {code &&
               parseFloat(customFeeInput.value) > 0 &&
               `${calculateGasFee(
                 code,
                 parseFloat(customFeeInput.value),
               )} ${code}`} */}
+            NAN
           </Text>
           <Text style={[styles.preset, styles.fiat]}>
-            {/*       {code &&
+            {/*    {code &&
               fiatRates &&
               parseFloat(customFeeInput.value) > 0 &&
               `$${formatFiat(
-                cryptoToFiat(
-                  calculateGasFee(code, parseFloat(customFeeInput.value)),
-                  fiatRates[code],
-                ).toNumber(),
+                new BigNumber(
+                  cryptoToFiat(
+                    calculateGasFee(code, parseFloat(customFeeInput.value)),
+                    fiatRates[code],
+                  ),
+                ),
               )}`} */}
+            NAN
           </Text>
         </View>
       </View>
-      {!!error && <Text style={styles.error}>{error}</Text>}
+    )
+  }
 
-      <View style={[styles.block, styles.row, styles.actions]}>
-        <Button
-          type="secondary"
-          variant="m"
-          label="Cancel"
-          onPress={navigation.goBack}
-          isBorderless={false}
-          isActive={true}
-        />
-        <Button
-          type="primary"
-          variant="m"
-          label="Apply"
-          onPress={handleApplyPress}
-          isBorderless={false}
-          isActive={true}
-        />
+  return (
+    <View style={styles.container}>
+      <View style={styles.block}>
+        <View style={styles.tabsBlock}>
+          <Pressable
+            style={[styles.tabHeader, showBasic && styles.headerFocused]}
+            onPress={() => setShowBasic(!showBasic)}>
+            <Text
+              style={[
+                styles.headerText,
+                showBasic && styles.headerTextFocused,
+              ]}>
+              BASIC
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.tabHeader, !showBasic && styles.headerFocused]}
+            onPress={() => setShowBasic(!showBasic)}>
+            <Text
+              style={[
+                styles.headerText,
+                !showBasic && styles.headerTextFocused,
+              ]}>
+              CUSTOMIZE
+            </Text>
+          </Pressable>
+        </View>
+        <View style={styles.rowEnd}>
+          <AssetIcon asset={code} />
+          <Text style={[styles.headerText, styles.headerTextFocused]}>
+            {code}
+          </Text>
+        </View>
+        <View style={styles.row}>
+          {showBasic ? renderShowBasic() : renderShowCustomized()}
+        </View>
+        <View style={[styles.block, styles.row, styles.actions]}>
+          <Button
+            type="secondary"
+            variant="m"
+            label="Cancel"
+            onPress={navigation.goBack}
+            isBorderless={false}
+            isActive={true}
+          />
+          <Button
+            type="primary"
+            variant="m"
+            label="Apply"
+            onPress={handleApplyPress}
+            isBorderless={false}
+            isActive={true}
+          />
+        </View>
       </View>
     </View>
   )
@@ -232,20 +359,40 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#FFFFFF',
     paddingVertical: 15,
+  },
+  fragmentContainer: {
     paddingHorizontal: 20,
   },
   row: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  rowEnd: {
+    flexDirection: 'row',
     alignItems: 'flex-end',
+    padding: 15,
+  },
+  rowEndBtn: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    marginTop: 10,
+  },
+
+  rowEndFiat: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   col: {
     paddingLeft: 5,
     borderColor: '#d9dfe5',
     borderWidth: 1,
+    width: '33%',
   },
   middleCol: {
     borderLeftWidth: 0,
     borderRightWidth: 0,
+    width: '33%',
   },
   asset: {
     fontFamily: 'Montserrat-Regular',
@@ -257,7 +404,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontWeight: '700',
     fontSize: 12,
-    marginRight: 5,
+  },
+  labelNormal: {
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '300',
+    fontSize: 12,
   },
   headerLabel: {
     marginVertical: 10,
@@ -276,6 +427,10 @@ const styles = StyleSheet.create({
   },
   fiat: {
     fontSize: 12,
+    marginTop: 5,
+  },
+  fiatFirst: {
+    marginLeft: '37%',
   },
   block: {
     marginVertical: 15,
@@ -297,7 +452,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderBottomColor: '#38FFFB',
     borderBottomWidth: 1,
-    width: '90%',
+    width: '30%',
   },
   actions: {
     justifyContent: 'space-around',
@@ -305,15 +460,32 @@ const styles = StyleSheet.create({
   selected: {
     backgroundColor: '#F0F7F9',
   },
-  error: {
+
+  tabsBlock: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    alignContent: 'stretch',
+  },
+  tabHeader: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#D9DFE5',
+  },
+  headerFocused: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#000',
+  },
+  headerText: {
     fontFamily: 'Montserrat-Regular',
-    color: '#F12274',
-    fontSize: 12,
-    backgroundColor: '#FFF',
-    textAlignVertical: 'center',
-    marginTop: 5,
-    paddingVertical: 5,
-    height: 25,
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '600',
+    color: '#D9DFE5',
+  },
+  headerTextFocused: {
+    color: '#000',
   },
 })
 
