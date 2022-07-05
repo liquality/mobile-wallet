@@ -17,9 +17,12 @@ import {
 } from '../../../types'
 import Button from '../../../theme/button'
 import { useRecoilValue } from 'recoil'
-import { networkState } from '../../../atoms'
+import { fiatRatesState, networkState } from '../../../atoms'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions' // Default options
+import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
+import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
+import { BigNumber } from '@liquality/types'
 
 type CustomFeeEIP1559ScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -44,7 +47,6 @@ const CustomFeeEIP1559Screen = ({
   const [showBasic, setShowBasic] = useState<boolean>(true)
 
   const { code }: AssetDataElementType = route.params.assetData!
-
   const wallet = setupWallet({
     ...defaultOptions,
   })
@@ -58,11 +60,13 @@ const CustomFeeEIP1559Screen = ({
   fees: state.fees,
   history: state.history, */
   const { activeWalletId, fees } = wallet.state
-  //const fiatRates = useRecoilValue(fiatRatesState)
+  const fiatRates = useRecoilValue(fiatRatesState)
 
   /*   console.log('Active network:', activeNetwork)
   console.log('Wallet state ID:', activeWalletId, 'and fees:', fees)
-  console.log('Fiat rates:', fiatRates) */
+  console.log('Fiat rates:', fiatRates)
+  console.log(code, 'what is code? (from assetData)')
+  console.log(wallet.state, 'WALLET STATE') */
 
   const customFeeInput = useInputState(
     `${fees?.[activeNetwork]?.[activeWalletId]?.[code].average.fee || '0'}`,
@@ -75,13 +79,20 @@ const CustomFeeEIP1559Screen = ({
     })
   }
 
+  const renderEstimationSpeed = (speed: string) => {
+    if (speed === 'slow') {
+      return '~maybe in 30 sec'
+    } else if (speed === 'average') {
+      return '~likely in < 30 sec'
+    } else return '~likely in < 15 sec'
+  }
+
   useEffect(() => {
     const _feeDetails = fees?.[activeNetwork]?.[activeWalletId]?.[code]
     if (!_feeDetails) {
       setError('Gas fees missing')
       return
     }
-    //console.log(_feeDetails, 'wats feedetails?')
     setGasFees(_feeDetails)
   }, [setError, fees, activeWalletId, activeNetwork, code])
 
@@ -93,6 +104,37 @@ const CustomFeeEIP1559Screen = ({
     )
   }
 
+  const renderSlowAverageFastPreset = (speed: string) => {
+    let preset
+    if (speed === 'slow') {
+      preset = gasFees?.slow || null
+    } else if (speed === 'average') {
+      preset = gasFees?.average || null
+    } else {
+      preset = gasFees?.fast || null
+    }
+
+    /*  if (gasFees)
+      console.log(gasFees[speed as keyof FeeDetails].toNumber(), 'GAS FEES') */
+
+    const defaultFee =
+      preset.fee?.suggestedBaseFeePerGas + preset.fee?.maxPriorityFeePerGas || 0
+
+    const maximumFee =
+      preset.fee?.suggestedBaseFeePerGas + preset.fee?.maxFeePerGas || 0
+
+    const sendFee = getSendFee(code, defaultFee)
+    return {
+      amount: new BigNumber(sendFee).dp(6).toString(),
+
+      //fiat: prettyFiatBalance(totalFees.slow, fiatRates[code]),
+      maximum: prettyFiatBalance(
+        getSendFee(code, maximumFee),
+        fiatRates[code],
+      ).toString(),
+    }
+  }
+
   const renderShowBasic = () => {
     return (
       <View style={[styles.container, styles.fragmentContainer]}>
@@ -100,6 +142,8 @@ const CustomFeeEIP1559Screen = ({
         <View style={styles.row}>
           {gasFees &&
             Object.keys(gasFees).map((speed, index) => {
+              var preset = renderSlowAverageFastPreset(speed)
+
               return (
                 <Pressable
                   style={[
@@ -117,17 +161,15 @@ const CustomFeeEIP1559Screen = ({
                     }
                   }}>
                   <Text style={[styles.preset, styles.speed]}>{speed}</Text>
+                  <Text style={[styles.preset, styles.fiat]}>
+                    {renderEstimationSpeed(speed)}
+                  </Text>
+
                   <Text style={[styles.preset, styles.amount]}>
-                    {/*   {gasFees &&
-                        code &&
-                        `${calculateGasFee(
-                          code,
-                          gasFees[speed as keyof FeeDetails].toNumber(),
-                        )} ${code}`} */}
-                    NAN
+                    {preset?.amount}MATIC
                   </Text>
                   <Text style={[styles.preset, styles.fiat]}>
-                    USD
+                    0.0 USD
                     {/*  {fiatRates &&
                         gasFees &&
                         code &&
@@ -143,6 +185,9 @@ const CustomFeeEIP1559Screen = ({
                           ),
                         )} USD`} */}
                   </Text>
+                  <Text style={[styles.preset, styles.fiat]}>
+                    Max {preset?.maximum} USD
+                  </Text>
                 </Pressable>
               )
             })}
@@ -151,6 +196,15 @@ const CustomFeeEIP1559Screen = ({
     )
   }
 
+  /*   const minerTipFiat = () => {
+    console.log('Native asset:', code, 'MINER TIP:' minerTip)
+    const fiat = prettyFiatBalance(
+      getSendFee(code, this.minerTip),
+      this.fiatRates[code],
+    )
+    return isNaN(fiat) ? 0 : fiat
+  }
+ */
   const renderShowCustomized = () => {
     return (
       <View style={[styles.container, styles.fragmentContainer]}>
@@ -417,7 +471,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
     fontSize: 14,
-    lineHeight: 26,
+    lineHeight: 18,
   },
   speed: {
     textTransform: 'capitalize',
