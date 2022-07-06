@@ -11,6 +11,8 @@ import { Network } from '@liquality/wallet-core/dist/store/types'
 import dayjs from 'dayjs'
 import Pbkdf2 from 'react-native-fast-pbkdf2'
 
+type EncryptionType = 'sha-1' | 'sha-256' | 'sha-512'
+
 export const sortQuotes = (quotes: SwapQuote[]): SwapQuote[] => {
   if (!quotes) {
     throw new Error('Can not sort a null array')
@@ -50,13 +52,13 @@ export const pbkdf2 = async (
   length: number,
   digest: string,
 ): Promise<string> => {
-  Log('async pbkdf2', 'info')
   const generatedValue = await Pbkdf2.derive(
     password.toString(),
     salt.toString(),
     iterations,
     length,
-    digest?.toLowerCase().replace('sha', 'sha-') || 'sha-256',
+    (digest?.toLowerCase().replace('sha', 'sha-') ||
+      'sha-256') as EncryptionType,
   )
 
   return global.Buffer.from(atob(generatedValue)).toString('hex')
@@ -69,13 +71,13 @@ export const pbkdf2Sync = (
   length: number,
   digest: string,
 ): string => {
-  Log('sync pbkdf2', 'info')
   const generatedValue = Pbkdf2.deriveSync(
     password.toString(),
     salt.toString(),
     iterations,
     length,
-    digest?.toLowerCase().replace('sha', 'sha-') || 'sha-256',
+    (digest?.toLowerCase().replace('sha', 'sha-') ||
+      'sha-256') as EncryptionType,
   )
 
   return global.Buffer.from(generatedValue).toString('hex')
