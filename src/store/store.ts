@@ -93,20 +93,20 @@ export const initWallet = async (initialState?: CustomRootState) => {
   }
   wallet = setupWallet(walletOptions)
   // wallet.original.subscribe((mutation) => {
-  // if (mutation.type === 'CREATE_WALLET') {
-  //   console.log(mutation.type, dayjs().unix() - start, 'seconds')
-  // } else if (mutation.type === 'UPDATE_BALANCE') {
-  //   console.log(
-  //     mutation.type,
-  //     mutation.payload.asset,
-  //     dayjs().unix() - start,
-  //     'seconds',
-  //   )
-  // } else if (mutation.type === 'UPDATE_ACCOUNT_ADDRESSES') {
-  //   console.log(mutation.type, dayjs().unix() - start, 'seconds')
-  // } else if (mutation.type === 'UPDATE_HISTORY') {
-  //   console.log('UPDATE_HISTORY: ', mutation.payload)
-  // }
+  //   if (mutation.type === 'CREATE_WALLET') {
+  //     console.log(mutation.type, dayjs().unix() - start, 'seconds')
+  //   } else if (mutation.type === 'UPDATE_BALANCE') {
+  //     console.log(
+  //       mutation.type,
+  //       mutation.payload,
+  //       dayjs().unix() - start,
+  //       'seconds',
+  //     )
+  //   } else if (mutation.type === 'UPDATE_ACCOUNT_ADDRESSES') {
+  //     console.log(mutation.type, dayjs().unix() - start, 'seconds')
+  //   } else if (mutation.type === 'UPDATE_HISTORY') {
+  //     console.log('UPDATE_HISTORY: ', mutation.payload)
+  //   }
   // })
 
   return wallet
@@ -147,7 +147,6 @@ export const createWallet = async (
  */
 export const populateWallet = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet.state
-
   await wallet.dispatch
     .updateMarketData({
       network: activeNetwork,
@@ -158,7 +157,7 @@ export const populateWallet = async (): Promise<void> => {
 
   await wallet.dispatch
     .updateFiatRates({
-      assets: ['ETH', 'BTC'],
+      assets: wallet.getters.networkAssets,
     })
     .catch((e) => {
       Log(`Failed to update fiat rates: ${e}`, 'error')

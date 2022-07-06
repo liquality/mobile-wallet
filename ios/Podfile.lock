@@ -360,6 +360,8 @@ PODS:
     - React
   - react-native-background-actions (2.6.7):
     - React-Core
+  - react-native-fast-pbkdf2 (0.3.1):
+    - React-Core
   - react-native-flipper (0.151.1):
     - React-Core
   - react-native-randombytes (3.6.1):
@@ -455,7 +457,7 @@ PODS:
     - React-Core
   - RNOS (1.2.6):
     - React
-  - RNReanimated (2.8.0):
+  - RNReanimated (2.9.1):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -482,7 +484,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.13.1):
+  - RNScreens (3.14.1):
     - React-Core
     - React-RCTImage
   - RNShare (7.6.4):
@@ -553,6 +555,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-aes-cipher (from `../node_modules/react-native-aes-cipher`)
   - react-native-background-actions (from `../node_modules/react-native-background-actions`)
+  - react-native-fast-pbkdf2 (from `../node_modules/react-native-fast-pbkdf2`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -661,6 +664,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-aes-cipher"
   react-native-background-actions:
     :path: "../node_modules/react-native-background-actions"
+  react-native-fast-pbkdf2:
+    :path: "../node_modules/react-native-fast-pbkdf2"
   react-native-flipper:
     :path: "../node_modules/react-native-flipper"
   react-native-randombytes:
@@ -773,6 +778,7 @@ SPEC CHECKSUMS:
   React-logger: a1f028f6d8639a3f364ef80419e5e862e1115250
   react-native-aes-cipher: 87362294a7e70f99e19576137818121aeab74962
   react-native-background-actions: 2c251c986f23347f9c1722f05fd296938f60edb1
+  react-native-fast-pbkdf2: 44d6ffa0346863e14100294004a1595ec76b2e9f
   react-native-flipper: 8cfe7d710204654eb7289ea05d6596d2d92c9112
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
@@ -797,8 +803,8 @@ SPEC CHECKSUMS:
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
-  RNReanimated: 46cdb89ca59ab7181334f4ed05a70e82ddb36751
-  RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
+  RNReanimated: b5b17149593e7c05e4ec5c0efea1f21e05829510
+  RNScreens: aa9a97835afbbdc18a4757870b2b59b7d9fae16a
   RNShare: 4406f61af043027b695c3a0b8f39e2c2bdacde12
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d

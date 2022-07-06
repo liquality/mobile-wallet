@@ -110,10 +110,14 @@ const WrappedRow: FC<{
     ],
   )
 
-  if (!account || !account.code || (isDoneFetching && (!balance || !address)))
+  if (
+    !account ||
+    !account.code ||
+    (isDoneFetching && (balance < 0 || !address))
+  )
     return null
 
-  if (!balance || !address)
+  if (balance < 0 || !address)
     return (
       <View style={styles.row}>
         <AssetIcon chain={cryptoassets[item.name].chain} />
