@@ -96,7 +96,9 @@ const PasswordCreationScreen = ({
             />
           </View>
           {!!error && <Text variant="error">Passwords don't match</Text>}
-          <Text variant="error">Passwords must be at least 8 characters</Text>
+          <Text variant="description" marginTop="l">
+            Passwords must be at least 8 characters
+          </Text>
         </View>
       </View>
 

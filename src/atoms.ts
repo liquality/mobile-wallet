@@ -24,6 +24,7 @@ import {
   Network,
 } from '@liquality/wallet-core/dist/store/types'
 import { CustomRootState } from './reducers'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 //------------ATOMS---------------------
 export const accountsIdsState = atom<{ id: string; name: Asset }[]>({
@@ -84,7 +85,7 @@ export const optInAnalyticsState = atom<
   effects: [localStorageEffect('analytics')],
 })
 
-export const iDoneFetchingData = atom<boolean>({
+export const isDoneFetchingData = atom<boolean>({
   key: 'DoneFetchingData',
   default: false,
 })
@@ -92,19 +93,28 @@ export const iDoneFetchingData = atom<boolean>({
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',
-  default: {},
+  default: (accountId) =>
+    AsyncStorage.getItem(`account-info-${accountId}`).then((savedValue) =>
+      savedValue !== null ? JSON.parse(savedValue) : {},
+    ),
   effects: (accountId) => [localStorageEffect(`account-info-${accountId}`)],
 })
 
 export const balanceStateFamily = atomFamily<number, string>({
   key: 'AssetBalance',
-  default: -1,
+  default: (asset) =>
+    AsyncStorage.getItem(asset).then((savedValue) =>
+      savedValue !== null ? Number(savedValue) : -1,
+    ),
   effects: (asset) => [localStorageEffect(asset), balanceEffect(asset)],
 })
 
 export const addressStateFamily = atomFamily<string, string>({
   key: 'AccountAddress',
-  default: '',
+  default: (accountId) =>
+    AsyncStorage.getItem(`address-${accountId}`).then((savedValue) =>
+      savedValue !== null ? JSON.parse(savedValue) : '',
+    ),
   effects: (accountId) => [
     localStorageEffect(`address-${accountId}`),
     addressEffect(accountId),

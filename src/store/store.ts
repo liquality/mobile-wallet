@@ -654,7 +654,9 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
     if (trigger === 'get') {
       setSelf(
         AsyncStorage.getItem(key).then((savedValue) => {
-          return savedValue ? JSON.parse(savedValue) : new DefaultValue()
+          return savedValue !== null
+            ? JSON.parse(savedValue)
+            : new DefaultValue()
         }),
       )
     }
@@ -663,7 +665,10 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
       if (newValue instanceof DefaultValue && trigger === 'get') return
       isReset
         ? AsyncStorage.removeItem(key)
-        : newValue && AsyncStorage.setItem(key, JSON.stringify(newValue))
+        : newValue !== null &&
+          typeof newValue !== 'undefined' &&
+          newValue !== -1
+      AsyncStorage.setItem(key, JSON.stringify(newValue))
     })
   }
 
