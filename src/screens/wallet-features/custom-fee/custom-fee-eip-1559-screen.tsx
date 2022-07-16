@@ -16,6 +16,9 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions' // Default options
 
 import Preset from './preset'
+import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
+import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
+import { BigNumber } from '@liquality/types'
 
 type CustomFeeEIP1559ScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -38,6 +41,12 @@ const CustomFeeEIP1559Screen = ({
   const [gasFees, setGasFees] = useState<GasFees>()
   const [setError] = useState('')
   const [showBasic, setShowBasic] = useState<boolean>(true)
+  if (gasFees) {
+    var minerTip = gasFees[speedMode].fee.maxPriorityFeePerGas
+    var maximumFee = gasFees[speedMode].fee.maxFeePerGas
+    var formattedMinerTip = new BigNumber(minerTip)
+    var formattedMaximumFee = BigNumber(maximumFee)
+  }
 
   const { code }: AssetDataElementType = route.params.assetData!
   const wallet = setupWallet({
@@ -89,18 +98,37 @@ const CustomFeeEIP1559Screen = ({
     )
   }
 
+  const getMinerTip = () => {
+    const fiat = prettyFiatBalance(getSendFee(code, minerTip), fiatRates[code])
+    return isNaN(fiat) ? 0 : fiat
+  }
+
+  const maxFiat = () => {
+    const fiat = prettyFiatBalance(
+      getSendFee(code, maximumFee),
+      fiatRates[code],
+    )
+    return isNaN(fiat) ? 0 : fiat
+  }
+
   const renderShowCustomized = () => {
     return (
       <View style={[styles.container, styles.fragmentContainer]}>
         <View style={styles.block}>
-          <Text style={[styles.label, styles.headerLabel]}>
-            CURRENT BASE FEE
+          <View style={styles.row}>
+            <Text style={[styles.label, styles.headerLabel]}>
+              CURRENT BASE FEE
+              <Text style={[styles.labelNormal, styles.headerLabel]}>
+                {' '}
+                PER GAS
+              </Text>
+            </Text>
+
             <Text style={[styles.labelNormal, styles.headerLabel]}>
               {' '}
-              PER GAS
+              GWEI {gasFees[speedMode].fee.suggestedBaseFeePerGas}
             </Text>
-          </Text>
-
+          </View>
           <View style={styles.row}>
             <Text style={[styles.label, styles.headerLabel]}>
               MINER TIP
@@ -119,33 +147,9 @@ const CustomFeeEIP1559Screen = ({
           </View>
           <View style={styles.rowEndFiat}>
             <Text style={[styles.fiat, styles.fiatFirst]}>
-              {/*    {code &&
-                fiatRates &&
-                parseFloat(customFeeInput.value) > 0 &&
-                `$${formatFiat(
-                  new BigNumber(
-                    cryptoToFiat(
-                      calculateGasFee(code, parseFloat(customFeeInput.value)),
-                      fiatRates[code],
-                    ),
-                  ),
-                )}`} */}
-              $9.11
+              ${getMinerTip()}
             </Text>
-            <Text style={styles.fiat}>
-              {/*    {code &&
-                fiatRates &&
-                parseFloat(customFeeInput.value) > 0 &&
-                `$${formatFiat(
-                  new BigNumber(
-                    cryptoToFiat(
-                      calculateGasFee(code, parseFloat(customFeeInput.value)),
-                      fiatRates[code],
-                    ),
-                  ),
-                )}`} */}
-              $9.11
-            </Text>
+            <Text style={styles.fiat}>${maxFiat()}</Text>
           </View>
 
           <View style={styles.row}>
@@ -153,7 +157,7 @@ const CustomFeeEIP1559Screen = ({
             <TextInput
               style={styles.gasInput}
               onChangeText={customFeeInput.onChangeText}
-              value={customFeeInput.value}
+              value={formattedMinerTip.toString()}
               autoCorrect={false}
               autoCapitalize={'none'}
               returnKeyType="done"
@@ -162,7 +166,7 @@ const CustomFeeEIP1559Screen = ({
             <TextInput
               style={styles.gasInput}
               onChangeText={customFeeInput.onChangeText}
-              value={customFeeInput.value}
+              value={formattedMaximumFee.toString()}
               autoCorrect={false}
               autoCapitalize={'none'}
               returnKeyType="done"

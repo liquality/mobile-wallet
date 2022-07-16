@@ -2479,9 +2479,9 @@
   dependencies:
     bignumber.js "^9.0.1"
 
-"@liquality/wallet-core@^1.20.1":
+"@liquality/wallet-core@1.20.1":
   version "1.20.1"
-  resolved "https://registry.npmjs.org/@liquality/wallet-core/-/wallet-core-1.20.1.tgz"
+  resolved "https://registry.yarnpkg.com/@liquality/wallet-core/-/wallet-core-1.20.1.tgz#b51342926c81eff951235205dcd22fc40a8ff5de"
   integrity sha512-5pr4/+RMpM2pUpyMcmKwe0Amsmut/GEShXYnGYcolQdx53AFcP7b1mN7YOU+UszM8RzFR7HJNnwIKLdZwOT5hA==
   dependencies:
     "@blobfishkate/sovryncontracts" "1.3.27"
