@@ -92,6 +92,7 @@ const WrappedRow: FC<{
           params: {
             ...route.params,
             assetData: selectedAccount,
+            includeBackBtn: true,
           },
         })
       }
