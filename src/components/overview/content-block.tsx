@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { accountsIdsState, iDoneFetchingData } from '../../atoms'
+import { accountsIdsState, isDoneFetchingData } from '../../atoms'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { populateWallet } from '../../store/store'
 import { Pressable, StyleSheet, View } from 'react-native'
@@ -17,22 +17,16 @@ const ContentBlock = () => {
   }
   const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
   const accountsIds = useRecoilValue(accountsIdsState)
-  const setIsDoneFetchingData = useSetRecoilState(iDoneFetchingData)
+  const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
 
   useEffect(() => {
     AsyncStorage.getItem('BTC').then((result) => {
-      if (result) {
-        setTimeout(
-          () =>
-            populateWallet().then(() => {
-              setIsDoneFetchingData(true)
-            }),
-          3000,
-        )
-      } else {
+      if (result !== null) {
         populateWallet().then(() => {
           setIsDoneFetchingData(true)
         })
+      } else {
+        setIsDoneFetchingData(true)
       }
     })
   }, [setIsDoneFetchingData])

@@ -1,4 +1,3 @@
-import { NativeModules } from 'react-native'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { AES } from 'crypto-js'
 import { fetchFeesForAsset, fetchSwapProvider } from '../store/store'
@@ -10,6 +9,9 @@ import {
 } from '@liquality/wallet-core/dist/swaps/types'
 import { Network } from '@liquality/wallet-core/dist/store/types'
 import dayjs from 'dayjs'
+import Pbkdf2 from 'react-native-fast-pbkdf2'
+
+type EncryptionType = 'sha-1' | 'sha-256' | 'sha-512'
 
 export const sortQuotes = (quotes: SwapQuote[]): SwapQuote[] => {
   if (!quotes) {
@@ -50,15 +52,16 @@ export const pbkdf2 = async (
   length: number,
   digest: string,
 ): Promise<string> => {
-  Log(digest, 'info')
-  const generatedValue = await NativeModules.Aes.pbkdf2(
-    password,
-    salt,
+  const generatedValue = await Pbkdf2.derive(
+    password.toString(),
+    salt.toString(),
     iterations,
     length,
+    (digest?.toLowerCase().replace('sha', 'sha-') ||
+      'sha-256') as EncryptionType,
   )
 
-  return global.Buffer.from(generatedValue).toString('hex')
+  return global.Buffer.from(atob(generatedValue)).toString('hex')
 }
 
 export const pbkdf2Sync = (
@@ -68,19 +71,18 @@ export const pbkdf2Sync = (
   length: number,
   digest: string,
 ): string => {
-  Log(digest, 'info')
-  const generatedValue = NativeModules.Aes.pbkdf2Sync(
-    password,
-    salt,
+  const generatedValue = Pbkdf2.deriveSync(
+    password.toString(),
+    salt.toString(),
     iterations,
     length,
-    digest,
+    (digest?.toLowerCase().replace('sha', 'sha-') ||
+      'sha-256') as EncryptionType,
   )
 
   return global.Buffer.from(generatedValue).toString('hex')
 }
 
-global.pbkdf2Sync = pbkdf2Sync
 export const encrypt = async (
   value: string,
   derivedKey: string,

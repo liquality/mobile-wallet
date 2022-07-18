@@ -12,7 +12,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import Header from '../../header'
 import { createWallet, restoreWallet } from '../../../store/store'
-import { useDispatch } from 'react-redux'
 import Text from '../../../theme/text'
 import Button from '../../../theme/button'
 import Box from '../../../theme/box'
@@ -39,8 +38,6 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
   const [loading, setLoading] = useState(false)
   const [userHasChecked, setUserHasChecked] = useState<boolean>(false)
 
-  const dispatch = useDispatch()
-
   const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
       setError('Passwords must be at least 8 characters')
@@ -48,18 +45,10 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
       setError('Please check that you understand the risks')
     } else {
       setLoading(true)
-      //TODO find a better way to handle threads
-      restoreWallet(passwordInput.value).then((walletState) => {
-        dispatch({
-          type: 'RESTORE_WALLET',
-          payload: {
-            ...walletState,
-          },
-        })
-        setLoading(false)
-        navigation.navigate('BackupSeedScreen', {
-          screenTitle: 'Seed Phrase',
-        })
+      await restoreWallet(passwordInput.value)
+      setLoading(false)
+      navigation.navigate('BackupSeedScreen', {
+        screenTitle: 'Seed Phrase',
       })
     }
   }

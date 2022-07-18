@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Dimensions, StyleSheet, View } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import ErrorBoundary from 'react-native-error-boundary'
@@ -9,6 +9,7 @@ import Box from '../../../theme/box'
 import GradientBackground from '../../../components/gradient-background'
 import SummaryBlock from '../../../components/overview/summary-block'
 import ContentBlock from '../../../components/overview/content-block'
+import HandleLockWalletAndBackgroundTasks from '../../../components/handle-lock-wallet-and-background-tasks'
 
 export type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
@@ -17,8 +18,9 @@ export type OverviewProps = NativeStackScreenProps<
 
 const OverviewScreen = ({ navigation }: OverviewProps) => {
   return (
-    <View style={styles.container}>
+    <Box flex={1}>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <HandleLockWalletAndBackgroundTasks />
         <React.Suspense
           fallback={
             <Box style={styles.overviewBlock}>
@@ -26,44 +28,30 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
                 width={Dimensions.get('screen').width}
                 height={225}
               />
-              <Text style={styles.loading}>Loading...</Text>
+              <Text variant="loading">Loading...</Text>
             </Box>
           }>
           <SummaryBlock navigation={navigation} />
         </React.Suspense>
         <React.Suspense
           fallback={
-            <View>
-              <Text>Loading...</Text>
-            </View>
+            <Box>
+              <Text variant="loading">Loading...</Text>
+            </Box>
           }>
           <ContentBlock />
         </React.Suspense>
       </ErrorBoundary>
-    </View>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
   overviewBlock: {
     justifyContent: 'center',
     width: '100%',
     height: 225,
     paddingVertical: 10,
-  },
-  loading: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    fontSize: 28,
-    color: '#FFF',
-    textAlign: 'center',
-    marginHorizontal: 20,
-    marginTop: 15,
-    lineHeight: 28,
   },
 })
 

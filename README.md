@@ -31,6 +31,7 @@
 * Background fetch
 * Remote notifications
 * Background processing
+* Make sure to create a .env file and add these environment variables to it: MNEMONIC, PASSWORD, and INFURA_API_KEY
 
 ## Running the app
 

@@ -225,6 +225,16 @@ const theme = createTheme({
       textAlign: 'center',
       marginVertical: 'l',
     },
+    loading: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '400',
+      fontSize: 28,
+      color: 'mainForeground',
+      textAlign: 'center',
+      marginHorizontal: 'xl',
+      marginTop: 'l',
+      lineHeight: 28,
+    },
   },
   buttonVariants: {
     l: {
