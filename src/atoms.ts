@@ -57,7 +57,12 @@ export const marketDataState = atom<MarketData[]>({
 
 export const historyIdsState = atom<string[]>({
   key: 'HistoryIds',
-  default: [],
+  default: AsyncStorage.getItem('historyIds').then((savedValue) =>
+    savedValue !== null && typeof savedValue !== 'undefined'
+      ? JSON.parse(savedValue)
+      : [],
+  ),
+  effects: [localStorageEffect<string[]>('historyIds')],
 })
 
 export const enabledAssetsState = atom<string[]>({
@@ -123,7 +128,10 @@ export const addressStateFamily = atomFamily<string, string>({
 
 export const historyStateFamily = atomFamily<Partial<HistoryItem>, string>({
   key: 'TransactionHistory',
-  default: {},
+  default: (transactionId) =>
+    AsyncStorage.getItem(transactionId).then((savedValue) =>
+      savedValue !== null ? JSON.parse(savedValue) : '',
+    ),
   effects: (transactionId) => [
     localStorageEffect(transactionId),
     transactionHistoryEffect(transactionId),

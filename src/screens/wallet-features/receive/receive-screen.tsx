@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from 'react'
 import {
+  Alert,
   Dimensions,
   Linking,
   Pressable,
@@ -16,7 +17,7 @@ import Button from '../../../theme/button'
 import CheckIcon from '../../../assets/icons/swap-check.svg'
 import CopyIcon from '../../../assets/icons/copy.svg'
 import { useRecoilValue } from 'recoil'
-import { networkState } from '../../../atoms'
+import { addressStateFamily, networkState } from '../../../atoms'
 
 type ReceiveScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -25,7 +26,8 @@ type ReceiveScreenProps = NativeStackScreenProps<
 
 const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   const [buttonPressed, setButtonPressed] = useState<boolean>(false)
-  const { name, address, chain, code }: AccountType = route.params.assetData!
+  const { name, chain, code, id }: AccountType = route.params.assetData!
+  const address = useRecoilValue(addressStateFamily(id))
   const activeNetwork = useRecoilValue(networkState)
 
   //TODO Read this from a config file
@@ -77,7 +79,8 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   }
 
   const handleCopyAddressPress = async () => {
-    Clipboard.setString(address!)
+    if (!address) Alert.alert('Address empty. Please try again!')
+    Clipboard.setString(address)
     setButtonPressed(true)
   }
 
@@ -99,7 +102,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
         <Text style={styles.scanPrompt}>
           Scan QR code with a mobile wallet to send funds to this address.
         </Text>
-        <QRCode value={address} size={200} />
+        {!!address && <QRCode value={address} size={200} />}
         {activeNetwork === 'testnet' && (
           <Fragment>
             <Text style={styles.linkLabel}>
