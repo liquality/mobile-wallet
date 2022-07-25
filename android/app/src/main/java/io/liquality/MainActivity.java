@@ -1,10 +1,11 @@
 package io.liquality;
-import android.os.Bundle;
+
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import org.devio.rn.splashscreen.SplashScreen;
-import android.content.Intent;
+
+import expo.modules.ReactActivityDelegateWrapper;
 
 public class MainActivity extends ReactActivity {
 
@@ -23,12 +24,12 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {
+    SplashScreen.show(this, R.style.SplashScreenTheme, true); // here
     return new ReactActivityDelegateWrapper(this, new MainActivityDelegate(this, getMainComponentName()));
   }
 
   public static class MainActivityDelegate extends ReactActivityDelegate {
     public MainActivityDelegate(ReactActivity activity, String mainComponentName) {
-      SplashScreen.show(this);
       super(activity, mainComponentName);
     }
 
