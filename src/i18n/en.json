@@ -1,7 +1,7 @@
 {
-  "common": {
-    "ok": "OK",
-    "cancel": "Cancel",
-    "back": "Back"
+  "entryScreen": {
+    "one": "one",
+    "wallet": "wallet",
+    "all_chains": "all chains"
   }
 }
