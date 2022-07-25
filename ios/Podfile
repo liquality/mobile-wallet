@@ -1,7 +1,8 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '11.0'
+platform :ios, '12.0'
+install! 'cocoapods', :deterministic_uuids => false
 
 target 'Liquality' do
   config = use_native_modules!
@@ -10,7 +11,10 @@ target 'Liquality' do
     :production => true,
     :path => config[:reactNativePath],
     # to enable hermes on iOS, change `false` to `true` and then install pods
-    :hermes_enabled => true
+    :hermes_enabled => flags[:hermes_enabled],
+    :fabric_enabled => flags[:fabric_enabled],
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
 #   target 'LiqualityMobileTests' do

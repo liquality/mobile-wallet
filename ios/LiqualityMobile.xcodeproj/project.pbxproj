@@ -8,19 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* LiqualityMobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* LiqualityMobileTests.m */; };
-		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
+		0C80B921A6F3F58F76C31292 /* libPods-Liquality.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-Liquality.a */; };
+		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		151DCA792C504755852F4176 /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3ED306E0FE724E079F2199CF /* Montserrat-SemiBold.ttf */; };
 		1BC8CFF8E94E4B3B88AADA80 /* MontserratAlternates-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BEF43A8B06684F6EB6B6BA82 /* MontserratAlternates-Light.ttf */; };
 		41CA9ABBDB1D44B0A7D3E255 /* Montserrat-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25EEDD48ACFF48F1B01440C9 /* Montserrat-Thin.ttf */; };
 		7F0E149610EC4420B2FD3C9E /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A329444B44A84455A02D7576 /* Montserrat-Light.ttf */; };
+		7699B88040F8A987B510C191 /* libPods-LiqualityMobile-LiqualityMobileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-LiqualityMobile-LiqualityMobileTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A16E247B0F3044E399070B57 /* Montserrat-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 39653CB7D3D54AE682CB8883 /* Montserrat-ExtraBold.ttf */; };
 		A6AC6665CA5C40F3BC406E73 /* Montserrat-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A04C782E4C7F4778B430C1EB /* Montserrat-ExtraLight.ttf */; };
 		A9607C075563483FBE678B0F /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B4A612A69124EBC9537BCD2 /* Montserrat-Bold.ttf */; };
 		BDE31449D0A341EDB965AB9C /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CAF9395E95024EEC91C8A475 /* Montserrat-Regular.ttf */; };
-		C10099B48A6695A287A22529 /* libPods-Liquality.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0660EA7C99F7C71F1F97A9E8 /* libPods-Liquality.a */; };
 		F1F23B96C5BD41B2AC6C5F92 /* Montserrat-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E417885473EB46718A92E91E /* Montserrat-Black.ttf */; };
 		F559EBC5B69845828EC0B25B /* Montserrat-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 996F33021AD3443B80FA05E1 /* Montserrat-Medium.ttf */; };
 /* End PBXBuildFile section */
@@ -43,7 +44,7 @@
 		0660EA7C99F7C71F1F97A9E8 /* libPods-Liquality.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Liquality.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* LiqualityMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiqualityMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = LiqualityMobile/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = LiqualityMobile/AppDelegate.m; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = LiqualityMobile/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = LiqualityMobile/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = LiqualityMobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = LiqualityMobile/main.m; sourceTree = "<group>"; };
@@ -86,7 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C10099B48A6695A287A22529 /* libPods-Liquality.a in Frameworks */,
+				0C80B921A6F3F58F76C31292 /* libPods-Liquality.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,7 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
-				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -415,7 +416,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -650,7 +651,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -715,7 +716,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;

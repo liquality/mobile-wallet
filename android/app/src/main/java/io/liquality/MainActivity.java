@@ -28,6 +28,7 @@ public class MainActivity extends ReactActivity {
 
   public static class MainActivityDelegate extends ReactActivityDelegate {
     public MainActivityDelegate(ReactActivity activity, String mainComponentName) {
+      SplashScreen.show(this);
       super(activity, mainComponentName);
     }
 
