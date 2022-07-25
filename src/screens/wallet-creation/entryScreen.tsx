@@ -97,9 +97,9 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
       />
       <Header width={135} height={83} style={styles.header} showText={false} />
       <Box flex={0.4} justifyContent="flex-start" alignItems="center">
-        <Text variant="slogan1">one</Text>
-        <Text variant="slogan2">wallet</Text>
-        <Text variant="slogan1">all chains</Text>
+        <Text variant="slogan1" tx="entryScreen.one" />
+        <Text variant="slogan2" tx="entryScreen.wallet" />
+        <Text variant="slogan1" tx="entryScreen.all_chains" />
       </Box>
       <Box flex={0.3} width="90%" justifyContent="flex-end">
         <View style={styles.forgotPassword}>
