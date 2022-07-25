@@ -42,7 +42,7 @@
   bridge.surfacePresenter = _bridgeAdapter.surfacePresenter;
 #endif
 
-  UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"LiqualityMobile", nil);
+  UIView *rootView = [self.reactDelegate createRootViewWithBridge:bridge moduleName:@"LiqualityMobile" initialProperties:nil];
 
   if (@available(iOS 13.0, *)) {
     rootView.backgroundColor = [UIColor systemBackgroundColor];
@@ -56,7 +56,8 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [super application:application didFinishLaunchingWithOptions:launchOptions];
-  [RNSplashScreen show]; 
+  [RNSplashScreen show];
+  [super application:application didFinishLaunchingWithOptions:launchOptions];
   return YES;
 }
 
