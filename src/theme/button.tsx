@@ -47,6 +47,7 @@ const Button: FC<Props> = (props) => {
   } = props
 
   const theme = useTheme<Theme>()
+
   let content
   if (typeof label !== 'string') {
     const { tx } = label

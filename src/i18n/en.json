@@ -5,7 +5,8 @@
     "all_chains": "all chains",
     "forgotPassword": "Forgot password? ",
     "importWithSeedPhrase": "Import with seed phrase",
-    "openSesame": "Open Sesame"
+    "openSesame": "Open Sesame",
+    "ok": "OK"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
@@ -17,7 +18,11 @@
     "password": "PASSWORD",
     "unlock": "Unlock"
   },
-  "optInAnalyticsModal": {},
+  "optInAnalyticsModal": {
+    "helpUsToImprove": "HELP US IMPROVE LIQUALITY TO BETTER SERVE YOU",
+    "shareWhereYouClick": "Share where you click. There is no identifying data. This permission can be revoked at any time.",
+    "shareMyClicks": "Share my clicks"
+  },
   "passwordCreationScreen": {},
   "seedPhraseConfirmationScreen": {},
   "seedPhraseScreen": {},
