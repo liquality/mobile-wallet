@@ -23,7 +23,15 @@
     "shareWhereYouClick": "Share where you click. There is no identifying data. This permission can be revoked at any time.",
     "shareMyClicks": "Share my clicks"
   },
-  "passwordCreationScreen": {},
+  "passwordCreationScreen": {
+    "createPassword": "Create Password",
+    "choosePassword": "CHOOSE PASSWORD (at least 8 characters)",
+    "confirmPassword": "CONFIRM PASSWORD",
+    "passwordDontMatch": "Passwords don't match",
+    "password8char": "Passwords must be at least 8 characters",
+    "cancel": "Cancel",
+    "next": "Next"
+  },
   "seedPhraseConfirmationScreen": {},
   "seedPhraseScreen": {},
   "termsScreen": {},
