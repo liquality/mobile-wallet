@@ -1,17 +1,22 @@
 {
-  "congratulationsScreen": {
-    "congrats": "Congrats!"
-  },
-  "entryScreen": {
+  "common": {
     "one": "one 🇪🇸",
     "wallet": "wallet 🇪🇸",
     "all_chains": "all chains 🇪🇸",
     "forgotPassword": "Forgot password? ",
     "importWithSeedPhrase": "Import with seed phrase",
-    "createNewWallet": "Create a new Wallet",
     "openSesame": "Open Sesame"
   },
-  "loginScreen": {},
+  "congratulationsScreen": {
+    "congrats": "Congrats!"
+  },
+  "entryScreen": {
+    "createNewWallet": "Create a new Wallet"
+  },
+  "loginScreen": {
+    "password": "PASSWORD",
+    "unlock": "Unlock"
+  },
   "optInAnalyticsModal": {},
   "passwordCreationScreen": {},
   "seedPhraseConfirmationScreen": {},
