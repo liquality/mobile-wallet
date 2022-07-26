@@ -1,7 +1,34 @@
 {
+  "congratulationsScreen": {},
   "entryScreen": {
     "one": "one 🇨🇳",
     "wallet": "wallet 🇨🇳",
     "all_chains": "all chains 🇨🇳"
-  }
+  },
+  "loginScreen": {},
+  "optInAnalyticsModal": {},
+  "passwordCreationScreen": {},
+  "seedPhraseConfirmationScreen": {},
+  "seedPhraseScreen": {},
+  "termsScreen": {},
+  "assetChooserScreen": {},
+  "assetManagementScreen": {},
+  "assetScreen": {},
+  "assetToggleScreen": {},
+  "backupLoginScreen": {},
+  "backupSeedScreen": {},
+  "backupWarningScreen": {},
+  "overviewScreen": {},
+  "receiveScreen": {},
+  "sendConfirmationScreeen": {},
+  "sendReviewScreen": {},
+  "sendScreen": {},
+  "settingsScreen": {},
+  "swapConfirmationScreen": {},
+  "swapReviewScreen": {},
+  "swapScreen": {},
+  "customFeeScreen": {},
+  "loadingScreen": {},
+  "unlockWalletScreen": {},
+  "header": {}
 }
