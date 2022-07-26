@@ -9,7 +9,9 @@
     "ok": "OK",
     "pleaseTryAgain": "Please try again",
     "back": "Back",
-    "continue": "Continue"
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "next": "Next"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
@@ -31,9 +33,7 @@
     "choosePassword": "CHOOSE PASSWORD (at least 8 characters)",
     "confirmPassword": "CONFIRM PASSWORD",
     "passwordDontMatch": "Passwords don't match",
-    "password8char": "Passwords must be at least 8 characters",
-    "cancel": "Cancel",
-    "next": "Next"
+    "password8char": "Passwords must be at least 8 characters"
   },
   "seedPhraseConfirmationScreen": {
     "keyInfoMissing": "Key information missing",
@@ -43,7 +43,10 @@
     "5thWord": "5th WORD",
     "12thWord": "12TH WORD"
   },
-  "seedPhraseScreen": {},
+  "seedPhraseScreen": {
+    "backupYourWallet": "Backup your Wallet",
+    "restoreYourWallet": "The seed phrase is the only way to restore your wallet. Write itdown. Next you will confirm it."
+  },
   "termsScreen": {},
   "assetChooserScreen": {},
   "assetManagementScreen": {},

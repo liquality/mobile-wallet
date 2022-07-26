@@ -120,7 +120,7 @@ const PasswordCreationScreen = ({
         <Button
           type="secondary"
           variant="m"
-          label={{ tx: 'passwordCreationScreen.cancel' }}
+          label={{ tx: 'common.cancel' }}
           onPress={() =>
             navigation.navigate(route.params.nextScreen || 'Entry')
           }
@@ -130,7 +130,7 @@ const PasswordCreationScreen = ({
         <Button
           type="primary"
           variant="m"
-          label={{ tx: 'passwordCreationScreen.next' }}
+          label={{ tx: 'common.next' }}
           onPress={() =>
             arePasswordsValid() &&
             navigation.navigate('LoadingScreen', {

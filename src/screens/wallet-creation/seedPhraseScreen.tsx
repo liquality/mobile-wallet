@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
   View,
-  Text,
   StyleSheet,
   FlatList,
   KeyboardAvoidingView,
@@ -16,6 +15,7 @@ import Button from '../../theme/button'
 import Box from '../../theme/box'
 import GradientBackground from '../../components/gradient-background'
 import { generateMnemonic } from 'bip39'
+import { Text } from '../../components/text/text'
 
 type WalletBackupProps = NativeStackScreenProps<
   RootStackParamList,
@@ -58,11 +58,14 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
         style={[styles.keyboard, StyleSheet.absoluteFillObject]}>
         <Header showText={true} />
         <View style={styles.prompt}>
-          <Text style={styles.promptText}>Backup your Wallet</Text>
-          <Text style={styles.description}>
-            The seed phrase is the only way to restore your wallet. Write it
-            down. Next you will confirm it.
-          </Text>
+          <Text
+            style={styles.promptText}
+            tx="seedPhraseScreen.backupYourWallet"
+          />
+          <Text
+            style={styles.description}
+            tx="seedPhraseScreen.restoreYourWallet"
+          />
         </View>
 
         <View style={styles.main}>
@@ -80,7 +83,7 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
               <Button
                 type="secondary"
                 variant="m"
-                label="Cancel"
+                label={{ tx: 'common.cancel' }}
                 onPress={() => navigation.navigate('Entry')}
                 isBorderless={false}
                 isActive={true}
@@ -88,7 +91,7 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
               <Button
                 type="primary"
                 variant="m"
-                label="Next"
+                label={{ tx: 'common.next' }}
                 onPress={() =>
                   navigation.navigate('SeedPhraseConfirmationScreen', {
                     ...route.params,
