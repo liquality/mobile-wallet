@@ -6,7 +6,10 @@
     "forgotPassword": "Forgot password? ",
     "importWithSeedPhrase": "Import with seed phrase",
     "openSesame": "Open Sesame",
-    "ok": "OK"
+    "ok": "OK",
+    "pleaseTryAgain": "Please try again",
+    "back": "Back",
+    "continue": "Continue"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
@@ -32,7 +35,14 @@
     "cancel": "Cancel",
     "next": "Next"
   },
-  "seedPhraseConfirmationScreen": {},
+  "seedPhraseConfirmationScreen": {
+    "keyInfoMissing": "Key information missing",
+    "confirmSeed": "Confirm Seed Phrase",
+    "tap3wordMatching": "Tap the 3 words matching their position in the seed phrase. Once confirmed, store the phrase securely.",
+    "1stWord": "1ST WORD",
+    "5thWord": "5th WORD",
+    "12thWord": "12TH WORD"
+  },
   "seedPhraseScreen": {},
   "termsScreen": {},
   "assetChooserScreen": {},

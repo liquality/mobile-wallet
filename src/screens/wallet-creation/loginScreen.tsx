@@ -31,6 +31,7 @@ import {
   networkState,
 } from '../../atoms'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { labelTranslateFn } from '../../utils'
 
 type LoginScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -61,7 +62,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
 
   const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
-      setError('Passwords must be at least 8 characters')
+      setError(labelTranslateFn('passwordCreationScreen.password8char')!)
     } else {
       setLoading(true)
       await restoreWallet(passwordInput.value)

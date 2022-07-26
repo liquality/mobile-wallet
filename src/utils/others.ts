@@ -10,6 +10,7 @@ import {
 import { Network } from '@liquality/wallet-core/dist/store/types'
 import dayjs from 'dayjs'
 import Pbkdf2 from 'react-native-fast-pbkdf2'
+import { translate, TxKeyPath } from '../i18n'
 
 type EncryptionType = 'sha-1' | 'sha-256' | 'sha-512'
 
@@ -189,3 +190,5 @@ export const capitalizeFirstLetter = (str: string) => {
 export const isNumber = (value: string): boolean => {
   return /^\d+(.\d*)?$/.test(value)
 }
+
+export const labelTranslateFn = (value: TxKeyPath) => translate(value)
