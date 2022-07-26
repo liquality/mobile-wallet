@@ -1,8 +1,7 @@
 import React, { FC } from 'react'
 import { StyleSheet, Text, TextStyle } from 'react-native'
-import { TxKeyPath } from '../../i18n'
+import { TxKeyPath, translate } from '../../i18n'
 import i18n from 'i18n-js'
-import { translate } from '../../i18n'
 
 type LabelProps = {
   text: string

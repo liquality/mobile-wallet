@@ -103,15 +103,17 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
       </Box>
       <Box flex={0.3} width="90%" justifyContent="flex-end">
         <View style={styles.forgotPassword}>
-          <Text variant="description">Forgot password? </Text>
-          <Text variant="description" onPress={handleImportPress}>
-            Import with seed phrase
-          </Text>
+          <Text variant="description" tx="entryScreen.forgotPassword" />
+          <Text
+            variant="description"
+            onPress={handleImportPress}
+            tx="entryScreen.importWithSeedPhrase"
+          />
         </View>
         <Button
           type="primary"
           variant="l"
-          label="Create a new Wallet"
+          label={{ tx: 'entryScreen.createNewWallet' }}
           onPress={handleCreateWalletPress}
           isBorderless
           isActive

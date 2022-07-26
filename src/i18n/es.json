@@ -1,5 +1,7 @@
 {
-  "congratulationsScreen": {},
+  "congratulationsScreen": {
+    "congrats": "Congrats!"
+  },
   "entryScreen": {
     "one": "one 🇪🇸",
     "wallet": "wallet 🇪🇸",
