@@ -56,7 +56,13 @@
     "searchCurrency": "Search for a Currency"
   },
   "assetManagementScreen": {},
-  "assetScreen": {},
+  "assetScreen": {
+    "loadingAsset": "Loading asset screen...",
+    "send": "Send",
+    "swap": "Swap",
+    "receive": "Receive",
+    "activity": "ACTIVITY"
+  },
   "assetToggleScreen": {},
   "backupLoginScreen": {},
   "backupSeedScreen": {},
