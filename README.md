@@ -107,6 +107,12 @@ elif [[ -x "$(command -v brew)" && -s "$(brew --prefix nvm)/nvm.sh" ]]; then
 fi
 ```
 
+2. Android Error: Plugin with id 'maven' not found
+
+```
+  Replace maven with maven-publish
+```
+
 ## License
 
 [MIT](./LICENSE.md)

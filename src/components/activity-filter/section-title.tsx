@@ -1,9 +1,21 @@
 import React, { FC } from 'react'
 import { StyleSheet, Text } from 'react-native'
+import { TxKeyPath } from '../../i18n'
+import i18n from 'i18n-js'
+import { translate } from '../../i18n'
 
-const SectionTitle: FC<{ title: string }> = ({ title }) => (
-  <Text style={styles.title}>{title}</Text>
-)
+interface SectionTitleProps {
+  title: string
+  tx?: TxKeyPath
+  txOptions?: i18n.TranslateOptions
+}
+
+const SectionTitle: FC<SectionTitleProps> = (props: SectionTitleProps) => {
+  const { tx, txOptions, title } = props
+  const i18nText = tx && translate(tx, txOptions)
+  const content = i18nText || title
+  return <Text style={styles.title}>{content}</Text>
+}
 
 const styles = StyleSheet.create({
   title: {

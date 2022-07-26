@@ -65,6 +65,14 @@ jest.mock('rn-flipper-async-storage-advanced', () => {
 jest.mock('react-native-vision-camera', () => {
   return {}
 })
+jest.mock('expo-localization', () => {
+  return {}
+})
+jest.mock('i18n-js', () => {
+  return {
+    t: (key) => `${key}.test`,
+  }
+})
 
 Object.defineProperty(global.window, 'crypto', {
   getRandomValues: () => '',
