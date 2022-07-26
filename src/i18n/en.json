@@ -8,7 +8,8 @@
     "all_chains": "all chains",
     "forgotPassword": "Forgot password? ",
     "importWithSeedPhrase": "Import with seed phrase",
-    "createNewWallet": "Create a new Wallet"
+    "createNewWallet": "Create a new Wallet",
+    "openSesame": "Open Sesame"
   },
   "loginScreen": {},
   "optInAnalyticsModal": {},

@@ -121,7 +121,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
         <Button
           type="primary"
           variant="l"
-          label="Open Sesame"
+          label={{ tx: 'entryScreen.openSesame' }}
           onPress={handleOpenSesamePress}
           isLoading={loading}
           isBorderless
