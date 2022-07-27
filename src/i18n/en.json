@@ -18,7 +18,8 @@
     "status": "STATUS",
     "speedUp": "Speed Up",
     "sent": "SENT",
-    "networkSpeed": "NETWORK SPEED/FEE"
+    "networkSpeed": "NETWORK SPEED/FEE",
+    "edit": "Edit"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
@@ -182,7 +183,15 @@
     "actions": "Actions",
     "retry": "Retry"
   },
-  "swapReviewScreen": {},
+  "swapReviewScreen": {
+    "swapDetails": "Swap {{fromCode} to {{toCode}} Details",
+    "swapRespNull": "Swap Response null",
+    "failedToPerfSwap": "Failed to perform swap",
+    "invalidParams": "Invalid params. Please try again",
+    "maxSlippage": "Max slippage is 0.5%.",
+    "swapDoesnotComp": "If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at 20:45 GMT",
+    "initiateSwap": "Initiate Swap"
+  },
   "swapScreen": {},
   "customFeeScreen": {},
   "loadingScreen": {},
