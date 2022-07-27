@@ -11,6 +11,7 @@
     "back": "Back",
     "continue": "Continue",
     "cancel": "Cancel",
+    "apply": "Apply",
     "next": "Next",
     "loading": "Loading",
     "review": "Review",
@@ -207,7 +208,11 @@
     "isNotTraded": "This pair isn't traded yet. See our list of compatible pairs here. You can also suggest list of your token on Liquality Discord",
     "quoteNotFnd": "Quotes not found"
   },
-  "customFeeScreen": {},
+  "customFeeScreen": {
+    "presets": "PRESETS",
+    "customSettings": "CUSTOMIZED SETTINGS",
+    "gasPrice": "Gas Price"
+  },
   "loadingScreen": {},
   "unlockWalletScreen": {
     "testing": "Testing"
