@@ -20,7 +20,7 @@ import Box from '../../theme/box'
 import Text from '../../theme/text'
 import ListHeader from './list-header'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
-import { capitalizeFirstLetter } from '../../utils'
+import { capitalizeFirstLetter, labelTranslateFn } from '../../utils'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/utils/quotes'
 import TimesIcon from '../../assets/icons/times.svg'
 import CheckIcon from '../../assets/icons/swap-check.svg'
@@ -69,7 +69,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
       selectQuote(selectedItem)
       setIsRatesModalVisible(false)
     } else {
-      Alert.alert('Select a quote first')
+      Alert.alert(labelTranslateFn('swapRatesComp.selectQuoteFirst')!)
     }
   }
 
@@ -112,7 +112,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
         justifyContent="space-between"
         alignItems="center">
         <Box>
-          <Text variant="secondaryInputLabel">RATE</Text>
+          <Text variant="secondaryInputLabel" tx="swapRatesComp.rate" />
           <Button
             type="tertiary"
             variant="s"
@@ -144,7 +144,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
         </Box>
       </Box>
       <Pressable onPress={() => setIsSwapTypesModalVisible(true)}>
-        <Text variant="link">Swap Types</Text>
+        <Text variant="link" tx="swapRatesComp.swapTypes" />
       </Pressable>
       {isRatesModalVisible && (
         <Box
@@ -167,14 +167,17 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
                 borderWidth={1}
                 paddingVertical="m">
                 <View style={styles.header}>
-                  <Text variant="header">{`${quotes?.length} AVAILABLE QUOTES`}</Text>
+                  <Text variant="header">{`${quotes?.length} ${labelTranslateFn(
+                    'swapRatesComp.availQuotes',
+                  )}`}</Text>
                   <Pressable onPress={() => setIsRatesModalVisible(false)}>
                     <TimesIcon fill={'#000'} />
                   </Pressable>
                 </View>
-                <Text style={[styles.text, styles.padded]}>
-                  These quotes are from different swap providers.
-                </Text>
+                <Text
+                  style={[styles.text, styles.padded]}
+                  tx="swapRatesComp.theseAreDiffQuotesProv"
+                />
                 <FlatList
                   contentContainerStyle={styles.flatList}
                   data={quotes}
@@ -186,12 +189,15 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
                   <Button
                     type="primary"
                     variant="l"
-                    label="Select Quote"
+                    label={{ tx: 'swapRatesComp.selectQuote' }}
                     onPress={handleSelectQuote}
                     isBorderless={false}
                     isActive={true}
                   />
-                  <Text style={styles.text}>Learn about swap types</Text>
+                  <Text
+                    style={styles.text}
+                    tx="swapRatesComp.learnMoreAboutSwap"
+                  />
                 </View>
               </Box>
             </Box>

@@ -28,7 +28,7 @@ type RoundButtonProps = React.ComponentProps<typeof RoundBaseButton> &
     variant: string
     onPress: () => void
     label?: string
-    tx: TxKeyPath
+    tx?: TxKeyPath
     txOptions?: i18n.TranslateOptions
   }
 

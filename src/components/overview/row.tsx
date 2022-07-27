@@ -21,6 +21,7 @@ import {
 } from '../../atoms'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
+import I18n from 'i18n-js'
 
 type RowProps = {
   item: AccountType
@@ -101,7 +102,8 @@ const Row = (props: RowProps) => {
         {isNested ? (
           <View style={styles.col3}>
             <Text style={styles.TotalBalanceInUSD}>
-              {`Total ${prettyFiatBalance}`}
+              {/* {`Total ${prettyFiatBalance}`} */}
+              {I18n.t('common.totalPrettyFiatBal', { prettyFiatBalance })}
             </Text>
           </View>
         ) : (

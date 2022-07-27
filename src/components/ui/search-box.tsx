@@ -1,9 +1,11 @@
 import React, { Dispatch, SetStateAction, useCallback } from 'react'
-import { Pressable, StyleSheet, TextInput, View, Text } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
 import SearchIcon from '../../assets/icons/search.svg'
 import TimesIcon from '../../assets/icons/times.svg'
 import Fuse from 'fuse.js'
 import { useInputState } from '../../hooks'
+import TextInput from '../../theme/textInput'
+import Text from '../../theme/text'
 
 type SearchBoxPropsType<T> = {
   updateData: Dispatch<SetStateAction<T[]>>
@@ -43,7 +45,7 @@ const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
       <SearchIcon style={styles.icon} />
       <TextInput
         style={styles.sendInput}
-        placeholder={'Search for a Currency'}
+        placeholderTx="searchForCurrency"
         keyboardType={'numeric'}
         onChangeText={searchInput.onChangeText}
         onEndEditing={filterItems}
@@ -54,7 +56,7 @@ const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
       {searchInput.value.length > 0 && (
         <Pressable style={styles.clearBtn} onPress={handleClearBtnPress}>
           <TimesIcon fill={'#646F85'} />
-          <Text style={styles.clearBtnText}>Reset</Text>
+          <Text style={styles.clearBtnText} tx="common.reset" />
         </Pressable>
       )}
     </View>

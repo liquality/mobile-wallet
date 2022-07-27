@@ -56,9 +56,10 @@ const ContentBlock = () => {
           (accountsIds.length > 0 ? (
             <ActivityFlatList />
           ) : (
-            <Text style={styles.noActivityMessageBlock}>
-              Once you start using your wallet you will see the activity here.
-            </Text>
+            <Text
+              style={styles.noActivityMessageBlock}
+              tx="common.onceYouStart"
+            />
           ))}
         {selectedView === ViewKind.ASSETS && accountsIds && (
           <AssetFlatList accounts={accountsIds} />

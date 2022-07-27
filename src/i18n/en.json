@@ -46,7 +46,12 @@
     "less": "less ",
     "more": "more ",
     "filterOptions": "filter options",
-    "sort": "SORT"
+    "sort": "SORT",
+    "onceYouStart": "Once you start using your wallet you will see the activity here.",
+    "totalPrettyFiatBal": "Total {{prettyFiatBalance}}",
+    "started": "Started",
+    "completed": "Completed",
+    "custom": "Custom"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
@@ -252,5 +257,62 @@
     "by_date": "By date (newest first)",
     "by_type": "By type (A to Z)",
     "by_token": "By Token (A to Z)"
-  }
+  },
+  "summaryBlockComp": {
+    "selectAssetSend": "Select asset for Send",
+    "selectAssetReceive": "Select asset for receive",
+    "selectAssetSwap": "Select asset for swap",
+    "asset": " Asset",
+    "assets": " Assets",
+    "send": "Send",
+    "swap": "Swap",
+    "receive": "Receive"
+  },
+  "sendTranDetailComp": {
+    "transId": "TRANSACTION ID",
+    "sent": "Sent",
+    "completed": "Completed"
+  },
+  "confirmationBlockComp": {
+    "fee": "Fee",
+    "confirmations": "Confirmations"
+  },
+  "listHeaderComp": {
+    "rate": "RATE",
+    "provider": "PROVIDER"
+  },
+  "swapRatesComp": {
+    "selectQuoteFirst": "Select a quote first",
+    "rate": "RATE",
+    "swapTypes": "Swap Types",
+    "availQuotes": "AVAILABLE QUOTES",
+    "theseAreDiffQuotesProv": "These quotes are from different swap providers.",
+    "selectQuote": "Select Quote",
+    "learnMoreAboutSwap": "Learn about swap types"
+  },
+  "swapRevAstSumComp": {
+    "networkFee": "NETWORK FEE",
+    "amtFee": "AMOUNT + FEES",
+    "sendFrom": "SEND FROM",
+    "receiveAt": "RECEIVED AT"
+  },
+  "swapTypesInfo": {
+    "atomicSwapSwap": "Atomic Swap Swap native assets across blockchains without counterparty risks.",
+    "feeStruct": "Fee structure: 1%, 0 slippage, $100 minimum trade size",
+    "ammSwapSwap": "AMM Swap  Swap Ethereum tokens through liquidity pools.",
+    "learnMoreAboutSwap": "Learn about swap types",
+    "whenTradingAssets": "When trading assets provider vary regards the way its done: assets, chain, fees, slippage etc. At a glance:",
+    "pro": "Pro",
+    "con": "Con"
+  },
+  "searchForCurrency": "Search for a Currency",
+  "failedToFetchGasFee": "Failed to fetch gas fees",
+  "whatsNew": "What's New",
+  "whatsNewDesc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod ante in augue tristique convallis. Morbi pharetra, erat quis mattis tristique, sapien tortor convallis diam, elementum rhoncus erat massa vitae nibh. Ut suscipit nisi enim, ut dictum felis tristique sit amet.",
+  "loadingActivity": "loading activity...",
+  "somethingWentWrong": "Something went wrong",
+  "invalidQRCode": "Invalid QR Code",
+  "manageAssets": "Manage Assets",
+  "ledger": "Ledger",
+  "lock": "Lock"
 }

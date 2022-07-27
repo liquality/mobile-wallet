@@ -9,6 +9,7 @@ import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
 import ErrorFallback from '../error-fallback'
 import ErrorBoundary from 'react-native-error-boundary'
 import Box from '../../theme/box'
+import { labelTranslateFn } from '../../utils'
 
 type SwapFeeSelectorProps = {
   asset: string
@@ -33,14 +34,14 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
   useEffect(() => {
     fetchFeesForAsset(asset)
       .then(setGasFees)
-      .catch(() => Alert.alert('Failed to fetch gas fees'))
+      .catch(() => Alert.alert(labelTranslateFn('failedToFetchGasFee')!))
   }, [asset, networkFee, selectedQuote, type])
 
   //TODO add an ErrorBoundary component
   if (!gasFees)
     return (
       <Box>
-        <Text>Loading...</Text>
+        <Text tx="common.load..." />
       </Box>
     )
 

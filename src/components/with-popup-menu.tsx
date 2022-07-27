@@ -1,10 +1,11 @@
 import React, { Suspense } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
 import LockIcon from '../assets/icons/lock.svg'
 import LedgerIcon from '../assets/icons/ledger.svg'
 import ManageAssetsIcon from '../assets/icons/manage-assets.svg'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../types'
+import Text from '../theme/text'
 
 type FctType = (...args: any) => any
 type Props = NativeStackScreenProps<
@@ -33,7 +34,7 @@ const WithPopupMenu = <T extends FctType>(
         <Suspense
           fallback={
             <View>
-              <Text>Loading...</Text>
+              <Text tx="common.load..." />
             </View>
           }>
           <Component navigation={navigation} route={route} />
@@ -44,20 +45,20 @@ const WithPopupMenu = <T extends FctType>(
               style={styles.menuItem}
               onPress={handleManageAssetsBtnPress}>
               <ManageAssetsIcon style={styles.icon} />
-              <Text>Manage Assets</Text>
+              <Text tx="manageAssets" />
             </Pressable>
             <Pressable style={styles.menuItem}>
               <LockIcon style={styles.icon} />
-              <Text>Manage Assets</Text>
+              <Text tx="manageAssets" />
             </Pressable>
             <Pressable style={styles.menuItem}>
               <LedgerIcon style={styles.icon} />
-              <Text>Ledger</Text>
+              <Text tx="ledger" />
             </Pressable>
 
             <Pressable style={styles.menuItem} onPress={handleLockPress}>
               <LockIcon style={styles.icon} />
-              <Text>Lock</Text>
+              <Text tx="lock" />
             </Pressable>
           </View>
         )}

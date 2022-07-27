@@ -20,6 +20,7 @@ import CopyIcon from '../../assets/icons/copy.svg'
 import CheckIcon from '../../assets/icons/swap-check.svg'
 import { useRecoilValue } from 'recoil'
 import { addressStateFamily } from '../../atoms'
+import { labelTranslateFn } from '../../utils'
 
 type SwapReviewAssetSummaryProps = {
   type: 'SEND' | 'RECEIVE'
@@ -67,7 +68,7 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
             )}`}
         </Text>
       </View>
-      <Label text="NETWORK FEE" variant="light" />
+      <Label tx="swapRevAstSumComp.networkFee" variant="light" />
       <View style={styles.row}>
         <Text style={[styles.font, styles.amount]}>{`${networkFee.toNumber()} ${
           chains[cryptoassets[asset.code].chain].fees.unit
@@ -77,7 +78,7 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
           fiatRates[asset.code],
         ).toString()}`}</Text>
       </View>
-      <Label text="AMOUNT + FEES" variant="light" />
+      <Label tx="swapRevAstSumComp.amtFee" variant="light" />
       <View style={styles.row}>
         <Text style={[styles.font, styles.amountStrong]}>{`${amount.plus(
           unitToCurrency(cryptoassets[asset.code], networkFee.toNumber()),
@@ -92,7 +93,11 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
         )}`}</Text>
       </View>
       <Label
-        text={type === 'SEND' ? 'SEND FROM' : 'RECEIVED AT'}
+        text={
+          type === 'SEND'
+            ? `${labelTranslateFn('swapRevAstSumComp.sendFrom')}`
+            : `${labelTranslateFn('swapRevAstSumComp.receiveAt')}`
+        }
         variant="light"
       />
       <View style={styles.box}>

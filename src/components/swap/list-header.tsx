@@ -10,8 +10,8 @@ const ListHeader: FC = () => {
       borderBottomWidth={1}
       borderBottomColor="mainBorderColor"
       paddingHorizontal="xl">
-      <Text variant="header">RATE</Text>
-      <Text variant="header">PROVIDER</Text>
+      <Text variant="header" tx="listHeaderComp.rate" />
+      <Text variant="header" tx="listHeaderComp.provider" />
     </Box>
   )
 }
