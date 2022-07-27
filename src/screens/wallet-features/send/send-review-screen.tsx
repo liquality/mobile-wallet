@@ -72,7 +72,6 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
       addTransaction(transaction.id, transaction)
 
       navigation.navigate('SendConfirmationScreen', {
-        // screenTitle: `SEND ${asset} Transaction Details`,
         screenTitle: i18n.t('sendReviewScreen.sendTransDetails', { asset }),
         sendTransactionConfirmation: transaction,
       })

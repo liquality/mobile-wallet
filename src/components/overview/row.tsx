@@ -102,7 +102,6 @@ const Row = (props: RowProps) => {
         {isNested ? (
           <View style={styles.col3}>
             <Text style={styles.TotalBalanceInUSD}>
-              {/* {`Total ${prettyFiatBalance}`} */}
               {I18n.t('common.totalPrettyFiatBal', { prettyFiatBalance })}
             </Text>
           </View>
