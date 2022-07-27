@@ -64,7 +64,12 @@
     "activity": "ACTIVITY"
   },
   "assetToggleScreen": {},
-  "backupLoginScreen": {},
+  "backupLoginScreen": {
+    "signInToSeedPhrase": "Sign-in \n to see Seed Phrase",
+    "password": "PASSWORD",
+    "iHavePrivacy": "I have privacy and understand the risk.",
+    "pleaseCheckRisk": "Please check that you understand the risks"
+  },
   "backupSeedScreen": {},
   "backupWarningScreen": {},
   "overviewScreen": {},
