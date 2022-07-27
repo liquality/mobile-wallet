@@ -31,7 +31,22 @@
     "maxSlippage": "Max slippage is 0.5%.",
     "swapDoesnotComp": "If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at {{date}}",
     "initiateSwap": "Initiate Swap",
-    "activities": "ACTIVITIES"
+    "activities": "ACTIVITIES",
+    "assets": "ASSETS",
+    "dateRange": "DATE RANGE",
+    "start": "Start",
+    "end": "End",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "filter": "Filter",
+    "result": "Result",
+    "results": "Results",
+    "reset": "Reset",
+    "export": "Export",
+    "less": "less ",
+    "more": "more ",
+    "filterOptions": "filter options",
+    "sort": "SORT"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
@@ -226,5 +241,16 @@
   },
   "header": {
     "wallet": "Wallet"
+  },
+  "sortPicker": {
+    "needs_attention": "Needs attention",
+    "pending": "Pending",
+    "canceled": "Canceled",
+    "refunded": "Refunded",
+    "completed": "Completed",
+    "failed": "Failed",
+    "by_date": "By date (newest first)",
+    "by_type": "By type (A to Z)",
+    "by_token": "By Token (A to Z)"
   }
 }
