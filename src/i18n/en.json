@@ -213,7 +213,9 @@
     "customSettings": "CUSTOMIZED SETTINGS",
     "gasPrice": "Gas Price"
   },
-  "loadingScreen": {},
+  "loadingScreen": {
+    "failedImport": "Failed to import/create wallet. Please try again!"
+  },
   "unlockWalletScreen": {
     "testing": "Testing"
   },
