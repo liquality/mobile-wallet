@@ -223,5 +223,7 @@
     "12words": "12 words",
     "24words": "24 words"
   },
-  "header": {}
+  "header": {
+    "wallet": "Wallet"
+  }
 }
