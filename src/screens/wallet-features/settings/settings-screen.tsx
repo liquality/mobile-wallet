@@ -5,7 +5,6 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -16,11 +15,13 @@ import SettingsSwitch from '../../../components/ui/switch'
 import { DarkModeEnum } from '../../../types'
 import WhatsNew from '../../../components/ui/whats-new'
 import Button from '../../../theme/button'
-import { downloadWalletLogs } from '../../../utils'
+import Text from '../../../theme/text'
+import { downloadWalletLogs, labelTranslateFn } from '../../../utils'
 import { useRecoilValue } from 'recoil'
 import { networkState, optInAnalyticsState, walletState } from '../../../atoms'
 import DeviceInfo from 'react-native-device-info'
 import { useNavigation } from '@react-navigation/core'
+import i18n from 'i18n-js'
 
 const SettingsScreen = ({ route }) => {
   const walletStateCopy = useRecoilValue(walletState)
@@ -65,7 +66,7 @@ const SettingsScreen = ({ route }) => {
 
   useEffect(() => {
     if (!activeNetwork) {
-      Alert.alert('Please reload your app')
+      Alert.alert(labelTranslateFn('settingsScreen.reloadApp')!)
     }
 
     //Used for handle-lock-wallet-and-background-tasks.tsx
@@ -88,13 +89,15 @@ const SettingsScreen = ({ route }) => {
     downloadWalletLogs(walletStateDownload)
   }, [walletStateCopy])
 
+  const version = DeviceInfo.getVersion()
+
   return (
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.row}>
           <View style={styles.action}>
             <View>
-              <Text style={styles.label}>Networks</Text>
+              <Text style={styles.label} tx="settingsScreen.networks" />
               <View style={styles.btnOptions}>
                 <Pressable
                   style={[
@@ -103,7 +106,10 @@ const SettingsScreen = ({ route }) => {
                     activeNetwork === 'mainnet' && styles.btnSelected,
                   ]}
                   onPress={() => toggleNetwork('mainnet')}>
-                  <Text style={[styles.label, styles.small]}>Mainnet</Text>
+                  <Text
+                    style={[styles.label, styles.small]}
+                    tx="settingsScreen.mainnet"
+                  />
                 </Pressable>
                 <Pressable
                   style={[
@@ -112,7 +118,10 @@ const SettingsScreen = ({ route }) => {
                     activeNetwork === 'testnet' && styles.btnSelected,
                   ]}
                   onPress={() => toggleNetwork('testnet')}>
-                  <Text style={[styles.label, styles.small]}>Testnet</Text>
+                  <Text
+                    style={[styles.label, styles.small]}
+                    tx="settingsScreen.testnet"
+                  />
                 </Pressable>
               </View>
             </View>
@@ -149,10 +158,14 @@ const SettingsScreen = ({ route }) => {
           <View style={styles.action}>
             <View style={styles.btnContainer}>
               <View>
-                <Text style={styles.label}>Back-up Seed Phrase</Text>
-                <Text style={styles.description}>
-                  Always keep your seed phrase safe.
-                </Text>
+                <Text
+                  style={styles.label}
+                  tx="settingsScreen.backUpSeedPhrase"
+                />
+                <Text
+                  style={styles.description}
+                  tx="settingsScreen.alwayKeepSeedSafe"
+                />
               </View>
               <View style={styles.btnOptions}>
                 <Pressable onPress={handleBackupSeedPress}>
@@ -164,52 +177,51 @@ const SettingsScreen = ({ route }) => {
         </View>
         <View style={styles.row}>
           <View style={styles.action}>
-            <Text style={styles.label}>Wallet Logs</Text>
+            <Text style={styles.label} tx="settingsScreen.walletLogs" />
             <Button
               type="tertiary"
               variant="s"
-              label="Download logs"
+              label={{ tx: 'settingsScreen.downloadLogs' }}
               onPress={handleDownload}
               isBorderless={false}
               isActive={true}
             />
           </View>
-          <Text style={styles.description}>
-            The wallet logs contain your public information such as addresses
-            and transactions.
-          </Text>
+          <Text
+            style={styles.description}
+            tx="settingsScreen.walletLogPublicInfo"
+          />
         </View>
         <View style={styles.row}>
           <View style={styles.action}>
-            <Text style={styles.label}>Analytics</Text>
+            <Text style={styles.label} tx="settingsScreen.analytics" />
             <SettingsSwitch
               isFeatureEnabled={isAnalyticsEnabled}
               enableFeature={toggleAnalyticsOptin}
             />
           </View>
-          <Text style={styles.description}>
-            Share where you click. No identifying data is collected.
-          </Text>
+          <Text style={styles.description} tx="settingsScreen.shareYouClick" />
         </View>
         <View style={styles.row}>
           <View style={styles.action}>
-            <Text style={styles.label}>Notifications</Text>
+            <Text style={styles.label} tx="settingsScreen.notifications" />
             <Pressable
               onPress={() => {
                 Linking.openSettings()
               }}>
-              <Text style={[styles.label, styles.link]}>manage</Text>
+              <Text
+                style={[styles.label, styles.link]}
+                tx="settingsScreen.manage"
+              />
             </Pressable>
           </View>
-          <Text style={styles.description}>
-            Get informed about transaction status and funds received.
-          </Text>
+          <Text style={styles.description} tx="settingsScreen.getInfoAbout" />
         </View>
 
         <View style={styles.rowDesign}>
           <View style={styles.action}>
             <View style={styles.btnContainer}>
-              <Text style={styles.label}>Design</Text>
+              <Text style={styles.label} tx="settingsScreen.design" />
               <View style={styles.btnOptions}>
                 <Pressable
                   style={[
@@ -218,7 +230,10 @@ const SettingsScreen = ({ route }) => {
                     darkMode === DarkModeEnum.Light && styles.btnSelected,
                   ]}
                   onPress={() => setDarkMode(DarkModeEnum.Light)}>
-                  <Text style={[styles.label, styles.small]}>light</Text>
+                  <Text
+                    style={[styles.label, styles.small]}
+                    tx="settingsScreen.light"
+                  />
                 </Pressable>
                 <Pressable
                   style={[
@@ -227,7 +242,10 @@ const SettingsScreen = ({ route }) => {
                     darkMode === DarkModeEnum.Dark && styles.btnSelected,
                   ]}
                   onPress={() => setDarkMode(DarkModeEnum.Dark)}>
-                  <Text style={[styles.label, styles.small]}>dark</Text>
+                  <Text
+                    style={[styles.label, styles.small]}
+                    tx="settingsScreen.dark"
+                  />
                 </Pressable>
               </View>
             </View>
@@ -238,7 +256,7 @@ const SettingsScreen = ({ route }) => {
           <View style={styles.action}>
             <View style={styles.btnContainer}>
               <View>
-                <Text style={styles.label}>About Liquality</Text>
+                <Text style={styles.label} tx="settingsScreen.aboutLiquality" />
               </View>
               <View style={styles.toLiqualityWebsite}>
                 <Pressable
@@ -260,17 +278,21 @@ const SettingsScreen = ({ route }) => {
                 style={styles.signOutIcon}
               />
             </Pressable>
-            <Text style={styles.label}>Lock</Text>
+            <Text style={styles.label} tx="settingsScreen.lock" />
           </View>
         </View>
 
         <View style={styles.lastRow}>
           <View style={styles.info}>
             <Text style={[styles.label, styles.version]}>
-              Version: {DeviceInfo.getVersion()}
+              {/* Version: {version} */}
+              {i18n.t('settingsScreen.version', { version })}
             </Text>
             <Pressable onPress={() => setIsWhatsNewVisible(true)}>
-              <Text style={[styles.label, styles.link]}>What's new</Text>
+              <Text
+                style={[styles.label, styles.link]}
+                tx="settingsScreen.whatNew"
+              />
             </Pressable>
           </View>
         </View>
