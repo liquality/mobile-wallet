@@ -93,7 +93,14 @@
     "copied": "Copied!",
     "copyAdd": "Copy Address"
   },
-  "sendConfirmationScreeen": {},
+  "sendConfirmationScreeen": {
+    "status": "STATUS",
+    "time": "TIME",
+    "sent": "SENT",
+    "networkSpeed": "NETWORK SPEED/FEE",
+    "speedUp": "Speed Up",
+    "load...": "Loading..."
+  },
   "sendReviewScreen": {},
   "sendScreen": {},
   "settingsScreen": {},
