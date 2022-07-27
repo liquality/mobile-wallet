@@ -17,9 +17,19 @@
     "load...": "Loading...",
     "status": "STATUS",
     "speedUp": "Speed Up",
+    "send": "SEND",
     "sent": "SENT",
     "networkSpeed": "NETWORK SPEED/FEE",
-    "edit": "Edit"
+    "edit": "Edit",
+    "error": "Error",
+    "addLiquidity": "Add Liquidity",
+    "min": "Min",
+    "max": "Max",
+    "available": "Available",
+    "receive": "RECEIVE",
+    "maxSlippage": "Max slippage is 0.5%.",
+    "swapDoesnotComp": "If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at {{date}}",
+    "initiateSwap": "Initiate Swap"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
@@ -188,11 +198,15 @@
     "swapRespNull": "Swap Response null",
     "failedToPerfSwap": "Failed to perform swap",
     "invalidParams": "Invalid params. Please try again",
-    "maxSlippage": "Max slippage is 0.5%.",
-    "swapDoesnotComp": "If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at 20:45 GMT",
     "initiateSwap": "Initiate Swap"
   },
-  "swapScreen": {},
+  "swapScreen": {
+    "selectAssetForSwap": "Select asset for Swap",
+    "invalidArgs": "Invalid arguments for swap",
+    "swapReview": "Swap {{swapPairfromAssetCode}} to {{swapPairtoAssetCode}} review",
+    "isNotTraded": "This pair isn't traded yet. See our list of compatible pairs here. You can also suggest list of your token on Liquality Discord",
+    "quoteNotFnd": "Quotes not found"
+  },
   "customFeeScreen": {},
   "loadingScreen": {},
   "unlockWalletScreen": {
