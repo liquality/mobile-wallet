@@ -101,7 +101,19 @@
     "speedUp": "Speed Up",
     "load...": "Loading..."
   },
-  "sendReviewScreen": {},
+  "sendReviewScreen": {
+    "inputDataInvalid": "Input data invalid",
+    "sendTransDetails": "SEND {{asset}} Transaction Details",
+    "failedTrans": "Failed to send transaction: ",
+    "rateNotAvail": "Rates not available",
+    "send": "Send",
+    "netFee": "NETWORK FEE",
+    "amtFee": "AMOUNT + FEES",
+    "sendTo": "SEND TO",
+    "memoOpt": "MEMO (OPTIONAL)",
+    "edit": "Edit",
+    "sendAsset": "Send {{asset}}"
+  },
   "sendScreen": {},
   "settingsScreen": {},
   "swapConfirmationScreen": {},
