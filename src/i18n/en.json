@@ -217,7 +217,11 @@
     "failedImport": "Failed to import/create wallet. Please try again!"
   },
   "unlockWalletScreen": {
-    "testing": "Testing"
+    "invalidSeedPhrase": "Your seed phrase is invalid', 'Please try again",
+    "unlockWallet": "Unlock Wallet",
+    "enterSeedPhrase": "Enter the seed phrase, in the same order saved when creating your wallet.",
+    "12words": "12 words",
+    "24words": "24 words"
   },
   "header": {}
 }
