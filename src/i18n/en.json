@@ -67,7 +67,7 @@
   "backupLoginScreen": {
     "signInToSeedPhrase": "Sign-in \n to see Seed Phrase",
     "password": "PASSWORD",
-    "iHavePrivacy": "I have privacy and understand the risk.",
+    "iHavePrivacyUnderstand": "I have privacy and understand the risk.",
     "pleaseCheckRisk": "Please check that you understand the risks"
   },
   "backupSeedScreen": {
@@ -77,7 +77,12 @@
     "hidden4Security": "Hidden for security. Tap to reveal phrase.",
     "iSaveSeed": "I saved the seed"
   },
-  "backupWarningScreen": {},
+  "backupWarningScreen": {
+    "showSeedPhrase": "Show Seed Phrase?",
+    "anyoneWhoSeed": "Anyone who has this seed phrase can steal your funds.",
+    "viewItPrivate": "View it in private without any cameras around.",
+    "iHavePrivacy": "I have privacy"
+  },
   "overviewScreen": {},
   "receiveScreen": {},
   "sendConfirmationScreeen": {},

@@ -101,7 +101,7 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
             onPress={handleCheckBox}
             textStyle={styles.checkBoxText}
             style={styles.checkBoxStyle}
-            text={{ tx: 'backupLoginScreen.iHavePrivacy' }}
+            text={{ tx: 'backupLoginScreen.iHavePrivacyUnderstand' }}
           />
           <Box flex={0.3} width="90%" justifyContent="flex-end">
             <View style={styles.actionBlock}>
