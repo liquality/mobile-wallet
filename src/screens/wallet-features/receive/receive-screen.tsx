@@ -1,5 +1,12 @@
 import React, { Fragment, useState } from 'react'
-import { Dimensions, Linking, Pressable, StyleSheet, View } from 'react-native'
+import {
+  Alert,
+  Dimensions,
+  Linking,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -10,8 +17,8 @@ import Text from '../../../theme/text'
 import CheckIcon from '../../../assets/icons/swap-check.svg'
 import CopyIcon from '../../../assets/icons/copy.svg'
 import { useRecoilValue } from 'recoil'
-import { networkState } from '../../../atoms'
 import i18n from 'i18n-js'
+import { addressStateFamily, networkState } from '../../../atoms'
 
 type ReceiveScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -20,7 +27,8 @@ type ReceiveScreenProps = NativeStackScreenProps<
 
 const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   const [buttonPressed, setButtonPressed] = useState<boolean>(false)
-  const { name, address, chain, code }: AccountType = route.params.assetData!
+  const { name, chain, code, id }: AccountType = route.params.assetData!
+  const address = useRecoilValue(addressStateFamily(id))
   const activeNetwork = useRecoilValue(networkState)
 
   //TODO Read this from a config file
@@ -72,7 +80,8 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   }
 
   const handleCopyAddressPress = async () => {
-    Clipboard.setString(address!)
+    if (!address) Alert.alert('Address empty. Please try again!')
+    Clipboard.setString(address)
     setButtonPressed(true)
   }
 
@@ -92,7 +101,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
       </View>
       <View style={styles.ContentBlock}>
         <Text style={styles.scanPrompt} tx="receiveScreen.scanORcode" />
-        <QRCode value={address} size={200} />
+        {!!address && <QRCode value={address} size={200} />}
         {activeNetwork === 'testnet' && (
           <Fragment>
             <Text style={styles.linkLabel}>

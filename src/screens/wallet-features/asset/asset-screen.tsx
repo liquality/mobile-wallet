@@ -43,6 +43,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const handleReceivePress = useCallback(() => {
     navigation.navigate('ReceiveScreen', {
       assetData: route.params.assetData,
+      includeBackBtn: true,
       screenTitle: `Receive ${code}`,
     })
   }, [code, navigation, route.params.assetData])
