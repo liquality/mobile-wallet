@@ -75,7 +75,7 @@ const ActivityStatusToggles: FC<{
 
   return (
     <View style={styles.container}>
-      <SectionTitle title="ACTIVITIES" />
+      <SectionTitle tx="common.activities" />
       <View style={styles.content}>{ITEMS.map(renderItem)}</View>
     </View>
   )

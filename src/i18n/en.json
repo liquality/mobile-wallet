@@ -30,7 +30,8 @@
     "receive": "RECEIVE",
     "maxSlippage": "Max slippage is 0.5%.",
     "swapDoesnotComp": "If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at {{date}}",
-    "initiateSwap": "Initiate Swap"
+    "initiateSwap": "Initiate Swap",
+    "activities": "ACTIVITIES"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
