@@ -1,22 +1,17 @@
 import React, { Fragment, useState } from 'react'
-import {
-  Dimensions,
-  Linking,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { Dimensions, Linking, Pressable, StyleSheet, View } from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, RootStackParamList } from '../../../types'
 import AssetIcon from '../../../components/asset-icon'
 import Button from '../../../theme/button'
+import Text from '../../../theme/text'
 import CheckIcon from '../../../assets/icons/swap-check.svg'
 import CopyIcon from '../../../assets/icons/copy.svg'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
+import i18n from 'i18n-js'
 
 type ReceiveScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -86,7 +81,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
       <View style={styles.headerBlock}>
         <AssetIcon asset={code} chain={chain} />
         <Text style={styles.addressLabel}>
-          {`Your current ${code}/${activeNetwork} address`}
+          {i18n.t('receiveScreen.yourCurrent', { code, activeNetwork })}
         </Text>
         <View style={styles.addressWrapper}>
           <Text style={styles.address}>{address}</Text>
@@ -96,9 +91,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
         </View>
       </View>
       <View style={styles.ContentBlock}>
-        <Text style={styles.scanPrompt}>
-          Scan QR code with a mobile wallet to send funds to this address.
-        </Text>
+        <Text style={styles.scanPrompt} tx="receiveScreen.scanORcode" />
         <QRCode value={address} size={200} />
         {activeNetwork === 'testnet' && (
           <Fragment>
@@ -117,7 +110,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
         <Button
           type="secondary"
           variant="m"
-          label="Done"
+          label={{ tx: 'receiveScreen.done' }}
           onPress={navigation.goBack}
           isBorderless={false}
           isActive={true}
@@ -125,7 +118,11 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
         <Button
           type="primary"
           variant="m"
-          label={buttonPressed ? 'Copied!' : 'Copy Address'}
+          label={
+            buttonPressed
+              ? { tx: 'receiveScreen.copied' }
+              : { tx: 'receiveScreen.copyAdd' }
+          }
           onPress={handleCopyAddressPress}
           isBorderless={false}
           isActive={true}>

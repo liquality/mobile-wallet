@@ -86,7 +86,13 @@
   "overviewScreen": {
     "load...": "Loading..."
   },
-  "receiveScreen": {},
+  "receiveScreen": {
+    "yourCurrent": "Your current {{code}}/{{activeNetwork}} address",
+    "scanORcode": "Scan QR code with a mobile wallet to send funds to this address.",
+    "done": "Done",
+    "copied": "Copied!",
+    "copyAdd": "Copy Address"
+  },
   "sendConfirmationScreeen": {},
   "sendReviewScreen": {},
   "sendScreen": {},
