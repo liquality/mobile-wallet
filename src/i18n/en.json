@@ -83,7 +83,9 @@
     "viewItPrivate": "View it in private without any cameras around.",
     "iHavePrivacy": "I have privacy"
   },
-  "overviewScreen": {},
+  "overviewScreen": {
+    "load...": "Loading..."
+  },
   "receiveScreen": {},
   "sendConfirmationScreeen": {},
   "sendReviewScreen": {},
