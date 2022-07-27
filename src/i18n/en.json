@@ -13,7 +13,12 @@
     "cancel": "Cancel",
     "next": "Next",
     "loading": "Loading",
-    "review": "Review"
+    "review": "Review",
+    "load...": "Loading...",
+    "status": "STATUS",
+    "speedUp": "Speed Up",
+    "sent": "SENT",
+    "networkSpeed": "NETWORK SPEED/FEE"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
@@ -153,7 +158,30 @@
     "version": "Version: {{version}}",
     "whatNew": "What's new"
   },
-  "swapConfirmationScreen": {},
+  "swapConfirmationScreen": {
+    "networkSpeed": "NETWORK SPEED/FEE",
+    "received": "Received",
+    "pendingReceipt": "PENDING RECEIPT",
+    "advanced": "ADVANCED",
+    "counterParty": "Counter-party",
+    "orderId": "Order Id",
+    "startedAt": "Started At",
+    "finishedAt": "Finished At",
+    "rate": "Rate",
+    "buy": "Buy",
+    "sell": "Sell",
+    "minConfirm": "Minimum Confirmations",
+    "yourFrmAddress": "Your {{from}} address",
+    "yourToddress": "Your {{to}} address",
+    "secret": "Secret",
+    "clickToRevealSecret": "Click to reveal secret",
+    "secretHast": "Secret Hash",
+    "yourFrFunding": "Your ${from} funding transaction",
+    "yourToFunding": "Your ${to} funding transaction",
+    "yourToReceive": "Your ${to} receive transactionn",
+    "actions": "Actions",
+    "retry": "Retry"
+  },
   "swapReviewScreen": {},
   "swapScreen": {},
   "customFeeScreen": {},
