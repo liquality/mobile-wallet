@@ -12,7 +12,8 @@
     "continue": "Continue",
     "cancel": "Cancel",
     "next": "Next",
-    "loading": "Loading"
+    "loading": "Loading",
+    "review": "Review"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
@@ -114,7 +115,21 @@
     "edit": "Edit",
     "sendAsset": "Send {{asset}}"
   },
-  "sendScreen": {},
+  "sendScreen": {
+    "enterValidAmt": "Enter a valid amount",
+    "lowerAmt": "Lower amount. This exceeds available balance.",
+    "wrongFmt": "Wrong format. Please check the address.",
+    "sendReview": "Send {{code}} Review",
+    "invalidAmt": "Invalid amount.",
+    "fiatRate": "Fiat rates missing!",
+    "networkSpeed": "NETWORK SPEED/FEE",
+    "snd": "SEND",
+    "available": "Available",
+    "max": "Max",
+    "sndTo": "SEND TO",
+    "address": "Address",
+    "memoOpt": "MEMO (OPTIONAL)"
+  },
   "settingsScreen": {},
   "swapConfirmationScreen": {},
   "swapReviewScreen": {},
