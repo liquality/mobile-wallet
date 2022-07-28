@@ -47,10 +47,14 @@ const WrappedRow: FC<{
   }, [isExpanded])
 
   const onAssetSelected = useCallback(
-    (selectedAccount: AccountType) => {
+    (currentAccount: AccountType) => {
       // Make sure account assets have the same id (account id) as their parent
-      selectedAccount.id = account.id
-      selectedAccount.address = account.address
+      const selectedAccount: AccountType = {
+        ...currentAccount,
+        id: account.id,
+        address,
+      }
+
       let fromAsset: AccountType, toAsset: AccountType
       toAsset = selectedAccount.code === 'ETH' ? btcAccount : ethAccount
 
@@ -98,7 +102,6 @@ const WrappedRow: FC<{
       }
     },
     [
-      account.address,
       account.id,
       btcAccount,
       ethAccount,
@@ -108,6 +111,7 @@ const WrappedRow: FC<{
       screenMap,
       setSwapPair,
       swapPair,
+      address,
     ],
   )
 

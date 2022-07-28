@@ -22,7 +22,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
   const handleOkButtonPress = useCallback(() => {
     onAction(false)
     setAnalytics({
-      ...analytics,
+      ...(analytics || {}),
       acceptedDate: userHasChecked ? Date.now() : undefined,
     })
     navigation.navigate(nextScreen, {
