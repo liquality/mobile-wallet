@@ -130,7 +130,8 @@
     "scanORcode": "Scan QR code with a mobile wallet to send funds to this address.",
     "done": "Done",
     "copied": "Copied!",
-    "copyAdd": "Copy Address"
+    "copyAdd": "Copy Address",
+    "addressEmpty": "Address empty. Please try again!"
   },
   "sendConfirmationScreeen": {
     "status": "STATUS",
