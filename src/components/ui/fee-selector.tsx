@@ -1,7 +1,8 @@
 import React, { FC, MutableRefObject, useEffect, useState } from 'react'
-import { Alert, Pressable, StyleSheet, Text } from 'react-native'
+import { Alert, Pressable, StyleSheet } from 'react-native'
 import { FeeDetails } from '@liquality/types'
 import Box from '../../theme/box'
+import Text from '../../theme/text'
 import { GasFees, NetworkFeeType } from '../../types'
 import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
 
@@ -79,7 +80,7 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
         ))}
       </Box>
       <Pressable onPress={handleCustomPress}>
-        <Text style={styles.customFee}>Custom</Text>
+        <Text style={styles.customFee} tx="common.custom" />
       </Pressable>
     </Box>
   )

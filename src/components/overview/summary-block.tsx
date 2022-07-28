@@ -14,6 +14,7 @@ import Text from '../../theme/text'
 import RoundButton from '../../theme/round-button'
 import * as React from 'react'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
+import { labelTranslateFn } from '../../utils'
 
 type SummaryBlockProps = {
   navigation: OverviewProps['navigation']
@@ -27,14 +28,14 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
 
   const handleSendBtnPress = useCallback(() => {
     navigation.navigate('AssetChooserScreen', {
-      screenTitle: 'Select asset for Send',
+      screenTitle: labelTranslateFn('summaryBlockComp.selectAssetSend')!,
       action: ActionEnum.SEND,
     })
   }, [navigation])
 
   const handleReceiveBtnPress = useCallback(() => {
     navigation.navigate('AssetChooserScreen', {
-      screenTitle: 'Select asset for receive',
+      screenTitle: labelTranslateFn('summaryBlockComp.selectAssetReceive')!,
       action: ActionEnum.RECEIVE,
     })
   }, [navigation])
@@ -42,7 +43,7 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
   const handleSwapBtnPress = useCallback(() => {
     setSwapPair({})
     navigation.navigate('AssetChooserScreen', {
-      screenTitle: 'Select asset for swap',
+      screenTitle: labelTranslateFn('summaryBlockComp.selectAssetSwap')!,
       action: ActionEnum.SWAP,
     })
   }, [navigation, setSwapPair])
@@ -72,25 +73,27 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
         </View>
         <Text style={styles.assets}>
           {accountsIds.length}
-          {accountsIds.length === 1 ? ' Asset' : ' Assets'}
+          {accountsIds.length === 1
+            ? `${labelTranslateFn('summaryBlockComp.asset')}`
+            : `${labelTranslateFn('summaryBlockComp.assets')}`}
         </Text>
 
         <Box flexDirection="row" justifyContent="center" marginTop="l">
           <RoundButton
             onPress={handleSendBtnPress}
-            label="Send"
+            tx="summaryBlockComp.send"
             type="SEND"
             variant="smallPrimary"
           />
           <RoundButton
             onPress={handleSwapBtnPress}
-            label="Swap"
+            tx="summaryBlockComp.send"
             type="SWAP"
             variant="largePrimary"
           />
           <RoundButton
             onPress={handleReceiveBtnPress}
-            label="Receive"
+            tx="summaryBlockComp.receive"
             type="RECEIVE"
             variant="smallPrimary"
           />

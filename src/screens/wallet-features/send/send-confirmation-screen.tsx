@@ -46,7 +46,7 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
           paddingHorizontal="xl"
           marginBottom="xl">
           <Box>
-            <Text variant="header">STATUS</Text>
+            <Text variant="header" tx="sendConfirmationScreeen.status" />
             <Text variant="content">
               {historyItem.status === 'SUCCESS'
                 ? `Completed / ${
@@ -75,14 +75,14 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
           justifyContent="space-between"
           paddingHorizontal="xl"
           marginBottom="xl">
-          <Text variant="header">TIME</Text>
+          <Text variant="header" tx="sendConfirmationScreeen.time" />
           <Text variant="content">{formatDate(historyItem.startTime)}</Text>
         </Box>
         <Box
           justifyContent="space-between"
           paddingHorizontal="xl"
           marginBottom="xl">
-          <Text variant="header">SENT</Text>
+          <Text variant="header" tx="sendConfirmationScreeen.sent" />
           <Text variant="content">
             {historyItem.fee &&
               `${unitToCurrency(
@@ -102,7 +102,7 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
           borderBottomWidth={1}
           borderColor="mainBorderColor">
           <Box>
-            <Text variant="header">NETWORK SPEED/FEE</Text>
+            <Text variant="header" tx="sendConfirmationScreeen.networkSpeed" />
             <Text variant="content">
               {`${historyItem.from} Fee: ${historyItem.tx.fee} x ${
                 chains[cryptoassets[historyItem.from].chain].fees.unit
@@ -111,7 +111,7 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
           </Box>
           {historyItem.status !== 'SUCCESS' && (
             <Pressable onPress={handleTransactionSpeedUp}>
-              <Text variant="link">Speed Up</Text>
+              <Text variant="link" tx="sendConfirmationScreeen.speedUp" />
             </Pressable>
           )}
         </Box>
@@ -129,7 +129,7 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
     <React.Suspense
       fallback={
         <View>
-          <Text>Loading...</Text>
+          <Text tx="sendConfirmationScreeen.load..." />
         </View>
       }>
       <ConfirmationComponent navigation={navigation} route={route} />

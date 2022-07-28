@@ -97,21 +97,23 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
       />
       <Header width={135} height={83} style={styles.header} showText={false} />
       <Box flex={0.4} justifyContent="flex-start" alignItems="center">
-        <Text variant="slogan1" tx="entryScreen.one" />
-        <Text variant="slogan2" tx="entryScreen.wallet" />
-        <Text variant="slogan1" tx="entryScreen.all_chains" />
+        <Text variant="slogan1" tx="common.one" />
+        <Text variant="slogan2" tx="common.wallet" />
+        <Text variant="slogan1" tx="common.all_chains" />
       </Box>
       <Box flex={0.3} width="90%" justifyContent="flex-end">
         <View style={styles.forgotPassword}>
-          <Text variant="description">Forgot password? </Text>
-          <Text variant="description" onPress={handleImportPress}>
-            Import with seed phrase
-          </Text>
+          <Text variant="description" tx="common.forgotPassword" />
+          <Text
+            variant="description"
+            onPress={handleImportPress}
+            tx="common.importWithSeedPhrase"
+          />
         </View>
         <Button
           type="primary"
           variant="l"
-          label="Create a new Wallet"
+          label={{ tx: 'entryScreen.createNewWallet' }}
           onPress={handleCreateWalletPress}
           isBorderless
           isActive
@@ -119,7 +121,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
         <Button
           type="primary"
           variant="l"
-          label="Open Sesame"
+          label={{ tx: 'common.openSesame' }}
           onPress={handleOpenSesamePress}
           isLoading={loading}
           isBorderless

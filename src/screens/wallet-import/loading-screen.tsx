@@ -16,6 +16,7 @@ import {
 import { chains } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
 import { Alert } from 'react-native'
+import { labelTranslateFn } from '../../utils'
 
 type LoadingScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -79,7 +80,7 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
           setWallet(wallet)
           navigation.navigate('CongratulationsScreen')
         } else {
-          Alert.alert('Failed to import/create wallet. Please try again!')
+          Alert.alert(labelTranslateFn('loadingScreen.failedImport')!)
         }
       },
     )

@@ -60,7 +60,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
       <React.Suspense
         fallback={
           <View>
-            <Text>Loading asset screen...</Text>
+            <Text tx="assetScreen.loadingAsset" />
           </View>
         }>
         <Box style={styles.overviewBlock}>
@@ -98,19 +98,19 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
           <Box flexDirection="row" justifyContent="center" marginTop="l">
             <RoundButton
               onPress={handleSendPress}
-              label="Send"
+              tx={'assetScreen.send'}
               type="SEND"
               variant="smallPrimary"
             />
             <RoundButton
               onPress={handleSwapPress}
-              label="Swap"
+              tx={'assetScreen.swap'}
               type="SWAP"
               variant="largePrimary"
             />
             <RoundButton
               onPress={handleReceivePress}
-              label="Receive"
+              tx={'assetScreen.receive'}
               type="RECEIVE"
               variant="smallPrimary"
             />
@@ -118,7 +118,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         </Box>
         <View style={styles.tabBlack}>
           <Pressable style={[styles.leftHeader, styles.headerFocused]}>
-            <Text variant="tabHeader">ACTIVITY</Text>
+            <Text variant="tabHeader" tx="assetScreen.activity" />
           </Pressable>
         </View>
         <ActivityFlatList selectedAsset={code} />

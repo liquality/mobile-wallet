@@ -1,6 +1,7 @@
-import { Modal, StyleSheet, Text, View } from 'react-native'
+import { Modal, StyleSheet, View } from 'react-native'
 import React from 'react'
 import Button from '../../theme/button'
+import Text from '../../theme/text'
 
 const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
   const styles = StyleSheet.create({
@@ -58,18 +59,12 @@ const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
       style={styles.modalView}>
       <View style={styles.container}>
         <View style={styles.contentWrapper}>
-          <Text style={[styles.content, styles.header]}>What's New</Text>
-          <Text style={styles.content}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod
-            ante in augue tristique convallis. Morbi pharetra, erat quis mattis
-            tristique, sapien tortor convallis diam, elementum rhoncus erat
-            massa vitae nibh. Ut suscipit nisi enim, ut dictum felis tristique
-            sit amet.
-          </Text>
+          <Text style={[styles.content, styles.header]} tx="whatsNew" />
+          <Text style={styles.content} tx="whatsNewDesc" />
           <Button
             type="primary"
             variant="m"
-            label="OK"
+            label={{ tx: 'common.ok' }}
             onPress={handleOkButtonPress}
             isBorderless={false}
             isActive={true}

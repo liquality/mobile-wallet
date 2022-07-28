@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
+import { StyleSheet, View, TextInput, Pressable } from 'react-native'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import {
   cryptoToFiat,
@@ -15,6 +15,7 @@ import {
   UseInputStateReturnType,
 } from '../../types'
 import Button from '../../theme/button'
+import Text from '../../theme/text'
 import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms'
 import { fetchFeesForAsset } from '../../store/store'
@@ -53,7 +54,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   if (!gasFees) {
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <Text tx="common.load..." />
       </View>
     )
   }
@@ -65,7 +66,10 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
             <AssetIcon asset={code} />
             <Text style={styles.asset}>ETH</Text>
           </View>
-          <Text style={[styles.label, styles.headerLabel]}>PRESETS</Text>
+          <Text
+            style={[styles.label, styles.headerLabel]}
+            tx="customFeeScreen.presets"
+          />
           <View style={styles.row}>
             {gasFees &&
               Object.keys(gasFees).map((speed, index) => {
@@ -117,11 +121,12 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
         </View>
 
         <View style={styles.block}>
-          <Text style={[styles.label, styles.headerLabel]}>
-            CUSTOMIZED SETTINGS
-          </Text>
+          <Text
+            style={[styles.label, styles.headerLabel]}
+            tx="customFeeScreen.customSettings"
+          />
           <View style={styles.row}>
-            <Text style={styles.label}>Gas Price</Text>
+            <Text style={styles.label} tx="customFeeScreen.gasPrice" />
             <Text style={styles.fiat}>
               {code &&
                 fiatRates &&
@@ -150,7 +155,10 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
         </View>
 
         <View style={[styles.block, styles.summary]}>
-          <Text style={[styles.preset, styles.speed]}>New Speed/Fee</Text>
+          <Text
+            style={[styles.preset, styles.speed]}
+            tx="common.networkSpeed"
+          />
           <Text style={[styles.preset, styles.amount]}>
             {code &&
               parseFloat(customFeeInput.value) > 0 &&
@@ -179,7 +187,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
         <Button
           type="secondary"
           variant="m"
-          label="Cancel"
+          label={{ tx: 'common.cancel' }}
           onPress={navigation.goBack}
           isBorderless={false}
           isActive={true}
@@ -187,7 +195,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
         <Button
           type="primary"
           variant="m"
-          label="Apply"
+          label={{ tx: 'common.apply' }}
           onPress={handleApplyPress}
           isBorderless={false}
           isActive={true}
@@ -276,6 +284,7 @@ const styles = StyleSheet.create({
   selected: {
     backgroundColor: '#F0F7F9',
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   error: {
     fontFamily: 'Montserrat-Regular',
     color: '#F12274',

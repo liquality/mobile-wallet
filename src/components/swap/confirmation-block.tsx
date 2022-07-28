@@ -50,7 +50,7 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
         </Pressable>
       </Box>
       <Box flexDirection="row" justifyContent="center" alignItems="center">
-        <Text variant="timelineLabel">Fee</Text>
+        <Text variant="timelineLabel" tx="confirmationBlockComp.fee" />
         <Text variant="amount">
           {fiatRates &&
             fee &&
@@ -64,7 +64,10 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
         </Text>
       </Box>
       <Box flexDirection="row" justifyContent="center" alignItems="center">
-        <Text variant="timelineLabel">Confirmations</Text>
+        <Text
+          variant="timelineLabel"
+          tx="confirmationBlockComp.confirmations"
+        />
         <Text variant="amount">{confirmations} </Text>
       </Box>
     </Box>

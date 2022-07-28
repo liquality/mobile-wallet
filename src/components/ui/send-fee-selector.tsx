@@ -6,6 +6,7 @@ import { GasFees, NetworkFeeType } from '../../types'
 import FeeSelector from './fee-selector'
 import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
 import ErrorFallback from '../error-fallback'
+import { labelTranslateFn } from '../../utils'
 
 type SendFeeSelectorProps = {
   asset: string
@@ -21,7 +22,7 @@ const SendFeeSelector: FC<SendFeeSelectorProps> = (props) => {
   useEffect(() => {
     fetchFeesForAsset(asset)
       .then(setGasFees)
-      .catch(() => Alert.alert('Failed to fetch gas fees'))
+      .catch(() => Alert.alert(labelTranslateFn('failedToFetchGasFee')!))
   }, [asset])
 
   if (!gasFees) return null

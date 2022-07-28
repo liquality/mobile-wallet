@@ -74,7 +74,7 @@ const AssetToggles: FC<{
 
   return (
     <View style={styles.container}>
-      <SectionTitle title="ASSETS" />
+      <SectionTitle tx="common.assets" />
       <View style={styles.content}>{items.map(renderItem)}</View>
     </View>
   )

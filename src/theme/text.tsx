@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { createText } from '@shopify/restyle'
 import { Theme } from './'
-import { TxKeyPath } from '../i18n'
+import { TxKeyPath, translate } from '../i18n'
 import i18n from 'i18n-js'
-import { translate } from '../i18n'
 
 const RnText = createText<Theme>()
 

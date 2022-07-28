@@ -22,6 +22,8 @@ import {
   networkState,
 } from '../../../atoms'
 import { HistoryItem } from '@liquality/wallet-core/dist/store/types'
+import { labelTranslateFn } from '../../../utils'
+import i18n from 'i18n-js'
 
 type SendReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -48,7 +50,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
   const handleSendPress = async () => {
     setIsLoading(true)
     if (!asset || !destinationAddress || !amount || !gasFee || !activeNetwork) {
-      setError('Input data invalid')
+      setError(labelTranslateFn('sendReviewScreen.inputDataInvalid')!)
       return
     }
 
@@ -70,12 +72,12 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
       addTransaction(transaction.id, transaction)
 
       navigation.navigate('SendConfirmationScreen', {
-        screenTitle: `SEND ${asset} Transaction Details`,
+        screenTitle: i18n.t('sendReviewScreen.sendTransDetails', { asset }),
         sendTransactionConfirmation: transaction,
       })
     } catch (_error) {
       setIsLoading(false)
-      setError('Failed to send transaction: ' + _error)
+      setError(labelTranslateFn('sendReviewScreen.failedTrans')! + _error)
     }
   }
 
@@ -85,7 +87,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
 
   useEffect(() => {
     if (!fiatRates || !asset || !fiatRates[asset]) {
-      setError('Rates not available')
+      setError(labelTranslateFn('sendReviewScreen.rateNotAvail')!)
     } else {
       setRate(fiatRates[asset])
     }
@@ -98,7 +100,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
       paddingVertical="l"
       paddingHorizontal="xl">
       <Box marginTop="l">
-        <Text variant="secondaryInputLabel">SEND</Text>
+        <Text variant="secondaryInputLabel" tx="sendReviewScreen.send" />
         <Box
           flexDirection="row"
           justifyContent="space-between"
@@ -114,7 +116,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
       </Box>
 
       <Box marginTop="l">
-        <Text variant="secondaryInputLabel">NETWORK FEE</Text>
+        <Text variant="secondaryInputLabel" tx="sendReviewScreen.netFee" />
         <Box
           flexDirection="row"
           justifyContent="space-between"
@@ -137,7 +139,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
       </Box>
 
       <Box marginTop="l">
-        <Text variant="secondaryInputLabel">AMOUNT + FEES</Text>
+        <Text variant="secondaryInputLabel" tx="sendReviewScreen.amtFee" />
         <Box
           flexDirection="row"
           justifyContent="space-between"
@@ -166,12 +168,12 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
       </Box>
 
       <Box marginTop="l">
-        <Text variant="secondaryInputLabel">SEND TO</Text>
+        <Text variant="secondaryInputLabel" tx="sendReviewScreen.sendTo" />
         <Text variant="address">{shortenAddress(destinationAddress)}</Text>
       </Box>
 
       <Box marginTop="l">
-        <Text variant="secondaryInputLabel">MEMO (OPTIONAL)</Text>
+        <Text variant="secondaryInputLabel" tx="sendReviewScreen.memoOpt" />
         <Text variant="address">{memo}</Text>
       </Box>
 
@@ -180,7 +182,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <Button
           type="secondary"
           variant="m"
-          label="Edit"
+          label={{ tx: 'sendReviewScreen.edit' }}
           onPress={handleEditPress}
           isBorderless={false}
           isActive={true}
@@ -188,7 +190,8 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <Button
           type="primary"
           variant="m"
-          label={`Send ${asset}`}
+          // label={`Send ${asset}`}
+          label={i18n.t('sendAsset', { asset })}
           onPress={handleSendPress}
           isLoading={isLoading}
           isBorderless={false}

@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import {
   View,
-  Text,
   StyleSheet,
   Alert,
   TextInput,
@@ -16,8 +15,10 @@ import { RootStackParamList } from '../../types'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
 import Button from '../../theme/button'
+import Text from '../../theme/text'
 import Box from '../../theme/box'
 import GradientBackground from '../../components/gradient-background'
+import { labelTranslateFn } from '../../utils'
 
 type UnlockWalletScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -72,7 +73,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
 
   const onContinue = () => {
     if (!validateSeedPhrase()) {
-      Alert.alert('Your seed phrase is invalid', 'Please try again')
+      Alert.alert(labelTranslateFn('unlockWalletScreen.invalidSeedPhrase')!)
       return
     } else {
       navigation.navigate('PasswordCreationScreen', {
@@ -95,11 +96,14 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
         style={[styles.keyboard, StyleSheet.absoluteFillObject]}>
         <Header showText={true} />
         <View style={styles.prompt}>
-          <Text style={styles.promptText}>Unlock Wallet</Text>
-          <Text style={styles.description}>
-            Enter the seed phrase, in the same order saved when creating your
-            wallet.
-          </Text>
+          <Text
+            style={styles.promptText}
+            tx="unlockWalletScreen.unlockWallet"
+          />
+          <Text
+            style={styles.description}
+            tx="unlockWalletScreen.enterSeedPhrase"
+          />
         </View>
         <View style={styles.main}>
           <View style={styles.seedPhrase}>
@@ -111,7 +115,10 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
                   styles.btnLeftSide,
                   seedPhraseLength === 12 && styles.optionActive,
                 ]}>
-                <Text style={styles.seedWordOptionText}>12 words</Text>
+                <Text
+                  style={styles.seedWordOptionText}
+                  tx="unlockWalletScreen.12words"
+                />
               </Pressable>
               <Pressable
                 onPress={() => setPhraseLength(24)}
@@ -120,7 +127,10 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
                   styles.btnRightSide,
                   seedPhraseLength === 24 && styles.optionActive,
                 ]}>
-                <Text style={styles.seedWordOptionText}>24 words</Text>
+                <Text
+                  style={styles.seedWordOptionText}
+                  tx="unlockWalletScreen.24words"
+                />
               </Pressable>
             </View>
             <FlatList
@@ -138,7 +148,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
               <Button
                 type="secondary"
                 variant="m"
-                label="Cancel"
+                label={{ tx: 'common.cancel' }}
                 onPress={navigation.goBack}
                 isBorderless={false}
                 isActive={true}
@@ -146,7 +156,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
               <Button
                 type="primary"
                 variant="m"
-                label="Continue"
+                label={{ tx: 'common.continue' }}
                 onPress={onContinue}
                 isBorderless={false}
                 isActive={chosenSeedWords.every((val) => !!val)}

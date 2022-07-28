@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react'
 import {
   View,
-  Text,
   StyleSheet,
   KeyboardAvoidingView,
   FlatList,
@@ -19,6 +18,7 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions'
 import GradientBackground from '../../../components/gradient-background'
 import Box from '../../../theme/box'
+import Text from '../../../theme/text'
 
 type BackupSeedScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -72,7 +72,7 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
               {item.word}
             </Animated.Text>
           ) : (
-            <Text style={styles.placeHolderText}>hej</Text>
+            <Text style={styles.placeHolderText} tx="backupSeedScreen.hej" />
           )}
         </View>
       </TouchableOpacity>
@@ -103,18 +103,19 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
         </View>
 
         <View style={styles.prompt}>
-          <Text style={styles.promptText}>Your Seed Phrase</Text>
-          <Text style={styles.description}>
-            Write it down, verify it and store it securely. {'\n'} It is the
-            only way to restore your wallet.
-          </Text>
+          <Text
+            style={styles.promptText}
+            tx="backupSeedScreen.yourSeedPhrase"
+          />
+          <Text style={styles.description} tx="backupSeedScreen.writeItDown" />
         </View>
         <View style={styles.main}>
           <View style={styles.seedPhrase}>
             <View style={styles.seedWordLengthOptions}>
-              <Text style={styles.explainHidden}>
-                Hidden for security. Tap to reveal phrase.
-              </Text>
+              <Text
+                style={styles.explainHidden}
+                tx="backupSeedScreen.hidden4Security"
+              />
               {/*  
               We might want to implement toggle between 12-24 words in the future, so keeping this code here  
               <Pressable
@@ -152,7 +153,7 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
               <Button
                 type="secondary"
                 variant="m"
-                label="Cancel"
+                label={{ tx: 'common.cancel' }}
                 onPress={() => navigation.navigate('OverviewScreen')}
                 isBorderless={false}
                 isActive={true}
@@ -160,7 +161,7 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
               <Button
                 type="primary"
                 variant="m"
-                label="I saved the seed"
+                label={{ tx: 'backupSeedScreen.iSaveSeed' }}
                 onPress={() => navigation.navigate('OverviewScreen')}
                 isBorderless={false}
               />
