@@ -129,7 +129,7 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
     <React.Suspense
       fallback={
         <View>
-          <Text tx="sendConfirmationScreeen.load..." />
+          <Text tx="sendConfirmationScreeen.load" />
         </View>
       }>
       <ConfirmationComponent navigation={navigation} route={route} />

@@ -34,7 +34,7 @@ const WithPopupMenu = <T extends FctType>(
         <Suspense
           fallback={
             <View>
-              <Text tx="common.load..." />
+              <Text tx="common.load" />
             </View>
           }>
           <Component navigation={navigation} route={route} />

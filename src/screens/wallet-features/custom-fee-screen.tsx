@@ -54,7 +54,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   if (!gasFees) {
     return (
       <View style={styles.container}>
-        <Text tx="common.load..." />
+        <Text tx="common.load" />
       </View>
     )
   }

@@ -96,7 +96,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   if (!historyItem || !swapProvider) {
     return (
       <Box style={styles.container}>
-        <Text tx="common.load..." />
+        <Text tx="common.load" />
       </Box>
     )
   }

@@ -15,7 +15,7 @@
     "next": "Next",
     "loading": "Loading",
     "review": "Review",
-    "load...": "Loading...",
+    "load": "Loading...",
     "status": "STATUS",
     "speedUp": "Speed Up",
     "send": "SEND",
@@ -123,7 +123,7 @@
     "iHavePrivacy": "I have privacy"
   },
   "overviewScreen": {
-    "load...": "Loading..."
+    "load": "Loading..."
   },
   "receiveScreen": {
     "yourCurrent": "Your current {{code}}/{{activeNetwork}} address",
@@ -139,7 +139,7 @@
     "sent": "SENT",
     "networkSpeed": "NETWORK SPEED/FEE",
     "speedUp": "Speed Up",
-    "load...": "Loading..."
+    "load": "Loading..."
   },
   "sendReviewScreen": {
     "inputDataInvalid": "Input data invalid",

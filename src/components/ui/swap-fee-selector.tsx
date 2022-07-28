@@ -41,7 +41,7 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
   if (!gasFees)
     return (
       <Box>
-        <Text tx="common.load..." />
+        <Text tx="common.load" />
       </Box>
     )
 

@@ -36,7 +36,7 @@ const Spinner = () => {
         <Text
           variant="description"
           style={{ color: theme.colors.secondaryForeground }}
-          tx="common.load..."
+          tx="common.load"
         />
       </View>
     </View>
