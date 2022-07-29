@@ -6,16 +6,10 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import {
   accountForAssetState,
   accountInfoStateFamily,
-  addressStateFamily,
-  balanceStateFamily,
-  isDoneFetchingData,
   swapPairState,
 } from '../../atoms'
 import { useNavigation, useRoute } from '@react-navigation/core'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
-import AssetIcon from '../asset-icon'
-import { assets as cryptoassets } from '@liquality/cryptoassets'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
 const WrappedRow: FC<{
   item: { id: string; name: string }
@@ -24,10 +18,7 @@ const WrappedRow: FC<{
   const [isExpanded, setIsExpanded] = useState(false)
   const ethAccount = useRecoilValue(accountForAssetState('ETH'))
   const btcAccount = useRecoilValue(accountForAssetState('BTC'))
-  const address = useRecoilValue(addressStateFamily(item.id))
-  const balance = useRecoilValue(balanceStateFamily(item.name))
   const account = useRecoilValue(accountInfoStateFamily(item.id))
-  const isDoneFetching = useRecoilValue(isDoneFetchingData)
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
   const assets = Object.values(account?.assets || {}) || []
   const isNested = assets.length > 0 && item.name !== 'BTC'
@@ -49,7 +40,7 @@ const WrappedRow: FC<{
   const onAssetSelected = useCallback(
     (selectedAccount: AccountType) => {
       // Make sure account assets have the same id (account id) as their parent
-      selectedAccount.id = account.id
+      // selectedAccount.id = account.id
       selectedAccount.address = account.address
       let fromAsset: AccountType, toAsset: AccountType
       toAsset = selectedAccount.code === 'ETH' ? btcAccount : ethAccount
@@ -99,7 +90,6 @@ const WrappedRow: FC<{
     },
     [
       account.address,
-      account.id,
       btcAccount,
       ethAccount,
       item.name,
@@ -111,20 +101,23 @@ const WrappedRow: FC<{
     ],
   )
 
-  if (
-    !account ||
-    !account.code ||
-    (isDoneFetching && (balance < 0 || !address))
-  )
-    return null
+  // if (
+  //   !account ||
+  //   !account.code ||
+  //   (isDoneFetching && (balance < 0 || !address))
+  // )
+  //   return null
 
-  if (balance < 0 || !address)
-    return (
-      <View style={styles.row}>
-        <AssetIcon chain={cryptoassets[item.name].chain} />
-        <ActivityIndicator />
-      </View>
-    )
+  // if (balance < 0 || !address) {
+  //   const chainId = item.name as ChainId
+  //   return (
+  //     <View style={styles.row}>
+  //       <AssetIcon chain={chainId} />
+  //       <ActivityIndicator />
+  //     </View>
+  //   )
+  // }
+
   return (
     <Fragment key={item.id}>
       <Row
@@ -150,18 +143,5 @@ const WrappedRow: FC<{
     </Fragment>
   )
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignContent: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
-    borderLeftWidth: 3,
-    paddingVertical: 10,
-    height: 60,
-  },
-})
 
 export default WrappedRow

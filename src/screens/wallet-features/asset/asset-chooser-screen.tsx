@@ -9,6 +9,7 @@ import { useInputState } from '../../../hooks'
 import { useRecoilValue } from 'recoil'
 import { accountListState, accountsIdsState } from '../../../atoms'
 import TextInput from '../../../theme/textInput'
+import _ from 'lodash'
 
 type AssetChooserProps = NativeStackScreenProps<
   RootStackParamList,
@@ -22,11 +23,10 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
   const [data, setData] =
     useState<Array<{ id: string; name: string }>>(accountIds)
 
-  const filterByTerm = useCallback((): void => {
-    const term = searchInput.value
-
+  const debounceHandler = _.debounce((text: string): void => {
+    const term = text
     if (term.length === 0 || !accountList) {
-      return setData(accountList || ([] as AccountType[]))
+      return setData(accountIds || ([] as AccountType[]))
     }
 
     const filteredResults: { id: string; name: string }[] = accountList
@@ -45,9 +45,20 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
       })
       .filter((item) => item.name)
       .map((item) => ({ id: item.id, name: item.name }))
-
     setData(filteredResults || [])
-  }, [accountList, searchInput.value])
+  }, 800)
+
+  const filterByTerm = useCallback(debounceHandler, [
+    accountList,
+    searchInput.value,
+    accountIds,
+    debounceHandler,
+  ])
+
+  const onChangeText = (text: string) => {
+    filterByTerm(text)
+    searchInput.onChangeText(text)
+  }
 
   return (
     <View style={styles.container}>
@@ -57,10 +68,10 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
           style={styles.sendInput}
           placeholderTx={'assetChooserScreen.searchCurrency'}
           keyboardType={'ascii-capable'}
-          onChangeText={searchInput.onChangeText}
-          onEndEditing={filterByTerm}
+          onChangeText={onChangeText}
           value={searchInput.value}
           autoCorrect={false}
+          placeholderTextColor="#747E8DB2"
           autoCapitalize="none"
           returnKeyType="done"
         />
@@ -83,7 +94,7 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     height: 14,
     width: '90%',
-    color: '#747E8DB2',
+    color: '#000',
   },
   searchBox: {
     flexDirection: 'row',

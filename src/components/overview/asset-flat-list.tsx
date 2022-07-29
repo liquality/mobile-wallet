@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
 import { AccountType } from '../../types'
 import WrappedRow from './wrapped-row'
 import AssetIcon from '../asset-icon'
-import { assets as cryptoassets } from '@liquality/cryptoassets'
+import { ChainId } from '@liquality/cryptoassets'
 
 type AssetFlatListPropsType = {
   assets?: AccountType[]
@@ -15,11 +15,12 @@ const AssetFlatList = (props: AssetFlatListPropsType) => {
 
   const renderAsset = useCallback(
     ({ item }: { item: { id: string; name: string } }) => {
+      const chainId = item.name as ChainId
       return (
         <React.Suspense
           fallback={
             <View style={styles.row}>
-              <AssetIcon chain={cryptoassets[item.name].chain} />
+              <AssetIcon chain={chainId} />
               <ActivityIndicator />
             </View>
           }>
