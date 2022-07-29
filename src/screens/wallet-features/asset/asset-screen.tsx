@@ -20,6 +20,8 @@ import {
   swapPairState,
 } from '../../../atoms'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import I18n from 'i18n-js'
+import { labelTranslateFn } from '../../../utils'
 
 type AssetScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -36,7 +38,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const handleSendPress = useCallback(() => {
     navigation.navigate('SendScreen', {
       assetData: route.params.assetData,
-      screenTitle: `Send ${code}`,
+      screenTitle: I18n.t('assetScreen.sendCode', { code }),
     })
   }, [code, navigation, route.params.assetData])
 
@@ -44,14 +46,14 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
     navigation.navigate('ReceiveScreen', {
       assetData: route.params.assetData,
       includeBackBtn: true,
-      screenTitle: `Receive ${code}`,
+      screenTitle: I18n.t('assetScreen.receiveCode', { code }),
     })
   }, [code, navigation, route.params.assetData])
 
   const handleSwapPress = useCallback(() => {
     navigation.navigate('SwapScreen', {
       swapAssetPair: swapPair,
-      screenTitle: 'Swap',
+      screenTitle: labelTranslateFn('assetScreen.swap')!,
     })
   }, [navigation, swapPair])
 

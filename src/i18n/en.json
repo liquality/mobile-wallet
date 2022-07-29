@@ -100,7 +100,9 @@
     "send": "Send",
     "swap": "Swap",
     "receive": "Receive",
-    "activity": "ACTIVITY"
+    "activity": "ACTIVITY",
+    "sendCode": "Send {{code}}",
+    "receiveCode": "Receive {{code}}"
   },
   "assetToggleScreen": {},
   "backupLoginScreen": {

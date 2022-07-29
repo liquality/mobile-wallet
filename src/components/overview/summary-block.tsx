@@ -87,7 +87,7 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
           />
           <RoundButton
             onPress={handleSwapBtnPress}
-            tx="summaryBlockComp.send"
+            tx="summaryBlockComp.swap"
             type="SWAP"
             variant="largePrimary"
           />
