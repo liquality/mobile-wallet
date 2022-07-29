@@ -53,6 +53,7 @@ const WrappedRow: FC<{
         ...currentAccount,
         id: account.id,
         address,
+        balance,
       }
 
       let fromAsset: AccountType, toAsset: AccountType
@@ -103,15 +104,16 @@ const WrappedRow: FC<{
     },
     [
       account.id,
+      address,
+      balance,
       btcAccount,
       ethAccount,
-      item.name,
-      navigation,
       route.params,
-      screenMap,
-      setSwapPair,
       swapPair,
-      address,
+      navigation,
+      screenMap,
+      item.name,
+      setSwapPair,
     ],
   )
 

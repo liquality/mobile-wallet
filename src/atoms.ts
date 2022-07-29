@@ -181,7 +181,20 @@ export const accountForAssetState = selectorFamily<
       const filteredAccounts = accountsIds
         .map((item) => get(accountInfoStateFamily(item.id)))
         .filter((account) => account.code === asset)
-      return filteredAccounts.length > 0 ? filteredAccounts[0] : undefined
+      const account =
+        filteredAccounts.length > 0 ? filteredAccounts[0] : undefined
+      if (!account?.id) return account
+      return {
+        ...account,
+        address: get(addressStateFamily(account.id)),
+        assets: {
+          ...account.assets,
+          [asset]: {
+            ...account.assets[asset],
+            balance: get(balanceStateFamily(asset)),
+          },
+        },
+      }
     },
 })
 
