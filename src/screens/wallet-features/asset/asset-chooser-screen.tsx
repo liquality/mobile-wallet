@@ -48,12 +48,8 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
     setData(filteredResults || [])
   }, 800)
 
-  const filterByTerm = useCallback(debounceHandler, [
-    accountList,
-    searchInput.value,
-    accountIds,
-    debounceHandler,
-  ])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const filterByTerm = useCallback(debounceHandler, [])
 
   const onChangeText = (text: string) => {
     filterByTerm(text)
