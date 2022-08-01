@@ -23,10 +23,11 @@
     "postinstall": "rn-nodeify --install 'crypto,stream,assert,fs,os,path,tty,http,https,url' --hack && node patch.js"
   },
   "dependencies": {
+    "@craftzdog/react-native-buffer": "^6.0.5",
     "@ethersproject/shims": "^5.6.0",
     "@liquality/cryptoassets": "^1.2.14",
     "@liquality/types": "^1.10.0",
-    "@liquality/wallet-core": "^1.22.0",
+    "@liquality/wallet-core": "^1.23.3",
     "@react-native-async-storage/async-storage": "^1.15.8",
     "@react-native-clipboard/clipboard": "^1.9.0",
     "@react-native-community/push-notification-ios": "^1.10.1",
@@ -60,12 +61,11 @@
     "react-native-aes-cipher": "^1.0.9",
     "react-native-background-actions": "^2.6.7",
     "react-native-calendars": "^1.1280.0",
-    "react-native-crypto": "https://github.com/adilmezghouti/react-native-crypto",
+    "react-native-crypto": "^2.2.0",
     "react-native-device-info": "^8.7.1",
     "react-native-dotenv": "^3.3.0",
     "react-native-error-boundary": "^1.1.12",
     "react-native-fast-image": "^8.3.7",
-    "react-native-fast-pbkdf2": "https://github.com/adilmezghouti/react-native-fast-pbkdf2",
     "react-native-flipper": "^0.151.1",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.3.2",
@@ -74,6 +74,7 @@
     "react-native-os": "^1.2.6",
     "react-native-push-notification": "^8.1.1",
     "react-native-qrcode-svg": "^6.1.1",
+    "react-native-quick-crypto": "^0.4.3",
     "react-native-randombytes": "^3.6.1",
     "react-native-reanimated": "^2.5.0",
     "react-native-safe-area-context": "^4.2.2",
@@ -131,7 +132,7 @@
     "@types/react": "^17"
   },
   "rnx-kit": {
-    "reactNativeVersion": "^0.67",
+    "reactNativeVersion": "^0.68",
     "kitType": "app",
     "capabilities": [
       "animation",
@@ -165,7 +166,8 @@
     "path": "path-browserify",
     "tty": "tty-browserify",
     "http": "@tradle/react-native-http",
-    "https": "https-browserify"
+    "https": "https-browserify",
+    "buffer": "@craftzdog/react-native-buffer"
   },
   "browser": {
     "crypto": "react-native-crypto",
@@ -180,6 +182,7 @@
     "path": "path-browserify",
     "tty": "tty-browserify",
     "http": "@tradle/react-native-http",
-    "https": "https-browserify"
+    "https": "https-browserify",
+    "buffer": "@craftzdog/react-native-buffer"
   }
 }

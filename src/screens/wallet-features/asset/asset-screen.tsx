@@ -20,6 +20,7 @@ import {
   swapPairState,
 } from '../../../atoms'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
 
 type AssetScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -91,9 +92,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             <Text style={styles.nativeCurrency}>{code}</Text>
           </Box>
           <Text style={styles.address}>
-            {`${address?.substring(0, 4)}...${address?.substring(
-              address?.length - 4,
-            )}`}
+            {!!address && `${shortenAddress(address)}`}
           </Text>
           <Box flexDirection="row" justifyContent="center" marginTop="l">
             <RoundButton

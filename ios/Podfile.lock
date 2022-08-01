@@ -370,9 +370,12 @@ PODS:
     - React
   - react-native-background-actions (2.6.7):
     - React-Core
-  - react-native-fast-pbkdf2 (0.3.1):
-    - React-Core
   - react-native-flipper (0.151.1):
+    - React-Core
+  - react-native-quick-crypto (0.4.4):
+    - OpenSSL-Universal
+    - React
+    - React-callinvoker
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
@@ -499,7 +502,7 @@ PODS:
     - React-RCTImage
   - RNShare (7.6.6):
     - React-Core
-  - RNSVG (12.4.0):
+  - RNSVG (12.4.3):
     - React-Core
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
@@ -572,8 +575,8 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-aes-cipher (from `../node_modules/react-native-aes-cipher`)
   - react-native-background-actions (from `../node_modules/react-native-background-actions`)
-  - react-native-fast-pbkdf2 (from `../node_modules/react-native-fast-pbkdf2`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
+  - react-native-quick-crypto (from `../node_modules/react-native-quick-crypto`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -698,10 +701,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-aes-cipher"
   react-native-background-actions:
     :path: "../node_modules/react-native-background-actions"
-  react-native-fast-pbkdf2:
-    :path: "../node_modules/react-native-fast-pbkdf2"
   react-native-flipper:
     :path: "../node_modules/react-native-flipper"
+  react-native-quick-crypto:
+    :path: "../node_modules/react-native-quick-crypto"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
   react-native-safe-area-context:
@@ -820,8 +823,8 @@ SPEC CHECKSUMS:
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
   react-native-aes-cipher: 87362294a7e70f99e19576137818121aeab74962
   react-native-background-actions: 2c251c986f23347f9c1722f05fd296938f60edb1
-  react-native-fast-pbkdf2: 44d6ffa0346863e14100294004a1595ec76b2e9f
   react-native-flipper: 8cfe7d710204654eb7289ea05d6596d2d92c9112
+  react-native-quick-crypto: 7fb9a6aa45ffa1b568cb30d187f90a34b2d3304b
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
@@ -848,7 +851,7 @@ SPEC CHECKSUMS:
   RNReanimated: 5c8c17e26787fd8984cd5accdc70fef2ca70aafd
   RNScreens: 4a1af06327774490d97342c00aee0c2bafb497b7
   RNShare: d56424e3926cbc239db1cc1c168adcb051aad50b
-  RNSVG: 3dd44d99d1c18e1342aee4bfa53ab3f6a8c4865f
+  RNSVG: f3b60aeeaa81960e2e0536c3a9eef50b667ef3a9
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
