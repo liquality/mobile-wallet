@@ -1,17 +1,12 @@
 import React, { FC } from 'react'
-import {
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import Label from '../ui/label'
+import Text from '../../theme/text'
 import TimesIcon from '../../assets/icons/times.svg'
 import Uniswap from '../../assets/icons/swap-providers/uniswap.svg'
 import LiqualityBoost from '../../assets/icons/swap-providers/liqualityboost.svg'
 import Liquality from '../../assets/icons/swap-providers/liquality.svg'
+import { labelTranslateFn } from '../../utils'
 
 type SwapTypesInfoProps = {
   swapProviders: any[]
@@ -24,28 +19,26 @@ const providersInfo = [
   {
     name: 'Liquality',
     icon: () => <Liquality width={15} height={15} style={styles.icon} />,
-    description:
-      'Atomic Swap Swap native assets across blockchains without counterparty risks.',
+    description: labelTranslateFn('swapTypesInfo.atomicSwapSwap')!,
     pros: ['Cross-chain', 'Secure', 'Native assets'],
     cons: ['Low-quality', 'Few pairs'],
-    tip: 'Fee structure: 1%, 0 slippage, $100 minimum trade size',
+    tip: labelTranslateFn('swapTypesInfo.feeStruct')!,
   },
   {
     name: 'LiqualityBoost',
     icon: () => <LiqualityBoost width={15} height={15} style={styles.icon} />,
-    description:
-      'Atomic Swap Swap native assets across blockchains without counterparty risks.',
+    description: labelTranslateFn('swapTypesInfo.atomicSwapSwap')!,
     pros: ['Cross-chain', 'Secure', 'Native assets'],
     cons: ['Low-quality', 'Few pairs'],
-    tip: 'Fee structure: 1%, 0 slippage, $100 minimum trade size',
+    tip: labelTranslateFn('swapTypesInfo.feeStruct')!,
   },
   {
     name: 'Uniswap',
     icon: () => <Uniswap width={15} height={15} style={styles.icon} />,
-    description: 'AMM Swap  Swap Ethereum tokens through liquidity pools.',
+    description: labelTranslateFn('swapTypesInfo.ammSwapSwap'),
     pros: ['High Liquidity', 'Many pairs', 'Fast'],
     cons: ['Slippage', 'Ethereum tokens only'],
-    tip: 'Fee structure: 1%, 0 slippage, $100 minimum trade size',
+    tip: labelTranslateFn('swapTypesInfo.feeStruct')!,
   },
 ]
 
@@ -57,16 +50,16 @@ const SwapTypesInfo: FC<SwapTypesInfoProps> = (props) => {
         <View style={styles.container}>
           <View style={styles.content}>
             <View style={styles.header}>
-              <Label text="Learn about swap types" variant="strong" />
+              <Label tx="swapTypesInfo.learnMoreAboutSwap" variant="strong" />
               <Pressable onPress={toggleModal}>
                 <TimesIcon fill={'#000'} />
               </Pressable>
             </View>
             <ScrollView>
-              <Text style={[styles.text, styles.padded]}>
-                When trading assets provider vary regards the way its done:
-                assets, chain, fees, slippage etc. At a glance:
-              </Text>
+              <Text
+                style={[styles.text, styles.padded]}
+                tx="swapTypesInfo.whenTradingAssets"
+              />
               <View style={styles.providersLogos}>
                 {swapProviders.map((item) => {
                   return (
@@ -88,7 +81,7 @@ const SwapTypesInfo: FC<SwapTypesInfoProps> = (props) => {
                   <Text style={styles.description}>{provider.description}</Text>
                   <View style={styles.prosCons}>
                     <View>
-                      <Label text="Pro" variant="strong" />
+                      <Label tx="swapTypesInfo.pro" variant="strong" />
                       {provider.pros.map((pro) => (
                         <Text key={pro} style={styles.prosConsItem}>
                           {pro}
@@ -96,7 +89,7 @@ const SwapTypesInfo: FC<SwapTypesInfoProps> = (props) => {
                       ))}
                     </View>
                     <View>
-                      <Label text="Con" variant="strong" />
+                      <Label tx="swapTypesInfo.con" variant="strong" />
                       {provider.cons.map((con) => (
                         <Text key={con} style={styles.prosConsItem}>
                           {con}

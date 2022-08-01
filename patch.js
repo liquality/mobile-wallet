@@ -52,6 +52,13 @@ async function fixBrowserCheck(path) {
     fixedXmlHttpRequestFile,
   )
 
+  //Fix Vue JSX conflict with react-native jsx
+  const vueJsxTypeDef = await fs.readFile('node_modules/vue/types/jsx.d.ts', {
+    encoding: 'utf8',
+  })
+  const fixVueJsxTypeDef = vueJsxTypeDef.replaceAll('JSX', 'JSX_NOT_REQUIRED')
+  await fs.writeFile('node_modules/vue/types/jsx.d.ts', fixVueJsxTypeDef)
+
   try {
     await fs.rename(
       'node_modules/superstruct/lib/index.cjs',

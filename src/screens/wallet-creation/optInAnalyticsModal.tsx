@@ -1,10 +1,11 @@
-import { Modal, StyleSheet, Text, View } from 'react-native'
+import { Modal, StyleSheet, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import Button from '../../theme/button'
 import { useNavigation } from '@react-navigation/core'
 import CheckBox from '../../components/checkbox'
 import { useRecoilState } from 'recoil'
 import { optInAnalyticsState } from '../../atoms'
+import { Text } from '../../components/text/text'
 
 type AnalyticsModalProps = {
   onAction: (params: boolean) => void
@@ -50,26 +51,26 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
       style={styles.modalView}>
       <View style={styles.container}>
         <View style={styles.contentWrapper}>
-          <Text style={[styles.content, styles.header]}>
-            HELP US IMPROVE LIQUALITY TO BETTER SERVE YOU
-          </Text>
-          <Text style={styles.content}>
-            Share where you click. There is no identifying data. This permission
-            can be revoked at any time.
-          </Text>
+          <Text
+            style={[styles.content, styles.header]}
+            tx="optInAnalyticsModal.helpUsToImprove"
+          />
+          <Text
+            style={styles.content}
+            tx="optInAnalyticsModal.shareWhereYouClick"
+          />
           <CheckBox
             selected={userHasChecked}
             onPress={handleCheckBox}
             textStyle={styles.checkBoxText}
             style={styles.checkBoxStyle}
             color={'#000D35'}
-            text="Share my clicks"
+            text={{ tx: 'optInAnalyticsModal.shareMyClicks' }}
           />
-
           <Button
             type="secondary"
             variant="l"
-            label="OK"
+            label={{ tx: 'common.ok' }}
             onPress={handleOkButtonPress}
             isBorderless={false}
             isActive={true}

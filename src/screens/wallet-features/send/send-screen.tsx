@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
-import { Pressable, StyleSheet, TextInput } from 'react-native'
+import { Pressable, StyleSheet, ViewStyle } from 'react-native'
 import {
   assets as cryptoassets,
   ChainId,
@@ -26,15 +26,17 @@ import QrCodeScanner from '../../../components/qr-code-scanner'
 import { chainDefaultColors } from '../../../core/config'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
+import TextInput from '../../../theme/textInput'
 import Box from '../../../theme/box'
 import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
 import SendFeeSelector from '../../../components/ui/send-fee-selector'
 import { fetchFeesForAsset } from '../../../store/store'
 import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
 import ButtonFooter from '../../../components/button-footer'
-import { isNumber } from '../../../utils'
+import { isNumber, labelTranslateFn } from '../../../utils'
 import { useRecoilValue } from 'recoil'
 import { balanceStateFamily, fiatRatesState } from '../../../atoms'
+import i18n from 'i18n-js'
 
 const useInputState = (
   initialValue: string,
@@ -44,6 +46,14 @@ const useInputState = (
 }
 
 type SendScreenProps = NativeStackScreenProps<RootStackParamList, 'SendScreen'>
+
+const memoInputStyle: ViewStyle = {
+  marginTop: 5,
+  borderColor: '#D9DFE5',
+  borderWidth: 1,
+  height: 150,
+  width: '100%',
+}
 
 const SendScreen: FC<SendScreenProps> = (props) => {
   const { navigation, route } = props
@@ -72,13 +82,13 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
   const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
-      setError('Enter a valid amount')
+      setError(labelTranslateFn('sendScreen.enterValidAmt')!)
       return false
     } else if (new BigNumber(amountInput.value).gt(new BigNumber(balance))) {
-      setError('Lower amount. This exceeds available balance.')
+      setError(labelTranslateFn('sendScreen.lowerAmt')!)
       return false
     } else if (!chain || !chains[chain].isValidAddress(addressInput.value)) {
-      setError('Wrong format. Please check the address.')
+      setError(labelTranslateFn('sendScreen.wrongFmt')!)
       return false
     }
 
@@ -111,7 +121,8 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const handleReviewPress = useCallback(() => {
     if (validate() && networkFee?.current?.value) {
       navigation.navigate('SendReviewScreen', {
-        screenTitle: `Send ${code} Review`,
+        // screenTitle: `Send ${code} Review`,
+        screenTitle: i18n.t('sendScreen.sendReview', { code }),
         sendTransaction: {
           amount: new BigNumber(amountInput.value).toNumber(),
           gasFee: networkFee.current.value,
@@ -145,12 +156,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const handleOnChangeText = useCallback(
     (text: string): void => {
       if (!isNumber(text)) {
-        setError('Invalid amount.')
+        setError(labelTranslateFn('sendScreen.invalidAmt')!)
         return
       }
 
       if (!fiatRates) {
-        setError('Fiat rates missing!')
+        setError(labelTranslateFn('sendScreen.fiatRate')!)
         return
       }
 
@@ -181,7 +192,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const handleCustomPress = () => {
     navigation.navigate('CustomFeeScreen', {
       assetData: route.params.assetData,
-      screenTitle: 'NETWORK SPEED/FEE',
+      screenTitle: labelTranslateFn('sendScreen.networkSpeed')!,
     })
   }
 
@@ -221,7 +232,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 justifyContent="space-between"
                 alignItems="flex-end"
                 marginBottom="m">
-                <Text variant="secondaryInputLabel">SEND</Text>
+                <Text variant="secondaryInputLabel" tx="sendScreen.snd" />
                 <Button
                   label={
                     showAmountsInFiat
@@ -258,11 +269,11 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             alignItems="flex-end"
             marginBottom="m">
             <Box flexDirection="row">
-              <Text variant="amountLabel">Available</Text>
+              <Text variant="amountLabel" tx="sendScreen.available" />
               <Text variant="amount">{` ${availableAmount} ${code}`}</Text>
             </Box>
             <Button
-              label="Max"
+              label={{ tx: 'sendScreen.max' }}
               type="tertiary"
               variant="s"
               onPress={() =>
@@ -271,7 +282,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             />
           </Box>
           <Box marginTop={'xl'}>
-            <Text variant="secondaryInputLabel">SEND TO</Text>
+            <Text variant="secondaryInputLabel" tx="sendScreen.sndTo" />
             <Box
               flexDirection="row"
               justifyContent="space-between"
@@ -282,7 +293,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 onChangeText={addressInput.onChangeText}
                 onFocus={() => setError('')}
                 value={addressInput.value}
-                placeholder="Address"
+                placeholderTx="sendScreen.address"
                 autoCorrect={false}
                 returnKeyType="done"
               />
@@ -292,20 +303,14 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             </Box>
           </Box>
           <Box marginTop={'xl'}>
-            <Text variant="secondaryInputLabel">MEMO (OPTIONAL)</Text>
+            <Text variant="secondaryInputLabel" tx="sendScreen.memoOpt" />
             <Box
               flexDirection="row"
               justifyContent="space-between"
               alignItems="flex-end"
               marginBottom="m">
               <TextInput
-                style={{
-                  marginTop: 5,
-                  borderColor: '#D9DFE5',
-                  borderWidth: 1,
-                  height: 150,
-                  width: '100%',
-                }}
+                style={memoInputStyle}
                 onChangeText={memoInput.onChangeText}
                 onFocus={() => setError('')}
                 value={memoInput.value}
@@ -333,7 +338,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               <AngleRight style={styles.dropdown} />
             )}
 
-            <Text variant="secondaryInputLabel">NETWORK SPEED/FEE</Text>
+            <Text variant="secondaryInputLabel" tx="sendScreen.networkSpeed" />
           </Pressable>
           {customFee ? (
             <Text style={styles.speedValue}>
@@ -362,7 +367,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         <Button
           type="secondary"
           variant="m"
-          label="Cancel"
+          label={{ tx: 'common.cancel' }}
           onPress={navigation.goBack}
           isBorderless={false}
           isActive={true}
@@ -370,7 +375,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         <Button
           type="primary"
           variant="m"
-          label="Review"
+          label={{ tx: 'common.review' }}
           onPress={handleReviewPress}
           isBorderless={false}
           isActive={true}

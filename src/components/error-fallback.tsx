@@ -17,9 +17,14 @@ const ErrorFallback: FC<ErrorFallbackProps> = (props) => {
       borderWidth={1}
       margin="l"
       borderColor="mainButtonBorderColor">
-      <Text variant="body">Something went wrong</Text>
+      <Text variant="body" tx="somethingWentWrong" />
       <Text variant="error">{error.message}</Text>
-      <Button type="primary" variant="m" label="Reset" onPress={resetError} />
+      <Button
+        type="primary"
+        variant="m"
+        label={{ tx: 'common.reset' }}
+        onPress={resetError}
+      />
     </Box>
   )
 }

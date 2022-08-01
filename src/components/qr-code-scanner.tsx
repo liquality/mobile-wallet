@@ -15,6 +15,7 @@ import {
 } from 'vision-camera-code-scanner'
 import { runOnJS } from 'react-native-reanimated'
 import TimesIcon from '../assets/icons/times.svg'
+import { labelTranslateFn } from '../utils'
 
 type QrCodeScannerPropsType = {
   onClose: (address: string) => void
@@ -37,7 +38,7 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
       if (address && chains[chain].isValidAddress(address)) {
         onClose(address)
       } else {
-        setError('Invalid QR Code')
+        setError(labelTranslateFn('invalidQRCode')!)
       }
     },
     [chain, error, onClose],

@@ -31,6 +31,7 @@ import {
   networkState,
 } from '../../atoms'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { labelTranslateFn } from '../../utils'
 
 type LoginScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -61,7 +62,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
 
   const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
-      setError('Passwords must be at least 8 characters')
+      setError(labelTranslateFn('passwordCreationScreen.password8char')!)
     } else {
       setLoading(true)
       await restoreWallet(passwordInput.value)
@@ -135,13 +136,13 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
           <Header showText={true} />
           <Box flex={0.6} justifyContent="space-around" width="100%">
             <Box alignItems="center">
-              <Text variant="slogan1">one</Text>
-              <Text variant="slogan2">wallet</Text>
-              <Text variant="slogan1">all chains</Text>
+              <Text variant="slogan1" tx="common.one" />
+              <Text variant="slogan2" tx="common.wallet" />
+              <Text variant="slogan1" tx="common.all_chains" />
             </Box>
 
             <View style={styles.inputWrapper}>
-              <Text variant="mainInputLabel">PASSWORD</Text>
+              <Text variant="mainInputLabel" tx="loginScreen.password" />
               <TextInput
                 style={styles.input}
                 onChangeText={passwordInput.onChangeText}
@@ -156,17 +157,17 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
           </Box>
           <Box flex={0.3} width="90%" justifyContent="flex-end">
             <View style={styles.forgotPassword}>
-              <Text variant="description">Forgot password? </Text>
+              <Text variant="description" tx="common.forgotPassword" />
               <Text
                 variant="description"
-                onPress={() => navigation.navigate('WalletImportNavigator')}>
-                Import with seed phrase
-              </Text>
+                onPress={() => navigation.navigate('WalletImportNavigator')}
+                tx="common.importWithSeedPhrase"
+              />
             </View>
             <Button
               type="primary"
               variant="l"
-              label="Unlock"
+              label={{ tx: 'loginScreen.unlock' }}
               isLoading={loading}
               onPress={onUnlock}
               isBorderless
@@ -175,7 +176,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             <Button
               type="primary"
               variant="l"
-              label="Open Sesame"
+              label={{ tx: 'common.openSesame' }}
               isLoading={loading}
               onPress={onSesamePress}
               isBorderless

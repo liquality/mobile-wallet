@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View, Text } from 'react-native'
 import CalendarIcon from '../../assets/icons/calendar.svg'
 import SectionTitle from './section-title'
 import DatePicker from './date-picker'
+import { labelTranslateFn } from '../../utils'
 
 const DateRange: FC<{
   start: string | undefined
@@ -40,27 +41,31 @@ const DateRange: FC<{
 
   return (
     <View style={styles.container}>
-      <SectionTitle title="DATE RANGE" />
+      <SectionTitle tx="common.dateRange" />
       <View style={styles.content}>
         <Pressable style={styles.button} onPress={handleOpenStartDate}>
-          <Text style={styles.label}>{start || 'Start'}</Text>
+          <Text style={styles.label}>
+            {start || labelTranslateFn('common.start')}
+          </Text>
           <CalendarIcon />
         </Pressable>
         <Pressable
           style={[styles.button, styles.secondButton]}
           onPress={handleOpenPickEndDate}>
-          <Text style={styles.label}>{end || 'End'}</Text>
+          <Text style={styles.label}>
+            {end || labelTranslateFn('common.end')}
+          </Text>
           <CalendarIcon />
         </Pressable>
         <DatePicker
-          title="Start Date"
+          title={labelTranslateFn('common.startDate')!}
           open={isStartDatePickerVisible}
           onClose={handleCloseStartDate}
           date={start}
           onChange={handleChangeStartDate}
         />
         <DatePicker
-          title="End Date"
+          title={labelTranslateFn('common.endDate')!}
           open={isEndDatePickerVisible}
           onClose={handleCloseEndDate}
           date={end}

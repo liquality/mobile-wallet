@@ -11,6 +11,7 @@ import { Network } from '@liquality/wallet-core/dist/store/types'
 import dayjs from 'dayjs'
 import QuickCrypto from 'react-native-quick-crypto'
 import { Buffer } from '@craftzdog/react-native-buffer'
+import { translate, TxKeyPath } from '../i18n'
 
 export const sortQuotes = (quotes: SwapQuote[]): SwapQuote[] => {
   if (!quotes) {
@@ -185,3 +186,5 @@ export const capitalizeFirstLetter = (str: string) => {
 export const isNumber = (value: string): boolean => {
   return /^\d+(.\d*)?$/.test(value)
 }
+
+export const labelTranslateFn = (value: TxKeyPath) => translate(value)

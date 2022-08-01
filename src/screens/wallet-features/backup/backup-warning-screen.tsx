@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 import Eye from '../../../assets/icons/eye.svg'
 import Button from '../../../theme/button'
+import Text from '../../../theme/text'
 
 const BackupWarningScreen = ({}) => {
   const navigation = useNavigation()
@@ -16,22 +17,27 @@ const BackupWarningScreen = ({}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.warningBackupSeedTitle}>Show Seed Phrase?</Text>
-      <Text style={styles.warningBackupSeedSubtitle}>
-        Anyone who has this seed phrase can steal your funds.
-      </Text>
+      <Text
+        style={styles.warningBackupSeedTitle}
+        tx="backupWarningScreen.showSeedPhrase"
+      />
+      <Text
+        style={styles.warningBackupSeedSubtitle}
+        tx="backupWarningScreen.anyoneWhoSeed"
+      />
       <View style={styles.eyeIcon}>
         <Eye />
-        <Text style={styles.warningBackupSeedNoCamera}>
-          View it in private without any cameras around.
-        </Text>
+        <Text
+          style={styles.warningBackupSeedNoCamera}
+          tx="backupWarningScreen.viewItPrivate"
+        />
       </View>
       <View style={styles.actionBlock}>
         <Button
           style={styles.btn}
           type="secondary"
           variant="m"
-          label="Cancel"
+          label={{ tx: 'common.cancel' }}
           onPress={() => {
             navigation.navigate('SettingsScreen')
           }}
@@ -41,7 +47,7 @@ const BackupWarningScreen = ({}) => {
         <Button
           type="primary"
           variant="m"
-          label="I have privacy"
+          label={{ tx: 'backupWarningScreen.iHavePrivacy' }}
           onPress={handleBackupSeedBtnPress}
           isBorderless={false}
         />

@@ -1,25 +1,32 @@
 import React, { FC } from 'react'
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, StyleSheet, View } from 'react-native'
 import Button from '../../theme/button'
+import Text from '../../theme/text'
+import { TxKeyPath, translate } from '../../i18n'
 
 type MessageBannerProps = {
   text1: string
   text2: string
+  tx?: TxKeyPath
+  txOptions?: i18n.TranslateOptions
   onAction: (...args: unknown[]) => void
 }
 
 const MessageBanner: FC<MessageBannerProps> = (props) => {
-  const { text1, text2, onAction } = props
+  const { tx, txOptions, text1, text2, onAction } = props
+
+  const i18nText = tx && translate(tx, txOptions)
+  const content = i18nText || text1
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{text1}</Text>
+      <Text style={styles.text}>{content}</Text>
       <View style={styles.row}>
         <Text style={styles.text}>{text2}</Text>
         <Button
           type="tertiary"
           variant="s"
-          label="Add Liquidity"
+          label={{ tx: 'common.addLiquidity' }}
           onPress={onAction}
           isBorderless={false}
           isActive={true}

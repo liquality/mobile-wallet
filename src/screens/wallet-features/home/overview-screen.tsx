@@ -28,7 +28,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
                 width={Dimensions.get('screen').width}
                 height={225}
               />
-              <Text variant="loading">Loading...</Text>
+              <Text variant="loading" tx="overviewScreen.load..." />
             </Box>
           }>
           <SummaryBlock navigation={navigation} />
@@ -36,7 +36,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
         <React.Suspense
           fallback={
             <Box>
-              <Text variant="loading">Loading...</Text>
+              <Text variant="loading" tx="overviewScreen.load..." />
             </Box>
           }>
           <ContentBlock />

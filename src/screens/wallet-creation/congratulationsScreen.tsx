@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, Image, Dimensions } from 'react-native'
+import { View, StyleSheet, Image, Dimensions } from 'react-native'
+import { Text } from '../../components/text/text'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import Confetti from '../../components/confetti'
@@ -32,7 +33,7 @@ const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
       />
       <Confetti />
       <View style={styles.message}>
-        <Text style={styles.messageText}>Congrats!</Text>
+        <Text style={styles.messageText} tx="congratulationsScreen.congrats" />
         <Image
           style={styles.checkmark}
           source={require('../../assets/icons/checkmark.png')}

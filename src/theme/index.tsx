@@ -305,6 +305,7 @@ const theme = createTheme({
     },
   },
   cardVariants: {},
+  textInputVariants: {},
 })
 
 export type Theme = typeof theme

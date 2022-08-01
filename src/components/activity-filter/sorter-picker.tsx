@@ -1,19 +1,23 @@
 import React, { FC } from 'react'
 import { StyleSheet, Dimensions } from 'react-native'
 import ModalFilterPicker from 'react-native-modal-filter-picker'
+import { labelTranslateFn } from '../../utils'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen')
 
 export const SORT_OPTIONS = [
-  { key: 'needs_attention', label: 'Needs attention' },
-  { key: 'pending', label: 'Pending' },
-  { key: 'canceled', label: 'Canceled' },
-  { key: 'refunded', label: 'Refunded' },
-  { key: 'completed', label: 'Completed' },
-  { key: 'failed', label: 'Failed' },
-  { key: 'by_date', label: 'By date (newest first)' },
-  { key: 'by_type', label: 'By type (A to Z)' },
-  { key: 'by_token', label: 'By Token (A to Z)' },
+  {
+    key: 'needs_attention',
+    label: labelTranslateFn('sortPicker.needs_attention')!,
+  },
+  { key: 'pending', label: labelTranslateFn('sortPicker.pending')! },
+  { key: 'canceled', label: labelTranslateFn('sortPicker.canceled')! },
+  { key: 'refunded', label: labelTranslateFn('sortPicker.refunded')! },
+  { key: 'completed', label: labelTranslateFn('sortPicker.completed')! },
+  { key: 'failed', label: labelTranslateFn('sortPicker.failed')! },
+  { key: 'by_date', label: labelTranslateFn('sortPicker.by_date')! },
+  { key: 'by_type', label: labelTranslateFn('sortPicker.by_type')! },
+  { key: 'by_token', label: labelTranslateFn('sortPicker.by_token')! },
 ]
 
 const SorterPicker: FC<{
