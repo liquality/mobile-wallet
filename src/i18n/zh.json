@@ -133,7 +133,8 @@
     "done": "Done",
     "copied": "Copied!",
     "copyAdd": "Copy Address",
-    "addressEmpty": "Address empty. Please try again!"
+    "addressEmpty": "Address empty. Please try again!",
+    "buyCrypto": "Buy Crypto"
   },
   "sendConfirmationScreeen": {
     "status": "STATUS",

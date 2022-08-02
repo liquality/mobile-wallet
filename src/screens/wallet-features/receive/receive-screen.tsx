@@ -16,6 +16,7 @@ import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import CheckIcon from '../../../assets/icons/swap-check.svg'
 import CopyIcon from '../../../assets/icons/copy.svg'
+import TransakIcon from '../../../assets/icons/transak.svg'
 import { useRecoilValue } from 'recoil'
 import i18n from 'i18n-js'
 import { addressStateFamily, networkState } from '../../../atoms'
@@ -119,7 +120,45 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
             </Text>
           </Fragment>
         )}
+        <View style={styles.buyCryptoBtnView}>
+          <Button
+            type="secondary"
+            variant="m"
+            label={{ tx: 'receiveScreen.buyCrypto' }}
+            onPress={() => {}}
+            isBorderless={false}
+            isActive={true}
+          />
+          <View style={styles.poweredTransakIconView}>
+            <Text style={styles.poweredBuyTextStyle}>powered buy </Text>
+            <TransakIcon
+              width={85}
+              height={24}
+              stroke={'#FFFFFF'}
+              style={styles.icon}
+            />
+          </View>
+        </View>
       </View>
+      {/* <View style={styles.buyCryptoBtnView}>
+        <Button
+          type="secondary"
+          variant="m"
+          label={{ tx: 'receiveScreen.buyCrypto' }}
+          onPress={() => {}}
+          isBorderless={false}
+          isActive={true}
+        />
+        <View style={styles.poweredTransakIconView}>
+          <Text style={styles.poweredBuyTextStyle}>powered buy </Text>
+          <TransakIcon
+            width={85}
+            height={24}
+            stroke={'#FFFFFF'}
+            style={styles.icon}
+          />
+        </View>
+      </View> */}
       <View style={styles.actionBlock}>
         <Button
           type="secondary"
@@ -191,7 +230,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   ContentBlock: {
-    flex: 0.5,
+    flex: 0.6,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -220,7 +259,7 @@ const styles = StyleSheet.create({
     color: '#9D4DFA',
   },
   actionBlock: {
-    flex: 0.3,
+    flex: 0.2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
@@ -229,6 +268,19 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 5,
+  },
+  buyCryptoBtnView: {
+    alignItems: 'center',
+  },
+  poweredTransakIconView: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  poweredBuyTextStyle: {
+    fontSize: 12,
+    lineHeight: 18,
+    color: '#646F85',
   },
 })
 
