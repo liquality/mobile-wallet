@@ -72,7 +72,7 @@ const SwapTransactionDetails: React.FC<SwapTransactionDetailsProps> = (
     <Box justifyContent="space-between" paddingHorizontal="xl" marginTop="xl">
       <Box justifyContent="center" alignItems="center">
         <Text variant="timelineLabel">{formatDate(historyItem.startTime)}</Text>
-        <Label tx="common.started" variant="strong" />
+        <Label text={{ tx: 'common.started' }} variant="strong" />
         {!['SUCCESS', 'REFUNDED'].includes(historyItem.status) && (
           <Pressable onPress={handleTransactionCancellation}>
             <Text variant="link" tx="common.cancel" />
@@ -87,7 +87,7 @@ const SwapTransactionDetails: React.FC<SwapTransactionDetailsProps> = (
       />
       {['SUCCESS', 'REFUNDED'].includes(historyItem.status?.toUpperCase()) && (
         <Box justifyContent="center" alignItems="center">
-          <Label tx="common.completed" variant="strong" />
+          <Label text={{ tx: 'common.completed' }} variant="strong" />
           <Text variant="timelineLabel">
             {historyItem.endTime && formatDate(historyItem.endTime)}
           </Text>

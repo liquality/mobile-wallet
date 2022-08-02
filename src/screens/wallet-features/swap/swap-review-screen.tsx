@@ -127,7 +127,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         selectQuote={handleSelectQuote}
       /> */}
       <Warning
-        tx1={'common.maxSlippage'}
+        text1={{ tx1: 'common.maxSlippage' }}
         text2={I18n.t('common.swapDoesnotComp', {
           date: `${new Date(
             new Date().getTime() + 3 * 60 * 60 * 1000,

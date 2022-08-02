@@ -68,7 +68,7 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
             )}`}
         </Text>
       </View>
-      <Label tx="swapRevAstSumComp.networkFee" variant="light" />
+      <Label text={{ tx: 'swapRevAstSumComp.networkFee' }} variant="light" />
       <View style={styles.row}>
         <Text style={[styles.font, styles.amount]}>{`${networkFee.toNumber()} ${
           chains[cryptoassets[asset.code].chain].fees.unit
@@ -78,7 +78,7 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
           fiatRates[asset.code],
         ).toString()}`}</Text>
       </View>
-      <Label tx="swapRevAstSumComp.amtFee" variant="light" />
+      <Label text={{ tx: 'swapRevAstSumComp.amtFee' }} variant="light" />
       <View style={styles.row}>
         <Text style={[styles.font, styles.amountStrong]}>{`${amount.plus(
           unitToCurrency(cryptoassets[asset.code], networkFee.toNumber()),
