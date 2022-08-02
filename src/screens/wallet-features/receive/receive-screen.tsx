@@ -21,6 +21,19 @@ import { useRecoilValue } from 'recoil'
 import i18n from 'i18n-js'
 import { addressStateFamily, networkState } from '../../../atoms'
 import { labelTranslateFn, COPY_BUTTON_TIMEOUT } from '../../../utils'
+import BuyCryptoModal from './buyCryptoModal'
+
+const PowerByTransak = () => (
+  <View style={styles.poweredTransakIconView}>
+    <Text style={styles.poweredBuyTextStyle} tx="receiveScreen.poweredBy" />
+    <TransakIcon
+      width={85}
+      height={24}
+      stroke={'#FFFFFF'}
+      style={styles.icon}
+    />
+  </View>
+)
 
 type ReceiveScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -33,6 +46,13 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   const address = useRecoilValue(addressStateFamily(id))
   const activeNetwork = useRecoilValue(networkState)
   const { width } = Dimensions.get('screen')
+  const [cryptoModalVisible, setCryptoModalVisible] = useState(false)
+
+  const isPoweredByTransak = true
+
+  const onCloseButtonPress = () => {
+    setCryptoModalVisible(false)
+  }
 
   const QRCodeSize = width < 390 ? width / 2.4 : width / 2
 
@@ -96,6 +116,13 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
 
   return (
     <View style={styles.container}>
+      <BuyCryptoModal
+        visible={cryptoModalVisible}
+        onPress={onCloseButtonPress}
+        isPoweredByTransak={isPoweredByTransak}
+        poweredTransakComp={<PowerByTransak />}
+        handleLinkPress={handleLinkPress}
+      />
       <View style={styles.headerBlock}>
         <AssetIcon asset={code} chain={chain} />
         <Text style={styles.addressLabel}>
@@ -128,19 +155,11 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
             type="secondary"
             variant="m"
             label={{ tx: 'receiveScreen.buyCrypto' }}
-            onPress={() => {}}
+            onPress={() => setCryptoModalVisible(true)}
             isBorderless={false}
             isActive={true}
           />
-          <View style={styles.poweredTransakIconView}>
-            <Text style={styles.poweredBuyTextStyle}>powered buy </Text>
-            <TransakIcon
-              width={85}
-              height={24}
-              stroke={'#FFFFFF'}
-              style={styles.icon}
-            />
-          </View>
+          {isPoweredByTransak && <PowerByTransak />}
         </View>
       </View>
       <View style={styles.actionBlock}>

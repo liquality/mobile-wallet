@@ -134,7 +134,11 @@
     "copied": "Copied!",
     "copyAdd": "Copy Address",
     "addressEmpty": "Address empty. Please try again!",
-    "buyCrypto": "Buy Crypto"
+    "buyCrypto": "Buy Crypto",
+    "poweredBy": "powered by",
+    "transakContent": "Transak lets you buy multiple assets with your credit card or via bank transer depending on location straight into your Liquality wallet. To cover fees (gas) or interact with DApps you’ll mostly need ETH.",
+    "feeAndLimits": "Fees and limits may vary. It usually takes just a couple of minutes and requires registration.",
+    "continueToTransak": "Continue To Transak"
   },
   "sendConfirmationScreeen": {
     "status": "STATUS",
