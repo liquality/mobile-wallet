@@ -32,6 +32,9 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   const { name, chain, code, id }: AccountType = route.params.assetData!
   const address = useRecoilValue(addressStateFamily(id))
   const activeNetwork = useRecoilValue(networkState)
+  const { width } = Dimensions.get('screen')
+
+  const QRCodeSize = width < 390 ? width / 2.4 : width / 2
 
   //TODO Read this from a config file
   const getFaucetUrl = (asset: string): { name: string; url: string } => {
@@ -107,7 +110,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
       </View>
       <View style={styles.ContentBlock}>
         <Text style={styles.scanPrompt} tx="receiveScreen.scanORcode" />
-        {!!address && <QRCode value={address} size={200} />}
+        {!!address && <QRCode value={address} size={QRCodeSize} />}
         {activeNetwork === 'testnet' && (
           <Fragment>
             <Text style={styles.linkLabel}>
@@ -140,25 +143,6 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
           </View>
         </View>
       </View>
-      {/* <View style={styles.buyCryptoBtnView}>
-        <Button
-          type="secondary"
-          variant="m"
-          label={{ tx: 'receiveScreen.buyCrypto' }}
-          onPress={() => {}}
-          isBorderless={false}
-          isActive={true}
-        />
-        <View style={styles.poweredTransakIconView}>
-          <Text style={styles.poweredBuyTextStyle}>powered buy </Text>
-          <TransakIcon
-            width={85}
-            height={24}
-            stroke={'#FFFFFF'}
-            style={styles.icon}
-          />
-        </View>
-      </View> */}
       <View style={styles.actionBlock}>
         <Button
           type="secondary"
@@ -231,7 +215,6 @@ const styles = StyleSheet.create({
   },
   ContentBlock: {
     flex: 0.6,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   scanPrompt: {
@@ -242,7 +225,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: '#000D35',
     width: '70%',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   linkLabel: {
     fontFamily: 'Montserrat-Regular',

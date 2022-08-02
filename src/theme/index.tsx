@@ -125,9 +125,8 @@ const theme = createTheme({
       fontFamily: 'Montserrat-Regular',
       fontWeight: '600',
       fontSize: 14,
-      lineHeight: 10,
+      lineHeight: 16,
       color: 'buttonFontPrimary',
-      paddingVertical: 'l',
     },
     tertiaryButtonLabel: {
       fontFamily: 'Montserrat-Regular',
@@ -246,7 +245,7 @@ const theme = createTheme({
       paddingHorizontal: 'l',
       marginVertical: 'l',
       width: '100%',
-      height: 35,
+      height: 36,
     },
     m: {
       flexDirection: 'row',
