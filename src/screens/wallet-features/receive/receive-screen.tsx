@@ -19,7 +19,7 @@ import CopyIcon from '../../../assets/icons/copy.svg'
 import { useRecoilValue } from 'recoil'
 import i18n from 'i18n-js'
 import { addressStateFamily, networkState } from '../../../atoms'
-import { labelTranslateFn } from '../../../utils'
+import { labelTranslateFn, COPY_BUTTON_TIMEOUT } from '../../../utils'
 
 type ReceiveScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -84,6 +84,10 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
     if (!address) Alert.alert(labelTranslateFn('receiveScreen.addressEmpty')!)
     Clipboard.setString(address)
     setButtonPressed(true)
+    setTimeout(() => {
+      Clipboard.setString('')
+      setButtonPressed(false)
+    }, COPY_BUTTON_TIMEOUT)
   }
 
   return (
