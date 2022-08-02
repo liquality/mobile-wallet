@@ -125,7 +125,7 @@ const theme = createTheme({
       fontFamily: 'Montserrat-Regular',
       fontWeight: '600',
       fontSize: 14,
-      lineHeight: 16,
+      lineHeight: 14,
       color: 'buttonFontPrimary',
     },
     tertiaryButtonLabel: {
