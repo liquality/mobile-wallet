@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import React from 'react'
 import Button from '../../../theme/button'
+import Box from '../../../theme/box'
 import { Text } from '../../../components/text/text'
 import XIcon from '../../../assets/icons/X.svg'
 
@@ -54,8 +55,8 @@ const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
       transparent={true}
       visible={visible}
       style={styles.modalView}>
-      <View style={styles.container}>
-        <View style={styles.contentWrapper}>
+      <Box style={styles.container}>
+        <Box style={styles.contentWrapper}>
           <Pressable onPress={onPress} style={XIconStyle}>
             <View style={Padding10}>
               <XIcon width={25} height={25} />
@@ -84,8 +85,8 @@ const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
             isBorderless={false}
             isActive={true}
           />
-        </View>
-      </View>
+        </Box>
+      </Box>
     </Modal>
   )
 }
