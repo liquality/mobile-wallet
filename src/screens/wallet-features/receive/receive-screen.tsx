@@ -16,9 +16,24 @@ import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import CheckIcon from '../../../assets/icons/swap-check.svg'
 import CopyIcon from '../../../assets/icons/copy.svg'
+import TransakIcon from '../../../assets/icons/transak.svg'
 import { useRecoilValue } from 'recoil'
 import i18n from 'i18n-js'
 import { addressStateFamily, networkState } from '../../../atoms'
+import { labelTranslateFn, COPY_BUTTON_TIMEOUT } from '../../../utils'
+import BuyCryptoModal from './buyCryptoModal'
+
+const PowerByTransak = () => (
+  <View style={styles.poweredTransakIconView}>
+    <Text style={styles.poweredBuyTextStyle} tx="receiveScreen.poweredBy" />
+    <TransakIcon
+      width={85}
+      height={24}
+      stroke={'#FFFFFF'}
+      style={styles.icon}
+    />
+  </View>
+)
 
 type ReceiveScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -30,6 +45,16 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   const { name, chain, code, id }: AccountType = route.params.assetData!
   const address = useRecoilValue(addressStateFamily(id))
   const activeNetwork = useRecoilValue(networkState)
+  const { width } = Dimensions.get('screen')
+  const [cryptoModalVisible, setCryptoModalVisible] = useState(false)
+
+  const isPoweredByTransak = true
+
+  const onCloseButtonPress = () => {
+    setCryptoModalVisible(false)
+  }
+
+  const QRCodeSize = width < 390 ? width / 2.4 : width / 2
 
   //TODO Read this from a config file
   const getFaucetUrl = (asset: string): { name: string; url: string } => {
@@ -80,13 +105,24 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   }
 
   const handleCopyAddressPress = async () => {
-    if (!address) Alert.alert('Address empty. Please try again!')
+    if (!address) Alert.alert(labelTranslateFn('receiveScreen.addressEmpty')!)
     Clipboard.setString(address)
     setButtonPressed(true)
+    setTimeout(() => {
+      Clipboard.setString('')
+      setButtonPressed(false)
+    }, COPY_BUTTON_TIMEOUT)
   }
 
   return (
     <View style={styles.container}>
+      <BuyCryptoModal
+        visible={cryptoModalVisible}
+        onPress={onCloseButtonPress}
+        isPoweredByTransak={isPoweredByTransak}
+        poweredTransakComp={<PowerByTransak />}
+        handleLinkPress={handleLinkPress}
+      />
       <View style={styles.headerBlock}>
         <AssetIcon asset={code} chain={chain} />
         <Text style={styles.addressLabel}>
@@ -101,7 +137,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
       </View>
       <View style={styles.ContentBlock}>
         <Text style={styles.scanPrompt} tx="receiveScreen.scanORcode" />
-        {!!address && <QRCode value={address} size={200} />}
+        {!!address && <QRCode value={address} size={QRCodeSize} />}
         {activeNetwork === 'testnet' && (
           <Fragment>
             <Text style={styles.linkLabel}>
@@ -114,6 +150,17 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
             </Text>
           </Fragment>
         )}
+        <View style={styles.buyCryptoBtnView}>
+          <Button
+            type="secondary"
+            variant="m"
+            label={{ tx: 'receiveScreen.buyCrypto' }}
+            onPress={() => setCryptoModalVisible(true)}
+            isBorderless={false}
+            isActive={true}
+          />
+          {isPoweredByTransak && <PowerByTransak />}
+        </View>
       </View>
       <View style={styles.actionBlock}>
         <Button
@@ -186,8 +233,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   ContentBlock: {
-    flex: 0.5,
-    justifyContent: 'center',
+    flex: 0.6,
     alignItems: 'center',
   },
   scanPrompt: {
@@ -198,7 +244,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: '#000D35',
     width: '70%',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   linkLabel: {
     fontFamily: 'Montserrat-Regular',
@@ -215,7 +261,7 @@ const styles = StyleSheet.create({
     color: '#9D4DFA',
   },
   actionBlock: {
-    flex: 0.3,
+    flex: 0.2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
@@ -224,6 +270,19 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 5,
+  },
+  buyCryptoBtnView: {
+    alignItems: 'center',
+  },
+  poweredTransakIconView: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  poweredBuyTextStyle: {
+    fontSize: 12,
+    lineHeight: 18,
+    color: '#646F85',
   },
 })
 

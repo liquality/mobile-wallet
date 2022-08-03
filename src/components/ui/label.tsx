@@ -4,9 +4,8 @@ import { TxKeyPath, translate } from '../../i18n'
 import i18n from 'i18n-js'
 
 type LabelProps = {
-  text: string
+  text: string | { tx: TxKeyPath }
   variant: 'light' | 'strong'
-  tx?: TxKeyPath
   txOptions?: i18n.TranslateOptions
 }
 
@@ -24,9 +23,14 @@ const strong: TextStyle = {
 }
 
 const Label: FC<LabelProps> = (props) => {
-  const { tx, txOptions, text, variant } = props
-  const i18nText = tx && translate(tx, txOptions)
-  const content = i18nText || text
+  const { txOptions, text, variant } = props
+  let content
+  if (typeof text !== 'string') {
+    const { tx } = text
+    content = tx && translate(tx, txOptions)
+  } else {
+    content = text
+  }
 
   const styleOverride = variant === 'light' ? light : strong
 

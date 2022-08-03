@@ -96,7 +96,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   if (!historyItem || !swapProvider) {
     return (
       <Box style={styles.container}>
-        <Text tx="common.load..." />
+        <Text tx="common.load" />
       </Box>
     )
   }
@@ -220,7 +220,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           ) : (
             <AngleRight style={styles.dropdown} />
           )}
-          <Label tx="swapConfirmationScreen.advanced" variant="strong" />
+          <Label
+            text={{ tx: 'swapConfirmationScreen.advanced' }}
+            variant="strong"
+          />
         </Pressable>
         {isExpanded && (
           <>
@@ -231,7 +234,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
                 paddingHorizontal={'xl'}
                 paddingVertical={'m'}>
                 <Label
-                  tx="swapConfirmationScreen.counterParty"
+                  text={{ tx: 'swapConfirmationScreen.counterParty' }}
                   variant="light"
                 />
                 <Text style={styles.transactionInfo}>
@@ -244,7 +247,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               borderTopColor="mainBorderColor"
               paddingHorizontal={'xl'}
               paddingVertical={'m'}>
-              <Label tx="swapConfirmationScreen.orderId" variant="light" />
+              <Label
+                text={{ tx: 'swapConfirmationScreen.orderId' }}
+                variant="light"
+              />
               <Text style={styles.transactionInfo}>{id}</Text>
             </Box>
             {!!startTime && (
@@ -253,7 +259,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
                 borderTopColor="mainBorderColor"
                 paddingHorizontal={'xl'}
                 paddingVertical={'m'}>
-                <Label tx="swapConfirmationScreen.startedAt" variant="light" />
+                <Label
+                  text={{ tx: 'swapConfirmationScreen.startedAt' }}
+                  variant="light"
+                />
                 <Text style={styles.transactionInfo}>
                   {formatDate(startTime)}
                 </Text>
@@ -264,7 +273,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               borderTopColor="mainBorderColor"
               paddingHorizontal={'xl'}
               paddingVertical={'m'}>
-              <Label tx="swapConfirmationScreen.finishedAt" variant="light" />
+              <Label
+                text={{ tx: 'swapConfirmationScreen.finishedAt' }}
+                variant="light"
+              />
               <Text style={styles.transactionInfo}>
                 {historyItem?.endTime && formatDate(historyItem?.endTime)}
               </Text>
@@ -275,7 +287,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
                 borderTopColor="mainBorderColor"
                 paddingHorizontal={'xl'}
                 paddingVertical={'m'}>
-                <Label tx="swapConfirmationScreen.rate" variant="light" />
+                <Label
+                  text={{ tx: 'swapConfirmationScreen.rate' }}
+                  variant="light"
+                />
                 <Text style={styles.transactionInfo}>{`1${from} = ${computeRate(
                   transaction,
                 )} ${to}`}</Text>
@@ -286,7 +301,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               borderTopColor="mainBorderColor"
               paddingHorizontal={'xl'}
               paddingVertical={'m'}>
-              <Label tx="common.status" variant="light" />
+              <Label text={{ tx: 'common.status' }} variant="light" />
               <Text style={styles.transactionInfo}>{historyItem?.status}</Text>
             </Box>
             <Box
@@ -294,7 +309,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               borderTopColor="mainBorderColor"
               paddingHorizontal={'xl'}
               paddingVertical={'m'}>
-              <Label tx="swapConfirmationScreen.buy" variant="light" />
+              <Label
+                text={{ tx: 'swapConfirmationScreen.buy' }}
+                variant="light"
+              />
               {!!toAmount && !!to && (
                 <Text style={styles.transactionInfo}>{`${prettyBalance(
                   new BigNumber(toAmount),
@@ -307,7 +325,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               borderTopColor="mainBorderColor"
               paddingHorizontal={'xl'}
               paddingVertical={'m'}>
-              <Label tx="swapConfirmationScreen.sell" variant="light" />
+              <Label
+                text={{ tx: 'swapConfirmationScreen.sell' }}
+                variant="light"
+              />
               {!!fromAmount && !!from && (
                 <Text style={styles.transactionInfo}>{`${prettyBalance(
                   new BigNumber(fromAmount),
@@ -321,7 +342,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
                 borderTopColor="mainBorderColor"
                 paddingHorizontal={'xl'}
                 paddingVertical={'m'}>
-                <Label tx="swapConfirmationScreen.minConfirm" variant="light" />
+                <Label
+                  text={{ tx: 'swapConfirmationScreen.minConfirm' }}
+                  variant="light"
+                />
                 <Text style={styles.transactionInfo}>{minConf}</Text>
               </Box>
             )}
@@ -331,7 +355,6 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
                 borderTopColor="mainBorderColor"
                 paddingHorizontal={'xl'}
                 paddingVertical={'m'}>
-                {/* <Label text={`Your ${from} address`} variant="light" /> */}
                 <Label
                   text={I18n.t('swapConfirmationScreen.yourFrmAddress', {
                     from,
@@ -347,7 +370,6 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
                 borderTopColor="mainBorderColor"
                 paddingHorizontal={'xl'}
                 paddingVertical={'m'}>
-                {/* <Label text={`Your ${to} address`} variant="light" /> */}
                 <Label
                   text={I18n.t('swapConfirmationScreen.yourToAddress', {
                     to,
@@ -363,7 +385,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
                 borderTopColor="mainBorderColor"
                 paddingHorizontal={'xl'}
                 paddingVertical={'m'}>
-                <Label tx="swapConfirmationScreen.secret" variant="light" />
+                <Label
+                  text={{ tx: 'swapConfirmationScreen.secret' }}
+                  variant="light"
+                />
                 {isSecretRevealed ? (
                   <Text style={styles.transactionInfo}>{secret}</Text>
                 ) : (
@@ -383,7 +408,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
                 borderTopColor="mainBorderColor"
                 paddingHorizontal={'xl'}
                 paddingVertical={'m'}>
-                <Label tx="swapConfirmationScreen.secretHast" variant="light" />
+                <Label
+                  text={{ tx: 'swapConfirmationScreen.secretHast' }}
+                  variant="light"
+                />
                 <Text style={styles.transactionInfo}>{secretHash}</Text>
               </Box>
             )}
@@ -393,7 +421,6 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               paddingHorizontal={'xl'}
               paddingVertical={'m'}>
               <Label
-                // text={`Your ${from} funding transaction`}
                 text={I18n.t('swapConfirmationScreen.yourFrFunding', { from })}
                 variant="light"
               />
@@ -406,7 +433,6 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
                 paddingHorizontal={'xl'}
                 paddingVertical={'m'}>
                 <Label
-                  // text={`Your ${to} funding transaction`}
                   text={I18n.t('swapConfirmationScreen.yourToFunding', {
                     to,
                   })}
@@ -422,7 +448,6 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
                 paddingHorizontal={'xl'}
                 paddingVertical={'m'}>
                 <Label
-                  // text={`Your ${to} receive transaction`}
                   text={I18n.t('swapConfirmationScreen.yourToReceive', {
                     to,
                   })}

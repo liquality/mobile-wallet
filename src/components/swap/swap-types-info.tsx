@@ -50,7 +50,10 @@ const SwapTypesInfo: FC<SwapTypesInfoProps> = (props) => {
         <View style={styles.container}>
           <View style={styles.content}>
             <View style={styles.header}>
-              <Label tx="swapTypesInfo.learnMoreAboutSwap" variant="strong" />
+              <Label
+                text={{ tx: 'swapTypesInfo.learnMoreAboutSwap' }}
+                variant="strong"
+              />
               <Pressable onPress={toggleModal}>
                 <TimesIcon fill={'#000'} />
               </Pressable>
@@ -81,7 +84,10 @@ const SwapTypesInfo: FC<SwapTypesInfoProps> = (props) => {
                   <Text style={styles.description}>{provider.description}</Text>
                   <View style={styles.prosCons}>
                     <View>
-                      <Label tx="swapTypesInfo.pro" variant="strong" />
+                      <Label
+                        text={{ tx: 'swapTypesInfo.pro' }}
+                        variant="strong"
+                      />
                       {provider.pros.map((pro) => (
                         <Text key={pro} style={styles.prosConsItem}>
                           {pro}
@@ -89,7 +95,10 @@ const SwapTypesInfo: FC<SwapTypesInfoProps> = (props) => {
                       ))}
                     </View>
                     <View>
-                      <Label tx="swapTypesInfo.con" variant="strong" />
+                      <Label
+                        text={{ tx: 'swapTypesInfo.con' }}
+                        variant="strong"
+                      />
                       {provider.cons.map((con) => (
                         <Text key={con} style={styles.prosConsItem}>
                           {con}

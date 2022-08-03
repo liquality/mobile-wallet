@@ -284,7 +284,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           />
         </Box>
         <Box flexDirection="row">
-          <Label tx="common.available" variant="light" />
+          <Label text={{ tx: 'common.available' }} variant="light" />
           {fromBalance && swapPair.fromAsset?.code ? (
             <Text style={[styles.font, styles.amount]}>
               {fromBalance &&
@@ -339,7 +339,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           ) : (
             <AngleRight style={styles.dropdown} />
           )}
-          <Label tx="common.networkSpeed" variant="strong" />
+          <Label text={{ tx: 'common.networkSpeed' }} variant="strong" />
           {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
             <Label
               text={`${swapPair.fromAsset?.code} ${fromNetworkSpeed} / ${swapPair.toAsset?.code} ${toNetworkSpeed}`}
@@ -374,7 +374,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             />
           ) : null}
           <Warning
-            tx1={'common.maxSlippage'}
+            text1={{ tx1: 'common.maxSlippage' }}
             text2={I18n.t('common.swapDoesnotComp', {
               date: `${new Date(
                 new Date().getTime() + 3 * 60 * 60 * 1000,
