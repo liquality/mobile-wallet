@@ -74,7 +74,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
         passwordInput.onChangeText('')
         setError(labelTranslateFn('loginScreen.invalidPassword')!)
         textInputRef.current?.blur()
-      } finally {
         setLoading(false)
       }
     }
