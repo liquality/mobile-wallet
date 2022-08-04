@@ -60,14 +60,23 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       },
   )
 
+  const textInputRef = React.useRef<TextInput>(null)
+
   const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
       setError(labelTranslateFn('passwordCreationScreen.password8char')!)
     } else {
-      setLoading(true)
-      await restoreWallet(passwordInput.value)
-      setLoading(false)
-      navigation.navigate('MainNavigator')
+      try {
+        setLoading(true)
+        await restoreWallet(passwordInput.value)
+        navigation.navigate('MainNavigator')
+      } catch (_error) {
+        passwordInput.onChangeText('')
+        setError(labelTranslateFn('loginScreen.invalidPassword')!)
+        textInputRef.current?.blur()
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
@@ -151,6 +160,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
                 secureTextEntry
                 autoCorrect={false}
                 returnKeyType="done"
+                ref={textInputRef}
               />
             </View>
             {!!error && <Text variant="error">{error}</Text>}

@@ -61,7 +61,8 @@
   },
   "loginScreen": {
     "password": "PASSWORD",
-    "unlock": "Unlock"
+    "unlock": "Unlock",
+    "invalidPassword": "Password is invalid"
   },
   "optInAnalyticsModal": {
     "helpUsToImprove": "HELP US IMPROVE LIQUALITY TO BETTER SERVE YOU",
