@@ -87,7 +87,7 @@ const ActivityFlatList = ({ selectedAsset }: { selectedAsset?: string }) => {
         <React.Suspense
           fallback={
             <View>
-              <Text>Loading activity...</Text>
+              <Text tx="loadingActivity" />
             </View>
           }>
           <Box

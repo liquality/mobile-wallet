@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Alert, Dimensions, Pressable, StyleSheet, Text } from 'react-native'
+import { Alert, Dimensions, Pressable, StyleSheet } from 'react-native'
 import { ChainId } from '@liquality/cryptoassets/src/types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ChevronRight from '../../../assets/icons/activity-status/chevron-right.svg'
@@ -23,9 +23,10 @@ import { getQuotes, updateMarketData } from '../../../store/store'
 import { ActionEnum, NetworkFeeType, RootStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
-import { sortQuotes } from '../../../utils'
+import { labelTranslateFn, sortQuotes } from '../../../utils'
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
 import Button from '../../../theme/button'
+import Text from '../../../theme/text'
 import Box from '../../../theme/box'
 import SwapFeeSelector from '../../../components/ui/swap-fee-selector'
 import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
@@ -37,6 +38,7 @@ import {
   marketDataState,
   swapPairState,
 } from '../../../atoms'
+import I18n from 'i18n-js'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -96,7 +98,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const handleFromAssetPress = () => {
     setSwapPair((prevVal) => ({ ...prevVal, fromAsset: undefined }))
     navigation.navigate('AssetChooserScreen', {
-      screenTitle: 'Select asset for Swap',
+      screenTitle: labelTranslateFn('swapScreen.selectAssetForSwap')!,
       swapAssetPair: { ...swapPair, fromAsset: undefined },
       action: ActionEnum.SWAP,
     })
@@ -105,7 +107,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const handleToAssetPress = () => {
     setSwapPair((prevVal) => ({ ...prevVal, toAsset: undefined }))
     navigation.navigate('AssetChooserScreen', {
-      screenTitle: 'Select asset for Swap',
+      screenTitle: labelTranslateFn('swapScreen.selectAssetForSwap')!,
       swapAssetPair: { ...swapPair, toAsset: undefined },
       action: ActionEnum.SWAP,
     })
@@ -128,7 +130,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       !fromNetworkFee.current ||
       !toNetworkFee.current
     ) {
-      Alert.alert('Invalid arguments for swap')
+      Alert.alert(labelTranslateFn('swapScreen.invalidArgs')!)
       return
     }
 
@@ -146,7 +148,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         fromNetworkFee: fromNetworkFee.current,
         toNetworkFee: toNetworkFee.current,
       },
-      screenTitle: `Swap ${swapPair.fromAsset.code} to ${swapPair.toAsset.code} review`,
+      // screenTitle: `Swap ${swapPair.fromAsset.code} to ${swapPair.toAsset.code} review`,
+      screenTitle: I18n.t('swapScreen.swapReview', {
+        swapPairfromAssetCode: swapPair.fromAsset.code,
+        swapPairtoAssetCode: swapPair.toAsset.code,
+      }),
     })
   }
 
@@ -187,10 +193,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           amount,
         )
 
-        if (quoteList.length === 0) {
-          setError(
-            "This pair isn't traded yet. See our list of compatible pairs here. You can also suggest list of your token on Liquality Discord",
-          )
+        if (quoteList?.length === 0) {
+          setError(labelTranslateFn('swapScreen.isNotTraded')!)
         } else {
           const sortedQuotes = sortQuotes(quoteList)
           setQuotes(sortedQuotes)
@@ -207,7 +211,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       }
 
       if (bestQuoteAmount.eq(0)) {
-        setError('Quotes not found')
+        setError(labelTranslateFn('swapScreen.quoteNotFnd')!)
       }
       setBestQuote(bestQuoteAmount)
     },
@@ -235,7 +239,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       width={Dimensions.get('window').width}
       backgroundColor="mainBackground">
       {error ? (
-        <MessageBanner text1="Error" text2={error} onAction={() => ({})} />
+        <MessageBanner tx="common.error" text2={error} onAction={() => ({})} />
       ) : null}
       <Box
         flexDirection="row"
@@ -244,7 +248,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         marginHorizontal="xl">
         <AmountTextInputBlock
           type="FROM"
-          label="SEND"
+          label={labelTranslateFn('common.send')!}
           chain={swapPair.fromAsset?.chain || ChainId.Bitcoin}
           assetSymbol={swapPair.fromAsset?.code || 'BTC'}
           maximumValue={maximumValue}
@@ -265,7 +269,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           <Button
             type="tertiary"
             variant="s"
-            label="Min"
+            label={{ tx: 'common.min' }}
             onPress={handleMinPress}
             isBorderless={false}
             isActive={true}
@@ -273,14 +277,14 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           <Button
             type="tertiary"
             variant="s"
-            label="Max"
+            label={{ tx: 'common.max' }}
             onPress={handleMaxPress}
             isBorderless={false}
             isActive={true}
           />
         </Box>
         <Box flexDirection="row">
-          <Label text="Available" variant="light" />
+          <Label text={{ tx: 'common.available' }} variant="light" />
           {fromBalance && swapPair.fromAsset?.code ? (
             <Text style={[styles.font, styles.amount]}>
               {fromBalance &&
@@ -302,7 +306,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         marginHorizontal="xl">
         <AmountTextInputBlock
           type="TO"
-          label="RECEIVE"
+          label={labelTranslateFn('common.receive')!}
           chain={swapPair.toAsset?.chain || ChainId.Ethereum}
           assetSymbol={swapPair.toAsset?.code || 'ETH'}
           minimumValue={bestQuote}
@@ -335,7 +339,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           ) : (
             <AngleRight style={styles.dropdown} />
           )}
-          <Label text="NETWORK SPEED/FEE" variant="strong" />
+          <Label text={{ tx: 'common.networkSpeed' }} variant="strong" />
           {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
             <Label
               text={`${swapPair.fromAsset?.code} ${fromNetworkSpeed} / ${swapPair.toAsset?.code} ${toNetworkSpeed}`}
@@ -370,10 +374,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             />
           ) : null}
           <Warning
-            text1="Max slippage is 0.5%."
-            text2={`If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at ${new Date(
-              new Date().getTime() + 3 * 60 * 60 * 1000,
-            ).toTimeString()}`}>
+            text1={{ tx1: 'common.maxSlippage' }}
+            text2={I18n.t('common.swapDoesnotComp', {
+              date: `${new Date(
+                new Date().getTime() + 3 * 60 * 60 * 1000,
+              ).toTimeString()}`,
+            })}>
             <Clock width={15} height={15} style={styles.icon} />
           </Warning>
         </>
@@ -386,7 +392,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           <Button
             type="secondary"
             variant="m"
-            label="Cancel"
+            label={{ tx: 'common.cancel' }}
             onPress={handleCancelPress}
             isBorderless={false}
             isActive={true}
@@ -394,7 +400,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           <Button
             type="primary"
             variant="m"
-            label="Review"
+            label={{ tx: 'common.review' }}
             onPress={handleReviewBtnPress}
             isBorderless={false}
             isActive={true}

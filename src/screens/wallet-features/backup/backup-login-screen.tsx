@@ -12,13 +12,13 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import Header from '../../header'
 import { createWallet, restoreWallet } from '../../../store/store'
-import { useDispatch } from 'react-redux'
 import Text from '../../../theme/text'
 import Button from '../../../theme/button'
 import Box from '../../../theme/box'
 import { MNEMONIC, PASSWORD } from '@env'
 import CheckBox from '../../../components/checkbox'
 import GradientBackground from '../../../components/gradient-background'
+import { labelTranslateFn } from '../../../utils'
 
 type LoginScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -39,8 +39,6 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
   const [loading, setLoading] = useState(false)
   const [userHasChecked, setUserHasChecked] = useState<boolean>(false)
 
-  const dispatch = useDispatch()
-
   const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
       setError('Passwords must be at least 8 characters')
@@ -48,18 +46,10 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
       setError('Please check that you understand the risks')
     } else {
       setLoading(true)
-      //TODO find a better way to handle threads
-      restoreWallet(passwordInput.value).then((walletState) => {
-        dispatch({
-          type: 'RESTORE_WALLET',
-          payload: {
-            ...walletState,
-          },
-        })
-        setLoading(false)
-        navigation.navigate('BackupSeedScreen', {
-          screenTitle: 'Seed Phrase',
-        })
+      await restoreWallet(passwordInput.value)
+      setLoading(false)
+      navigation.navigate('BackupSeedScreen', {
+        screenTitle: 'Seed Phrase',
       })
     }
   }
@@ -86,13 +76,14 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
           <Header showText={true} />
           <Box flex={0.6} justifyContent="space-around" width="100%">
             <Box alignItems="center">
-              <Text variant="loginToSeePhraseTitle">
-                Sign-in {'\n'} to see Seed Phrase
-              </Text>
+              <Text
+                variant="loginToSeePhraseTitle"
+                tx="backupLoginScreen.signInToSeedPhrase"
+              />
             </Box>
 
             <View style={styles.inputWrapper}>
-              <Text variant="mainInputLabel">PASSWORD</Text>
+              <Text variant="mainInputLabel" tx="backupLoginScreen.password" />
               <TextInput
                 style={styles.input}
                 onChangeText={passwordInput.onChangeText}
@@ -110,14 +101,14 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
             onPress={handleCheckBox}
             textStyle={styles.checkBoxText}
             style={styles.checkBoxStyle}
-            text="I have privacy and understand the risk."
+            text={{ tx: 'backupLoginScreen.iHavePrivacyUnderstand' }}
           />
           <Box flex={0.3} width="90%" justifyContent="flex-end">
             <View style={styles.actionBlock}>
               <Button
                 type="secondary"
                 variant="m"
-                label="Cancel"
+                label={{ tx: 'common.cancel' }}
                 onPress={navigation.goBack}
                 isBorderless={false}
                 isActive={true}
@@ -125,7 +116,7 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
               <Button
                 type="primary"
                 variant="m"
-                label="Continue"
+                label={{ tx: 'common.continue' }}
                 isLoading={loading}
                 onPress={onUnlock}
                 isBorderless={false}
@@ -135,7 +126,7 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
             <Button
               type="primary"
               variant="l"
-              label="Open Sesame"
+              label={{ tx: 'common.openSesame' }}
               isLoading={loading}
               onPress={async () => {
                 if (userHasChecked) {
@@ -144,7 +135,10 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
                   navigation.navigate('BackupSeedScreen', {
                     screenTitle: 'Seed Phrase',
                   })
-                } else setError('Please check that you understand the risks')
+                } else
+                  setError(
+                    labelTranslateFn('backupLoginScreen.pleaseCheckRisk')!,
+                  )
               }}
               isBorderless
               isActive={true}

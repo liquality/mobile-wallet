@@ -32,13 +32,13 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
   return (
     <Box justifyContent="space-between" paddingHorizontal="xl" marginTop="xl">
       <Box flexDirection="row" justifyContent="center">
-        <Text variant="timelineLabel">TRANSACTION ID</Text>
+        <Text variant="timelineLabel" tx="sendTranDetailComp.transId" />
         <Text variant="link">{shortenAddress(historyItem.id)}</Text>
       </Box>
 
       <Box justifyContent="center" alignItems="center">
         <Text variant="timelineLabel">{formatDate(historyItem.startTime)}</Text>
-        <Label text="Sent" variant="strong" />
+        <Label text={{ tx: 'sendTranDetailComp.sent' }} variant="strong" />
       </Box>
 
       <Box
@@ -115,7 +115,10 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
 
       {['SUCCESS', 'REFUNDED'].includes(historyItem.status?.toUpperCase()) && (
         <Box justifyContent="center" alignItems="center">
-          <Label text="Completed" variant="strong" />
+          <Label
+            text={{ tx: 'sendTranDetailComp.completed' }}
+            variant="strong"
+          />
           <Text variant="timelineLabel">
             {historyItem.endTime && formatDate(historyItem.endTime)}
           </Text>

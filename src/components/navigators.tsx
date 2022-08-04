@@ -110,7 +110,7 @@ export const AppStackNavigator = () => (
       title: '',
       headerLeft: (props: HeaderBackButtonProps) => (
         <OverviewHeaderLeft
-          includeBackBtn={!props.canGoBack}
+          includeBackBtn={!props.canGoBack || !!route?.params?.includeBackBtn}
           goBack={navigation.goBack}
           screenTitle={route?.params?.screenTitle || 'Overview'}
         />

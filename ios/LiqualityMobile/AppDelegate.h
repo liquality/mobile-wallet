@@ -1,8 +1,8 @@
 #import <React/RCTBridgeDelegate.h>
-#import <UserNotifications/UNUserNotificationCenter.h>
+#import <Expo/Expo.h>
 #import <UIKit/UIKit.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate, UNUserNotificationCenterDelegate>
+@interface AppDelegate : EXAppDelegateWrapper <UIApplicationDelegate, RCTBridgeDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 

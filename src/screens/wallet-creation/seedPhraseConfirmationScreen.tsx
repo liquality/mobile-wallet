@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
   View,
-  Text,
   StyleSheet,
   Pressable,
   FlatList,
@@ -17,6 +16,8 @@ import ButtonFooter from '../../components/button-footer'
 import Button from '../../theme/button'
 import Box from '../../theme/box'
 import GradientBackground from '../../components/gradient-background'
+import { Text } from '../../components/text/text'
+import { labelTranslateFn } from '../../utils'
 
 type SeedPhraseConfirmationProps = NativeStackScreenProps<
   RootStackParamList,
@@ -90,7 +91,10 @@ const SeedPhraseConfirmationScreen = ({
 
   const onContinue = () => {
     if (!confirmSeedPhrase()) {
-      Alert.alert('Key information missing', 'Please try again')
+      Alert.alert(
+        labelTranslateFn('seedPhraseConfirmationScreen.keyInfoMissing')!,
+        labelTranslateFn('common.pleaseTryAgain')!,
+      )
       return
     }
     navigation.navigate('PasswordCreationScreen', {
@@ -118,11 +122,14 @@ const SeedPhraseConfirmationScreen = ({
         style={[styles.keyboard, StyleSheet.absoluteFillObject]}>
         <Header showText={true} />
         <View style={styles.prompt}>
-          <Text style={styles.promptText}>Confirm Seed Phrase</Text>
-          <Text style={styles.description}>
-            Tap the 3 words matching their position in the seed phrase. Once
-            confirmed, store the phrase securely.
-          </Text>
+          <Text
+            style={styles.promptText}
+            tx="seedPhraseConfirmationScreen.confirmSeed"
+          />
+          <Text
+            style={styles.description}
+            tx="seedPhraseConfirmationScreen.tap3wordMatching"
+          />
         </View>
 
         <View style={styles.main}>
@@ -131,19 +138,28 @@ const SeedPhraseConfirmationScreen = ({
 
             <View style={styles.missingWords}>
               <View style={styles.missingWordView}>
-                <Text style={styles.wordOrderText}>1ST WORD</Text>
+                <Text
+                  style={styles.wordOrderText}
+                  tx="seedPhraseConfirmationScreen.1stWord"
+                />
                 <Text style={styles.missingWordText}>
                   {chosenSeedWords.length >= 1 && chosenSeedWords[0]}
                 </Text>
               </View>
               <View style={styles.missingWordView}>
-                <Text style={styles.wordOrderText}>5TH WORD</Text>
+                <Text
+                  style={styles.wordOrderText}
+                  tx="seedPhraseConfirmationScreen.5thWord"
+                />
                 <Text style={styles.missingWordText}>
                   {chosenSeedWords.length >= 2 && chosenSeedWords[1]}
                 </Text>
               </View>
               <View style={styles.missingWordView}>
-                <Text style={styles.wordOrderText}>12TH WORD</Text>
+                <Text
+                  style={styles.wordOrderText}
+                  tx="seedPhraseConfirmationScreen.12thWord"
+                />
                 <Text style={styles.missingWordText}>
                   {chosenSeedWords.length >= 3 && chosenSeedWords[2]}
                 </Text>
@@ -162,7 +178,7 @@ const SeedPhraseConfirmationScreen = ({
               <Button
                 type="secondary"
                 variant="m"
-                label="Back"
+                label={{ tx: 'common.back' }}
                 onPress={navigation.goBack}
                 isBorderless={false}
                 isActive={true}
@@ -170,7 +186,7 @@ const SeedPhraseConfirmationScreen = ({
               <Button
                 type="primary"
                 variant="m"
-                label="Continue"
+                label={{ tx: 'common.continue' }}
                 onPress={onContinue}
                 isBorderless={true}
                 isActive={chosenSeedWords.length >= 3}

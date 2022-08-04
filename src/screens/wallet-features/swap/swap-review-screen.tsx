@@ -9,7 +9,7 @@ import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-s
 import Button from '../../../theme/button'
 import { BigNumber } from '@liquality/types'
 import { performSwap } from '../../../store/store'
-import { Log } from '../../../utils'
+import { labelTranslateFn, Log } from '../../../utils'
 import { useRecoilCallback, useRecoilValue } from 'recoil'
 import { SwapHistoryItem } from '@liquality/wallet-core/dist/store/types'
 import {
@@ -17,6 +17,7 @@ import {
   historyIdsState,
   historyStateFamily,
 } from '../../../atoms'
+import I18n from 'i18n-js'
 
 type SwapReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -70,20 +71,24 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           addTransaction(transaction.id, transaction)
           navigation.navigate('SwapConfirmationScreen', {
             swapTransactionConfirmation: transaction,
-            screenTitle: `Swap ${fromAsset.code} to ${toAsset.code} Details`,
+            // screenTitle: `Swap ${fromAsset.code} to ${toAsset.code} Details`,
+            screenTitle: I18n.t('swapReviewScreen.swapDetails', {
+              fromCode: fromAsset.code,
+              toCode: toAsset.code,
+            }),
           })
         } else {
           setIsLoading(false)
-          Alert.alert('Swap Response null')
+          Alert.alert(labelTranslateFn('swapReviewScreen.swapRespNull')!)
         }
       } catch (error) {
         setIsLoading(false)
         Log(`Failed to perform swap: ${error}`, 'error')
-        Alert.alert('Failed to perform swap')
+        Alert.alert(labelTranslateFn('swapReviewScreen.failedToPerfSwap')!)
       }
     } else {
       setIsLoading(false)
-      Alert.alert('Invalid params. Please try again')
+      Alert.alert(labelTranslateFn('swapReviewScreen.invalidParams')!)
     }
   }
 
@@ -122,16 +127,19 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         selectQuote={handleSelectQuote}
       /> */}
       <Warning
-        text1="Max slippage is 0.5%."
-        text2="If the swap doesn’t complete within 3 hours, you will be refunded in 6
-          hours at 20:45 GMT">
+        text1={{ tx1: 'common.maxSlippage' }}
+        text2={I18n.t('common.swapDoesnotComp', {
+          date: `${new Date(
+            new Date().getTime() + 3 * 60 * 60 * 1000,
+          ).toTimeString()}`,
+        })}>
         <Clock width={15} height={15} style={styles.icon} />
       </Warning>
       <View style={styles.buttonWrapper}>
         <Button
           type="secondary"
           variant="m"
-          label="Edit"
+          label={{ tx: 'common.edit' }}
           onPress={navigation.goBack}
           isBorderless={false}
           isActive={true}
@@ -139,7 +147,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         <Button
           type="primary"
           variant="m"
-          label="Initiate Swap"
+          label={{ tx: 'swapReviewScreen.initiateSwap' }}
           onPress={handleInitiateSwap}
           isBorderless={false}
           isActive={true}

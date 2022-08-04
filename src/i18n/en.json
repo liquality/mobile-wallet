@@ -1,0 +1,326 @@
+{
+  "common": {
+    "one": "one",
+    "wallet": "wallet",
+    "all_chains": "all chains",
+    "forgotPassword": "Forgot password? ",
+    "importWithSeedPhrase": "Import with seed phrase",
+    "openSesame": "Open Sesame",
+    "ok": "OK",
+    "pleaseTryAgain": "Please try again",
+    "back": "Back",
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "next": "Next",
+    "loading": "Loading",
+    "review": "Review",
+    "load": "Loading...",
+    "status": "STATUS",
+    "speedUp": "Speed Up",
+    "send": "SEND",
+    "sent": "SENT",
+    "networkSpeed": "NETWORK SPEED/FEE",
+    "edit": "Edit",
+    "error": "Error",
+    "addLiquidity": "Add Liquidity",
+    "min": "Min",
+    "max": "Max",
+    "available": "Available",
+    "receive": "RECEIVE",
+    "maxSlippage": "Max slippage is 0.5%.",
+    "swapDoesnotComp": "If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at {{date}}",
+    "initiateSwap": "Initiate Swap",
+    "activities": "ACTIVITIES",
+    "assets": "ASSETS",
+    "dateRange": "DATE RANGE",
+    "start": "Start",
+    "end": "End",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "filter": "Filter",
+    "result": "Result",
+    "results": "Results",
+    "reset": "Reset",
+    "export": "Export",
+    "less": "less ",
+    "more": "more ",
+    "filterOptions": "filter options",
+    "sort": "SORT",
+    "onceYouStart": "Once you start using your wallet you will see the activity here.",
+    "totalPrettyFiatBal": "Total {{prettyFiatBalance}}",
+    "started": "Started",
+    "completed": "Completed",
+    "custom": "Custom"
+  },
+  "congratulationsScreen": {
+    "congrats": "Congrats!"
+  },
+  "entryScreen": {
+    "createNewWallet": "Create a new Wallet"
+  },
+  "loginScreen": {
+    "password": "PASSWORD",
+    "unlock": "Unlock"
+  },
+  "optInAnalyticsModal": {
+    "helpUsToImprove": "HELP US IMPROVE LIQUALITY TO BETTER SERVE YOU",
+    "shareWhereYouClick": "Share where you click. There is no identifying data. This permission can be revoked at any time.",
+    "shareMyClicks": "Share my clicks"
+  },
+  "passwordCreationScreen": {
+    "createPassword": "Create Password",
+    "choosePassword": "CHOOSE PASSWORD (at least 8 characters)",
+    "confirmPassword": "CONFIRM PASSWORD",
+    "passwordDontMatch": "Passwords don't match",
+    "password8char": "Passwords must be at least 8 characters"
+  },
+  "seedPhraseConfirmationScreen": {
+    "keyInfoMissing": "Key information missing",
+    "confirmSeed": "Confirm Seed Phrase",
+    "tap3wordMatching": "Tap the 3 words matching their position in the seed phrase. Once confirmed, store the phrase securely.",
+    "1stWord": "1ST WORD",
+    "5thWord": "5th WORD",
+    "12thWord": "12TH WORD"
+  },
+  "seedPhraseScreen": {
+    "backupYourWallet": "Backup your Wallet",
+    "restoreYourWallet": "The seed phrase is the only way to restore your wallet. Write itdown. Next you will confirm it."
+  },
+  "termsScreen": {
+    "termPrivacy": "Term & Privacy",
+    "termCopy": "THIS IS THE BETA VERSION OF THE LIQUALITY PLATFORM WHICH IS STILL BEING ACTIVELY DEVELOPED. YOU ACKNOWLEDGE THE INFORMATION AVAILABLE IS NOT INTENDED TO BE RELIED ON OR USED IN A PRODUCTION ENVIRONMENT. YOU ACKNOWLEDGE AND ACCEPT THAT THE SITE OR SERVICES \n (A) MAY CONTAIN BUGS, ERRORS, AND DEFECTS, \n (B) MAY FUNCTION IMPROPERLY OR BE SUBJECT TO PERIODS OF DOWNTIME AN UNAVAILABILITY, \n (C) MAY RESULT IN TOTAL OR PARTIAL LOSS OR CORRUPTION OF DATA USED IN THE SITE, AND \n (D) MAY BE MODIFIED AT ANY TIME, INCLUDING THROUGH THE RELEASE OF SUBSEQUENT VERSIONS, ALL WITH OR WITHOUT NOTICE. THE ALPHA PLATFORM IS AVAILABLE ON AN “AS IS” AND “AS AVAILABLE” BASIS FOR THE SOLE PURPOSE OF COLLECTING FEEDBACK ON QUALITY, USABILITY, PERFORMANCE AND ANY DEFECTS. THANK YOU FOR YOUR SUPPORT WHILE WE CONTINUE TO WORK ON DELIVERING A PERFECT PRODUCT."
+  },
+  "assetChooserScreen": {
+    "searchCurrency": "Search for a Currency"
+  },
+  "assetManagementScreen": {},
+  "assetScreen": {
+    "loadingAsset": "Loading asset screen...",
+    "send": "Send",
+    "swap": "Swap",
+    "receive": "Receive",
+    "activity": "ACTIVITY",
+    "sendCode": "Send {{code}}",
+    "receiveCode": "Receive {{code}}"
+  },
+  "assetToggleScreen": {},
+  "backupLoginScreen": {
+    "signInToSeedPhrase": "Sign-in \n to see Seed Phrase",
+    "password": "PASSWORD",
+    "iHavePrivacyUnderstand": "I have privacy and understand the risk.",
+    "pleaseCheckRisk": "Please check that you understand the risks"
+  },
+  "backupSeedScreen": {
+    "hej": "hej",
+    "yourSeedPhrase": "Your Seed Phrase",
+    "writeItDown": "Write it down, verify it and store it securely. \n It is the only way to restore your wallet.",
+    "hidden4Security": "Hidden for security. Tap to reveal phrase.",
+    "iSaveSeed": "I saved the seed"
+  },
+  "backupWarningScreen": {
+    "showSeedPhrase": "Show Seed Phrase?",
+    "anyoneWhoSeed": "Anyone who has this seed phrase can steal your funds.",
+    "viewItPrivate": "View it in private without any cameras around.",
+    "iHavePrivacy": "I have privacy"
+  },
+  "overviewScreen": {
+    "load": "Loading..."
+  },
+  "receiveScreen": {
+    "yourCurrent": "Your current {{code}}/{{activeNetwork}} address",
+    "scanORcode": "Scan QR code with a mobile wallet to send funds to this address.",
+    "done": "Done",
+    "copied": "Copied!",
+    "copyAdd": "Copy Address",
+    "addressEmpty": "Address empty. Please try again!",
+    "buyCrypto": "Buy Crypto",
+    "poweredBy": "powered by",
+    "transakContent": "Transak lets you buy multiple assets with your credit card or via bank transer depending on location straight into your Liquality wallet. To cover fees (gas) or interact with DApps you’ll mostly need ETH.",
+    "feeAndLimits": "Fees and limits may vary. It usually takes just a couple of minutes and requires registration.",
+    "continueToTransak": "Continue To Transak"
+  },
+  "sendConfirmationScreeen": {
+    "status": "STATUS",
+    "time": "TIME",
+    "sent": "SENT",
+    "networkSpeed": "NETWORK SPEED/FEE",
+    "speedUp": "Speed Up",
+    "load": "Loading..."
+  },
+  "sendReviewScreen": {
+    "inputDataInvalid": "Input data invalid",
+    "sendTransDetails": "SEND {{asset}} Transaction Details",
+    "failedTrans": "Failed to send transaction: ",
+    "rateNotAvail": "Rates not available",
+    "send": "Send",
+    "netFee": "NETWORK FEE",
+    "amtFee": "AMOUNT + FEES",
+    "sendTo": "SEND TO",
+    "memoOpt": "MEMO (OPTIONAL)",
+    "edit": "Edit",
+    "sendAsset": "Send {{asset}}"
+  },
+  "sendScreen": {
+    "enterValidAmt": "Enter a valid amount",
+    "lowerAmt": "Lower amount. This exceeds available balance.",
+    "wrongFmt": "Wrong format. Please check the address.",
+    "sendReview": "Send {{code}} Review",
+    "invalidAmt": "Invalid amount.",
+    "fiatRate": "Fiat rates missing!",
+    "networkSpeed": "NETWORK SPEED/FEE",
+    "snd": "SEND",
+    "available": "Available",
+    "max": "Max",
+    "sndTo": "SEND TO",
+    "address": "Address",
+    "memoOpt": "MEMO (OPTIONAL)"
+  },
+  "settingsScreen": {
+    "reloadApp": "Please reload your app",
+    "networks": "Networks",
+    "mainnet": "Mainnet",
+    "testnet": "Testnet",
+    "backUpSeedPhrase": "Back-up Seed Phrase",
+    "alwayKeepSeedSafe": "Always keep your seed phrase safe.",
+    "walletLogs": "Wallet Logs",
+    "downloadLogs": "Download Logs",
+    "walletLogPublicInfo": "The wallet logs contain your public information such as addresses and transactions.",
+    "analytics": "Analytics",
+    "shareYouClick": "Share where you click. No identifying data is collected.",
+    "notifications": "Notifications",
+    "manage": "manage",
+    "getInfoAbout": "Get informed about transaction status and funds received.",
+    "design": "Design",
+    "light": "light",
+    "dark": "dark",
+    "aboutLiquality": "About Liquality",
+    "lock": "Lock",
+    "version": "Version: {{version}}",
+    "whatNew": "What's new"
+  },
+  "swapConfirmationScreen": {
+    "networkSpeed": "NETWORK SPEED/FEE",
+    "received": "Received",
+    "pendingReceipt": "PENDING RECEIPT",
+    "advanced": "ADVANCED",
+    "counterParty": "Counter-party",
+    "orderId": "Order Id",
+    "startedAt": "Started At",
+    "finishedAt": "Finished At",
+    "rate": "Rate",
+    "buy": "Buy",
+    "sell": "Sell",
+    "minConfirm": "Minimum Confirmations",
+    "yourFrmAddress": "Your {{from}} address",
+    "yourToddress": "Your {{to}} address",
+    "secret": "Secret",
+    "clickToRevealSecret": "Click to reveal secret",
+    "secretHast": "Secret Hash",
+    "yourFrFunding": "Your ${from} funding transaction",
+    "yourToFunding": "Your ${to} funding transaction",
+    "yourToReceive": "Your ${to} receive transactionn",
+    "actions": "Actions",
+    "retry": "Retry"
+  },
+  "swapReviewScreen": {
+    "swapDetails": "Swap {{fromCode} to {{toCode}} Details",
+    "swapRespNull": "Swap Response null",
+    "failedToPerfSwap": "Failed to perform swap",
+    "invalidParams": "Invalid params. Please try again",
+    "initiateSwap": "Initiate Swap"
+  },
+  "swapScreen": {
+    "selectAssetForSwap": "Select asset for Swap",
+    "invalidArgs": "Invalid arguments for swap",
+    "swapReview": "Swap {{swapPairfromAssetCode}} to {{swapPairtoAssetCode}} review",
+    "isNotTraded": "This pair isn't traded yet. See our list of compatible pairs here. You can also suggest list of your token on Liquality Discord",
+    "quoteNotFnd": "Quotes not found"
+  },
+  "customFeeScreen": {
+    "presets": "PRESETS",
+    "customSettings": "CUSTOMIZED SETTINGS",
+    "gasPrice": "Gas Price"
+  },
+  "loadingScreen": {
+    "failedImport": "Failed to import/create wallet. Please try again!"
+  },
+  "unlockWalletScreen": {
+    "invalidSeedPhrase": "Your seed phrase is invalid', 'Please try again",
+    "unlockWallet": "Unlock Wallet",
+    "enterSeedPhrase": "Enter the seed phrase, in the same order saved when creating your wallet.",
+    "12words": "12 words",
+    "24words": "24 words"
+  },
+  "header": {
+    "wallet": "Wallet"
+  },
+  "sortPicker": {
+    "needs_attention": "Needs attention",
+    "pending": "Pending",
+    "canceled": "Canceled",
+    "refunded": "Refunded",
+    "completed": "Completed",
+    "failed": "Failed",
+    "by_date": "By date (newest first)",
+    "by_type": "By type (A to Z)",
+    "by_token": "By Token (A to Z)"
+  },
+  "summaryBlockComp": {
+    "selectAssetSend": "Select asset for Send",
+    "selectAssetReceive": "Select asset for receive",
+    "selectAssetSwap": "Select asset for swap",
+    "asset": " Asset",
+    "assets": " Assets",
+    "send": "Send",
+    "swap": "Swap",
+    "receive": "Receive"
+  },
+  "sendTranDetailComp": {
+    "transId": "TRANSACTION ID",
+    "sent": "Sent",
+    "completed": "Completed"
+  },
+  "confirmationBlockComp": {
+    "fee": "Fee",
+    "confirmations": "Confirmations"
+  },
+  "listHeaderComp": {
+    "rate": "RATE",
+    "provider": "PROVIDER"
+  },
+  "swapRatesComp": {
+    "selectQuoteFirst": "Select a quote first",
+    "rate": "RATE",
+    "swapTypes": "Swap Types",
+    "availQuotes": "AVAILABLE QUOTES",
+    "theseAreDiffQuotesProv": "These quotes are from different swap providers.",
+    "selectQuote": "Select Quote",
+    "learnMoreAboutSwap": "Learn about swap types"
+  },
+  "swapRevAstSumComp": {
+    "networkFee": "NETWORK FEE",
+    "amtFee": "AMOUNT + FEES",
+    "sendFrom": "SEND FROM",
+    "receiveAt": "RECEIVED AT"
+  },
+  "swapTypesInfo": {
+    "atomicSwapSwap": "Atomic Swap Swap native assets across blockchains without counterparty risks.",
+    "feeStruct": "Fee structure: 1%, 0 slippage, $100 minimum trade size",
+    "ammSwapSwap": "AMM Swap  Swap Ethereum tokens through liquidity pools.",
+    "learnMoreAboutSwap": "Learn about swap types",
+    "whenTradingAssets": "When trading assets provider vary regards the way its done: assets, chain, fees, slippage etc. At a glance:",
+    "pro": "Pro",
+    "con": "Con"
+  },
+  "searchForCurrency": "Search for a Currency",
+  "failedToFetchGasFee": "Failed to fetch gas fees",
+  "whatsNew": "What's New",
+  "whatsNewDesc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod ante in augue tristique convallis. Morbi pharetra, erat quis mattis tristique, sapien tortor convallis diam, elementum rhoncus erat massa vitae nibh. Ut suscipit nisi enim, ut dictum felis tristique sit amet.",
+  "loadingActivity": "loading activity...",
+  "somethingWentWrong": "Something went wrong",
+  "invalidQRCode": "Invalid QR Code",
+  "manageAssets": "Manage Assets",
+  "ledger": "Ledger",
+  "lock": "Lock"
+}

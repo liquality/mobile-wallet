@@ -67,12 +67,16 @@ const PasswordCreationScreen = ({
       />
       <Header showText={true} />
       <View style={styles.prompt}>
-        <Text variant="mainInputLabel">Create Password</Text>
+        <Text
+          variant="mainInputLabel"
+          tx="passwordCreationScreen.createPassword"
+        />
         <View style={styles.inputs}>
           <View style={styles.inputWrapper}>
-            <Text variant="description">
-              CHOOSE PASSWORD (at least 8 characters)
-            </Text>
+            <Text
+              variant="description"
+              tx="passwordCreationScreen.choosePassword"
+            />
             <TextInput
               style={styles.input}
               onChangeText={passwordInput.onChangeText}
@@ -84,7 +88,10 @@ const PasswordCreationScreen = ({
             />
           </View>
           <View style={styles.inputWrapper}>
-            <Text variant="mainInputLabel">CONFIRM PASSWORD</Text>
+            <Text
+              variant="mainInputLabel"
+              tx="passwordCreationScreen.confirmPassword"
+            />
             <TextInput
               style={styles.input}
               onChangeText={passwordConfirmationInput.onChangeText}
@@ -95,8 +102,17 @@ const PasswordCreationScreen = ({
               returnKeyType="done"
             />
           </View>
-          {!!error && <Text variant="error">Passwords don't match</Text>}
-          <Text variant="error">Passwords must be at least 8 characters</Text>
+          {!!error && (
+            <Text
+              variant="error"
+              tx="passwordCreationScreen.passwordDontMatch"
+            />
+          )}
+          <Text
+            variant="description"
+            marginTop="l"
+            tx="passwordCreationScreen.password8char"
+          />
         </View>
       </View>
 
@@ -104,7 +120,7 @@ const PasswordCreationScreen = ({
         <Button
           type="secondary"
           variant="m"
-          label="Cancel"
+          label={{ tx: 'common.cancel' }}
           onPress={() =>
             navigation.navigate(route.params.nextScreen || 'Entry')
           }
@@ -114,7 +130,7 @@ const PasswordCreationScreen = ({
         <Button
           type="primary"
           variant="m"
-          label="Next"
+          label={{ tx: 'common.next' }}
           onPress={() =>
             arePasswordsValid() &&
             navigation.navigate('LoadingScreen', {

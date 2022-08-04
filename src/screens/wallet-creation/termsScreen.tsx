@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native'
+import { View, StyleSheet, ScrollView, Dimensions } from 'react-native'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ButtonFooter from '../../components/button-footer'
@@ -8,6 +8,8 @@ import Button from '../../theme/button'
 import Box from '../../theme/box'
 import GradientBackground from '../../components/gradient-background'
 import AnalyticsModal from './optInAnalyticsModal'
+import { Text } from '../../components/text/text'
+
 type TermsProps = NativeStackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation, route }: TermsProps) => {
@@ -22,7 +24,7 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
       />
       <Header showText={true} />
       <View style={styles.containerWrapper}>
-        <Text style={styles.termsTitle}>Terms & Privacy</Text>
+        <Text style={styles.termsTitle} tx="termsScreen.termPrivacy" />
 
         <ScrollView
           contentContainerStyle={styles.termsSection}
@@ -42,34 +44,7 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
             }
           }} */
         >
-          <Text style={styles.termsCopy}>
-            THIS IS THE BETA VERSION OF THE LIQUALITY PLATFORM WHICH IS STILL
-            BEING ACTIVELY DEVELOPED. YOU ACKNOWLEDGE THE INFORMATION AVAILABLE
-            IS NOT INTENDED TO BE RELIED ON OR USED IN A PRODUCTION ENVIRONMENT.
-            YOU ACKNOWLEDGE AND ACCEPT THAT THE SITE OR SERVICES {'\n'} (A) MAY
-            CONTAIN BUGS, ERRORS, AND DEFECTS, {'\n'} (B) MAY FUNCTION
-            IMPROPERLY OR BE SUBJECT TO PERIODS OF DOWNTIME AN UNAVAILABILITY,
-            {'\n'} (C) MAY RESULT IN TOTAL OR PARTIAL LOSS OR CORRUPTION OF DATA
-            USED IN THE SITE, AND {'\n'} (D) MAY BE MODIFIED AT ANY TIME,
-            INCLUDING THROUGH THE RELEASE OF SUBSEQUENT VERSIONS, ALL WITH OR
-            WITHOUT NOTICE. THE ALPHA PLATFORM IS AVAILABLE ON AN “AS IS” AND
-            “AS AVAILABLE” BASIS FOR THE SOLE PURPOSE OF COLLECTING FEEDBACK ON
-            QUALITY, USABILITY, PERFORMANCE AND ANY DEFECTS. THANK YOU FOR YOUR
-            SUPPORT WHILE WE CONTINUE TO WORK ON DELIVERING A PERFECT PRODUCT.
-            THIS IS THE BETA VERSION OF THE LIQUALITY PLATFORM WHICH IS STILL
-            BEING ACTIVELY DEVELOPED. YOU ACKNOWLEDGE THE INFORMATION AVAILABLE
-            IS NOT INTENDED TO BE RELIED ON OR USED IN A PRODUCTION ENVIRONMENT.
-            YOU ACKNOWLEDGE AND ACCEPT THAT THE SITE OR SERVICES {'\n'} (A) MAY
-            CONTAIN BUGS, ERRORS, AND DEFECTS, {'\n'} (B) MAY FUNCTION
-            IMPROPERLY OR BE SUBJECT TO PERIODS OF DOWNTIME AN UNAVAILABILITY,
-            {'\n'} (C) MAY RESULT IN TOTAL OR PARTIAL LOSS OR CORRUPTION OF DATA
-            USED IN THE SITE, AND {'\n'} (D) MAY BE MODIFIED AT ANY TIME,
-            INCLUDING THROUGH THE RELEASE OF SUBSEQUENT VERSIONS, ALL WITH OR
-            WITHOUT NOTICE. THE ALPHA PLATFORM IS AVAILABLE ON AN “AS IS” AND
-            “AS AVAILABLE” BASIS FOR THE SOLE PURPOSE OF COLLECTING FEEDBACK ON
-            QUALITY, USABILITY, PERFORMANCE AND ANY DEFECTS. THANK YOU FOR YOUR
-            SUPPORT WHILE WE CONTINUE TO WORK ON DELIVERING A PERFECT PRODUCT.
-          </Text>
+          <Text style={styles.termsCopy} tx="termsScreen.termCopy" />
         </ScrollView>
         <ButtonFooter unpositioned>
           <Button
@@ -93,7 +68,7 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
           <React.Suspense
             fallback={
               <View>
-                <Text>Loading</Text>
+                <Text tx="common.loading" />
               </View>
             }>
             <AnalyticsModal

@@ -2,5 +2,9 @@
 <resources>
     <color name="primary_dark">#000000</color>
     <color name="white">#FFF</color>
+    <color name="status_bar_color">#000000</color>
 
+    <style name="SplashScreenTheme" parent="SplashScreen_SplashTheme">
+        <item name="colorPrimaryDark">@color/status_bar_color</item>
+    </style>
 </resources>

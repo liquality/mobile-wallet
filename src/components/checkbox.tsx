@@ -2,6 +2,8 @@ import React from 'react'
 import CheckIcon from '../assets/icons/swap-check.svg'
 
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native'
+import i18n from 'i18n-js'
+import { TxKeyPath, translate } from '../i18n'
 
 type CheckBoxProps = {
   chi: React.ReactElement[]
@@ -11,7 +13,8 @@ type CheckBoxProps = {
   textStyle: object
   size: number
   color: string
-  text: string
+  text: string | { tx: TxKeyPath }
+  txOptions?: i18n.TranslateOptions
 }
 
 const CheckBox: React.FC<CheckBoxProps> = ({
@@ -22,20 +25,36 @@ const CheckBox: React.FC<CheckBoxProps> = ({
   size = 20,
   color = '#FFF',
   text = '',
+  txOptions,
   ...props
-}) => (
-  <TouchableOpacity
-    style={[styles.checkBox, style]}
-    onPress={onPress}
-    {...props}>
-    {selected ? (
-      <CheckIcon width={size} height={size} color={color} style={styles.icon} />
-    ) : (
-      <View style={styles.icon} />
-    )}
-    <Text style={textStyle}> {text} </Text>
-  </TouchableOpacity>
-)
+}) => {
+  let content
+  if (typeof text !== 'string') {
+    const { tx } = text
+    content = tx && translate(tx, txOptions)
+  } else {
+    content = text
+  }
+
+  return (
+    <TouchableOpacity
+      style={[styles.checkBox, style]}
+      onPress={onPress}
+      {...props}>
+      {selected ? (
+        <CheckIcon
+          width={size}
+          height={size}
+          color={color}
+          style={styles.icon}
+        />
+      ) : (
+        <View style={styles.icon} />
+      )}
+      <Text style={textStyle}> {content} </Text>
+    </TouchableOpacity>
+  )
+}
 
 const styles = StyleSheet.create({
   checkBox: {

@@ -125,9 +125,8 @@ const theme = createTheme({
       fontFamily: 'Montserrat-Regular',
       fontWeight: '600',
       fontSize: 14,
-      lineHeight: 10,
+      lineHeight: 14,
       color: 'buttonFontPrimary',
-      paddingVertical: 'l',
     },
     tertiaryButtonLabel: {
       fontFamily: 'Montserrat-Regular',
@@ -225,6 +224,16 @@ const theme = createTheme({
       textAlign: 'center',
       marginVertical: 'l',
     },
+    loading: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '400',
+      fontSize: 28,
+      color: 'mainForeground',
+      textAlign: 'center',
+      marginHorizontal: 'xl',
+      marginTop: 'l',
+      lineHeight: 28,
+    },
   },
   buttonVariants: {
     l: {
@@ -236,7 +245,7 @@ const theme = createTheme({
       paddingHorizontal: 'l',
       marginVertical: 'l',
       width: '100%',
-      height: 35,
+      height: 36,
     },
     m: {
       flexDirection: 'row',
@@ -295,6 +304,7 @@ const theme = createTheme({
     },
   },
   cardVariants: {},
+  textInputVariants: {},
 })
 
 export type Theme = typeof theme

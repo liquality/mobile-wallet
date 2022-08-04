@@ -1,3 +1,4 @@
+require('../shim.js')
 require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests()
 import 'react-native-gesture-handler/jestSetup'
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock'
@@ -61,3 +62,23 @@ jest.mock('react-native-background-actions', () => ({
 jest.mock('rn-flipper-async-storage-advanced', () => {
   return {}
 })
+jest.mock('react-native-vision-camera', () => {
+  return {}
+})
+jest.mock('expo-localization', () => {
+  return {}
+})
+jest.mock('i18n-js', () => {
+  return {
+    t: (key) => `${key}.test`,
+  }
+})
+
+Object.defineProperty(global.window, 'crypto', {
+  getRandomValues: () => '',
+})
+
+global.window = {
+  ...global.window,
+  crypto: { getRandomValues: () => '' },
+}

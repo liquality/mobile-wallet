@@ -39,13 +39,19 @@ const CustomFeeEIP1559Screen = ({
 }: CustomFeeEIP1559ScreenProps) => {
   const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
   const [gasFees, setGasFees] = useState<GasFees>()
+
   const [setError] = useState('')
   const [showBasic, setShowBasic] = useState<boolean>(true)
   if (gasFees) {
     var minerTip = gasFees[speedMode].fee.maxPriorityFeePerGas
     var maximumFee = gasFees[speedMode].fee.maxFeePerGas
-    var formattedMinerTip = new BigNumber(minerTip)
-    var formattedMaximumFee = BigNumber(maximumFee)
+    var formattedMinerTip = new BigNumber(minerTip).toString()
+    var formattedMaximumFee = new BigNumber(maximumFee).toString()
+    /*     var [userInputMinerTip, setUserInputMinerTip] =
+      useState<string>(formattedMinerTip)
+
+    var [userInputMaximumFee, setUserInputMaximumFee] =
+      useState<string>(formattedMaximumFee) */
   }
 
   const { code }: AssetDataElementType = route.params.assetData!
@@ -111,6 +117,26 @@ const CustomFeeEIP1559Screen = ({
     return isNaN(fiat) ? 0 : fiat
   }
 
+  const renderSummaryMaxOrMinAmountAndFiat = (type: string) => {
+    //TODO totalfees needs to be fetched from wallet-core
+    let minOrMaxFee
+    let totalMinOrMaxFee
+    if (type === 'max') {
+      minOrMaxFee = maximumFee
+      //totalMinOrMaxFee = getSendFee(code, minOrMaxFee.plus(totalFees.fast))
+    } else {
+      minOrMaxFee = minerTip + gasFees[speedMode].fee.suggestedBaseFeePerGas
+      //totalMinOrMaxFee = getSendFee(code, minOrMaxFee.plus(totalFees.fast))
+    }
+    return {
+      // amount: new BigNumber(totalMinOrMaxFee).dp(6),
+      // fiat: prettyFiatBalance(totalFees.slow, fiatRates[code])
+    }
+  }
+
+  let likelyIn30 = '~likely in < 30 sec'
+  let likelyIn15 = '~likely in < 15 sec'
+
   const renderShowCustomized = () => {
     return (
       <View style={[styles.container, styles.fragmentContainer]}>
@@ -157,7 +183,7 @@ const CustomFeeEIP1559Screen = ({
             <TextInput
               style={styles.gasInput}
               onChangeText={customFeeInput.onChangeText}
-              value={formattedMinerTip.toString()}
+              value={'hej'}
               autoCorrect={false}
               autoCapitalize={'none'}
               returnKeyType="done"
@@ -166,7 +192,7 @@ const CustomFeeEIP1559Screen = ({
             <TextInput
               style={styles.gasInput}
               onChangeText={customFeeInput.onChangeText}
-              value={formattedMaximumFee.toString()}
+              value={customFeeInput.value}
               autoCorrect={false}
               autoCapitalize={'none'}
               returnKeyType="done"
@@ -193,45 +219,50 @@ const CustomFeeEIP1559Screen = ({
             />
           </View>
         </View>
-        <Text style={[styles.label, styles.headerLabel]}>GAS LIMIT</Text>
-
-        <View style={styles.row}>
-          <TextInput
-            style={styles.gasInput}
-            onChangeText={customFeeInput.onChangeText}
-            value={customFeeInput.value}
-            autoCorrect={false}
-            autoCapitalize={'none'}
-            returnKeyType="done"
-          />
-        </View>
 
         <View style={[styles.block, styles.summary]}>
-          <Text style={[styles.preset, styles.speed]}>New Speed/Fee</Text>
-          <Text style={[styles.preset, styles.amount]}>
-            {/*          {code &&
-              parseFloat(customFeeInput.value) > 0 &&
-              `${calculateGasFee(
-                code,
-                parseFloat(customFeeInput.value),
-              )} ${code}`} */}
-            NAN
+          <Text style={[styles.preset, styles.speed, styles.labelBold]}>
+            New Fee Total
           </Text>
-          <Text style={[styles.preset, styles.fiat]}>
-            {/*    {code &&
-              fiatRates &&
-              parseFloat(customFeeInput.value) > 0 &&
-              `$${formatFiat(
-                new BigNumber(
-                  cryptoToFiat(
-                    calculateGasFee(code, parseFloat(customFeeInput.value)),
-                    fiatRates[code],
-                  ),
-                ),
-              )}`} */}
-            NAN
-          </Text>
+          <View style={styles.row}>
+            <Text style={[styles.preset, styles.fiat]}>minimum</Text>
+            <Text style={[styles.preset, styles.fiat]}>maximum</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={[styles.preset, styles.fiat, styles.fiatFast]}>
+              {likelyIn30}
+            </Text>
+            <Text style={[styles.preset, styles.fiat, styles.fiatFast]}>
+              {likelyIn15}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={[styles.preset, styles.fiat]}>minimum</Text>
+            <Text style={[styles.preset, styles.fiat]}>maximum</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={[styles.preset, styles.fiat]}>minimum</Text>
+            <Text style={[styles.preset, styles.fiat]}>maximum</Text>
+          </View>
         </View>
+
+        {/*        <div class="custom-fee-result" id="custom_speed_fee_results">
+          <div class="custom-fee-result-title">New Fee Total</div>
+          <div class="custom-fee-estimation">
+            <div>
+              <span>minimum</span>
+              <span>~Likely in &lt; 30 sec</span>
+              <div class="custom-fee-result-amount">~{{ minimum.amount }}</div>
+              <div class="custom-fee-result-fiat" v-if="minimum.fiat">~{{ minimum.fiat }} USD</div>
+            </div>
+            <div>
+              <span>maximum</span>
+              <span>~Likely in &lt; 15 sec</span>
+              <div class="custom-fee-result-amount">~{{ maximum.amount }}</div>
+              <div class="custom-fee-result-fiat" v-if="maximum.fiat">~{{ maximum.fiat }} USD</div>
+            </div>
+          </div>
+        </div> */}
       </View>
     )
   }
@@ -351,6 +382,9 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 12,
   },
+  labelBold: {
+    fontWeight: '700',
+  },
   headerLabel: {
     marginVertical: 10,
   },
@@ -384,6 +418,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingVertical: 15,
     paddingLeft: 10,
+    flexDirection: 'column',
   },
   inputLabel: {
     fontFamily: 'Montserrat-Regular',
@@ -425,6 +460,9 @@ const styles = StyleSheet.create({
   },
   headerTextFocused: {
     color: '#000',
+  },
+  fiatFast: {
+    color: '#088513',
   },
 })
 

@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
 import ChevronRightIcon from '../../assets/icons/activity-status/chevron-right.svg'
 import AngleRightIcon from '../../assets/icons/angle-right.svg'
 import AngleDownIcon from '../../assets/icons/angle-down.svg'
@@ -18,6 +18,8 @@ import SorterPicker, { SORT_OPTIONS } from './sorter-picker'
 import { ActionEnum, ActivityStatusEnum, TimeLimitEnum } from '../../types'
 import { useRecoilState } from 'recoil'
 import { activityFilterState } from '../../atoms'
+import { labelTranslateFn } from '../../utils'
+import Text from '../../theme/text'
 
 const ActivityFilter: FC<{
   numOfResults: number
@@ -105,18 +107,21 @@ const ActivityFilter: FC<{
           onPress={() => setExpanded(!expanded)}>
           {expanded ? <AngleDownIcon /> : <AngleRightIcon />}
           <Text style={styles.filterLabel}>
-            Filter ({numOfResults} {numOfResults === 1 ? ' Result' : ' Results'}
+            {labelTranslateFn('common.filter')} ({numOfResults}
+            {numOfResults === 1
+              ? ` ${labelTranslateFn('common.result')}`
+              : ` ${labelTranslateFn('common.results')}`}
             )
           </Text>
         </Pressable>
         <Pressable style={styles.resetBtn} onPress={handleClearFilter}>
           <TimeIcon />
-          <Text style={styles.resetLabel}>Reset</Text>
+          <Text style={styles.resetLabel} tx="common.reset" />
         </Pressable>
         <View style={styles.spacer} />
         <Pressable style={styles.iconBtn} onPress={onExport}>
           <ExportIcon width={16} fill={'#646F85'} />
-          <Text style={styles.exportLabel}>Export</Text>
+          <Text style={styles.exportLabel} tx="common.export" />
         </Pressable>
       </View>
       {expanded && (
@@ -138,7 +143,10 @@ const ActivityFilter: FC<{
               <PlusSign fill="#1D1E21" width={10} />
             )}
             <Text style={styles.filterLabel}>
-              {moreExpanded ? 'less ' : 'more '} filter options
+              {moreExpanded
+                ? `${labelTranslateFn('common.less')}`
+                : `${labelTranslateFn('common.more')}`}
+              `${labelTranslateFn('common.filterOptions')}`
             </Text>
           </Pressable>
           {moreExpanded && (
@@ -162,10 +170,13 @@ const ActivityFilter: FC<{
           )}
           <View style={styles.sortBar}>
             <Text style={styles.filterLabel}>
-              {numOfResults} {numOfResults === 1 ? ' Result' : ' Results'}
+              {numOfResults}
+              {numOfResults === 1
+                ? ` ${labelTranslateFn('common.result')}`
+                : ` ${labelTranslateFn('common.results')}`}
             </Text>
             <View style={styles.spacer} />
-            <SectionTitle title="SORT" />
+            <SectionTitle tx="common.sort" />
             <Pressable style={styles.iconBtn} onPress={handleShowPicker}>
               <Text style={styles.sorterLabel}>
                 {

@@ -20,6 +20,9 @@ import {
   swapPairState,
 } from '../../../atoms'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import I18n from 'i18n-js'
+import { labelTranslateFn } from '../../../utils'
+import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
 
 type AssetScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -36,21 +39,22 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const handleSendPress = useCallback(() => {
     navigation.navigate('SendScreen', {
       assetData: route.params.assetData,
-      screenTitle: `Send ${code}`,
+      screenTitle: I18n.t('assetScreen.sendCode', { code }),
     })
   }, [code, navigation, route.params.assetData])
 
   const handleReceivePress = useCallback(() => {
     navigation.navigate('ReceiveScreen', {
       assetData: route.params.assetData,
-      screenTitle: `Receive ${code}`,
+      includeBackBtn: true,
+      screenTitle: I18n.t('assetScreen.receiveCode', { code }),
     })
   }, [code, navigation, route.params.assetData])
 
   const handleSwapPress = useCallback(() => {
     navigation.navigate('SwapScreen', {
       swapAssetPair: swapPair,
-      screenTitle: 'Swap',
+      screenTitle: labelTranslateFn('assetScreen.swap')!,
     })
   }, [navigation, swapPair])
 
@@ -59,7 +63,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
       <React.Suspense
         fallback={
           <View>
-            <Text>Loading asset screen...</Text>
+            <Text tx="assetScreen.loadingAsset" />
           </View>
         }>
         <Box style={styles.overviewBlock}>
@@ -90,26 +94,24 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             <Text style={styles.nativeCurrency}>{code}</Text>
           </Box>
           <Text style={styles.address}>
-            {`${address?.substring(0, 4)}...${address?.substring(
-              address?.length - 4,
-            )}`}
+            {!!address && `${shortenAddress(address)}`}
           </Text>
           <Box flexDirection="row" justifyContent="center" marginTop="l">
             <RoundButton
               onPress={handleSendPress}
-              label="Send"
+              tx={'assetScreen.send'}
               type="SEND"
               variant="smallPrimary"
             />
             <RoundButton
               onPress={handleSwapPress}
-              label="Swap"
+              tx={'assetScreen.swap'}
               type="SWAP"
               variant="largePrimary"
             />
             <RoundButton
               onPress={handleReceivePress}
-              label="Receive"
+              tx={'assetScreen.receive'}
               type="RECEIVE"
               variant="smallPrimary"
             />
@@ -117,7 +119,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         </Box>
         <View style={styles.tabBlack}>
           <Pressable style={[styles.leftHeader, styles.headerFocused]}>
-            <Text variant="tabHeader">ACTIVITY</Text>
+            <Text variant="tabHeader" tx="assetScreen.activity" />
           </Pressable>
         </View>
         <ActivityFlatList selectedAsset={code} />

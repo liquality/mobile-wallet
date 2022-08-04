@@ -1,4 +1,3 @@
-import { NativeModules } from 'react-native'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { AES } from 'crypto-js'
 import { fetchFeesForAsset, fetchSwapProvider } from '../store/store'
@@ -10,6 +9,9 @@ import {
 } from '@liquality/wallet-core/dist/swaps/types'
 import { Network } from '@liquality/wallet-core/dist/store/types'
 import dayjs from 'dayjs'
+import QuickCrypto from 'react-native-quick-crypto'
+import { Buffer } from '@craftzdog/react-native-buffer'
+import { translate, TxKeyPath } from '../i18n'
 
 export const sortQuotes = (quotes: SwapQuote[]): SwapQuote[] => {
   if (!quotes) {
@@ -50,15 +52,22 @@ export const pbkdf2 = async (
   length: number,
   digest: string,
 ): Promise<string> => {
-  Log(digest, 'info')
-  const generatedValue = await NativeModules.Aes.pbkdf2(
-    password,
-    salt,
-    iterations,
-    length,
-  )
-
-  return global.Buffer.from(generatedValue).toString('hex')
+  return new Promise((resolve, reject) => {
+    QuickCrypto.pbkdf2(
+      Buffer.from(password),
+      Buffer.from(salt),
+      iterations,
+      length,
+      digest,
+      (error, derivedKey) => {
+        if (error || !derivedKey) {
+          reject(error)
+        } else {
+          resolve(derivedKey.toString())
+        }
+      },
+    )
+  })
 }
 
 export const pbkdf2Sync = (
@@ -68,31 +77,22 @@ export const pbkdf2Sync = (
   length: number,
   digest: string,
 ): string => {
-  Log(digest, 'info')
-  const generatedValue = NativeModules.Aes.pbkdf2Sync(
-    password,
-    salt,
+  const derivedKey = QuickCrypto.pbkdf2Sync(
+    Buffer.from(password),
+    Buffer.from(salt),
     iterations,
     length,
     digest,
   )
 
-  return global.Buffer.from(generatedValue).toString('hex')
+  return derivedKey.toString()
 }
 
-global.pbkdf2Sync = pbkdf2Sync
 export const encrypt = async (
   value: string,
   derivedKey: string,
 ): Promise<any> => {
   return Promise.resolve(AES.encrypt(value, derivedKey))
-  // const encrypted = await NativeModules.Aes.encrypt(
-  //   value,
-  //   derivedKey,
-  //   IV_STRING,
-  // )
-  // console.log('encrypted: ', encrypted, encrypted0)
-  // return encrypted
 }
 
 export const decrypt = async (
@@ -101,7 +101,6 @@ export const decrypt = async (
 ): Promise<any> => {
   try {
     return Promise.resolve(AES.decrypt(encrypted, derivedKey))
-    // return await NativeModules.Aes.decrypt(encrypted, derivedKey, IV_STRING)
   } catch (e) {
     return ''
   }
@@ -187,3 +186,5 @@ export const capitalizeFirstLetter = (str: string) => {
 export const isNumber = (value: string): boolean => {
   return /^\d+(.\d*)?$/.test(value)
 }
+
+export const labelTranslateFn = (value: TxKeyPath) => translate(value)

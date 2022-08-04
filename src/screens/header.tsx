@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
+import Text from '../theme/text'
 import Logo from '../assets/icons/logo.svg'
 
 const Header = ({
@@ -20,7 +21,7 @@ const Header = ({
         height={height || 54}
         style={styles.headerLogo}
       />
-      {showText && <Text style={styles.headerText}>Wallet</Text>}
+      {showText && <Text style={styles.headerText} tx="header.wallet" />}
     </View>
   )
 }

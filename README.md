@@ -31,6 +31,7 @@
 * Background fetch
 * Remote notifications
 * Background processing
+* Make sure to create a .env file and add these environment variables to it: MNEMONIC, PASSWORD, and INFURA_API_KEY
 
 ## Running the app
 
@@ -104,6 +105,12 @@ elif [[ -x "$(command -v brew)" && -s "$(brew --prefix nvm)/nvm.sh" ]]; then
   . "$(brew --prefix nvm)/nvm.sh" --no-use
   nvm use 2> /dev/null || nvm use default
 fi
+```
+
+2. Android Error: Plugin with id 'maven' not found
+
+```
+  Replace maven with maven-publish
 ```
 
 ## License

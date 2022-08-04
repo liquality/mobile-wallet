@@ -14,6 +14,8 @@ import {
 } from '@shopify/restyle'
 import { Theme } from './index'
 import Box from './box'
+import { TxKeyPath } from '../i18n'
+import i18n from 'i18n-js'
 
 const RoundBaseButton = createRestyleComponent<
   VariantProps<Theme, 'roundButtonVariants'> & PressableProps,
@@ -26,11 +28,13 @@ type RoundButtonProps = React.ComponentProps<typeof RoundBaseButton> &
     variant: string
     onPress: () => void
     label?: string
+    tx?: TxKeyPath
+    txOptions?: i18n.TranslateOptions
   }
 
 const RoundButton: FC<RoundButtonProps> = (props) => {
   const theme = useTheme<Theme>()
-  const { onPress, label, type, variant } = props
+  const { onPress, label, tx, txOptions, type, variant } = props
   const { buttonFontSecondary, buttonFontPrimary } = theme.colors
   const iconFontColor =
     variant === 'largePrimary'
@@ -63,7 +67,11 @@ const RoundButton: FC<RoundButtonProps> = (props) => {
           <ReceiveIcon width={computeIconSize()} height={computeIconSize()} />
         )}
       </RoundBaseButton>
-      {label && <Text variant="mainButtonLabel">{label}</Text>}
+      {tx ? (
+        <Text variant="mainButtonLabel" tx={tx} txOptions={txOptions} />
+      ) : label ? (
+        <Text variant="mainButtonLabel">{label}</Text>
+      ) : null}
     </Box>
   )
 }

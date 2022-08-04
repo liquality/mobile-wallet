@@ -38,7 +38,7 @@ import {
 import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
 import { AtomEffect, DefaultValue } from 'recoil'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-// import dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import { showNotification } from './pushNotification'
 
 // Unwrap the type returned by a promise
@@ -75,7 +75,7 @@ export const store = configureStore({
 
 //-------------------------3. REGISTER THE CALLBACKS / SUBSCRIBE TO MEANINGFULL EVENTS-----------------------------
 export const initWallet = async (initialState?: CustomRootState) => {
-  // const start = dayjs().unix()
+  const start = dayjs().unix()
   const walletOptions: WalletOptions = {
     initialState: initialState || {
       activeNetwork: Network.Testnet,
@@ -92,22 +92,19 @@ export const initWallet = async (initialState?: CustomRootState) => {
     },
   }
   wallet = setupWallet(walletOptions)
-  // wallet.original.subscribe((mutation) => {
-  // if (mutation.type === 'CREATE_WALLET') {
-  //   console.log(mutation.type, dayjs().unix() - start, 'seconds')
-  // } else if (mutation.type === 'UPDATE_BALANCE') {
-  //   console.log(
-  //     mutation.type,
-  //     mutation.payload.asset,
-  //     dayjs().unix() - start,
-  //     'seconds',
-  //   )
-  // } else if (mutation.type === 'UPDATE_ACCOUNT_ADDRESSES') {
-  //   console.log(mutation.type, dayjs().unix() - start, 'seconds')
-  // } else if (mutation.type === 'UPDATE_HISTORY') {
-  //   console.log('UPDATE_HISTORY: ', mutation.payload)
-  // }
-  // })
+  wallet.original.subscribe((mutation) => {
+    if (
+      [
+        'UPDATE_MULTIPLE_BALANCES',
+        'CREATE_WALLET',
+        'UPDATE_BALANCE',
+        'UPDATE_ACCOUNT_ADDRESSES',
+        'UPDATE_HISTORY',
+      ].includes(mutation.type)
+    ) {
+      Log(`${mutation.type} ${dayjs().unix() - start} seconds`, 'info')
+    }
+  })
 
   return wallet
 }
@@ -147,6 +144,27 @@ export const createWallet = async (
  */
 export const populateWallet = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet.state
+  await wallet.dispatch.initializeAddresses({
+    network: activeNetwork,
+    walletId: activeWalletId,
+  })
+
+  await wallet.dispatch
+    .updateBalances({
+      network: activeNetwork,
+      walletId: activeWalletId,
+    })
+    .catch((e) => {
+      Log(`Failed update balances: ${e}`, 'error')
+    })
+
+  await wallet.dispatch
+    .updateFiatRates({
+      assets: wallet.getters.networkAssets as string[],
+    })
+    .catch((e) => {
+      Log(`Failed to update fiat rates: ${e}`, 'error')
+    })
 
   await wallet.dispatch
     .updateMarketData({
@@ -156,42 +174,13 @@ export const populateWallet = async (): Promise<void> => {
       Log(`Failed to update market data: ${e}`, 'error')
     })
 
-  wallet.dispatch
-    .updateFiatRates({
-      assets: ['ETH', 'BTC'],
-    })
-    .catch((e) => {
-      Log(`Failed to update fiat rates: ${e}`, 'error')
-    })
-
-  wallet.dispatch
-    .updateBalances({
-      network: activeNetwork,
-      walletId: activeWalletId,
-    })
-    .catch((e) => {
-      Log(`Failed update balances: ${e}`, 'error')
-    })
-
-  retryPendingSwaps()
+  wallet.dispatch.checkPendingActions({
+    walletId: activeWalletId,
+  })
 }
 
 export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet?.state
-  /*   const enabledAssets = ['BTC',
-      'ETH',
-      'DAI',
-      'RBTC',
-      'BNB',
-      'NEAR',
-      'SOV',
-      'MATIC',
-      'PWETH',
-      'ARBETH',
-      'SOL',
-      'LUNA',
-      'UST',
-    ] */
 
   await wallet.dispatch
     .updateBalances({
@@ -549,23 +538,18 @@ export const getTimeline = async (
   )
 }
 
-// export const walletEffect: () => AtomEffect<typeof wallet> =
-//   () =>
-//   ({ setSelf, trigger }) => {
-//     if (trigger === 'get') {
-//       setSelf(wallet)
-//     }
-//   }
-
 export const balanceEffect: (asset: string) => AtomEffect<number> =
   (asset) =>
   ({ setSelf }) => {
     wallet.original.subscribe((mutation) => {
       const { type, payload } = mutation
-      if (type === 'UPDATE_BALANCE') {
-        if (payload.asset === asset) {
-          setSelf(Number(payload.balance))
-        }
+      if (type === 'UPDATE_BALANCE' && payload.asset === asset) {
+        setSelf(Number(payload.balance))
+      } else if (
+        type === 'UPDATE_MULTIPLE_BALANCES' &&
+        payload.assets.includes(asset)
+      ) {
+        setSelf(Number(payload.balances[payload.assets.indexOf(asset)]))
       }
     })
   }
@@ -669,7 +653,9 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
     if (trigger === 'get') {
       setSelf(
         AsyncStorage.getItem(key).then((savedValue) => {
-          return savedValue ? JSON.parse(savedValue) : new DefaultValue()
+          return savedValue !== null
+            ? JSON.parse(savedValue)
+            : new DefaultValue()
         }),
       )
     }
@@ -678,7 +664,10 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
       if (newValue instanceof DefaultValue && trigger === 'get') return
       isReset
         ? AsyncStorage.removeItem(key)
-        : newValue && AsyncStorage.setItem(key, JSON.stringify(newValue))
+        : newValue !== null &&
+          typeof newValue !== 'undefined' &&
+          newValue !== -1
+      AsyncStorage.setItem(key, JSON.stringify(newValue))
     })
   }
 

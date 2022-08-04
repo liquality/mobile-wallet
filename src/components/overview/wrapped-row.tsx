@@ -8,6 +8,7 @@ import {
   accountInfoStateFamily,
   addressStateFamily,
   balanceStateFamily,
+  isDoneFetchingData,
   swapPairState,
 } from '../../atoms'
 import { useNavigation, useRoute } from '@react-navigation/core'
@@ -21,11 +22,12 @@ const WrappedRow: FC<{
 }> = (props) => {
   const { item } = props
   const [isExpanded, setIsExpanded] = useState(false)
-  const ethAccount = useRecoilValue(accountForAssetState('BTC'))
+  const ethAccount = useRecoilValue(accountForAssetState('ETH'))
   const btcAccount = useRecoilValue(accountForAssetState('BTC'))
   const address = useRecoilValue(addressStateFamily(item.id))
   const balance = useRecoilValue(balanceStateFamily(item.name))
   const account = useRecoilValue(accountInfoStateFamily(item.id))
+  const isDoneFetching = useRecoilValue(isDoneFetchingData)
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
   const assets = Object.values(account?.assets || {}) || []
   const isNested = assets.length > 0 && item.name !== 'BTC'
@@ -45,10 +47,15 @@ const WrappedRow: FC<{
   }, [isExpanded])
 
   const onAssetSelected = useCallback(
-    (selectedAccount: AccountType) => {
+    (currentAccount: AccountType) => {
       // Make sure account assets have the same id (account id) as their parent
-      selectedAccount.id = account.id
-      selectedAccount.address = account.address
+      const selectedAccount: AccountType = {
+        ...currentAccount,
+        id: account.id,
+        address,
+        balance,
+      }
+
       let fromAsset: AccountType, toAsset: AccountType
       toAsset = selectedAccount.code === 'ETH' ? btcAccount : ethAccount
 
@@ -90,27 +97,34 @@ const WrappedRow: FC<{
           params: {
             ...route.params,
             assetData: selectedAccount,
+            includeBackBtn: true,
           },
         })
       }
     },
     [
-      account.address,
       account.id,
+      address,
+      balance,
       btcAccount,
       ethAccount,
-      item.name,
-      navigation,
       route.params,
-      screenMap,
-      setSwapPair,
       swapPair,
+      navigation,
+      screenMap,
+      item.name,
+      setSwapPair,
     ],
   )
 
-  if (!account || !account.code) return null
+  if (
+    !account ||
+    !account.code ||
+    (isDoneFetching && (balance < 0 || !address))
+  )
+    return null
 
-  if (!balance || !address)
+  if (balance < 0 || !address)
     return (
       <View style={styles.row}>
         <AssetIcon chain={cryptoassets[item.name].chain} />

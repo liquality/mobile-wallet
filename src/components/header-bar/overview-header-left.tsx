@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { Pressable, StyleSheet, Text } from 'react-native'
 import ChevronLeft from '../../assets/icons/chevron-left.svg'
 
@@ -6,15 +6,16 @@ import { networkState } from '../../atoms'
 import { useRecoilValue } from 'recoil'
 import Box from '../../theme/box'
 
-const OverviewHeaderLeft = ({
-  includeBackBtn,
-  goBack,
-  screenTitle,
-}: {
+type OverviewHeaderLeftProps = {
   includeBackBtn: boolean
   goBack: () => void
   screenTitle: string
-}): React.ReactElement => {
+}
+
+const OverviewHeaderLeft: FC<OverviewHeaderLeftProps> = (
+  props,
+): React.ReactElement => {
+  const { includeBackBtn, goBack, screenTitle } = props
   const activeNetwork = useRecoilValue(networkState)
   return (
     <Box flexDirection="row">

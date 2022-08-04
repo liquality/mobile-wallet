@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { StyleSheet, TextInput, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import SearchIcon from '../../../assets/icons/search.svg'
 
@@ -8,6 +8,7 @@ import AssetFlatList from '../../../components/overview/asset-flat-list'
 import { useInputState } from '../../../hooks'
 import { useRecoilValue } from 'recoil'
 import { accountListState, accountsIdsState } from '../../../atoms'
+import TextInput from '../../../theme/textInput'
 
 type AssetChooserProps = NativeStackScreenProps<
   RootStackParamList,
@@ -54,7 +55,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
         <SearchIcon />
         <TextInput
           style={styles.sendInput}
-          placeholder={'Search for a Currency'}
+          placeholderTx={'assetChooserScreen.searchCurrency'}
           keyboardType={'ascii-capable'}
           onChangeText={searchInput.onChangeText}
           onEndEditing={filterByTerm}
