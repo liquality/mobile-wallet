@@ -9,6 +9,7 @@ import Box from '../../theme/box'
 import ActivityFlatList from '../activity-flat-list'
 import AssetFlatList from './asset-flat-list'
 import * as React from 'react'
+import { Log } from '../../utils'
 
 const ContentBlock = () => {
   enum ViewKind {
@@ -22,9 +23,13 @@ const ContentBlock = () => {
   useEffect(() => {
     AsyncStorage.getItem('BTC').then((result) => {
       if (result !== null) {
-        populateWallet().then(() => {
-          setIsDoneFetchingData(true)
-        })
+        populateWallet()
+          .then(() => {
+            setIsDoneFetchingData(true)
+          })
+          .catch((e) => {
+            Log(`Failed to populateWallet: ${e}`, 'error')
+          })
       } else {
         setIsDoneFetchingData(true)
       }

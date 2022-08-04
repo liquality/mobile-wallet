@@ -144,10 +144,14 @@ export const createWallet = async (
  */
 export const populateWallet = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet.state
-  await wallet.dispatch.initializeAddresses({
-    network: activeNetwork,
-    walletId: activeWalletId,
-  })
+  await wallet.dispatch
+    .initializeAddresses({
+      network: activeNetwork,
+      walletId: activeWalletId,
+    })
+    .catch((e) => {
+      Log(`Failed to initialize addresses: ${e}`, 'error')
+    })
 
   await wallet.dispatch
     .updateBalances({
