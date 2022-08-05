@@ -1,7 +1,10 @@
 import React from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 
-import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
+import {
+  getSendAmountFee,
+  getSendFee,
+} from '@liquality/wallet-core/dist/utils/fees'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
@@ -15,7 +18,10 @@ const Preset = ({
   fiatRates,
   speedMode,
   setSpeedMode,
+  accountAssetId,
+  amountInput,
 }) => {
+  let totalFees = getSendAmountFee(accountAssetId, code, amountInput)
   const renderEstimationSpeed = (speed: string) => {
     if (speed === 'slow') {
       return '~maybe in 30 sec'
@@ -44,7 +50,7 @@ const Preset = ({
     return {
       amount: new BigNumber(sendFee).dp(6).toString(),
 
-      //fiat: prettyFiatBalance(totalFees.slow, fiatRates[code]),
+      fiat: prettyFiatBalance(totalFees._W.slow, fiatRates[code]),
       maximum: prettyFiatBalance(
         getSendFee(code, maximumFee),
         fiatRates[code],
@@ -89,7 +95,9 @@ const Preset = ({
                 <Text style={[styles.preset, styles.amount]}>
                   {preset?.amount} in {code}
                 </Text>
-                <Text style={[styles.preset, styles.fiat]}>0.0 USD</Text>
+                <Text style={[styles.preset, styles.fiat]}>
+                  {preset?.fiat} USD
+                </Text>
                 <Text style={[styles.preset, styles.fiat]}>
                   Max {preset?.maximum} USD
                 </Text>

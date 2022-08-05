@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, TextInput, Pressable } from 'react-native'
+import { StyleSheet, View, TextInput, Pressable, Text } from 'react-native'
 import { FeeDetails } from '@liquality/types/lib/fees'
 /* import {
   cryptoToFiat,

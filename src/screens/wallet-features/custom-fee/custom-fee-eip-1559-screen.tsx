@@ -11,12 +11,19 @@ import {
 } from '../../../types'
 import Button from '../../../theme/button'
 import { useRecoilValue } from 'recoil'
-import { fiatRatesState, networkState } from '../../../atoms'
+import {
+  accountForAssetState,
+  fiatRatesState,
+  networkState,
+} from '../../../atoms'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions' // Default options
 
 import Preset from './preset'
-import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
+import {
+  getSendAmountFee,
+  getSendFee,
+} from '@liquality/wallet-core/dist/utils/fees'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 
@@ -45,8 +52,8 @@ const CustomFeeEIP1559Screen = ({
   if (gasFees) {
     var minerTip = gasFees[speedMode].fee.maxPriorityFeePerGas
     var maximumFee = gasFees[speedMode].fee.maxFeePerGas
-    var formattedMinerTip = new BigNumber(minerTip).toString()
-    var formattedMaximumFee = new BigNumber(maximumFee).toString()
+    /*     var formattedMinerTip = new BigNumber(minerTip).toString()
+    var formattedMaximumFee = new BigNumber(maximumFee).toString() */
     /*     var [userInputMinerTip, setUserInputMinerTip] =
       useState<string>(formattedMinerTip)
 
@@ -58,24 +65,15 @@ const CustomFeeEIP1559Screen = ({
   const wallet = setupWallet({
     ...defaultOptions,
   })
-
   const activeNetwork = useRecoilValue(networkState)
-  //There should be walletid & fees in wallet state?
-  /*   accounts: state.accounts,
-  walletId: state.activeWalletId,
-  activeNetwork: state.activeNetwork,
-  fiatRates: state.fiatRates,
-  fees: state.fees,
-  history: state.history, */
+  const accountForAsset = useRecoilValue(accountForAssetState(code))
+  let totalFees = getSendAmountFee(
+    accountForAsset?.id,
+    code,
+    route.params.amountInput,
+  )
   const { activeWalletId, fees } = wallet.state
   const fiatRates = useRecoilValue(fiatRatesState)
-
-  /*   console.log('Active network:', activeNetwork)
-  console.log('Wallet state ID:', activeWalletId, 'and fees:', fees)
-  console.log('Fiat rates:', fiatRates)
-  console.log(code, 'what is code? (from assetData)')
-  console.log(wallet.state, 'WALLET STATE') */
-
   const customFeeInput = useInputState(
     `${fees?.[activeNetwork]?.[activeWalletId]?.[code].average.fee || '0'}`,
   )
@@ -118,24 +116,33 @@ const CustomFeeEIP1559Screen = ({
   }
 
   const renderSummaryMaxOrMinAmountAndFiat = (type: string) => {
-    //TODO totalfees needs to be fetched from wallet-core
     let minOrMaxFee
     let totalMinOrMaxFee
     if (type === 'max') {
       minOrMaxFee = maximumFee
-      //totalMinOrMaxFee = getSendFee(code, minOrMaxFee.plus(totalFees.fast))
+      totalMinOrMaxFee = getSendFee(
+        code,
+        new BigNumber(minOrMaxFee).plus(totalFees._W.fast),
+      )
     } else {
       minOrMaxFee = minerTip + gasFees[speedMode].fee.suggestedBaseFeePerGas
-      //totalMinOrMaxFee = getSendFee(code, minOrMaxFee.plus(totalFees.fast))
+
+      totalMinOrMaxFee = getSendFee(
+        code,
+        new BigNumber(minOrMaxFee).plus(totalFees._W.slow),
+      )
     }
     return {
-      // amount: new BigNumber(totalMinOrMaxFee).dp(6),
-      // fiat: prettyFiatBalance(totalFees.slow, fiatRates[code])
+      amount: new BigNumber(totalMinOrMaxFee).dp(6),
+      fiat: prettyFiatBalance(totalFees._W.slow, fiatRates[code]),
     }
   }
 
   let likelyIn30 = '~likely in < 30 sec'
   let likelyIn15 = '~likely in < 15 sec'
+  let summaryMinimum = renderSummaryMaxOrMinAmountAndFiat('min')
+  let summaryMaximum = renderSummaryMaxOrMinAmountAndFiat('max')
+  let tilda = '~'
 
   const renderShowCustomized = () => {
     return (
@@ -226,43 +233,41 @@ const CustomFeeEIP1559Screen = ({
           </Text>
           <View style={styles.row}>
             <Text style={[styles.preset, styles.fiat]}>minimum</Text>
-            <Text style={[styles.preset, styles.fiat]}>maximum</Text>
+            <Text style={[styles.preset, styles.fiat, styles.maximum]}>
+              maximum
+            </Text>
           </View>
           <View style={styles.row}>
             <Text style={[styles.preset, styles.fiat, styles.fiatFast]}>
               {likelyIn30}
             </Text>
-            <Text style={[styles.preset, styles.fiat, styles.fiatFast]}>
+            <Text
+              style={[
+                styles.preset,
+                styles.fiat,
+                styles.fiatFast,
+                styles.maximum,
+              ]}>
               {likelyIn15}
             </Text>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.preset, styles.fiat]}>minimum</Text>
-            <Text style={[styles.preset, styles.fiat]}>maximum</Text>
+            <Text style={[styles.preset, styles.fiat]}>
+              {tilda + summaryMinimum.amount.toString()}
+            </Text>
+            <Text style={[styles.preset, styles.fiat, styles.maximum]}>
+              {tilda + summaryMaximum.amount.toString()}
+            </Text>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.preset, styles.fiat]}>minimum</Text>
-            <Text style={[styles.preset, styles.fiat]}>maximum</Text>
+            <Text style={[styles.preset, styles.fiat]}>
+              {tilda + summaryMinimum.fiat.toString()} USD
+            </Text>
+            <Text style={[styles.preset, styles.fiat, styles.maximum]}>
+              {tilda + summaryMaximum.fiat.toString()} USD
+            </Text>
           </View>
         </View>
-
-        {/*        <div class="custom-fee-result" id="custom_speed_fee_results">
-          <div class="custom-fee-result-title">New Fee Total</div>
-          <div class="custom-fee-estimation">
-            <div>
-              <span>minimum</span>
-              <span>~Likely in &lt; 30 sec</span>
-              <div class="custom-fee-result-amount">~{{ minimum.amount }}</div>
-              <div class="custom-fee-result-fiat" v-if="minimum.fiat">~{{ minimum.fiat }} USD</div>
-            </div>
-            <div>
-              <span>maximum</span>
-              <span>~Likely in &lt; 15 sec</span>
-              <div class="custom-fee-result-amount">~{{ maximum.amount }}</div>
-              <div class="custom-fee-result-fiat" v-if="maximum.fiat">~{{ maximum.fiat }} USD</div>
-            </div>
-          </div>
-        </div> */}
       </View>
     )
   }
@@ -312,6 +317,8 @@ const CustomFeeEIP1559Screen = ({
               fees={fees}
               activeNetwork={activeNetwork}
               activeWalletId={activeWalletId}
+              accountAssetId={accountForAsset?.id}
+              amountInput={route.params.amountInput}
             />
           ) : (
             renderShowCustomized()
@@ -408,6 +415,9 @@ const styles = StyleSheet.create({
 
   fiatFirst: {
     marginLeft: '37%',
+  },
+  maximum: {
+    marginRight: '2%',
   },
   block: {
     marginVertical: 15,

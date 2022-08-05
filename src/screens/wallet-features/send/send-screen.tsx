@@ -198,6 +198,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       {
         assetData: route.params.assetData,
         screenTitle: labelTranslateFn('sendScreen.networkSpeed')!,
+        amountInput: amountInput.value,
       },
     )
   }
