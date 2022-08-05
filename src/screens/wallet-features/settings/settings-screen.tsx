@@ -22,6 +22,7 @@ import { networkState, optInAnalyticsState, walletState } from '../../../atoms'
 import DeviceInfo from 'react-native-device-info'
 import { useNavigation } from '@react-navigation/core'
 import i18n from 'i18n-js'
+import { toggleNetwork } from '../../../store/store'
 
 const SettingsScreen = ({ route }) => {
   const walletStateCopy = useRecoilValue(walletState)
@@ -59,10 +60,6 @@ const SettingsScreen = ({ route }) => {
       includeBackBtn: false,
     })
   }, [navigation])
-
-  const toggleNetwork = (network: any) => {
-    toggleNetwork(network)
-  }
 
   useEffect(() => {
     if (!activeNetwork) {
