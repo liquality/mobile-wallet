@@ -671,7 +671,7 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
         : newValue !== null &&
           typeof newValue !== 'undefined' &&
           newValue !== -1
-      AsyncStorage.setItem(key, JSON.stringify(newValue))
+      AsyncStorage.setItem(key, JSON.stringify(newValue)).catch(() => {})
     })
   }
 
