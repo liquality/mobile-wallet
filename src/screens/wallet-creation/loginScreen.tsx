@@ -3,9 +3,9 @@ import {
   View,
   StyleSheet,
   TextInput,
-  Platform,
   KeyboardAvoidingView,
   Dimensions,
+  Alert,
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
@@ -80,50 +80,55 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   }
 
   const onSesamePress = async () => {
-    setLoading(true)
-    await AsyncStorage.clear()
-    const { accounts, activeWalletId, activeNetwork } = await createWallet(
-      PASSWORD,
-      MNEMONIC,
-    )
-    const accountsIds: { id: string; name: string }[] = []
-    accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
-      const nativeAsset = chains[account.chain].nativeAsset
-      accountsIds.push({
-        id: account.id,
-        name: nativeAsset,
-      })
-      const newAccount: AccountType = {
-        id: account.id,
-        chain: account.chain,
-        name: account.name,
-        code: nativeAsset,
-        address: account.addresses[0], //TODO why pick only the first address
-        color: account.color,
-        assets: {},
-        balance: 0,
-      }
-
-      for (const asset of account.assets) {
-        newAccount.assets[asset] = {
-          id: asset,
-          name: cryptoassets[asset].name,
-          code: asset,
+    try {
+      setLoading(true)
+      await AsyncStorage.clear()
+      const { accounts, activeWalletId, activeNetwork } = await createWallet(
+        PASSWORD,
+        MNEMONIC,
+      )
+      const accountsIds: { id: string; name: string }[] = []
+      accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
+        const nativeAsset = chains[account.chain].nativeAsset
+        accountsIds.push({
+          id: account.id,
+          name: nativeAsset,
+        })
+        const newAccount: AccountType = {
+          id: account.id,
           chain: account.chain,
+          name: account.name,
+          code: nativeAsset,
+          address: account.addresses[0], //TODO why pick only the first address
           color: account.color,
-          balance: 0,
           assets: {},
+          balance: 0,
         }
-      }
 
-      addAccount(account.id, newAccount)
-    })
+        for (const asset of account.assets) {
+          newAccount.assets[asset] = {
+            id: asset,
+            name: cryptoassets[asset].name,
+            code: asset,
+            chain: account.chain,
+            color: account.color,
+            balance: 0,
+            assets: {},
+          }
+        }
 
-    setAccountsIds(accountsIds)
-    setActiveNetwork(activeNetwork)
+        addAccount(account.id, newAccount)
+      })
 
-    setLoading(false)
-    navigation.navigate('MainNavigator')
+      setAccountsIds(accountsIds)
+      setActiveNetwork(activeNetwork)
+
+      setLoading(false)
+      navigation.navigate('MainNavigator')
+    } catch (_err) {
+      setLoading(false)
+      Alert.alert(labelTranslateFn('somethingWentWrong')!)
+    }
   }
 
   return (
@@ -133,9 +138,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
         height={Dimensions.get('screen').height}
         isFullPage
       />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-        style={styles.keyboard}>
+      <KeyboardAvoidingView behavior={'position'} style={styles.keyboard}>
         <Box
           flex={1}
           justifyContent="center"

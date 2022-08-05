@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     lineHeight: 30,
     height: 35,
+    paddingBottom: 0,
     width: '100%',
     color: '#EAB300',
   },
