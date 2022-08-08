@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, TextInput, Text } from 'react-native'
+import { StyleSheet, View, TextInput } from 'react-native'
 import { FeeDetails } from '@liquality/types/lib/fees'
 
 import AssetIcon from '../../../components/asset-icon'
@@ -11,6 +11,7 @@ import {
   UseInputStateReturnType,
 } from '../../../types'
 import Button from '../../../theme/button'
+import Text from '../../../theme/text'
 /* import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms' */
 import { fetchFeesForAsset } from '../../../store/store'
@@ -83,9 +84,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
       <View style={styles.block}>
         <View style={styles.rowEnd}>
           <AssetIcon asset={code} />
-          <Text style={[styles.headerText, styles.headerTextFocused]}>
-            {code}
-          </Text>
+          <Text>{code}</Text>
         </View>
         <View style={styles.row}>
           <Preset

@@ -1309,6 +1309,15 @@
     "@liquality/cryptoassets" "^1.13.3"
     bignumber.js "^9.0.2"
 
+"@chainify/types@^1.2.13":
+  version "1.2.13"
+  resolved "https://registry.yarnpkg.com/@chainify/types/-/types-1.2.13.tgz#c24a9377a76f7288dd3aa044a85f64ae863cce28"
+  integrity sha512-BY1boPhRI8jpp2AxM0Xm0dYH4902pzN7k81UXgyXWa2Ng1O8H/tRzmwNw8nXwOwM80p8ySxPs7Lx1YuzJn5jaA==
+  dependencies:
+    "@ethersproject/bignumber" "5.6.0"
+    "@liquality/cryptoassets" "^1.13.3"
+    bignumber.js "^9.0.2"
+
 "@chainify/utils@1.2.12":
   version "1.2.12"
   resolved "https://registry.yarnpkg.com/@chainify/utils/-/utils-1.2.12.tgz#c4ce1115e81c8b00555dd9716df45f1211930073"

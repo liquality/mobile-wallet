@@ -83,6 +83,7 @@ export type StackPayload = {
   action?: ActionEnum
   selectedAssetCodes?: string[]
   onSelectAssetCodes?: (selectedAssetCodes: string[]) => void
+  amountInput?: string
 }
 
 export type RootStackParamList = {
@@ -109,6 +110,7 @@ export type RootStackParamList = {
   SendConfirmationScreen: StackPayload
   SwapConfirmationScreen: StackPayload
   CustomFeeScreen: StackPayload
+  CustomFeeEIP1559Screen: StackPayload
   SwapScreen: StackPayload
   SwapReviewScreen: StackPayload
   WalletImportNavigator: undefined
