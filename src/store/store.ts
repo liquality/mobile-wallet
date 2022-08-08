@@ -300,10 +300,10 @@ export const updateMarketData = async (): Promise<void> => {
  */
 export const toggleNetwork = async (network: any): Promise<void> => {
   await wallet.dispatch.changeActiveNetwork(network)
-  store.dispatch({
-    type: 'NETWORK_UPDATE',
-    payload: { activeNetwork: network },
-  })
+  // store.dispatch({
+  //   type: 'NETWORK_UPDATE',
+  //   payload: { activeNetwork: network },
+  // })
 }
 
 /**

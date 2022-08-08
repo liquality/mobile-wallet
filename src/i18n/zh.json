@@ -325,5 +325,7 @@
   "invalidQRCode": "Invalid QR Code",
   "manageAssets": "Manage Assets",
   "ledger": "Ledger",
-  "lock": "Lock"
+  "lock": "Lock",
+  "settings": "SETTINGS",
+  "warning": "WARNING"
 }
