@@ -49,17 +49,38 @@ const CustomFeeEIP1559Screen = ({
 
   const [setError] = useState('')
   const [showBasic, setShowBasic] = useState<boolean>(true)
-  if (gasFees) {
-    var minerTip = gasFees[speedMode].fee.maxPriorityFeePerGas
-    var maximumFee = gasFees[speedMode].fee.maxFeePerGas
-    /*     var formattedMinerTip = new BigNumber(minerTip).toString()
-    var formattedMaximumFee = new BigNumber(maximumFee).toString() */
-    /*     var [userInputMinerTip, setUserInputMinerTip] =
-      useState<string>(formattedMinerTip)
+  var formattedMinerTip = ''
+  var formattedMaximumFee = ''
 
-    var [userInputMaximumFee, setUserInputMaximumFee] =
-      useState<string>(formattedMaximumFee) */
+  var [userInputMinerTip, setUserInputMinerTip] =
+    useState<string>(formattedMinerTip)
+  var [userInputMaximumFee, setUserInputMaximumFee] =
+    useState<string>(formattedMaximumFee)
+  const [minerTip, setMinerTip] = useState()
+
+  if (gasFees && minerTip) {
+    var minerTipVar = gasFees[speedMode].fee.maxPriorityFeePerGas
+    var maximumFee = gasFees[speedMode].fee.maxFeePerGas
+    formattedMinerTip = new BigNumber(minerTip).toString()
+    formattedMaximumFee = new BigNumber(maximumFee).toString()
   }
+
+  useEffect(() => {
+    if (userInputMaximumFee === '' || (userInputMaximumFee === '' && gasFees)) {
+      setUserInputMaximumFee(formattedMaximumFee)
+      setUserInputMinerTip(formattedMinerTip)
+      setMinerTip(minerTipVar)
+    }
+  }, [
+    userInputMaximumFee,
+    userInputMinerTip,
+    formattedMaximumFee,
+    formattedMinerTip,
+    minerTip,
+    gasFees,
+    speedMode,
+    minerTipVar,
+  ])
 
   const { code }: AssetDataElementType = route.params.assetData!
   const wallet = setupWallet({
@@ -189,8 +210,8 @@ const CustomFeeEIP1559Screen = ({
             <Text style={styles.inputLabel}>GWEI</Text>
             <TextInput
               style={styles.gasInput}
-              onChangeText={customFeeInput.onChangeText}
-              value={'hej'}
+              onChangeText={setUserInputMinerTip}
+              value={userInputMinerTip}
               autoCorrect={false}
               autoCapitalize={'none'}
               returnKeyType="done"
@@ -198,8 +219,8 @@ const CustomFeeEIP1559Screen = ({
             <Text style={styles.inputLabel}>GWEI</Text>
             <TextInput
               style={styles.gasInput}
-              onChangeText={customFeeInput.onChangeText}
-              value={customFeeInput.value}
+              onChangeText={setUserInputMaximumFee}
+              value={userInputMaximumFee}
               autoCorrect={false}
               autoCapitalize={'none'}
               returnKeyType="done"
@@ -308,6 +329,7 @@ const CustomFeeEIP1559Screen = ({
         <View style={styles.row}>
           {showBasic ? (
             <Preset
+              EIP1559={true}
               customFeeInput={customFeeInput}
               gasFees={gasFees}
               code={code}

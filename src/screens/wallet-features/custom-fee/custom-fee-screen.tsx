@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, TextInput, Pressable, Text } from 'react-native'
+import { StyleSheet, View, TextInput, Text } from 'react-native'
 import { FeeDetails } from '@liquality/types/lib/fees'
-/* import {
-  cryptoToFiat,
-  formatFiat,
-} from '@liquality/wallet-core/dist/utils/coinFormatter' */
-//import { calculateGasFee } from '../../core/utils/fee-calculator'
+
 import AssetIcon from '../../../components/asset-icon'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
@@ -18,6 +14,16 @@ import Button from '../../../theme/button'
 /* import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms' */
 import { fetchFeesForAsset } from '../../../store/store'
+import Preset from './preset'
+import { useRecoilValue } from 'recoil'
+import {
+  accountForAssetState,
+  fiatRatesState,
+  networkState,
+} from '../../../atoms'
+//import { getSendAmountFee } from '@liquality/wallet-core/dist/utils/fees'
+import { setupWallet } from '@liquality/wallet-core'
+import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions'
 //import { BigNumber } from '@liquality/types'
 
 type CustomFeeScreenProps = NativeStackScreenProps<
@@ -37,8 +43,22 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const [gasFees, setGasFees] = useState<GasFees>()
   const { code }: AccountType = route.params.assetData!
   //const fiatRates = useRecoilValue(fiatRatesState)
+  const wallet = setupWallet({
+    ...defaultOptions,
+  })
   const customFeeInput = useInputState('0')
+  const activeNetwork = useRecoilValue(networkState)
+  const fiatRates = useRecoilValue(fiatRatesState)
+  const accountForAsset = useRecoilValue(accountForAssetState(code))
+  const { activeWalletId, fees } = wallet.state
 
+  /*  let totalFees = getSendAmountFee(
+    accountForAsset?.id,
+    code,
+    route.params.amountInput,
+  ) */
+
+  //console.log( fees[activeNetwork]?.[activeWalletId]?.[code], 'FEES fetched from wallet core for this asset')
   const handleApplyPress = () => {
     navigation.navigate('SendScreen', {
       ...route.params,
@@ -57,70 +77,47 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
       </View>
     )
   }
+
   return (
     <View style={styles.container}>
-      <View>
-        <View style={styles.block}>
-          <View style={styles.row}>
-            <AssetIcon asset={code} />
-            <Text style={styles.asset}>ETH</Text>
-          </View>
-          <Text
-            style={[styles.label, styles.headerLabel]}
-            tx="customFeeScreen.presets"
-          />
-          <View style={styles.row}>
-            {gasFees &&
-              Object.keys(gasFees).map((speed, index) => {
-                return (
-                  <Pressable
-                    style={[
-                      styles.col,
-                      index === 1 && styles.middleCol,
-                      speed === speedMode && styles.selected,
-                    ]}
-                    key={speed}
-                    onPress={() => {
-                      setSpeedMode(speed as SpeedMode)
-                      if (gasFees && code) {
-                        customFeeInput.onChangeText(
-                          gasFees[speed as SpeedMode].toString(),
-                        )
-                      }
-                    }}>
-                    <Text style={[styles.preset, styles.speed]}>{speed}</Text>
-                    <Text style={[styles.preset, styles.amount]}>
-                      {/*   {gasFees &&
-                        code &&
-                        `${calculateGasFee(
-                          code,
-                          gasFees[speed as keyof FeeDetails].toNumber(),
-                        )} ${code}`} */}
-                      NAN
-                    </Text>
-                    <Text style={[styles.preset, styles.fiat]}>
-                      USD
-                      {/*  {fiatRates &&
-                        gasFees &&
-                        code &&
-                        `${formatFiat(
-                          new BigNumber(
-                            cryptoToFiat(
-                              calculateGasFee(
-                                code,
-                                gasFees[speed as keyof FeeDetails].toNumber(),
-                              ),
-                              fiatRates[code],
-                            ),
-                          ),
-                        )} USD`} */}
-                    </Text>
-                  </Pressable>
-                )
-              })}
-          </View>
+      <View style={styles.block}>
+        <View style={styles.rowEnd}>
+          <AssetIcon asset={code} />
+          <Text style={[styles.headerText, styles.headerTextFocused]}>
+            {code}
+          </Text>
         </View>
-
+        <View style={styles.row}>
+          <Preset
+            EIP1559={false}
+            customFeeInput={customFeeInput}
+            gasFees={gasFees}
+            code={code}
+            fiatRates={fiatRates}
+            speedMode={speedMode}
+            setSpeedMode={setSpeedMode}
+            fees={fees}
+            activeNetwork={activeNetwork}
+            activeWalletId={activeWalletId}
+            accountAssetId={accountForAsset?.id}
+            amountInput={route.params.amountInput}
+          />
+        </View>
+      </View>
+      <View style={styles.rest}>
+        <View style={styles.row}>
+          <Text style={[styles.label, styles.headerLabel]}>
+            CUSTOMIZED SETTING
+          </Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={[styles.label, styles.headerLabel]}>
+            Gas Price{' '}
+            <Text style={[styles.labelNormal, styles.headerLabel]}>
+              $XX USD
+            </Text>
+          </Text>
+        </View>
         <View style={styles.block}>
           <Text
             style={[styles.label, styles.headerLabel]}
@@ -128,23 +125,9 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
           />
           <View style={styles.row}>
             <Text style={styles.label} tx="customFeeScreen.gasPrice" />
-            <Text style={styles.fiat}>
-              {/*    {code &&
-                fiatRates &&
-                parseFloat(customFeeInput.value) > 0 &&
-                `$${formatFiat(
-                  new BigNumber(
-                    cryptoToFiat(
-                      calculateGasFee(code, parseFloat(customFeeInput.value)),
-                      fiatRates[code],
-                    ),
-                  ),
-                )}`} */}
-              NAN
-            </Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.inputLabel}>GWEI</Text>
+            <Text style={styles.inputLabel}>SAT/B</Text>
             <TextInput
               style={styles.gasInput}
               onChangeText={customFeeInput.onChangeText}
@@ -155,55 +138,34 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
             />
           </View>
         </View>
-
         <View style={[styles.block, styles.summary]}>
           <Text
             style={[styles.preset, styles.speed]}
             tx="common.networkSpeed"
           />
-          <Text style={[styles.preset, styles.amount]}>
-            {/*          {code &&
-              parseFloat(customFeeInput.value) > 0 &&
-              `${calculateGasFee(
-                code,
-                parseFloat(customFeeInput.value),
-              )} ${code}`} */}
-            NAN
-          </Text>
-          <Text style={[styles.preset, styles.fiat]}>
-            {/*    {code &&
-              fiatRates &&
-              parseFloat(customFeeInput.value) > 0 &&
-              `$${formatFiat(
-                new BigNumber(
-                  cryptoToFiat(
-                    calculateGasFee(code, parseFloat(customFeeInput.value)),
-                    fiatRates[code],
-                  ),
-                ),
-              )}`} */}
-            NAN
-          </Text>
+          <Text style={[styles.preset, styles.amount]}>New Speed/Fee</Text>
+          <Text style={[styles.preset, styles.fiat]}>BTC amount here</Text>
+          <Text style={[styles.preset, styles.fiat]}>fiat amount here</Text>
         </View>
-      </View>
 
-      <View style={[styles.block, styles.row, styles.actions]}>
-        <Button
-          type="secondary"
-          variant="m"
-          label={{ tx: 'common.cancel' }}
-          onPress={navigation.goBack}
-          isBorderless={false}
-          isActive={true}
-        />
-        <Button
-          type="primary"
-          variant="m"
-          label={{ tx: 'common.apply' }}
-          onPress={handleApplyPress}
-          isBorderless={false}
-          isActive={true}
-        />
+        <View style={[styles.block, styles.row, styles.actions]}>
+          <Button
+            type="secondary"
+            variant="m"
+            label={{ tx: 'common.cancel' }}
+            onPress={navigation.goBack}
+            isBorderless={false}
+            isActive={true}
+          />
+          <Button
+            type="primary"
+            variant="m"
+            label={{ tx: 'common.apply' }}
+            onPress={handleApplyPress}
+            isBorderless={false}
+            isActive={true}
+          />
+        </View>
       </View>
     </View>
   )
@@ -215,6 +177,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#FFFFFF',
     paddingVertical: 15,
+  },
+  fragmentContainer: {
     paddingHorizontal: 20,
   },
   row: {
@@ -222,23 +186,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  col: {
-    paddingLeft: 5,
-    borderColor: '#d9dfe5',
-    borderWidth: 1,
-    width: '25%',
+  rowEnd: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    padding: 15,
   },
-  middleCol: {
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-    width: '25%',
-  },
-  asset: {
+  labelNormal: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
-    fontSize: 24,
-    marginLeft: 5,
+    fontSize: 12,
   },
+
+  rest: {
+    marginHorizontal: 20,
+  },
+
   label: {
     fontFamily: 'Montserrat-Regular',
     fontWeight: '700',
@@ -246,7 +208,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   headerLabel: {
-    marginVertical: 10,
+    marginVertical: 5,
   },
   preset: {
     fontFamily: 'Montserrat-Regular',
@@ -264,7 +226,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   block: {
-    marginVertical: 15,
+    marginVertical: 10,
   },
   summary: {
     backgroundColor: '#F0F7F9',
@@ -272,6 +234,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingVertical: 15,
     paddingLeft: 10,
+    flexDirection: 'column',
   },
   inputLabel: {
     fontFamily: 'Montserrat-Regular',
@@ -288,9 +251,7 @@ const styles = StyleSheet.create({
   actions: {
     justifyContent: 'space-around',
   },
-  selected: {
-    backgroundColor: '#F0F7F9',
-  },
+
   // eslint-disable-next-line react-native/no-unused-styles
   error: {
     fontFamily: 'Montserrat-Regular',

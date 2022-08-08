@@ -12,6 +12,7 @@ import { FeeDetails } from '@liquality/types/lib/fees'
 type SpeedMode = keyof FeeDetails
 
 const Preset = ({
+  EIP1559,
   customFeeInput,
   gasFees,
   code,
@@ -22,6 +23,19 @@ const Preset = ({
   amountInput,
 }) => {
   let totalFees = getSendAmountFee(accountAssetId, code, amountInput)
+  /*   console.log(
+    EIP1559,
+    customFeeInput,
+    gasFees,
+    code,
+    fiatRates,
+    speedMode,
+    setSpeedMode,
+    accountAssetId,
+    amountInput,
+    'Preset PROPS in EIP1559 T/F?',
+    EIP1559,
+  ) */
   const renderEstimationSpeed = (speed: string) => {
     if (speed === 'slow') {
       return '~maybe in 30 sec'
@@ -39,22 +53,31 @@ const Preset = ({
     } else {
       preset = gasFees?.fast || null
     }
+    if (EIP1559) {
+      const defaultFee =
+        preset.fee?.suggestedBaseFeePerGas + preset.fee?.maxPriorityFeePerGas ||
+        0
 
-    const defaultFee =
-      preset.fee?.suggestedBaseFeePerGas + preset.fee?.maxPriorityFeePerGas || 0
+      const maximumFee =
+        preset.fee?.suggestedBaseFeePerGas + preset.fee?.maxFeePerGas || 0
 
-    const maximumFee =
-      preset.fee?.suggestedBaseFeePerGas + preset.fee?.maxFeePerGas || 0
+      const sendFee = getSendFee(code, defaultFee)
 
-    const sendFee = getSendFee(code, defaultFee)
-    return {
-      amount: new BigNumber(sendFee).dp(6).toString(),
+      return {
+        amount: new BigNumber(sendFee).dp(6).toString(),
 
-      fiat: prettyFiatBalance(totalFees._W.slow, fiatRates[code]),
-      maximum: prettyFiatBalance(
-        getSendFee(code, maximumFee),
-        fiatRates[code],
-      ).toString(),
+        fiat: prettyFiatBalance(totalFees._W.slow, fiatRates[code]),
+        maximum: prettyFiatBalance(
+          getSendFee(code, maximumFee),
+          fiatRates[code],
+        ).toString(),
+      }
+    } else {
+      return {
+        amount: 'amount here',
+        fiat: 'fiat here',
+        maximum: 'max here',
+      }
     }
   }
 
@@ -65,7 +88,7 @@ const Preset = ({
         {gasFees &&
           Object.keys(gasFees).map((speed, index) => {
             var preset = renderSlowAverageFastPreset(speed)
-
+            if (speed === 'custom') return null
             return (
               <Pressable
                 style={[
