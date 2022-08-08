@@ -6,12 +6,12 @@ import i18n from 'i18n-js'
 import { TxKeyPath, translate } from '../i18n'
 
 type CheckBoxProps = {
-  chi: React.ReactElement[]
+  chi?: React.ReactElement[]
   selected?: boolean
   onPress: (params: any) => any
   style: object
   textStyle: object
-  size: number
+  size?: number
   color: string
   text: string | { tx: TxKeyPath }
   txOptions?: i18n.TranslateOptions

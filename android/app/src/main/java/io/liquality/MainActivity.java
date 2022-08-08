@@ -24,7 +24,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {
-    SplashScreen.show(this, R.style.SplashScreenTheme, true); // here
+    SplashScreen.show(this); // here
     return new ReactActivityDelegateWrapper(this, new MainActivityDelegate(this, getMainComponentName()));
   }
 

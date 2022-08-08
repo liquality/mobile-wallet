@@ -1,5 +1,5 @@
 import React, { createContext } from 'react'
-import { View, StyleSheet, Text, Pressable } from 'react-native'
+import { View, StyleSheet, Pressable } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import UserCog from '../assets/icons/user-cog.svg'
 import SwapCheck from '../assets/icons/swap-check.svg'
@@ -40,6 +40,8 @@ import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-scre
 import BackupLoginScreen from '../screens/wallet-features/backup/backup-login-screen'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/core'
 import TimesIcon from '../assets/icons/times.svg'
+import Box from '../theme/box'
+import Text from '../theme/text'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
@@ -108,11 +110,18 @@ export const AppStackNavigator = () => (
       headerShown: true,
       title: '',
       headerLeft: (props: HeaderBackButtonProps) => (
-        <OverviewHeaderLeft
-          includeBackBtn={!props.canGoBack || !!route?.params?.includeBackBtn}
-          goBack={navigation.goBack}
-          screenTitle={route?.params?.screenTitle || 'Overview'}
-        />
+        <React.Suspense
+          fallback={
+            <Box>
+              <Text variant="loading" tx="overviewScreen.load" />
+            </Box>
+          }>
+          <OverviewHeaderLeft
+            includeBackBtn={!props.canGoBack || !!route?.params?.includeBackBtn}
+            goBack={navigation.goBack}
+            screenTitle={route?.params?.screenTitle || 'Overview'}
+          />
+        </React.Suspense>
       ),
       headerRight: () => (
         <OverviewHeaderRight
@@ -190,7 +199,7 @@ export const AppStackNavigator = () => (
       options={({ navigation }) => ({
         headerShown: true,
         headerTitle: '',
-        headerLeft: () => <Text style={styles.settingsTitle}>WARNING</Text>,
+        headerLeft: () => <Text style={styles.settingsTitle} tx="warning" />,
         headerRight: () => (
           <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
             <TimesIcon
@@ -296,7 +305,7 @@ export const MainNavigator = () => (
       options={({}) => ({
         headerShown: true,
         headerTitle: '',
-        headerLeft: () => <Text style={styles.settingsTitle}>SETTINGS</Text>,
+        headerLeft: () => <Text style={styles.settingsTitle} tx="settings" />,
         /*    headerRight: () => (
           <SettingsHeaderRight navigate={navigation.navigate} />
         ), */

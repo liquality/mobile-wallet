@@ -17,16 +17,18 @@ import WhatsNew from '../../../components/ui/whats-new'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import { downloadWalletLogs, labelTranslateFn } from '../../../utils'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useRecoilState } from 'recoil'
 import { networkState, optInAnalyticsState, walletState } from '../../../atoms'
 import DeviceInfo from 'react-native-device-info'
 import { useNavigation } from '@react-navigation/core'
 import i18n from 'i18n-js'
+import { toggleNetwork } from '../../../store/store'
+import { Network } from '@liquality/wallet-core/dist/store/types'
 
 const SettingsScreen = ({ route }) => {
   const walletStateCopy = useRecoilValue(walletState)
   const analytics = useRecoilValue(optInAnalyticsState)
-  const activeNetwork = useRecoilValue(networkState)
+  const [activeNetwork, setActiveNetwork] = useRecoilState(networkState)
   const isAnalyticsEnabledFromStart = analytics?.acceptedDate !== undefined
   const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(
     isAnalyticsEnabledFromStart,
@@ -60,9 +62,13 @@ const SettingsScreen = ({ route }) => {
     })
   }, [navigation])
 
-  const toggleNetwork = (network: any) => {
-    toggleNetwork(network)
-  }
+  const handNetworkPress = useCallback(
+    (state: Network) => {
+      setActiveNetwork(state)
+      toggleNetwork(state)
+    },
+    [setActiveNetwork],
+  )
 
   useEffect(() => {
     if (!activeNetwork) {
@@ -105,7 +111,7 @@ const SettingsScreen = ({ route }) => {
                     styles.leftBtn,
                     activeNetwork === 'mainnet' && styles.btnSelected,
                   ]}
-                  onPress={() => toggleNetwork('mainnet')}>
+                  onPress={() => handNetworkPress(Network.Mainnet)}>
                   <Text
                     style={[styles.label, styles.small]}
                     tx="settingsScreen.mainnet"
@@ -117,7 +123,7 @@ const SettingsScreen = ({ route }) => {
                     styles.rightBtn,
                     activeNetwork === 'testnet' && styles.btnSelected,
                   ]}
-                  onPress={() => toggleNetwork('testnet')}>
+                  onPress={() => handNetworkPress(Network.Testnet)}>
                   <Text
                     style={[styles.label, styles.small]}
                     tx="settingsScreen.testnet"

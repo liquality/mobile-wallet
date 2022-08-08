@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* LiqualityMobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* LiqualityMobileTests.m */; };
-		0C80B921A6F3F58F76C31292 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		0C80B921A6F3F58F76C31292 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		110BBC2AF0ADADBD3BEC0DFA /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9338FEEC88A9F62261AAD3 /* ExpoModulesProvider.swift */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -18,9 +18,9 @@
 		41CA9ABBDB1D44B0A7D3E255 /* Montserrat-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25EEDD48ACFF48F1B01440C9 /* Montserrat-Thin.ttf */; };
 		7F0E149610EC4420B2FD3C9E /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A329444B44A84455A02D7576 /* Montserrat-Light.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8FE80D0E5A56365677406F38 /* libPods-Liquality.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F20D814E8F6A811D0C620C0 /* libPods-Liquality.a */; };
 		A16E247B0F3044E399070B57 /* Montserrat-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 39653CB7D3D54AE682CB8883 /* Montserrat-ExtraBold.ttf */; };
 		A6AC6665CA5C40F3BC406E73 /* Montserrat-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A04C782E4C7F4778B430C1EB /* Montserrat-ExtraLight.ttf */; };
-		A74D151F97A7C2F305DE49AE /* libPods-Liquality.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4DA1D5BED9FCD1170CB2AFB /* libPods-Liquality.a */; };
 		A9607C075563483FBE678B0F /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B4A612A69124EBC9537BCD2 /* Montserrat-Bold.ttf */; };
 		BDE31449D0A341EDB965AB9C /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CAF9395E95024EEC91C8A475 /* Montserrat-Regular.ttf */; };
 		F1F23B96C5BD41B2AC6C5F92 /* Montserrat-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E417885473EB46718A92E91E /* Montserrat-Black.ttf */; };
@@ -42,7 +42,6 @@
 		00E356EE1AD99517003FC87E /* LiqualityMobileTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiqualityMobileTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* LiqualityMobileTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LiqualityMobileTests.m; sourceTree = "<group>"; };
-		0FC11FD121B60E9D46C2C769 /* Pods-Liquality.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Liquality.release.xcconfig"; path = "Target Support Files/Pods-Liquality/Pods-Liquality.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* LiqualityMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiqualityMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = LiqualityMobile/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = LiqualityMobile/AppDelegate.mm; sourceTree = "<group>"; };
@@ -55,10 +54,11 @@
 		3DD52CC64D604E56865C459D /* Montserrat-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraLightItalic.ttf"; path = "../src/assets/fonts/Montserrat-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		3E9338FEEC88A9F62261AAD3 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Liquality/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		3ED306E0FE724E079F2199CF /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-SemiBold.ttf"; path = "../src/assets/fonts/Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
-		50D663FE2E17FE2A92814834 /* Pods-Liquality.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Liquality.debug.xcconfig"; path = "Target Support Files/Pods-Liquality/Pods-Liquality.debug.xcconfig"; sourceTree = "<group>"; };
+		4F20D814E8F6A811D0C620C0 /* libPods-Liquality.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Liquality.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		55369644DA8A438B88B1BBD3 /* Montserrat-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Italic.ttf"; path = "../src/assets/fonts/Montserrat-Italic.ttf"; sourceTree = "<group>"; };
 		647ABD422844BEB300D6E4C8 /* Liquality.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Liquality.entitlements; sourceTree = "<group>"; };
 		6B4A612A69124EBC9537BCD2 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Bold.ttf"; path = "../src/assets/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
+		703772F54D69E0537654BEE0 /* Pods-Liquality.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Liquality.release.xcconfig"; path = "Target Support Files/Pods-Liquality/Pods-Liquality.release.xcconfig"; sourceTree = "<group>"; };
 		7CBF106312B245D281F64704 /* Montserrat-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-BoldItalic.ttf"; path = "../src/assets/fonts/Montserrat-BoldItalic.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = LiqualityMobile/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		996F33021AD3443B80FA05E1 /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Medium.ttf"; path = "../src/assets/fonts/Montserrat-Medium.ttf"; sourceTree = "<group>"; };
@@ -69,10 +69,10 @@
 		BEF43A8B06684F6EB6B6BA82 /* MontserratAlternates-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "MontserratAlternates-Light.ttf"; path = "../src/assets/fonts/MontserratAlternates-Light.ttf"; sourceTree = "<group>"; };
 		CAF9395E95024EEC91C8A475 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Regular.ttf"; path = "../src/assets/fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		D4C061BA09154C3B886BCA70 /* Montserrat-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ThinItalic.ttf"; path = "../src/assets/fonts/Montserrat-ThinItalic.ttf"; sourceTree = "<group>"; };
-		D4DA1D5BED9FCD1170CB2AFB /* libPods-Liquality.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Liquality.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB15922584C049108A6B1824 /* Montserrat-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Montserrat-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		E417885473EB46718A92E91E /* Montserrat-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Black.ttf"; path = "../src/assets/fonts/Montserrat-Black.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		FADCC57D173DEF3E9D866F91 /* Pods-Liquality.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Liquality.debug.xcconfig"; path = "Target Support Files/Pods-Liquality/Pods-Liquality.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,8 +87,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* BuildFile in Frameworks */,
-				A74D151F97A7C2F305DE49AE /* libPods-Liquality.a in Frameworks */,
+				0C80B921A6F3F58F76C31292 /* (null) in Frameworks */,
+				8FE80D0E5A56365677406F38 /* libPods-Liquality.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,7 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				D4DA1D5BED9FCD1170CB2AFB /* libPods-Liquality.a */,
+				4F20D814E8F6A811D0C620C0 /* libPods-Liquality.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -145,8 +145,8 @@
 		7FCAB7E7B11B9AF80CE31952 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				50D663FE2E17FE2A92814834 /* Pods-Liquality.debug.xcconfig */,
-				0FC11FD121B60E9D46C2C769 /* Pods-Liquality.release.xcconfig */,
+				FADCC57D173DEF3E9D866F91 /* Pods-Liquality.debug.xcconfig */,
+				703772F54D69E0537654BEE0 /* Pods-Liquality.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -244,14 +244,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Liquality" */;
 			buildPhases = (
-				EBB3B5ACB0C589F635BA2D84 /* [CP] Check Pods Manifest.lock */,
+				7B4AE7A2075B6CEE8094E3D3 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				82959861998DAC6F72ED4FC6 /* [CP] Embed Pods Frameworks */,
-				D24E962C36643A558DCE4F7D /* [CP] Copy Pods Resources */,
+				000F7D118F2A59B443BB26B3 /* [CP] Embed Pods Frameworks */,
+				0FF36EA2C301DE3C7847450F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -328,21 +328,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native code and images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
-		};
-		82959861998DAC6F72ED4FC6 /* [CP] Embed Pods Frameworks */ = {
+		000F7D118F2A59B443BB26B3 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -359,7 +345,21 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D24E962C36643A558DCE4F7D /* [CP] Copy Pods Resources */ = {
+		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		0FF36EA2C301DE3C7847450F /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -376,7 +376,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EBB3B5ACB0C589F635BA2D84 /* [CP] Check Pods Manifest.lock */ = {
+		7B4AE7A2075B6CEE8094E3D3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -502,7 +502,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50D663FE2E17FE2A92814834 /* Pods-Liquality.debug.xcconfig */;
+			baseConfigurationReference = FADCC57D173DEF3E9D866F91 /* Pods-Liquality.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -584,13 +584,14 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0FC11FD121B60E9D46C2C769 /* Pods-Liquality.release.xcconfig */;
+			baseConfigurationReference = 703772F54D69E0537654BEE0 /* Pods-Liquality.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -663,6 +664,7 @@
 				PRODUCT_NAME = LiqualityMobile;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

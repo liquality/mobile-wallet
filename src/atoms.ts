@@ -25,6 +25,7 @@ import {
 } from '@liquality/wallet-core/dist/store/types'
 import { CustomRootState } from './reducers'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { KEYS } from './utils'
 
 //------------ATOMS---------------------
 export const accountsIdsState = atom<{ id: string; name: Asset }[]>({
@@ -41,7 +42,12 @@ export const fiatRatesState = atom<FiatRates>({
 
 export const networkState = atom<Network>({
   key: 'ActiveNetwork',
-  default: Network.Testnet,
+  default: AsyncStorage.getItem(KEYS.ACTIVE_NETWORK_KEY).then((savedValue) =>
+    savedValue !== null && typeof savedValue !== 'undefined'
+      ? (JSON.parse(savedValue) as Network)
+      : Network.Testnet,
+  ),
+  effects: [localStorageEffect<Network>(KEYS.ACTIVE_NETWORK_KEY)],
 })
 
 export const swapPairState = atom<SwapAssetPairType>({

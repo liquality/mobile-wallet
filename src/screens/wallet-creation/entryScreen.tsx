@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { View, StyleSheet, Dimensions } from 'react-native'
+import { View, StyleSheet, Dimensions, Alert } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, RootStackParamList } from '../../types'
 import Header from '../header'
@@ -19,6 +19,7 @@ import {
   walletState,
 } from '../../atoms'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { labelTranslateFn } from '../../utils'
 
 type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
@@ -43,49 +44,54 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
     })
 
   const handleOpenSesamePress = async () => {
-    setLoading(true)
-    await AsyncStorage.clear()
-    const wallet = await createWallet(PASSWORD, MNEMONIC)
-    setWallet(wallet)
-    const { accounts, activeWalletId, activeNetwork } = wallet
-    const accountsIds: { id: string; name: string }[] = []
-    accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
-      const nativeAsset = chains[account.chain].nativeAsset
-      accountsIds.push({
-        id: account.id,
-        name: nativeAsset,
-      })
-      const newAccount: AccountType = {
-        id: account.id,
-        chain: account.chain,
-        name: account.name,
-        code: nativeAsset,
-        address: account.addresses[0], //TODO why pick only the first address
-        color: account.color,
-        assets: {},
-        balance: 0,
-      }
-
-      for (const asset of account.assets) {
-        newAccount.assets[asset] = {
-          id: asset,
-          name: cryptoassets[asset].name,
-          code: asset,
+    try {
+      setLoading(true)
+      await AsyncStorage.clear()
+      const wallet = await createWallet(PASSWORD, MNEMONIC)
+      setWallet(wallet)
+      const { accounts, activeWalletId, activeNetwork } = wallet
+      const accountsIds: { id: string; name: string }[] = []
+      accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
+        const nativeAsset = chains[account.chain].nativeAsset
+        accountsIds.push({
+          id: account.id,
+          name: nativeAsset,
+        })
+        const newAccount: AccountType = {
+          id: account.id,
           chain: account.chain,
+          name: account.name,
+          code: nativeAsset,
+          address: account.addresses[0], //TODO why pick only the first address
           color: account.color,
-          balance: 0,
           assets: {},
+          balance: 0,
         }
-      }
 
-      addAccount(account.id, newAccount)
-    })
+        for (const asset of account.assets) {
+          newAccount.assets[asset] = {
+            id: asset,
+            name: cryptoassets[asset].name,
+            code: asset,
+            chain: account.chain,
+            color: account.color,
+            balance: 0,
+            assets: {},
+          }
+        }
 
-    setAccountsIds(accountsIds)
-    setActiveNetwork(activeNetwork)
+        addAccount(account.id, newAccount)
+      })
 
-    setLoading(false)
-    navigation.navigate('MainNavigator')
+      setAccountsIds(accountsIds)
+      setActiveNetwork(activeNetwork)
+
+      setLoading(false)
+      navigation.navigate('MainNavigator')
+    } catch (error) {
+      setLoading(false)
+      Alert.alert(labelTranslateFn('somethingWentWrong')!)
+    }
   }
 
   return (
@@ -140,6 +146,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 0.3,
+    width: '100%',
   },
   forgotPassword: {
     flexDirection: 'row',

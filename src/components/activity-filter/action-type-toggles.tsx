@@ -18,10 +18,11 @@ const ActionTypeToggles: FC<{
   onChange: (actionTypes: ActionEnum[]) => void
 }> = ({ value, onChange }) => {
   const renderItem = useCallback(
-    (key: ActionEnum) => {
+    (key: ActionEnum, index: number) => {
       const isSelected = value?.includes(key)
       return (
         <Pressable
+          key={`id is ${index}`}
           style={isSelected ? styles.selectedButton : styles.button}
           onPress={() => {
             const newActionTypes = isSelected
