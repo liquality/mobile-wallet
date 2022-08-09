@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, TextInput } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  ScrollView,
+  ViewStyle,
+} from 'react-native'
 import { FeeDetails } from '@liquality/types/lib/fees'
 
 import AssetIcon from '../../../components/asset-icon'
@@ -27,6 +33,10 @@ import {
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions'
 //import { BigNumber } from '@liquality/types'
+
+const scrollViewStyle: ViewStyle = {
+  flex: 1,
+}
 
 type CustomFeeScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -82,7 +92,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
 
   return (
     <Box flex={1} paddingVertical="l" backgroundColor="mainBackground">
-      <Box flex={1}>
+      <ScrollView showsVerticalScrollIndicator={false} style={scrollViewStyle}>
         <View style={styles.block}>
           <View style={styles.rowEnd}>
             <AssetIcon asset={code} />
@@ -111,13 +121,13 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
               style={[styles.label, styles.headerLabel]}
               tx="customFeeScreen.customSettings"
             />
-            <Box flexDirection="row" alignItems="center">
+            <Box flexDirection="row" alignItems="flex-end">
               <Text style={styles.label} tx="customFeeScreen.gasPrice" />
               <Text style={[styles.labelNormal, styles.headerLabel]}>
                 $XX USD
               </Text>
             </Box>
-            <Box flexDirection="row" alignItems="center" marginTop={'m'}>
+            <Box flexDirection="row" alignItems="center">
               <Text style={styles.inputLabel}>SAT/B</Text>
               <TextInput
                 style={styles.gasInput}
@@ -139,7 +149,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
             <Text style={[styles.preset, styles.fiat]}>fiat amount here</Text>
           </View>
         </View>
-      </Box>
+      </ScrollView>
       <View style={[styles.row, styles.actions]}>
         <Button
           type="secondary"
@@ -195,7 +205,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   headerLabel: {
-    marginVertical: 5,
+    marginTop: 5,
   },
   preset: {
     fontFamily: 'Montserrat-Regular',
@@ -228,12 +238,16 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 14,
     marginRight: 10,
+    alignSelf: 'flex-end',
   },
   gasInput: {
     borderBottomColor: '#38FFFB',
     borderBottomWidth: 1,
     textAlign: 'right',
     width: '85%',
+    color: '#000D35',
+    paddingBottom: 0,
+    height: 35,
   },
   actions: {
     justifyContent: 'space-around',
