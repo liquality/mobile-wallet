@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
-
+import { UseInputStateReturnType, GasFees, LikelyWait } from '../../../types'
 import {
   getSendAmountFee,
   getSendFee,
@@ -8,8 +8,15 @@ import {
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
+import { FiatRates, Network } from '@liquality/wallet-core/dist/store/types'
+import { FeeDetails as FD } from '@chainify/types'
 
 type SpeedMode = keyof FeeDetails
+
+type FeesProp = {
+  mainnet?: Record<string, Record<string, FD>> | undefined
+  testnet?: Record<string, Record<string, FD>> | undefined
+}
 
 const Preset = ({
   EIP1559,
@@ -22,6 +29,20 @@ const Preset = ({
   accountAssetId,
   amountInput,
   likelyWait,
+}: {
+  EIP1559: boolean
+  customFeeInput: UseInputStateReturnType<string>
+  gasFees: GasFees
+  code: string
+  fiatRates: FiatRates
+  speedMode: string
+  setSpeedMode: React.Dispatch<React.SetStateAction<keyof FeeDetails>>
+  fees?: FeesProp
+  activeNetwork?: Network
+  activeWalletId?: string
+  accountAssetId: string | undefined
+  amountInput?: string | undefined
+  likelyWait?: LikelyWait | undefined
 }) => {
   let totalFees = getSendAmountFee(accountAssetId, code, amountInput)
   /*   console.log(
@@ -39,10 +60,10 @@ const Preset = ({
   ) */
   const renderEstimationSpeed = (speed: string) => {
     if (speed === 'slow') {
-      return '~' + likelyWait.slow + ' sec'
+      return '~' + likelyWait?.slow + ' sec'
     } else if (speed === 'average') {
-      return '~' + likelyWait.average + ' sec'
-    } else return '~' + likelyWait.fast + ' sec'
+      return '~' + likelyWait?.average + ' sec'
+    } else return '~' + likelyWait?.fast + ' sec'
   }
 
   const renderSlowAverageFastPreset = (speed: string) => {
