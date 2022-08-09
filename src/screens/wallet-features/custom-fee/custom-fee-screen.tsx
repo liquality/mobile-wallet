@@ -12,6 +12,7 @@ import {
 } from '../../../types'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
+import Box from '../../../theme/box'
 /* import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms' */
 import { fetchFeesForAsset } from '../../../store/store'
@@ -80,105 +81,92 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.block}>
-        <View style={styles.rowEnd}>
-          <AssetIcon asset={code} />
-          <Text>{code}</Text>
-        </View>
-        <View style={styles.row}>
-          <Preset
-            EIP1559={false}
-            customFeeInput={customFeeInput}
-            gasFees={gasFees}
-            code={code}
-            fiatRates={fiatRates}
-            speedMode={speedMode}
-            setSpeedMode={setSpeedMode}
-            fees={fees}
-            activeNetwork={activeNetwork}
-            activeWalletId={activeWalletId}
-            accountAssetId={accountForAsset?.id}
-            amountInput={route.params.amountInput}
-          />
-        </View>
-      </View>
-      <View style={styles.rest}>
-        <View style={styles.row}>
-          <Text style={[styles.label, styles.headerLabel]}>
-            CUSTOMIZED SETTING
-          </Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={[styles.label, styles.headerLabel]}>
-            Gas Price{' '}
-            <Text style={[styles.labelNormal, styles.headerLabel]}>
-              $XX USD
-            </Text>
-          </Text>
-        </View>
+    <Box flex={1} paddingVertical="l" backgroundColor="mainBackground">
+      <Box flex={1}>
         <View style={styles.block}>
-          <Text
-            style={[styles.label, styles.headerLabel]}
-            tx="customFeeScreen.customSettings"
-          />
-          <View style={styles.row}>
-            <Text style={styles.label} tx="customFeeScreen.gasPrice" />
+          <View style={styles.rowEnd}>
+            <AssetIcon asset={code} />
+            <Text>{code}</Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.inputLabel}>SAT/B</Text>
-            <TextInput
-              style={styles.gasInput}
-              onChangeText={customFeeInput.onChangeText}
-              value={customFeeInput.value}
-              autoCorrect={false}
-              autoCapitalize={'none'}
-              returnKeyType="done"
+            <Preset
+              EIP1559={false}
+              customFeeInput={customFeeInput}
+              gasFees={gasFees}
+              code={code}
+              fiatRates={fiatRates}
+              speedMode={speedMode}
+              setSpeedMode={setSpeedMode}
+              fees={fees}
+              activeNetwork={activeNetwork}
+              activeWalletId={activeWalletId}
+              accountAssetId={accountForAsset?.id}
+              amountInput={route.params.amountInput}
             />
           </View>
         </View>
-        <View style={[styles.block, styles.summary]}>
-          <Text
-            style={[styles.preset, styles.speed]}
-            tx="common.networkSpeed"
-          />
-          <Text style={[styles.preset, styles.amount]}>New Speed/Fee</Text>
-          <Text style={[styles.preset, styles.fiat]}>BTC amount here</Text>
-          <Text style={[styles.preset, styles.fiat]}>fiat amount here</Text>
+        <View style={styles.rest}>
+          <View style={styles.block}>
+            <Text
+              style={[styles.label, styles.headerLabel]}
+              tx="customFeeScreen.customSettings"
+            />
+            <Box flexDirection="row" alignItems="center">
+              <Text style={styles.label} tx="customFeeScreen.gasPrice" />
+              <Text style={[styles.labelNormal, styles.headerLabel]}>
+                $XX USD
+              </Text>
+            </Box>
+            <Box flexDirection="row" alignItems="center" marginTop={'m'}>
+              <Text style={styles.inputLabel}>SAT/B</Text>
+              <TextInput
+                style={styles.gasInput}
+                onChangeText={customFeeInput.onChangeText}
+                value={customFeeInput.value}
+                autoCorrect={false}
+                autoCapitalize={'none'}
+                returnKeyType="done"
+              />
+            </Box>
+          </View>
+          <View style={[styles.block, styles.summary]}>
+            <Text
+              style={[styles.preset, styles.speed]}
+              tx="common.networkSpeed"
+            />
+            <Text style={[styles.preset, styles.amount]}>New Speed/Fee</Text>
+            <Text style={[styles.preset, styles.fiat]}>BTC amount here</Text>
+            <Text style={[styles.preset, styles.fiat]}>fiat amount here</Text>
+          </View>
         </View>
-
-        <View style={[styles.block, styles.row, styles.actions]}>
-          <Button
-            type="secondary"
-            variant="m"
-            label={{ tx: 'common.cancel' }}
-            onPress={navigation.goBack}
-            isBorderless={false}
-            isActive={true}
-          />
-          <Button
-            type="primary"
-            variant="m"
-            label={{ tx: 'common.apply' }}
-            onPress={handleApplyPress}
-            isBorderless={false}
-            isActive={true}
-          />
-        </View>
+      </Box>
+      <View style={[styles.row, styles.actions]}>
+        <Button
+          type="secondary"
+          variant="m"
+          label={{ tx: 'common.cancel' }}
+          onPress={navigation.goBack}
+          isBorderless={false}
+          isActive={true}
+        />
+        <Button
+          type="primary"
+          variant="m"
+          label={{ tx: 'common.apply' }}
+          onPress={handleApplyPress}
+          isBorderless={false}
+          isActive={true}
+        />
       </View>
-    </View>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
     backgroundColor: '#FFFFFF',
     paddingVertical: 15,
-  },
-  fragmentContainer: {
-    paddingHorizontal: 20,
   },
   row: {
     flexDirection: 'row',
@@ -187,8 +175,8 @@ const styles = StyleSheet.create({
   },
   rowEnd: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
-    padding: 15,
+    alignItems: 'center',
+    paddingHorizontal: 15,
   },
   labelNormal: {
     fontFamily: 'Montserrat-Regular',
@@ -197,7 +185,7 @@ const styles = StyleSheet.create({
   },
 
   rest: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
 
   label: {
@@ -239,13 +227,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
     fontSize: 14,
-    marginRight: 5,
+    marginRight: 10,
   },
   gasInput: {
-    marginTop: 5,
     borderBottomColor: '#38FFFB',
     borderBottomWidth: 1,
-    width: '90%',
+    textAlign: 'right',
+    width: '85%',
   },
   actions: {
     justifyContent: 'space-around',
