@@ -22,7 +22,7 @@ import {
   fiatRatesState,
   networkState,
 } from '../../../atoms'
-//import { getSendAmountFee } from '@liquality/wallet-core/dist/utils/fees'
+import { getSendAmountFee } from '@liquality/wallet-core/dist/utils/fees'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions'
 //import { BigNumber } from '@liquality/types'
@@ -42,6 +42,8 @@ const useInputState = (
 const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
   const [gasFees, setGasFees] = useState<GasFees>()
+  const [totalFees, setTotalFees] = useState({})
+
   const { code }: AccountType = route.params.assetData!
   //const fiatRates = useRecoilValue(fiatRatesState)
   const wallet = setupWallet({
@@ -59,19 +61,18 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     fast: feesForThisAsset?.fast.wait,
   }
 
-  /*  let totalFees = getSendAmountFee(
-    accountForAsset?.id,
-    code,
-    route.params.amountInput,
-  )
-  console.log(totalFees, 'Total FEEs for bTC')
+  useEffect(() => {
+    async function fetchData() {
+      var totalFeesData = await getSendAmountFee(
+        accountForAsset?.id,
+        code,
+        route.params.amountInput,
+      )
+      setTotalFees(totalFeesData)
+    }
+    fetchData()
+  }, [])
 
-  console.log(
-    accountForAsset?.id,
-    code,
-    route.params.amountInput,
-    'what I send to GETAMOUNTSENDFEE()',
-  ) */
   /*   console.log(
     fees[activeNetwork]?.[activeWalletId]?.[code],
     'FEES fetched from wallet core for this asset',
@@ -117,6 +118,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
             accountAssetId={accountForAsset?.id}
             amountInput={route.params.amountInput}
             likelyWait={likelyWaitObj}
+            totalFees={totalFees}
           />
         </View>
       </View>
