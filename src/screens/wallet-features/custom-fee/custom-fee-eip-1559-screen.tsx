@@ -46,6 +46,7 @@ const CustomFeeEIP1559Screen = ({
 }: CustomFeeEIP1559ScreenProps) => {
   const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
   const [gasFees, setGasFees] = useState<GasFees>()
+  const [totalFees, setTotalFees] = useState({})
 
   const [setError] = useState('')
   const [showBasic, setShowBasic] = useState<boolean>(true)
@@ -93,16 +94,25 @@ const CustomFeeEIP1559Screen = ({
   })
   const activeNetwork = useRecoilValue(networkState)
   const accountForAsset = useRecoilValue(accountForAssetState(code))
-  let totalFees = getSendAmountFee(
-    accountForAsset?.id,
-    code,
-    route.params.amountInput,
-  )
+
   const { activeWalletId, fees } = wallet.state
   const fiatRates = useRecoilValue(fiatRatesState)
   const customFeeInput = useInputState(
     `${fees?.[activeNetwork]?.[activeWalletId]?.[code].average.fee || '0'}`,
   )
+
+  useEffect(() => {
+    async function fetchData() {
+      var totalFeesData = await getSendAmountFee(
+        accountForAsset?.id,
+        code,
+        route.params.amountInput,
+      )
+      setTotalFees(totalFeesData)
+    }
+    fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleApplyPress = () => {
     navigation.navigate('SendScreen', {
@@ -347,6 +357,7 @@ const CustomFeeEIP1559Screen = ({
               accountAssetId={accountForAsset?.id}
               amountInput={route.params.amountInput}
               likelyWait={likelyWaitObj}
+              totalFees={totalFees}
             />
           ) : (
             renderShowCustomized()
