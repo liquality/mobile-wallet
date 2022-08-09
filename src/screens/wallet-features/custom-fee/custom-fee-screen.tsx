@@ -51,14 +51,30 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const fiatRates = useRecoilValue(fiatRatesState)
   const accountForAsset = useRecoilValue(accountForAssetState(code))
   const { activeWalletId, fees } = wallet.state
+  const feesForThisAsset = fees[activeNetwork]?.[activeWalletId]?.[code]
+  const likelyWaitObj = {
+    slow: feesForThisAsset?.slow.wait,
+    average: feesForThisAsset?.average.wait,
+    fast: feesForThisAsset?.fast.wait,
+  }
 
   /*  let totalFees = getSendAmountFee(
     accountForAsset?.id,
     code,
     route.params.amountInput,
-  ) */
+  )
+  console.log(totalFees, 'Total FEEs for bTC')
 
-  //console.log( fees[activeNetwork]?.[activeWalletId]?.[code], 'FEES fetched from wallet core for this asset')
+  console.log(
+    accountForAsset?.id,
+    code,
+    route.params.amountInput,
+    'what I send to GETAMOUNTSENDFEE()',
+  ) */
+  /*   console.log(
+    fees[activeNetwork]?.[activeWalletId]?.[code],
+    'FEES fetched from wallet core for this asset',
+  ) */
   const handleApplyPress = () => {
     navigation.navigate('SendScreen', {
       ...route.params,
@@ -101,6 +117,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
             activeWalletId={activeWalletId}
             accountAssetId={accountForAsset?.id}
             amountInput={route.params.amountInput}
+            likelyWait={likelyWaitObj}
           />
         </View>
       </View>

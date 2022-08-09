@@ -21,6 +21,7 @@ const Preset = ({
   setSpeedMode,
   accountAssetId,
   amountInput,
+  likelyWait,
 }) => {
   let totalFees = getSendAmountFee(accountAssetId, code, amountInput)
   /*   console.log(
@@ -38,10 +39,10 @@ const Preset = ({
   ) */
   const renderEstimationSpeed = (speed: string) => {
     if (speed === 'slow') {
-      return '~maybe in 30 sec'
+      return '~' + likelyWait.slow + ' sec'
     } else if (speed === 'average') {
-      return '~likely in < 30 sec'
-    } else return '~likely in < 15 sec'
+      return '~' + likelyWait.average + ' sec'
+    } else return '~' + likelyWait.fast + ' sec'
   }
 
   const renderSlowAverageFastPreset = (speed: string) => {
@@ -106,14 +107,16 @@ const Preset = ({
                   }
                 }}>
                 <Text style={[styles.preset, styles.speed]}>{speed}</Text>
-                <Text
-                  style={[
-                    styles.preset,
-                    styles.fiat,
-                    speed === 'slow' ? styles.fiatSlow : styles.fiatFast,
-                  ]}>
-                  {renderEstimationSpeed(speed)}
-                </Text>
+                {likelyWait.slow ? (
+                  <Text
+                    style={[
+                      styles.preset,
+                      styles.fiat,
+                      speed === 'slow' ? styles.fiatSlow : styles.fiatFast,
+                    ]}>
+                    {renderEstimationSpeed(speed)}
+                  </Text>
+                ) : null}
 
                 <Text style={[styles.preset, styles.amount]}>
                   {preset?.amount} in {code}
