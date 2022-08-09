@@ -29,7 +29,7 @@ import {
   fiatRatesState,
   networkState,
 } from '../../../atoms'
-//import { getSendAmountFee } from '@liquality/wallet-core/dist/utils/fees'
+import { getSendAmountFee } from '@liquality/wallet-core/dist/utils/fees'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions'
 //import { BigNumber } from '@liquality/types'
@@ -53,6 +53,8 @@ const useInputState = (
 const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
   const [gasFees, setGasFees] = useState<GasFees>()
+  const [totalFees, setTotalFees] = useState({})
+
   const { code }: AccountType = route.params.assetData!
   //const fiatRates = useRecoilValue(fiatRatesState)
   const wallet = setupWallet({
@@ -63,14 +65,30 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const fiatRates = useRecoilValue(fiatRatesState)
   const accountForAsset = useRecoilValue(accountForAssetState(code))
   const { activeWalletId, fees } = wallet.state
+  const feesForThisAsset = fees[activeNetwork]?.[activeWalletId]?.[code]
+  const likelyWaitObj = {
+    slow: feesForThisAsset?.slow.wait,
+    average: feesForThisAsset?.average.wait,
+    fast: feesForThisAsset?.fast.wait,
+  }
 
-  /*  let totalFees = getSendAmountFee(
-    accountForAsset?.id,
-    code,
-    route.params.amountInput,
+  useEffect(() => {
+    async function fetchData() {
+      var totalFeesData = await getSendAmountFee(
+        accountForAsset?.id,
+        code,
+        route.params.amountInput,
+      )
+      setTotalFees(totalFeesData)
+    }
+    fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  /*   console.log(
+    fees[activeNetwork]?.[activeWalletId]?.[code],
+    'FEES fetched from wallet core for this asset',
   ) */
-
-  //console.log( fees[activeNetwork]?.[activeWalletId]?.[code], 'FEES fetched from wallet core for this asset')
   const handleApplyPress = () => {
     navigation.navigate('SendScreen', {
       ...route.params,
@@ -112,6 +130,8 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
               activeWalletId={activeWalletId}
               accountAssetId={accountForAsset?.id}
               amountInput={route.params.amountInput}
+              likelyWait={likelyWaitObj}
+              totalFees={totalFees}
             />
           </View>
         </View>

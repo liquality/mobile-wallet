@@ -51,6 +51,11 @@ const CustomFeeEIP1559Screen = ({
   const [showBasic, setShowBasic] = useState<boolean>(true)
   var formattedMinerTip = ''
   var formattedMaximumFee = ''
+  const likelyWaitObj = {
+    slow: 'maybe in 30',
+    average: 'likely in < 30',
+    fast: 'likely in < 15',
+  }
 
   var [userInputMinerTip, setUserInputMinerTip] =
     useState<string>(formattedMinerTip)
@@ -341,6 +346,7 @@ const CustomFeeEIP1559Screen = ({
               activeWalletId={activeWalletId}
               accountAssetId={accountForAsset?.id}
               amountInput={route.params.amountInput}
+              likelyWait={likelyWaitObj}
             />
           ) : (
             renderShowCustomized()

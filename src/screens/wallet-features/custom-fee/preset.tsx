@@ -1,10 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
-import { UseInputStateReturnType, GasFees } from '../../../types'
-import {
-  // getSendAmountFee,
-  getSendFee,
-} from '@liquality/wallet-core/dist/utils/fees'
+import { UseInputStateReturnType, GasFees, LikelyWait } from '../../../types'
+import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
@@ -26,6 +23,9 @@ const Preset = ({
   fiatRates,
   speedMode,
   setSpeedMode,
+
+  likelyWait,
+  totalFees,
 }: {
   EIP1559: boolean
   customFeeInput: UseInputStateReturnType<string>
@@ -39,8 +39,9 @@ const Preset = ({
   activeWalletId?: string
   accountAssetId: string | undefined
   amountInput?: string | undefined
+  likelyWait?: LikelyWait | undefined
+  totalFees: Object
 }) => {
-  let totalFees = 10
   /*   console.log(
     EIP1559,
     customFeeInput,
@@ -56,10 +57,10 @@ const Preset = ({
   ) */
   const renderEstimationSpeed = (speed: string) => {
     if (speed === 'slow') {
-      return '~maybe in 30 sec'
+      return '~' + likelyWait?.slow + ' sec'
     } else if (speed === 'average') {
-      return '~likely in < 30 sec'
-    } else return '~likely in < 15 sec'
+      return '~' + likelyWait?.average + ' sec'
+    } else return '~' + likelyWait?.fast + ' sec'
   }
 
   const renderSlowAverageFastPreset = (speed: string) => {
@@ -84,7 +85,7 @@ const Preset = ({
       return {
         amount: new BigNumber(sendFee).dp(6).toString(),
 
-        fiat: prettyFiatBalance(totalFees._W.slow, fiatRates[code]),
+        fiat: prettyFiatBalance(totalFees._W.preset, fiatRates[code]),
         maximum: prettyFiatBalance(
           getSendFee(code, maximumFee),
           fiatRates[code],
@@ -92,8 +93,8 @@ const Preset = ({
       }
     } else {
       return {
-        amount: 'amount here',
-        fiat: 'fiat here',
+        amount: new BigNumber(totalFees[speed]).dp(6).toString(),
+        fiat: prettyFiatBalance(totalFees[speed], fiatRates[code]).toString(),
         maximum: 'max here',
       }
     }
@@ -124,14 +125,16 @@ const Preset = ({
                   }
                 }}>
                 <Text style={[styles.preset, styles.speed]}>{speed}</Text>
-                <Text
-                  style={[
-                    styles.preset,
-                    styles.fiat,
-                    speed === 'slow' ? styles.fiatSlow : styles.fiatFast,
-                  ]}>
-                  {renderEstimationSpeed(speed)}
-                </Text>
+                {likelyWait.slow ? (
+                  <Text
+                    style={[
+                      styles.preset,
+                      styles.fiat,
+                      speed === 'slow' ? styles.fiatSlow : styles.fiatFast,
+                    ]}>
+                    {renderEstimationSpeed(speed)}
+                  </Text>
+                ) : null}
 
                 <Text style={[styles.preset, styles.amount]}>
                   {preset?.amount} in {code}
@@ -139,9 +142,11 @@ const Preset = ({
                 <Text style={[styles.preset, styles.fiat]}>
                   {preset?.fiat} USD
                 </Text>
-                <Text style={[styles.preset, styles.fiat]}>
-                  Max {preset?.maximum} USD
-                </Text>
+                {EIP1559 ? (
+                  <Text style={[styles.preset, styles.fiat]}>
+                    Max {preset?.maximum} USD
+                  </Text>
+                ) : null}
               </Pressable>
             )
           })}
