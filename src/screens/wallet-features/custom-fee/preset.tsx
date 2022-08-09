@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import { UseInputStateReturnType, GasFees } from '../../../types'
 import {
-  getSendAmountFee,
+  // getSendAmountFee,
   getSendFee,
 } from '@liquality/wallet-core/dist/utils/fees'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
@@ -26,8 +26,6 @@ const Preset = ({
   fiatRates,
   speedMode,
   setSpeedMode,
-  accountAssetId,
-  amountInput,
 }: {
   EIP1559: boolean
   customFeeInput: UseInputStateReturnType<string>
@@ -42,7 +40,7 @@ const Preset = ({
   accountAssetId: string | undefined
   amountInput?: string | undefined
 }) => {
-  let totalFees = getSendAmountFee(accountAssetId, code, amountInput)
+  let totalFees = 10
   /*   console.log(
     EIP1559,
     customFeeInput,
