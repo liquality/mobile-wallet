@@ -50,7 +50,7 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
           <Button
             type="secondary"
             variant="m"
-            label="Cancel"
+            label={{ tx: 'termsScreen.cancel' }}
             onPress={navigation.goBack}
             isBorderless={false}
             isActive={true}
@@ -58,7 +58,7 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
           <Button
             type="primary"
             variant="m"
-            label="I Accept"
+            label={{ tx: 'termsScreen.iAccept:' }}
             onPress={() => setShowAnalyticsModal(true)}
             isBorderless={true}
             //isActive={scrolledToEnd}

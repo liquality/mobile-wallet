@@ -10,8 +10,9 @@ const TimeLimitOptions: FC<{
   onChange: (timeLimit: TimeLimitEnum) => void
 }> = ({ value, onChange }) => {
   const renderItem = useCallback(
-    (key: TimeLimitEnum) => (
+    (key: TimeLimitEnum, index: number) => (
       <Pressable
+        key={`id is ${index}`}
         style={styles.button}
         onPress={() => {
           onChange(key)

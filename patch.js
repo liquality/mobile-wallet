@@ -59,6 +59,37 @@ async function fixBrowserCheck(path) {
   const fixVueJsxTypeDef = vueJsxTypeDef.replaceAll('JSX', 'JSX_NOT_REQUIRED')
   await fs.writeFile('node_modules/vue/types/jsx.d.ts', fixVueJsxTypeDef)
 
+  //Fix Asyncstorage warning
+  const asyncDownIssueFile1 = await fs.readFile(
+    'node_modules/asyncstorage-down/default-opts.js',
+    {
+      encoding: 'utf8',
+    },
+  )
+  const fixAsyncDownIssueFile1 = asyncDownIssueFile1.replaceAll(
+    "return require('react-native').AsyncStorage",
+    "return require('@react-native-async-storage/async-storage').default",
+  )
+  await fs.writeFile(
+    'node_modules/asyncstorage-down/default-opts.js',
+    fixAsyncDownIssueFile1,
+  )
+
+  const asyncDownIssueFile2 = await fs.readFile(
+    'node_modules/asyncstorage-down/package.json',
+    {
+      encoding: 'utf8',
+    },
+  )
+  const fixAsyncDownIssueFile2 = asyncDownIssueFile2.replaceAll(
+    '"react-native": "file:./mock-react-native"',
+    '"@react-native-async-storage/async-storage": "file:./mock-react-native"',
+  )
+  await fs.writeFile(
+    'node_modules/asyncstorage-down/package.json',
+    fixAsyncDownIssueFile2,
+  )
+
   try {
     await fs.rename(
       'node_modules/superstruct/lib/index.cjs',

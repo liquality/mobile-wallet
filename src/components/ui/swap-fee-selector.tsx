@@ -30,12 +30,18 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
     changeNetworkSpeed,
   } = props
   const [gasFees, setGasFees] = useState<GasFees>()
-
+  const [alertStatus, setAlertStatus] = useState(false)
   useEffect(() => {
     fetchFeesForAsset(asset)
       .then(setGasFees)
-      .catch(() => Alert.alert(labelTranslateFn('failedToFetchGasFee')!))
-  }, [asset, networkFee, selectedQuote, type])
+      .catch(() => {
+        // to avoid multiple alert rendering
+        if (!alertStatus) {
+          Alert.alert(labelTranslateFn('failedToFetchGasFee')!)
+          setAlertStatus(true)
+        }
+      })
+  }, [asset, networkFee, selectedQuote, type, alertStatus])
 
   //TODO add an ErrorBoundary component
   if (!gasFees)

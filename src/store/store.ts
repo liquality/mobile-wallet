@@ -67,10 +67,16 @@ const persistenceMiddleware: Middleware<
   }
 }
 
+const middlewares = new MiddlewareArray().concat([persistenceMiddleware, thunk])
+if (__DEV__) {
+  const createDebugger = require('redux-flipper').default
+  middlewares.push(createDebugger())
+}
+
 export const store = configureStore({
   reducer: rootReducer,
   preloadedState: {},
-  middleware: new MiddlewareArray().concat([persistenceMiddleware, thunk]),
+  middleware: middlewares,
 })
 
 //-------------------------3. REGISTER THE CALLBACKS / SUBSCRIBE TO MEANINGFULL EVENTS-----------------------------
@@ -144,10 +150,14 @@ export const createWallet = async (
  */
 export const populateWallet = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet.state
-  await wallet.dispatch.initializeAddresses({
-    network: activeNetwork,
-    walletId: activeWalletId,
-  })
+  await wallet.dispatch
+    .initializeAddresses({
+      network: activeNetwork,
+      walletId: activeWalletId,
+    })
+    .catch((e) => {
+      Log(`Failed to initialize addresses: ${e}`, 'error')
+    })
 
   await wallet.dispatch
     .updateBalances({
@@ -290,10 +300,10 @@ export const updateMarketData = async (): Promise<void> => {
  */
 export const toggleNetwork = async (network: any): Promise<void> => {
   await wallet.dispatch.changeActiveNetwork(network)
-  store.dispatch({
-    type: 'NETWORK_UPDATE',
-    payload: { activeNetwork: network },
-  })
+  // store.dispatch({
+  //   type: 'NETWORK_UPDATE',
+  //   payload: { activeNetwork: network },
+  // })
 }
 
 /**
@@ -667,7 +677,7 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
         : newValue !== null &&
           typeof newValue !== 'undefined' &&
           newValue !== -1
-      AsyncStorage.setItem(key, JSON.stringify(newValue))
+      AsyncStorage.setItem(key, JSON.stringify(newValue)).catch(() => {})
     })
   }
 

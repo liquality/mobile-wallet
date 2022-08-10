@@ -199,6 +199,7 @@ const theme = createTheme({
     error: {
       fontFamily: 'Montserrat-Light',
       color: 'danger',
+      fontWeight: '500',
       fontSize: 12,
       marginTop: 's',
       paddingLeft: 's',

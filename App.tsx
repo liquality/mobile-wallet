@@ -46,9 +46,7 @@ const App: FC = () => {
   useEffect(() => {
     isNewInstallation()
       .then((isNew) => {
-        if (isNew) {
-          setInitialRouteName('WalletCreationNavigator')
-        } else {
+        if (!isNew) {
           setInitialRouteName('LoginScreen')
         }
       })
