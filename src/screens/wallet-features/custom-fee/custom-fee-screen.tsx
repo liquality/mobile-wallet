@@ -176,9 +176,18 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
               style={[styles.preset, styles.speed]}
               tx="common.networkSpeed"
             />
-            <Text style={[styles.preset, styles.amount]}>New Speed/Fee</Text>
-            <Text style={[styles.preset, styles.fiat]}>BTC amount here</Text>
-            <Text style={[styles.preset, styles.fiat]}>fiat amount here</Text>
+            <Text
+              style={[styles.preset, styles.amount]}
+              tx="customFeeScreen.newSpeedFee"
+            />
+            <Text
+              style={[styles.preset, styles.fiat]}
+              tx="customFeeScreen.btcAmountHere"
+            />
+            <Text
+              style={[styles.preset, styles.fiat]}
+              tx="customFeeScreen.fiatAmountHere"
+            />
           </View>
         </View>
       </ScrollView>

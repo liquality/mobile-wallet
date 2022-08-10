@@ -7,6 +7,7 @@ import { BigNumber } from '@liquality/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { FiatRates, Network } from '@liquality/wallet-core/dist/store/types'
 import { FeeDetails as FDs } from '@chainify/types'
+import { labelTranslateFn } from '../../../utils'
 
 type SpeedMode = keyof FeeDetails
 
@@ -107,7 +108,7 @@ const Preset = ({
           totalFees ? totalFees[speed as keyof TotalFees] : new BigNumber(0),
           fiatRates[code],
         ).toString(),
-        maximum: 'max here',
+        maximum: labelTranslateFn('customFeeScreen.maxHere'),
       }
     }
   }

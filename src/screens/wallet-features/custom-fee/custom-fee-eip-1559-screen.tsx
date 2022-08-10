@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native'
+import { StyleSheet, View, TextInput, Pressable } from 'react-native'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import AssetIcon from '../../../components/asset-icon'
@@ -26,6 +26,9 @@ import {
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails as FDs } from '@chainify/types'
+import Box from '../../../theme/box'
+import Text from '../../../theme/text'
+import { labelTranslateFn } from '../../../utils'
 
 type CustomFeeEIP1559ScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -53,9 +56,9 @@ const CustomFeeEIP1559Screen = ({
   var formattedMinerTip = ''
   var formattedMaximumFee = ''
   const likelyWaitObj = {
-    slow: 'maybe in 30',
-    average: 'likely in < 30',
-    fast: 'likely in < 15',
+    slow: labelTranslateFn('customFeeScreen.maybeIn30'),
+    average: labelTranslateFn('customFeeScreen.likelyLess30'),
+    fast: labelTranslateFn('customFeeScreen.likelyLess15'),
   }
 
   var [userInputMinerTip, setUserInputMinerTip] =
@@ -132,7 +135,7 @@ const CustomFeeEIP1559Screen = ({
   useEffect(() => {
     const _feeDetails = fees?.[activeNetwork]?.[activeWalletId]?.[code]
     if (!_feeDetails) {
-      setError('Gas fees missing')
+      setError(labelTranslateFn('customFeeScreen.gasFeeMissing')!)
       return
     }
     setGasFees(_feeDetails)
@@ -141,7 +144,7 @@ const CustomFeeEIP1559Screen = ({
   if (!gasFees) {
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <Text tx="common.load" />
       </View>
     )
   }
@@ -193,8 +196,8 @@ const CustomFeeEIP1559Screen = ({
     }
   }
 
-  let likelyIn30 = '~likely in < 30 sec'
-  let likelyIn15 = '~likely in < 15 sec'
+  let likelyIn30 = `~${labelTranslateFn('customFeeScreen.likelyLess30')}`
+  let likelyIn15 = `~${labelTranslateFn('customFeeScreen.likelyLess15')}`
   let summaryMinimum = renderSummaryMaxOrMinAmountAndFiat('min')
   let summaryMaximum = renderSummaryMaxOrMinAmountAndFiat('max')
   let tilda = '~'
@@ -213,10 +216,10 @@ const CustomFeeEIP1559Screen = ({
         <View style={styles.block}>
           <View style={styles.row}>
             <Text style={[styles.label, styles.headerLabel]}>
-              CURRENT BASE FEE
+              {`${labelTranslateFn('customFeeScreen.currentBaseFee')}`}
               <Text style={[styles.labelNormal, styles.headerLabel]}>
                 {' '}
-                PER GAS
+                {`${labelTranslateFn('customFeeScreen.gasPrice')}`}
               </Text>
             </Text>
 
@@ -227,17 +230,17 @@ const CustomFeeEIP1559Screen = ({
           </View>
           <View style={styles.row}>
             <Text style={[styles.label, styles.headerLabel]}>
-              MINER TIP
+              {`${labelTranslateFn('customFeeScreen.minerTip')}`}
               <Text style={[styles.labelNormal, styles.headerLabel]}>
                 {' '}
-                TO SPEED UP
+                {`${labelTranslateFn('customFeeScreen.toSpeedUp')}`}
               </Text>
             </Text>
             <Text style={[styles.label, styles.headerLabel]}>
-              MAX FEE
+              {`${labelTranslateFn('customFeeScreen.maxFee')}`}
               <Text style={[styles.labelNormal, styles.headerLabel]}>
                 {' '}
-                PER GAS
+                {`${labelTranslateFn('customFeeScreen.maxFee')}`}
               </Text>
             </Text>
           </View>
@@ -268,7 +271,7 @@ const CustomFeeEIP1559Screen = ({
               returnKeyType="done"
             />
           </View>
-          <View style={styles.rowEndBtn}>
+          <Box style={styles.rowEndBtn}>
             <Button
               label="Low"
               type="tertiary"
@@ -287,58 +290,60 @@ const CustomFeeEIP1559Screen = ({
               variant="s"
               onPress={handleApplyPress}
             />
-          </View>
+          </Box>
         </View>
-
-        <View style={[styles.block, styles.summary]}>
-          <Text style={[styles.preset, styles.speed, styles.labelBold]}>
-            New Fee Total
-          </Text>
-          <View style={styles.row}>
-            <Text style={[styles.preset, styles.fiat]}>minimum</Text>
-            <Text style={[styles.preset, styles.fiat, styles.maximum]}>
-              maximum
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={[styles.preset, styles.fiat, styles.fiatFast]}>
-              {likelyIn30}
-            </Text>
-            <Text
-              style={[
-                styles.preset,
-                styles.fiat,
-                styles.fiatFast,
-                styles.maximum,
-              ]}>
-              {likelyIn15}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            {summaryMinimum ? (
-              <Text style={[styles.preset, styles.fiat]}>
-                {tilda + summaryMinimum.amount.toString()}
+        <Box marginTop={'xl'} style={[styles.block, styles.summary]}>
+          <Text
+            style={[styles.preset, styles.speed, styles.labelBold]}
+            tx="customFeeScreen.newFeeTotal"
+          />
+          <Box flexDirection={'row'} marginTop="m">
+            <Box flex={0.55}>
+              <Text
+                style={[styles.preset, styles.fiat]}
+                tx="customFeeScreen.minimum"
+              />
+              <Text style={[styles.preset, styles.fiat, styles.fiatFast]}>
+                {likelyIn30}
               </Text>
-            ) : null}
-            {summaryMaximum ? (
-              <Text style={[styles.preset, styles.fiat, styles.maximum]}>
-                {tilda + summaryMaximum.amount.toString()}
+              {summaryMinimum ? (
+                <Text style={[styles.preset, styles.fiat]}>
+                  {tilda + summaryMinimum.amount.toString()}
+                </Text>
+              ) : null}
+              {summaryMinimum ? (
+                <Text style={[styles.preset, styles.fiat]}>
+                  {tilda + summaryMinimum.fiat.toString()} USD
+                </Text>
+              ) : null}
+            </Box>
+            <Box flex={0.45}>
+              <Text
+                style={[styles.preset, styles.fiat, styles.maximum]}
+                tx="customFeeScreen.maximum"
+              />
+              <Text
+                style={[
+                  styles.preset,
+                  styles.fiat,
+                  styles.fiatFast,
+                  styles.maximum,
+                ]}>
+                {likelyIn15}
               </Text>
-            ) : null}
-          </View>
-          <View style={styles.row}>
-            {summaryMinimum ? (
-              <Text style={[styles.preset, styles.fiat]}>
-                {tilda + summaryMinimum.fiat.toString()} USD
-              </Text>
-            ) : null}
-            {summaryMaximum ? (
-              <Text style={[styles.preset, styles.fiat, styles.maximum]}>
-                {tilda + summaryMaximum.fiat.toString()} USD
-              </Text>
-            ) : null}
-          </View>
-        </View>
+              {summaryMaximum ? (
+                <Text style={[styles.preset, styles.fiat, styles.maximum]}>
+                  {tilda + summaryMaximum.amount.toString()}
+                </Text>
+              ) : null}
+              {summaryMaximum ? (
+                <Text style={[styles.preset, styles.fiat, styles.maximum]}>
+                  {tilda + summaryMaximum.fiat.toString()} USD
+                </Text>
+              ) : null}
+            </Box>
+          </Box>
+        </Box>
       </View>
     )
   }
@@ -398,25 +403,24 @@ const CustomFeeEIP1559Screen = ({
             renderShowCustomized()
           )}
         </View>
-
-        <View style={[styles.block, styles.row, styles.actions]}>
-          <Button
-            type="secondary"
-            variant="m"
-            label="Cancel"
-            onPress={navigation.goBack}
-            isBorderless={false}
-            isActive={true}
-          />
-          <Button
-            type="primary"
-            variant="m"
-            label="Apply"
-            onPress={handleApplyPress}
-            isBorderless={false}
-            isActive={true}
-          />
-        </View>
+      </View>
+      <View style={[styles.row, styles.actions]}>
+        <Button
+          type="secondary"
+          variant="m"
+          label="Cancel"
+          onPress={navigation.goBack}
+          isBorderless={false}
+          isActive={true}
+        />
+        <Button
+          type="primary"
+          variant="m"
+          label="Apply"
+          onPress={handleApplyPress}
+          isBorderless={false}
+          isActive={true}
+        />
       </View>
     </View>
   )
@@ -439,13 +443,14 @@ const styles = StyleSheet.create({
   },
   rowEnd: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     padding: 15,
   },
   rowEndBtn: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginTop: 10,
+    justifyContent: 'space-between',
+    width: '50%',
+    marginTop: 20,
   },
 
   rowEndFiat: {
@@ -480,13 +485,8 @@ const styles = StyleSheet.create({
   },
   fiat: {
     fontSize: 12,
-    marginTop: 5,
+    // marginTop: 5,
   },
-
-  amount: {
-    fontSize: 16,
-  },
-
   fiatFirst: {
     marginLeft: '37%',
   },
@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
     marginRight: '2%',
   },
   block: {
-    marginVertical: 15,
+    // marginVertical: 15,
   },
   summary: {
     backgroundColor: '#F0F7F9',
@@ -509,12 +509,16 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 14,
     marginRight: 5,
+    alignSelf: 'flex-end',
   },
   gasInput: {
     marginTop: 5,
     borderBottomColor: '#38FFFB',
     borderBottomWidth: 1,
     width: '30%',
+    textAlign: 'right',
+    paddingBottom: 0,
+    color: '#000D35',
   },
   actions: {
     justifyContent: 'space-around',
