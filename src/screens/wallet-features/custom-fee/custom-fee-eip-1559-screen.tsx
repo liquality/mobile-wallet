@@ -110,6 +110,7 @@ const CustomFeeEIP1559Screen = ({
       )
       setTotalFees(totalFeesData)
     }
+
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -154,23 +155,25 @@ const CustomFeeEIP1559Screen = ({
   const renderSummaryMaxOrMinAmountAndFiat = (type: string) => {
     let minOrMaxFee
     let totalMinOrMaxFee
-    if (type === 'max') {
-      minOrMaxFee = maximumFee
-      totalMinOrMaxFee = getSendFee(
-        code,
-        new BigNumber(minOrMaxFee).plus(totalFees._W.fast),
-      )
-    } else {
-      minOrMaxFee = minerTip + gasFees[speedMode].fee.suggestedBaseFeePerGas
+    if (totalFees.fast) {
+      if (type === 'max') {
+        minOrMaxFee = maximumFee
+        totalMinOrMaxFee = getSendFee(
+          code,
+          new BigNumber(minOrMaxFee).plus(totalFees.fast),
+        )
+      } else {
+        minOrMaxFee = minerTip + gasFees[speedMode].fee.suggestedBaseFeePerGas
 
-      totalMinOrMaxFee = getSendFee(
-        code,
-        new BigNumber(minOrMaxFee).plus(totalFees._W.slow),
-      )
-    }
-    return {
-      amount: new BigNumber(totalMinOrMaxFee).dp(6),
-      fiat: prettyFiatBalance(totalFees._W.slow, fiatRates[code]),
+        totalMinOrMaxFee = getSendFee(
+          code,
+          new BigNumber(minOrMaxFee).plus(totalFees.slow),
+        )
+      }
+      return {
+        amount: new BigNumber(totalMinOrMaxFee).dp(6),
+        fiat: prettyFiatBalance(totalFees.slow, fiatRates[code]),
+      }
     }
   }
 

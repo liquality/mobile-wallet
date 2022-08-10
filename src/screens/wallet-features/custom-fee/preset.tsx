@@ -85,7 +85,7 @@ const Preset = ({
       return {
         amount: new BigNumber(sendFee).dp(6).toString(),
 
-        fiat: prettyFiatBalance(totalFees._W.preset, fiatRates[code]),
+        fiat: prettyFiatBalance(totalFees[speed], fiatRates[code]).toString(),
         maximum: prettyFiatBalance(
           getSendFee(code, maximumFee),
           fiatRates[code],
