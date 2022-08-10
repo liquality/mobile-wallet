@@ -4,7 +4,7 @@ import { FeeDetails } from '@liquality/types/lib/fees'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import AssetIcon from '../../../components/asset-icon'
 import {
-  GasFees,
+  TotalFees,
   RootStackParamList,
   UseInputStateReturnType,
 } from '../../../types'
@@ -25,6 +25,7 @@ import {
 } from '@liquality/wallet-core/dist/utils/fees'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
+import { FeeDetails as FDs } from '@chainify/types'
 
 type CustomFeeEIP1559ScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -44,10 +45,10 @@ const CustomFeeEIP1559Screen = ({
   route,
 }: CustomFeeEIP1559ScreenProps) => {
   const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
-  const [gasFees, setGasFees] = useState<GasFees>()
-  const [totalFees, setTotalFees] = useState({})
+  const [gasFees, setGasFees] = useState<FDs>()
+  const [totalFees, setTotalFees] = useState<TotalFees>()
 
-  const [setError] = useState('')
+  const [, setError] = useState('')
   const [showBasic, setShowBasic] = useState<boolean>(true)
   var formattedMinerTip = ''
   var formattedMaximumFee = ''
@@ -61,13 +62,18 @@ const CustomFeeEIP1559Screen = ({
     useState<string>(formattedMinerTip)
   var [userInputMaximumFee, setUserInputMaximumFee] =
     useState<string>(formattedMaximumFee)
-  const [minerTip, setMinerTip] = useState()
+  const [minerTip, setMinerTip] = useState<number>()
 
+  let minerTipVar: number = 0
+  let maximumFee: number = 0
   if (gasFees && minerTip) {
-    var minerTipVar = gasFees[speedMode].fee.maxPriorityFeePerGas
-    var maximumFee = gasFees[speedMode].fee.maxFeePerGas
-    formattedMinerTip = new BigNumber(minerTip).toString()
-    formattedMaximumFee = new BigNumber(maximumFee).toString()
+    const tempFee = gasFees[speedMode].fee
+    if (typeof tempFee !== 'number') {
+      minerTipVar = tempFee.maxPriorityFeePerGas
+      maximumFee = tempFee.maxFeePerGas
+      formattedMinerTip = new BigNumber(minerTip).toString()
+      formattedMaximumFee = new BigNumber(maximumFee).toString()
+    }
   }
 
   useEffect(() => {
@@ -103,10 +109,11 @@ const CustomFeeEIP1559Screen = ({
 
   useEffect(() => {
     async function fetchData() {
-      var totalFeesData = await getSendAmountFee(
-        accountForAsset?.id,
+      const amtInpBg = new BigNumber(Number(route.params.amountInput))
+      const totalFeesData = await getSendAmountFee(
+        accountForAsset?.id!,
         code,
-        route.params.amountInput,
+        amtInpBg,
       )
       setTotalFees(totalFeesData)
     }
@@ -140,8 +147,11 @@ const CustomFeeEIP1559Screen = ({
   }
 
   const getMinerTip = () => {
-    const fiat = prettyFiatBalance(getSendFee(code, minerTip), fiatRates[code])
-    return isNaN(fiat) ? 0 : fiat
+    const fiat = prettyFiatBalance(
+      getSendFee(code, minerTip || 0),
+      fiatRates[code],
+    )
+    return isNaN(Number(fiat)) ? 0 : fiat
   }
 
   const maxFiat = () => {
@@ -149,29 +159,35 @@ const CustomFeeEIP1559Screen = ({
       getSendFee(code, maximumFee),
       fiatRates[code],
     )
-    return isNaN(fiat) ? 0 : fiat
+    return isNaN(Number(fiat)) ? 0 : fiat
   }
 
   const renderSummaryMaxOrMinAmountAndFiat = (type: string) => {
     let minOrMaxFee
     let totalMinOrMaxFee
-    if (totalFees.fast) {
+    if (totalFees && totalFees.fast) {
       if (type === 'max') {
         minOrMaxFee = maximumFee
         totalMinOrMaxFee = getSendFee(
           code,
-          new BigNumber(minOrMaxFee).plus(totalFees.fast),
+          new BigNumber(minOrMaxFee).plus(totalFees.fast).toNumber(),
         )
       } else {
-        minOrMaxFee = minerTip + gasFees[speedMode].fee.suggestedBaseFeePerGas
-
-        totalMinOrMaxFee = getSendFee(
-          code,
-          new BigNumber(minOrMaxFee).plus(totalFees.slow),
-        )
+        const tempFee = gasFees[speedMode].fee
+        if (
+          typeof tempFee !== 'number' &&
+          typeof minerTip !== 'undefined' &&
+          tempFee.suggestedBaseFeePerGas
+        ) {
+          minOrMaxFee = minerTip + tempFee.suggestedBaseFeePerGas
+          totalMinOrMaxFee = getSendFee(
+            code,
+            new BigNumber(minOrMaxFee).plus(totalFees.slow).toNumber(),
+          )
+        }
       }
       return {
-        amount: new BigNumber(totalMinOrMaxFee).dp(6),
+        amount: new BigNumber(totalMinOrMaxFee || 0).dp(6),
         fiat: prettyFiatBalance(totalFees.slow, fiatRates[code]),
       }
     }
@@ -184,6 +200,14 @@ const CustomFeeEIP1559Screen = ({
   let tilda = '~'
 
   const renderShowCustomized = () => {
+    let tempFee = gasFees[speedMode].fee
+    let suggestedBaseFeePerGas
+    if (typeof tempFee !== 'number') {
+      suggestedBaseFeePerGas = tempFee.suggestedBaseFeePerGas
+    } else {
+      suggestedBaseFeePerGas = tempFee
+    }
+
     return (
       <View style={[styles.container, styles.fragmentContainer]}>
         <View style={styles.block}>
@@ -198,7 +222,7 @@ const CustomFeeEIP1559Screen = ({
 
             <Text style={[styles.labelNormal, styles.headerLabel]}>
               {' '}
-              GWEI {gasFees[speedMode].fee.suggestedBaseFeePerGas}
+              GWEI {suggestedBaseFeePerGas}
             </Text>
           </View>
           <View style={styles.row}>
@@ -291,20 +315,28 @@ const CustomFeeEIP1559Screen = ({
             </Text>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.preset, styles.fiat]}>
-              {tilda + summaryMinimum.amount.toString()}
-            </Text>
-            <Text style={[styles.preset, styles.fiat, styles.maximum]}>
-              {tilda + summaryMaximum.amount.toString()}
-            </Text>
+            {summaryMinimum ? (
+              <Text style={[styles.preset, styles.fiat]}>
+                {tilda + summaryMinimum.amount.toString()}
+              </Text>
+            ) : null}
+            {summaryMaximum ? (
+              <Text style={[styles.preset, styles.fiat, styles.maximum]}>
+                {tilda + summaryMaximum.amount.toString()}
+              </Text>
+            ) : null}
           </View>
           <View style={styles.row}>
-            <Text style={[styles.preset, styles.fiat]}>
-              {tilda + summaryMinimum.fiat.toString()} USD
-            </Text>
-            <Text style={[styles.preset, styles.fiat, styles.maximum]}>
-              {tilda + summaryMaximum.fiat.toString()} USD
-            </Text>
+            {summaryMinimum ? (
+              <Text style={[styles.preset, styles.fiat]}>
+                {tilda + summaryMinimum.fiat.toString()} USD
+              </Text>
+            ) : null}
+            {summaryMaximum ? (
+              <Text style={[styles.preset, styles.fiat, styles.maximum]}>
+                {tilda + summaryMaximum.fiat.toString()} USD
+              </Text>
+            ) : null}
           </View>
         </View>
       </View>

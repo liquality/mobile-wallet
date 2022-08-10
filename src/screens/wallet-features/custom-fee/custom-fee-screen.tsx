@@ -11,7 +11,6 @@ import { FeeDetails } from '@liquality/types/lib/fees'
 import AssetIcon from '../../../components/asset-icon'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
-  GasFees,
   RootStackParamList,
   TotalFees,
   UseInputStateReturnType,
@@ -21,7 +20,7 @@ import Text from '../../../theme/text'
 import Box from '../../../theme/box'
 /* import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms' */
-import { fetchFeesForAsset } from '../../../store/store'
+// import { fetchFeesForAsset } from '../../../store/store'
 import Preset from './preset'
 import { useRecoilValue } from 'recoil'
 import {
@@ -33,6 +32,7 @@ import { getSendAmountFee } from '@liquality/wallet-core/dist/utils/fees'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions'
 import { BigNumber } from '@liquality/types'
+import { FeeDetails as FDs } from '@chainify/types'
 //import { BigNumber } from '@liquality/types'
 
 const scrollViewStyle: ViewStyle = {
@@ -53,8 +53,9 @@ const useInputState = (
 
 const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
-  const [gasFees, setGasFees] = useState<GasFees>()
+  const [gasFees, setGasFees] = useState<FDs>()
   const [totalFees, setTotalFees] = useState<TotalFees>()
+  const [, setError] = useState('')
 
   const code = route.params.code!
   //const fiatRates = useRecoilValue(fiatRatesState)
@@ -98,9 +99,18 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     })
   }
 
+  // useEffect(() => {
+  //   fetchFeesForAsset(code).then(setGasFees)
+  // }, [code])
+
   useEffect(() => {
-    fetchFeesForAsset(code).then(setGasFees)
-  }, [code])
+    const _feeDetails = fees?.[activeNetwork]?.[activeWalletId]?.[code]
+    if (!_feeDetails) {
+      setError('Gas fees missing')
+      return
+    }
+    setGasFees(_feeDetails)
+  }, [setError, fees, activeWalletId, activeNetwork, code])
 
   if (!gasFees) {
     return (

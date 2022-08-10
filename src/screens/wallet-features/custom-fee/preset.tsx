@@ -1,23 +1,18 @@
 import React from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
-import {
-  UseInputStateReturnType,
-  GasFees,
-  LikelyWait,
-  TotalFees,
-} from '../../../types'
+import { UseInputStateReturnType, LikelyWait, TotalFees } from '../../../types'
 import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { FiatRates, Network } from '@liquality/wallet-core/dist/store/types'
-import { FeeDetails as FD } from '@chainify/types'
+import { FeeDetails as FDs } from '@chainify/types'
 
 type SpeedMode = keyof FeeDetails
 
 type FeesProp = {
-  mainnet?: Record<string, Record<string, FD>> | undefined
-  testnet?: Record<string, Record<string, FD>> | undefined
+  mainnet?: Record<string, Record<string, FDs>> | undefined
+  testnet?: Record<string, Record<string, FDs>> | undefined
 }
 
 const Preset = ({
@@ -34,7 +29,7 @@ const Preset = ({
 }: {
   EIP1559: boolean
   customFeeInput: UseInputStateReturnType<string>
-  gasFees: GasFees
+  gasFees: FDs
   code: string
   fiatRates: FiatRates
   speedMode: string
@@ -78,12 +73,14 @@ const Preset = ({
       preset = gasFees?.fast || null
     }
     if (EIP1559) {
-      const defaultFee =
-        preset.fee?.suggestedBaseFeePerGas + preset.fee?.maxPriorityFeePerGas ||
-        0
-
-      const maximumFee =
-        preset.fee?.suggestedBaseFeePerGas + preset.fee?.maxFeePerGas || 0
+      let tempfee = preset.fee
+      let defaultFee = 0
+      let maximumFee = 0
+      if (typeof tempfee !== 'number') {
+        defaultFee =
+          tempfee.suggestedBaseFeePerGas || 0 + tempfee.maxPriorityFeePerGas
+        maximumFee = tempfee.suggestedBaseFeePerGas || 0 + tempfee.maxFeePerGas
+      }
 
       const sendFee = getSendFee(code, defaultFee)
 
