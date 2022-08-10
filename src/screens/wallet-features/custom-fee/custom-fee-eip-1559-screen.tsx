@@ -4,7 +4,6 @@ import { FeeDetails } from '@liquality/types/lib/fees'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import AssetIcon from '../../../components/asset-icon'
 import {
-  AssetDataElementType,
   GasFees,
   RootStackParamList,
   UseInputStateReturnType,
@@ -88,7 +87,8 @@ const CustomFeeEIP1559Screen = ({
     minerTipVar,
   ])
 
-  const { code }: AssetDataElementType = route.params.assetData!
+  const code = route.params.code!
+  // const amountInput = route.params.amountInput!
   const wallet = setupWallet({
     ...defaultOptions,
   })
@@ -111,6 +111,7 @@ const CustomFeeEIP1559Screen = ({
       setTotalFees(totalFeesData)
     }
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleApplyPress = () => {

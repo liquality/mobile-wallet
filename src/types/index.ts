@@ -84,6 +84,7 @@ export type StackPayload = {
   selectedAssetCodes?: string[]
   onSelectAssetCodes?: (selectedAssetCodes: string[]) => void
   amountInput?: string
+  code?: string
 }
 
 export type RootStackParamList = {
@@ -175,4 +176,9 @@ export interface CustomFeeDetails extends FeeDetails {
 
 export type GasFees = Record<'slow' | 'average' | 'fast' | 'custom', BigNumber>
 
-export type LikelyWait = Record<'slow' | 'average' | 'fast', String>
+// export type LikelyWait = Record<'slow' | 'average' | 'fast', String>
+export type LikelyWait = {
+  slow?: number
+  average?: number
+  fast?: number
+}
