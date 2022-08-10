@@ -39,10 +39,16 @@ import {
   swapPairState,
 } from '../../../atoms'
 import I18n from 'i18n-js'
+import { isEIP1559Fees } from '@liquality/wallet-core/dist/utils/fees'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
   toAmount?: BigNumber
+}
+
+enum Direction {
+  From,
+  To,
 }
 
 export const reducer: Reducer<SwapEventType, PayloadAction<SwapEventType>> = (
@@ -181,6 +187,24 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       )
       setMaximumValue(new BigNumber(amnt))
     }
+  }
+
+  const handleCustomPressBtn = (
+    code: string,
+    chain: ChainId,
+    direction: Direction,
+  ) => {
+    navigation.navigate(
+      isEIP1559Fees(chain) ? 'CustomFeeEIP1559Screen' : 'CustomFeeScreen',
+      {
+        code,
+        screenTitle: labelTranslateFn('sendScreen.networkSpeed')!,
+        amountInput:
+          direction === Direction.From
+            ? state.fromAmount?.toString()
+            : state.toAmount?.toString(),
+      },
+    )
   }
 
   const updateBestQuote = useCallback(
@@ -356,7 +380,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           {swapPair.fromAsset?.code ? (
             <SwapFeeSelector
               asset={swapPair.fromAsset?.code}
-              handleCustomPress={() => ({})}
+              handleCustomPress={() =>
+                handleCustomPressBtn(
+                  swapPair.fromAsset?.code!,
+                  swapPair.fromAsset?.chain!,
+                  Direction.From,
+                )
+              }
               networkFee={fromNetworkFee}
               selectedQuote={selectedQuote}
               type={'from'}
@@ -366,7 +396,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           {swapPair.toAsset?.code ? (
             <SwapFeeSelector
               asset={swapPair.toAsset?.code}
-              handleCustomPress={() => ({})}
+              handleCustomPress={() =>
+                handleCustomPressBtn(
+                  swapPair.toAsset?.code!,
+                  swapPair.toAsset?.chain!,
+                  Direction.To,
+                )
+              }
               networkFee={toNetworkFee}
               selectedQuote={selectedQuote}
               type={'to'}

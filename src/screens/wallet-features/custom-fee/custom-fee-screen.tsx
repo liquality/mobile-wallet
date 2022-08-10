@@ -11,7 +11,6 @@ import { FeeDetails } from '@liquality/types/lib/fees'
 import AssetIcon from '../../../components/asset-icon'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
-  AccountType,
   GasFees,
   RootStackParamList,
   UseInputStateReturnType,
@@ -55,7 +54,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const [gasFees, setGasFees] = useState<GasFees>()
   const [totalFees, setTotalFees] = useState({})
 
-  const { code }: AccountType = route.params.assetData!
+  const code = route.params.code!
   //const fiatRates = useRecoilValue(fiatRatesState)
   const wallet = setupWallet({
     ...defaultOptions,

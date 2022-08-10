@@ -84,6 +84,7 @@ export type StackPayload = {
   selectedAssetCodes?: string[]
   onSelectAssetCodes?: (selectedAssetCodes: string[]) => void
   amountInput?: string
+  code?: string
 }
 
 export type RootStackParamList = {
