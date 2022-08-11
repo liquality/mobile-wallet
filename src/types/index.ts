@@ -99,7 +99,7 @@ export type RootStackParamList = {
   AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
   AssetManagementScreen: StackPayload
-  BackupWarningScreen: undefined
+  BackupWarningScreen: { screenTitle?: string; includeBackBtn?: false }
   BackupSeedScreen: undefined
   BackupLoginScreen: undefined
   AssetToggleScreen: StackPayload
@@ -113,6 +113,11 @@ export type RootStackParamList = {
   SwapReviewScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
+}
+
+export type RootTabParamList = {
+  AppStackNavigator: undefined
+  SettingsScreen: { shouldLogOut?: boolean }
 }
 
 export interface UseInputStateReturnType<T> {

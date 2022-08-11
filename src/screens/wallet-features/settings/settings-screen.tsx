@@ -12,7 +12,11 @@ import AngleRightIcon from '../../../assets/icons/angle-right.svg'
 import SignoutIcon from '../../../assets/icons/logout.svg'
 
 import SettingsSwitch from '../../../components/ui/switch'
-import { DarkModeEnum } from '../../../types'
+import {
+  DarkModeEnum,
+  RootTabParamList,
+  RootStackParamList,
+} from '../../../types'
 import WhatsNew from '../../../components/ui/whats-new'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
@@ -20,12 +24,19 @@ import { downloadWalletLogs, labelTranslateFn } from '../../../utils'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import { networkState, optInAnalyticsState, walletState } from '../../../atoms'
 import DeviceInfo from 'react-native-device-info'
-import { useNavigation } from '@react-navigation/core'
+import { NavigationProp, useNavigation } from '@react-navigation/core'
 import i18n from 'i18n-js'
 import { toggleNetwork } from '../../../store/store'
 import { Network } from '@liquality/wallet-core/dist/store/types'
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { CustomRootState } from '../../../reducers'
 
-const SettingsScreen = ({ route }) => {
+type SettingsScreenProps = BottomTabScreenProps<
+  RootTabParamList,
+  'SettingsScreen'
+>
+
+const SettingsScreen = ({ route }: SettingsScreenProps) => {
   const walletStateCopy = useRecoilValue(walletState)
   const analytics = useRecoilValue(optInAnalyticsState)
   const [activeNetwork, setActiveNetwork] = useRecoilState(networkState)
@@ -36,7 +47,7 @@ const SettingsScreen = ({ route }) => {
   const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
   const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
   const dispatch = useDispatch()
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>()
 
   const toggleAnalyticsOptin = () => {
     setIsAnalyticsEnabled(!isAnalyticsEnabled)
@@ -84,7 +95,7 @@ const SettingsScreen = ({ route }) => {
   }, [activeNetwork, analytics, handleLockPress, route?.params?.shouldLogOut])
 
   const handleDownload = useCallback(() => {
-    const walletStateDownload = { ...walletStateCopy }
+    const walletStateDownload: Partial<CustomRootState> = { ...walletStateCopy }
 
     delete walletStateDownload.encryptedWallets
     delete walletStateDownload.keySalt
