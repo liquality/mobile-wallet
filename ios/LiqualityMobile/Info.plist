@@ -2,11 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleLocalizations</key>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>en</string>
-		<string>Spanish</string>
-		<string>zh</string>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	</array>
 	<key>CFBundleDisplayName</key>
 	<string>Liquality</string>
@@ -16,6 +14,12 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>Spanish</string>
+		<string>zh</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
@@ -72,14 +76,8 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
-	<array>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	</array>
 </dict>
 </plist>
