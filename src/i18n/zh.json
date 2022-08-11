@@ -125,7 +125,8 @@
     "showSeedPhrase": "Show Seed Phrase?",
     "anyoneWhoSeed": "Anyone who has this seed phrase can steal your funds.",
     "viewItPrivate": "View it in private without any cameras around.",
-    "iHavePrivacy": "I have privacy"
+    "iHavePrivacy": "I have privacy",
+    "signIn": "Sign In"
   },
   "overviewScreen": {
     "load": "Loading..."
