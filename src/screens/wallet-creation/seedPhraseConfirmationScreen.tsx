@@ -97,9 +97,16 @@ const SeedPhraseConfirmationScreen = ({
       )
       return
     }
+
+    const seedWords = route.params.seedWords
+    let tempSeedWords: Array<string> = []
+    if (seedWords && seedWords.length) {
+      seedWords.forEach((item) => tempSeedWords.push(item.word))
+    }
+
     navigation.navigate('PasswordCreationScreen', {
       ...route.params,
-      mnemonic: route.params.seedWords?.join(' ') || '',
+      mnemonic: tempSeedWords.join(' ') || '',
       imported: false,
     })
   }
