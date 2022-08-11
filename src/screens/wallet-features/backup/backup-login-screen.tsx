@@ -49,7 +49,7 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
       await restoreWallet(passwordInput.value)
       setLoading(false)
       navigation.navigate('BackupSeedScreen', {
-        screenTitle: 'Seed Phrase',
+        screenTitle: labelTranslateFn('backupLoginScreen.seedPhrase')!,
       })
     }
   }

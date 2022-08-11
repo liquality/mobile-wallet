@@ -112,7 +112,8 @@
     "signInToSeedPhrase": "Sign-in \n to see Seed Phrase",
     "password": "PASSWORD",
     "iHavePrivacyUnderstand": "I have privacy and understand the risk.",
-    "pleaseCheckRisk": "Please check that you understand the risks"
+    "pleaseCheckRisk": "Please check that you understand the risks",
+    "seedPhrase": "Seed Phrase"
   },
   "backupSeedScreen": {
     "hej": "hej",

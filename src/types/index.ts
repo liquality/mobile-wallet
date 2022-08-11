@@ -100,7 +100,7 @@ export type RootStackParamList = {
   AssetScreen: StackPayload
   AssetManagementScreen: StackPayload
   BackupWarningScreen: { screenTitle?: string; includeBackBtn?: false }
-  BackupSeedScreen: undefined
+  BackupSeedScreen: { screenTitle?: string }
   BackupLoginScreen: { backupSeed?: boolean; screenTitle?: string }
   AssetToggleScreen: StackPayload
   ReceiveScreen: StackPayload

@@ -2,9 +2,7 @@ import React, { useRef, useState } from 'react'
 import {
   View,
   StyleSheet,
-  KeyboardAvoidingView,
   FlatList,
-  Platform,
   Dimensions,
   TouchableOpacity,
   Animated,
@@ -95,22 +93,17 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
         height={Dimensions.get('screen').height}
         isFullPage
       />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-        style={[styles.keyboard, StyleSheet.absoluteFillObject]}>
-        <View style={styles.eyeIcon}>
-          <Eye width={150} height={150} />
-        </View>
+      <View style={styles.eyeIcon}>
+        <Eye width={150} height={150} />
+      </View>
 
-        <View style={styles.prompt}>
-          <Text
-            style={styles.promptText}
-            tx="backupSeedScreen.yourSeedPhrase"
-          />
-          <Text style={styles.description} tx="backupSeedScreen.writeItDown" />
-        </View>
-        <View style={styles.main}>
-          <View style={styles.seedPhrase}>
+      <View style={styles.prompt}>
+        <Text style={styles.promptText} tx="backupSeedScreen.yourSeedPhrase" />
+        <Text style={styles.description} tx="backupSeedScreen.writeItDown" />
+      </View>
+      <View style={styles.main}>
+        <View style={styles.seedPhrase}>
+          <Box flex={1}>
             <View style={styles.seedWordLengthOptions}>
               <Text
                 style={styles.explainHidden}
@@ -149,12 +142,14 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
               keyExtractor={(item) => `${item.id}`}
               columnWrapperStyle={styles.columnWrapperStyle}
             />
+          </Box>
+          <Box>
             <ButtonFooter unpositioned>
               <Button
                 type="secondary"
                 variant="m"
                 label={{ tx: 'common.cancel' }}
-                onPress={() => navigation.navigate('OverviewScreen')}
+                onPress={() => navigation.navigate('OverviewScreen', {})}
                 isBorderless={false}
                 isActive={true}
               />
@@ -162,13 +157,13 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
                 type="primary"
                 variant="m"
                 label={{ tx: 'backupSeedScreen.iSaveSeed' }}
-                onPress={() => navigation.navigate('OverviewScreen')}
+                onPress={() => navigation.navigate('OverviewScreen', {})}
                 isBorderless={false}
               />
             </ButtonFooter>
-          </View>
+          </Box>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </Box>
   )
 }
@@ -176,13 +171,12 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    paddingVertical: 20,
   },
   main: {
-    flex: 0.9,
+    flex: 1,
     alignItems: 'center',
     width: Dimensions.get('window').width,
+    backgroundColor: '#fff',
   },
   eyeIcon: { marginTop: 50, alignItems: 'center' },
   explainHidden: {
@@ -216,8 +210,8 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   seedPhrase: {
-    backgroundColor: '#fff',
     width: Dimensions.get('window').width,
+    flex: 1,
   },
   flatList: {
     marginTop: 5,
@@ -280,11 +274,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#2CD2CF',
     width: '100%',
-  },
-  keyboard: {
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
 })
 
