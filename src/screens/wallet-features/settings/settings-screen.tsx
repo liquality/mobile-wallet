@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   View,
+  useColorScheme,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
 import AngleRightIcon from '../../../assets/icons/angle-right.svg'
@@ -22,7 +23,12 @@ import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import { downloadWalletLogs, labelTranslateFn } from '../../../utils'
 import { useRecoilValue, useRecoilState } from 'recoil'
-import { networkState, optInAnalyticsState, walletState } from '../../../atoms'
+import {
+  networkState,
+  optInAnalyticsState,
+  walletState,
+  themeMode,
+} from '../../../atoms'
 import DeviceInfo from 'react-native-device-info'
 import { NavigationProp, useNavigation } from '@react-navigation/core'
 import i18n from 'i18n-js'
@@ -44,7 +50,8 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
   const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(
     isAnalyticsEnabledFromStart,
   )
-  const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
+  // const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
+  const [theme, setTheme] = useRecoilState(themeMode)
   const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
   const dispatch = useDispatch()
   const navigation = useNavigation<NavigationProp<RootStackParamList>>()
@@ -107,6 +114,13 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
   }, [walletStateCopy])
 
   const version = DeviceInfo.getVersion()
+  const deviceTheme = useColorScheme()
+  const enableDark = theme
+    ? DarkModeEnum.Dark === theme
+    : DarkModeEnum.Dark === deviceTheme
+  const enableLight = theme
+    ? DarkModeEnum.Light === theme
+    : DarkModeEnum.Light === deviceTheme
 
   return (
     <View style={styles.container}>
@@ -244,9 +258,9 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
                   style={[
                     styles.btn,
                     styles.leftBtn,
-                    darkMode === DarkModeEnum.Light && styles.btnSelected,
+                    enableLight && styles.btnSelected,
                   ]}
-                  onPress={() => setDarkMode(DarkModeEnum.Light)}>
+                  onPress={() => setTheme(DarkModeEnum.Light)}>
                   <Text
                     style={[styles.label, styles.small]}
                     tx="settingsScreen.light"
@@ -256,9 +270,9 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
                   style={[
                     styles.btn,
                     styles.rightBtn,
-                    darkMode === DarkModeEnum.Dark && styles.btnSelected,
+                    enableDark && styles.btnSelected,
                   ]}
-                  onPress={() => setDarkMode(DarkModeEnum.Dark)}>
+                  onPress={() => setTheme(DarkModeEnum.Dark)}>
                   <Text
                     style={[styles.label, styles.small]}
                     tx="settingsScreen.dark"
@@ -289,8 +303,8 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
           <View style={styles.lockInfo}>
             <Pressable onPress={handleLockPress}>
               <SignoutIcon
-                width={20}
-                height={20}
+                width={40}
+                height={40}
                 color={'#5F5F5F'}
                 style={styles.signOutIcon}
               />
@@ -405,6 +419,7 @@ const styles = StyleSheet.create({
   },
   lockInfo: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   signOutIcon: {
     marginRight: 10,

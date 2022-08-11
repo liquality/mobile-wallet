@@ -139,8 +139,9 @@ export type ProviderType = {
 }
 
 export enum DarkModeEnum {
-  Light,
-  Dark,
+  Light = 'light',
+  Dark = 'dark',
+  Null = '',
 }
 
 export enum ActionEnum {

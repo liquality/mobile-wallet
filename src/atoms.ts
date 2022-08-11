@@ -1,3 +1,4 @@
+import { DarkModeEnum } from './types/index'
 import { atom, atomFamily, selector, selectorFamily } from 'recoil'
 import { AccountType, SwapAssetPairType } from './types'
 import { BigNumber } from '@liquality/types'
@@ -99,6 +100,16 @@ export const optInAnalyticsState = atom<
 export const isDoneFetchingData = atom<boolean>({
   key: 'DoneFetchingData',
   default: false,
+})
+
+export const themeMode = atom<DarkModeEnum>({
+  key: 'ThemeMode',
+  default: AsyncStorage.getItem(KEYS.ACTIVE_THEME).then((savedValue) =>
+    savedValue !== null && typeof savedValue !== 'undefined'
+      ? (JSON.parse(savedValue) as DarkModeEnum)
+      : DarkModeEnum.Null,
+  ),
+  effects: [localStorageEffect<DarkModeEnum>(KEYS.ACTIVE_THEME)],
 })
 
 //---------- ATOM FAMILIES----------------
