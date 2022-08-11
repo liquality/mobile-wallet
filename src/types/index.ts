@@ -175,10 +175,11 @@ export interface CustomFeeDetails extends FeeDetails {
 }
 
 export type GasFees = Record<'slow' | 'average' | 'fast' | 'custom', BigNumber>
+export type TotalFees = Record<'slow' | 'average' | 'fast', BigNumber>
 
 // export type LikelyWait = Record<'slow' | 'average' | 'fast', String>
 export type LikelyWait = {
-  slow?: number
-  average?: number
-  fast?: number
+  slow?: string | number
+  average?: string | number
+  fast?: string | number
 }
