@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import { UseInputStateReturnType, LikelyWait, TotalFees } from '../../../types'
 import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
@@ -24,7 +24,6 @@ const Preset = ({
   fiatRates,
   speedMode,
   setSpeedMode,
-
   likelyWait,
   totalFees,
 }: {
@@ -56,6 +55,7 @@ const Preset = ({
     'Preset PROPS in EIP1559 T/F?',
     EIP1559,
   ) */
+
   const renderEstimationSpeed = (speed: string) => {
     if (speed === 'slow') {
       return '~' + likelyWait?.slow + ' sec'
@@ -85,9 +85,8 @@ const Preset = ({
 
       const sendFee = getSendFee(code, defaultFee)
 
-      return {
+      let formattedRatesForEIP1559Obj = {
         amount: new BigNumber(sendFee).dp(6).toString(),
-
         fiat: prettyFiatBalance(
           totalFees ? totalFees[speed as keyof TotalFees] : new BigNumber(0),
           fiatRates[code],
@@ -97,8 +96,9 @@ const Preset = ({
           fiatRates[code],
         ).toString(),
       }
+      return formattedRatesForEIP1559Obj
     } else {
-      return {
+      let formattedRatesObj = {
         amount: new BigNumber(
           totalFees ? totalFees[speed as keyof TotalFees] : new BigNumber(0),
         )
@@ -110,6 +110,7 @@ const Preset = ({
         ).toString(),
         maximum: labelTranslateFn('customFeeScreen.maxHere'),
       }
+      return formattedRatesObj
     }
   }
 
@@ -133,7 +134,7 @@ const Preset = ({
                   setSpeedMode(speed as SpeedMode)
                   if (gasFees && code) {
                     customFeeInput.onChangeText(
-                      gasFees[speed as SpeedMode].toString(),
+                      gasFees[speed as SpeedMode].fee.toString(),
                     )
                   }
                 }}>

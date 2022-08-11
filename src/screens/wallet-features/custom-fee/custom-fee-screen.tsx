@@ -10,11 +10,7 @@ import { FeeDetails } from '@liquality/types/lib/fees'
 
 import AssetIcon from '../../../components/asset-icon'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import {
-  RootStackParamList,
-  TotalFees,
-  UseInputStateReturnType,
-} from '../../../types'
+import { RootStackParamList, TotalFees } from '../../../types'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
@@ -33,6 +29,7 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails as FDs } from '@chainify/types'
+import { useInputState } from '../../../hooks'
 //import { BigNumber } from '@liquality/types'
 
 const scrollViewStyle: ViewStyle = {
@@ -44,12 +41,6 @@ type CustomFeeScreenProps = NativeStackScreenProps<
   'SendScreen'
 >
 type SpeedMode = keyof FeeDetails
-const useInputState = (
-  initialValue: string,
-): UseInputStateReturnType<string> => {
-  const [value, setValue] = useState<string>(initialValue)
-  return { value, onChangeText: setValue }
-}
 
 const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
@@ -63,6 +54,9 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     ...defaultOptions,
   })
   const customFeeInput = useInputState('0')
+
+  //const { value, onChangeText } = useInputState('0')
+
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
   const accountForAsset = useRecoilValue(accountForAssetState(code))
@@ -88,20 +82,13 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  /*   console.log(
-    fees[activeNetwork]?.[activeWalletId]?.[code],
-    'FEES fetched from wallet core for this asset',
-  ) */
   const handleApplyPress = () => {
     navigation.navigate('SendScreen', {
+      assetData: route.params.assetData,
       ...route.params,
       customFee: parseFloat(customFeeInput.value),
     })
   }
-
-  // useEffect(() => {
-  //   fetchFeesForAsset(code).then(setGasFees)
-  // }, [code])
 
   useEffect(() => {
     const _feeDetails = fees?.[activeNetwork]?.[activeWalletId]?.[code]
@@ -110,7 +97,11 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
       return
     }
     setGasFees(_feeDetails)
-  }, [setError, fees, activeWalletId, activeNetwork, code])
+    if (gasFees) {
+      customFeeInput.onChangeText(gasFees[speedMode].fee.toString())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setError, fees, activeWalletId, activeNetwork, code, gasFees, speedMode])
 
   if (!gasFees) {
     return (
@@ -118,6 +109,9 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
         <Text tx="common.load" />
       </View>
     )
+  }
+  const handleTextChange = (text: string) => {
+    customFeeInput.onChangeText(text)
   }
 
   return (
@@ -160,10 +154,13 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
               </Text>
             </Box>
             <Box flexDirection="row" alignItems="center">
-              <Text style={styles.inputLabel}>SAT/B</Text>
+              <Text style={styles.inputLabel}>
+                {code === 'BTC' ? 'SAT/B' : 'GWEI'}
+              </Text>
               <TextInput
                 style={styles.gasInput}
-                onChangeText={customFeeInput.onChangeText}
+                keyboardType={'numeric'}
+                onChangeText={handleTextChange}
                 value={customFeeInput.value}
                 autoCorrect={false}
                 autoCapitalize={'none'}

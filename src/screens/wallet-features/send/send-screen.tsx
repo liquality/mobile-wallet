@@ -196,6 +196,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     navigation.navigate(
       isEIP1559() ? 'CustomFeeEIP1559Screen' : 'CustomFeeScreen',
       {
+        assetData: route.params.assetData,
         code,
         screenTitle: labelTranslateFn('sendScreen.networkSpeed')!,
         amountInput: amountInput.value,
