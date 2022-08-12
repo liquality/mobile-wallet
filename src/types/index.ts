@@ -99,9 +99,9 @@ export type RootStackParamList = {
   AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
   AssetManagementScreen: StackPayload
-  BackupWarningScreen: undefined
-  BackupSeedScreen: undefined
-  BackupLoginScreen: undefined
+  BackupWarningScreen: { screenTitle?: string; includeBackBtn?: false }
+  BackupSeedScreen: { screenTitle?: string }
+  BackupLoginScreen: { backupSeed?: boolean; screenTitle?: string }
   AssetToggleScreen: StackPayload
   ReceiveScreen: StackPayload
   SendScreen: StackPayload
@@ -113,6 +113,11 @@ export type RootStackParamList = {
   SwapReviewScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
+}
+
+export type RootTabParamList = {
+  AppStackNavigator: undefined
+  SettingsScreen: { shouldLogOut?: boolean }
 }
 
 export interface UseInputStateReturnType<T> {
@@ -134,8 +139,9 @@ export type ProviderType = {
 }
 
 export enum DarkModeEnum {
-  Light,
-  Dark,
+  Light = 'light',
+  Dark = 'dark',
+  Null = '',
 }
 
 export enum ActionEnum {

@@ -6,26 +6,43 @@ import {
   ScrollView,
   StyleSheet,
   View,
+  useColorScheme,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
 import AngleRightIcon from '../../../assets/icons/angle-right.svg'
 import SignoutIcon from '../../../assets/icons/logout.svg'
 
 import SettingsSwitch from '../../../components/ui/switch'
-import { DarkModeEnum } from '../../../types'
+import {
+  DarkModeEnum,
+  RootTabParamList,
+  RootStackParamList,
+} from '../../../types'
 import WhatsNew from '../../../components/ui/whats-new'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import { downloadWalletLogs, labelTranslateFn } from '../../../utils'
 import { useRecoilValue, useRecoilState } from 'recoil'
-import { networkState, optInAnalyticsState, walletState } from '../../../atoms'
+import {
+  networkState,
+  optInAnalyticsState,
+  walletState,
+  themeMode,
+} from '../../../atoms'
 import DeviceInfo from 'react-native-device-info'
-import { useNavigation } from '@react-navigation/core'
+import { NavigationProp, useNavigation } from '@react-navigation/core'
 import i18n from 'i18n-js'
 import { toggleNetwork } from '../../../store/store'
 import { Network } from '@liquality/wallet-core/dist/store/types'
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { CustomRootState } from '../../../reducers'
 
-const SettingsScreen = ({ route }) => {
+type SettingsScreenProps = BottomTabScreenProps<
+  RootTabParamList,
+  'SettingsScreen'
+>
+
+const SettingsScreen = ({ route }: SettingsScreenProps) => {
   const walletStateCopy = useRecoilValue(walletState)
   const analytics = useRecoilValue(optInAnalyticsState)
   const [activeNetwork, setActiveNetwork] = useRecoilState(networkState)
@@ -33,10 +50,11 @@ const SettingsScreen = ({ route }) => {
   const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(
     isAnalyticsEnabledFromStart,
   )
-  const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
+  // const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
+  const [theme, setTheme] = useRecoilState(themeMode)
   const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
   const dispatch = useDispatch()
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>()
 
   const toggleAnalyticsOptin = () => {
     setIsAnalyticsEnabled(!isAnalyticsEnabled)
@@ -84,7 +102,7 @@ const SettingsScreen = ({ route }) => {
   }, [activeNetwork, analytics, handleLockPress, route?.params?.shouldLogOut])
 
   const handleDownload = useCallback(() => {
-    const walletStateDownload = { ...walletStateCopy }
+    const walletStateDownload: Partial<CustomRootState> = { ...walletStateCopy }
 
     delete walletStateDownload.encryptedWallets
     delete walletStateDownload.keySalt
@@ -96,6 +114,13 @@ const SettingsScreen = ({ route }) => {
   }, [walletStateCopy])
 
   const version = DeviceInfo.getVersion()
+  const deviceTheme = useColorScheme()
+  const enableDark = theme
+    ? DarkModeEnum.Dark === theme
+    : DarkModeEnum.Dark === deviceTheme
+  const enableLight = theme
+    ? DarkModeEnum.Light === theme
+    : DarkModeEnum.Light === deviceTheme
 
   return (
     <View style={styles.container}>
@@ -233,9 +258,9 @@ const SettingsScreen = ({ route }) => {
                   style={[
                     styles.btn,
                     styles.leftBtn,
-                    darkMode === DarkModeEnum.Light && styles.btnSelected,
+                    enableLight && styles.btnSelected,
                   ]}
-                  onPress={() => setDarkMode(DarkModeEnum.Light)}>
+                  onPress={() => setTheme(DarkModeEnum.Light)}>
                   <Text
                     style={[styles.label, styles.small]}
                     tx="settingsScreen.light"
@@ -245,9 +270,9 @@ const SettingsScreen = ({ route }) => {
                   style={[
                     styles.btn,
                     styles.rightBtn,
-                    darkMode === DarkModeEnum.Dark && styles.btnSelected,
+                    enableDark && styles.btnSelected,
                   ]}
-                  onPress={() => setDarkMode(DarkModeEnum.Dark)}>
+                  onPress={() => setTheme(DarkModeEnum.Dark)}>
                   <Text
                     style={[styles.label, styles.small]}
                     tx="settingsScreen.dark"
@@ -278,8 +303,8 @@ const SettingsScreen = ({ route }) => {
           <View style={styles.lockInfo}>
             <Pressable onPress={handleLockPress}>
               <SignoutIcon
-                width={20}
-                height={20}
+                width={40}
+                height={40}
                 color={'#5F5F5F'}
                 style={styles.signOutIcon}
               />
@@ -394,6 +419,7 @@ const styles = StyleSheet.create({
   },
   lockInfo: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   signOutIcon: {
     marginRight: 10,

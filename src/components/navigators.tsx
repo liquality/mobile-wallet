@@ -48,6 +48,8 @@ const Tab = createBottomTabNavigator()
 
 export const OnboardingContext = createContext({})
 
+const PlaceholderComp = () => <Box />
+
 export const WalletCreationNavigator = () => (
   <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
     <Stack.Navigator
@@ -138,7 +140,7 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="AssetChooserScreen"
       options={() => ({
-        headerRight: () => <View />,
+        headerRight: PlaceholderComp,
       })}>
       {(props) => WithPopupMenu(AssetChooserScreen)(props)}
     </Stack.Screen>
@@ -149,28 +151,28 @@ export const AppStackNavigator = () => (
       name="ReceiveScreen"
       component={ReceiveScreen}
       options={() => ({
-        headerRight: () => <View />,
+        headerRight: PlaceholderComp,
       })}
     />
     <Stack.Screen
       name="SendScreen"
       component={SendScreen}
       options={() => ({
-        headerRight: () => <View />,
+        headerRight: PlaceholderComp,
       })}
     />
     <Stack.Screen
       name="SendReviewScreen"
       component={SendReviewScreen}
       options={() => ({
-        headerRight: () => <View />,
+        headerRight: PlaceholderComp,
       })}
     />
     <Stack.Screen
       name="CustomFeeScreen"
       component={CustomFeeScreen}
       options={() => ({
-        headerRight: () => <View />,
+        headerRight: PlaceholderComp,
       })}
     />
     <Stack.Screen
@@ -183,14 +185,14 @@ export const AppStackNavigator = () => (
           </Pressable>
         ),
         title: route?.params?.screenTitle || 'Overview',
-        headerLeft: () => <View />,
+        headerLeft: PlaceholderComp,
       })}
     />
     <Stack.Screen
       name="AssetManagementScreen"
       component={AssetManagementScreen}
       options={() => ({
-        headerRight: () => <View />,
+        headerRight: PlaceholderComp,
       })}
     />
     <Stack.Screen
@@ -230,21 +232,21 @@ export const AppStackNavigator = () => (
       name="AssetToggleScreen"
       component={AssetToggleScreen}
       options={() => ({
-        headerRight: () => <View />,
+        headerRight: PlaceholderComp,
       })}
     />
     <Stack.Screen
       name="SwapScreen"
       component={WithPopupMenu(SwapScreen)}
       options={() => ({
-        headerRight: () => <View />,
+        headerRight: PlaceholderComp,
       })}
     />
     <Stack.Screen
       name="SwapReviewScreen"
       component={WithPopupMenu(SwapReviewScreen)}
       options={() => ({
-        headerRight: () => <View />,
+        headerRight: PlaceholderComp,
       })}
     />
     <Stack.Screen
@@ -257,7 +259,7 @@ export const AppStackNavigator = () => (
           </Pressable>
         ),
         title: route?.params?.screenTitle || 'Overview',
-        headerLeft: () => <View />,
+        headerLeft: PlaceholderComp,
       })}
     />
   </Stack.Navigator>

@@ -39,18 +39,26 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
   const [loading, setLoading] = useState(false)
   const [userHasChecked, setUserHasChecked] = useState<boolean>(false)
 
+  const textInputRef = React.useRef<TextInput>(null)
+
   const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
       setError('Passwords must be at least 8 characters')
     } else if (!userHasChecked) {
       setError('Please check that you understand the risks')
     } else {
-      setLoading(true)
-      await restoreWallet(passwordInput.value)
-      setLoading(false)
-      navigation.navigate('BackupSeedScreen', {
-        screenTitle: 'Seed Phrase',
-      })
+      try {
+        setLoading(true)
+        await restoreWallet(passwordInput.value)
+        navigation.navigate('BackupSeedScreen', {
+          screenTitle: labelTranslateFn('backupLoginScreen.seedPhrase')!,
+        })
+      } catch (_error) {
+        passwordInput.onChangeText('')
+        setError(labelTranslateFn('loginScreen.invalidPassword')!)
+        textInputRef.current?.blur()
+        setLoading(false)
+      }
     }
   }
 
@@ -92,9 +100,10 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
                 secureTextEntry
                 autoCorrect={false}
                 returnKeyType="done"
+                ref={textInputRef}
               />
             </View>
-            {!!error && <Text variant="errorLight">{error}</Text>}
+            {!!error && <Text variant="error">{error}</Text>}
           </Box>
           <CheckBox
             selected={userHasChecked}
@@ -133,7 +142,9 @@ const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
                   setLoading(true)
                   await createWallet(PASSWORD, MNEMONIC)
                   navigation.navigate('BackupSeedScreen', {
-                    screenTitle: 'Seed Phrase',
+                    screenTitle: labelTranslateFn(
+                      'backupLoginScreen.seedPhrase',
+                    )!,
                   })
                 } else
                   setError(

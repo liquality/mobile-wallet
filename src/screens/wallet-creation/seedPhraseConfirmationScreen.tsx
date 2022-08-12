@@ -97,9 +97,11 @@ const SeedPhraseConfirmationScreen = ({
       )
       return
     }
+
     navigation.navigate('PasswordCreationScreen', {
       ...route.params,
-      mnemonic: route.params.seedWords?.join(' ') || '',
+      mnemonic:
+        route.params.seedWords?.map((item) => item.word).join(' ') || '',
       imported: false,
     })
   }
