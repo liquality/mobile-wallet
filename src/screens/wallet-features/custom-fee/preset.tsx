@@ -83,16 +83,15 @@ const Preset = ({
       preset = gasFees?.fast || null
     }
     if (EIP1559) {
-      let tempfee = preset.fee
-      let defaultFee = 0
-      let maximumFee = 0
-      if (typeof tempfee !== 'number') {
-        defaultFee =
-          tempfee.suggestedBaseFeePerGas || 0 + tempfee.maxPriorityFeePerGas
-        maximumFee = tempfee.suggestedBaseFeePerGas || 0 + tempfee.maxFeePerGas
+      let slowAvgOrMaxFees = preset.fee
+      let maxFeePerGas = 0
+      if (typeof slowAvgOrMaxFees !== 'number') {
+        maxFeePerGas =
+          slowAvgOrMaxFees.suggestedBaseFeePerGas ||
+          0 + slowAvgOrMaxFees.maxPriorityFeePerGas
       }
 
-      const sendFee = getSendFee(code, defaultFee)
+      const sendFee = getSendFee(code, maxFeePerGas)
 
       let formattedRatesForEIP1559Obj = {
         amount: new BigNumber(sendFee).dp(6).toString(),
@@ -101,7 +100,7 @@ const Preset = ({
           fiatRates[code],
         ).toString(),
         maximum: prettyFiatBalance(
-          getSendFee(code, maximumFee),
+          getSendFee(code, maxFeePerGas),
           fiatRates[code],
         ).toString(),
       }
