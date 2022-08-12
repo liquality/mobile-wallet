@@ -122,19 +122,25 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   }, [code, chain, balance])
 
   const handleReviewPress = useCallback(() => {
+    let feeInUnit
+    customFee
+      ? (feeInUnit = customFee)
+      : (feeInUnit = networkFee?.current?.value)
+
     if (validate() && networkFee?.current?.value) {
       navigation.navigate('SendReviewScreen', {
         // screenTitle: `Send ${code} Review`,
         screenTitle: i18n.t('sendScreen.sendReview', { code }),
         sendTransaction: {
           amount: new BigNumber(amountInput.value).toNumber(),
-          gasFee: networkFee.current.value,
+          gasFee: feeInUnit,
           speedLabel: networkFee.current?.speed,
           destinationAddress: addressInput.value,
           asset: code,
           memo: memoInput.value,
           color: color || '#EAB300',
         },
+        customFee: customFee,
       })
     }
   }, [
@@ -145,6 +151,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     memoInput.value,
     navigation,
     validate,
+    customFee,
   ])
 
   const handleFiatBtnPress = useCallback(() => {

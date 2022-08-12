@@ -4,12 +4,12 @@ import { Linking, Pressable, StyleSheet } from 'react-native'
 import Box from '../../theme/box'
 import Text from '../../theme/text'
 import {
-  prettyBalance,
+  dpUI,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
-import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
-import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+
 import CopyIcon from '../../assets/icons/copy.svg'
+import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
 
 type ConfirmationBlockProps = {
   address?: string
@@ -19,12 +19,22 @@ type ConfirmationBlockProps = {
   asset: string
   fiatRates: any['fiatRates']
   url: string
+  fiatRate: number
 }
 
 const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
   props,
 ): React.ReactElement => {
-  const { address, status, fee, confirmations, asset, fiatRates, url } = props
+  const {
+    address,
+    status,
+    fee,
+    confirmations,
+    asset,
+    fiatRates,
+    url,
+    fiatRate,
+  } = props
 
   const handleCopyAddressPress = async () => {
     if (address) {
@@ -39,6 +49,16 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
     })
   }
 
+  const formatFeeAmountAndFiat = () => {
+    if (fiatRates && fee && asset) {
+      return {
+        amount: dpUI(getSendFee(asset, fee), 9),
+        fiat: prettyFiatBalance(getSendFee(asset, fee).toNumber(), fiatRate),
+      }
+    }
+  }
+
+  let displayFormattedFee = formatFeeAmountAndFiat()
   return (
     <Box width={'45%'} paddingVertical="s">
       <Box flexDirection="row" justifyContent="center" alignItems="center">
@@ -52,15 +72,13 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
       <Box flexDirection="row" justifyContent="center" alignItems="center">
         <Text variant="timelineLabel" tx="confirmationBlockComp.fee" />
         <Text variant="amount">
-          {fiatRates &&
-            fee &&
-            asset &&
-            `${prettyBalance(fee, asset)} ${getNativeAsset(
-              asset,
-            )}/ $${prettyFiatBalance(
-              unitToCurrency(cryptoassets[getNativeAsset(asset)], fee),
-              fiatRates[getNativeAsset(asset)],
-            )}`}
+          {fiatRates && fee && asset
+            ? displayFormattedFee?.amount +
+              ' ' +
+              asset +
+              '/ $' +
+              displayFormattedFee?.fiat
+            : null}
         </Text>
       </Box>
       <Box flexDirection="row" justifyContent="center" alignItems="center">

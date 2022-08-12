@@ -47,6 +47,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const [gasFees, setGasFees] = useState<FDs>()
   const [totalFees, setTotalFees] = useState<TotalFees>()
   const [, setError] = useState('')
+  const [formattedRatesObj, setFormattedRatesObj] = useState()
 
   const code = route.params.code!
   //const fiatRates = useRecoilValue(fiatRatesState)
@@ -54,8 +55,6 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     ...defaultOptions,
   })
   const customFeeInput = useInputState('0')
-
-  //const { value, onChangeText } = useInputState('0')
 
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
@@ -131,6 +130,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
               fiatRates={fiatRates}
               speedMode={speedMode}
               setSpeedMode={setSpeedMode}
+              setFormattedRatesObj={setFormattedRatesObj}
               fees={fees}
               activeNetwork={activeNetwork}
               activeWalletId={activeWalletId}
@@ -150,7 +150,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
             <Box flexDirection="row" alignItems="flex-end">
               <Text style={styles.label} tx="customFeeScreen.gasPrice" />
               <Text style={[styles.labelNormal, styles.headerLabel]}>
-                $XX USD
+                ${formattedRatesObj?.fiat} USD
               </Text>
             </Box>
             <Box flexDirection="row" alignItems="center">
@@ -177,14 +177,12 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
               style={[styles.preset, styles.amount]}
               tx="customFeeScreen.newSpeedFee"
             />
-            <Text
-              style={[styles.preset, styles.fiat]}
-              tx="customFeeScreen.btcAmountHere"
-            />
-            <Text
-              style={[styles.preset, styles.fiat]}
-              tx="customFeeScreen.fiatAmountHere"
-            />
+            <Text style={[styles.preset, styles.fiat]}>
+              {formattedRatesObj?.amount} BTC
+            </Text>
+            <Text style={[styles.preset, styles.fiat]}>
+              {formattedRatesObj?.fiat} USD
+            </Text>
           </View>
         </View>
       </ScrollView>

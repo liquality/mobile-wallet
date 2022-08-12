@@ -24,6 +24,7 @@ const Preset = ({
   fiatRates,
   speedMode,
   setSpeedMode,
+  setFormattedRatesObj,
   likelyWait,
   totalFees,
 }: {
@@ -55,6 +56,14 @@ const Preset = ({
     'Preset PROPS in EIP1559 T/F?',
     EIP1559,
   ) */
+
+  useEffect(() => {
+    if (gasFees) {
+      let formattedRates = renderSlowAverageFastPreset(speedMode)
+      setFormattedRatesObj(formattedRates)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [speedMode])
 
   const renderEstimationSpeed = (speed: string) => {
     if (speed === 'slow') {
