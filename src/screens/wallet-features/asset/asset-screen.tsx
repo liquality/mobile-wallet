@@ -33,7 +33,9 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const { id, code }: AccountType = route.params.assetData!
   const swapPair = useRecoilValue(swapPairState)
   const address = useRecoilValue(addressStateFamily(id))
-  const balance = useRecoilValue(balanceStateFamily(code))
+  const balance = useRecoilValue(
+    balanceStateFamily({ asset: code, assetId: id }),
+  )
   const fiatRates = useRecoilValue(fiatRatesState)
 
   const handleSendPress = useCallback(() => {
