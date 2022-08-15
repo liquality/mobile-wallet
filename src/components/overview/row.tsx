@@ -9,10 +9,10 @@ import {
   cryptoToFiat,
   formatFiat,
   prettyBalance,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
-import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
+import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { useRecoilValue } from 'recoil'
 import {
   addressStateFamily,
@@ -20,7 +20,7 @@ import {
   fiatRatesState,
 } from '../../atoms'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
-import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
+import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import I18n from 'i18n-js'
 
 type RowProps = {

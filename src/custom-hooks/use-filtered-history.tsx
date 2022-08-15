@@ -1,7 +1,7 @@
 import Fuse from 'fuse.js'
 import { ActionEnum, TimeLimitEnum } from '../types'
 import moment from 'moment'
-import { HistoryItem } from '@liquality/wallet-core/dist/store/types'
+import { HistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilValue } from 'recoil'
 import { activityFilterState, historyItemsState } from '../atoms'
 

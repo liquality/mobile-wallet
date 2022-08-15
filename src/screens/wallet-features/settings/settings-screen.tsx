@@ -23,7 +23,7 @@ import DeviceInfo from 'react-native-device-info'
 import { useNavigation } from '@react-navigation/core'
 import i18n from 'i18n-js'
 import { toggleNetwork } from '../../../store/store'
-import { Network } from '@liquality/wallet-core/dist/store/types'
+import { Network } from '@liquality/wallet-core/dist/src/store/types'
 
 const SettingsScreen = ({ route }) => {
   const walletStateCopy = useRecoilValue(walletState)

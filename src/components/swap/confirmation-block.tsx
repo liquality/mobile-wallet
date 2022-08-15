@@ -6,8 +6,8 @@ import Text from '../../theme/text'
 import {
   prettyBalance,
   prettyFiatBalance,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
-import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import CopyIcon from '../../assets/icons/copy.svg'
 

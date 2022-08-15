@@ -4,7 +4,7 @@ import { BigNumber } from '@liquality/types'
 import {
   cryptoToFiat,
   formatFiat,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import {
   addressEffect,
   balanceEffect,
@@ -15,14 +15,14 @@ import {
   transactionHistoryEffect,
 } from './store/store'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
-import { Asset } from '@liquality/wallet-core/src/store/types'
-import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
+import { Asset } from '@liquality/wallet-core/dist/src/store/types'
+import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import {
   FiatRates,
   HistoryItem,
   MarketData,
   Network,
-} from '@liquality/wallet-core/dist/store/types'
+} from '@liquality/wallet-core/dist/src/store/types'
 import { CustomRootState } from './reducers'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { KEYS } from './utils'

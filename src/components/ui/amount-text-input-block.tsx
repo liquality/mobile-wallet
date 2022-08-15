@@ -2,7 +2,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react'
 import { useInputState } from '../../hooks'
 import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
 import AssetIcon from '../asset-icon'
-import { ChainId } from '@liquality/cryptoassets/src/types'
+import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import Label from './label'
 import { chainDefaultColors } from '../../core/config'
 import { BigNumber } from '@liquality/types'
@@ -10,7 +10,7 @@ import {
   cryptoToFiat,
   fiatToCrypto,
   formatFiat,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { SwapEventType } from '../../screens/wallet-features/swap/swap-screen'
 import Button from '../../theme/button'
 import { useRecoilValue } from 'recoil'

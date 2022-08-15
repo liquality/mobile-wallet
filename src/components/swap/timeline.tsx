@@ -1,9 +1,9 @@
 import React from 'react'
-import { TimelineStep } from '@liquality/wallet-core/dist/utils/timeline'
+import { TimelineStep } from '@liquality/wallet-core/dist/src/utils/timeline'
 import {
   FiatRates,
   SwapHistoryItem,
-} from '@liquality/wallet-core/dist/store/types'
+} from '@liquality/wallet-core/dist/src/store/types'
 import Box from '../../theme/box'
 import { v4 as uuidv4 } from 'uuid'
 import ConfirmationBlock from './confirmation-block'

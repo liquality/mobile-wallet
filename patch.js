@@ -16,8 +16,8 @@ async function fixBrowserCheck(path) {
     { encoding: 'utf8' },
   )
   const fixedSolanaWeb3Package = solanaWeb3Package.replaceAll(
-    './lib/index.browser.cjs.js',
-    './lib/index.cjs.js',
+    '"main": "lib/index.cjs.js"',
+    '"main": "lib/index.native.js"',
   )
   await fs.writeFile(
     'node_modules/@solana/web3.js/package.json',

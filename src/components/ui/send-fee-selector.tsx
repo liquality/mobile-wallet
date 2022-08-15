@@ -4,7 +4,7 @@ import ErrorBoundary from 'react-native-error-boundary'
 import { fetchFeesForAsset } from '../../store/store'
 import { GasFees, NetworkFeeType } from '../../types'
 import FeeSelector from './fee-selector'
-import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
+import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import ErrorFallback from '../error-fallback'
 import { labelTranslateFn } from '../../utils'
 

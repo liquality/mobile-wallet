@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react'
 import { Alert, Dimensions, Pressable, StyleSheet } from 'react-native'
-import { ChainId } from '@liquality/cryptoassets/src/types'
+import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ChevronRight from '../../../assets/icons/activity-status/chevron-right.svg'
 import AngleDown from '../../../assets/icons/angle-down.svg'
@@ -29,9 +29,9 @@ import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
 import SwapFeeSelector from '../../../components/ui/swap-fee-selector'
-import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
-import { prettyBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
-import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
+import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
+import { prettyBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import {
   balanceStateFamily,

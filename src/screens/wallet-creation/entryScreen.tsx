@@ -10,7 +10,7 @@ import { createWallet } from '../../store/store'
 import { MNEMONIC, PASSWORD } from '@env'
 import GradientBackground from '../../components/gradient-background'
 import { chains } from '@liquality/cryptoassets'
-import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
+import cryptoassets from '@liquality/wallet-core/dist/src/utils/cryptoassets'
 import { useRecoilCallback, useSetRecoilState } from 'recoil'
 import {
   accountInfoStateFamily,

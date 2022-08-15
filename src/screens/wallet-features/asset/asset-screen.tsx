@@ -3,7 +3,7 @@ import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
 import {
   prettyBalance,
   prettyFiatBalance,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, RootStackParamList } from '../../../types'
@@ -22,7 +22,7 @@ import {
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import I18n from 'i18n-js'
 import { labelTranslateFn } from '../../../utils'
-import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
+import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 
 type AssetScreenProps = NativeStackScreenProps<
   RootStackParamList,

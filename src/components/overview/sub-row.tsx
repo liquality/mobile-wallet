@@ -4,7 +4,7 @@ import {
   cryptoToFiat,
   formatFiat,
   prettyBalance,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import { AccountType } from '../../types'
 import AssetIcon from '../asset-icon'
@@ -17,7 +17,7 @@ import {
   fiatRatesState,
 } from '../../atoms'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
-import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
+import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 
 type SubRowProps = {
   parentItem: AccountType

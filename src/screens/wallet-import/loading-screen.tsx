@@ -14,7 +14,7 @@ import {
   walletState,
 } from '../../atoms'
 import { chains } from '@liquality/cryptoassets'
-import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
+import cryptoassets from '@liquality/wallet-core/dist/src/utils/cryptoassets'
 import { Alert } from 'react-native'
 import { labelTranslateFn } from '../../utils'
 

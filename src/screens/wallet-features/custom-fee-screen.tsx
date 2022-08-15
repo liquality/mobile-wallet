@@ -4,7 +4,7 @@ import { FeeDetails } from '@liquality/types/lib/fees'
 import {
   cryptoToFiat,
   formatFiat,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { calculateGasFee } from '../../core/utils/fee-calculator'
 import AssetIcon from '../../components/asset-icon'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'

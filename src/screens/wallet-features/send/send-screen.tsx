@@ -20,7 +20,7 @@ import {
   cryptoToFiat,
   dpUI,
   fiatToCrypto,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import { chainDefaultColors } from '../../../core/config'
@@ -28,10 +28,10 @@ import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import TextInput from '../../../theme/textInput'
 import Box from '../../../theme/box'
-import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
+import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import SendFeeSelector from '../../../components/ui/send-fee-selector'
 import { fetchFeesForAsset } from '../../../store/store'
-import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
+import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import ButtonFooter from '../../../components/button-footer'
 import { isNumber, labelTranslateFn } from '../../../utils'
 import { useRecoilValue } from 'recoil'
