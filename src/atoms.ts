@@ -172,7 +172,9 @@ export const accountInfoState = selectorFamily<Partial<AccountType>, string>({
       const address = get(addressStateFamily(accountId))
       const account = get(accountInfoStateFamily(accountId))
       if (account?.code) {
-        account.balance = get(balanceStateFamily(account.code))
+        account.balance = get(
+          balanceStateFamily({ asset: account.code, assetId: accountId }),
+        )
       }
       account.address = address
       for (let assetsKey in account.assets) {
@@ -216,7 +218,7 @@ export const accountForAssetState = selectorFamily<
           ...account.assets,
           [asset]: {
             ...account.assets[asset],
-            balance: get(balanceStateFamily(asset)),
+            balance: get(balanceStateFamily({ asset, assetId: account.id })),
           },
         },
       }
@@ -238,7 +240,10 @@ export const totalFiatBalanceState = selector<string>({
     const fiatRates = get(fiatRatesState)
 
     const totalFiatBalance = accountsIds.reduce((acc, account) => {
-      const balanceState = balanceStateFamily(account.name)
+      const balanceState = balanceStateFamily({
+        asset: account.name,
+        assetId: account.id,
+      })
 
       return BigNumber.sum(
         acc,
