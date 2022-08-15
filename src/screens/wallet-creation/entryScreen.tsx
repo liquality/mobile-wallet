@@ -17,6 +17,7 @@ import {
   accountsIdsState,
   networkState,
   walletState,
+  balanceStateFamily,
 } from '../../atoms'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { labelTranslateFn } from '../../utils'
@@ -29,6 +30,12 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
   const setAccountsIds = useSetRecoilState(accountsIdsState)
   const setActiveNetwork = useSetRecoilState(networkState)
   const setWallet = useSetRecoilState(walletState)
+  const addAssetBalance = useRecoilCallback(
+    ({ set }) =>
+      (accountId: string, accountCode: string) => {
+        set(balanceStateFamily({ asset: accountCode, assetId: accountId }), 0)
+      },
+  )
   const addAccount = useRecoilCallback(
     ({ set }) =>
       (accountId: string, account: AccountType) => {
@@ -78,6 +85,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
             balance: 0,
             assets: {},
           }
+          addAssetBalance(account.id, asset)
         }
 
         addAccount(account.id, newAccount)

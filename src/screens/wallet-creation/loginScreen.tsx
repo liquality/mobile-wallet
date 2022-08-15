@@ -51,10 +51,15 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const [loading, setLoading] = useState(false)
   const setAccountsIds = useSetRecoilState(accountsIdsState)
   const setActiveNetwork = useSetRecoilState(networkState)
+  const addAssetBalance = useRecoilCallback(
+    ({ set }) =>
+      (accountId: string, accountCode: string) => {
+        set(balanceStateFamily({ asset: accountCode, assetId: accountId }), 0)
+      },
+  )
   const addAccount = useRecoilCallback(
     ({ set }) =>
       (accountId: string, account: AccountType) => {
-        set(balanceStateFamily({ asset: account.code, assetId: account.id }), 0)
         set(addressStateFamily(accountId), '')
         set(accountInfoStateFamily(accountId), account)
       },
@@ -115,6 +120,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             balance: 0,
             assets: {},
           }
+          addAssetBalance(account.id, asset)
         }
 
         addAccount(account.id, newAccount)

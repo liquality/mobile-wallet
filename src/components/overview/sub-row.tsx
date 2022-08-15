@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import {
   cryptoToFiat,
@@ -30,7 +30,7 @@ const SubRow: FC<SubRowProps> = (props) => {
   const [prettyNativeBalance, setPrettyNativeBalance] = useState('')
   const [prettyFiatBalance, setPrettyFiatBalance] = useState('')
   const balance = useRecoilValue(
-    balanceStateFamily({ asset: item.code, assetId: item.id }),
+    balanceStateFamily({ asset: item.code, assetId: parentItem.id }),
   )
   const address = useRecoilValue(addressStateFamily(item.id))
   const fiatRates = useRecoilValue(fiatRatesState)
@@ -132,4 +132,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default memo(SubRow)
+export default SubRow
