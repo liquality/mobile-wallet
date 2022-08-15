@@ -5,7 +5,7 @@ module.exports = {
       'module-resolver',
       {
         alias: {
-          crypto: 'react-native-quick-crypto',
+          // crypto: 'react-native-quick-crypto',commented to avoid crash issue on aOS and iOS while creating seed phrase
           stream: 'stream-browserify',
           buffer: '@craftzdog/react-native-buffer',
         },

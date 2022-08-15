@@ -1,6 +1,9 @@
 import React, { createContext } from 'react'
 import { View, StyleSheet, Pressable } from 'react-native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack'
 import UserCog from '../assets/icons/user-cog.svg'
 import SwapCheck from '../assets/icons/swap-check.svg'
 import Infinity from '../assets/icons/infinity.svg'
@@ -54,6 +57,11 @@ export const WalletCreationNavigator = () => (
   <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
     <Stack.Navigator
       initialRouteName="Entry"
+      /**
+       * TransitionPresets types exist only on @react-navigation/stack
+       * but we are using @react-navigation/native-stack that is the
+       * reason for red squiggly line
+       */
       screenOptions={{
         headerShown: false,
         gestureEnabled: true,
@@ -83,6 +91,11 @@ export const WalletImportNavigator = () => (
   <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
     <Stack.Navigator
       initialRouteName="TermsScreen"
+      /**
+       * TransitionPresets types exist only on @react-navigation/stack
+       * but we are using @react-navigation/native-stack that is the
+       * reason for red squiggly line
+       */
       screenOptions={{
         headerShown: false,
         gestureEnabled: true,
@@ -103,35 +116,91 @@ export const WalletImportNavigator = () => (
   </OnboardingContext.Provider>
 )
 
+type NavigationProps = NativeStackScreenProps<
+  RootStackParamList,
+  | 'OverviewScreen'
+  | 'SendConfirmationScreen'
+  | 'BackupWarningScreen'
+  | 'SwapConfirmationScreen'
+>
+
+const OverViewHeaderLeft = (
+  headerProps: HeaderBackButtonProps,
+  navProps: NavigationProps,
+) => {
+  const { navigation, route } = navProps
+  return (
+    <React.Suspense
+      fallback={
+        <Box>
+          <Text variant="loading" tx="overviewScreen.load" />
+        </Box>
+      }>
+      <OverviewHeaderLeft
+        includeBackBtn={
+          !headerProps.canGoBack || !!route?.params?.includeBackBtn
+        }
+        goBack={navigation.goBack}
+        screenTitle={route?.params?.screenTitle || 'Overview'}
+      />
+    </React.Suspense>
+  )
+}
+
+const SwapCheckHeaderRight = (navProps: NavigationProps) => {
+  const { navigation } = navProps
+  return (
+    <Pressable onPress={() => navigation.navigate('OverviewScreen', {})}>
+      <SwapCheck style={styles.checkIcon} width={20} height={20} />
+    </Pressable>
+  )
+}
+
+const OverViewHeaderRight = (navProps: NavigationProps) => {
+  const { navigation, route } = navProps
+  return (
+    <OverviewHeaderRight
+      onPress={() => {
+        navigation.setParams({ showPopup: !route?.params?.showPopup })
+      }}
+    />
+  )
+}
+
+const BackupWarningHeaderLeft = () => (
+  <Text style={styles.settingsTitle} tx="warning" />
+)
+
+const BackupWarningHeaderRight = (navProps: NavigationProps) => {
+  const { navigation } = navProps
+
+  return (
+    <Pressable onPress={() => navigation.navigate('OverviewScreen', {})}>
+      <TimesIcon
+        width={30}
+        height={30}
+        color={'#5F5F5F'}
+        style={styles.checkIcon}
+      />
+    </Pressable>
+  )
+}
+
 export const AppStackNavigator = () => (
   <Stack.Navigator
     initialRouteName="OverviewScreen"
-    screenOptions={({ navigation, route }) => ({
+    /**
+     * TransitionPresets types exist only on @react-navigation/stack
+     * but we are using @react-navigation/native-stack that is the
+     * reason for red squiggly line
+     */
+    screenOptions={({ navigation, route }: NavigationProps) => ({
       gestureEnabled: true,
       ...TransitionPresets.SlideFromRightIOS,
       headerShown: true,
       title: '',
-      headerLeft: (props: HeaderBackButtonProps) => (
-        <React.Suspense
-          fallback={
-            <Box>
-              <Text variant="loading" tx="overviewScreen.load" />
-            </Box>
-          }>
-          <OverviewHeaderLeft
-            includeBackBtn={!props.canGoBack || !!route?.params?.includeBackBtn}
-            goBack={navigation.goBack}
-            screenTitle={route?.params?.screenTitle || 'Overview'}
-          />
-        </React.Suspense>
-      ),
-      headerRight: () => (
-        <OverviewHeaderRight
-          onPress={() => {
-            navigation.setParams({ showPopup: !route?.params?.showPopup })
-          }}
-        />
-      ),
+      headerLeft: (props) => OverViewHeaderLeft(props, { navigation, route }),
+      headerRight: () => OverViewHeaderRight({ navigation, route }),
     })}>
     <Stack.Screen name="LoginScreen" component={LoginScreen} />
     <Stack.Screen name="OverviewScreen">
@@ -178,12 +247,8 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="SendConfirmationScreen"
       component={SendConfirmationScreen}
-      options={({ navigation, route }) => ({
-        headerRight: () => (
-          <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
-            <SwapCheck style={styles.checkIcon} width={20} height={20} />
-          </Pressable>
-        ),
+      options={({ navigation, route }: NavigationProps) => ({
+        headerRight: () => SwapCheckHeaderRight({ navigation, route }),
         title: route?.params?.screenTitle || 'Overview',
         headerLeft: PlaceholderComp,
       })}
@@ -198,20 +263,11 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="BackupWarningScreen"
       component={BackupWarningScreen}
-      options={({ navigation }) => ({
+      options={({ navigation, route }: NavigationProps) => ({
         headerShown: true,
         headerTitle: '',
-        headerLeft: () => <Text style={styles.settingsTitle} tx="warning" />,
-        headerRight: () => (
-          <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
-            <TimesIcon
-              width={30}
-              height={30}
-              color={'#5F5F5F'}
-              style={styles.checkIcon}
-            />
-          </Pressable>
-        ),
+        headerLeft: BackupWarningHeaderLeft,
+        headerRight: () => BackupWarningHeaderRight({ navigation, route }),
       })}
     />
     <Stack.Screen
@@ -252,12 +308,8 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="SwapConfirmationScreen"
       component={WithPopupMenu(SwapConfirmationScreen)}
-      options={({ navigation, route }) => ({
-        headerRight: () => (
-          <Pressable onPress={() => navigation.navigate('OverviewScreen')}>
-            <SwapCheck style={styles.checkIcon} width={20} height={20} />
-          </Pressable>
-        ),
+      options={({ navigation, route }: NavigationProps) => ({
+        headerRight: () => SwapCheckHeaderRight({ navigation, route }),
         title: route?.params?.screenTitle || 'Overview',
         headerLeft: PlaceholderComp,
       })}
@@ -265,11 +317,27 @@ export const AppStackNavigator = () => (
   </Stack.Navigator>
 )
 
+const tabBarIcon = (focused: boolean, size: number, routeName: string) => {
+  return (
+    <View style={[styles.iconWrapper, focused && styles.tabFocused]}>
+      {routeName === 'SettingsScreen' ? (
+        <UserCog width={size} height={size} />
+      ) : (
+        <Infinity height={size} />
+      )}
+    </View>
+  )
+}
+
+const TabSettingsScreenHeaderLeft = () => (
+  <Text style={styles.settingsTitle} tx="settings" />
+)
+
 export const MainNavigator = () => (
   <Tab.Navigator
     initialRouteName="AppStackNavigator"
     screenOptions={({ route }) => ({
-      tabBarStyle: ((route) => {
+      tabBarStyle: (() => {
         const routeName = getFocusedRouteNameFromRoute(route) ?? ''
         if (
           routeName === 'BackupWarningScreen' ||
@@ -285,20 +353,10 @@ export const MainNavigator = () => (
             bottom: 0,
             position: 'absolute',
           }
-      })(route),
+      })(),
       headerShown: false,
       title: '',
-      tabBarIcon: ({ focused, size }) => {
-        return (
-          <View style={[styles.iconWrapper, focused && styles.tabFocused]}>
-            {route.name === 'SettingsScreen' ? (
-              <UserCog width={size} height={size} />
-            ) : (
-              <Infinity height={size} />
-            )}
-          </View>
-        )
-      },
+      tabBarIcon: ({ focused, size }) => tabBarIcon(focused, size, route.name),
     })}>
     <Tab.Screen name="AppStackNavigator" component={AppStackNavigator} />
     <Tab.Screen
@@ -307,7 +365,7 @@ export const MainNavigator = () => (
       options={({}) => ({
         headerShown: true,
         headerTitle: '',
-        headerLeft: () => <Text style={styles.settingsTitle} tx="settings" />,
+        headerLeft: TabSettingsScreenHeaderLeft,
         /*    headerRight: () => (
           <SettingsHeaderRight navigate={navigation.navigate} />
         ), */
