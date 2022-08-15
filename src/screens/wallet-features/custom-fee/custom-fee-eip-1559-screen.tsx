@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, View, TextInput, Pressable } from 'react-native'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -107,12 +107,12 @@ const CustomFeeEIP1559Screen = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleApplyPress = () => {
-    navigation.navigate('SendScreen', {
-      ...route.params,
-      customFee: parseFloat(customFeeInput.value),
-    })
-  }
+  const handleApplyPress = useCallback(
+    (speed) => {
+      setSpeedMode(speed)
+    },
+    [setSpeedMode],
+  )
 
   if (!gasFees) {
     return (
@@ -237,24 +237,26 @@ const CustomFeeEIP1559Screen = ({
               returnKeyType="done"
             />
           </View>
-          <Box style={styles.rowEndBtn}>
+          <Box style={[styles.rowEndBtn]}>
             <Button
               label="Low"
-              type="tertiary"
+              type={speedMode === 'slow' ? 'primary' : 'tertiary'}
               variant="s"
-              onPress={handleApplyPress}
+              isBorderless={false}
+              isActive={true}
+              onPress={() => handleApplyPress('slow')}
             />
             <Button
               label="Med"
-              type="tertiary"
+              type={speedMode === 'average' ? 'primary' : 'tertiary'}
               variant="s"
-              onPress={handleApplyPress}
+              onPress={() => handleApplyPress('average')}
             />
             <Button
               label="High"
-              type="tertiary"
+              type={speedMode === 'fast' ? 'primary' : 'tertiary'}
               variant="s"
-              onPress={handleApplyPress}
+              onPress={() => handleApplyPress('fast')}
             />
           </Box>
         </View>
@@ -278,7 +280,7 @@ const CustomFeeEIP1559Screen = ({
               </Text>
 
               <Text style={[styles.preset, styles.fiat]}>
-                {tilda + getSummaryMinimum()?.fiat}
+                {tilda + getSummaryMinimum()?.fiat + ' '}
                 USD
               </Text>
             </Box>
@@ -300,7 +302,7 @@ const CustomFeeEIP1559Screen = ({
                 {tilda + getSummaryMaximum()?.amount}
               </Text>
               <Text style={[styles.preset, styles.fiat, styles.maximum]}>
-                {tilda + getSummaryMaximum()?.fiat}
+                {tilda + getSummaryMaximum()?.fiat + ' '}
                 USD
               </Text>
             </Box>
@@ -514,6 +516,9 @@ const styles = StyleSheet.create({
   },
   fiatFast: {
     color: '#088513',
+  },
+  selected: {
+    color: '#F0F7F9',
   },
 })
 
