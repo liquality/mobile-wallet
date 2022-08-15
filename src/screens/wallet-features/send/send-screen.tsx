@@ -207,6 +207,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         code,
         screenTitle: labelTranslateFn('sendScreen.networkSpeed')!,
         amountInput: amountInput.value,
+        fee: fee,
       },
     )
   }

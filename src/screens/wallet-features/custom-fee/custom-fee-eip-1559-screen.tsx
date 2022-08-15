@@ -54,8 +54,8 @@ const CustomFeeEIP1559Screen = ({
 
   const [, setError] = useState('')
   const [showBasic, setShowBasic] = useState<boolean>(true)
-  var [userInputMinerTip, setUserInputMinerTip] = useState<string>('minerTippy')
-  var [userInputMaximumFee, setUserInputMaximumFee] = useState<string>('maxfee')
+  var [userInputMinerTip, setUserInputMinerTip] = useState<string>('0')
+  var [userInputMaximumFee, setUserInputMaximumFee] = useState<string>('0')
 
   const likelyWaitObj = {
     slow: labelTranslateFn('customFeeScreen.maybeIn30'),
@@ -102,7 +102,6 @@ const CustomFeeEIP1559Screen = ({
       )
       setTotalFees(totalFeesData)
     }
-
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -237,7 +236,7 @@ const CustomFeeEIP1559Screen = ({
               returnKeyType="done"
             />
           </View>
-          <Box style={[styles.rowEndBtn]}>
+          <Box style={styles.rowEndBtn}>
             <Button
               label="Low"
               type={speedMode === 'slow' ? 'primary' : 'tertiary'}
@@ -363,6 +362,7 @@ const CustomFeeEIP1559Screen = ({
               amountInput={route.params.amountInput}
               likelyWait={likelyWaitObj}
               totalFees={totalFees}
+              fee={route.params.fee}
             />
           ) : (
             renderShowCustomized()

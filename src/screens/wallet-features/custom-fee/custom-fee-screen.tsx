@@ -24,12 +24,19 @@ import {
   fiatRatesState,
   networkState,
 } from '../../../atoms'
-import { getSendAmountFee } from '@liquality/wallet-core/dist/utils/fees'
+import {
+  getSendAmountFee,
+  getSendFee,
+} from '@liquality/wallet-core/dist/utils/fees'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails as FDs } from '@chainify/types'
 import { useInputState } from '../../../hooks'
+import {
+  dpUI,
+  prettyFiatBalance,
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 //import { BigNumber } from '@liquality/types'
 
 const scrollViewStyle: ViewStyle = {
@@ -47,7 +54,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const [gasFees, setGasFees] = useState<FDs>()
   const [totalFees, setTotalFees] = useState<TotalFees>()
   const [, setError] = useState('')
-  const [formattedRatesObj, setFormattedRatesObj] = useState()
+  const [, setFormattedRatesObj] = useState()
 
   const code = route.params.code!
   //const fiatRates = useRecoilValue(fiatRatesState)
@@ -79,7 +86,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     }
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [setFormattedRatesObj, customFeeInput.value])
 
   const handleApplyPress = () => {
     navigation.navigate('SendScreen', {
@@ -113,6 +120,18 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     customFeeInput.onChangeText(text)
   }
 
+  const getSummaryAmountAndFiat = () => {
+    let amountInUnit = dpUI(
+      getSendFee(code, Number(customFeeInput.value)),
+      9,
+    ).toString()
+
+    return {
+      amount: amountInUnit.toString(),
+      fiat: prettyFiatBalance(Number(amountInUnit), fiatRates[code]).toString(),
+    }
+  }
+
   return (
     <Box flex={1} paddingVertical="l" backgroundColor="mainBackground">
       <ScrollView showsVerticalScrollIndicator={false} style={scrollViewStyle}>
@@ -138,6 +157,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
               amountInput={route.params.amountInput}
               likelyWait={likelyWaitObj}
               totalFees={totalFees}
+              fee={route.params.fee}
             />
           </View>
         </View>
@@ -150,7 +170,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
             <Box flexDirection="row" alignItems="flex-end">
               <Text style={styles.label} tx="customFeeScreen.gasPrice" />
               <Text style={[styles.labelNormal, styles.headerLabel]}>
-                ${formattedRatesObj?.fiat} USD
+                $ {getSummaryAmountAndFiat().fiat} USD
               </Text>
             </Box>
             <Box flexDirection="row" alignItems="center">
@@ -178,10 +198,10 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
               tx="customFeeScreen.newSpeedFee"
             />
             <Text style={[styles.preset, styles.fiat]}>
-              {formattedRatesObj?.amount} BTC
+              {getSummaryAmountAndFiat().amount} {code}
             </Text>
             <Text style={[styles.preset, styles.fiat]}>
-              {formattedRatesObj?.fiat} USD
+              {getSummaryAmountAndFiat().fiat} USD
             </Text>
           </View>
         </View>

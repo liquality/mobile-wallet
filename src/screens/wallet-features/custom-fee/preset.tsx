@@ -2,7 +2,10 @@ import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import { UseInputStateReturnType, LikelyWait, TotalFees } from '../../../types'
 import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
-import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
+import {
+  dpUI,
+  prettyFiatBalance,
+} from '@liquality/wallet-core/dist/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { FiatRates, Network } from '@liquality/wallet-core/dist/store/types'
@@ -27,6 +30,7 @@ const Preset = ({
   setFormattedRatesObj,
   likelyWait,
   totalFees,
+  fee,
 }: {
   EIP1559: boolean
   customFeeInput: UseInputStateReturnType<string>
@@ -43,28 +47,13 @@ const Preset = ({
   likelyWait?: LikelyWait | undefined
   totalFees: TotalFees | undefined
 }) => {
-  /*   console.log(
-    EIP1559,
-    customFeeInput,
-    gasFees,
-    code,
-    fiatRates,
-    speedMode,
-    setSpeedMode,
-    accountAssetId,
-    amountInput,
-    'Preset PROPS in EIP1559 T/F?',
-    EIP1559,
-  ) */
-
   useEffect(() => {
     if (gasFees) {
       let formattedRates = renderSlowAverageFastPreset(speedMode)
       setFormattedRatesObj(formattedRates)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [speedMode])
-
+  }, [speedMode, setFormattedRatesObj, totalFees])
   const renderEstimationSpeed = (speed: string) => {
     if (speed === 'slow') {
       return '~' + likelyWait?.slow + ' sec'
@@ -91,10 +80,13 @@ const Preset = ({
           0 + slowAvgOrMaxFees.maxPriorityFeePerGas
       }
 
-      const sendFee = getSendFee(code, maxFeePerGas)
+      //HÄÄÄÄÄR i amount fel
 
       let formattedRatesForEIP1559Obj = {
-        amount: new BigNumber(sendFee).dp(6).toString(),
+        amount: dpUI(
+          getSendFee(code, gasFees[speed].fee.maxFeePerGas || fee.toNumber()),
+          9,
+        ).toString(),
         fiat: prettyFiatBalance(
           totalFees ? totalFees[speed as keyof TotalFees] : new BigNumber(0),
           fiatRates[code],
@@ -106,16 +98,11 @@ const Preset = ({
       }
       return formattedRatesForEIP1559Obj
     } else {
+      let amountInUnit = dpUI(getSendFee(code, fee.toNumber()), 9).toString()
+
       let formattedRatesObj = {
-        amount: new BigNumber(
-          totalFees ? totalFees[speed as keyof TotalFees] : new BigNumber(0),
-        )
-          .dp(6)
-          .toString(),
-        fiat: prettyFiatBalance(
-          totalFees ? totalFees[speed as keyof TotalFees] : new BigNumber(0),
-          fiatRates[code],
-        ).toString(),
+        amount: amountInUnit,
+        fiat: prettyFiatBalance(amountInUnit, fiatRates[code]).toString(),
         maximum: labelTranslateFn('customFeeScreen.maxHere'),
       }
       return formattedRatesObj
