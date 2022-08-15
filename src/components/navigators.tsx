@@ -124,7 +124,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'SwapConfirmationScreen'
 >
 
-const overViewHeaderLeft = (
+const OverViewHeaderLeft = (
   headerProps: HeaderBackButtonProps,
   navProps: NavigationProps,
 ) => {
@@ -147,7 +147,7 @@ const overViewHeaderLeft = (
   )
 }
 
-const swapCheckHeaderRight = (navProps: NavigationProps) => {
+const SwapCheckHeaderRight = (navProps: NavigationProps) => {
   const { navigation } = navProps
   return (
     <Pressable onPress={() => navigation.navigate('OverviewScreen', {})}>
@@ -156,7 +156,7 @@ const swapCheckHeaderRight = (navProps: NavigationProps) => {
   )
 }
 
-const overViewHeaderRight = (navProps: NavigationProps) => {
+const OverViewHeaderRight = (navProps: NavigationProps) => {
   const { navigation, route } = navProps
   return (
     <OverviewHeaderRight
@@ -167,11 +167,11 @@ const overViewHeaderRight = (navProps: NavigationProps) => {
   )
 }
 
-const backupWarningHeaderLeft = () => (
+const BackupWarningHeaderLeft = () => (
   <Text style={styles.settingsTitle} tx="warning" />
 )
 
-const backupWarningHeaderRight = (navProps: NavigationProps) => {
+const BackupWarningHeaderRight = (navProps: NavigationProps) => {
   const { navigation } = navProps
 
   return (
@@ -199,8 +199,8 @@ export const AppStackNavigator = () => (
       ...TransitionPresets.SlideFromRightIOS,
       headerShown: true,
       title: '',
-      headerLeft: (props) => overViewHeaderLeft(props, { navigation, route }),
-      headerRight: () => overViewHeaderRight({ navigation, route }),
+      headerLeft: (props) => OverViewHeaderLeft(props, { navigation, route }),
+      headerRight: () => OverViewHeaderRight({ navigation, route }),
     })}>
     <Stack.Screen name="LoginScreen" component={LoginScreen} />
     <Stack.Screen name="OverviewScreen">
@@ -248,7 +248,7 @@ export const AppStackNavigator = () => (
       name="SendConfirmationScreen"
       component={SendConfirmationScreen}
       options={({ navigation, route }: NavigationProps) => ({
-        headerRight: () => swapCheckHeaderRight({ navigation, route }),
+        headerRight: () => SwapCheckHeaderRight({ navigation, route }),
         title: route?.params?.screenTitle || 'Overview',
         headerLeft: PlaceholderComp,
       })}
@@ -266,8 +266,8 @@ export const AppStackNavigator = () => (
       options={({ navigation, route }: NavigationProps) => ({
         headerShown: true,
         headerTitle: '',
-        headerLeft: backupWarningHeaderLeft,
-        headerRight: () => backupWarningHeaderRight({ navigation, route }),
+        headerLeft: BackupWarningHeaderLeft,
+        headerRight: () => BackupWarningHeaderRight({ navigation, route }),
       })}
     />
     <Stack.Screen
@@ -309,7 +309,7 @@ export const AppStackNavigator = () => (
       name="SwapConfirmationScreen"
       component={WithPopupMenu(SwapConfirmationScreen)}
       options={({ navigation, route }: NavigationProps) => ({
-        headerRight: () => swapCheckHeaderRight({ navigation, route }),
+        headerRight: () => SwapCheckHeaderRight({ navigation, route }),
         title: route?.params?.screenTitle || 'Overview',
         headerLeft: PlaceholderComp,
       })}
@@ -329,7 +329,7 @@ const tabBarIcon = (focused: boolean, size: number, routeName: string) => {
   )
 }
 
-const tabSettingsScreenHeaderLeft = () => (
+const TabSettingsScreenHeaderLeft = () => (
   <Text style={styles.settingsTitle} tx="settings" />
 )
 
@@ -365,7 +365,7 @@ export const MainNavigator = () => (
       options={({}) => ({
         headerShown: true,
         headerTitle: '',
-        headerLeft: tabSettingsScreenHeaderLeft,
+        headerLeft: TabSettingsScreenHeaderLeft,
         /*    headerRight: () => (
           <SettingsHeaderRight navigate={navigation.navigate} />
         ), */
