@@ -140,7 +140,8 @@ const CustomFeeEIP1559Screen = ({
   const getSummaryMinimum = () => {
     if (totalFees) {
       const minimumFee =
-        userInputMinerTip + gasFees[speedMode].fee.suggestedBaseFeePerGas
+        Number(userInputMinerTip) +
+        Number(gasFees[speedMode].fee.suggestedBaseFeePerGas)
       const totalMinFee = getSendFee(code, Number(minimumFee)).plus(
         totalFees.slow,
       )
@@ -153,6 +154,7 @@ const CustomFeeEIP1559Screen = ({
   const getSummaryMaximum = () => {
     if (totalFees) {
       const maximumFee = userInputMaximumFee
+
       const totalMaxFee = getSendFee(code, Number(maximumFee)).plus(
         totalFees.fast,
       )
