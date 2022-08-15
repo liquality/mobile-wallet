@@ -64,7 +64,7 @@ const App: FC = () => {
       <RecoilRoot>
         <ThemeProvider theme={theme}>
           <View style={backgroundStyle} testID={'app-test'}>
-            <StatusBar barStyle={'dark-content'} />
+            <StatusBar barStyle={'dark-content'} backgroundColor="white" />
             <GestureHandlerRootView style={backgroundStyle}>
               <NavigationContainer>
                 <AppNavigator initialRouteName={initialRouteName} />
