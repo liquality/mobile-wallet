@@ -26,7 +26,7 @@ import ArbitrumIcon from '../assets/icons/crypto/arbeth.svg'
 import AvalancheIcon from '../assets/icons/crypto/avax.svg'
 import BlankIcon from '../assets/icons/crypto/blank.svg'
 
-import { ChainId } from '@liquality/cryptoassets/src/types'
+import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import { FC } from 'react'
 
 type AssetIconType = {

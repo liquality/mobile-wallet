@@ -10,8 +10,9 @@
     "url": "git@github.com:liquality/mobile-wallet.git"
   },
   "scripts": {
-    "clean-all": "rm -rf node_modules && rm -rf ./ios/Podfile.lock ",
-    "install-all": "npm install && cd ./ios  && pod install && cd ..",
+    "clean-install-all": "rm -rf node_modules yarn.lock && rm -rf ./ios/Pods ./ios/Podfile.lock && yarn install && cd ./ios  && pod install && cd ..",
+    "clean-all": "rm -rf node_modules yarn.lock && rm -rf ./ios/Pods ./ios/Podfile.lock",
+    "install-all": "yarn install && cd ./ios  && pod install && cd ..",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",

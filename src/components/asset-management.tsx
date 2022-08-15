@@ -6,7 +6,7 @@ import AssetIcon from './asset-icon'
 import Switch from './ui/switch'
 import SearchBox from './ui/search-box'
 import { customConfig } from '../core/config'
-import { Network } from '@liquality/wallet-core/dist/store/types'
+import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../atoms'
 

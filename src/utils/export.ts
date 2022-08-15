@@ -1,5 +1,5 @@
-import { HistoryItem } from '@liquality/wallet-core/dist/store/types'
-import { getCSVContent } from '@liquality/wallet-core/dist/utils/export'
+import { HistoryItem } from '@liquality/wallet-core/dist/src/store/types'
+import { getCSVContent } from '@liquality/wallet-core/dist/src/utils/export'
 import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 

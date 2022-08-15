@@ -1,7 +1,7 @@
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
-import { RootState } from '@liquality/wallet-core/dist/store/types'
+import { RootState } from '@liquality/wallet-core/dist/src/store/types'
 import produce from 'immer'
-import { Asset, FiatRates } from '@liquality/wallet-core/src/store/types'
+import { Asset, FiatRates } from '@liquality/wallet-core/dist/src/store/types'
 import { AccountType } from '../types'
 
 export interface CustomRootState extends RootState {

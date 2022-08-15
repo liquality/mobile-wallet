@@ -14,8 +14,8 @@ import {
   cryptoToFiat,
   formatFiat,
   prettyFiatBalance,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
-import { getSendFee } from '@liquality/wallet-core/src/utils/fees'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import CopyIcon from '../../assets/icons/copy.svg'
 import CheckIcon from '../../assets/icons/swap-check.svg'
 import { useRecoilValue } from 'recoil'

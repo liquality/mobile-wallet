@@ -4,16 +4,16 @@ import { RootStackParamList } from '../../../types'
 import {
   dpUI,
   prettyFiatBalance,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { sendTransaction } from '../../../store/store'
 import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
-import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
+import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import Box from '../../../theme/box'
 import ButtonFooter from '../../../components/button-footer'
-import { shortenAddress } from '@liquality/wallet-core/dist/utils/address'
+import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { useRecoilCallback, useRecoilValue } from 'recoil'
 import {
   fiatRatesState,
@@ -21,7 +21,7 @@ import {
   historyStateFamily,
   networkState,
 } from '../../../atoms'
-import { HistoryItem } from '@liquality/wallet-core/dist/store/types'
+import { HistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import { labelTranslateFn } from '../../../utils'
 import i18n from 'i18n-js'
 

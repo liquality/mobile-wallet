@@ -18,16 +18,16 @@ import {
   dpUI,
   prettyBalance,
   prettyFiatBalance,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
-import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swap'
-import { SwapProvider } from '@liquality/wallet-core/dist/swaps/SwapProvider'
+import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
+import { SwapProvider } from '@liquality/wallet-core/dist/src/swaps/SwapProvider'
 import { retrySwap } from '../../../store/store'
 import RefundedIcon from '../../../assets/icons/activity-status/refunded.svg'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
-import { calculateQuoteRate } from '@liquality/wallet-core/dist/utils/quotes'
-import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
+import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
+import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import SwapRates from '../../../components/swap/swap-rates'
 import { formatDate, labelTranslateFn } from '../../../utils'
 import { useRecoilValue } from 'recoil'
