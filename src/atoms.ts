@@ -130,12 +130,12 @@ type AssetNameAssetKey = {
 export const balanceStateFamily = atomFamily<number, AssetNameAssetKey>({
   key: 'AssetBalance',
   default: ({ asset, assetId }) =>
-    AsyncStorage.getItem(`${asset}-${assetId}`).then((savedValue) =>
+    AsyncStorage.getItem(`${asset}|${assetId}`).then((savedValue) =>
       savedValue !== null ? Number(savedValue) : -1,
     ),
   effects: ({ asset, assetId }) => [
-    localStorageEffect(`${asset}-${assetId}`),
-    balanceEffect(asset),
+    localStorageEffect(`${asset}|${assetId}`),
+    balanceEffect(`${asset}|${assetId}`),
   ],
 })
 

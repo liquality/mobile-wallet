@@ -551,14 +551,21 @@ export const getTimeline = async (
   )
 }
 
-export const balanceEffect: (asset: string) => AtomEffect<number> =
-  (asset) =>
+export const balanceEffect: (assetObject: string) => AtomEffect<number> =
+  (assetObject) =>
   ({ setSelf }) => {
     wallet.original.subscribe((mutation) => {
+      const asset = assetObject.split('|')[0]
+      const accountId = assetObject.split('|')[1]
       const { type, payload } = mutation
-      if (type === 'UPDATE_BALANCE' && payload.asset === asset) {
+      if (
+        accountId === payload.accountId &&
+        type === 'UPDATE_BALANCE' &&
+        payload.asset === asset
+      ) {
         setSelf(Number(payload.balance))
       } else if (
+        accountId === payload.accountId &&
         type === 'UPDATE_MULTIPLE_BALANCES' &&
         payload.assets.includes(asset)
       ) {
