@@ -122,13 +122,21 @@ export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   effects: (accountId) => [localStorageEffect(`account-info-${accountId}`)],
 })
 
-export const balanceStateFamily = atomFamily<number, string>({
+type AssetNameAssetKey = {
+  asset: string
+  assetId: string
+}
+
+export const balanceStateFamily = atomFamily<number, AssetNameAssetKey>({
   key: 'AssetBalance',
-  default: (asset) =>
-    AsyncStorage.getItem(asset).then((savedValue) =>
+  default: ({ asset, assetId }) =>
+    AsyncStorage.getItem(`${asset}-${assetId}`).then((savedValue) =>
       savedValue !== null ? Number(savedValue) : -1,
     ),
-  effects: (asset) => [localStorageEffect(asset), balanceEffect(asset)],
+  effects: ({ asset, assetId }) => [
+    localStorageEffect(`${asset}-${assetId}`),
+    balanceEffect(asset),
+  ],
 })
 
 export const addressStateFamily = atomFamily<string, string>({

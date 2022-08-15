@@ -72,7 +72,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const marketData = useRecoilValue(marketDataState)
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
   const fromBalance = useRecoilValue(
-    balanceStateFamily(swapPair.fromAsset?.code),
+    balanceStateFamily({
+      asset: swapPair.fromAsset?.code || '',
+      assetId: swapPair.fromAsset?.id || '',
+    }),
   )
   const [areFeeSelectorsVisible, setFeeSelectorsVisible] = useState(true)
   const [selectedQuote, setSelectedQuote] = useState<SwapQuote>()

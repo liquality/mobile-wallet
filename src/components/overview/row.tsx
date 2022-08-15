@@ -37,7 +37,9 @@ const Row = (props: RowProps) => {
   const [prettyFiatBalance, setPrettyFiatBalance] = useState('0')
   const [prettyNativeBalance, setPrettyNativeBalance] = useState('0')
   const [shortAddress, setShortAddress] = useState('')
-  const balance = useRecoilValue(balanceStateFamily(item.code))
+  const balance = useRecoilValue(
+    balanceStateFamily({ asset: item.code, assetId: item.id }),
+  )
   const address = useRecoilValue(addressStateFamily(item.id))
   const fiatRates = useRecoilValue(fiatRatesState)
 
