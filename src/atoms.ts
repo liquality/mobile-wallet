@@ -218,7 +218,7 @@ export const accountForAssetState = selectorFamily<
           ...account.assets,
           [asset]: {
             ...account.assets[asset],
-            balance: get(balanceStateFamily(asset)),
+            balance: get(balanceStateFamily({ asset, assetId: account.id })),
           },
         },
       }
@@ -240,7 +240,10 @@ export const totalFiatBalanceState = selector<string>({
     const fiatRates = get(fiatRatesState)
 
     const totalFiatBalance = accountsIds.reduce((acc, account) => {
-      const balanceState = balanceStateFamily(account.name)
+      const balanceState = balanceStateFamily({
+        asset: account.name,
+        assetId: account.id,
+      })
 
       return BigNumber.sum(
         acc,
