@@ -138,8 +138,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     }
 
     //TODO Update wallet-core so it does not return objects with functions in them
-    delete selectedQuote.min
-    delete selectedQuote.max
+    // delete selectedQuote.min // commenting becuase min property doesn't exists in SwapQuote type
+    // delete selectedQuote.max // commenting becuase max property doesn't exists in SwapQuote type
 
     navigation.navigate('SwapReviewScreen', {
       swapTransaction: {
