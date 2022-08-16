@@ -29,7 +29,9 @@ const SubRow: FC<SubRowProps> = (props) => {
   const { parentItem, item, onAssetSelected } = props
   const [prettyNativeBalance, setPrettyNativeBalance] = useState('')
   const [prettyFiatBalance, setPrettyFiatBalance] = useState('')
-  const balance = useRecoilValue(balanceStateFamily(item.code))
+  const balance = useRecoilValue(
+    balanceStateFamily({ asset: item.code, assetId: item.id }),
+  )
   const address = useRecoilValue(addressStateFamily(item.id))
   const fiatRates = useRecoilValue(fiatRatesState)
 

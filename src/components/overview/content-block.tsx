@@ -21,20 +21,22 @@ const ContentBlock = () => {
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
 
   useEffect(() => {
-    AsyncStorage.getItem('BTC').then((result) => {
-      if (result !== null) {
-        populateWallet()
-          .then(() => {
-            setIsDoneFetchingData(true)
-          })
-          .catch((e) => {
-            Log(`Failed to populateWallet: ${e}`, 'error')
-          })
-      } else {
-        setIsDoneFetchingData(true)
-      }
-    })
-  }, [setIsDoneFetchingData])
+    AsyncStorage.getItem(`${accountsIds[0].name}-${accountsIds[0].id}`).then(
+      (result) => {
+        if (result !== null) {
+          populateWallet()
+            .then(() => {
+              setIsDoneFetchingData(true)
+            })
+            .catch((e) => {
+              Log(`Failed to populateWallet: ${e}`, 'error')
+            })
+        } else {
+          setIsDoneFetchingData(true)
+        }
+      },
+    )
+  }, [setIsDoneFetchingData, accountsIds])
 
   return (
     <Fragment>

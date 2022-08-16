@@ -12,7 +12,7 @@ type CheckBoxProps = {
   style: object
   textStyle: object
   size?: number
-  color: string
+  color?: string
   text: string | { tx: TxKeyPath }
   txOptions?: i18n.TranslateOptions
 }

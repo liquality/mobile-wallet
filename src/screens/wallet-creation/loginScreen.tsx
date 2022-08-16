@@ -54,7 +54,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const addAccount = useRecoilCallback(
     ({ set }) =>
       (accountId: string, account: AccountType) => {
-        set(balanceStateFamily(account.code), 0)
+        set(balanceStateFamily({ asset: account.code, assetId: account.id }), 0)
         set(addressStateFamily(accountId), '')
         set(accountInfoStateFamily(accountId), account)
       },

@@ -1,3 +1,4 @@
+import { DarkModeEnum } from './types/index'
 import { atom, atomFamily, selector, selectorFamily } from 'recoil'
 import { AccountType, SwapAssetPairType } from './types'
 import { BigNumber } from '@liquality/types'
@@ -101,6 +102,16 @@ export const isDoneFetchingData = atom<boolean>({
   default: false,
 })
 
+export const themeMode = atom<DarkModeEnum>({
+  key: 'ThemeMode',
+  default: AsyncStorage.getItem(KEYS.ACTIVE_THEME).then((savedValue) =>
+    savedValue !== null && typeof savedValue !== 'undefined'
+      ? (JSON.parse(savedValue) as DarkModeEnum)
+      : DarkModeEnum.Null,
+  ),
+  effects: [localStorageEffect<DarkModeEnum>(KEYS.ACTIVE_THEME)],
+})
+
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',
@@ -111,13 +122,21 @@ export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   effects: (accountId) => [localStorageEffect(`account-info-${accountId}`)],
 })
 
-export const balanceStateFamily = atomFamily<number, string>({
+type AssetNameAssetKey = {
+  asset: string
+  assetId: string
+}
+
+export const balanceStateFamily = atomFamily<number, AssetNameAssetKey>({
   key: 'AssetBalance',
-  default: (asset) =>
-    AsyncStorage.getItem(asset).then((savedValue) =>
+  default: ({ asset, assetId }) =>
+    AsyncStorage.getItem(`${asset}-${assetId}`).then((savedValue) =>
       savedValue !== null ? Number(savedValue) : -1,
     ),
-  effects: (asset) => [localStorageEffect(asset), balanceEffect(asset)],
+  effects: ({ asset, assetId }) => [
+    localStorageEffect(`${asset}-${assetId}`),
+    balanceEffect(asset),
+  ],
 })
 
 export const addressStateFamily = atomFamily<string, string>({
@@ -153,7 +172,9 @@ export const accountInfoState = selectorFamily<Partial<AccountType>, string>({
       const address = get(addressStateFamily(accountId))
       const account = get(accountInfoStateFamily(accountId))
       if (account?.code) {
-        account.balance = get(balanceStateFamily(account.code))
+        account.balance = get(
+          balanceStateFamily({ asset: account.code, assetId: accountId }),
+        )
       }
       account.address = address
       for (let assetsKey in account.assets) {
@@ -197,7 +218,7 @@ export const accountForAssetState = selectorFamily<
           ...account.assets,
           [asset]: {
             ...account.assets[asset],
-            balance: get(balanceStateFamily(asset)),
+            balance: get(balanceStateFamily({ asset, assetId: account.id })),
           },
         },
       }
@@ -219,7 +240,10 @@ export const totalFiatBalanceState = selector<string>({
     const fiatRates = get(fiatRatesState)
 
     const totalFiatBalance = accountsIds.reduce((acc, account) => {
-      const balanceState = balanceStateFamily(account.name)
+      const balanceState = balanceStateFamily({
+        asset: account.name,
+        assetId: account.id,
+      })
 
       return BigNumber.sum(
         acc,

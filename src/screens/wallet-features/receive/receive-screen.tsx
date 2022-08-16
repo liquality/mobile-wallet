@@ -109,7 +109,6 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
     Clipboard.setString(address)
     setButtonPressed(true)
     setTimeout(() => {
-      Clipboard.setString('')
       setButtonPressed(false)
     }, COPY_BUTTON_TIMEOUT)
   }

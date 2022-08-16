@@ -1,17 +1,22 @@
 import React, { useCallback } from 'react'
 import { View, StyleSheet } from 'react-native'
-import { useNavigation } from '@react-navigation/core'
+import { useNavigation, NavigationProp } from '@react-navigation/core'
 import Eye from '../../../assets/icons/eye.svg'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { RootStackParamList } from '../../../types'
+import { labelTranslateFn } from '../../../utils'
 
-const BackupWarningScreen = ({}) => {
-  const navigation = useNavigation()
+const BackupWarningScreen: React.FC<
+  NativeStackScreenProps<RootStackParamList, 'BackupWarningScreen'>
+> = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>()
 
   const handleBackupSeedBtnPress = useCallback(() => {
     navigation.navigate('BackupLoginScreen', {
       backupSeed: true,
-      screenTitle: 'Sign in',
+      screenTitle: labelTranslateFn('backupWarningScreen.signIn')!,
     })
   }, [navigation])
 

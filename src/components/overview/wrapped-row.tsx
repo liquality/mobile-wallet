@@ -26,7 +26,9 @@ const WrappedRow: FC<{
   const ethAccount = useRecoilValue(accountForAssetState('ETH'))
   const btcAccount = useRecoilValue(accountForAssetState('BTC'))
   const address = useRecoilValue(addressStateFamily(item.id))
-  const balance = useRecoilValue(balanceStateFamily(item.name))
+  const balance = useRecoilValue(
+    balanceStateFamily({ asset: item.name, assetId: item.id }),
+  )
   const account = useRecoilValue(accountInfoStateFamily(item.id))
   const isDoneFetching = useRecoilValue(isDoneFetchingData)
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
@@ -52,7 +54,7 @@ const WrappedRow: FC<{
       // Make sure account assets have the same id (account id) as their parent
       const selectedAccount: AccountType = {
         ...currentAccount,
-        id: account.id,
+        id: account.id || '',
         address,
         balance,
       }

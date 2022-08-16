@@ -65,10 +65,13 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     code = 'ETH',
     chain = ChainId.Ethereum,
     color,
+    id = '',
   } = route.params.assetData || {}
   const [customFee, setCustomFee] = useState<number>(0)
   const fiatRates = useRecoilValue(fiatRatesState)
-  const balance = useRecoilValue(balanceStateFamily(code))
+  const balance = useRecoilValue(
+    balanceStateFamily({ asset: code, assetId: id }),
+  )
   const [showFeeOptions, setShowFeeOptions] = useState(true)
   const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
@@ -218,7 +221,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         amountInput: amountInput.value,
         fee: fee,
         speedMode: networkSpeed,
-        setSpeedMode: setNetworkSpeed,
       },
     )
   }
