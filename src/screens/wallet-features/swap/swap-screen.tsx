@@ -121,7 +121,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const handleCancelPress = useCallback(() => {
-    navigation.navigate('OverviewScreen')
+    navigation.navigate('OverviewScreen', {})
   }, [navigation])
 
   const handleReviewBtnPress = async () => {
@@ -151,7 +151,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         fromNetworkFee: fromNetworkFee.current,
         toNetworkFee: toNetworkFee.current,
       },
-      // screenTitle: `Swap ${swapPair.fromAsset.code} to ${swapPair.toAsset.code} review`,
       screenTitle: I18n.t('swapScreen.swapReview', {
         swapPairfromAssetCode: swapPair.fromAsset.code,
         swapPairtoAssetCode: swapPair.toAsset.code,
@@ -199,7 +198,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         if (quoteList?.length === 0) {
           setError(labelTranslateFn('swapScreen.isNotTraded')!)
         } else {
-          const sortedQuotes = sortQuotes(quoteList)
+          const sortedQuotes = sortQuotes(quoteList || [])
           setQuotes(sortedQuotes)
           if (sortedQuotes.length) {
             setSelectedQuote(sortedQuotes[0])
@@ -242,7 +241,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       width={Dimensions.get('window').width}
       backgroundColor="mainBackground">
       {error ? (
-        <MessageBanner tx="common.error" text2={error} onAction={() => ({})} />
+        <MessageBanner
+          text1={{ tx1: 'common.error' }}
+          text2={error}
+          onAction={() => ({})}
+        />
       ) : null}
       <Box
         flexDirection="row"
@@ -327,7 +330,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           selectQuote={handleSelectQuote}
           selectedQuote={selectedQuote}
           clickable
-          style={{ paddingHorizontal: 20 }}
+          style={styles.paddingHorizontal}
         />
       ) : null}
       <Box
@@ -441,6 +444,9 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     marginRight: 5,
+  },
+  paddingHorizontal: {
+    paddingHorizontal: 20,
   },
 })
 
