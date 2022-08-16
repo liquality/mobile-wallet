@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   icon: {
-    alignSelf: 'flex-start',
     marginRight: 5,
   },
 })
