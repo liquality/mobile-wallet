@@ -12,7 +12,6 @@ import {
   enabledAssetsEffect,
   fiatRateEffect,
   localStorageEffect,
-  marketDataEffect,
   transactionHistoryEffect,
 } from './store/store'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
@@ -21,7 +20,6 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import {
   FiatRates,
   HistoryItem,
-  MarketData,
   Network,
 } from '@liquality/wallet-core/dist/src/store/types'
 import { CustomRootState } from './reducers'
@@ -54,12 +52,6 @@ export const networkState = atom<Network>({
 export const swapPairState = atom<SwapAssetPairType>({
   key: 'SwapPair',
   default: {},
-})
-
-export const marketDataState = atom<MarketData[]>({
-  key: 'MarketData',
-  default: [],
-  effects: [localStorageEffect<MarketData[]>('marketData'), marketDataEffect()],
 })
 
 export const historyIdsState = atom<string[]>({

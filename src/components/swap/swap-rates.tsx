@@ -49,8 +49,8 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
   const [isRatesModalVisible, setIsRatesModalVisible] = useState(false)
   const [isSwapTypesModalVisible, setIsSwapTypesModalVisible] = useState(false)
 
-  const getSwapProviderIcon = (marketQuotes: SwapQuote): React.ReactElement => {
-    switch (marketQuotes.provider) {
+  const getSwapProviderIcon = (swapQuote: SwapQuote): React.ReactElement => {
+    switch (swapQuote.provider) {
       case 'liquality':
         return <Logo width={15} height={15} style={styles.icon} />
       case 'liqualityboost':

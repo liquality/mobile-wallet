@@ -19,7 +19,7 @@ import AmountTextInputBlock from '../../../components/ui/amount-text-input-block
 import Label from '../../../components/ui/label'
 import Warning from '../../../components/ui/warning'
 import SwapRates from '../../../components/swap/swap-rates'
-import { getQuotes, updateMarketData } from '../../../store/store'
+import { getQuotes } from '../../../store/store'
 import { ActionEnum, NetworkFeeType, RootStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
@@ -33,12 +33,9 @@ import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { prettyBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import {
-  balanceStateFamily,
-  marketDataState,
-  swapPairState,
-} from '../../../atoms'
+import { balanceStateFamily, swapPairState, networkState } from '../../../atoms'
 import I18n from 'i18n-js'
+import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -69,7 +66,6 @@ type SwapScreenProps = NativeStackScreenProps<RootStackParamList, 'SwapScreen'>
 
 const SwapScreen: FC<SwapScreenProps> = (props) => {
   const { navigation } = props
-  const marketData = useRecoilValue(marketDataState)
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
   const fromBalance = useRecoilValue(
     balanceStateFamily({
@@ -77,6 +73,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       assetId: swapPair.fromAsset?.id || '',
     }),
   )
+  const activeNetwork = useRecoilValue(networkState)
   const [areFeeSelectorsVisible, setFeeSelectorsVisible] = useState(true)
   const [selectedQuote, setSelectedQuote] = useState<SwapQuote>()
   const [error, setError] = useState('')
@@ -121,7 +118,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const handleCancelPress = useCallback(() => {
-    navigation.navigate('OverviewScreen')
+    navigation.navigate('OverviewScreen', {})
   }, [navigation])
 
   const handleReviewBtnPress = async () => {
@@ -151,7 +148,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         fromNetworkFee: fromNetworkFee.current,
         toNetworkFee: toNetworkFee.current,
       },
-      // screenTitle: `Swap ${swapPair.fromAsset.code} to ${swapPair.toAsset.code} review`,
       screenTitle: I18n.t('swapScreen.swapReview', {
         swapPairfromAssetCode: swapPair.fromAsset.code,
         swapPairtoAssetCode: swapPair.toAsset.code,
@@ -159,21 +155,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     })
   }
 
-  const min = useCallback((): BigNumber => {
-    //TODO why do we have to check against the liquality type
-    const liqualityMarket = marketData?.find(
-      (pair) =>
-        pair.from === swapPair.fromAsset?.code &&
-        pair.to === swapPair.toAsset?.code,
-    )
-    return liqualityMarket && liqualityMarket.min
-      ? new BigNumber(liqualityMarket.min)
-      : new BigNumber(0)
-  }, [swapPair.fromAsset?.code, marketData, swapPair.toAsset?.code])
-
   const handleMinPress = () => {
     setMaximumValue(new BigNumber(0))
-    setMinimumValue(min())
+    setMinimumValue(minimumValue)
   }
 
   const handleMaxPress = () => {
@@ -186,55 +170,60 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     }
   }
 
-  const updateBestQuote = useCallback(
-    async (amount: BigNumber) => {
-      let bestQuoteAmount = new BigNumber(0)
-      if (swapPair.fromAsset?.code && swapPair.toAsset?.code) {
-        const quoteList = await getQuotes(
-          swapPair.fromAsset.code,
-          swapPair.toAsset.code,
-          amount,
-        )
+  const updateBestQuote = useCallback(async () => {
+    const amount = state.fromAmount?.gt(0) ? state.fromAmount : new BigNumber(0)
+    let bestQuoteAmount = new BigNumber(0)
+    if (swapPair.fromAsset?.code && swapPair.toAsset?.code) {
+      const quoteList = await getQuotes(
+        swapPair.fromAsset.code,
+        swapPair.toAsset.code,
+        amount,
+      )
 
-        if (quoteList?.length === 0) {
-          setError(labelTranslateFn('swapScreen.isNotTraded')!)
-        } else {
-          const sortedQuotes = sortQuotes(quoteList)
-          setQuotes(sortedQuotes)
-          if (sortedQuotes.length) {
-            setSelectedQuote(sortedQuotes[0])
-            bestQuoteAmount = new BigNumber(
-              unitToCurrency(
-                cryptoassets[swapPair.toAsset.code],
-                new BigNumber(sortedQuotes[0].toAmount || 0),
-              ),
-            )
-          }
+      if (quoteList?.length === 0) {
+        setError(labelTranslateFn('swapScreen.isNotTraded')!)
+      } else {
+        const sortedQuotes = sortQuotes(quoteList)
+        setQuotes(sortedQuotes)
+        if (sortedQuotes.length) {
+          const swapProvider = getSwapProvider(
+            activeNetwork,
+            sortedQuotes[0].provider,
+          )
+          setSelectedQuote(sortedQuotes[0])
+          setMinimumValue(
+            await swapProvider.getMin({
+              network: activeNetwork,
+              from: swapPair.fromAsset.code,
+              to: swapPair.toAsset.code,
+              amount: amount,
+            }),
+          )
+          bestQuoteAmount = new BigNumber(
+            unitToCurrency(
+              cryptoassets[swapPair.toAsset.code],
+              new BigNumber(sortedQuotes[0].toAmount || 0),
+            ),
+          )
         }
       }
+    }
 
-      if (bestQuoteAmount.eq(0)) {
-        setError(labelTranslateFn('swapScreen.quoteNotFnd')!)
-      }
-      setBestQuote(bestQuoteAmount)
-    },
-    [swapPair.fromAsset?.code, swapPair.toAsset?.code],
-  )
-
-  useEffect(() => {
-    updateMarketData()
-  }, [])
-
-  useEffect(() => {
-    const minimum = min()
-    setMinimumValue(minimum)
-  }, [swapPair, min])
+    if (bestQuoteAmount.eq(0)) {
+      setError(labelTranslateFn('swapScreen.quoteNotFnd')!)
+    }
+    setBestQuote(bestQuoteAmount)
+  }, [
+    activeNetwork,
+    state.fromAmount,
+    swapPair?.fromAsset?.code,
+    swapPair?.toAsset?.code,
+  ])
 
   useEffect(() => {
     setError('')
-    const minimum = min()
-    updateBestQuote(state.fromAmount?.gt(0) ? state.fromAmount : minimum)
-  }, [min, state.fromAmount, updateBestQuote])
+    updateBestQuote()
+  }, [updateBestQuote])
 
   return (
     <Box

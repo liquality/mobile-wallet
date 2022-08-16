@@ -62,21 +62,6 @@ const rootReducer: Reducer<CustomRootState, PayloadAction<CustomRootState>> = (
         if (draft?.digestedState)
           draft.digestedState.fiatRates = action.payload.fiatRates
       })
-    // return {
-    //   ...action.payload,
-    //   digestedState: {
-    //     accounts: {
-    //       ...(state?.digestedState?.accounts || {}),
-    //       ...action.payload.digestedState?.accounts,
-    //     },
-    //   },
-    // }
-    case 'UPDATE_MARKET_DATA':
-      const marketData = action.payload.marketData || {}
-      return {
-        ...state,
-        marketData: [...marketData],
-      }
     case 'NETWORK_UPDATE':
       return {
         ...state,
