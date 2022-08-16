@@ -106,12 +106,24 @@ const CustomFeeEIP1559Screen = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleApplyPress = useCallback(
+  const handlePressLowMedHigh = useCallback(
     (speed) => {
       setSpeedMode(speed)
     },
     [setSpeedMode],
   )
+
+  const handleApplyPress = () => {
+    console.log(
+      Number(userInputMinerTip) + Number(userInputMaximumFee),
+      'handle apply press',
+    )
+    navigation.navigate('SendScreen', {
+      assetData: route.params.assetData,
+      ...route.params,
+      customFee: Number(userInputMinerTip) + Number(userInputMaximumFee),
+    })
+  }
 
   if (!gasFees) {
     return (
@@ -245,19 +257,19 @@ const CustomFeeEIP1559Screen = ({
               variant="s"
               isBorderless={false}
               isActive={true}
-              onPress={() => handleApplyPress('slow')}
+              onPress={() => handlePressLowMedHigh('slow')}
             />
             <Button
               label="Med"
               type={speedMode === 'average' ? 'primary' : 'tertiary'}
               variant="s"
-              onPress={() => handleApplyPress('average')}
+              onPress={() => handlePressLowMedHigh('average')}
             />
             <Button
               label="High"
               type={speedMode === 'fast' ? 'primary' : 'tertiary'}
               variant="s"
-              onPress={() => handleApplyPress('fast')}
+              onPress={() => handlePressLowMedHigh('fast')}
             />
           </Box>
         </View>
