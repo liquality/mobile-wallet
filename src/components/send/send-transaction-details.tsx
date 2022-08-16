@@ -38,8 +38,7 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
 
       <Box justifyContent="center" alignItems="center">
         <Text variant="timelineLabel">{formatDate(historyItem.startTime)}</Text>
-        {/*         <Label text={{ tx: 'sendTranDetailComp.sent' }} variant="strong" />
-         */}
+        <Label text={{ tx: 'sendTranDetailComp.sent' }} variant="strong" />
       </Box>
 
       <Box

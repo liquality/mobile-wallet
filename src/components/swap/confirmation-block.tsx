@@ -73,11 +73,7 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
         <Text variant="timelineLabel" tx="confirmationBlockComp.fee" />
         <Text variant="amount">
           {fiatRates && fee && asset
-            ? displayFormattedFee?.amount +
-              ' ' +
-              asset +
-              '/ $' +
-              displayFormattedFee?.fiat
+            ? `${displayFormattedFee?.amount} ${asset} / $${displayFormattedFee?.fiat}`
             : null}
         </Text>
       </Box>

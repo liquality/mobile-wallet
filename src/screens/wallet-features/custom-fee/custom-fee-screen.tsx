@@ -52,7 +52,6 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   const [, setFormattedRatesObj] = useState()
 
   const code = route.params.code!
-  //const fiatRates = useRecoilValue(fiatRatesState)
   const wallet = setupWallet({
     ...defaultOptions,
   })
@@ -306,18 +305,6 @@ const styles = StyleSheet.create({
   },
   actions: {
     justifyContent: 'space-around',
-  },
-
-  // eslint-disable-next-line react-native/no-unused-styles
-  error: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#F12274',
-    fontSize: 12,
-    backgroundColor: '#FFF',
-    textAlignVertical: 'center',
-    marginTop: 5,
-    paddingVertical: 5,
-    height: 25,
   },
 })
 
