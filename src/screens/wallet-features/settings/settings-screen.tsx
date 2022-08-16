@@ -309,7 +309,10 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
                 style={styles.signOutIcon}
               />
             </Pressable>
-            <Text style={styles.label} tx="settingsScreen.lock" />
+            <Text
+              style={[styles.lockInfo, styles.lockLabel]}
+              tx="settingsScreen.lock"
+            />
           </View>
         </View>
 
@@ -372,6 +375,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000D35',
     marginRight: 5,
+  },
+  lockLabel: {
+    marginTop: 12,
   },
   btnContainer: {
     flex: 1,

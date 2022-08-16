@@ -245,7 +245,23 @@
   "customFeeScreen": {
     "presets": "PRESETS",
     "customSettings": "CUSTOMIZED SETTINGS",
-    "gasPrice": "Gas Price"
+    "gasPrice": "Gas Price",
+    "maybeIn30": "maybe in 30",
+    "likelyLess30": "likely in < 30",
+    "likelyLess15": "likely in < 15",
+    "gasFeeMissing": "Gas fees missing",
+    "currentBaseFee": "CURRENT BASE FEE",
+    "perGas": "PER Gas",
+    "minerTip": "Miner Tip",
+    "toSpeedUp": "TO SPEED UP",
+    "maxFee": "MAX FEE",
+    "newFeeTotal": "New Fee Total",
+    "minimum": "minimum",
+    "maximum": "maximum",
+    "maxHere": "max here",
+    "newSpeedFee": "New Speed/Fee",
+    "btcAmountHere": "BTC amount here",
+    "fiatAmountHere": "fiat amount here"
   },
   "loadingScreen": {
     "failedImport": "Failed to import/create wallet. Please try again!"

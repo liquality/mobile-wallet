@@ -46,7 +46,7 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
       speed: FeeLabel.Average,
       value: gasFees.average.toNumber(),
     }
-  }, [gasFees.average, networkFee])
+  }, [gasFees.average, networkFee, speedMode])
 
   return (
     <Box

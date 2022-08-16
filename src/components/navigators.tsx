@@ -25,7 +25,7 @@ import { HeaderBackButtonProps } from '@react-navigation/elements'
 import ReceiveScreen from '../screens/wallet-features/receive/receive-screen'
 import SendScreen from '../screens/wallet-features/send/send-screen'
 import SendReviewScreen from '../screens/wallet-features/send/send-review-screen'
-import CustomFeeScreen from '../screens/wallet-features/custom-fee-screen'
+import CustomFeeScreen from '../screens/wallet-features/custom-fee/custom-fee-screen'
 import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
 import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
@@ -43,6 +43,7 @@ import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-scre
 import BackupLoginScreen from '../screens/wallet-features/backup/backup-login-screen'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/core'
 import TimesIcon from '../assets/icons/times.svg'
+import CustomFeeEIP1559Screen from '../screens/wallet-features/custom-fee/custom-fee-eip-1559-screen'
 import Box from '../theme/box'
 import Text from '../theme/text'
 
@@ -242,6 +243,13 @@ export const AppStackNavigator = () => (
       component={CustomFeeScreen}
       options={() => ({
         headerRight: PlaceholderComp,
+      })}
+    />
+    <Stack.Screen
+      name="CustomFeeEIP1559Screen"
+      component={CustomFeeEIP1559Screen}
+      options={() => ({
+        headerRight: () => <View />,
       })}
     />
     <Stack.Screen
