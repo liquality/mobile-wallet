@@ -71,7 +71,7 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
         newAmount = fiatToCrypto(
           new BigNumber(text),
           fiatRates?.[assetSymbol] || 0,
-        )
+        ) as BigNumber
       }
 
       if (dispatch) {
