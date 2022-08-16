@@ -34,10 +34,10 @@ const Warning: FC<WarningProps> = (props) => {
     <Box
       flexDirection="row"
       justifyContent="center"
-      alignItems="flex-end"
+      alignItems="center"
       marginVertical="m"
       paddingHorizontal="xl">
-      {children}
+      <Box>{children}</Box>
       <Text variant="warningBold">
         {content1} <Text variant="warningLight">{content2}</Text>
       </Text>
