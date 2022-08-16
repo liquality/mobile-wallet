@@ -51,6 +51,7 @@ const Preset = ({
     if (gasFees) {
       let formattedRates = renderSlowAverageFastPreset(speedMode)
       setFormattedRatesObj(formattedRates)
+      setSpeedMode(speedMode)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speedMode, setFormattedRatesObj, totalFees])
@@ -80,8 +81,6 @@ const Preset = ({
           0 + slowAvgOrMaxFees.maxPriorityFeePerGas
       }
 
-      //HÄÄÄÄÄR i amount fel
-
       let formattedRatesForEIP1559Obj = {
         amount: dpUI(
           getSendFee(code, gasFees[speed].fee.maxFeePerGas || fee.toNumber()),
@@ -102,7 +101,10 @@ const Preset = ({
 
       let formattedRatesObj = {
         amount: amountInUnit,
-        fiat: prettyFiatBalance(amountInUnit, fiatRates[code]).toString(),
+        fiat: prettyFiatBalance(
+          Number(amountInUnit),
+          fiatRates[code],
+        ).toString(),
         maximum: labelTranslateFn('customFeeScreen.maxHere'),
       }
       return formattedRatesObj

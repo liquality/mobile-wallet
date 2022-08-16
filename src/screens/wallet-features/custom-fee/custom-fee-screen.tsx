@@ -7,16 +7,12 @@ import {
   ViewStyle,
 } from 'react-native'
 import { FeeDetails } from '@liquality/types/lib/fees'
-
 import AssetIcon from '../../../components/asset-icon'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, TotalFees } from '../../../types'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
-/* import { useRecoilValue } from 'recoil'
-import { fiatRatesState } from '../../atoms' */
-// import { fetchFeesForAsset } from '../../../store/store'
 import Preset from './preset'
 import { useRecoilValue } from 'recoil'
 import {
@@ -37,7 +33,6 @@ import {
   dpUI,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/utils/coinFormatter'
-//import { BigNumber } from '@liquality/types'
 
 const scrollViewStyle: ViewStyle = {
   flex: 1,
@@ -84,7 +79,10 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
       )
       setTotalFees(totalFeesData)
     }
+    setSpeedMode(route.params.speedMode)
+
     fetchData()
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setFormattedRatesObj, customFeeInput.value])
 
@@ -93,6 +91,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
       assetData: route.params.assetData,
       ...route.params,
       customFee: parseFloat(customFeeInput.value),
+      speed: speedMode,
     })
   }
 

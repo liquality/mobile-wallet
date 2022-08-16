@@ -105,8 +105,17 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       setAvailableAmount(
         calculateAvailableAmnt(code, route.params.customFee, balance),
       )
+      if (route.params.speed) {
+        setNetworkSpeed(route.params.speed)
+      }
     }
-  }, [balance, code, route.params.customFee])
+  }, [
+    balance,
+    code,
+    route.params.customFee,
+    route.params.speed,
+    setNetworkSpeed,
+  ])
 
   useEffect(() => {
     fetchFeesForAsset(code).then((gasFee) => {
@@ -208,6 +217,8 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         screenTitle: labelTranslateFn('sendScreen.networkSpeed')!,
         amountInput: amountInput.value,
         fee: fee,
+        speedMode: networkSpeed,
+        setSpeedMode: setNetworkSpeed,
       },
     )
   }

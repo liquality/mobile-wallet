@@ -47,10 +47,10 @@ const CustomFeeEIP1559Screen = ({
   navigation,
   route,
 }: CustomFeeEIP1559ScreenProps) => {
-  const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
   const [gasFees, setGasFees] = useState<FDs>()
   const [totalFees, setTotalFees] = useState<TotalFees>()
   const [, setFormattedRatesObj] = useState()
+  const [speedMode, setSpeedMode] = useState<SpeedMode>('average')
 
   const [, setError] = useState('')
   const [showBasic, setShowBasic] = useState<boolean>(true)
@@ -63,8 +63,6 @@ const CustomFeeEIP1559Screen = ({
     fast: labelTranslateFn('customFeeScreen.likelyLess15'),
   }
 
-  //Gör states till max o miner tip, fetcha allt o set states i useeffect
-
   useEffect(() => {
     const _feeDetails = fees?.[activeNetwork]?.[activeWalletId]?.[code]
     if (!_feeDetails) {
@@ -75,11 +73,12 @@ const CustomFeeEIP1559Screen = ({
     setUserInputMinerTip(
       _feeDetails[speedMode].fee.maxPriorityFeePerGas.toString(),
     )
+    setSpeedMode(route.params.speedMode)
     setUserInputMaximumFee(_feeDetails[speedMode].fee.maxFeePerGas.toString())
-  }, [speedMode, setError, fees, activeNetwork, activeWalletId, code])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setError, fees, activeNetwork, activeWalletId, code])
 
   const code = route.params.code!
-  // const amountInput = route.params.amountInput!
   const wallet = setupWallet({
     ...defaultOptions,
   })
@@ -114,14 +113,11 @@ const CustomFeeEIP1559Screen = ({
   )
 
   const handleApplyPress = () => {
-    console.log(
-      Number(userInputMinerTip) + Number(userInputMaximumFee),
-      'handle apply press',
-    )
     navigation.navigate('SendScreen', {
       assetData: route.params.assetData,
       ...route.params,
       customFee: Number(userInputMinerTip) + Number(userInputMaximumFee),
+      speed: speedMode,
     })
   }
 
@@ -464,7 +460,6 @@ const styles = StyleSheet.create({
   },
   fiat: {
     fontSize: 12,
-    // marginTop: 5,
   },
   fiatFirst: {
     marginLeft: '37%',
@@ -472,9 +467,7 @@ const styles = StyleSheet.create({
   maximum: {
     marginRight: '2%',
   },
-  block: {
-    // marginVertical: 15,
-  },
+
   summary: {
     backgroundColor: '#F0F7F9',
     borderColor: '#d9dfe5',
@@ -530,9 +523,6 @@ const styles = StyleSheet.create({
   },
   fiatFast: {
     color: '#088513',
-  },
-  selected: {
-    color: '#F0F7F9',
   },
 })
 
