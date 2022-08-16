@@ -8,6 +8,7 @@ import {
   SendHistoryItem,
   SwapHistoryItem,
 } from '@liquality/wallet-core/dist/store/types'
+import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
 import { Asset } from '@liquality/wallet-core/src/store/types'
 
 export type AssetDataElementType = {
@@ -48,7 +49,7 @@ export type SwapInfoType = {
   toAsset: AccountType
   fromAmount: number
   toAmount: number
-  quote: any
+  quote: SwapQuote
   fromNetworkFee: NetworkFeeType
   toNetworkFee: NetworkFeeType
 }
