@@ -71,7 +71,7 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
         newAmount = fiatToCrypto(
           new BigNumber(text),
           fiatRates?.[assetSymbol] || 0,
-        )
+        ) as BigNumber
       }
 
       if (dispatch && !skipDispatch) {
@@ -89,8 +89,12 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
 
   const handleTextChange = useCallback(
     (text: string) => {
-      onChangeText(text)
-      updateAmount(text, false)
+      // avoid more than one decimal points and only number are allowed
+      const validated = text.match(/^(\d*\.{0,1}\d{0,20}$)/)
+      if (validated) {
+        onChangeText(text)
+        updateAmount(text, false)
+      }
     },
     [onChangeText, updateAmount],
   )
@@ -105,6 +109,12 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
     }
   }, [onChangeText, maximumValue, minimumValue, updateAmount])
 
+  // Avoid NaN if user enters only decimal points
+  let formattedValue = value
+  if (value.length === 1 && value === '.') {
+    formattedValue = '0'
+  }
+
   return (
     <View style={styles.container}>
       <View style={[styles.row, styles.md3]}>
@@ -116,12 +126,12 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
             isAmountNative
               ? `$${formatFiat(
                   cryptoToFiat(
-                    new BigNumber(value),
+                    new BigNumber(formattedValue || 0),
                     fiatRates?.[assetSymbol] || 0,
                   ) as BigNumber,
                 )}`
               : `${fiatToCrypto(
-                  new BigNumber(value),
+                  new BigNumber(formattedValue || 0),
                   fiatRates?.[assetSymbol] || 0,
                 )} ${assetSymbol}`
           }
