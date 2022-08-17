@@ -229,6 +229,7 @@ const CustomFeeEIP1559Screen = ({
           <View style={styles.row}>
             <Text style={styles.inputLabel}>GWEI</Text>
             <TextInput
+              keyboardType={'numeric'}
               style={styles.gasInput}
               onChangeText={setUserInputMinerTip}
               value={userInputMinerTip}
@@ -238,6 +239,7 @@ const CustomFeeEIP1559Screen = ({
             />
             <Text style={styles.inputLabel}>GWEI</Text>
             <TextInput
+              keyboardType={'numeric'}
               style={styles.gasInput}
               onChangeText={setUserInputMaximumFee}
               value={userInputMaximumFee}
