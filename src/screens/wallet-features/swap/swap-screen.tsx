@@ -89,7 +89,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [toNetworkSpeed, setToNetworkSpeed] = useState<FeeLabel>(
     FeeLabel.Average,
   )
-  const [state, dispatch] = useReducer(reducer, {})
+  const [state, dispatch] = useReducer(reducer, {
+    fromAmount: new BigNumber(1),
+  })
 
   const toggleFeeSelectors = () => {
     setFeeSelectorsVisible(!areFeeSelectorsVisible)
@@ -171,8 +173,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const updateBestQuote = useCallback(async () => {
-    const amount = state.fromAmount?.gt(0) ? state.fromAmount : new BigNumber(0)
-    let bestQuoteAmount = new BigNumber(0)
+    const amount = state.fromAmount?.gt(0) ? state.fromAmount : new BigNumber(1)
+    let bestQuoteAmount = amount
     if (swapPair.fromAsset?.code && swapPair.toAsset?.code) {
       const quoteList = await getQuotes(
         swapPair.fromAsset.code,
