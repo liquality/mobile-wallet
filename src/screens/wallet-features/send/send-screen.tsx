@@ -28,7 +28,10 @@ import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import TextInput from '../../../theme/textInput'
 import Box from '../../../theme/box'
-import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
+import {
+  getSendFee,
+  isEIP1559Fees,
+} from '@liquality/wallet-core/dist/src/utils/fees'
 import SendFeeSelector from '../../../components/ui/send-fee-selector'
 import { fetchFeesForAsset } from '../../../store/store'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
@@ -105,8 +108,17 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       setAvailableAmount(
         calculateAvailableAmnt(code, route.params.customFee, balance),
       )
+      if (route.params.speed) {
+        setNetworkSpeed(route.params.speed)
+      }
     }
-  }, [balance, code, route.params.customFee])
+  }, [
+    balance,
+    code,
+    route.params.customFee,
+    route.params.speed,
+    setNetworkSpeed,
+  ])
 
   useEffect(() => {
     fetchFeesForAsset(code).then((gasFee) => {
@@ -122,19 +134,25 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   }, [code, chain, balance])
 
   const handleReviewPress = useCallback(() => {
+    let feeInUnit
+    customFee
+      ? (feeInUnit = customFee)
+      : (feeInUnit = networkFee?.current?.value)
+
     if (validate() && networkFee?.current?.value) {
       navigation.navigate('SendReviewScreen', {
         // screenTitle: `Send ${code} Review`,
         screenTitle: i18n.t('sendScreen.sendReview', { code }),
         sendTransaction: {
           amount: new BigNumber(amountInput.value).toNumber(),
-          gasFee: networkFee.current.value,
+          gasFee: feeInUnit,
           speedLabel: networkFee.current?.speed,
           destinationAddress: addressInput.value,
           asset: code,
           memo: memoInput.value,
           color: color || '#EAB300',
         },
+        customFee: customFee,
       })
     }
   }, [
@@ -145,6 +163,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     memoInput.value,
     navigation,
     validate,
+    customFee,
   ])
 
   const handleFiatBtnPress = useCallback(() => {
@@ -193,10 +212,21 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   }
 
   const handleCustomPress = () => {
-    navigation.navigate('CustomFeeScreen', {
-      assetData: route.params.assetData,
-      screenTitle: labelTranslateFn('sendScreen.networkSpeed')!,
-    })
+    navigation.navigate(
+      isEIP1559() ? 'CustomFeeEIP1559Screen' : 'CustomFeeScreen',
+      {
+        assetData: route.params.assetData,
+        code,
+        screenTitle: labelTranslateFn('sendScreen.networkSpeed')!,
+        amountInput: amountInput.value,
+        fee: fee,
+        speedMode: networkSpeed,
+      },
+    )
+  }
+
+  const isEIP1559 = () => {
+    return isEIP1559Fees(chain)
   }
 
   const handleQRCodeBtnPress = () => {

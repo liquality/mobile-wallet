@@ -104,7 +104,7 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
           <Box>
             <Text variant="header" tx="sendConfirmationScreeen.networkSpeed" />
             <Text variant="content">
-              {`${historyItem.from} Fee: ${historyItem.tx.fee} x ${
+              {`${historyItem.from} Fee: ${historyItem.fee} x ${
                 chains[cryptoassets[historyItem.from].chain].fees.unit
               }`}
             </Text>

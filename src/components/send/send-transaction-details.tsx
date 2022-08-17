@@ -110,6 +110,7 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
             historyItem.from,
             historyItem.network,
           )}
+          fiatRate={historyItem.fiatRate}
         />
       </Box>
 

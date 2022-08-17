@@ -21,6 +21,7 @@ const WrappedRow: FC<{
   item: { id: string; name: string }
 }> = (props) => {
   const { item } = props
+
   const [isExpanded, setIsExpanded] = useState(false)
   const ethAccount = useRecoilValue(accountForAssetState('ETH'))
   const btcAccount = useRecoilValue(accountForAssetState('BTC'))

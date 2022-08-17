@@ -83,6 +83,8 @@ export type StackPayload = {
   action?: ActionEnum
   selectedAssetCodes?: string[]
   onSelectAssetCodes?: (selectedAssetCodes: string[]) => void
+  amountInput?: string
+  code?: string
 }
 
 export type RootStackParamList = {
@@ -109,6 +111,7 @@ export type RootStackParamList = {
   SendConfirmationScreen: StackPayload
   SwapConfirmationScreen: StackPayload
   CustomFeeScreen: StackPayload
+  CustomFeeEIP1559Screen: StackPayload
   SwapScreen: StackPayload
   SwapReviewScreen: StackPayload
   WalletImportNavigator: undefined
@@ -178,3 +181,10 @@ export interface CustomFeeDetails extends FeeDetails {
 }
 
 export type GasFees = Record<'slow' | 'average' | 'fast' | 'custom', BigNumber>
+export type TotalFees = Record<'slow' | 'average' | 'fast', BigNumber>
+
+export type LikelyWait = {
+  slow?: string | number
+  average?: string | number
+  fast?: string | number
+}
