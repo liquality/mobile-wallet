@@ -6,8 +6,8 @@ import { GasFees } from '../types'
 import {
   EstimateFeeRequest,
   SwapQuote,
-} from '@liquality/wallet-core/dist/swaps/types'
-import { Network } from '@liquality/wallet-core/dist/store/types'
+} from '@liquality/wallet-core/dist/src/swaps/types'
+import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import dayjs from 'dayjs'
 import QuickCrypto from 'react-native-quick-crypto'
 import { Buffer } from '@craftzdog/react-native-buffer'

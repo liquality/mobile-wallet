@@ -23,16 +23,16 @@ import {
 import {
   getSendAmountFee,
   getSendFee,
-} from '@liquality/wallet-core/dist/utils/fees'
+} from '@liquality/wallet-core/dist/src/utils/fees'
 import { setupWallet } from '@liquality/wallet-core'
-import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions'
+import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails as FDs } from '@chainify/types'
 import { useInputState } from '../../../hooks'
 import {
   dpUI,
   prettyFiatBalance,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 
 const scrollViewStyle: ViewStyle = {
   flex: 1,

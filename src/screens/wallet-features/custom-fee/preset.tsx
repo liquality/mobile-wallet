@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import { UseInputStateReturnType, LikelyWait, TotalFees } from '../../../types'
-import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
+import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import {
   dpUI,
   prettyFiatBalance,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { FiatRates, Network } from '@liquality/wallet-core/dist/store/types'

@@ -5,25 +5,23 @@ import { BigNumber } from '@liquality/types'
 import {
   cryptoToFiat,
   formatFiat,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import {
   addressEffect,
   balanceEffect,
   enabledAssetsEffect,
   fiatRateEffect,
   localStorageEffect,
-  marketDataEffect,
   transactionHistoryEffect,
 } from './store/store'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
-import { Asset } from '@liquality/wallet-core/src/store/types'
-import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
+import { Asset } from '@liquality/wallet-core/dist/src/store/types'
+import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import {
   FiatRates,
   HistoryItem,
-  MarketData,
   Network,
-} from '@liquality/wallet-core/dist/store/types'
+} from '@liquality/wallet-core/dist/src/store/types'
 import { CustomRootState } from './reducers'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { KEYS } from './utils'
@@ -54,12 +52,6 @@ export const networkState = atom<Network>({
 export const swapPairState = atom<SwapAssetPairType>({
   key: 'SwapPair',
   default: {},
-})
-
-export const marketDataState = atom<MarketData[]>({
-  key: 'MarketData',
-  default: [],
-  effects: [localStorageEffect<MarketData[]>('marketData'), marketDataEffect()],
 })
 
 export const historyIdsState = atom<string[]>({
@@ -130,12 +122,12 @@ type AssetNameAssetKey = {
 export const balanceStateFamily = atomFamily<number, AssetNameAssetKey>({
   key: 'AssetBalance',
   default: ({ asset, assetId }) =>
-    AsyncStorage.getItem(`${asset}-${assetId}`).then((savedValue) =>
+    AsyncStorage.getItem(`${asset}|${assetId}`).then((savedValue) =>
       savedValue !== null ? Number(savedValue) : -1,
     ),
   effects: ({ asset, assetId }) => [
-    localStorageEffect(`${asset}-${assetId}`),
-    balanceEffect(asset),
+    localStorageEffect(`${asset}|${assetId}`),
+    balanceEffect(`${asset}|${assetId}`),
   ],
 })
 

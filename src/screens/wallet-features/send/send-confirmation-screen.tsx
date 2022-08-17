@@ -6,7 +6,7 @@ import {
   unitToCurrency,
   assets as cryptoassets,
 } from '@liquality/cryptoassets'
-import { SendHistoryItem } from '@liquality/wallet-core/dist/store/types'
+import { SendHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import { RootStackParamList } from '../../../types'
 import SendTransactionDetails from '../../../components/send/send-transaction-details'
 import ProgressCircle from '../../../components/animations/progress-circle'

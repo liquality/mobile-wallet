@@ -16,14 +16,14 @@ import {
   networkState,
 } from '../../../atoms'
 import { setupWallet } from '@liquality/wallet-core'
-import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions' // Default options
+import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions' // Default options
 
 import Preset from './preset'
 import {
   getSendAmountFee,
   getSendFee,
-} from '@liquality/wallet-core/dist/utils/fees'
-import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/fees'
+import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails as FDs } from '@chainify/types'
 import Box from '../../../theme/box'

@@ -10,7 +10,7 @@ import { labelTranslateFn } from '../../utils'
 
 type SwapTypesInfoProps = {
   swapProviders: any[]
-  getIcon: (marketData: any) => React.ReactElement
+  getIcon: (quote: any) => React.ReactElement
   toggleModal: () => void
 }
 

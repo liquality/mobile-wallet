@@ -2,7 +2,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react'
 import { useInputState } from '../../hooks'
 import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
 import AssetIcon from '../asset-icon'
-import { ChainId } from '@liquality/cryptoassets/src/types'
+import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import Label from './label'
 import { chainDefaultColors } from '../../core/config'
 import { BigNumber } from '@liquality/types'
@@ -10,7 +10,7 @@ import {
   cryptoToFiat,
   fiatToCrypto,
   formatFiat,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { SwapEventType } from '../../screens/wallet-features/swap/swap-screen'
 import Button from '../../theme/button'
 import { useRecoilValue } from 'recoil'
@@ -65,7 +65,7 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
   }
 
   const updateAmount = useCallback(
-    (text: string): BigNumber => {
+    (text: string, skipDispatch: boolean): BigNumber => {
       let newAmount = new BigNumber(text)
       if (!isAmountNative) {
         newAmount = fiatToCrypto(
@@ -74,7 +74,7 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
         )
       }
 
-      if (dispatch) {
+      if (dispatch && !skipDispatch) {
         dispatch({
           type: type === 'TO' ? 'TO_AMOUNT_UPDATED' : 'FROM_AMOUNT_UPDATED',
           payload: {
@@ -90,17 +90,17 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
   const handleTextChange = useCallback(
     (text: string) => {
       onChangeText(text)
-      updateAmount(text)
+      updateAmount(text, false)
     },
     [onChangeText, updateAmount],
   )
 
   useEffect(() => {
     if (maximumValue && maximumValue.gt(0)) {
-      updateAmount(maximumValue.toString())
+      updateAmount(maximumValue.toString(), true)
       onChangeText(maximumValue.toString())
     } else if (minimumValue && minimumValue.gt(0)) {
-      updateAmount(minimumValue.toString())
+      updateAmount(minimumValue.toString(), true)
       onChangeText(minimumValue.toString())
     }
   }, [onChangeText, maximumValue, minimumValue, updateAmount])

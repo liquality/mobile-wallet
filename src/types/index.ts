@@ -1,5 +1,5 @@
 import { Dispatch, ReactElement, SetStateAction } from 'react'
-import { ChainId } from '@liquality/cryptoassets/src/types'
+import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { BigNumber } from '@liquality/types'
 import {
@@ -7,8 +7,8 @@ import {
   Network,
   SendHistoryItem,
   SwapHistoryItem,
-} from '@liquality/wallet-core/dist/store/types'
-import { Asset } from '@liquality/wallet-core/src/store/types'
+} from '@liquality/wallet-core/dist/src/store/types'
+import { Asset } from '@liquality/wallet-core/dist/src/store/types'
 
 export type AssetDataElementType = {
   id: string
