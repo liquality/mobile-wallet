@@ -160,15 +160,29 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const handleMinPress = () => {
     setMaximumValue(new BigNumber(0))
     setMinimumValue(minimumValue)
+    dispatch({
+      type: 'FROM_AMOUNT_UPDATED',
+      payload: {
+        fromAmount: minimumValue,
+      },
+    })
   }
 
   const handleMaxPress = () => {
+    //TODO Fix this. maximumValue = fromBalance - Fee
+    //TODO Using redux here is just ugly. find a better solution
     if (swapPair && swapPair.fromAsset && swapPair.fromAsset.code) {
       const amnt = unitToCurrency(
         cryptoassets[swapPair.fromAsset.code],
         fromBalance || 0,
       )
       setMaximumValue(new BigNumber(amnt))
+      dispatch({
+        type: 'FROM_AMOUNT_UPDATED',
+        payload: {
+          fromAmount: new BigNumber(amnt),
+        },
+      })
     }
   }
 
