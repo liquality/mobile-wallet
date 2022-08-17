@@ -113,6 +113,12 @@ fi
   Replace maven with maven-publish
 ```
 
+3. Android Error: CMake Error at CMakeLists.txt:12 (include_directories)
+
+```
+  Open Android Studion Go to File Menu > Tap Invalidate Caches
+```
+
 ## License
 
 [MIT](./LICENSE.md)
