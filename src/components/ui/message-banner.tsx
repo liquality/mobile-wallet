@@ -3,26 +3,40 @@ import { Dimensions, StyleSheet, View } from 'react-native'
 import Button from '../../theme/button'
 import Text from '../../theme/text'
 import { TxKeyPath, translate } from '../../i18n'
+import i18n from 'i18n-js'
 
 type MessageBannerProps = {
-  text1: string
-  text2: string
-  tx?: TxKeyPath
-  txOptions?: i18n.TranslateOptions
+  text1: string | { tx1: TxKeyPath }
+  text2: string | { tx2: TxKeyPath }
+  txOptions1?: i18n.TranslateOptions
+  txOptions2?: i18n.TranslateOptions
   onAction: (...args: unknown[]) => void
 }
 
 const MessageBanner: FC<MessageBannerProps> = (props) => {
-  const { tx, txOptions, text1, text2, onAction } = props
+  // const { tx, txOptions, text1, text2, onAction } = props
+  const { txOptions1, txOptions2, text1, text2, onAction } = props
 
-  const i18nText = tx && translate(tx, txOptions)
-  const content = i18nText || text1
+  let content1
+  if (typeof text1 !== 'string') {
+    const { tx1 } = text1
+    content1 = tx1 && translate(tx1, txOptions1)
+  } else {
+    content1 = text1
+  }
+  let content2
+  if (typeof text2 !== 'string') {
+    const { tx2 } = text2
+    content2 = tx2 && translate(tx2, txOptions2)
+  } else {
+    content2 = text2
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{content}</Text>
+      <Text style={styles.text}>{content1}</Text>
       <View style={styles.row}>
-        <Text style={styles.text}>{text2}</Text>
+        <Text style={styles.text}>{content2}</Text>
         <Button
           type="tertiary"
           variant="s"

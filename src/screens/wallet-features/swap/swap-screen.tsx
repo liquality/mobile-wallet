@@ -271,7 +271,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       width={Dimensions.get('window').width}
       backgroundColor="mainBackground">
       {error ? (
-        <MessageBanner tx="common.error" text2={error} onAction={() => ({})} />
+        <MessageBanner
+          text1={{ tx1: 'common.error' }}
+          text2={error}
+          onAction={() => ({})}
+        />
       ) : null}
       <Box
         flexDirection="row"
