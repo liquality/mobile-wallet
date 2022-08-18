@@ -270,7 +270,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   ])
 
   useEffect(() => {
-    setError('a')
+    setError('')
     updateBestQuote()
   }, [updateBestQuote])
 
@@ -361,7 +361,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       flex={1}
       width={Dimensions.get('window').width}
       backgroundColor="mainBackground">
-      {getCompatibleErrorMsg(ErrorMessaging.PairsList)}
+      {getCompatibleErrorMsg(ErrorMessaging.MoreTknReq)}
       <Box
         flexDirection="row"
         justifyContent="center"
