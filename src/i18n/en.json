@@ -241,7 +241,7 @@
     "selectAssetForSwap": "Select asset for Swap",
     "invalidArgs": "Invalid arguments for swap",
     "swapReview": "Swap {{swapPairfromAssetCode}} to {{swapPairtoAssetCode}} review",
-    "isNotTraded": "This pair isn't traded yet. See our list of compatible pairs",
+    "isNotTraded": "This pair isn't traded yet. See our list of compatible pairs ",
     "here": "here.",
     "youCanAlsoSuggestToken": "You can also suggest listing of your {{token}} on {{channel}}",
     "quoteNotFnd": "Quotes not found",
