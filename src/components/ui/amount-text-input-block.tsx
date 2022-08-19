@@ -1,4 +1,12 @@
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import React, {
+  ForwardRefRenderFunction,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from 'react'
 import { useInputState } from '../../hooks'
 import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
 import AssetIcon from '../asset-icon'
@@ -11,7 +19,10 @@ import {
   fiatToCrypto,
   formatFiat,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
-import { SwapEventType } from '../../screens/wallet-features/swap/swap-screen'
+import {
+  SwapEventActionKind,
+  SwapEventAction,
+} from '../../screens/wallet-features/swap/swap-screen'
 import Button from '../../theme/button'
 import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms'
@@ -24,13 +35,17 @@ type AmountTextInputBlockProps = {
   maximumValue?: BigNumber
   minimumValue?: BigNumber
   defaultAmount?: BigNumber
-  dispatch?: React.Dispatch<{
-    payload: SwapEventType
-    type: string
-  }>
+  dispatch?: React.Dispatch<SwapEventAction>
 }
 
-const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
+type AmountTextInputHandle = {
+  setAfterDispatch: (text: string) => void
+}
+
+const AmountTextInputBlock: ForwardRefRenderFunction<
+  AmountTextInputHandle,
+  AmountTextInputBlockProps
+> = (props, forwardedRef) => {
   const {
     label,
     assetSymbol,
@@ -44,6 +59,7 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
   const { value, onChangeText } = useInputState('0')
   const color = chainDefaultColors[chain]
   const [isAmountNative, setIsAmountNative] = useState<boolean>(true)
+  const textInputRef = useRef<TextInput>(null)
 
   const handleToggleAmount = () => {
     if (isAmountNative) {
@@ -75,17 +91,28 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
       }
 
       if (dispatch && !skipDispatch) {
-        dispatch({
-          type: type === 'TO' ? 'TO_AMOUNT_UPDATED' : 'FROM_AMOUNT_UPDATED',
-          payload: {
-            [type === 'TO' ? 'toAmount' : 'fromAmount']: newAmount,
-          },
-        })
+        if (type === 'TO') {
+          dispatch({
+            type: SwapEventActionKind.ToAmountUpdated,
+            payload: { toAmount: newAmount },
+          })
+        } else {
+          dispatch({
+            type: SwapEventActionKind.FromAmountUpdated,
+            payload: { fromAmount: newAmount },
+          })
+        }
       }
       return newAmount
     },
     [assetSymbol, fiatRates, isAmountNative, dispatch, type],
   )
+
+  useImperativeHandle(forwardedRef, () => ({
+    setAfterDispatch: (text) => {
+      onChangeText(text)
+    },
+  }))
 
   const handleTextChange = useCallback(
     (text: string) => {
@@ -146,10 +173,11 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
             style={[styles.font, styles.input, { color }]}
             keyboardType={'numeric'}
             onChangeText={handleTextChange}
-            value={value}
+            value={formattedValue}
             placeholder={'0'}
             autoCorrect={false}
             returnKeyType="done"
+            ref={textInputRef}
           />
         </View>
         <AssetIcon asset={assetSymbol} chain={chain} />
@@ -201,4 +229,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default AmountTextInputBlock
+export default forwardRef(AmountTextInputBlock)

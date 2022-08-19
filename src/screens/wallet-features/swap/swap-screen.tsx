@@ -24,7 +24,7 @@ import { ActionEnum, NetworkFeeType, RootStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
 import { labelTranslateFn, sortQuotes } from '../../../utils'
-import { PayloadAction, Reducer } from '@reduxjs/toolkit'
+import { Reducer } from '@reduxjs/toolkit'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
@@ -41,6 +41,45 @@ import { isEIP1559Fees } from '@liquality/wallet-core/dist/src/utils/fees'
 export type SwapEventType = {
   fromAmount?: BigNumber
   toAmount?: BigNumber
+  minimumValue?: BigNumber
+  maximumValue?: BigNumber
+}
+
+export enum SwapEventActionKind {
+  FromAmountUpdated = 'FROM_AMOUNT_UPDATED',
+  ToAmountUpdated = 'TO_AMOUNT_UPDATED',
+  SetMaxVal = 'SET_MAX_VALUE',
+  SetMinVal = 'SET_MIN_VALUE',
+  SetFromAmtFrmMinVal = 'SET_FROM_AMOUNT_from_MIN_VALUE',
+}
+
+export type SwapEventAction =
+  | {
+      type: SwapEventActionKind.FromAmountUpdated
+      payload: { fromAmount: BigNumber }
+    }
+  | {
+      type: SwapEventActionKind.ToAmountUpdated
+      payload: { toAmount: BigNumber }
+    }
+  | {
+      type: SwapEventActionKind.SetMinVal
+      payload: { minimumValue: BigNumber }
+    }
+  | {
+      type: SwapEventActionKind.SetMaxVal
+      payload: { maximumValue: BigNumber }
+    }
+  | {
+      type: SwapEventActionKind.SetFromAmtFrmMinVal
+      payload: { minimumValue: BigNumber }
+    }
+
+const initialSwapSEventState: SwapEventType = {
+  fromAmount: new BigNumber(1),
+  maximumValue: new BigNumber(0),
+  minimumValue: new BigNumber(0),
+  toAmount: new BigNumber(0),
 }
 
 enum Direction {
@@ -57,20 +96,40 @@ enum ErrorMessaging {
   MoreTknReq,
 }
 
-export const reducer: Reducer<SwapEventType, PayloadAction<SwapEventType>> = (
+type AmountTextInputBlockHandle = React.ElementRef<typeof AmountTextInputBlock>
+
+export const reducer: Reducer<SwapEventType, SwapEventAction> = (
   state,
   action,
-) => {
-  switch (action.type) {
-    case 'FROM_AMOUNT_UPDATED':
+): SwapEventType => {
+  const { payload, type } = action
+  switch (type) {
+    case SwapEventActionKind.FromAmountUpdated:
       return {
         ...state,
-        fromAmount: action.payload.fromAmount,
+        fromAmount: payload.fromAmount,
       }
-    case 'TO_AMOUNT_UPDATED':
+    case SwapEventActionKind.ToAmountUpdated:
       return {
         ...state,
-        toAmount: action.payload.toAmount,
+        toAmount: payload.toAmount,
+      }
+    case SwapEventActionKind.SetMaxVal:
+      return {
+        ...state,
+        maximumValue: payload.maximumValue,
+        fromAmount: payload.maximumValue,
+      }
+    case SwapEventActionKind.SetMinVal:
+      return {
+        ...state,
+        minimumValue: payload.minimumValue,
+      }
+    case SwapEventActionKind.SetFromAmtFrmMinVal:
+      return {
+        ...state,
+        fromAmount: payload.minimumValue,
+        maximumValue: new BigNumber(0),
       }
     default:
       throw new Error()
@@ -94,8 +153,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [error, setError] = useState('')
   const fromNetworkFee = useRef<NetworkFeeType>()
   const toNetworkFee = useRef<NetworkFeeType>()
-  const [maximumValue, setMaximumValue] = useState<BigNumber>(new BigNumber(0))
-  const [minimumValue, setMinimumValue] = useState<BigNumber>(new BigNumber(0))
+  // const [maximumValue, setMaximumValue] = useState<BigNumber>(new BigNumber(0))
+  // const [minimumValue, setMinimumValue] = useState<BigNumber>(new BigNumber(0))
   const [bestQuote, setBestQuote] = useState<BigNumber>(new BigNumber(0))
   const [quotes, setQuotes] = useState<any[]>([])
   const [fromNetworkSpeed, setFromNetworkSpeed] = useState<FeeLabel>(
@@ -104,13 +163,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [toNetworkSpeed, setToNetworkSpeed] = useState<FeeLabel>(
     FeeLabel.Average,
   )
-  const [state, dispatch] = useReducer(reducer, {
-    fromAmount: new BigNumber(1),
-  })
+  const [state, dispatch] = useReducer(reducer, initialSwapSEventState)
 
   const toggleFeeSelectors = () => {
     setFeeSelectorsVisible(!areFeeSelectorsVisible)
   }
+
+  const amountInputRef = useRef<AmountTextInputBlockHandle>(null)
 
   const handleFromAssetPress = () => {
     setSwapPair((prevVal) => ({ ...prevVal, fromAsset: undefined }))
@@ -137,6 +196,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const handleCancelPress = useCallback(() => {
     navigation.navigate('OverviewScreen', {})
   }, [navigation])
+
+  // const handleCancelPress = () => {
+  //   console.log('FromAmount', state.fromAmount)
+  //   console.log('toAmount', state.toAmount)
+  //   console.log('maximumValue', state.maximumValue)
+  //   console.log('minimumValue', state.minimumValue)
+  // }
 
   const handleReviewBtnPress = async () => {
     if (
@@ -173,13 +239,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const handleMinPress = () => {
-    setMaximumValue(new BigNumber(0))
-    setMinimumValue(minimumValue)
+    amountInputRef.current?.setAfterDispatch(state.minimumValue?.toString()!)
     dispatch({
-      type: 'FROM_AMOUNT_UPDATED',
-      payload: {
-        fromAmount: minimumValue,
-      },
+      type: SwapEventActionKind.SetFromAmtFrmMinVal,
+      payload: { minimumValue: state.minimumValue! },
     })
   }
 
@@ -191,11 +254,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         cryptoassets[swapPair.fromAsset.code],
         fromBalance || 0,
       )
-      setMaximumValue(new BigNumber(amnt))
+      amountInputRef.current?.setAfterDispatch(amnt?.toString()!)
       dispatch({
-        type: 'FROM_AMOUNT_UPDATED',
+        type: SwapEventActionKind.SetMaxVal,
         payload: {
-          fromAmount: new BigNumber(amnt),
+          maximumValue: new BigNumber(amnt),
         },
       })
     }
@@ -240,14 +303,18 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             sortedQuotes[0].provider,
           )
           setSelectedQuote(sortedQuotes[0])
-          setMinimumValue(
-            await swapProvider.getMin({
-              network: activeNetwork,
-              from: swapPair.fromAsset.code,
-              to: swapPair.toAsset.code,
-              amount: amount,
-            }),
-          )
+          const minValue = await swapProvider.getMin({
+            network: activeNetwork,
+            from: swapPair.fromAsset.code,
+            to: swapPair.toAsset.code,
+            amount: amount,
+          })
+          dispatch({
+            type: SwapEventActionKind.SetMinVal,
+            payload: {
+              minimumValue: minValue,
+            },
+          })
           bestQuoteAmount = new BigNumber(
             unitToCurrency(
               cryptoassets[swapPair.toAsset.code],
@@ -371,9 +438,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           label={labelTranslateFn('common.send')!}
           chain={swapPair.fromAsset?.chain || ChainId.Bitcoin}
           assetSymbol={swapPair.fromAsset?.code || 'BTC'}
-          maximumValue={maximumValue}
-          minimumValue={minimumValue}
+          maximumValue={state.maximumValue}
+          minimumValue={state.minimumValue}
           dispatch={dispatch}
+          ref={amountInputRef}
         />
         <Pressable style={styles.chevronBtn} onPress={handleFromAssetPress}>
           <ChevronRight width={15} height={15} />
