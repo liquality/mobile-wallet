@@ -1,7 +1,6 @@
 import React, {
   ForwardRefRenderFunction,
   useCallback,
-  // useEffect,
   useState,
   useRef,
   useImperativeHandle,
@@ -46,16 +45,7 @@ const AmountTextInputBlock: ForwardRefRenderFunction<
   AmountTextInputHandle,
   AmountTextInputBlockProps
 > = (props, forwardedRef) => {
-  const {
-    label,
-    assetSymbol,
-    chain,
-    defaultAmount,
-    // maximumValue,
-    // minimumValue,
-    dispatch,
-    type,
-  } = props
+  const { label, assetSymbol, chain, defaultAmount, dispatch, type } = props
   const fiatRates = useRecoilValue(fiatRatesState)
   const { value, onChangeText } = useInputState(
     defaultAmount?.toString() || '0',
@@ -128,17 +118,6 @@ const AmountTextInputBlock: ForwardRefRenderFunction<
     },
     [onChangeText, updateAmount],
   )
-
-  // Commenting out because blocking user input, user cannot enter any value
-  // useEffect(() => {
-  //   if (maximumValue && maximumValue.gt(0)) {
-  //     updateAmount(maximumValue.toString(), true)
-  //     onChangeText(maximumValue.toString())
-  //   } else if (minimumValue && minimumValue.gt(0)) {
-  //     updateAmount(minimumValue.toString(), true)
-  //     onChangeText(minimumValue.toString())
-  //   }
-  // }, [onChangeText, maximumValue, minimumValue, updateAmount])
 
   // Avoid NaN if user enters only decimal points
   let formattedValue = value

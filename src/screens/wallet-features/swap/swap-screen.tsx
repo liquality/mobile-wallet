@@ -153,9 +153,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [error, setError] = useState('')
   const fromNetworkFee = useRef<NetworkFeeType>()
   const toNetworkFee = useRef<NetworkFeeType>()
-  // const [maximumValue, setMaximumValue] = useState<BigNumber>(new BigNumber(0))
-  // const [minimumValue, setMinimumValue] = useState<BigNumber>(new BigNumber(0))
-  // const [bestQuote, setBestQuote] = useState<BigNumber>(new BigNumber(0))
   const [quotes, setQuotes] = useState<any[]>([])
   const [fromNetworkSpeed, setFromNetworkSpeed] = useState<FeeLabel>(
     FeeLabel.Average,
