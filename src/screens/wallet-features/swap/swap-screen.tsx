@@ -155,7 +155,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const toNetworkFee = useRef<NetworkFeeType>()
   // const [maximumValue, setMaximumValue] = useState<BigNumber>(new BigNumber(0))
   // const [minimumValue, setMinimumValue] = useState<BigNumber>(new BigNumber(0))
-  const [bestQuote, setBestQuote] = useState<BigNumber>(new BigNumber(0))
+  // const [bestQuote, setBestQuote] = useState<BigNumber>(new BigNumber(0))
   const [quotes, setQuotes] = useState<any[]>([])
   const [fromNetworkSpeed, setFromNetworkSpeed] = useState<FeeLabel>(
     FeeLabel.Average,
@@ -170,6 +170,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const amountInputRef = useRef<AmountTextInputBlockHandle>(null)
+  const amountInputRefTo = useRef<AmountTextInputBlockHandle>(null)
 
   const handleFromAssetPress = () => {
     setSwapPair((prevVal) => ({ ...prevVal, fromAsset: undefined }))
@@ -197,13 +198,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     navigation.navigate('OverviewScreen', {})
   }, [navigation])
 
-  // const handleCancelPress = () => {
-  //   console.log('FromAmount', state.fromAmount)
-  //   console.log('toAmount', state.toAmount)
-  //   console.log('maximumValue', state.maximumValue)
-  //   console.log('minimumValue', state.minimumValue)
-  // }
-
   const handleReviewBtnPress = async () => {
     if (
       !swapPair.fromAsset ||
@@ -226,7 +220,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         fromAsset: swapPair.fromAsset,
         toAsset: swapPair.toAsset,
         fromAmount: state.fromAmount.toNumber(),
-        toAmount: bestQuote.toNumber(),
+        toAmount: state.toAmount?.toNumber() || 0,
         quote: selectedQuote,
         fromNetworkFee: fromNetworkFee.current,
         toNetworkFee: toNetworkFee.current,
@@ -328,7 +322,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     if (bestQuoteAmount.eq(0)) {
       setError(labelTranslateFn('swapScreen.quoteNotFnd')!)
     }
-    setBestQuote(bestQuoteAmount)
+    dispatch({
+      type: SwapEventActionKind.ToAmountUpdated,
+      payload: { toAmount: bestQuoteAmount },
+    })
+    amountInputRefTo.current?.setAfterDispatch(bestQuoteAmount?.toString()!)
+    // setBestQuote(bestQuoteAmount)
   }, [
     activeNetwork,
     state.fromAmount,
@@ -435,11 +434,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         marginHorizontal="xl">
         <AmountTextInputBlock
           type="FROM"
+          defaultAmount={state.fromAmount}
           label={labelTranslateFn('common.send')!}
           chain={swapPair.fromAsset?.chain || ChainId.Bitcoin}
           assetSymbol={swapPair.fromAsset?.code || 'BTC'}
-          maximumValue={state.maximumValue}
-          minimumValue={state.minimumValue}
           dispatch={dispatch}
           ref={amountInputRef}
         />
@@ -494,10 +492,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         marginHorizontal="xl">
         <AmountTextInputBlock
           type="TO"
+          defaultAmount={state.toAmount}
           label={labelTranslateFn('common.receive')!}
           chain={swapPair.toAsset?.chain || ChainId.Ethereum}
           assetSymbol={swapPair.toAsset?.code || 'ETH'}
-          minimumValue={bestQuote}
+          ref={amountInputRefTo}
         />
         <Pressable style={styles.chevronBtn} onPress={handleToAssetPress}>
           <ChevronRight width={15} height={15} />
