@@ -233,14 +233,26 @@
     "swapRespNull": "Swap Response null",
     "failedToPerfSwap": "Failed to perform swap",
     "invalidParams": "Invalid params. Please try again",
-    "initiateSwap": "Initiate Swap"
+    "initiateSwap": "Initiate Swap",
+    "feeAreHigh": "Fees are high. Review transaction carefully.",
+    "feeAreExtreme": "Fees are extreme. Review transaction carefully."
   },
   "swapScreen": {
     "selectAssetForSwap": "Select asset for Swap",
     "invalidArgs": "Invalid arguments for swap",
     "swapReview": "Swap {{swapPairfromAssetCode}} to {{swapPairtoAssetCode}} review",
-    "isNotTraded": "This pair isn't traded yet. See our list of compatible pairs here. You can also suggest list of your token on Liquality Discord",
-    "quoteNotFnd": "Quotes not found"
+    "isNotTraded": "This pair isn't traded yet. See our list of compatible pairs ",
+    "here": "here.",
+    "youCanAlsoSuggestToken": "You can also suggest listing of your {{token}} on {{channel}}",
+    "quoteNotFnd": "Quotes not found",
+    "toTradePair": "To trade this pair {{token}} has to be enabled.",
+    "okDoIt": "OK, do it",
+    "isNotTradedMaybeThereIsWay": "This pair isn't traded yet. Maybe there is a way to do multiple swaps to get that desired token.",
+    "notEnoughLiquidityYouCanReq": "Not enough liquidity for this trade. You can request {{token}} in {{channel}} or try again later.",
+    "notEnoughLiquidityTryAgain": "Not enough liquidity for this trade. Try again later.",
+    "moreTokenRequired": "More {{token}} required to cover min trade plus fee.",
+    "getToken": "Get {{token}}",
+    "notEnoughLiquidityLowerSpeed": "Not enough {{token}} to cover fees. Lower speed to account for gas fee or get more."
   },
   "customFeeScreen": {
     "presets": "PRESETS",
