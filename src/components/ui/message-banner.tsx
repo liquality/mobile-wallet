@@ -58,20 +58,20 @@ const MessageBanner: FC<MessageBannerProps> = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <Text style={styles.text}>
+        <Text variant="label" paddingRight="s">
           {content1}
           {clickableTxt ? (
             <Text
-              color={'buttonBackgroundPrimary'}
-              style={[styles.text, styles.linkStyle]}
+              color="buttonBackgroundPrimary"
+              variant="link"
               onPress={onTextPress}>
               {`${clickableTxt}`}
             </Text>
           ) : null}
-          {content2 ? <Text style={styles.text}>{` ${content2}`}</Text> : null}
+          {content2 ? <Text variant="label">{` ${content2}`}</Text> : null}
         </Text>
         {buttonText && onAction ? (
-          <View style={[styles.btnMargin, buttonStyle]}>
+          <View style={buttonStyle}>
             <Button
               type="tertiary"
               variant="s"
@@ -96,18 +96,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-  },
-  text: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    fontSize: 12,
-    lineHeight: 16,
-  },
-  linkStyle: {
-    textDecorationLine: 'underline',
-  },
-  btnMargin: {
-    marginLeft: 15,
+    alignItems: 'center',
   },
 })
 

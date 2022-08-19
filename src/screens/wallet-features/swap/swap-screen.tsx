@@ -338,7 +338,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                 token: swapPair.fromAsset?.code,
               })}
               onAction={onGetTokenPress}
-              buttonStyle={styles.marginLeft}
             />
           )
         case ErrorMessaging.EnableToken:
@@ -571,10 +570,6 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     marginRight: 5,
-  },
-  marginLeft: {
-    marginLeft: 0,
-    marginTop: 5,
   },
 })
 
