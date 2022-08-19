@@ -122,7 +122,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
   useEffect(() => {
     fetchFeesForAsset(code).then((gasFee) => {
-      setFee(gasFee.average)
+      setFee(gasFee)
       setAvailableAmount(
         calculateAvailableAmnt(
           code,

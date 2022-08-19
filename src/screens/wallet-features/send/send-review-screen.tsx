@@ -137,7 +137,6 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
           </Text>
         </Box>
       </Box>
-
       <Box marginTop="l">
         <Text variant="secondaryInputLabel" tx="sendReviewScreen.amtFee" />
         <Box

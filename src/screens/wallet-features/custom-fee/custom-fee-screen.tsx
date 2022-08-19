@@ -21,7 +21,7 @@ import {
   networkState,
 } from '../../../atoms'
 import {
-  getSendAmountFee,
+  getSendTxFees,
   getSendFee,
 } from '@liquality/wallet-core/dist/utils/fees'
 import { setupWallet } from '@liquality/wallet-core'
@@ -71,7 +71,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   useEffect(() => {
     async function fetchData() {
       const amtInpBg = new BigNumber(Number(route.params.amountInput))
-      const totalFeesData = await getSendAmountFee(
+      const totalFeesData = await getSendTxFees(
         accountForAsset?.id!,
         code,
         amtInpBg,

@@ -16,14 +16,16 @@ import {
   networkState,
 } from '../../../atoms'
 import { setupWallet } from '@liquality/wallet-core'
-import defaultOptions from '@liquality/wallet-core/dist/walletOptions/defaultOptions' // Default options
+import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions' // Default options
 
 import Preset from './preset'
 import {
-  getSendAmountFee,
   getSendFee,
-} from '@liquality/wallet-core/dist/utils/fees'
-import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
+  getSendTxFees,
+  maxFeePerUnitEIP1559,
+  probableFeePerUnitEIP1559,
+} from '@liquality/wallet-core/dist/src/utils/fees'
+import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails as FDs } from '@chainify/types'
 import Box from '../../../theme/box'
@@ -76,7 +78,7 @@ const CustomFeeEIP1559Screen = ({
     setSpeedMode(route.params.speedMode)
     setUserInputMaximumFee(_feeDetails[speedMode].fee.maxFeePerGas.toString())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setError, fees, activeNetwork, activeWalletId, code])
+  }, [setError, fees, activeNetwork, activeWalletId, code, setSpeedMode])
 
   const code = route.params.code!
   const wallet = setupWallet({
@@ -94,7 +96,7 @@ const CustomFeeEIP1559Screen = ({
   useEffect(() => {
     async function fetchData() {
       const amtInpBg = new BigNumber(Number(route.params.amountInput))
-      const totalFeesData = await getSendAmountFee(
+      const totalFeesData = await getSendTxFees(
         accountForAsset?.id!,
         code,
         amtInpBg,
@@ -107,9 +109,13 @@ const CustomFeeEIP1559Screen = ({
 
   const handlePressLowMedHigh = useCallback(
     (speed) => {
+      if (gasFees) {
+        setUserInputMaximumFee(gasFees[speed].fee.maxFeePerGas.toString())
+        setUserInputMinerTip(gasFees[speed].fee.maxPriorityFeePerGas.toString())
+      }
       setSpeedMode(speed)
     },
-    [setSpeedMode],
+    [setSpeedMode, gasFees],
   )
 
   const handleApplyPress = () => {
@@ -147,9 +153,13 @@ const CustomFeeEIP1559Screen = ({
 
   const getSummaryMinimum = () => {
     if (totalFees) {
-      const minimumFee =
-        Number(userInputMinerTip) +
-        Number(gasFees[speedMode].fee.suggestedBaseFeePerGas)
+      const minimumFee = probableFeePerUnitEIP1559({
+        maxFeePerGas: Number(userInputMaximumFee),
+        maxPriorityFeePerGas: Number(userInputMinerTip),
+        suggestedBaseFeePerGas: Number(
+          gasFees[speedMode].fee.suggestedBaseFeePerGas,
+        ),
+      })
       const totalMinFee = getSendFee(code, Number(minimumFee)).plus(
         totalFees.slow,
       )
@@ -159,10 +169,16 @@ const CustomFeeEIP1559Screen = ({
       }
     }
   }
+
   const getSummaryMaximum = () => {
     if (totalFees) {
-      const maximumFee = userInputMaximumFee
-
+      const maximumFee = maxFeePerUnitEIP1559({
+        maxFeePerGas: Number(userInputMaximumFee),
+        maxPriorityFeePerGas: Number(userInputMinerTip),
+        suggestedBaseFeePerGas: Number(
+          gasFees[speedMode].fee.suggestedBaseFeePerGas,
+        ),
+      })
       const totalMaxFee = getSendFee(code, Number(maximumFee)).plus(
         totalFees.fast,
       )
@@ -375,6 +391,8 @@ const CustomFeeEIP1559Screen = ({
               likelyWait={likelyWaitObj}
               totalFees={totalFees}
               fee={route.params.fee}
+              setUserInputMaximumFee={setUserInputMaximumFee}
+              setUserInputMinerTip={setUserInputMinerTip}
             />
           ) : (
             renderShowCustomized()
