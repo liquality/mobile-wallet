@@ -1,7 +1,7 @@
 import { PayloadAction, Reducer } from '@reduxjs/toolkit'
-import { RootState } from '@liquality/wallet-core/dist/store/types'
+import { RootState } from '@liquality/wallet-core/dist/src/store/types'
 import produce from 'immer'
-import { Asset, FiatRates } from '@liquality/wallet-core/src/store/types'
+import { Asset, FiatRates } from '@liquality/wallet-core/dist/src/store/types'
 import { AccountType } from '../types'
 
 export interface CustomRootState extends RootState {
@@ -62,21 +62,6 @@ const rootReducer: Reducer<CustomRootState, PayloadAction<CustomRootState>> = (
         if (draft?.digestedState)
           draft.digestedState.fiatRates = action.payload.fiatRates
       })
-    // return {
-    //   ...action.payload,
-    //   digestedState: {
-    //     accounts: {
-    //       ...(state?.digestedState?.accounts || {}),
-    //       ...action.payload.digestedState?.accounts,
-    //     },
-    //   },
-    // }
-    case 'UPDATE_MARKET_DATA':
-      const marketData = action.payload.marketData || {}
-      return {
-        ...state,
-        marketData: [...marketData],
-      }
     case 'NETWORK_UPDATE':
       return {
         ...state,

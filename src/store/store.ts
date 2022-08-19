@@ -11,31 +11,32 @@ import { BigNumber, FeeDetail } from '@liquality/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit } from '@liquality/cryptoassets'
-import cryptoassets from '@liquality/wallet-core/dist/utils/cryptoassets'
+import cryptoassets from '@liquality/wallet-core/dist/src/utils/cryptoassets'
 import { AccountType, GasFees } from '../types'
-import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swap'
-import { Notification, WalletOptions } from '@liquality/wallet-core/dist/types'
+import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
+import {
+  Notification,
+  WalletOptions,
+} from '@liquality/wallet-core/dist/src/types'
 import { decrypt, encrypt, Log, pbkdf2 } from '../utils'
 import {
   getFeeAsset,
   getNativeAsset,
-} from '@liquality/wallet-core/dist/utils/asset'
-import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
+} from '@liquality/wallet-core/dist/src/utils/asset'
+import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import {
   FeeLabel,
   FiatRates,
   HistoryItem,
-  MarketData,
   Network,
   SendHistoryItem,
   SwapHistoryItem,
-  TransactionType,
-} from '@liquality/wallet-core/dist/store/types'
+} from '@liquality/wallet-core/dist/src/store/types'
 import {
   getSwapTimeline,
   TimelineStep,
-} from '@liquality/wallet-core/dist/utils/timeline'
-import { Asset, WalletId } from '@liquality/wallet-core/src/store/types'
+} from '@liquality/wallet-core/dist/src/utils/timeline'
+import { Asset, WalletId } from '@liquality/wallet-core/dist/src/store/types'
 import { AtomEffect, DefaultValue } from 'recoil'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import dayjs from 'dayjs'
@@ -208,41 +209,12 @@ export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
     .catch((e) => {
       Log(`Failed to update fiat rates: ${e}`, 'error')
     })
-
-  await wallet.dispatch
-    .updateMarketData({
-      network: activeNetwork,
-    })
-    .catch((e) => {
-      Log(`Failed to update market data: ${e}`, 'error')
-    })
 }
 
 export const retrySwap = async (transaction: SwapHistoryItem) => {
   await wallet.dispatch.retrySwap({
     swap: transaction,
   })
-}
-
-export const retryPendingSwaps = async () => {
-  const { activeNetwork, activeWalletId } = store.getState()
-  const allTransactions =
-    store.getState().history?.[activeNetwork]?.[activeWalletId] || []
-
-  const promises = allTransactions
-    .filter(
-      (transaction) =>
-        transaction.type === TransactionType.Swap &&
-        !['SUCCESS', 'REFUNDED'].includes(transaction.status),
-    )
-    .map((transaction) =>
-      wallet.dispatch.retrySwap({
-        swap: transaction as SwapHistoryItem,
-      }),
-    )
-  if (promises.length > 0) {
-    await Promise.all(promises).catch((e) => Log(e, 'error'))
-  }
 }
 
 export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {
@@ -280,18 +252,6 @@ export const fetchSwapProvider = (providerId: string) => {
   if (!providerId) return
 
   return getSwapProvider(activeNetwork, providerId)
-}
-
-export const updateMarketData = async (): Promise<void> => {
-  const { activeNetwork } = wallet.state
-
-  await wallet.dispatch
-    .updateMarketData({
-      network: activeNetwork,
-    })
-    .catch((e) => {
-      Log(`Failed to update market data: ${e}`, 'error')
-    })
 }
 
 /**
@@ -548,14 +508,21 @@ export const getTimeline = async (
   )
 }
 
-export const balanceEffect: (asset: string) => AtomEffect<number> =
-  (asset) =>
+export const balanceEffect: (assetObject: string) => AtomEffect<number> =
+  (assetObject) =>
   ({ setSelf }) => {
     wallet.original.subscribe((mutation) => {
+      const asset = assetObject.split('|')[0]
+      const accountId = assetObject.split('|')[1]
       const { type, payload } = mutation
-      if (type === 'UPDATE_BALANCE' && payload.asset === asset) {
+      if (
+        accountId === payload.accountId &&
+        type === 'UPDATE_BALANCE' &&
+        payload.asset === asset
+      ) {
         setSelf(Number(payload.balance))
       } else if (
+        accountId === payload.accountId &&
         type === 'UPDATE_MULTIPLE_BALANCES' &&
         payload.assets.includes(asset)
       ) {
@@ -585,18 +552,6 @@ export const fiatRateEffect: () => AtomEffect<FiatRates> =
 
       if (type === 'UPDATE_FIAT_RATES') {
         setSelf(payload.fiatRates)
-      }
-    })
-  }
-
-export const marketDataEffect: () => AtomEffect<MarketData[]> =
-  () =>
-  ({ setSelf }) => {
-    wallet.original.subscribe((mutation) => {
-      const { type, payload } = mutation
-
-      if (type === 'UPDATE_MARKET_DATA') {
-        setSelf(payload.marketData)
       }
     })
   }

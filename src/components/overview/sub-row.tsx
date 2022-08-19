@@ -1,10 +1,10 @@
-import React, { FC, memo, useCallback, useEffect, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import {
   cryptoToFiat,
   formatFiat,
   prettyBalance,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import { AccountType } from '../../types'
 import AssetIcon from '../asset-icon'
@@ -17,7 +17,7 @@ import {
   fiatRatesState,
 } from '../../atoms'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
-import { getNativeAsset } from '@liquality/wallet-core/dist/utils/asset'
+import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 
 type SubRowProps = {
   parentItem: AccountType
@@ -30,7 +30,7 @@ const SubRow: FC<SubRowProps> = (props) => {
   const [prettyNativeBalance, setPrettyNativeBalance] = useState('')
   const [prettyFiatBalance, setPrettyFiatBalance] = useState('')
   const balance = useRecoilValue(
-    balanceStateFamily({ asset: item.code, assetId: item.id }),
+    balanceStateFamily({ asset: item.code, assetId: parentItem.id }),
   )
   const address = useRecoilValue(addressStateFamily(item.id))
   const fiatRates = useRecoilValue(fiatRatesState)
@@ -132,4 +132,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default memo(SubRow)
+export default SubRow

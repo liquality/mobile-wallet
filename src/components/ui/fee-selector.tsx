@@ -4,7 +4,7 @@ import { FeeDetails } from '@liquality/types'
 import Box from '../../theme/box'
 import Text from '../../theme/text'
 import { GasFees, NetworkFeeType } from '../../types'
-import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
+import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 
 const gasSpeeds: Array<FeeLabel> = [
   FeeLabel.Slow,

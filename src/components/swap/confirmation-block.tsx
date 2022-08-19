@@ -6,10 +6,10 @@ import Text from '../../theme/text'
 import {
   dpUI,
   prettyFiatBalance,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 
 import CopyIcon from '../../assets/icons/copy.svg'
-import { getSendFee } from '@liquality/wallet-core/dist/utils/fees'
+import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 
 type ConfirmationBlockProps = {
   address?: string

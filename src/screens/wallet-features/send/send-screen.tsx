@@ -20,7 +20,7 @@ import {
   cryptoToFiat,
   dpUI,
   fiatToCrypto,
-} from '@liquality/wallet-core/dist/utils/coinFormatter'
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import { chainDefaultColors } from '../../../core/config'
@@ -31,10 +31,10 @@ import Box from '../../../theme/box'
 import {
   getSendFee,
   isEIP1559Fees,
-} from '@liquality/wallet-core/dist/utils/fees'
+} from '@liquality/wallet-core/dist/src/utils/fees'
 import SendFeeSelector from '../../../components/ui/send-fee-selector'
 import { fetchFeesForAsset } from '../../../store/store'
-import { FeeLabel } from '@liquality/wallet-core/dist/store/types'
+import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import ButtonFooter from '../../../components/button-footer'
 import { isNumber, labelTranslateFn } from '../../../utils'
 import { useRecoilValue } from 'recoil'
@@ -380,7 +380,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           ) : (
             <Text style={styles.speedValue}>
               {`(${networkSpeed} / ${dpUI(
-                getSendFee(code, networkFee.current?.value || fee.toNumber()),
+                getSendFee(code, networkFee.current?.value || Number(fee)),
                 9,
               )} ${code})`}
             </Text>

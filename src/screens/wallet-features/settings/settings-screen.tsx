@@ -33,7 +33,7 @@ import DeviceInfo from 'react-native-device-info'
 import { NavigationProp, useNavigation } from '@react-navigation/core'
 import i18n from 'i18n-js'
 import { toggleNetwork } from '../../../store/store'
-import { Network } from '@liquality/wallet-core/dist/store/types'
+import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { CustomRootState } from '../../../reducers'
 

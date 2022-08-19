@@ -11,7 +11,7 @@ import { BigNumber } from '@liquality/types'
 import { performSwap } from '../../../store/store'
 import { labelTranslateFn, Log } from '../../../utils'
 import { useRecoilCallback, useRecoilValue } from 'recoil'
-import { SwapHistoryItem } from '@liquality/wallet-core/dist/store/types'
+import { SwapHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import {
   fiatRatesState,
   historyIdsState,

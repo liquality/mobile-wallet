@@ -15,13 +15,13 @@ import Sovryn from '../../assets/icons/swap-providers/sovryn.svg'
 import Thorchain from '../../assets/icons/swap-providers/thorchain.svg'
 import SwapTypesInfo from './swap-types-info'
 import Button from '../../theme/button'
-import { dpUI } from '@liquality/wallet-core/dist/utils/coinFormatter'
+import { dpUI } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import Box from '../../theme/box'
 import Text from '../../theme/text'
 import ListHeader from './list-header'
-import { SwapQuote } from '@liquality/wallet-core/dist/swaps/types'
+import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { capitalizeFirstLetter, labelTranslateFn } from '../../utils'
-import { calculateQuoteRate } from '@liquality/wallet-core/dist/utils/quotes'
+import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
 import TimesIcon from '../../assets/icons/times.svg'
 import CheckIcon from '../../assets/icons/swap-check.svg'
 
@@ -49,8 +49,8 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
   const [isRatesModalVisible, setIsRatesModalVisible] = useState(false)
   const [isSwapTypesModalVisible, setIsSwapTypesModalVisible] = useState(false)
 
-  const getSwapProviderIcon = (marketQuotes: SwapQuote): React.ReactElement => {
-    switch (marketQuotes.provider) {
+  const getSwapProviderIcon = (swapQuote: SwapQuote): React.ReactElement => {
+    switch (swapQuote.provider) {
       case 'liquality':
         return <Logo width={15} height={15} style={styles.icon} />
       case 'liqualityboost':

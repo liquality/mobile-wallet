@@ -9,7 +9,7 @@ import { BigNumber } from '@liquality/types'
 import {
   HistoryItem,
   TransactionType,
-} from '@liquality/wallet-core/dist/store/types'
+} from '@liquality/wallet-core/dist/src/store/types'
 
 import ProgressCircle from './animations/progress-circle'
 import SuccessIcon from '../assets/icons/activity-status/completed.svg'
@@ -17,10 +17,10 @@ import RefundedIcon from '../assets/icons/activity-status/refunded.svg'
 import ActivityFilter from './activity-filter'
 import { useFilteredHistory } from '../custom-hooks'
 import Text from '../theme/text'
-import { getSwapProvider } from '@liquality/wallet-core/dist/factory/swap'
+import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import Box from '../theme/box'
 import { downloadAssetAcitivity, formatDate } from '../utils'
-import { prettyFiatBalance } from '@liquality/wallet-core/dist/utils/coinFormatter'
+import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { useNavigation } from '@react-navigation/core'
 import { OverviewProps } from '../screens/wallet-features/home/overview-screen'
 
