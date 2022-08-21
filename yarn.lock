@@ -1311,9 +1311,9 @@
     bignumber.js "^9.0.2"
 
 "@chainify/types@^1.2.13":
-  version "1.2.21"
-  resolved "https://registry.yarnpkg.com/@chainify/types/-/types-1.2.21.tgz#378c27f5182cdf181f7d6b32f238eb3be03e686a"
-  integrity sha512-SV8AWT5v75e5BeOAPcGyi9fFyiab7fEzz68L+GwRs4jGYJ56KkVwupF7uY3Gn1MvwmYPhQ2EYkM6lwJIAlEDrw==
+  version "1.2.23"
+  resolved "https://registry.yarnpkg.com/@chainify/types/-/types-1.2.23.tgz#48b637a0f17429b957d142a2e0474be7c6f70052"
+  integrity sha512-ISJYs21QQ7Ephm12AHbc0ogIrKO1ahxd/1aI5a9Y3rh/lwe1E9/iG0RnjscyjYe0xKvr+qc/wAW7/JSrC/mi1Q==
   dependencies:
     "@ethersproject/bignumber" "5.6.0"
     "@liquality/cryptoassets" "^1.13.3"
@@ -2805,10 +2805,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@ledgerhq/cryptoassets@^6.31.0":
-  version "6.31.0"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/cryptoassets/-/cryptoassets-6.31.0.tgz#c15cf308fd6061ba1353b1078990b906aa9da4ae"
-  integrity sha512-DM6JcGbX0n9TmcJhCVSrXOm6L4mQFifsZnBIzR2kFZ5/+r2H5Eca9FM+teJ/MUe2BtvuMg2slTzFTK/slLRWLw==
+"@ledgerhq/cryptoassets@^6.32.0":
+  version "6.32.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/cryptoassets/-/cryptoassets-6.32.0.tgz#6e4aadae22781294114291b15af81f3d627a8a0a"
+  integrity sha512-PoUZLw8HNKYPyxOBZPDJDs0Usqy0RyaSioTrC5Nlm5sVHEWPwssGJAAWxXO4q60j2PvLAOnfXPPo2pRWxcBTeg==
   dependencies:
     invariant "2"
 
@@ -2851,13 +2851,13 @@
     sha.js "2"
 
 "@ledgerhq/hw-app-eth@^6.26.0":
-  version "6.29.3"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-app-eth/-/hw-app-eth-6.29.3.tgz#845c2d717d5ab61ba95746569cdf6d475548e8e7"
-  integrity sha512-rp+VGlNakVAH0CfthA+nhz7rBsKqkcXwZYQ7mnFUdWVFyhZgRdN9AgVV+pks+vo3j/LppK84c2Wf+n6WMP+Ojw==
+  version "6.29.4"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-app-eth/-/hw-app-eth-6.29.4.tgz#73fbdbec96000573e1f807c2a3158171225d34e0"
+  integrity sha512-lKiL7/H+fkknRnXMKyDhrldG3OQGH0mgC8TCudVl9R6Ddh2jL0Yqxip2Dne0djr9awPMvJT6DDzE9P3KiJO0ag==
   dependencies:
     "@ethersproject/abi" "^5.5.0"
     "@ethersproject/rlp" "^5.5.0"
-    "@ledgerhq/cryptoassets" "^6.31.0"
+    "@ledgerhq/cryptoassets" "^6.32.0"
     "@ledgerhq/errors" "^6.10.1"
     "@ledgerhq/hw-transport" "^6.27.2"
     "@ledgerhq/hw-transport-mocker" "^6.27.2"
@@ -2906,7 +2906,7 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-6.10.0.tgz#c012c1ecc1a0e53d50e6af381618dca5268461c1"
   integrity sha512-lLseUPEhSFUXYTKj6q7s2O3s2vW2ebgA11vMAlKodXGf5AFw4zUoEbTz9CoFOC9jS6xY4Qr8BmRnxP/odT4Uuw==
 
-"@liquality/cryptoassets@1.13.5", "@liquality/cryptoassets@^1.13.3", "@liquality/cryptoassets@^1.2.14":
+"@liquality/cryptoassets@1.13.5", "@liquality/cryptoassets@^1.13.3":
   version "1.13.5"
   resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.13.5.tgz#84dcb2fcda6db59db8a960ca2bc31adb5e0df90b"
   integrity sha512-3LJGV0ay5c49N6sW0AEivh3wm2iJ/Yt4pSjK14hXeK/eLX+A37d6PedhS6R0r8d2p7tSI6NT6DjOD/PU9Yla+Q==
@@ -2929,14 +2929,14 @@
     ethers "5.6.0"
     moving-averages "^4.0.6"
 
-"@liquality/types@^1.10.0":
+"@liquality/types@1.13.12":
   version "1.13.12"
   resolved "https://registry.yarnpkg.com/@liquality/types/-/types-1.13.12.tgz#d4ba6e774b597eb726e8434c570b63fd811a6e32"
   integrity sha512-42+ZfdmuZmGPDoYNJ7oCqR+3NtfLePBwtfpveoF2XQVu8FgzG/noH0/Nqz2Aw/TE1GD40n+ZrPRv6YDjDv+4xw==
   dependencies:
     bignumber.js "^9.0.1"
 
-"@liquality/wallet-core@^1.23.3":
+"@liquality/wallet-core@1.28.6":
   version "1.28.6"
   resolved "https://registry.yarnpkg.com/@liquality/wallet-core/-/wallet-core-1.28.6.tgz#7c7ec59b9d83afa9708cc544e4c6d51de4377dc6"
   integrity sha512-dSyII8d3I1EqLUHE5f/rUhInyfUP08do7QeYLTFxo0mmDNJz56OlmxOy5WcoEU8jb0lSaxJYWcy/mbFXjxzR+Q==
@@ -3131,9 +3131,9 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@rari-capital/solmate@git+https://github.com/rari-capital/solmate.git#8f9b23f8838670afda0fd8983f2c41e8037ae6bc":
+"@rari-capital/solmate@https://github.com/rari-capital/solmate.git#8f9b23f8838670afda0fd8983f2c41e8037ae6bc":
   version "7.0.0-alpha.3"
-  resolved "git+https://github.com/rari-capital/solmate.git#8f9b23f8838670afda0fd8983f2c41e8037ae6bc"
+  resolved "https://github.com/rari-capital/solmate.git#8f9b23f8838670afda0fd8983f2c41e8037ae6bc"
 
 "@react-native-async-storage/async-storage@^1.15.8":
   version "1.17.9"
@@ -3629,10 +3629,10 @@
     "@solana/web3.js" "^1.32.0"
     start-server-and-test "^1.14.0"
 
-"@solana/web3.js@1.50.1":
-  version "1.50.1"
-  resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.50.1.tgz#dae726a06267d1bcd88b1e3cd8ae44c709302dcf"
-  integrity sha512-1l9N/nS8pJEA2YibNT8wa072718O0/A1eKWE0+pdWC5wDGQgBNxZSLuv7Cq5Dcn46WsZ5J5ZstK89q8J/ZZaQA==
+"@solana/web3.js@1.47.3", "@solana/web3.js@1.50.1", "@solana/web3.js@^1.32.0":
+  version "1.47.3"
+  resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.47.3.tgz#ec13f2cf4f9f54cc4fbd26d20be1e026c6e2279c"
+  integrity sha512-TQJulaN/+b0xXq5EhQAYFwVyOORxSyVJn1EiXupClZm8DY7f9EeUG6vl0FzSAgwEAwXKsgK3sVs/3px2e7H7dQ==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@ethersproject/sha2" "^5.5.0"
@@ -3646,34 +3646,10 @@
     jayson "^3.4.4"
     js-sha3 "^0.8.0"
     node-fetch "2"
-    react-native-url-polyfill "^1.3.0"
     rpc-websockets "^7.5.0"
     secp256k1 "^4.0.2"
     superstruct "^0.14.2"
     tweetnacl "^1.0.0"
-
-"@solana/web3.js@^1.32.0":
-  version "1.53.0"
-  resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.53.0.tgz#24a6341e4026fc2b993656141361c54bec917c07"
-  integrity sha512-QyQDA9U5b+AiTo1ANsj9WihWWECeLv6VRpiTE7xPe5hLYANXZYecnlLglNiEzVgRg/jLvR5DrCISXhHx/mAEJw==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    "@ethersproject/sha2" "^5.5.0"
-    "@solana/buffer-layout" "^4.0.0"
-    bigint-buffer "^1.1.5"
-    bn.js "^5.0.0"
-    borsh "^0.7.0"
-    bs58 "^4.0.1"
-    buffer "6.0.1"
-    fast-stable-stringify "^1.0.0"
-    jayson "^3.4.4"
-    js-sha3 "^0.8.0"
-    node-fetch "2"
-    react-native-url-polyfill "^1.3.0"
-    rpc-websockets "^7.5.0"
-    secp256k1 "^4.0.2"
-    superstruct "^0.14.2"
-    tweetnacl "^1.0.3"
 
 "@solidity-parser/parser@^0.14.2":
   version "0.14.3"
@@ -4061,9 +4037,9 @@
     "@types/node" "*"
 
 "@types/lodash@^4.14.178", "@types/lodash@^4.14.182":
-  version "4.14.183"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.183.tgz#1173e843e858cff5b997c234df2789a4a54c2374"
-  integrity sha512-UXavyuxzXKMqJPEpFPri6Ku5F9af6ZJXUneHhvQJxavrEjuHkFp2YnDWHcxJiG7hk8ZkWqjcyNeW1s/smZv5cw==
+  version "4.14.184"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.184.tgz#23f96cd2a21a28e106dc24d825d4aa966de7a9fe"
+  integrity sha512-RoZphVtHbxPZizt4IcILciSWiC6dcn+eZ8oX9IWEYfDMcocdd42f7NPI6fQj+6zI8y4E0L7gu2pcZKLGTRaV9Q==
 
 "@types/long@^4.0.1":
   version "4.0.2"
@@ -4390,7 +4366,15 @@
     "@graphql-typed-document-node/core" "^3.1.0"
     wonka "^4.0.14"
 
-"@urql/core@>=2.3.1", "@urql/core@^2.6.1":
+"@urql/core@>=2.3.1":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-3.0.0.tgz#181976367ae27e1b36b9864fb3fa1bbfdad3ae71"
+  integrity sha512-C9nVn3+hhht8K0MEr9zLUgzoapkoX7X0crwMB72LrMqerhBjvEEuTngEFlZfALRwOzHjUNXBT9ZVgyzt6cKRhA==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.1.1"
+    wonka "^6.0.0"
+
+"@urql/core@^2.6.1":
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.6.1.tgz#c10ee972c5e81df6d7bf1e778ef1b5d30e2906e5"
   integrity sha512-gYrEHy3tViJhwIhauK6MIf2Qp09QTsgNHZRd0n71rS+hF6gdwjspf1oKljl4m25+272cJF7fPjBUGmjaiEr7Kg==
@@ -4406,10 +4390,10 @@
     "@urql/core" ">=2.3.1"
     wonka "^4.0.14"
 
-"@vue/compiler-sfc@2.7.8":
-  version "2.7.8"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-sfc/-/compiler-sfc-2.7.8.tgz#731aadd6beafdb9c72fd8614ce189ac6cee87612"
-  integrity sha512-2DK4YWKfgLnW9VDR9gnju1gcYRk3flKj8UNsms7fsRmFcg35slVTZEkqwBtX+wJBXaamFfn6NxSsZh3h12Ix/Q==
+"@vue/compiler-sfc@2.7.9":
+  version "2.7.9"
+  resolved "https://registry.yarnpkg.com/@vue/compiler-sfc/-/compiler-sfc-2.7.9.tgz#aa31813c94de39f4977e4b924eb261c2199218ad"
+  integrity sha512-TD2FvT0fPUezw5RVP4tfwTZnKHP0QjeEUb39y7tORvOJQTjbOuHJEk4GPHUPsRaTeQ8rjuKjntyrYcEIx+ODxg==
   dependencies:
     "@babel/parser" "^7.18.4"
     postcss "^8.4.14"
@@ -5836,7 +5820,7 @@ buffer@^4.9.1:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-buffer@^5.0.5, buffer@^5.4.3, buffer@^5.5.0, buffer@^5.6.0:
+buffer@^5.0.5, buffer@^5.5.0, buffer@^5.6.0:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.7.1.tgz#ba62e7c13133053582197160851a8f648e99eed0"
   integrity sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==
@@ -7263,9 +7247,9 @@ drbg.js@^1.0.1:
     create-hash "^1.1.2"
     create-hmac "^1.1.4"
 
-"ds-test@git+https://github.com/dapphub/ds-test.git#9310e879db8ba3ea6d5c6489a579118fd264a3f5":
+"ds-test@https://github.com/dapphub/ds-test.git#9310e879db8ba3ea6d5c6489a579118fd264a3f5":
   version "0.0.0"
-  resolved "git+https://github.com/dapphub/ds-test.git#9310e879db8ba3ea6d5c6489a579118fd264a3f5"
+  resolved "https://github.com/dapphub/ds-test.git#9310e879db8ba3ea6d5c6489a579118fd264a3f5"
 
 duplexer3@^0.1.4:
   version "0.1.5"
@@ -7299,9 +7283,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.202:
-  version "1.4.222"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.222.tgz#2ba24bef613fc1985dbffea85df8f62f2dec6448"
-  integrity sha512-gEM2awN5HZknWdLbngk4uQCVfhucFAfFzuchP3wM3NN6eow1eDU0dFy2kts43FB20ZfhVFF0jmFSTb1h5OhyIg==
+  version "1.4.225"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.225.tgz#3e27bdd157cbaf19768141f2e0f0f45071e52338"
+  integrity sha512-ICHvGaCIQR3P88uK8aRtx8gmejbVJyC6bB4LEC3anzBrIzdzC7aiZHY4iFfXhN4st6I7lMO0x4sgBHf/7kBvRw==
 
 electron@^11.1.0:
   version "11.5.0"
@@ -8141,9 +8125,9 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
 
-"excessively-safe-call@git+https://github.com/nomad-xyz/ExcessivelySafeCall.git#81cd99ce3e69117d665d7601c330ea03b97acce0":
+"excessively-safe-call@https://github.com/nomad-xyz/ExcessivelySafeCall.git#81cd99ce3e69117d665d7601c330ea03b97acce0":
   version "0.0.1-rc.1"
-  resolved "git+https://github.com/nomad-xyz/ExcessivelySafeCall.git#81cd99ce3e69117d665d7601c330ea03b97acce0"
+  resolved "https://github.com/nomad-xyz/ExcessivelySafeCall.git#81cd99ce3e69117d665d7601c330ea03b97acce0"
 
 exec-async@^2.2.0:
   version "2.2.0"
@@ -8696,14 +8680,14 @@ flat@^5.0.2:
   integrity sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==
 
 flatted@^3.1.0:
-  version "3.2.6"
-  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.6.tgz#022e9218c637f9f3fc9c35ab9c9193f05add60b2"
-  integrity sha512-0sQoMh9s0BYsm+12Huy/rkKxVu4R1+r96YX5cG44rHV0pQ6iC3Q+mkoMFaGWObMFYQxCVT+ssG1ksneA2MI9KQ==
+  version "3.2.7"
+  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.7.tgz#609f39207cb614b89d0765b477cb2d437fbf9787"
+  integrity sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==
 
 flow-parser@0.*:
-  version "0.184.0"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.184.0.tgz#45faed0a40fa554d24550c35ec7889b86b360c9b"
-  integrity sha512-+RAHizWmCnfnAWX1yD3fSdWRYCMhGiiqZSbHNU38MQxYc8XdTBoFB3ZpL1MEPG6yy/Yb3hg9w9eIf0DNlU8epQ==
+  version "0.185.0"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.185.0.tgz#56bde60805bad19b2934ebfc50c9485e5c5424f9"
+  integrity sha512-VWpXjEbQbIGQvB6CyWwx56wMioGZ6w2s8qJlFiuE3S7D8O+xE5t988i1u2TGFO5TLSzQPUhfIOzPpLYA93H9Jg==
 
 flow-parser@^0.121.0:
   version "0.121.0"
@@ -8754,9 +8738,9 @@ forever-agent@~0.6.1:
   resolved "https://registry.yarnpkg.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
   integrity sha512-j0KLYPhm6zeac4lz3oJ3o65qvgQCcPubiyotZrXqEaG4hNagNYO8qdlUrX5vwqv9ohqeT/Z3j6+yW067yWWdUw==
 
-"forge-std@git+https://github.com/foundry-rs/forge-std.git#f18682b2874fc57d7c80a511fed0b35ec4201ffa":
+"forge-std@https://github.com/foundry-rs/forge-std.git#f18682b2874fc57d7c80a511fed0b35ec4201ffa":
   version "0.0.0"
-  resolved "git+https://github.com/foundry-rs/forge-std.git#f18682b2874fc57d7c80a511fed0b35ec4201ffa"
+  resolved "https://github.com/foundry-rs/forge-std.git#f18682b2874fc57d7c80a511fed0b35ec4201ffa"
 
 form-data-encoder@1.7.1:
   version "1.7.1"
@@ -13801,9 +13785,9 @@ react-native-background-actions@^2.6.7:
     eventemitter3 "^4.0.7"
 
 react-native-calendars@^1.1280.0:
-  version "1.1287.0"
-  resolved "https://registry.yarnpkg.com/react-native-calendars/-/react-native-calendars-1.1287.0.tgz#0abfbe55269f98d2186357f5dc6eb1edbeca80e7"
-  integrity sha512-8B6Oad+4we8WCHl6Y42ZUq0Uj9UM+Z+qotoNIJPEXpTqGKIVnRawSAF4B7gFw76ctsa1pUdJT2CZcajmVKLxKA==
+  version "1.1288.0"
+  resolved "https://registry.yarnpkg.com/react-native-calendars/-/react-native-calendars-1.1288.0.tgz#1ff3ecd9a5f9a8b6ccf2e7c8b38e967413ea08ae"
+  integrity sha512-ZyTghahqUhz0SqF7XOhXiCzUU635ZBIej3N2bg7yAfHfFWu0fAgZZV4elm9Q+eE7v8qrXGo4f+H1w5GtPGl5UQ==
   dependencies:
     hoist-non-react-statics "^3.3.1"
     immutable "^4.0.0-rc.12"
@@ -13936,7 +13920,7 @@ react-native-quick-base64@^2.0.2, react-native-quick-base64@^2.0.5:
   dependencies:
     base64-js "^1.5.1"
 
-react-native-quick-crypto@^0.4.3:
+react-native-quick-crypto@^0.4.5:
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/react-native-quick-crypto/-/react-native-quick-crypto-0.4.5.tgz#08b5714577d5e6cf75ba217012ea36795dee6f54"
   integrity sha512-mv4MqoZAfgUGVr4kJLmCObv0HSYI3PGaDyvy2lNgUF5fmFcngUAgL0OZ0He5bbBCgcPSdEAzlGTGIY/r3mKezA==
@@ -13977,9 +13961,9 @@ react-native-safe-area-context@^4.2.2:
   integrity sha512-cEr7fknJCToTrSyDCVNg0GRdRMhyLeQa2NZwVCuzEQcWedOw/59ExomjmzCE4rxrKXs6OJbyfNtFRNyewDaHuA==
 
 react-native-screens@^3.13.1:
-  version "3.15.0"
-  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.15.0.tgz#78e42c8df72851b1ff235ddf5434b961ae123ca5"
-  integrity sha512-ezC5TibsUYyqPuuHpZoM3iEl6bRzCVBMJeGaFkn7xznuOt1VwkZVub0BvafIEYR/+AQC/RjxzMSQPs1qal0+wA==
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.16.0.tgz#34fe23f4b386c2a4bf29a33b915c81f3ebf60ba7"
+  integrity sha512-h87K/r6Oj4VQkDiICorG8/4LscQfBfFwPCluAW4zmbQILSZGc/NWqWSFV1mOQlpDrqOsc1DohBmnsmV6imMkbQ==
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
@@ -14016,13 +14000,6 @@ react-native-swipe-gestures@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.5.tgz#a172cb0f3e7478ccd681fd36b8bfbcdd098bde7c"
   integrity sha512-Ns7Bn9H/Tyw278+5SQx9oAblDZ7JixyzeOczcBK8dipQk2pD7Djkcfnf1nB/8RErAmMLL9iXgW0QHqiII8AhKw==
-
-react-native-url-polyfill@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-url-polyfill/-/react-native-url-polyfill-1.3.0.tgz#c1763de0f2a8c22cc3e959b654c8790622b6ef6a"
-  integrity sha512-w9JfSkvpqqlix9UjDvJjm1EjSt652zVQ6iwCIj1cVVkwXf4jQhQgTNXY6EVTwuAmUjg6BC6k9RHCBynoLFo3IQ==
-  dependencies:
-    whatwg-url-without-unicode "8.0.0-3"
 
 react-native-vision-camera@^2.9.4:
   version "2.14.1"
@@ -14208,10 +14185,10 @@ recast@^0.20.4:
     source-map "~0.6.1"
     tslib "^2.0.1"
 
-recoil@^0.7.3:
-  version "0.7.5"
-  resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.7.5.tgz#9a33a03350cfd99e08bdd5b73bfc8b8b9ee751b9"
-  integrity sha512-GVShsj5+M/2GULWBs5WBJGcsNis/d3YvDiaKjYh3mLKXftjtmk9kfaQ8jwjoIXySCwn8/RhgJ4Sshwgzj2UpFA==
+recoil@0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.7.3.tgz#b674f5d9ceddb24f53dcb089731ec939d9e87cfc"
+  integrity sha512-WaPppk3Hz5/V9nOVmu1X/o3cJyf/rLXw/YsEENvMzEDk+LKqMiGfFgZ3Gg51TKWccpCZCyrSBXn2O4L1E2WDPQ==
   dependencies:
     hamt_plus "1.0.2"
 
@@ -16128,9 +16105,9 @@ unbox-primitive@^1.0.2:
     which-boxed-primitive "^1.0.2"
 
 undici@^5.4.0:
-  version "5.8.2"
-  resolved "https://registry.yarnpkg.com/undici/-/undici-5.8.2.tgz#071fc8a6a5d24db0ad510ad442f607d9b09d5eec"
-  integrity sha512-3KLq3pXMS0Y4IELV045fTxqz04Nk9Ms7yfBBHum3yxsTR4XNn+ZCaUbf/mWitgYDAhsplQ0B1G4S5D345lMO3A==
+  version "5.9.1"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-5.9.1.tgz#fc9fd85dd488f965f153314a63d9426a11f3360b"
+  integrity sha512-6fB3a+SNnWEm4CJbgo0/CWR8RGcOCQP68SF4X0mxtYTq2VNN8T88NYrWVBAeSX+zb7bny2dx2iYhP3XHi00omg==
 
 unicode-canonical-property-names-ecmascript@^2.0.0:
   version "2.0.0"
@@ -16474,11 +16451,11 @@ vlq@^1.0.0:
   integrity sha512-gQpnTgkubC6hQgdIcRdYGDSDc+SaujOdyesZQMv6JlfQee/9Mp0Qhnys6WxDWvQnL5WZdT7o2Ul187aSt0Rq+w==
 
 vue@^2.6.11:
-  version "2.7.8"
-  resolved "https://registry.yarnpkg.com/vue/-/vue-2.7.8.tgz#34e06553137611d8cecc4b0cd78b7a59f80b1299"
-  integrity sha512-ncwlZx5qOcn754bCu5/tS/IWPhXHopfit79cx+uIlLMyt3vCMGcXai5yCG5y+I6cDmEj4ukRYyZail9FTQh7lQ==
+  version "2.7.9"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.7.9.tgz#ac3ccb4a4ac5dd31a8eec4c68a094efe7f83dfbb"
+  integrity sha512-GeWCvAUkjzD5q4A3vgi8ka5r9bM6g8fmNmx/9VnHDKCaEzBcoVw+7UcQktZHrJ2jhlI+Zv8L57pMCIwM4h4MWg==
   dependencies:
-    "@vue/compiler-sfc" "2.7.8"
+    "@vue/compiler-sfc" "2.7.9"
     csstype "^3.1.0"
 
 vuex@^3.1.3:
@@ -16804,15 +16781,6 @@ whatwg-mimetype@^2.3.0:
   resolved "https://registry.yarnpkg.com/whatwg-mimetype/-/whatwg-mimetype-2.3.0.tgz#3d4b1e0312d2079879f826aff18dbeeca5960fbf"
   integrity sha512-M4yMwr6mAnQz76TbJm914+gPpB/nCwvZbJU28cUD6dR004SAxDLOOSUaB1JDRqLtaOV/vi0IC5lEAGFgrjGv/g==
 
-whatwg-url-without-unicode@8.0.0-3:
-  version "8.0.0-3"
-  resolved "https://registry.yarnpkg.com/whatwg-url-without-unicode/-/whatwg-url-without-unicode-8.0.0-3.tgz#ab6df4bf6caaa6c85a59f6e82c026151d4bb376b"
-  integrity sha512-HoKuzZrUlgpz35YO27XgD28uh/WJH4B0+3ttFqRo//lmq+9T/mIOJ6kqmINI9HpUpz1imRC/nR/lxKpJiv0uig==
-  dependencies:
-    buffer "^5.4.3"
-    punycode "^2.1.1"
-    webidl-conversions "^5.0.0"
-
 whatwg-url@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/whatwg-url/-/whatwg-url-5.0.0.tgz#966454e8765462e37644d3626f6742ce8b70965d"
@@ -16890,6 +16858,11 @@ wonka@^4.0.14:
   version "4.0.15"
   resolved "https://registry.yarnpkg.com/wonka/-/wonka-4.0.15.tgz#9aa42046efa424565ab8f8f451fcca955bf80b89"
   integrity sha512-U0IUQHKXXn6PFo9nqsHphVCE5m3IntqZNB9Jjn7EB1lrR7YTDY3YWgFvEvwniTzXSvOH/XMzAZaIfJF/LvHYXg==
+
+wonka@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/wonka/-/wonka-6.0.0.tgz#38cd39a517fc3ff721ea3bf353642b353bf48860"
+  integrity sha512-TEiIOqkhQXbcmL1RrjxPCzTX15V5FSyJvZRSiTxvgTgrJMaOVKmzGTdRVh349CfaNo9dsIhWDyg1/GNq4NWrEg==
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
