@@ -21,7 +21,7 @@ import {
   networkState,
 } from '../../../atoms'
 import {
-  getSendAmountFee,
+  getSendTxFees,
   getSendFee,
 } from '@liquality/wallet-core/dist/src/utils/fees'
 import { setupWallet } from '@liquality/wallet-core'
@@ -33,6 +33,7 @@ import {
   dpUI,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import { speedUpTransaction } from '../../../store/store'
 
 const scrollViewStyle: ViewStyle = {
   flex: 1,
@@ -71,7 +72,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   useEffect(() => {
     async function fetchData() {
       const amtInpBg = new BigNumber(Number(route.params.amountInput))
-      const totalFeesData = await getSendAmountFee(
+      const totalFeesData = await getSendTxFees(
         accountForAsset?.id!,
         code,
         amtInpBg,
@@ -85,13 +86,24 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setFormattedRatesObj, customFeeInput.value])
 
-  const handleApplyPress = () => {
-    navigation.navigate('SendScreen', {
-      assetData: route.params.assetData,
-      ...route.params,
-      customFee: parseFloat(customFeeInput.value),
-      speed: speedMode,
-    })
+  const handleApplyPress = async () => {
+    if (route.params.speedUp) {
+      await speedUpTransaction(
+        route.params.id,
+        route.params.txHash,
+        code,
+        activeNetwork,
+        parseFloat(customFeeInput.value),
+      )
+      navigation.goBack()
+    } else {
+      navigation.navigate('SendScreen', {
+        assetData: route.params.assetData,
+        ...route.params,
+        customFee: parseFloat(customFeeInput.value),
+        speed: speedMode,
+      })
+    }
   }
 
   useEffect(() => {

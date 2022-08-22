@@ -438,7 +438,6 @@ export const fetchConfirmationByHash = async (
  * @param hash
  * @param asset
  * @param activeNetwork
- * @param tx
  * @param newFee
  */
 export const speedUpTransaction = async (
@@ -446,7 +445,6 @@ export const speedUpTransaction = async (
   hash: string,
   asset: string,
   activeNetwork: any,
-  tx: string,
   newFee: number,
 ) => {
   const { activeWalletId } = wallet.state

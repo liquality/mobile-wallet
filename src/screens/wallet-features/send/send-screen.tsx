@@ -122,7 +122,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
   useEffect(() => {
     fetchFeesForAsset(code).then((gasFee) => {
-      setFee(gasFee.average)
+      setFee(gasFee)
       setAvailableAmount(
         calculateAvailableAmnt(
           code,
@@ -142,6 +142,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     if (validate() && networkFee?.current?.value) {
       navigation.navigate('SendReviewScreen', {
         // screenTitle: `Send ${code} Review`,
+        assetData: route.params.assetData,
         screenTitle: i18n.t('sendScreen.sendReview', { code }),
         sendTransaction: {
           amount: new BigNumber(amountInput.value).toNumber(),
@@ -152,18 +153,21 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           memo: memoInput.value,
           color: color || '#EAB300',
         },
+        fee: fee,
         customFee: customFee,
       })
     }
   }, [
-    addressInput.value,
-    amountInput.value,
-    code,
-    color,
-    memoInput.value,
-    navigation,
-    validate,
     customFee,
+    validate,
+    navigation,
+    route.params.assetData,
+    code,
+    amountInput.value,
+    addressInput.value,
+    memoInput.value,
+    color,
+    fee,
   ])
 
   const handleFiatBtnPress = useCallback(() => {
@@ -380,7 +384,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           ) : (
             <Text style={styles.speedValue}>
               {`(${networkSpeed} / ${dpUI(
-                getSendFee(code, networkFee.current?.value || fee.toNumber()),
+                getSendFee(code, networkFee.current?.value || Number(fee)),
                 9,
               )} ${code})`}
             </Text>
