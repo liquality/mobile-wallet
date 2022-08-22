@@ -338,7 +338,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }, [updateBestQuote])
 
   const getCompatibleErrorMsg = React.useCallback(
-    (errorMessageType: ErrorMessaging) => {
+    (errorMessageType?: ErrorMessaging) => {
       if (!error) {
         return null
       }
@@ -413,6 +413,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               onAction={onOkDoItPress}
             />
           )
+        default:
+          return <MessageBanner text1={error} />
       }
     },
     [error, swapPair.fromAsset?.code],
@@ -423,7 +425,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       flex={1}
       width={Dimensions.get('window').width}
       backgroundColor="mainBackground">
-      {getCompatibleErrorMsg(ErrorMessaging.MoreTknReq)}
+      {getCompatibleErrorMsg()}
       <Box
         flexDirection="row"
         justifyContent="center"
