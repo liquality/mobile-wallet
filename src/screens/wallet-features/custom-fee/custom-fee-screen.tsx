@@ -86,12 +86,16 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   }, [setFormattedRatesObj, customFeeInput.value])
 
   const handleApplyPress = () => {
-    navigation.navigate('SendScreen', {
-      assetData: route.params.assetData,
-      ...route.params,
-      customFee: parseFloat(customFeeInput.value),
-      speed: speedMode,
-    })
+    if (route.params.speedUp) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('SendScreen', {
+        assetData: route.params.assetData,
+        ...route.params,
+        customFee: parseFloat(customFeeInput.value),
+        speed: speedMode,
+      })
+    }
   }
 
   useEffect(() => {

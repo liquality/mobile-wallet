@@ -119,12 +119,16 @@ const CustomFeeEIP1559Screen = ({
   )
 
   const handleApplyPress = () => {
-    navigation.navigate('SendScreen', {
-      assetData: route.params.assetData,
-      ...route.params,
-      customFee: Number(userInputMinerTip) + Number(userInputMaximumFee),
-      speed: speedMode,
-    })
+    if (route.params.speedUp) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('SendScreen', {
+        assetData: route.params.assetData,
+        ...route.params,
+        customFee: parseFloat(customFeeInput.value),
+        speed: speedMode,
+      })
+    }
   }
 
   if (!gasFees) {
