@@ -124,6 +124,8 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             <Text variant="tabHeader" tx="assetScreen.activity" />
           </Pressable>
         </View>
+        {/* For some reason ActivityFlatList started throwing undefined errors upon SEND navigation and flow.
+        Should be fixed, can be commented out to bypass that error for now */}
         <ActivityFlatList selectedAsset={code} />
       </React.Suspense>
     </Box>

@@ -33,6 +33,7 @@ import {
   dpUI,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import { speedUpTransaction } from '../../../store/store'
 
 const scrollViewStyle: ViewStyle = {
   flex: 1,
@@ -85,8 +86,15 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setFormattedRatesObj, customFeeInput.value])
 
-  const handleApplyPress = () => {
+  const handleApplyPress = async () => {
     if (route.params.speedUp) {
+      await speedUpTransaction(
+        route.params.id,
+        route.params.txHash,
+        code,
+        activeNetwork,
+        parseFloat(customFeeInput.value),
+      )
       navigation.goBack()
     } else {
       navigation.navigate('SendScreen', {

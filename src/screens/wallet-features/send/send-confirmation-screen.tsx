@@ -47,6 +47,8 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
           fee: route.params.fee,
           speedMode: 'average',
           speedUp: true,
+          id: transaction.id,
+          txHash: historyItem.txHash,
         },
       )
     }

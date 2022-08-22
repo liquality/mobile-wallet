@@ -31,6 +31,7 @@ import { FeeDetails as FDs } from '@chainify/types'
 import Box from '../../../theme/box'
 import Text from '../../../theme/text'
 import { labelTranslateFn } from '../../../utils'
+import { speedUpTransaction } from '../../../store/store'
 
 type CustomFeeEIP1559ScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -118,8 +119,15 @@ const CustomFeeEIP1559Screen = ({
     [setSpeedMode, gasFees],
   )
 
-  const handleApplyPress = () => {
+  const handleApplyPress = async () => {
     if (route.params.speedUp) {
+      await speedUpTransaction(
+        route.params.id,
+        route.params.txHash,
+        code,
+        activeNetwork,
+        parseFloat(customFeeInput.value),
+      )
       navigation.goBack()
     } else {
       navigation.navigate('SendScreen', {
