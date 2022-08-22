@@ -1,4 +1,11 @@
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import React, {
+  ForwardRefRenderFunction,
+  useCallback,
+  useState,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from 'react'
 import { useInputState } from '../../hooks'
 import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
 import AssetIcon from '../asset-icon'
@@ -11,7 +18,10 @@ import {
   fiatToCrypto,
   formatFiat,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
-import { SwapEventType } from '../../screens/wallet-features/swap/swap-screen'
+import {
+  SwapEventActionKind,
+  SwapEventAction,
+} from '../../screens/wallet-features/swap/swap-screen'
 import Button from '../../theme/button'
 import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms'
@@ -24,26 +34,25 @@ type AmountTextInputBlockProps = {
   maximumValue?: BigNumber
   minimumValue?: BigNumber
   defaultAmount?: BigNumber
-  dispatch?: React.Dispatch<{
-    payload: SwapEventType
-    type: string
-  }>
+  dispatch?: React.Dispatch<SwapEventAction>
 }
 
-const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
-  const {
-    label,
-    assetSymbol,
-    chain,
-    maximumValue,
-    minimumValue,
-    dispatch,
-    type,
-  } = props
+type AmountTextInputHandle = {
+  setAfterDispatch: (text: string) => void
+}
+
+const AmountTextInputBlock: ForwardRefRenderFunction<
+  AmountTextInputHandle,
+  AmountTextInputBlockProps
+> = (props, forwardedRef) => {
+  const { label, assetSymbol, chain, defaultAmount, dispatch, type } = props
   const fiatRates = useRecoilValue(fiatRatesState)
-  const { value, onChangeText } = useInputState('0')
+  const { value, onChangeText } = useInputState(
+    defaultAmount?.toString() || '0',
+  )
   const color = chainDefaultColors[chain]
   const [isAmountNative, setIsAmountNative] = useState<boolean>(true)
+  const textInputRef = useRef<TextInput>(null)
 
   const handleToggleAmount = () => {
     if (isAmountNative) {
@@ -71,39 +80,50 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
         newAmount = fiatToCrypto(
           new BigNumber(text),
           fiatRates?.[assetSymbol] || 0,
-        )
+        ) as BigNumber
       }
 
       if (dispatch && !skipDispatch) {
-        dispatch({
-          type: type === 'TO' ? 'TO_AMOUNT_UPDATED' : 'FROM_AMOUNT_UPDATED',
-          payload: {
-            [type === 'TO' ? 'toAmount' : 'fromAmount']: newAmount,
-          },
-        })
+        if (type === 'TO') {
+          dispatch({
+            type: SwapEventActionKind.ToAmountUpdated,
+            payload: { toAmount: newAmount },
+          })
+        } else {
+          dispatch({
+            type: SwapEventActionKind.FromAmountUpdated,
+            payload: { fromAmount: newAmount },
+          })
+        }
       }
       return newAmount
     },
     [assetSymbol, fiatRates, isAmountNative, dispatch, type],
   )
 
+  useImperativeHandle(forwardedRef, () => ({
+    setAfterDispatch: (text) => {
+      onChangeText(text)
+    },
+  }))
+
   const handleTextChange = useCallback(
     (text: string) => {
-      onChangeText(text)
-      updateAmount(text, false)
+      // avoid more than one decimal points and only number are allowed
+      const validated = text.match(/^(\d*\.{0,1}\d{0,20}$)/)
+      if (validated) {
+        onChangeText(text)
+        updateAmount(text, false)
+      }
     },
     [onChangeText, updateAmount],
   )
 
-  useEffect(() => {
-    if (maximumValue && maximumValue.gt(0)) {
-      updateAmount(maximumValue.toString(), true)
-      onChangeText(maximumValue.toString())
-    } else if (minimumValue && minimumValue.gt(0)) {
-      updateAmount(minimumValue.toString(), true)
-      onChangeText(minimumValue.toString())
-    }
-  }, [onChangeText, maximumValue, minimumValue, updateAmount])
+  // Avoid NaN if user enters only decimal points
+  let formattedValue = value
+  if (value.length === 1 && value === '.') {
+    formattedValue = '0'
+  }
 
   return (
     <View style={styles.container}>
@@ -116,12 +136,12 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
             isAmountNative
               ? `$${formatFiat(
                   cryptoToFiat(
-                    new BigNumber(value),
+                    new BigNumber(formattedValue || 0),
                     fiatRates?.[assetSymbol] || 0,
                   ) as BigNumber,
                 )}`
               : `${fiatToCrypto(
-                  new BigNumber(value),
+                  new BigNumber(formattedValue || 0),
                   fiatRates?.[assetSymbol] || 0,
                 )} ${assetSymbol}`
           }
@@ -136,10 +156,11 @@ const AmountTextInputBlock: FC<AmountTextInputBlockProps> = (props) => {
             style={[styles.font, styles.input, { color }]}
             keyboardType={'numeric'}
             onChangeText={handleTextChange}
-            value={value}
+            value={formattedValue}
             placeholder={'0'}
             autoCorrect={false}
             returnKeyType="done"
+            ref={textInputRef}
           />
         </View>
         <AssetIcon asset={assetSymbol} chain={chain} />
@@ -191,4 +212,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default AmountTextInputBlock
+export default forwardRef(AmountTextInputBlock)
