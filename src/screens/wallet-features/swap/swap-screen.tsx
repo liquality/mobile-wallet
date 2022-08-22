@@ -335,7 +335,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       payload: { toAmount: bestQuoteAmount },
     })
     amountInputRefTo.current?.setAfterDispatch(bestQuoteAmount?.toString()!)
-    // setBestQuote(bestQuoteAmount)
   }, [
     activeNetwork,
     state.fromAmount,
