@@ -65,9 +65,6 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         )
 
         if (transaction) {
-          delete transaction.quote
-          delete transaction.fromFundTx._raw
-
           addTransaction(transaction.id, transaction)
           navigation.navigate('SwapConfirmationScreen', {
             swapTransactionConfirmation: transaction,
