@@ -249,7 +249,7 @@ export const AppStackNavigator = () => (
       name="CustomFeeEIP1559Screen"
       component={CustomFeeEIP1559Screen}
       options={() => ({
-        headerRight: () => <View />,
+        headerRight: PlaceholderComp,
       })}
     />
     <Stack.Screen

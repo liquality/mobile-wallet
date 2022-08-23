@@ -190,8 +190,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <Button
           type="primary"
           variant="m"
-          // label={`Send ${asset}`}
-          label={i18n.t('sendAsset', { asset })}
+          label={i18n.t('sendReviewScreen.sendAsset', { asset })}
           onPress={handleSendPress}
           isLoading={isLoading}
           isBorderless={false}
