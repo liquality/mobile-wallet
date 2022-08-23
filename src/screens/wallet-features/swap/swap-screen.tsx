@@ -343,7 +343,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   ])
 
   useEffect(() => {
-    setError({ msg: '', type: null })
     updateBestQuote()
   }, [updateBestQuote])
 

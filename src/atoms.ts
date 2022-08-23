@@ -96,11 +96,7 @@ export const isDoneFetchingData = atom<boolean>({
 
 export const themeMode = atom<DarkModeEnum>({
   key: 'ThemeMode',
-  default: AsyncStorage.getItem(KEYS.ACTIVE_THEME).then((savedValue) =>
-    savedValue !== null && typeof savedValue !== 'undefined'
-      ? (JSON.parse(savedValue) as DarkModeEnum)
-      : DarkModeEnum.Null,
-  ),
+  default: DarkModeEnum.Null,
   effects: [localStorageEffect<DarkModeEnum>(KEYS.ACTIVE_THEME)],
 })
 
