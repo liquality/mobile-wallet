@@ -141,7 +141,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
     if (validate() && networkFee?.current?.value) {
       navigation.navigate('SendReviewScreen', {
-        // screenTitle: `Send ${code} Review`,
         screenTitle: i18n.t('sendScreen.sendReview', { code }),
         sendTransaction: {
           amount: new BigNumber(amountInput.value).toNumber(),
