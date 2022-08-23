@@ -65,8 +65,11 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         )
 
         if (transaction) {
+          /*This code made non-BTC swaps throw error. 
+            Swaps work as expected without it. Could be deleted
+            
           delete transaction.quote
-          delete transaction.fromFundTx._raw
+          delete transaction.fromFundTx._raw */
 
           addTransaction(transaction.id, transaction)
           navigation.navigate('SwapConfirmationScreen', {
