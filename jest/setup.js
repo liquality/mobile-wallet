@@ -59,9 +59,6 @@ jest.mock('react-native-background-actions', () => ({
   updateNotification: jest.fn(),
   isRunning: jest.fn(),
 }))
-jest.mock('rn-flipper-async-storage-advanced', () => {
-  return {}
-})
 jest.mock('react-native-vision-camera', () => {
   return {}
 })

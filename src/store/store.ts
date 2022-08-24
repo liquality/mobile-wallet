@@ -69,10 +69,6 @@ const persistenceMiddleware: Middleware<
 }
 
 const middlewares = new MiddlewareArray().concat([persistenceMiddleware, thunk])
-if (__DEV__) {
-  const createDebugger = require('redux-flipper').default
-  middlewares.push(createDebugger())
-}
 
 export const store = configureStore({
   reducer: rootReducer,

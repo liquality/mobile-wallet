@@ -2,10 +2,15 @@ const fs = require('fs/promises')
 
 async function fixBrowserCheck(path) {
   const vueRuntimeDom = await fs.readFile(path, { encoding: 'utf8' })
-  const fixedVueRuntimeDom = vueRuntimeDom.replaceAll(
-    "typeof window !== 'undefined'",
-    "typeof window !== 'undefined' && typeof document !== 'undefined'",
-  )
+  const fixedVueRuntimeDom = vueRuntimeDom
+    .replaceAll(
+      "typeof window !== 'undefined'",
+      "typeof window !== 'undefined' && typeof document !== 'undefined'",
+    )
+    .replaceAll(
+      '"undefined"!=typeof window',
+      '"undefined"!=typeof window && "undefined"!==typeof document',
+    )
   await fs.writeFile(path, fixedVueRuntimeDom)
 }
 
@@ -101,4 +106,5 @@ async function fixBrowserCheck(path) {
   }
 
   await fixBrowserCheck('node_modules/vue/dist/vue.runtime.common.dev.js')
+  await fixBrowserCheck('node_modules/vue/dist/vue.runtime.common.prod.js')
 })()
