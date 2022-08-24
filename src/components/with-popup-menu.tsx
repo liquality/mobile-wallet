@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import LockIcon from '../assets/icons/lock.svg'
-import LedgerIcon from '../assets/icons/ledger.svg'
 import ManageAssetsIcon from '../assets/icons/manage-assets.svg'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../types'
@@ -26,6 +25,7 @@ const WithPopupMenu = <T extends FctType>(
       navigation.setParams({ showPopup: !route?.params?.showPopup })
       navigation.navigate('AssetManagementScreen', {
         screenTitle: 'Manage Assets',
+        includeBackBtn: true,
       })
     }
 
@@ -49,13 +49,8 @@ const WithPopupMenu = <T extends FctType>(
             </Pressable>
             <Pressable style={styles.menuItem}>
               <LockIcon style={styles.icon} />
-              <Text tx="manageAssets" />
+              <Text tx="accountDetails" />
             </Pressable>
-            <Pressable style={styles.menuItem}>
-              <LedgerIcon style={styles.icon} />
-              <Text tx="ledger" />
-            </Pressable>
-
             <Pressable style={styles.menuItem} onPress={handleLockPress}>
               <LockIcon style={styles.icon} />
               <Text tx="lock" />

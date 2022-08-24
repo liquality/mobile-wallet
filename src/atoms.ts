@@ -155,6 +155,15 @@ export const historyStateFamily = atomFamily<Partial<HistoryItem>, string>({
   ],
 })
 
+export const enabledAssetsStateFamily = atomFamily<boolean, string>({
+  key: 'EnabledAssetsState',
+  default: (asset) =>
+    AsyncStorage.getItem(asset).then((savedValue) =>
+      savedValue !== null ? JSON.parse(savedValue) : true,
+    ),
+  effects: (asset) => [localStorageEffect(`enabled-asset-${asset}`)],
+})
+
 //--------------ATOM SELECTORS--------------
 export const accountInfoState = selectorFamily<Partial<AccountType>, string>({
   key: 'AccountInfoState',
