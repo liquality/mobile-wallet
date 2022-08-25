@@ -5,48 +5,39 @@ import { assets as cryptoassets } from '@liquality/cryptoassets'
 import AssetIcon from './asset-icon'
 import Switch from './ui/switch'
 import SearchBox from './ui/search-box'
-import { customConfig } from '../core/config'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../atoms'
+import Box from '../theme/box'
 
 const AssetManagement = ({
-  enabledAssetCodes,
-  onEnableFeature,
+  enabledAssets,
 }: {
-  enabledAssetCodes: string[] | undefined
-  onEnableFeature: (asset: string) => void
+  enabledAssets: string[] | undefined
 }) => {
   const DEFAULT_COLOR = '#EFEFEF'
   const [data, setData] = useState<Asset[]>([])
   const [assets, setAssets] = useState<Asset[]>([])
   const activeNetwork = useRecoilValue(networkState)
 
-  const renderAsset = useCallback(
-    ({ item }: { item: Asset }) => {
-      const { name, code, chain, color = DEFAULT_COLOR } = item
-      return (
-        <Fragment>
-          <View
-            style={[styles.row, { borderLeftColor: color || DEFAULT_COLOR }]}>
-            <View style={styles.col1}>
-              <AssetIcon chain={chain} asset={code} />
-            </View>
-            <View style={styles.col2}>
-              <Text style={styles.code}>{name}</Text>
-            </View>
-            <View style={styles.col3}>
-              <Switch
-                enableFeature={() => onEnableFeature(code)}
-                isFeatureEnabled={enabledAssetCodes?.includes(code) || false}
-              />
-            </View>
+  const renderAsset = useCallback(({ item }: { item: Asset }) => {
+    const { name, code, chain, color = DEFAULT_COLOR } = item
+    return (
+      <Fragment>
+        <View style={[styles.row, { borderLeftColor: color || DEFAULT_COLOR }]}>
+          <View style={styles.col1}>
+            <AssetIcon chain={chain} asset={code} />
           </View>
-        </Fragment>
-      )
-    },
-    [enabledAssetCodes, onEnableFeature],
-  )
+          <View style={styles.col2}>
+            <Text style={styles.code}>{name}</Text>
+          </View>
+          <View style={styles.col3}>
+            <Switch asset={code} />
+          </View>
+        </View>
+      </Fragment>
+    )
+  }, [])
 
   useEffect(() => {
     if (!activeNetwork) {
@@ -58,42 +49,36 @@ const AssetManagement = ({
     let myAssets: Asset[] = []
 
     if (activeNetwork === Network.Testnet) {
-      myAssets = customConfig.defaultAssets[activeNetwork].reduce(
-        (assetList: Asset[], asset) => {
+      myAssets =
+        enabledAssets?.reduce((assetList: Asset[], asset) => {
           if (cryptoassets.hasOwnProperty(asset)) {
             assetList.push({
               ...cryptoassets[asset],
-              contractAddress: customConfig.testnetContractAddresses[asset],
+              contractAddress: cryptoassets[asset].contractAddress,
             })
           }
           return assetList
-        },
-        [],
-      )
+        }, []) || []
     } else {
       myAssets = Object.keys(cryptoassets).map((key) => cryptoassets[key])
     }
     setAssets(myAssets)
     setData(myAssets)
-  }, [activeNetwork])
+  }, [activeNetwork, enabledAssets])
 
   return (
-    <View style={styles.container}>
+    <Box flex={1} backgroundColor={'mainBackground'} marginBottom={'xxl'}>
       <SearchBox items={assets} updateData={setData} />
       <FlatList
         data={data}
         renderItem={renderAsset}
         keyExtractor={(item) => item.code}
       />
-    </View>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF',
-  },
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',

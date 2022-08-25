@@ -8,6 +8,7 @@ import {
   accountInfoStateFamily,
   addressStateFamily,
   balanceStateFamily,
+  enabledAssetsStateFamily,
   isDoneFetchingData,
   swapPairState,
 } from '../../atoms'
@@ -32,6 +33,7 @@ const WrappedRow: FC<{
   const account = useRecoilValue(accountInfoStateFamily(item.id))
   const isDoneFetching = useRecoilValue(isDoneFetchingData)
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
+  const isAssetEnabled = useRecoilValue(enabledAssetsStateFamily(item.name))
   const assets = Object.values(account?.assets || {}) || []
   const isNested = assets.length > 0 && item.name !== 'BTC'
   const screenMap: Record<ActionEnum, keyof RootStackParamList> = useMemo(
@@ -121,6 +123,7 @@ const WrappedRow: FC<{
   )
 
   if (
+    !isAssetEnabled ||
     !account ||
     !account.code ||
     (isDoneFetching && (balance < 0 || !address))

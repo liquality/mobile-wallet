@@ -1,13 +1,12 @@
 import { StyleSheet, Switch } from 'react-native'
 import React from 'react'
+import { useRecoilState } from 'recoil'
+import { enabledAssetsStateFamily } from '../../atoms'
 
-const SettingsSwitch = ({
-  isFeatureEnabled,
-  enableFeature,
-}: {
-  isFeatureEnabled: boolean
-  enableFeature: any
-}) => {
+const SettingsSwitch = ({ asset }: { asset: string }) => {
+  const [isFeatureEnabled, toggleFeature] = useRecoilState(
+    enabledAssetsStateFamily(asset),
+  )
   const styles = StyleSheet.create({
     switch: {
       borderColor: isFeatureEnabled ? '#9D4DFA' : '#D9DFE5',
@@ -20,7 +19,7 @@ const SettingsSwitch = ({
       style={styles.switch}
       thumbColor={isFeatureEnabled ? '#9D4DFA' : '#D9DFE5'}
       ios_backgroundColor="#FFF"
-      onValueChange={() => enableFeature(!isFeatureEnabled)}
+      onValueChange={() => toggleFeature(!isFeatureEnabled)}
       value={isFeatureEnabled}
     />
   )
