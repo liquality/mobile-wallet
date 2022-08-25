@@ -32,7 +32,7 @@ type SendReviewScreenProps = NativeStackScreenProps<
 >
 
 const ReviewComponent = ({ navigation, route }: SendReviewScreenProps) => {
-  const { asset, destinationAddress, gasFee, amount, memo, speedLabel, color } =
+  const { asset, destinationAddress, gasFee, amount, speedLabel, color } =
     route.params.sendTransaction!
   const [rate, setRate] = useState<number>(0)
   const [error, setError] = useState('')
@@ -65,7 +65,7 @@ const ReviewComponent = ({ navigation, route }: SendReviewScreenProps) => {
         ),
         fee: gasFee,
         feeLabel: speedLabel,
-        memo: memo || '',
+        memo: '',
       })
 
       delete transaction.tx._raw
@@ -172,11 +172,6 @@ const ReviewComponent = ({ navigation, route }: SendReviewScreenProps) => {
       <Box marginTop="l">
         <Text variant="secondaryInputLabel" tx="sendReviewScreen.sendTo" />
         <Text variant="address">{shortenAddress(destinationAddress)}</Text>
-      </Box>
-
-      <Box marginTop="l">
-        <Text variant="secondaryInputLabel" tx="sendReviewScreen.memoOpt" />
-        <Text variant="address">{memo}</Text>
       </Box>
 
       {!!error && <Text variant="error">{error}</Text>}

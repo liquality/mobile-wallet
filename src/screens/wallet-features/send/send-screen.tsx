@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
-import { Pressable, StyleSheet, ViewStyle } from 'react-native'
+import { Pressable, StyleSheet } from 'react-native'
 import {
   assets as cryptoassets,
   ChainId,
@@ -50,14 +50,6 @@ const useInputState = (
 
 type SendScreenProps = NativeStackScreenProps<RootStackParamList, 'SendScreen'>
 
-const memoInputStyle: ViewStyle = {
-  marginTop: 5,
-  borderColor: '#D9DFE5',
-  borderWidth: 1,
-  height: 150,
-  width: '100%',
-}
-
 const SendScreen: FC<SendScreenProps> = (props) => {
   const { navigation, route } = props
   //TODO is there a better way to deal with this?
@@ -83,7 +75,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const [error, setError] = useState('')
   const amountInput = useInputState('0')
   const addressInput = useInputState('')
-  const memoInput = useInputState('')
   const networkFee = useRef<NetworkFeeType>()
 
   const validate = useCallback((): boolean => {
@@ -150,7 +141,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           speedLabel: networkFee.current?.speed,
           destinationAddress: addressInput.value,
           asset: code,
-          memo: memoInput.value,
+          memo: '',
           color: color || '#EAB300',
         },
         fee: fee,
@@ -165,7 +156,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     code,
     amountInput.value,
     addressInput.value,
-    memoInput.value,
     color,
     fee,
   ])
@@ -337,25 +327,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               <Pressable onPress={handleQRCodeBtnPress}>
                 <QRCode />
               </Pressable>
-            </Box>
-          </Box>
-          <Box marginTop={'xl'}>
-            <Text variant="secondaryInputLabel" tx="sendScreen.memoOpt" />
-            <Box
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems="flex-end"
-              marginBottom="m">
-              <TextInput
-                style={memoInputStyle}
-                onChangeText={memoInput.onChangeText}
-                onFocus={() => setError('')}
-                value={memoInput.value}
-                multiline
-                numberOfLines={15}
-                autoCorrect={false}
-                returnKeyType="done"
-              />
             </Box>
           </Box>
         </Box>
