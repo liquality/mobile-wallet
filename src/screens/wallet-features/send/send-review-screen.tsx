@@ -24,14 +24,15 @@ import {
 import { HistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import { labelTranslateFn } from '../../../utils'
 import i18n from 'i18n-js'
+import { View } from 'react-native'
 
 type SendReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'SendReviewScreen'
 >
 
-const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
-  const { asset, destinationAddress, gasFee, amount, memo, speedLabel, color } =
+const ReviewComponent = ({ navigation, route }: SendReviewScreenProps) => {
+  const { asset, destinationAddress, gasFee, amount, speedLabel, color } =
     route.params.sendTransaction!
   const [rate, setRate] = useState<number>(0)
   const [error, setError] = useState('')
@@ -64,7 +65,7 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         ),
         fee: gasFee,
         feeLabel: speedLabel,
-        memo: memo || '',
+        memo: '',
       })
 
       delete transaction.tx._raw
@@ -74,6 +75,8 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
       navigation.navigate('SendConfirmationScreen', {
         screenTitle: i18n.t('sendReviewScreen.sendTransDetails', { asset }),
         sendTransactionConfirmation: transaction,
+        assetData: route.params.assetData,
+        fee: route.params.fee,
       })
     } catch (_error) {
       setIsLoading(false)
@@ -137,7 +140,6 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
           </Text>
         </Box>
       </Box>
-
       <Box marginTop="l">
         <Text variant="secondaryInputLabel" tx="sendReviewScreen.amtFee" />
         <Box
@@ -172,11 +174,6 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         <Text variant="address">{shortenAddress(destinationAddress)}</Text>
       </Box>
 
-      <Box marginTop="l">
-        <Text variant="secondaryInputLabel" tx="sendReviewScreen.memoOpt" />
-        <Text variant="address">{memo}</Text>
-      </Box>
-
       {!!error && <Text variant="error">{error}</Text>}
       <ButtonFooter>
         <Button
@@ -198,6 +195,22 @@ const SendReviewScreen = ({ navigation, route }: SendReviewScreenProps) => {
         />
       </ButtonFooter>
     </Box>
+  )
+}
+
+const SendReviewScreen: React.FC<SendReviewScreenProps> = ({
+  route,
+  navigation,
+}) => {
+  return (
+    <React.Suspense
+      fallback={
+        <View>
+          <Text tx="sendConfirmationScreeen.load" />
+        </View>
+      }>
+      <ReviewComponent navigation={navigation} route={route} />
+    </React.Suspense>
   )
 }
 

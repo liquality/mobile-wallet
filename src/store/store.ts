@@ -69,10 +69,6 @@ const persistenceMiddleware: Middleware<
 }
 
 const middlewares = new MiddlewareArray().concat([persistenceMiddleware, thunk])
-if (__DEV__) {
-  const createDebugger = require('redux-flipper').default
-  middlewares.push(createDebugger())
-}
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -438,7 +434,6 @@ export const fetchConfirmationByHash = async (
  * @param hash
  * @param asset
  * @param activeNetwork
- * @param tx
  * @param newFee
  */
 export const speedUpTransaction = async (
@@ -446,7 +441,6 @@ export const speedUpTransaction = async (
   hash: string,
   asset: string,
   activeNetwork: any,
-  tx: string,
   newFee: number,
 ) => {
   const { activeWalletId } = wallet.state

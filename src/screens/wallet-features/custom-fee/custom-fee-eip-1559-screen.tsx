@@ -20,8 +20,10 @@ import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaul
 
 import Preset from './preset'
 import {
-  getSendAmountFee,
   getSendFee,
+  getSendTxFees,
+  maxFeePerUnitEIP1559,
+  probableFeePerUnitEIP1559,
 } from '@liquality/wallet-core/dist/src/utils/fees'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
@@ -29,6 +31,7 @@ import { FeeDetails as FDs } from '@chainify/types'
 import Box from '../../../theme/box'
 import Text from '../../../theme/text'
 import { labelTranslateFn } from '../../../utils'
+import { speedUpTransaction } from '../../../store/store'
 
 type CustomFeeEIP1559ScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -76,7 +79,7 @@ const CustomFeeEIP1559Screen = ({
     setSpeedMode(route.params.speedMode)
     setUserInputMaximumFee(_feeDetails[speedMode].fee.maxFeePerGas.toString())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setError, fees, activeNetwork, activeWalletId, code])
+  }, [setError, fees, activeNetwork, activeWalletId, code, setSpeedMode])
 
   const code = route.params.code!
   const wallet = setupWallet({
@@ -94,7 +97,7 @@ const CustomFeeEIP1559Screen = ({
   useEffect(() => {
     async function fetchData() {
       const amtInpBg = new BigNumber(Number(route.params.amountInput))
-      const totalFeesData = await getSendAmountFee(
+      const totalFeesData = await getSendTxFees(
         accountForAsset?.id!,
         code,
         amtInpBg,
@@ -107,18 +110,33 @@ const CustomFeeEIP1559Screen = ({
 
   const handlePressLowMedHigh = useCallback(
     (speed) => {
+      if (gasFees) {
+        setUserInputMaximumFee(gasFees[speed].fee.maxFeePerGas.toString())
+        setUserInputMinerTip(gasFees[speed].fee.maxPriorityFeePerGas.toString())
+      }
       setSpeedMode(speed)
     },
-    [setSpeedMode],
+    [setSpeedMode, gasFees],
   )
 
-  const handleApplyPress = () => {
-    navigation.navigate('SendScreen', {
-      assetData: route.params.assetData,
-      ...route.params,
-      customFee: Number(userInputMinerTip) + Number(userInputMaximumFee),
-      speed: speedMode,
-    })
+  const handleApplyPress = async () => {
+    if (route.params.speedUp) {
+      await speedUpTransaction(
+        route.params.id,
+        route.params.txHash,
+        code,
+        activeNetwork,
+        parseFloat(customFeeInput.value),
+      )
+      navigation.goBack()
+    } else {
+      navigation.navigate('SendScreen', {
+        assetData: route.params.assetData,
+        ...route.params,
+        customFee: parseFloat(customFeeInput.value),
+        speed: speedMode,
+      })
+    }
   }
 
   if (!gasFees) {
@@ -147,9 +165,13 @@ const CustomFeeEIP1559Screen = ({
 
   const getSummaryMinimum = () => {
     if (totalFees) {
-      const minimumFee =
-        Number(userInputMinerTip) +
-        Number(gasFees[speedMode].fee.suggestedBaseFeePerGas)
+      const minimumFee = probableFeePerUnitEIP1559({
+        maxFeePerGas: Number(userInputMaximumFee),
+        maxPriorityFeePerGas: Number(userInputMinerTip),
+        suggestedBaseFeePerGas: Number(
+          gasFees[speedMode].fee.suggestedBaseFeePerGas,
+        ),
+      })
       const totalMinFee = getSendFee(code, Number(minimumFee)).plus(
         totalFees.slow,
       )
@@ -159,10 +181,16 @@ const CustomFeeEIP1559Screen = ({
       }
     }
   }
+
   const getSummaryMaximum = () => {
     if (totalFees) {
-      const maximumFee = userInputMaximumFee
-
+      const maximumFee = maxFeePerUnitEIP1559({
+        maxFeePerGas: Number(userInputMaximumFee),
+        maxPriorityFeePerGas: Number(userInputMinerTip),
+        suggestedBaseFeePerGas: Number(
+          gasFees[speedMode].fee.suggestedBaseFeePerGas,
+        ),
+      })
       const totalMaxFee = getSendFee(code, Number(maximumFee)).plus(
         totalFees.fast,
       )
@@ -229,6 +257,7 @@ const CustomFeeEIP1559Screen = ({
           <View style={styles.row}>
             <Text style={styles.inputLabel}>GWEI</Text>
             <TextInput
+              keyboardType={'numeric'}
               style={styles.gasInput}
               onChangeText={setUserInputMinerTip}
               value={userInputMinerTip}
@@ -238,6 +267,7 @@ const CustomFeeEIP1559Screen = ({
             />
             <Text style={styles.inputLabel}>GWEI</Text>
             <TextInput
+              keyboardType={'numeric'}
               style={styles.gasInput}
               onChangeText={setUserInputMaximumFee}
               value={userInputMaximumFee}
@@ -373,6 +403,8 @@ const CustomFeeEIP1559Screen = ({
               likelyWait={likelyWaitObj}
               totalFees={totalFees}
               fee={route.params.fee}
+              setUserInputMaximumFee={setUserInputMaximumFee}
+              setUserInputMinerTip={setUserInputMinerTip}
             />
           ) : (
             renderShowCustomized()

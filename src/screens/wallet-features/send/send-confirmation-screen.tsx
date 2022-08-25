@@ -5,6 +5,7 @@ import {
   chains,
   unitToCurrency,
   assets as cryptoassets,
+  ChainId,
 } from '@liquality/cryptoassets'
 import { SendHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import { RootStackParamList } from '../../../types'
@@ -16,6 +17,7 @@ import Box from '../../../theme/box'
 import { formatDate } from '../../../utils'
 import { useRecoilValue } from 'recoil'
 import { historyStateFamily } from '../../../atoms'
+import { isEIP1559Fees } from '@liquality/wallet-core/dist/src/utils/fees'
 
 type SendConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -30,11 +32,29 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
       historyStateFamily(transaction.id),
     ) as SendHistoryItem
 
+    //TODO is there a better way to deal with this?
+    const { code = 'ETH', chain = ChainId.Ethereum } =
+      route.params.assetData || {}
+
     const handleTransactionSpeedUp = () => {
-      navigation.navigate('CustomFeeScreen', {
-        assetData: route.params.assetData,
-        screenTitle: 'NETWORK SPEED/FEE',
-      })
+      navigation.navigate(
+        isEIP1559() ? 'CustomFeeEIP1559Screen' : 'CustomFeeScreen',
+        {
+          assetData: route.params.assetData,
+          screenTitle: 'NETWORK SPEED/FEE',
+          code,
+          amountInput: route.params.amount,
+          fee: route.params.fee,
+          speedMode: 'average',
+          speedUp: true,
+          id: transaction.id,
+          txHash: historyItem.txHash,
+        },
+      )
+    }
+
+    const isEIP1559 = () => {
+      return isEIP1559Fees(chain)
     }
 
     return (

@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
-import { Pressable, StyleSheet, ViewStyle } from 'react-native'
+import { Pressable, StyleSheet } from 'react-native'
 import {
   assets as cryptoassets,
   ChainId,
@@ -50,14 +50,6 @@ const useInputState = (
 
 type SendScreenProps = NativeStackScreenProps<RootStackParamList, 'SendScreen'>
 
-const memoInputStyle: ViewStyle = {
-  marginTop: 5,
-  borderColor: '#D9DFE5',
-  borderWidth: 1,
-  height: 150,
-  width: '100%',
-}
-
 const SendScreen: FC<SendScreenProps> = (props) => {
   const { navigation, route } = props
   //TODO is there a better way to deal with this?
@@ -83,7 +75,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const [error, setError] = useState('')
   const amountInput = useInputState('0')
   const addressInput = useInputState('')
-  const memoInput = useInputState('')
   const networkFee = useRef<NetworkFeeType>()
 
   const validate = useCallback((): boolean => {
@@ -122,7 +113,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
   useEffect(() => {
     fetchFeesForAsset(code).then((gasFee) => {
-      setFee(gasFee.average)
+      setFee(gasFee)
       setAvailableAmount(
         calculateAvailableAmnt(
           code,
@@ -141,6 +132,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
     if (validate() && networkFee?.current?.value) {
       navigation.navigate('SendReviewScreen', {
+        assetData: route.params.assetData,
         screenTitle: i18n.t('sendScreen.sendReview', { code }),
         sendTransaction: {
           amount: new BigNumber(amountInput.value).toNumber(),
@@ -148,21 +140,23 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           speedLabel: networkFee.current?.speed,
           destinationAddress: addressInput.value,
           asset: code,
-          memo: memoInput.value,
+          memo: '',
           color: color || '#EAB300',
         },
+        fee: fee,
         customFee: customFee,
       })
     }
   }, [
-    addressInput.value,
-    amountInput.value,
-    code,
-    color,
-    memoInput.value,
-    navigation,
-    validate,
     customFee,
+    validate,
+    navigation,
+    route.params.assetData,
+    code,
+    amountInput.value,
+    addressInput.value,
+    color,
+    fee,
   ])
 
   const handleFiatBtnPress = useCallback(() => {
@@ -334,25 +328,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               </Pressable>
             </Box>
           </Box>
-          <Box marginTop={'xl'}>
-            <Text variant="secondaryInputLabel" tx="sendScreen.memoOpt" />
-            <Box
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems="flex-end"
-              marginBottom="m">
-              <TextInput
-                style={memoInputStyle}
-                onChangeText={memoInput.onChangeText}
-                onFocus={() => setError('')}
-                value={memoInput.value}
-                multiline
-                numberOfLines={15}
-                autoCorrect={false}
-                returnKeyType="done"
-              />
-            </Box>
-          </Box>
         </Box>
       </Box>
       <Box flex={0.3}>
@@ -379,7 +354,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           ) : (
             <Text style={styles.speedValue}>
               {`(${networkSpeed} / ${dpUI(
-                getSendFee(code, networkFee.current?.value || fee.toNumber()),
+                getSendFee(code, networkFee.current?.value || Number(fee)),
                 9,
               )} ${code})`}
             </Text>

@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import { UseInputStateReturnType, LikelyWait, TotalFees } from '../../../types'
-import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
+import {
+  getSendFee,
+  maxFeePerUnitEIP1559,
+} from '@liquality/wallet-core/dist/src/utils/fees'
 import {
   dpUI,
   prettyFiatBalance,
-} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
-import { BigNumber } from '@liquality/types'
+} from '@liquality/wallet-core/dist/src//utils/coinFormatter'
 import { FeeDetails } from '@liquality/types/lib/fees'
-import { FiatRates, Network } from '@liquality/wallet-core/dist/store/types'
+import { FiatRates, Network } from '@liquality/wallet-core/dist/src/store/types'
 import { FeeDetails as FDs } from '@chainify/types'
 import { labelTranslateFn } from '../../../utils'
 
@@ -31,6 +33,8 @@ const Preset = ({
   likelyWait,
   totalFees,
   fee,
+  setUserInputMaximumFee,
+  setUserInputMinerTip,
 }: {
   EIP1559: boolean
   customFeeInput: UseInputStateReturnType<string>
@@ -64,50 +68,68 @@ const Preset = ({
   }
 
   const renderSlowAverageFastPreset = (speed: string) => {
+    //A bit ugly/messy, may refactor later
     let preset
+    let totalFeesSpeed
+    let feeInSatOrGwei
     if (speed === 'slow') {
       preset = gasFees?.slow || null
+      totalFeesSpeed = totalFees?.slow || null
+      feeInSatOrGwei = fee.slow
     } else if (speed === 'average') {
       preset = gasFees?.average || null
+      totalFeesSpeed = totalFees?.average || null
+      feeInSatOrGwei = fee.average
     } else {
       preset = gasFees?.fast || null
+      totalFeesSpeed = totalFees?.fast || null
+      feeInSatOrGwei = fee.fast
     }
     if (EIP1559) {
-      let slowAvgOrMaxFees = preset.fee
-      let maxFeePerGas = 0
-      if (typeof slowAvgOrMaxFees !== 'number') {
-        maxFeePerGas =
-          slowAvgOrMaxFees.suggestedBaseFeePerGas ||
-          0 + slowAvgOrMaxFees.maxPriorityFeePerGas
-      }
+      const gasFeeForSpeed = preset.fee
+      const maxSendFee = getSendFee(code, maxFeePerUnitEIP1559(gasFeeForSpeed))
 
-      let formattedRatesForEIP1559Obj = {
-        amount: dpUI(
-          getSendFee(code, gasFees[speed].fee.maxFeePerGas || fee.toNumber()),
-          9,
-        ).toString(),
-        fiat: prettyFiatBalance(
-          totalFees ? totalFees[speed as keyof TotalFees] : new BigNumber(0),
-          fiatRates[code],
-        ).toString(),
-        maximum: prettyFiatBalance(
-          getSendFee(code, maxFeePerGas),
-          fiatRates[code],
-        ).toString(),
+      let amountInNative = dpUI(
+        getSendFee(code, feeInSatOrGwei.toNumber()),
+        6,
+      ).toString()
+      let fiat = prettyFiatBalance(totalFeesSpeed, fiatRates[code])
+      return {
+        amount: amountInNative,
+        fiat: fiat.toString(),
+        maximum: prettyFiatBalance(maxSendFee, fiatRates[code]).toString(),
       }
-      return formattedRatesForEIP1559Obj
     } else {
-      let amountInUnit = dpUI(getSendFee(code, fee.toNumber()), 9).toString()
+      let amountInNative = dpUI(
+        getSendFee(code, feeInSatOrGwei.toNumber()),
+        9,
+      ).toString()
 
       let formattedRatesObj = {
-        amount: amountInUnit,
+        amount: amountInNative,
         fiat: prettyFiatBalance(
-          Number(amountInUnit),
+          Number(amountInNative),
           fiatRates[code],
         ).toString(),
         maximum: labelTranslateFn('customFeeScreen.maxHere'),
       }
       return formattedRatesObj
+    }
+  }
+
+  const handleChangeSpeedPress = (speed: string) => {
+    setSpeedMode(speed as SpeedMode)
+    if (EIP1559) {
+      setUserInputMaximumFee(
+        gasFees[speed as SpeedMode].fee.maxFeePerGas.toString(),
+      )
+      setUserInputMinerTip(
+        gasFees[speed as SpeedMode].fee.maxPriorityFeePerGas.toString(),
+      )
+    } else {
+      if (gasFees && code) {
+        customFeeInput.onChangeText(gasFees[speed as SpeedMode].fee.toString())
+      }
     }
   }
 
@@ -118,6 +140,7 @@ const Preset = ({
         {gasFees &&
           Object.keys(gasFees).map((speed, index) => {
             var preset = renderSlowAverageFastPreset(speed)
+
             if (speed === 'custom') return null
             return (
               <Pressable
@@ -127,14 +150,7 @@ const Preset = ({
                   speed === speedMode && styles.selected,
                 ]}
                 key={speed}
-                onPress={() => {
-                  setSpeedMode(speed as SpeedMode)
-                  if (gasFees && code) {
-                    customFeeInput.onChangeText(
-                      gasFees[speed as SpeedMode].fee.toString(),
-                    )
-                  }
-                }}>
+                onPress={() => handleChangeSpeedPress(speed)}>
                 <Text style={[styles.preset, styles.speed]}>{speed}</Text>
                 {likelyWait && likelyWait.slow ? (
                   <Text
