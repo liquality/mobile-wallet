@@ -169,8 +169,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const assetsAreSameChain =
     getNativeAsset(swapPair.fromAsset?.code) ===
     getNativeAsset(swapPair.toAsset?.code)
-      ? true
-      : false
 
   const amountInputRef = useRef<AmountTextInputBlockHandle>(null)
   const amountInputRefTo = useRef<AmountTextInputBlockHandle>(null)
@@ -231,7 +229,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         swapPairfromAssetCode: swapPair.fromAsset.code,
         swapPairtoAssetCode: swapPair.toAsset.code,
       }),
-      assetsAreSameChain: assetsAreSameChain,
+      assetsAreSameChain,
     })
   }
 

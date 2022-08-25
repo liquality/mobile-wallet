@@ -56,7 +56,7 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
               color: chainDefaultColors[cryptoassets[asset.code]?.chain],
             },
           ]}>
-          {`${amount.dp(9)} ${asset.code}`}
+          {`${amount.dp(6)} ${asset.code}`}
         </Text>
         <Text style={[styles.font, styles.amount]}>
           {amount &&

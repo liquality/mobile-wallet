@@ -69,9 +69,7 @@ const CustomFeeEIP1559Screen = ({
 
   useEffect(() => {
     const _feeDetails =
-      fees?.[activeNetwork]?.[activeWalletId]?.[
-        nativeAssetCode === 'DAI' ? 'ETH' : nativeAssetCode
-      ]
+      fees?.[activeNetwork]?.[activeWalletId]?.[getNativeAsset(code)]
     if (!_feeDetails) {
       setError(labelTranslateFn('customFeeScreen.gasFeeMissing')!)
       return
@@ -106,9 +104,8 @@ const CustomFeeEIP1559Screen = ({
 
   const customFeeInput = useInputState(
     `${
-      fees?.[activeNetwork]?.[activeWalletId]?.[
-        nativeAssetCode === 'DAI' ? 'ETH' : nativeAssetCode
-      ].average.fee || '0'
+      fees?.[activeNetwork]?.[activeWalletId]?.[getNativeAsset(code)].average
+        .fee || '0'
     }`,
   )
 

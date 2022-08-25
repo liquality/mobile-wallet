@@ -26,8 +26,10 @@ type SwapReviewScreenProps = NativeStackScreenProps<
 
 const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   const { navigation, route } = props
-  const swapTransaction = route.params.swapTransaction
-  const assetsAreSameChain = route.params.assetsAreSameChain
+
+  const {
+    params: { swapTransaction, assetsAreSameChain },
+  } = route
   const fiatRates = useRecoilValue(fiatRatesState)
   const ids = useRecoilValue(historyIdsState)
   const addTransaction = useRecoilCallback(
