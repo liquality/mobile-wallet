@@ -75,7 +75,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const [error, setError] = useState('')
   const amountInput = useInputState('0')
   const addressInput = useInputState('')
-  // const memoInput = useInputState('')
   const networkFee = useRef<NetworkFeeType>()
 
   const validate = useCallback((): boolean => {
