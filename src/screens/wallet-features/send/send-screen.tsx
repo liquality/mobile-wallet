@@ -132,7 +132,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
     if (validate() && networkFee?.current?.value) {
       navigation.navigate('SendReviewScreen', {
-        // screenTitle: `Send ${code} Review`,
         assetData: route.params.assetData,
         screenTitle: i18n.t('sendScreen.sendReview', { code }),
         sendTransaction: {

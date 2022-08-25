@@ -97,6 +97,11 @@ enum ErrorMessaging {
   MoreTknReq,
 }
 
+interface ErrorMsgAndType {
+  msg: string
+  type: ErrorMessaging | null
+}
+
 type AmountTextInputBlockHandle = React.ElementRef<typeof AmountTextInputBlock>
 
 export const reducer: Reducer<SwapEventType, SwapEventAction> = (
@@ -151,7 +156,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const activeNetwork = useRecoilValue(networkState)
   const [areFeeSelectorsVisible, setFeeSelectorsVisible] = useState(true)
   const [selectedQuote, setSelectedQuote] = useState<SwapQuote>()
-  const [error, setError] = useState('')
+  const [error, setError] = useState<ErrorMsgAndType>({ msg: '', type: null })
   const fromNetworkFee = useRef<NetworkFeeType>()
   const toNetworkFee = useRef<NetworkFeeType>()
   const [quotes, setQuotes] = useState<any[]>([])
@@ -293,7 +298,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       )
 
       if (quoteList?.length === 0) {
-        setError(labelTranslateFn('swapScreen.isNotTraded')!)
+        setError({
+          msg: labelTranslateFn('swapScreen.isNotTraded')!,
+          type: ErrorMessaging.PairsList,
+        })
       } else {
         const sortedQuotes = sortQuotes(quoteList)
         setQuotes(sortedQuotes)
@@ -326,14 +334,16 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     }
 
     if (bestQuoteAmount.eq(0)) {
-      setError(labelTranslateFn('swapScreen.quoteNotFnd')!)
+      setError({
+        msg: labelTranslateFn('swapScreen.quoteNotFnd')!,
+        type: null,
+      })
     }
     dispatch({
       type: SwapEventActionKind.ToAmountUpdated,
       payload: { toAmount: bestQuoteAmount },
     })
     amountInputRefTo.current?.setAfterDispatch(bestQuoteAmount?.toString()!)
-    // setBestQuote(bestQuoteAmount)
   }, [
     activeNetwork,
     state.fromAmount,
@@ -342,90 +352,89 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   ])
 
   useEffect(() => {
-    setError('')
     updateBestQuote()
   }, [updateBestQuote])
 
-  const getCompatibleErrorMsg = React.useCallback(
-    (errorMessageType: ErrorMessaging) => {
-      if (!error) {
-        return null
-      }
+  const getCompatibleErrorMsg = React.useCallback(() => {
+    const { msg, type } = error
+    if (!msg) {
+      return null
+    }
 
-      const onOkDoItPress = () => {}
-      const onTextPress = () => {}
-      const onGetTokenPress = () => {}
+    const onOkDoItPress = () => {}
+    const onTextPress = () => {}
+    const onGetTokenPress = () => {}
 
-      switch (errorMessageType) {
-        case ErrorMessaging.EnableToken:
-          return (
-            <MessageBanner
-              text1={I18n.t('swapScreen.toTradePair', {
-                token: swapPair.fromAsset?.code,
-              })}
-              btnLabel={{ tx: 'swapScreen.okDoIt' }}
-              onAction={onOkDoItPress}
-            />
-          )
-        case ErrorMessaging.PairsList:
-          return (
-            <MessageBanner
-              text1={{ tx: 'swapScreen.isNotTraded' }}
-              linkTxt={{ tx: 'swapScreen.here' }}
-              onTextPress={onTextPress}
-              text2={I18n.t('swapScreen.youCanAlsoSuggestToken', {
-                token: swapPair.fromAsset?.code,
-                channel: 'Discord',
-              })}
-            />
-          )
-        case ErrorMessaging.MultipleSwaps:
-          return (
-            <MessageBanner
-              text1={{ tx: 'swapScreen.isNotTradedMaybeThereIsWay' }}
-            />
-          )
-        case ErrorMessaging.NotEngRequestTkn:
-          return (
-            <MessageBanner
-              text1={I18n.t('swapScreen.notEnoughLiquidityYouCanReq', {
-                token: swapPair.fromAsset?.code,
-                channel: 'Discord',
-              })}
-            />
-          )
-        case ErrorMessaging.NotEngLiq:
-          return (
-            <MessageBanner
-              text1={{ tx: 'swapScreen.notEnoughLiquidityTryAgain' }}
-            />
-          )
-        case ErrorMessaging.MoreTknReq:
-          return (
-            <MessageBanner
-              text1={I18n.t('swapScreen.moreTokenRequired', {
-                token: swapPair.fromAsset?.code,
-              })}
-              btnLabel={I18n.t('swapScreen.getToken', {
-                token: swapPair.fromAsset?.code,
-              })}
-              onAction={onGetTokenPress}
-            />
-          )
-        case ErrorMessaging.EnableToken:
-          return (
-            <MessageBanner
-              text1={I18n.t('swapScreen.toTradePair', {
-                token: swapPair.fromAsset?.code,
-              })}
-              btnLabel={{ tx: 'swapScreen.okDoIt' }}
-              onAction={onOkDoItPress}
-            />
-          )
-      }
-    },
-    [error, swapPair.fromAsset?.code],
-  )
+    switch (type) {
+      case ErrorMessaging.EnableToken:
+        return (
+          <MessageBanner
+            text1={I18n.t('swapScreen.toTradePair', {
+              token: swapPair.fromAsset?.code,
+            })}
+            btnLabel={{ tx: 'swapScreen.okDoIt' }}
+            onAction={onOkDoItPress}
+          />
+        )
+      case ErrorMessaging.PairsList:
+        return (
+          <MessageBanner
+            text1={{ tx: 'swapScreen.isNotTraded' }}
+            linkTxt={{ tx: 'swapScreen.here' }}
+            onTextPress={onTextPress}
+            text2={I18n.t('swapScreen.youCanAlsoSuggestToken', {
+              token: swapPair.fromAsset?.code,
+              channel: 'Discord',
+            })}
+          />
+        )
+      case ErrorMessaging.MultipleSwaps:
+        return (
+          <MessageBanner
+            text1={{ tx: 'swapScreen.isNotTradedMaybeThereIsWay' }}
+          />
+        )
+      case ErrorMessaging.NotEngRequestTkn:
+        return (
+          <MessageBanner
+            text1={I18n.t('swapScreen.notEnoughLiquidityYouCanReq', {
+              token: swapPair.fromAsset?.code,
+              channel: 'Discord',
+            })}
+          />
+        )
+      case ErrorMessaging.NotEngLiq:
+        return (
+          <MessageBanner
+            text1={{ tx: 'swapScreen.notEnoughLiquidityTryAgain' }}
+          />
+        )
+      case ErrorMessaging.MoreTknReq:
+        return (
+          <MessageBanner
+            text1={I18n.t('swapScreen.moreTokenRequired', {
+              token: swapPair.fromAsset?.code,
+            })}
+            btnLabel={I18n.t('swapScreen.getToken', {
+              token: swapPair.fromAsset?.code,
+            })}
+            onAction={onGetTokenPress}
+          />
+        )
+      case ErrorMessaging.EnableToken:
+        return (
+          <MessageBanner
+            text1={I18n.t('swapScreen.toTradePair', {
+              token: swapPair.fromAsset?.code,
+            })}
+            btnLabel={{ tx: 'swapScreen.okDoIt' }}
+            onAction={onOkDoItPress}
+          />
+        )
+      default:
+        return <MessageBanner text1={msg} />
+    }
+  }, [error, swapPair.fromAsset?.code])
 
   const renderSwapFeeSelector = () => {
     //If swap is on the same chain, there is just 1 type of gasfees
@@ -501,7 +510,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       flex={1}
       width={Dimensions.get('window').width}
       backgroundColor="mainBackground">
-      {getCompatibleErrorMsg(ErrorMessaging.MoreTknReq)}
+      {getCompatibleErrorMsg()}
       <Box
         flexDirection="row"
         justifyContent="center"
@@ -586,7 +595,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           selectQuote={handleSelectQuote}
           selectedQuote={selectedQuote}
           clickable
-          style={{ paddingHorizontal: 20 }}
+          style={styles.paddingHorizontal}
         />
       ) : null}
       <Box
@@ -687,6 +696,9 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     marginRight: 5,
+  },
+  paddingHorizontal: {
+    paddingHorizontal: 20,
   },
 })
 
