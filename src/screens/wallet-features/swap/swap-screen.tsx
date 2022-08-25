@@ -166,6 +166,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const toggleFeeSelectors = () => {
     setFeeSelectorsVisible(!areFeeSelectorsVisible)
   }
+  const assetsAreSameChain =
+    getNativeAsset(swapPair.fromAsset?.code) ===
+    getNativeAsset(swapPair.toAsset?.code)
+      ? true
+      : false
 
   const amountInputRef = useRef<AmountTextInputBlockHandle>(null)
   const amountInputRefTo = useRef<AmountTextInputBlockHandle>(null)
@@ -195,7 +200,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const handleCancelPress = useCallback(() => {
     navigation.navigate('OverviewScreen', {})
   }, [navigation])
-
   const handleReviewBtnPress = async () => {
     if (
       !swapPair.fromAsset ||
@@ -203,7 +207,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       !state.fromAmount ||
       !selectedQuote ||
       !fromNetworkFee.current ||
-      !toNetworkFee.current
+      (!toNetworkFee.current && !assetsAreSameChain)
     ) {
       Alert.alert(labelTranslateFn('swapScreen.invalidArgs')!)
       return
@@ -227,6 +231,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         swapPairfromAssetCode: swapPair.fromAsset.code,
         swapPairtoAssetCode: swapPair.toAsset.code,
       }),
+      assetsAreSameChain: assetsAreSameChain,
     })
   }
 
@@ -426,10 +431,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
   const renderSwapFeeSelector = () => {
     //If swap is on the same chain, there is just 1 type of gasfees
-    if (
-      getNativeAsset(swapPair.fromAsset?.code) ===
-      getNativeAsset(swapPair.toAsset?.code)
-    )
+    if (assetsAreSameChain)
       return (
         <>
           {swapPair.fromAsset?.code ? (
@@ -604,7 +606,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           <Label text={{ tx: 'common.networkSpeed' }} variant="strong" />
           {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
             <Label
-              text={`${swapPair.fromAsset?.code} ${fromNetworkSpeed} / ${swapPair.toAsset?.code} ${toNetworkSpeed}`}
+              text={
+                assetsAreSameChain
+                  ? `${getNativeAsset(
+                      swapPair.fromAsset?.code,
+                    )} ${fromNetworkSpeed}`
+                  : `${swapPair.fromAsset?.code} ${fromNetworkSpeed} / ${swapPair.toAsset?.code} ${toNetworkSpeed}`
+              }
               variant="light"
             />
           ) : null}

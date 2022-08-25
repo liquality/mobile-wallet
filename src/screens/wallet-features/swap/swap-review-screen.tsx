@@ -27,6 +27,7 @@ type SwapReviewScreenProps = NativeStackScreenProps<
 const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   const { navigation, route } = props
   const swapTransaction = route.params.swapTransaction
+  const assetsAreSameChain = route.params.assetsAreSameChain
   const fiatRates = useRecoilValue(fiatRatesState)
   const ids = useRecoilValue(historyIdsState)
   const addTransaction = useRecoilCallback(
@@ -36,6 +37,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         set(historyStateFamily(transactionId), historyItem)
       },
   )
+
   const [isLoading, setIsLoading] = useState(false)
 
   const handleInitiateSwap = async () => {
@@ -59,9 +61,14 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           new BigNumber(toAmount),
           quote,
           fromNetworkFee.value,
-          toNetworkFee.value,
+          //If assets are on the same chain, they have the same fee
+          assetsAreSameChain && !toNetworkFee
+            ? fromNetworkFee.value
+            : toNetworkFee.value,
           fromNetworkFee.speed,
-          toNetworkFee.speed,
+          assetsAreSameChain && !toNetworkFee
+            ? fromNetworkFee.speed
+            : toNetworkFee.speed,
         )
 
         if (transaction) {
@@ -122,7 +129,11 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         amount={new BigNumber(toAmount)}
         asset={toAsset}
         fiatRates={fiatRates}
-        networkFee={new BigNumber(toNetworkFee.value)}
+        networkFee={
+          assetsAreSameChain && !toNetworkFee
+            ? new BigNumber(fromNetworkFee.value)
+            : new BigNumber(toNetworkFee.value)
+        }
       />
       {/* <SwapRates
         fromAsset={fromAsset.code}

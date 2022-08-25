@@ -403,8 +403,8 @@ const CustomFeeEIP1559Screen = ({
           </Text>
         </View>
         <View style={styles.row}>
-          {showBasic
-            ? /*      <Preset
+          {showBasic ? (
+            <Preset
               EIP1559={true}
               customFeeInput={customFeeInput}
               gasFees={gasFees}
@@ -423,8 +423,10 @@ const CustomFeeEIP1559Screen = ({
               fee={route.params.fee}
               setUserInputMaximumFee={setUserInputMaximumFee}
               setUserInputMinerTip={setUserInputMinerTip}
-            /> */ null
-            : renderShowCustomized()}
+            />
+          ) : (
+            renderShowCustomized()
+          )}
         </View>
       </View>
       <View style={[styles.row, styles.actions]}>
