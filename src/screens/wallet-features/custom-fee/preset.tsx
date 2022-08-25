@@ -85,6 +85,7 @@ const Preset = ({
       totalFeesSpeed = totalFees?.fast || null
       feeInSatOrGwei = fee.fast
     }
+
     if (EIP1559) {
       const gasFeeForSpeed = preset.fee
       const maxSendFee = getSendFee(code, maxFeePerUnitEIP1559(gasFeeForSpeed))

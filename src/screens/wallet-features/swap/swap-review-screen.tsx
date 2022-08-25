@@ -26,7 +26,10 @@ type SwapReviewScreenProps = NativeStackScreenProps<
 
 const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   const { navigation, route } = props
-  const swapTransaction = route.params.swapTransaction
+
+  const {
+    params: { swapTransaction, assetsAreSameChain },
+  } = route
   const fiatRates = useRecoilValue(fiatRatesState)
   const ids = useRecoilValue(historyIdsState)
   const addTransaction = useRecoilCallback(
@@ -36,6 +39,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         set(historyStateFamily(transactionId), historyItem)
       },
   )
+
   const [isLoading, setIsLoading] = useState(false)
 
   const handleInitiateSwap = async () => {
@@ -59,15 +63,20 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           new BigNumber(toAmount),
           quote,
           fromNetworkFee.value,
-          toNetworkFee.value,
+          //If assets are on the same chain, they have the same fee
+          assetsAreSameChain && !toNetworkFee
+            ? fromNetworkFee.value
+            : toNetworkFee.value,
           fromNetworkFee.speed,
-          toNetworkFee.speed,
+          assetsAreSameChain && !toNetworkFee
+            ? fromNetworkFee.speed
+            : toNetworkFee.speed,
         )
 
         if (transaction) {
           /*This code made non-BTC swaps throw error. 
-            Swaps work as expected without it. Could be deleted
-            
+            Swaps work as expected without it. Could be deleted?
+
           delete transaction.quote
           delete transaction.fromFundTx._raw */
 
@@ -122,7 +131,11 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         amount={new BigNumber(toAmount)}
         asset={toAsset}
         fiatRates={fiatRates}
-        networkFee={new BigNumber(toNetworkFee.value)}
+        networkFee={
+          assetsAreSameChain && !toNetworkFee
+            ? new BigNumber(fromNetworkFee.value)
+            : new BigNumber(toNetworkFee.value)
+        }
       />
       {/* <SwapRates
         fromAsset={fromAsset.code}

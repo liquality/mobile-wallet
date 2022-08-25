@@ -32,6 +32,7 @@ import Box from '../../../theme/box'
 import Text from '../../../theme/text'
 import { labelTranslateFn } from '../../../utils'
 import { speedUpTransaction } from '../../../store/store'
+import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 
 type CustomFeeEIP1559ScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -67,7 +68,8 @@ const CustomFeeEIP1559Screen = ({
   }
 
   useEffect(() => {
-    const _feeDetails = fees?.[activeNetwork]?.[activeWalletId]?.[code]
+    const _feeDetails =
+      fees?.[activeNetwork]?.[activeWalletId]?.[getNativeAsset(code)]
     if (!_feeDetails) {
       setError(labelTranslateFn('customFeeScreen.gasFeeMissing')!)
       return
@@ -79,19 +81,32 @@ const CustomFeeEIP1559Screen = ({
     setSpeedMode(route.params.speedMode)
     setUserInputMaximumFee(_feeDetails[speedMode].fee.maxFeePerGas.toString())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setError, fees, activeNetwork, activeWalletId, code, setSpeedMode])
+  }, [
+    setError,
+    fees,
+    activeNetwork,
+    activeWalletId,
+    nativeAssetCode,
+    setSpeedMode,
+  ])
 
   const code = route.params.code!
+  const nativeAssetCode = getNativeAsset(code)
+
   const wallet = setupWallet({
     ...defaultOptions,
   })
   const activeNetwork = useRecoilValue(networkState)
-  const accountForAsset = useRecoilValue(accountForAssetState(code))
+  const accountForAsset = useRecoilValue(accountForAssetState(nativeAssetCode))
 
   const { activeWalletId, fees } = wallet.state
   const fiatRates = useRecoilValue(fiatRatesState)
+
   const customFeeInput = useInputState(
-    `${fees?.[activeNetwork]?.[activeWalletId]?.[code].average.fee || '0'}`,
+    `${
+      fees?.[activeNetwork]?.[activeWalletId]?.[getNativeAsset(code)].average
+        .fee || '0'
+    }`,
   )
 
   useEffect(() => {
@@ -99,7 +114,7 @@ const CustomFeeEIP1559Screen = ({
       const amtInpBg = new BigNumber(Number(route.params.amountInput))
       const totalFeesData = await getSendTxFees(
         accountForAsset?.id!,
-        code,
+        nativeAssetCode,
         amtInpBg,
       )
       setTotalFees(totalFeesData)
@@ -124,7 +139,7 @@ const CustomFeeEIP1559Screen = ({
       await speedUpTransaction(
         route.params.id,
         route.params.txHash,
-        code,
+        nativeAssetCode,
         activeNetwork,
         parseFloat(customFeeInput.value),
       )
@@ -149,16 +164,16 @@ const CustomFeeEIP1559Screen = ({
 
   const getMinerTipFiat = () => {
     const fiat = prettyFiatBalance(
-      getSendFee(code, Number(userInputMinerTip) || 0),
-      fiatRates[code],
+      getSendFee(nativeAssetCode, Number(userInputMinerTip) || 0),
+      fiatRates[nativeAssetCode],
     )
     return isNaN(Number(fiat)) ? 0 : fiat
   }
 
   const getMaxFiat = () => {
     const fiat = prettyFiatBalance(
-      getSendFee(code, Number(userInputMaximumFee)),
-      fiatRates[code],
+      getSendFee(nativeAssetCode, Number(userInputMaximumFee)),
+      fiatRates[nativeAssetCode],
     )
     return isNaN(Number(fiat)) ? 0 : fiat
   }
@@ -172,12 +187,12 @@ const CustomFeeEIP1559Screen = ({
           gasFees[speedMode].fee.suggestedBaseFeePerGas,
         ),
       })
-      const totalMinFee = getSendFee(code, Number(minimumFee)).plus(
+      const totalMinFee = getSendFee(nativeAssetCode, Number(minimumFee)).plus(
         totalFees.slow,
       )
       return {
         amount: new BigNumber(totalMinFee).dp(6),
-        fiat: prettyFiatBalance(totalFees.slow, fiatRates[code]),
+        fiat: prettyFiatBalance(totalFees.slow, fiatRates[nativeAssetCode]),
       }
     }
   }
@@ -191,12 +206,12 @@ const CustomFeeEIP1559Screen = ({
           gasFees[speedMode].fee.suggestedBaseFeePerGas,
         ),
       })
-      const totalMaxFee = getSendFee(code, Number(maximumFee)).plus(
+      const totalMaxFee = getSendFee(nativeAssetCode, Number(maximumFee)).plus(
         totalFees.fast,
       )
       return {
         amount: new BigNumber(totalMaxFee).dp(6),
-        fiat: prettyFiatBalance(totalFees.fast, fiatRates[code]),
+        fiat: prettyFiatBalance(totalFees.fast, fiatRates[nativeAssetCode]),
       }
     }
   }
@@ -379,9 +394,9 @@ const CustomFeeEIP1559Screen = ({
           </Pressable>
         </View>
         <View style={styles.rowEnd}>
-          <AssetIcon asset={code} />
+          <AssetIcon asset={nativeAssetCode} />
           <Text style={[styles.headerText, styles.headerTextFocused]}>
-            {code}
+            {nativeAssetCode}
           </Text>
         </View>
         <View style={styles.row}>
@@ -390,7 +405,7 @@ const CustomFeeEIP1559Screen = ({
               EIP1559={true}
               customFeeInput={customFeeInput}
               gasFees={gasFees}
-              code={code}
+              code={nativeAssetCode}
               fiatRates={fiatRates}
               speedMode={speedMode}
               setSpeedMode={setSpeedMode}

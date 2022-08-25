@@ -37,6 +37,7 @@ import { balanceStateFamily, swapPairState, networkState } from '../../../atoms'
 import I18n from 'i18n-js'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import { isEIP1559Fees } from '@liquality/wallet-core/dist/src/utils/fees'
+import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -139,7 +140,7 @@ export const reducer: Reducer<SwapEventType, SwapEventAction> = (
 type SwapScreenProps = NativeStackScreenProps<RootStackParamList, 'SwapScreen'>
 
 const SwapScreen: FC<SwapScreenProps> = (props) => {
-  const { navigation } = props
+  const { route, navigation } = props
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
   const fromBalance = useRecoilValue(
     balanceStateFamily({
@@ -165,6 +166,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const toggleFeeSelectors = () => {
     setFeeSelectorsVisible(!areFeeSelectorsVisible)
   }
+  const assetsAreSameChain =
+    getNativeAsset(swapPair.fromAsset?.code) ===
+    getNativeAsset(swapPair.toAsset?.code)
 
   const amountInputRef = useRef<AmountTextInputBlockHandle>(null)
   const amountInputRefTo = useRef<AmountTextInputBlockHandle>(null)
@@ -194,7 +198,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const handleCancelPress = useCallback(() => {
     navigation.navigate('OverviewScreen', {})
   }, [navigation])
-
   const handleReviewBtnPress = async () => {
     if (
       !swapPair.fromAsset ||
@@ -202,7 +205,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       !state.fromAmount ||
       !selectedQuote ||
       !fromNetworkFee.current ||
-      !toNetworkFee.current
+      (!toNetworkFee.current && !assetsAreSameChain)
     ) {
       Alert.alert(labelTranslateFn('swapScreen.invalidArgs')!)
       return
@@ -226,6 +229,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         swapPairfromAssetCode: swapPair.fromAsset.code,
         swapPairtoAssetCode: swapPair.toAsset.code,
       }),
+      assetsAreSameChain,
     })
   }
 
@@ -259,16 +263,21 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     code: string,
     chain: ChainId,
     direction: Direction,
+    networkFee: NetworkFeeType,
+    networkSpeed: FeeLabel,
   ) => {
     navigation.navigate(
       isEIP1559Fees(chain) ? 'CustomFeeEIP1559Screen' : 'CustomFeeScreen',
       {
+        assetData: route.params.assetData,
         code,
         screenTitle: labelTranslateFn('sendScreen.networkSpeed')!,
         amountInput:
           direction === Direction.From
             ? state.fromAmount?.toString()
             : state.toAmount?.toString(),
+        fee: networkFee,
+        speedMode: networkSpeed,
       },
     )
   }
@@ -418,6 +427,75 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     [error, swapPair.fromAsset?.code],
   )
 
+  const renderSwapFeeSelector = () => {
+    //If swap is on the same chain, there is just 1 type of gasfees
+    if (assetsAreSameChain)
+      return (
+        <>
+          {swapPair.fromAsset?.code ? (
+            <SwapFeeSelector
+              asset={getNativeAsset(swapPair.fromAsset?.code)}
+              handleCustomPress={() =>
+                handleCustomPressBtn(
+                  swapPair.fromAsset?.code!,
+                  swapPair.fromAsset?.chain!,
+                  Direction.From,
+                  fromNetworkFee,
+                  fromNetworkSpeed,
+                )
+              }
+              networkFee={fromNetworkFee}
+              selectedQuote={selectedQuote}
+              type={'from'}
+              changeNetworkSpeed={setFromNetworkSpeed}
+            />
+          ) : null}
+        </>
+      )
+    else {
+      return (
+        <>
+          {swapPair.fromAsset?.code ? (
+            <SwapFeeSelector
+              asset={swapPair.fromAsset?.code}
+              handleCustomPress={() =>
+                handleCustomPressBtn(
+                  swapPair.fromAsset?.code!,
+                  swapPair.fromAsset?.chain!,
+                  Direction.From,
+                  fromNetworkFee,
+                  fromNetworkSpeed,
+                )
+              }
+              networkFee={fromNetworkFee}
+              selectedQuote={selectedQuote}
+              type={'from'}
+              changeNetworkSpeed={setFromNetworkSpeed}
+            />
+          ) : null}
+          {swapPair.toAsset?.code ? (
+            <SwapFeeSelector
+              asset={swapPair.toAsset?.code}
+              handleCustomPress={() =>
+                handleCustomPressBtn(
+                  swapPair.toAsset?.code!,
+                  swapPair.toAsset?.chain!,
+                  Direction.To,
+                  toNetworkFee,
+                  toNetworkSpeed,
+                )
+              }
+              networkFee={toNetworkFee}
+              selectedQuote={selectedQuote}
+              type={'to'}
+              changeNetworkSpeed={setToNetworkSpeed}
+            />
+          ) : null}
+        </>
+      )
+    }
+  }
+
   return (
     <Box
       flex={1}
@@ -526,7 +604,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           <Label text={{ tx: 'common.networkSpeed' }} variant="strong" />
           {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
             <Label
-              text={`${swapPair.fromAsset?.code} ${fromNetworkSpeed} / ${swapPair.toAsset?.code} ${toNetworkSpeed}`}
+              text={
+                assetsAreSameChain
+                  ? `${getNativeAsset(
+                      swapPair.fromAsset?.code,
+                    )} ${fromNetworkSpeed}`
+                  : `${swapPair.fromAsset?.code} ${fromNetworkSpeed} / ${swapPair.toAsset?.code} ${toNetworkSpeed}`
+              }
               variant="light"
             />
           ) : null}
@@ -537,38 +621,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       toNetworkFee &&
       selectedQuote ? (
         <>
-          {swapPair.fromAsset?.code ? (
-            <SwapFeeSelector
-              asset={swapPair.fromAsset?.code}
-              handleCustomPress={() =>
-                handleCustomPressBtn(
-                  swapPair.fromAsset?.code!,
-                  swapPair.fromAsset?.chain!,
-                  Direction.From,
-                )
-              }
-              networkFee={fromNetworkFee}
-              selectedQuote={selectedQuote}
-              type={'from'}
-              changeNetworkSpeed={setFromNetworkSpeed}
-            />
-          ) : null}
-          {swapPair.toAsset?.code ? (
-            <SwapFeeSelector
-              asset={swapPair.toAsset?.code}
-              handleCustomPress={() =>
-                handleCustomPressBtn(
-                  swapPair.toAsset?.code!,
-                  swapPair.toAsset?.chain!,
-                  Direction.To,
-                )
-              }
-              networkFee={toNetworkFee}
-              selectedQuote={selectedQuote}
-              type={'to'}
-              changeNetworkSpeed={setToNetworkSpeed}
-            />
-          ) : null}
+          {renderSwapFeeSelector()}
           <Warning
             text1={{ tx1: 'common.maxSlippage' }}
             text2={I18n.t('common.swapDoesnotComp', {
