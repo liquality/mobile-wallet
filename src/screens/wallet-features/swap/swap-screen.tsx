@@ -36,8 +36,13 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { balanceStateFamily, swapPairState, networkState } from '../../../atoms'
 import I18n from 'i18n-js'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
-import { isEIP1559Fees } from '@liquality/wallet-core/dist/src/utils/fees'
+import {
+  feePerUnit,
+  isEIP1559Fees,
+} from '@liquality/wallet-core/dist/src/utils/fees'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
+import { setupWallet } from '@liquality/wallet-core'
+import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -153,6 +158,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       assetId: swapPair.fromAsset?.id || '',
     }),
   )
+  const [gasFees, setGasFees] = useState<GasFees>()
+
   const activeNetwork = useRecoilValue(networkState)
   const [areFeeSelectorsVisible, setFeeSelectorsVisible] = useState(true)
   const [selectedQuote, setSelectedQuote] = useState<SwapQuote>()
@@ -174,6 +181,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const assetsAreSameChain =
     getNativeAsset(swapPair.fromAsset?.code) ===
     getNativeAsset(swapPair.toAsset?.code)
+
+  const wallet = setupWallet({
+    ...defaultOptions,
+  })
+  const { activeWalletId, fees } = wallet.state
 
   const amountInputRef = useRef<AmountTextInputBlockHandle>(null)
   const amountInputRefTo = useRef<AmountTextInputBlockHandle>(null)
@@ -281,10 +293,23 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           direction === Direction.From
             ? state.fromAmount?.toString()
             : state.toAmount?.toString(),
-        fee: networkFee,
+        fee: networkFee.current.value,
         speedMode: networkSpeed,
       },
     )
+  }
+
+  const getAssetFees = (asset) => {
+    const assetFees = {}
+
+    const suggestedFees = wallet.getters.suggestedFeePrices(
+      getNativeAsset(swapPair.fromAsset.code),
+    )
+    console.log(suggestedFees, 'wats SUUUGEESTEDFEE')
+    if (suggestedFees) {
+      Object.assign(assetFees, suggestedFees)
+    }
+    return assetFees
   }
 
   const updateBestQuote = useCallback(async () => {
@@ -317,6 +342,28 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             to: swapPair.toAsset.code,
             amount: amount,
           })
+          const { fromTxType, toTxType } = swapProvider
+          const assetFees = getAssetFees(swapPair.fromAsset?.chain)
+          console.log(assetFees, 'wats assetfees')
+
+          console.log(sortedQuotes[0], 'quotelist?')
+          const totalFees = await swapProvider.estimateFees({
+            network: activeNetwork,
+            walletId: activeWalletId,
+            asset: swapPair.fromAsset.code,
+            txType: fromTxType,
+            quote: sortedQuotes[0],
+            feePrices: Object.values(assetFees).map((fee) =>
+              feePerUnit(fee.fee, cryptoassets[swapPair.fromAsset.code].chain),
+            ),
+          })
+          console.log(totalFees, 'totalfees')
+          if (!totalFees) return
+
+          /* for (const [speed, fee] of Object.entries(assetFees)) {
+            const feePrice = feePerUnit(fee.fee, cryptoassets[asset].chain)
+            fees[chain][speed] = fees['testnet'][speed].plus(totalFees[feePrice])
+          } */
           dispatch({
             type: SwapEventActionKind.SetMinVal,
             payload: {
@@ -457,6 +504,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               selectedQuote={selectedQuote}
               type={'from'}
               changeNetworkSpeed={setFromNetworkSpeed}
+              gasFees={gasFees}
+              setGasFees={setGasFees}
             />
           ) : null}
         </>
@@ -480,6 +529,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               selectedQuote={selectedQuote}
               type={'from'}
               changeNetworkSpeed={setFromNetworkSpeed}
+              gasFees={gasFees}
+              setGasFees={setGasFees}
             />
           ) : null}
           {swapPair.toAsset?.code ? (
@@ -498,6 +549,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               selectedQuote={selectedQuote}
               type={'to'}
               changeNetworkSpeed={setToNetworkSpeed}
+              gasFees={gasFees}
+              setGasFees={setGasFees}
             />
           ) : null}
         </>
