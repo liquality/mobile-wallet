@@ -39,6 +39,7 @@ import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import {
   feePerUnit,
   isEIP1559Fees,
+  newSendFees,
 } from '@liquality/wallet-core/dist/src/utils/fees'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { setupWallet } from '@liquality/wallet-core'
@@ -344,9 +345,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           })
           const { fromTxType, toTxType } = swapProvider
           const assetFees = getAssetFees(swapPair.fromAsset?.chain)
-          console.log(assetFees, 'wats assetfees')
 
-          console.log(sortedQuotes[0], 'quotelist?')
+          const feesToPopulate = {
+            ['testnet']: newSendFees(),
+            ['testnet']: newSendFees(),
+          }
           const totalFees = await swapProvider.estimateFees({
             network: activeNetwork,
             walletId: activeWalletId,
@@ -357,13 +360,18 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               feePerUnit(fee.fee, cryptoassets[swapPair.fromAsset.code].chain),
             ),
           })
-          console.log(totalFees, 'totalfees')
           if (!totalFees) return
 
-          /* for (const [speed, fee] of Object.entries(assetFees)) {
-            const feePrice = feePerUnit(fee.fee, cryptoassets[asset].chain)
-            fees[chain][speed] = fees['testnet'][speed].plus(totalFees[feePrice])
-          } */
+          for (const [speed, fee] of Object.entries(assetFees)) {
+            const feePrice = feePerUnit(fee.fee, 'ethereum')
+
+            feesToPopulate['testnet'][speed] =
+              feesToPopulate['testnet'][speed] + totalFees[feePrice]
+
+            console.log(feesToPopulate, 'testnet speed fees')
+
+            console.log(feePrice, 'wats feeprice?')
+          }
           dispatch({
             type: SwapEventActionKind.SetMinVal,
             payload: {
