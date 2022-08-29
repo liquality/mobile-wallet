@@ -294,7 +294,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           direction === Direction.From
             ? state.fromAmount?.toString()
             : state.toAmount?.toString(),
-        fee: networkFee.current.value,
+        fee: gasFees,
         speedMode: networkSpeed,
       },
     )
@@ -306,7 +306,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     const suggestedFees = wallet.getters.suggestedFeePrices(
       getNativeAsset(swapPair.fromAsset.code),
     )
-    console.log(suggestedFees, 'wats SUUUGEESTEDFEE')
     if (suggestedFees) {
       Object.assign(assetFees, suggestedFees)
     }
@@ -345,6 +344,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           })
           const { fromTxType, toTxType } = swapProvider
           const assetFees = getAssetFees(swapPair.fromAsset?.chain)
+          console.log(assetFees, 'just assetfees')
 
           const feesToPopulate = {
             ['testnet']: newSendFees(),
@@ -367,11 +367,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
             feesToPopulate['testnet'][speed] =
               feesToPopulate['testnet'][speed] + totalFees[feePrice]
-
-            console.log(feesToPopulate, 'testnet speed fees')
-
-            console.log(feePrice, 'wats feeprice?')
           }
+          console.log(feesToPopulate, 'testnet speed fees')
+          console.log(totalFees, 'TOOOTALFES ')
+
+          //console.log(feePrice, 'wats feeprice?')
           dispatch({
             type: SwapEventActionKind.SetMinVal,
             payload: {

@@ -90,6 +90,7 @@ const CustomFeeEIP1559Screen = ({
     setSpeedMode,
   ])
 
+  console.log(route.params.fee, 'Just FEEE')
   const code = route.params.code!
   const nativeAssetCode = getNativeAsset(code)
 
@@ -366,6 +367,8 @@ const CustomFeeEIP1559Screen = ({
     )
   }
 
+  console.log(route.params.fee, 'just fee var in !!!eip')
+
   return (
     <View style={styles.container}>
       <View style={styles.block}>
@@ -400,8 +403,8 @@ const CustomFeeEIP1559Screen = ({
           </Text>
         </View>
         <View style={styles.row}>
-          {showBasic
-            ? /*      <Preset
+          {showBasic ? (
+            <Preset
               EIP1559={true}
               customFeeInput={customFeeInput}
               gasFees={gasFees}
@@ -420,8 +423,10 @@ const CustomFeeEIP1559Screen = ({
               fee={route.params.fee}
               setUserInputMaximumFee={setUserInputMaximumFee}
               setUserInputMinerTip={setUserInputMinerTip}
-            /> */ null
-            : renderShowCustomized()}
+            />
+          ) : (
+            renderShowCustomized()
+          )}
         </View>
       </View>
       <View style={[styles.row, styles.actions]}>
