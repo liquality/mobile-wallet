@@ -69,7 +69,6 @@ const Preset = ({
 
   const renderSlowAverageFastPreset = (speed: string) => {
     //A bit ugly/messy, may refactor later
-    console.log(fee, 'wats fee')
     let preset
     let totalFeesSpeed
     let feeInSatOrGwei
@@ -86,7 +85,6 @@ const Preset = ({
       totalFeesSpeed = totalFees?.fast || null
       feeInSatOrGwei = fee.fast || fee
     }
-    console.log(feeInSatOrGwei, 'feeInSatOrGwei')
 
     if (EIP1559) {
       const gasFeeForSpeed = preset.fee

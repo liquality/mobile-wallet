@@ -284,6 +284,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     networkFee: NetworkFeeType,
     networkSpeed: FeeLabel,
   ) => {
+    console.log(code, 'wats code+?')
     navigation.navigate(
       isEIP1559Fees(chain) ? 'CustomFeeEIP1559Screen' : 'CustomFeeScreen',
       {
@@ -296,6 +297,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             : state.toAmount?.toString(),
         fee: gasFees,
         speedMode: networkSpeed,
+        swap: true,
       },
     )
   }
@@ -344,7 +346,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           })
           const { fromTxType, toTxType } = swapProvider
           const assetFees = getAssetFees(swapPair.fromAsset?.chain)
-          console.log(assetFees, 'just assetfees')
 
           const feesToPopulate = {
             ['testnet']: newSendFees(),
@@ -368,10 +369,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             feesToPopulate['testnet'][speed] =
               feesToPopulate['testnet'][speed] + totalFees[feePrice]
           }
-          console.log(feesToPopulate, 'testnet speed fees')
-          console.log(totalFees, 'TOOOTALFES ')
 
-          //console.log(feePrice, 'wats feeprice?')
           dispatch({
             type: SwapEventActionKind.SetMinVal,
             payload: {
@@ -408,7 +406,32 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
   useEffect(() => {
     updateBestQuote()
-  }, [updateBestQuote])
+    console.log(route.params.customFee, 'customfee')
+    console.log(
+      'ASSETDATA CODE:',
+      route.params.code,
+      'FROMASSET CODE:',
+      swapPair.fromAsset.code,
+    )
+    if (
+      route.params.customFee &&
+      route.params.code === swapPair.fromAsset.code
+    ) {
+      console.log('GOT IN FROM NETWORK')
+      setFromNetworkSpeed('custom')
+    } else if (
+      route.params.customFee &&
+      route.params.code === swapPair.toAsset
+    ) {
+      console.log('GOT IN TO NETWORK')
+      setToNetworkSpeed('custom')
+    }
+  }, [
+    route.params.customFee,
+    swapPair.fromAsset,
+    swapPair.toAsset,
+    updateBestQuote,
+  ])
 
   const getCompatibleErrorMsg = React.useCallback(() => {
     const { msg, type } = error
@@ -565,6 +588,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       )
     }
   }
+
+  let networkSpeedFeeText = assetsAreSameChain
+    ? `${getNativeAsset(swapPair.fromAsset?.code)} ${fromNetworkSpeed}`
+    : `${swapPair.fromAsset?.code} ${fromNetworkSpeed} / ${swapPair.toAsset?.code} ${toNetworkSpeed}`
+
+  console.log('TOO: ', toNetworkSpeed, 'network speed FROM:', fromNetworkSpeed)
 
   return (
     <Box

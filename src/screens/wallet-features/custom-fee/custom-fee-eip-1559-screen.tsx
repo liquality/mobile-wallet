@@ -90,7 +90,6 @@ const CustomFeeEIP1559Screen = ({
     setSpeedMode,
   ])
 
-  console.log(route.params.fee, 'Just FEEE')
   const code = route.params.code!
   const nativeAssetCode = getNativeAsset(code)
 
@@ -136,6 +135,13 @@ const CustomFeeEIP1559Screen = ({
   )
 
   const handleApplyPress = async () => {
+    let applySwapOrSendParams = {
+      assetData: route.params.assetData,
+      ...route.params,
+      customFee: Number(userInputMinerTip) + Number(userInputMaximumFee), // parseFloat(customFeeInput.value),
+      speed: speedMode,
+      code: route.params.code,
+    }
     if (route.params.speedUp) {
       await speedUpTransaction(
         route.params.id,
@@ -144,14 +150,12 @@ const CustomFeeEIP1559Screen = ({
         activeNetwork,
         parseFloat(customFeeInput.value),
       )
+      //TODO: handle send in params here when speedup is fixed in WC
       navigation.goBack()
+    } else if (route.params.swap) {
+      navigation.navigate('SwapScreen', applySwapOrSendParams)
     } else {
-      navigation.navigate('SendScreen', {
-        assetData: route.params.assetData,
-        ...route.params,
-        customFee: parseFloat(customFeeInput.value),
-        speed: speedMode,
-      })
+      navigation.navigate('SendScreen', applySwapOrSendParams)
     }
   }
 
@@ -366,8 +370,6 @@ const CustomFeeEIP1559Screen = ({
       </View>
     )
   }
-
-  console.log(route.params.fee, 'just fee var in !!!eip')
 
   return (
     <View style={styles.container}>
