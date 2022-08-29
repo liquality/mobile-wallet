@@ -9,7 +9,7 @@ import {
 } from '@liquality/wallet-core/dist/src/swaps/types'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import dayjs from 'dayjs'
-import QuickCrypto from 'react-native-quick-crypto'
+import Pbkdf2 from 'react-native-fast-pbkdf2'
 import { Buffer } from '@craftzdog/react-native-buffer'
 import { translate, TxKeyPath } from '../i18n'
 
@@ -52,22 +52,14 @@ export const pbkdf2 = async (
   length: number,
   digest: string,
 ): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    QuickCrypto.pbkdf2(
-      Buffer.from(password),
-      Buffer.from(salt),
-      iterations,
-      length,
-      digest,
-      (error, derivedKey) => {
-        if (error || !derivedKey) {
-          reject(error)
-        } else {
-          resolve(derivedKey.toString())
-        }
-      },
-    )
-  })
+  const generatedValue = await Pbkdf2.derive(
+    password.toString(),
+    salt.toString(),
+    iterations,
+    length,
+    digest?.toLowerCase().replace('sha', 'sha-') || 'sha-256',
+  )
+  return Buffer.from(atob(generatedValue)).toString('hex')
 }
 
 export const pbkdf2Sync = (
@@ -77,17 +69,17 @@ export const pbkdf2Sync = (
   length: number,
   digest: string,
 ): string => {
-  const derivedKey = QuickCrypto.pbkdf2Sync(
-    Buffer.from(password),
-    Buffer.from(salt),
+  const generatedValue = Pbkdf2.deriveSync(
+    password.toString(),
+    salt.toString(),
     iterations,
     length,
-    digest,
+    digest?.toLowerCase().replace('sha', 'sha-') || 'sha-256',
   )
 
-  return derivedKey.toString()
+  return Buffer.from(generatedValue).toString('hex')
 }
-
+global.pbkdf2Sync = pbkdf2Sync
 export const encrypt = async (
   value: string,
   derivedKey: string,
@@ -106,18 +98,11 @@ export const decrypt = async (
   }
 }
 
-//TODO This is only a placeholder until we implement a more sophisticated approach to collect logs
-const logDump: Record<string, string[]> = {
-  info: [],
-  warn: [],
-  error: [],
-}
-
 export const Log = (
-  message: unknown,
-  level: 'info' | 'warn' | 'error',
+  _message: unknown,
+  _level: 'info' | 'warn' | 'error',
 ): void => {
-  logDump[level].push(JSON.stringify(message))
+  //TODO store this in a db
 }
 
 export const calculateFees = async (
@@ -150,7 +135,9 @@ export const calculateFees = async (
       walletId: activeWalletId,
       asset,
       txType:
-        txSource === 'from' ? swapProvider.fromTxType : swapProvider.toTxType,
+        (txSource === 'from'
+          ? swapProvider.fromTxType
+          : swapProvider.toTxType) || '',
       quote: selectedQuote,
       feePrices,
       max,
