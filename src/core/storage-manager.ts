@@ -41,7 +41,7 @@ export default class StorageManager {
       const result = await AsyncStorage.getItem(storageKey)
       return JSON.parse(result || '') as T
     } catch (e) {
-      throw new Error('Failed to read from storage')
+      throw new Error('Failed to read from storage: ' + e)
     }
   }
 }

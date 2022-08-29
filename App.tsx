@@ -17,6 +17,7 @@ import LoginScreen from './src/screens/wallet-creation/loginScreen'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Log } from './src/utils'
 import { RecoilRoot } from 'recoil'
+import FlipperAsyncStorage from 'rn-flipper-async-storage-advanced'
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
@@ -59,6 +60,7 @@ const App: FC = () => {
 
   return (
     <Provider store={store}>
+      {__DEV__ && !process.env.JEST_WORKER_ID ? <FlipperAsyncStorage /> : null}
       <RecoilRoot>
         <ThemeProvider theme={theme}>
           <View style={backgroundStyle} testID={'app-test'}>
