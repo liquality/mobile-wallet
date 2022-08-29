@@ -302,9 +302,9 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               label={{ tx: 'sendScreen.max' }}
               type="tertiary"
               variant="s"
-              onPress={() =>
-                amountInput.onChangeText(availableAmount.toString())
-              }
+              onPress={() => {
+                handleOnChangeText(availableAmount.toString())
+              }}
             />
           </Box>
           <Box marginTop={'xl'}>

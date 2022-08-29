@@ -107,4 +107,68 @@ async function fixBrowserCheck(path) {
 
   await fixBrowserCheck('node_modules/vue/dist/vue.runtime.common.dev.js')
   await fixBrowserCheck('node_modules/vue/dist/vue.runtime.common.prod.js')
+
+  //Fix for bitcoin send issue with BufferN for file p2pkh
+  const readBufferN_p2pkh = await fs.readFile(
+    'node_modules/bitcoinjs-lib/src/payments/p2pkh.js',
+    {
+      encoding: 'utf8',
+    },
+  )
+  const writeBufferN_To_Buffer_p2pkh = readBufferN_p2pkh.replaceAll(
+    'output: typef.maybe(typef.BufferN(25))',
+    'output: typef.maybe(typef.Buffer)',
+  )
+  await fs.writeFile(
+    'node_modules/bitcoinjs-lib/src/payments/p2pkh.js',
+    writeBufferN_To_Buffer_p2pkh,
+  )
+
+  //Fix for bitcoin send issue with BufferN for file p2sh
+  const readBufferN_p2sh = await fs.readFile(
+    'node_modules/bitcoinjs-lib/src/payments/p2sh.js',
+    {
+      encoding: 'utf8',
+    },
+  )
+  const writeBufferN_To_Buffer_p2sh = readBufferN_p2sh.replaceAll(
+    'output: typef.maybe(typef.BufferN(23))',
+    'output: typef.maybe(typef.Buffer)',
+  )
+  await fs.writeFile(
+    'node_modules/bitcoinjs-lib/src/payments/p2sh.js',
+    writeBufferN_To_Buffer_p2sh,
+  )
+
+  //Fix for bitcoin send issue with BufferN for file p2wpkh
+  const readBufferN_p2wpkh = await fs.readFile(
+    'node_modules/bitcoinjs-lib/src/payments/p2wpkh.js',
+    {
+      encoding: 'utf8',
+    },
+  )
+  const writeBufferN_To_Buffer_p2wpkh = readBufferN_p2wpkh.replaceAll(
+    'output: typef.maybe(typef.BufferN(22))',
+    'output: typef.maybe(typef.Buffer)',
+  )
+  await fs.writeFile(
+    'node_modules/bitcoinjs-lib/src/payments/p2wpkh.js',
+    writeBufferN_To_Buffer_p2wpkh,
+  )
+
+  //Fix for bitcoin send issue with BufferN for file p2wsh
+  const readBufferN_p2wsh = await fs.readFile(
+    'node_modules/bitcoinjs-lib/src/payments/p2wsh.js',
+    {
+      encoding: 'utf8',
+    },
+  )
+  const writeBufferN_To_Buffer_p2wsh = readBufferN_p2wsh.replaceAll(
+    'output: typef.maybe(typef.BufferN(34))',
+    'output: typef.maybe(typef.Buffer)',
+  )
+  await fs.writeFile(
+    'node_modules/bitcoinjs-lib/src/payments/p2wsh.js',
+    writeBufferN_To_Buffer_p2wsh,
+  )
 })()
