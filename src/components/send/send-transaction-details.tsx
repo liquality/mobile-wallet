@@ -10,7 +10,7 @@ import { EmptyBlock, Separator, Step } from '../swap/swap-transaction-details'
 import { getTransactionExplorerLink } from '@liquality/wallet-core/dist/src/utils/asset'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { useRecoilValue } from 'recoil'
-import { fiatRatesState } from '../../atoms'
+import { fiatRatesState, addressStateFamily } from '../../atoms'
 
 type SendTransactionDetailsProps = {
   historyItem: SendHistoryItem
@@ -20,6 +20,11 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
 ): React.ReactElement => {
   const { historyItem } = props
   const fiatRates = useRecoilValue(fiatRatesState)
+  const address = useRecoilValue(addressStateFamily(historyItem.accountId))
+
+  // Bitcoin send's historyItem props missing 'from' key
+  // to avoid crash
+  const fromAddress = historyItem.tx?.from?.toString() || address
 
   if (!historyItem) {
     return (
@@ -48,10 +53,11 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
         key={uuidv4()}>
         <ConfirmationBlock
           address={historyItem.from}
-          status={`From: ${shortenAddress(historyItem.tx.from.toString())}`}
+          status={`From: ${shortenAddress(fromAddress)}`}
           confirmations={historyItem.tx?.confirmations || 0}
           fee={historyItem.fee}
           asset={historyItem.from}
+          fiatRate={historyItem.fiatRate}
           fiatRates={fiatRates}
           url={getTransactionExplorerLink(
             historyItem.tx?.hash,
