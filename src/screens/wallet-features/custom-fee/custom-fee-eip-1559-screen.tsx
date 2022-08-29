@@ -138,7 +138,7 @@ const CustomFeeEIP1559Screen = ({
     let applySwapOrSendParams = {
       assetData: route.params.assetData,
       ...route.params,
-      customFee: Number(userInputMinerTip) + Number(userInputMaximumFee), // parseFloat(customFeeInput.value),
+      customFee: Number(userInputMinerTip) + Number(userInputMaximumFee),
       speed: speedMode,
       code: route.params.code,
     }

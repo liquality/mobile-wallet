@@ -186,7 +186,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const wallet = setupWallet({
     ...defaultOptions,
   })
-  const { activeWalletId, fees } = wallet.state
+  const { activeWalletId } = wallet.state
 
   const amountInputRef = useRef<AmountTextInputBlockHandle>(null)
   const amountInputRefTo = useRef<AmountTextInputBlockHandle>(null)
@@ -284,7 +284,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     networkFee: NetworkFeeType,
     networkSpeed: FeeLabel,
   ) => {
-    console.log(code, 'wats code+?')
     navigation.navigate(
       isEIP1559Fees(chain) ? 'CustomFeeEIP1559Screen' : 'CustomFeeScreen',
       {
@@ -302,9 +301,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     )
   }
 
-  const getAssetFees = (asset) => {
+  const getAssetFees = () => {
     const assetFees = {}
-
     const suggestedFees = wallet.getters.suggestedFeePrices(
       getNativeAsset(swapPair.fromAsset.code),
     )
@@ -344,12 +342,14 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             to: swapPair.toAsset.code,
             amount: amount,
           })
-          const { fromTxType, toTxType } = swapProvider
-          const assetFees = getAssetFees(swapPair.fromAsset?.chain)
 
+          //TODO: Not sure if all this logic is needed, as we are currently accessing the
+          //same fees in another way using getFeeAsset(asset),
+          const { fromTxType } = swapProvider
+          const assetFees = getAssetFees(swapPair.fromAsset?.chain)
           const feesToPopulate = {
-            ['testnet']: newSendFees(),
-            ['testnet']: newSendFees(),
+            [activeNetwork]: newSendFees(),
+            [activeNetwork]: newSendFees(),
           }
           const totalFees = await swapProvider.estimateFees({
             network: activeNetwork,
@@ -364,11 +364,15 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           if (!totalFees) return
 
           for (const [speed, fee] of Object.entries(assetFees)) {
-            const feePrice = feePerUnit(fee.fee, 'ethereum')
+            const feePrice = feePerUnit(
+              fee.fee,
+              cryptoassets[swapPair.fromAsset.code].chain,
+            )
 
-            feesToPopulate['testnet'][speed] =
-              feesToPopulate['testnet'][speed] + totalFees[feePrice]
+            feesToPopulate[activeNetwork][speed] =
+              feesToPopulate[activeNetwork][speed] + totalFees[feePrice]
           }
+          //
 
           dispatch({
             type: SwapEventActionKind.SetMinVal,
@@ -397,6 +401,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       payload: { toAmount: bestQuoteAmount },
     })
     amountInputRefTo.current?.setAfterDispatch(bestQuoteAmount?.toString()!)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     activeNetwork,
     state.fromAmount,
@@ -406,27 +411,28 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
   useEffect(() => {
     updateBestQuote()
-    console.log(route.params.customFee, 'customfee')
-    console.log(
-      'ASSETDATA CODE:',
-      route.params.code,
-      'FROMASSET CODE:',
-      swapPair.fromAsset.code,
-    )
+
     if (
       route.params.customFee &&
       route.params.code === swapPair.fromAsset.code
     ) {
-      console.log('GOT IN FROM NETWORK')
+      fromNetworkFee.current = {
+        speed: 'custom',
+        value: route.params.customFee,
+      }
       setFromNetworkSpeed('custom')
     } else if (
       route.params.customFee &&
       route.params.code === swapPair.toAsset
     ) {
-      console.log('GOT IN TO NETWORK')
+      toNetworkFee.current = {
+        speed: 'custom',
+        value: route.params.customFee,
+      }
       setToNetworkSpeed('custom')
     }
   }, [
+    route.params.code,
     route.params.customFee,
     swapPair.fromAsset,
     swapPair.toAsset,
@@ -537,6 +543,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               changeNetworkSpeed={setFromNetworkSpeed}
               gasFees={gasFees}
               setGasFees={setGasFees}
+              customFee={route.params.customFee}
+              customFeeAsset={route.params.code}
             />
           ) : null}
         </>
@@ -562,6 +570,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               changeNetworkSpeed={setFromNetworkSpeed}
               gasFees={gasFees}
               setGasFees={setGasFees}
+              customFee={route.params.customFee}
+              customFeeAsset={route.params.code}
             />
           ) : null}
           {swapPair.toAsset?.code ? (
@@ -582,18 +592,14 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               changeNetworkSpeed={setToNetworkSpeed}
               gasFees={gasFees}
               setGasFees={setGasFees}
+              customFee={route.params.customFee}
+              customFeeAsset={route.params.code}
             />
           ) : null}
         </>
       )
     }
   }
-
-  let networkSpeedFeeText = assetsAreSameChain
-    ? `${getNativeAsset(swapPair.fromAsset?.code)} ${fromNetworkSpeed}`
-    : `${swapPair.fromAsset?.code} ${fromNetworkSpeed} / ${swapPair.toAsset?.code} ${toNetworkSpeed}`
-
-  console.log('TOO: ', toNetworkSpeed, 'network speed FROM:', fromNetworkSpeed)
 
   return (
     <Box

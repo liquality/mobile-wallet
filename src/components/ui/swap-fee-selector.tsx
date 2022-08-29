@@ -20,6 +20,8 @@ type SwapFeeSelectorProps = {
   changeNetworkSpeed: (speed: FeeLabel) => void
   gasFees: GasFees
   setGasFees: (gasFee: GasFees) => void
+  customFee: number | undefined
+  customFeeAsset: string
 }
 
 const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
@@ -32,6 +34,8 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
     changeNetworkSpeed,
     gasFees,
     setGasFees,
+    customFee,
+    customFeeAsset,
   } = props
   // const [gasFees, setGasFees] = useState<GasFees>()
   const [alertStatus, setAlertStatus] = useState(false)
@@ -63,6 +67,8 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
         networkFee={networkFee}
         gasFees={gasFees}
         changeNetworkSpeed={changeNetworkSpeed}
+        customFeeProps={customFee}
+        customFeeAsset={customFeeAsset}
       />
     </ErrorBoundary>
   )

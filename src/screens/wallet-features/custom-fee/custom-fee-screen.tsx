@@ -87,6 +87,13 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
   }, [setFormattedRatesObj, customFeeInput.value])
 
   const handleApplyPress = async () => {
+    let applySwapOrSendParams = {
+      assetData: route.params.assetData,
+      ...route.params,
+      customFee: parseFloat(customFeeInput.value),
+      speed: speedMode,
+      code: route.params.code,
+    }
     if (route.params.speedUp) {
       await speedUpTransaction(
         route.params.id,
@@ -95,14 +102,12 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
         activeNetwork,
         parseFloat(customFeeInput.value),
       )
+      //TODO: handle send in params here when speedup is fixed in WC
       navigation.goBack()
+    } else if (route.params.swap) {
+      navigation.navigate('SwapScreen', applySwapOrSendParams)
     } else {
-      navigation.navigate('SendScreen', {
-        assetData: route.params.assetData,
-        ...route.params,
-        customFee: parseFloat(customFeeInput.value),
-        speed: speedMode,
-      })
+      navigation.navigate('SendScreen', applySwapOrSendParams)
     }
   }
 

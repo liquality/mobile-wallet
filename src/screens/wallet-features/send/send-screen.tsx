@@ -92,7 +92,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     return true
   }, [addressInput.value, amountInput.value, balance, chain])
 
-  console.log(route.params.customFee, 'CUSTOMFEEEE')
   useEffect(() => {
     if (route.params.customFee && balance) {
       setFee(new BigNumber(route.params.customFee))
