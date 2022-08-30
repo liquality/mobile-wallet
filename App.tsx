@@ -66,11 +66,9 @@ const App: FC = () => {
           <View style={backgroundStyle} testID={'app-test'}>
             <StatusBar barStyle={'dark-content'} backgroundColor="white" />
             <GestureHandlerRootView style={backgroundStyle}>
-              <React.Suspense fallback={<View />}>
-                <NavigationContainer>
-                  <AppNavigator initialRouteName={initialRouteName} />
-                </NavigationContainer>
-              </React.Suspense>
+              <NavigationContainer>
+                <AppNavigator initialRouteName={initialRouteName} />
+              </NavigationContainer>
             </GestureHandlerRootView>
           </View>
         </ThemeProvider>
