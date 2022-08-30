@@ -75,15 +75,15 @@ const Preset = ({
     if (speed === 'slow') {
       preset = gasFees?.slow || null
       totalFeesSpeed = totalFees?.slow || null
-      feeInSatOrGwei = fee.slow
+      feeInSatOrGwei = fee.slow || fee
     } else if (speed === 'average') {
       preset = gasFees?.average || null
       totalFeesSpeed = totalFees?.average || null
-      feeInSatOrGwei = fee.average
+      feeInSatOrGwei = fee.average || fee
     } else {
       preset = gasFees?.fast || null
       totalFeesSpeed = totalFees?.fast || null
-      feeInSatOrGwei = fee.fast
+      feeInSatOrGwei = fee.fast || fee
     }
 
     if (EIP1559) {

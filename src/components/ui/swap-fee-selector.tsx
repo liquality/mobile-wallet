@@ -18,6 +18,10 @@ type SwapFeeSelectorProps = {
   type: 'from' | 'to'
   handleCustomPress: (...args: unknown[]) => void
   changeNetworkSpeed: (speed: FeeLabel) => void
+  gasFees: GasFees
+  setGasFees: (gasFee: GasFees) => void
+  customFee: number | undefined
+  customFeeAsset: string
 }
 
 const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
@@ -28,12 +32,15 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
     type,
     handleCustomPress,
     changeNetworkSpeed,
+    gasFees,
+    setGasFees,
+    customFee,
+    customFeeAsset,
   } = props
-  const [gasFees, setGasFees] = useState<GasFees>()
   const [alertStatus, setAlertStatus] = useState(false)
   useEffect(() => {
     fetchFeesForAsset(asset)
-      .then(setGasFees)
+      .then((result) => setGasFees(result))
       .catch(() => {
         // to avoid multiple alert rendering
         if (!alertStatus) {
@@ -41,7 +48,7 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
           setAlertStatus(true)
         }
       })
-  }, [asset, networkFee, selectedQuote, type, alertStatus])
+  }, [asset, networkFee, selectedQuote, type, alertStatus, setGasFees])
 
   //TODO add an ErrorBoundary component
   if (!gasFees)
@@ -59,6 +66,8 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
         networkFee={networkFee}
         gasFees={gasFees}
         changeNetworkSpeed={changeNetworkSpeed}
+        customFeeProps={customFee}
+        customFeeAsset={customFeeAsset}
       />
     </ErrorBoundary>
   )

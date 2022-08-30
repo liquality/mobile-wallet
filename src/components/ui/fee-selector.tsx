@@ -17,6 +17,8 @@ type FeeSelectorProps = {
   networkFee: MutableRefObject<NetworkFeeType | undefined>
   changeNetworkSpeed?: (speed: FeeLabel) => void
   gasFees: GasFees
+  customFeeProps: number | undefined
+  customFeeAsset: string
 }
 
 const FeeSelector: FC<FeeSelectorProps> = (props) => {
@@ -26,6 +28,8 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
     networkFee,
     gasFees,
     changeNetworkSpeed,
+    customFeeProps,
+    customFeeAsset,
   } = props
   const [customFee, setCustomFee] = useState()
   const [speedMode, setSpeedMode] = useState<keyof FeeDetails>('average')
@@ -35,7 +39,9 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
       if (changeNetworkSpeed) changeNetworkSpeed(speed)
       setCustomFee(undefined)
       setSpeedMode(speed)
-      networkFee.current = { speed, value: gasFees[speed].toNumber() }
+      customFeeProps
+        ? (networkFee.current = { speed, value: customFeeProps })
+        : (networkFee.current = { speed, value: gasFees[speed].toNumber() })
     } else {
       Alert.alert('Invalid gas fees')
     }
@@ -46,7 +52,22 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
       speed: FeeLabel.Average,
       value: gasFees.average.toNumber(),
     }
-  }, [gasFees.average, networkFee, speedMode])
+    //TODO: Handle multiple custom fees if different chains?
+    customFeeProps && assetSymbol === customFeeAsset
+      ? (networkFee.current = { speed: 'custom', value: customFeeProps })
+      : (networkFee.current = {
+          speed: FeeLabel.Average,
+          value: gasFees[speedMode].toNumber(),
+        })
+  }, [
+    assetSymbol,
+    customFeeAsset,
+    customFeeProps,
+    gasFees,
+    gasFees.average,
+    networkFee,
+    speedMode,
+  ])
 
   return (
     <Box

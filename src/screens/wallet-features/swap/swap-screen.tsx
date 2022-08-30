@@ -36,8 +36,14 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { balanceStateFamily, swapPairState, networkState } from '../../../atoms'
 import I18n from 'i18n-js'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
-import { isEIP1559Fees } from '@liquality/wallet-core/dist/src/utils/fees'
+import {
+  feePerUnit,
+  isEIP1559Fees,
+  newSendFees,
+} from '@liquality/wallet-core/dist/src/utils/fees'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
+import { setupWallet } from '@liquality/wallet-core'
+import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -153,6 +159,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       assetId: swapPair.fromAsset?.id || '',
     }),
   )
+  const [gasFees, setGasFees] = useState<GasFees>()
+
   const activeNetwork = useRecoilValue(networkState)
   const [areFeeSelectorsVisible, setFeeSelectorsVisible] = useState(true)
   const [selectedQuote, setSelectedQuote] = useState<SwapQuote>()
@@ -174,6 +182,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const assetsAreSameChain =
     getNativeAsset(swapPair.fromAsset?.code) ===
     getNativeAsset(swapPair.toAsset?.code)
+
+  const wallet = setupWallet({
+    ...defaultOptions,
+  })
+  const { activeWalletId } = wallet.state
 
   const amountInputRef = useRef<AmountTextInputBlockHandle>(null)
   const amountInputRefTo = useRef<AmountTextInputBlockHandle>(null)
@@ -281,10 +294,22 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           direction === Direction.From
             ? state.fromAmount?.toString()
             : state.toAmount?.toString(),
-        fee: networkFee,
+        fee: gasFees,
         speedMode: networkSpeed,
+        swap: true,
       },
     )
+  }
+
+  const getAssetFees = () => {
+    const assetFees = {}
+    const suggestedFees = wallet.getters.suggestedFeePrices(
+      getNativeAsset(swapPair.fromAsset.code),
+    )
+    if (suggestedFees) {
+      Object.assign(assetFees, suggestedFees)
+    }
+    return assetFees
   }
 
   const updateBestQuote = useCallback(async () => {
@@ -317,6 +342,38 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             to: swapPair.toAsset.code,
             amount: amount,
           })
+
+          //TODO: Not sure if all this logic is needed, as we are currently accessing the
+          //same fees in another way using getFeeAsset(asset),
+          const { fromTxType } = swapProvider
+          const assetFees = getAssetFees(swapPair.fromAsset?.chain)
+          const feesToPopulate = {
+            [activeNetwork]: newSendFees(),
+            [activeNetwork]: newSendFees(),
+          }
+          const totalFees = await swapProvider.estimateFees({
+            network: activeNetwork,
+            walletId: activeWalletId,
+            asset: swapPair.fromAsset.code,
+            txType: fromTxType,
+            quote: sortedQuotes[0],
+            feePrices: Object.values(assetFees).map((fee) =>
+              feePerUnit(fee.fee, cryptoassets[swapPair.fromAsset.code].chain),
+            ),
+          })
+          if (!totalFees) return
+
+          for (const [speed, fee] of Object.entries(assetFees)) {
+            const feePrice = feePerUnit(
+              fee.fee,
+              cryptoassets[swapPair.fromAsset.code].chain,
+            )
+
+            feesToPopulate[activeNetwork][speed] =
+              feesToPopulate[activeNetwork][speed] + totalFees[feePrice]
+          }
+          //
+
           dispatch({
             type: SwapEventActionKind.SetMinVal,
             payload: {
@@ -344,6 +401,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       payload: { toAmount: bestQuoteAmount },
     })
     amountInputRefTo.current?.setAfterDispatch(bestQuoteAmount?.toString()!)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     activeNetwork,
     state.fromAmount,
@@ -353,7 +411,33 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
   useEffect(() => {
     updateBestQuote()
-  }, [updateBestQuote])
+
+    if (
+      route.params.customFee &&
+      route.params.code === swapPair.fromAsset.code
+    ) {
+      fromNetworkFee.current = {
+        speed: 'custom',
+        value: route.params.customFee,
+      }
+      setFromNetworkSpeed('custom')
+    } else if (
+      route.params.customFee &&
+      route.params.code === swapPair.toAsset
+    ) {
+      toNetworkFee.current = {
+        speed: 'custom',
+        value: route.params.customFee,
+      }
+      setToNetworkSpeed('custom')
+    }
+  }, [
+    route.params.code,
+    route.params.customFee,
+    swapPair.fromAsset,
+    swapPair.toAsset,
+    updateBestQuote,
+  ])
 
   const getCompatibleErrorMsg = React.useCallback(() => {
     const { msg, type } = error
@@ -457,6 +541,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               selectedQuote={selectedQuote}
               type={'from'}
               changeNetworkSpeed={setFromNetworkSpeed}
+              gasFees={gasFees}
+              setGasFees={setGasFees}
+              customFee={route.params.customFee}
+              customFeeAsset={route.params.code}
             />
           ) : null}
         </>
@@ -480,6 +568,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               selectedQuote={selectedQuote}
               type={'from'}
               changeNetworkSpeed={setFromNetworkSpeed}
+              gasFees={gasFees}
+              setGasFees={setGasFees}
+              customFee={route.params.customFee}
+              customFeeAsset={route.params.code}
             />
           ) : null}
           {swapPair.toAsset?.code ? (
@@ -498,6 +590,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               selectedQuote={selectedQuote}
               type={'to'}
               changeNetworkSpeed={setToNetworkSpeed}
+              gasFees={gasFees}
+              setGasFees={setGasFees}
+              customFee={route.params.customFee}
+              customFeeAsset={route.params.code}
             />
           ) : null}
         </>
