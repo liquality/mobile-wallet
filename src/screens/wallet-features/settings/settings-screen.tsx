@@ -50,7 +50,6 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
   const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(
     isAnalyticsEnabledFromStart,
   )
-  // const [darkMode, setDarkMode] = useState<DarkModeEnum>(DarkModeEnum.Light)
   const [theme, setTheme] = useRecoilState(themeMode)
   const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
   const dispatch = useDispatch()

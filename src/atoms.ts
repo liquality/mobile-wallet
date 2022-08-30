@@ -41,11 +41,7 @@ export const fiatRatesState = atom<FiatRates>({
 
 export const networkState = atom<Network>({
   key: 'ActiveNetwork',
-  default: AsyncStorage.getItem(KEYS.ACTIVE_NETWORK_KEY).then((savedValue) =>
-    savedValue !== null && typeof savedValue !== 'undefined'
-      ? (JSON.parse(savedValue) as Network)
-      : Network.Testnet,
-  ),
+  default: Network.Testnet,
   effects: [localStorageEffect<Network>(KEYS.ACTIVE_NETWORK_KEY)],
 })
 
