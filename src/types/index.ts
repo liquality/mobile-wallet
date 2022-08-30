@@ -147,6 +147,12 @@ export enum DarkModeEnum {
   Null = '',
 }
 
+export enum LanguageEnum {
+  English = 'en',
+  Spanish = 'es',
+  Mandarin = 'zh',
+}
+
 export enum ActionEnum {
   SEND = 'SEND',
   SWAP = 'SWAP',

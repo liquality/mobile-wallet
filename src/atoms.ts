@@ -1,4 +1,4 @@
-import { DarkModeEnum } from './types/index'
+import { DarkModeEnum, LanguageEnum } from './types/index'
 import { atom, atomFamily, selector, selectorFamily } from 'recoil'
 import { AccountType, SwapAssetPairType } from './types'
 import { BigNumber } from '@liquality/types'
@@ -25,6 +25,7 @@ import {
 import { CustomRootState } from './reducers'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { KEYS } from './utils'
+import * as Localization from 'expo-localization'
 
 //------------ATOMS---------------------
 export const accountsIdsState = atom<{ id: string; name: Asset }[]>({
@@ -94,6 +95,12 @@ export const themeMode = atom<DarkModeEnum>({
   key: 'ThemeMode',
   default: DarkModeEnum.Null,
   effects: [localStorageEffect<DarkModeEnum>(KEYS.ACTIVE_THEME)],
+})
+
+export const langSelected = atom<LanguageEnum | string>({
+  key: 'LanguageSelected',
+  default: Localization.locale || LanguageEnum.English,
+  effects: [localStorageEffect<LanguageEnum | string>(KEYS.ACTIVE_LANG)],
 })
 
 //---------- ATOM FAMILIES----------------

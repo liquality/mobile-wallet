@@ -28,6 +28,7 @@ import {
   optInAnalyticsState,
   walletState,
   themeMode,
+  langSelected,
 } from '../../../atoms'
 import DeviceInfo from 'react-native-device-info'
 import { NavigationProp, useNavigation } from '@react-navigation/core'
@@ -38,12 +39,6 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { CustomRootState } from '../../../reducers'
 import Box from '../../../theme/box'
 import Dropdown from '../../../theme/dropdown'
-
-const data = [
-  { label: 'English', value: 'english' },
-  { label: 'Spanish', value: 'spanish' },
-  { label: 'Mandarin', value: 'mandarin' },
-]
 
 type SettingsScreenProps = BottomTabScreenProps<
   RootTabParamList,
@@ -62,7 +57,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
   const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
   const dispatch = useDispatch()
   const navigation = useNavigation<NavigationProp<RootStackParamList>>()
-  const [value, setValue] = useState('2')
+  const [lang, setLangSelected] = useRecoilState(langSelected)
 
   const toggleAnalyticsOptin = () => {
     setIsAnalyticsEnabled(!isAnalyticsEnabled)
@@ -108,6 +103,16 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
 
     setIsAnalyticsEnabled(!!analytics?.acceptedDate)
   }, [activeNetwork, analytics, handleLockPress, route?.params?.shouldLogOut])
+
+  const supportedLanguages = React.useMemo(
+    () => [
+      { label: labelTranslateFn('settingsScreen.english'), value: 'en' },
+      { label: labelTranslateFn('settingsScreen.spanish'), value: 'es' },
+      { label: labelTranslateFn('settingsScreen.mandarin'), value: 'zh' },
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [lang],
+  )
 
   const handleDownload = useCallback(() => {
     const walletStateDownload: Partial<CustomRootState> = { ...walletStateCopy }
@@ -261,19 +266,19 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
           paddingVertical={'m'}
           borderTopWidth={1}
           borderTopColor="mainBorderColor">
-          <Text variant="settingLabel">Language</Text>
+          <Text variant="settingLabel" tx="settingsScreen.language" />
           <Dropdown
-            data={data}
+            data={supportedLanguages}
             variant="language"
             maxHeight={100}
             labelField="label"
             selectedTextStyle={[styles.description, styles.selectedFontStyle]}
             valueField="value"
-            value={value}
+            value={lang}
             autoScroll={false}
             renderRightIcon={() => <DropdownIcon width={15} height={15} />}
             onChange={(item) => {
-              setValue(item.value)
+              setLangSelected(item.value)
             }}
           />
         </Box>

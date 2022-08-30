@@ -202,7 +202,11 @@
     "aboutLiquality": "About Liquality",
     "lock": "Lock",
     "version": "Version: {{version}}",
-    "whatNew": "What's new"
+    "whatNew": "What's new",
+    "language": "Language",
+    "english": "English 🇨🇳",
+    "spanish": "Spanish 🇨🇳",
+    "mandarin": "Mandarin 🇨🇳"
   },
   "swapConfirmationScreen": {
     "networkSpeed": "NETWORK SPEED/FEE",
