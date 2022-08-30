@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux'
 import AngleRightIcon from '../../../assets/icons/angle-right.svg'
 import SignoutIcon from '../../../assets/icons/logout.svg'
 
-import SettingsSwitch from '../../../components/ui/switch'
+import GeneralSwitch from '../../../components/ui/general-switch'
 import {
   DarkModeEnum,
   RootTabParamList,
@@ -225,9 +225,9 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
         <View style={styles.row}>
           <View style={styles.action}>
             <Text style={styles.label} tx="settingsScreen.analytics" />
-            <SettingsSwitch
-              isFeatureEnabled={isAnalyticsEnabled}
-              enableFeature={toggleAnalyticsOptin}
+            <GeneralSwitch
+              isEnabled={isAnalyticsEnabled}
+              onValueChange={toggleAnalyticsOptin}
             />
           </View>
           <Text style={styles.description} tx="settingsScreen.shareYouClick" />
