@@ -37,7 +37,6 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
     customFee,
     customFeeAsset,
   } = props
-  // const [gasFees, setGasFees] = useState<GasFees>()
   const [alertStatus, setAlertStatus] = useState(false)
   useEffect(() => {
     fetchFeesForAsset(asset)
