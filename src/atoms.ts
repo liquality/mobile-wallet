@@ -12,6 +12,7 @@ import {
   enabledAssetsEffect,
   fiatRateEffect,
   localStorageEffect,
+  localStorageLangEffect,
   transactionHistoryEffect,
 } from './store/store'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
@@ -97,10 +98,25 @@ export const themeMode = atom<DarkModeEnum>({
   effects: [localStorageEffect<DarkModeEnum>(KEYS.ACTIVE_THEME)],
 })
 
+/**
+ * Sync device language with dropdown options if available
+ * @param deviceLang
+ * @returns
+ */
+const setDefaultIfLangSupported = (deviceLang = '') => {
+  const availableLang = ['es', 'en', 'zh']
+  const index = availableLang.indexOf(deviceLang.split('-')[0])
+  if (index !== -1) {
+    return availableLang[index]
+  } else {
+    return LanguageEnum.English
+  }
+}
+
 export const langSelected = atom<LanguageEnum | string>({
   key: 'LanguageSelected',
-  default: Localization.locale || LanguageEnum.English,
-  effects: [localStorageEffect<LanguageEnum | string>(KEYS.ACTIVE_LANG)],
+  default: setDefaultIfLangSupported(Localization.locale),
+  effects: [localStorageLangEffect<string>(KEYS.ACTIVE_LANG)],
 })
 
 //---------- ATOM FAMILIES----------------

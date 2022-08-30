@@ -1,12 +1,13 @@
 import { StyleSheet, Switch, SwitchProps } from 'react-native'
 import * as React from 'react'
+import { palette } from '../../theme'
 
 interface GeneralSwitchProps extends SwitchProps {
   isEnabled: boolean
 }
 
-const SwitchEnabledColor = '#9D4DFA'
-const SwitchDisabledColor = '#D9DFE5'
+const SwitchEnabledColor = palette.blueVioletPrimary
+const SwitchDisabledColor = palette.gray
 
 const trackColor = {
   false: '#FFF',

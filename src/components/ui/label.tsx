@@ -2,6 +2,8 @@ import React, { FC } from 'react'
 import { StyleSheet, Text, TextStyle } from 'react-native'
 import { TxKeyPath, translate } from '../../i18n'
 import i18n from 'i18n-js'
+import { langSelected as LS } from '../../../src/atoms'
+import { useRecoilValue } from 'recoil'
 
 type LabelProps = {
   text: string | { tx: TxKeyPath }
@@ -24,6 +26,8 @@ const strong: TextStyle = {
 
 const Label: FC<LabelProps> = (props) => {
   const { txOptions, text, variant } = props
+  const langSelected = useRecoilValue(LS)
+  i18n.locale = langSelected
   let content
   if (typeof text !== 'string') {
     const { tx } = text

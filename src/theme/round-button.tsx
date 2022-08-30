@@ -16,6 +16,8 @@ import { Theme } from './index'
 import Box from './box'
 import { TxKeyPath } from '../i18n'
 import i18n from 'i18n-js'
+import { langSelected as LS } from '../../src/atoms'
+import { useRecoilValue } from 'recoil'
 
 const RoundBaseButton = createRestyleComponent<
   VariantProps<Theme, 'roundButtonVariants'> & PressableProps,
@@ -35,6 +37,8 @@ type RoundButtonProps = React.ComponentProps<typeof RoundBaseButton> &
 const RoundButton: FC<RoundButtonProps> = (props) => {
   const theme = useTheme<Theme>()
   const { onPress, label, tx, txOptions, type, variant } = props
+  const langSelected = useRecoilValue(LS)
+  i18n.locale = langSelected
   const { buttonFontSecondary, buttonFontPrimary } = theme.colors
   const iconFontColor =
     variant === 'largePrimary'

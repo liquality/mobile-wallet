@@ -361,5 +361,7 @@
   "accountDetails": "Account Details",
   "lock": "Lock",
   "settings": "SETTINGS",
-  "warning": "WARNING"
+  "warning": "WARNING",
+  "asset": "ASSET 🇨🇳",
+  "activity": "ACTIVITY 🇨🇳"
 }

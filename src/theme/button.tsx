@@ -12,6 +12,8 @@ import { Theme } from './'
 import React, { FC, useMemo } from 'react'
 import i18n from 'i18n-js'
 import { TxKeyPath, translate } from '../i18n'
+import { langSelected as LS } from '../../src/atoms'
+import { useRecoilValue } from 'recoil'
 
 const BaseButton = createRestyleComponent<
   VariantProps<Theme, 'buttonVariants'> & PressableProps,
@@ -45,7 +47,8 @@ const Button: FC<Props> = (props) => {
     appendChildren = false,
     txOptions,
   } = props
-
+  const langSelected = useRecoilValue(LS)
+  i18n.locale = langSelected
   const theme = useTheme<Theme>()
 
   let content

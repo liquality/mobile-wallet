@@ -4,6 +4,8 @@ import CheckIcon from '../assets/icons/swap-check.svg'
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native'
 import i18n from 'i18n-js'
 import { TxKeyPath, translate } from '../i18n'
+import { langSelected as LS } from '../../src/atoms'
+import { useRecoilValue } from 'recoil'
 
 type CheckBoxProps = {
   chi?: React.ReactElement[]
@@ -28,6 +30,8 @@ const CheckBox: React.FC<CheckBoxProps> = ({
   txOptions,
   ...props
 }) => {
+  const langSelected = useRecoilValue(LS)
+  i18n.locale = langSelected
   let content
   if (typeof text !== 'string') {
     const { tx } = text

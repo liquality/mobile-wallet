@@ -18,14 +18,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Log } from './src/utils'
 import { RecoilRoot } from 'recoil'
 import FlipperAsyncStorage from 'rn-flipper-async-storage-advanced'
-import i18n from 'i18n-js'
-import { langSelected as LS } from './src/atoms'
-import { useRecoilValue } from 'recoil'
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
-  const langSelected = useRecoilValue(LS)
-  i18n.locale = langSelected
-
   const Navigator = createSwitchNavigator(
     {
       WalletCreationNavigator,
