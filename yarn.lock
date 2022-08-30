@@ -13832,6 +13832,11 @@ react-native-dotenv@^3.3.0:
   dependencies:
     dotenv "^10.0.0"
 
+react-native-element-dropdown@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-element-dropdown/-/react-native-element-dropdown-2.2.0.tgz#7d2c9d28aad878b0bd6a145c83a5fdc0eb769abb"
+  integrity sha512-ViD10x3Cubpi1/Vy8ym543ucMTkFnTRSEl96/nYnIo9MOL1tD6eGMIAF5GnPraumgFK+GdTJimJUYSlEGjlFxA==
+
 react-native-error-boundary@^1.1.12:
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/react-native-error-boundary/-/react-native-error-boundary-1.1.15.tgz#3c30bdadea7eb72c53431e04568f605f363216ca"

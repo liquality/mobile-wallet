@@ -11,7 +11,7 @@ import {
 import { useDispatch } from 'react-redux'
 import AngleRightIcon from '../../../assets/icons/angle-right.svg'
 import SignoutIcon from '../../../assets/icons/logout.svg'
-
+import DropdownIcon from '../../../assets/icons/dropdownMenu.svg'
 import GeneralSwitch from '../../../components/ui/general-switch'
 import {
   DarkModeEnum,
@@ -36,6 +36,14 @@ import { toggleNetwork } from '../../../store/store'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { CustomRootState } from '../../../reducers'
+import Box from '../../../theme/box'
+import Dropdown from '../../../theme/dropdown'
+
+const data = [
+  { label: 'English', value: 'english' },
+  { label: 'Spanish', value: 'spanish' },
+  { label: 'Mandarin', value: 'mandarin' },
+]
 
 type SettingsScreenProps = BottomTabScreenProps<
   RootTabParamList,
@@ -54,6 +62,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
   const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
   const dispatch = useDispatch()
   const navigation = useNavigation<NavigationProp<RootStackParamList>>()
+  const [value, setValue] = useState('2')
 
   const toggleAnalyticsOptin = () => {
     setIsAnalyticsEnabled(!isAnalyticsEnabled)
@@ -127,7 +136,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
         <View style={styles.row}>
           <View style={styles.action}>
             <View>
-              <Text style={styles.label} tx="settingsScreen.networks" />
+              <Text variant="settingLabel" tx="settingsScreen.networks" />
               <View style={styles.btnOptions}>
                 <Pressable
                   style={[
@@ -189,7 +198,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
             <View style={styles.btnContainer}>
               <View>
                 <Text
-                  style={styles.label}
+                  variant="settingLabel"
                   tx="settingsScreen.backUpSeedPhrase"
                 />
                 <Text
@@ -207,7 +216,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
         </View>
         <View style={styles.row}>
           <View style={styles.action}>
-            <Text style={styles.label} tx="settingsScreen.walletLogs" />
+            <Text variant="settingLabel" tx="settingsScreen.walletLogs" />
             <Button
               type="tertiary"
               variant="s"
@@ -224,7 +233,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
         </View>
         <View style={styles.row}>
           <View style={styles.action}>
-            <Text style={styles.label} tx="settingsScreen.analytics" />
+            <Text variant="settingLabel" tx="settingsScreen.analytics" />
             <GeneralSwitch
               isEnabled={isAnalyticsEnabled}
               onValueChange={toggleAnalyticsOptin}
@@ -234,7 +243,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
         </View>
         <View style={styles.row}>
           <View style={styles.action}>
-            <Text style={styles.label} tx="settingsScreen.notifications" />
+            <Text variant="settingLabel" tx="settingsScreen.notifications" />
             <Pressable
               onPress={() => {
                 Linking.openSettings()
@@ -247,11 +256,32 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
           </View>
           <Text style={styles.description} tx="settingsScreen.getInfoAbout" />
         </View>
+        <Box
+          paddingHorizontal="xl"
+          paddingVertical={'m'}
+          borderTopWidth={1}
+          borderTopColor="mainBorderColor">
+          <Text variant="settingLabel">Language</Text>
+          <Dropdown
+            data={data}
+            variant="language"
+            maxHeight={100}
+            labelField="label"
+            selectedTextStyle={[styles.description, styles.selectedFontStyle]}
+            valueField="value"
+            value={value}
+            autoScroll={false}
+            renderRightIcon={() => <DropdownIcon width={15} height={15} />}
+            onChange={(item) => {
+              setValue(item.value)
+            }}
+          />
+        </Box>
 
         <View style={styles.rowDesign}>
           <View style={styles.action}>
             <View style={styles.btnContainer}>
-              <Text style={styles.label} tx="settingsScreen.design" />
+              <Text variant="settingLabel" tx="settingsScreen.design" />
               <View style={styles.btnOptions}>
                 <Pressable
                   style={[
@@ -286,7 +316,10 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
           <View style={styles.action}>
             <View style={styles.btnContainer}>
               <View>
-                <Text style={styles.label} tx="settingsScreen.aboutLiquality" />
+                <Text
+                  variant="settingLabel"
+                  tx="settingsScreen.aboutLiquality"
+                />
               </View>
               <View style={styles.toLiqualityWebsite}>
                 <Pressable
@@ -318,7 +351,6 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
         <View style={styles.lastRow}>
           <View style={styles.info}>
             <Text style={[styles.label, styles.version]}>
-              {/* Version: {version} */}
               {i18n.t('settingsScreen.version', { version })}
             </Text>
             <Pressable onPress={() => setIsWhatsNewVisible(true)}>
@@ -441,6 +473,9 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 26,
     color: '#1D1E21',
+  },
+  selectedFontStyle: {
+    fontSize: 14,
   },
 })
 
