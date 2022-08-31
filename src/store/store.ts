@@ -38,7 +38,6 @@ import {
 } from '@liquality/wallet-core/dist/src/utils/timeline'
 import { Asset, WalletId } from '@liquality/wallet-core/dist/src/store/types'
 import { AtomEffect, DefaultValue } from 'recoil'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import dayjs from 'dayjs'
 import { showNotification } from './pushNotification'
 
@@ -51,7 +50,7 @@ const excludedProps: Array<keyof CustomRootState> = [
   'wallets',
   'unlockedAt',
 ]
-const storageManager = new StorageManager(excludedProps)
+export const storageManager = new StorageManager(excludedProps)
 let wallet: Awaited<ReturnType<typeof setupWallet>>
 
 //-------------------------2. CONFIGURE THE STORE---------------------------------------------------------------------
@@ -60,7 +59,7 @@ const persistenceMiddleware: Middleware<
   any
 > = ({ getState }) => {
   return (next) => async (action) => {
-    await storageManager.write('@local-storage', {
+    storageManager.write('@local-storage', {
       ...getState(),
       ...action.payload,
     })
@@ -113,9 +112,9 @@ export const initWallet = async (initialState?: CustomRootState) => {
 }
 
 //-------------------------4. PERFORM ACTIONS ON THE WALLET-------------------------------------------------------------
-export const isNewInstallation = async (): Promise<boolean> => {
-  const result = await storageManager.read('wallet')
-  if (result) {
+export const isNewInstallation = (): boolean => {
+  const result = storageManager.read<Object>('wallet', {})
+  if (result && Object.keys(result).length > 0) {
     store.dispatch({ type: 'INIT_STORE', payload: result })
     return false
   }
@@ -138,7 +137,7 @@ export const createWallet = async (
     mnemonic: mnemonic,
     imported: true,
   })
-  await storageManager.write('wallet', wallet.state)
+  storageManager.write('wallet', wallet.state)
   return wallet.state
 }
 
@@ -304,7 +303,7 @@ export const updateWallet = async (): Promise<void> => {
  * @param password
  */
 export const restoreWallet = async (password: string): Promise<void> => {
-  const result = await storageManager.read<RootState>('wallet')
+  const result = storageManager.read<CustomRootState>('wallet', {})
   await initWallet(result)
   await wallet.dispatch.unlockWallet({
     key: password,
@@ -610,23 +609,22 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
   (key) =>
   ({ setSelf, onSet, trigger }) => {
     if (trigger === 'get') {
+      const savedValue = storageManager.read(key, '')
       setSelf(
-        AsyncStorage.getItem(key).then((savedValue) => {
-          return savedValue !== null
-            ? JSON.parse(savedValue)
-            : new DefaultValue()
-        }),
+        savedValue !== null && savedValue
+          ? JSON.parse(savedValue)
+          : new DefaultValue(),
       )
     }
 
     onSet((newValue, _, isReset) => {
       if (newValue instanceof DefaultValue && trigger === 'get') return
       isReset
-        ? AsyncStorage.removeItem(key)
+        ? storageManager.remove(key)
         : newValue !== null &&
           typeof newValue !== 'undefined' &&
           newValue !== -1
-      AsyncStorage.setItem(key, JSON.stringify(newValue)).catch(() => {})
+      storageManager.write(key, JSON.stringify(newValue))
     })
   }
 

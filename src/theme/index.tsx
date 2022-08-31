@@ -304,6 +304,9 @@ const theme = createTheme({
       borderColor: 'mainBackground',
       backgroundColor: 'buttonBackgroundPrimary',
     },
+    defaults: {
+      marginBottom: 'm',
+    },
   },
   cardVariants: {},
   textInputVariants: {},

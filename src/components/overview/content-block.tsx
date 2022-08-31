@@ -1,8 +1,7 @@
 import { Fragment, useEffect, useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { accountsIdsState, isDoneFetchingData } from '../../atoms'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { populateWallet } from '../../store/store'
+import { populateWallet, storageManager } from '../../store/store'
 import { Pressable, StyleSheet, View } from 'react-native'
 import Text from '../../theme/text'
 import Box from '../../theme/box'
@@ -21,21 +20,21 @@ const ContentBlock = () => {
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
 
   useEffect(() => {
-    AsyncStorage.getItem(`${accountsIds[0].name}|${accountsIds[0].id}`).then(
-      (result) => {
-        if (result !== null) {
-          populateWallet()
-            .then(() => {
-              setIsDoneFetchingData(true)
-            })
-            .catch((e) => {
-              Log(`Failed to populateWallet: ${e}`, 'error')
-            })
-        } else {
-          setIsDoneFetchingData(true)
-        }
-      },
+    const result = storageManager.read<string | null>(
+      `${accountsIds[0].name}|${accountsIds[0].id}`,
+      '',
     )
+    if (result !== null && result) {
+      populateWallet()
+        .then(() => {
+          setIsDoneFetchingData(true)
+        })
+        .catch((e) => {
+          Log(`Failed to populateWallet: ${e}`, 'error')
+        })
+    } else {
+      setIsDoneFetchingData(true)
+    }
   }, [setIsDoneFetchingData, accountsIds])
 
   return (

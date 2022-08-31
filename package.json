@@ -30,7 +30,6 @@
     "@liquality/cryptoassets": "1.14.2",
     "@liquality/types": "1.13.12",
     "@liquality/wallet-core": "1.29.2",
-    "@react-native-async-storage/async-storage": "^1.15.8",
     "@react-native-clipboard/clipboard": "^1.9.0",
     "@react-native-community/push-notification-ios": "^1.10.1",
     "@react-navigation/bottom-tabs": "^6.2.0",
@@ -73,6 +72,7 @@
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.3.2",
     "react-native-level-fs": "^3.0.1",
+    "react-native-mmkv": "2.4.3",
     "react-native-modal-filter-picker": "^2.1.0",
     "react-native-os": "^1.2.6",
     "react-native-push-notification": "^8.1.1",
@@ -126,7 +126,6 @@
     "react-dom": "^17.0.2",
     "react-native-svg-transformer": "^0.14.3",
     "react-test-renderer": "17.0.2",
-    "rn-flipper-async-storage-advanced": "1.0.4",
     "rn-nodeify": "^10.3.0",
     "typescript": "^4.3.5"
   },
