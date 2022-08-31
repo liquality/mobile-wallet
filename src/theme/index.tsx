@@ -1,6 +1,6 @@
 import { createTheme } from '@shopify/restyle'
 
-const palette = {
+export const palette = {
   black: '#1D1E21',
   black2: '#000D35',
   white: '#FFFFFF',
@@ -236,6 +236,13 @@ const theme = createTheme({
       marginTop: 'l',
       lineHeight: 28,
     },
+    settingLabel: {
+      fontFamily: 'Montserrat-Regular',
+      fontWeight: '500',
+      fontSize: 16,
+      color: 'addressColor',
+      marginRight: 's',
+    },
   },
   buttonVariants: {
     l: {
@@ -306,6 +313,13 @@ const theme = createTheme({
     },
   },
   cardVariants: {},
+  dropDownVariants: {
+    language: {
+      width: '50%',
+      borderBottomColor: 'progressDotColor',
+      borderBottomWidth: 1,
+    },
+  },
   textInputVariants: {},
 })
 

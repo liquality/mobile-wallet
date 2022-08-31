@@ -10,6 +10,8 @@ import Button from '../../theme/button'
 import Text from '../../theme/text'
 import { TxKeyPath, translate } from '../../i18n'
 import i18n from 'i18n-js'
+import { langSelected as LS } from '../../../src/atoms'
+import { useRecoilValue } from 'recoil'
 
 type MessageBannerProps = {
   text1: string | { tx: TxKeyPath }
@@ -49,7 +51,8 @@ const MessageBanner: FC<MessageBannerProps> = (props) => {
     onAction,
     buttonStyle,
   } = props
-
+  const langSelected = useRecoilValue(LS)
+  i18n.locale = langSelected
   let content1 = textToContentConverterFn(text1, txOptions1)
   let content2 = textToContentConverterFn(text2 || '', txOptions2)
   let clickableTxt = textToContentConverterFn(linkTxt || '')

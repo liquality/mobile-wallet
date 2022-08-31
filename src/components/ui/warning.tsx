@@ -3,6 +3,8 @@ import Box from '../../theme/box'
 import Text from '../../theme/text'
 import { TxKeyPath, translate } from '../../i18n'
 import i18n from 'i18n-js'
+import { langSelected as LS } from '../../../src/atoms'
+import { useRecoilValue } from 'recoil'
 
 type WarningProps = {
   text1: string | { tx1: TxKeyPath }
@@ -14,7 +16,8 @@ type WarningProps = {
 
 const Warning: FC<WarningProps> = (props) => {
   const { txOptions1, txOptions2, text1, text2, children } = props
-
+  const langSelected = useRecoilValue(LS)
+  i18n.locale = langSelected
   let content1
   if (typeof text1 !== 'string') {
     const { tx1 } = text1

@@ -1,4 +1,4 @@
-import { DarkModeEnum } from './types/index'
+import { DarkModeEnum, LanguageEnum } from './types/index'
 import { atom, atomFamily, selector, selectorFamily } from 'recoil'
 import { AccountType, SwapAssetPairType } from './types'
 import { BigNumber } from '@liquality/types'
@@ -12,6 +12,7 @@ import {
   enabledAssetsEffect,
   fiatRateEffect,
   localStorageEffect,
+  localStorageLangEffect,
   transactionHistoryEffect,
 } from './store/store'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
@@ -25,6 +26,7 @@ import {
 import { CustomRootState } from './reducers'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { KEYS } from './utils'
+import * as Localization from 'expo-localization'
 
 //------------ATOMS---------------------
 export const accountsIdsState = atom<{ id: string; name: Asset }[]>({
@@ -41,11 +43,7 @@ export const fiatRatesState = atom<FiatRates>({
 
 export const networkState = atom<Network>({
   key: 'ActiveNetwork',
-  default: AsyncStorage.getItem(KEYS.ACTIVE_NETWORK_KEY).then((savedValue) =>
-    savedValue !== null && typeof savedValue !== 'undefined'
-      ? (JSON.parse(savedValue) as Network)
-      : Network.Testnet,
-  ),
+  default: Network.Testnet,
   effects: [localStorageEffect<Network>(KEYS.ACTIVE_NETWORK_KEY)],
 })
 
@@ -98,6 +96,27 @@ export const themeMode = atom<DarkModeEnum>({
   key: 'ThemeMode',
   default: DarkModeEnum.Null,
   effects: [localStorageEffect<DarkModeEnum>(KEYS.ACTIVE_THEME)],
+})
+
+/**
+ * Sync device language with dropdown options if available
+ * @param deviceLang
+ * @returns
+ */
+const setDefaultIfLangSupported = (deviceLang = '') => {
+  const availableLang = ['es', 'en', 'zh']
+  const index = availableLang.indexOf(deviceLang.split('-')[0])
+  if (index !== -1) {
+    return availableLang[index]
+  } else {
+    return LanguageEnum.English
+  }
+}
+
+export const langSelected = atom<LanguageEnum | string>({
+  key: 'LanguageSelected',
+  default: setDefaultIfLangSupported(Localization.locale),
+  effects: [localStorageLangEffect<string>(KEYS.ACTIVE_LANG)],
 })
 
 //---------- ATOM FAMILIES----------------

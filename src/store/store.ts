@@ -606,6 +606,27 @@ export const transactionHistoryEffect: (
     })
   }
 
+export const localStorageLangEffect: <T>(key: string) => AtomEffect<T> =
+  (key) =>
+  ({ setSelf, onSet, trigger }) => {
+    const loadPersisted = async () => {
+      const savedValue = await AsyncStorage.getItem(key)
+
+      if (savedValue != null) {
+        setSelf(JSON.parse(savedValue))
+      }
+    }
+    if (trigger === 'get') {
+      loadPersisted()
+    }
+
+    onSet((newValue, _, isReset) => {
+      isReset
+        ? AsyncStorage.removeItem(key)
+        : AsyncStorage.setItem(key, JSON.stringify(newValue))
+    })
+  }
+
 export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
   (key) =>
   ({ setSelf, onSet, trigger }) => {

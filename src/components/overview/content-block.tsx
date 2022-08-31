@@ -47,7 +47,7 @@ const ContentBlock = () => {
             selectedView === ViewKind.ASSETS && styles.headerFocused,
           ]}
           onPress={() => setSelectedView(ViewKind.ASSETS)}>
-          <Text style={styles.headerText}>ASSET</Text>
+          <Text tx="asset" style={styles.headerText} />
         </Pressable>
         <Pressable
           style={[
@@ -55,7 +55,7 @@ const ContentBlock = () => {
             selectedView === ViewKind.ACTIVITY && styles.headerFocused,
           ]}
           onPress={() => setSelectedView(ViewKind.ACTIVITY)}>
-          <Text style={styles.headerText}>ACTIVITY</Text>
+          <Text tx="activity" style={styles.headerText} />
         </Pressable>
       </View>
       <Box flex={1}>
