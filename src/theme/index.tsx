@@ -12,6 +12,7 @@ export const palette = {
   red: '#F12274',
   transparentBlack: 'rgba(0,0,0,0.5)',
   turquoise: '#2CD2CF',
+  yellowBar: '#FFF8DA',
 }
 
 const theme = createTheme({
@@ -36,8 +37,10 @@ const theme = createTheme({
     transparentBlack: palette.transparentBlack,
     progressDotColor: palette.turquoise,
     addressColor: palette.black2,
+    errorMsgBarColor: palette.yellowBar,
   },
   spacing: {
+    vs: 2,
     s: 5,
     m: 10,
     l: 15,

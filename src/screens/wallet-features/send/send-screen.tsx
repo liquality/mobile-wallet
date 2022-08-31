@@ -40,7 +40,8 @@ import { isNumber, labelTranslateFn } from '../../../utils'
 import { useRecoilValue } from 'recoil'
 import { balanceStateFamily, fiatRatesState } from '../../../atoms'
 import i18n from 'i18n-js'
-
+import ErrMsgBanner, { ErrorBtn } from '../../../components/ui/err-msg-banner'
+import { palette } from '../../../theme/index'
 const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {
@@ -49,6 +50,19 @@ const useInputState = (
 }
 
 type SendScreenProps = NativeStackScreenProps<RootStackParamList, 'SendScreen'>
+
+enum ErrorMessages {
+  NotEnoughToken,
+  NotEnoughTokenSelectMax,
+  NotEnoughCoverFees,
+  NotEnoughGas,
+  AdjustSending,
+}
+
+interface ErrorMsgAndType {
+  msg: string
+  type: ErrorMessages | null
+}
 
 const SendScreen: FC<SendScreenProps> = (props) => {
   const { navigation, route } = props
@@ -72,20 +86,23 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const [showAmountsInFiat, setShowAmountsInFiat] = useState<boolean>(false)
   const [isCameraVisible, setIsCameraVisible] = useState(false)
   const [networkSpeed, setNetworkSpeed] = useState<FeeLabel>(FeeLabel.Average)
-  const [error, setError] = useState('')
+  const [error, setError] = useState<ErrorMsgAndType>({
+    msg: 'error',
+    type: ErrorMessages.AdjustSending,
+  })
   const amountInput = useInputState('0')
   const addressInput = useInputState('')
   const networkFee = useRef<NetworkFeeType>()
 
   const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
-      setError(labelTranslateFn('sendScreen.enterValidAmt')!)
+      // setError(labelTranslateFn('sendScreen.enterValidAmt')!)
       return false
     } else if (new BigNumber(amountInput.value).gt(new BigNumber(balance))) {
-      setError(labelTranslateFn('sendScreen.lowerAmt')!)
+      // setError(labelTranslateFn('sendScreen.lowerAmt')!)
       return false
     } else if (!chain || !chains[chain].isValidAddress(addressInput.value)) {
-      setError(labelTranslateFn('sendScreen.wrongFmt')!)
+      // setError(labelTranslateFn('sendScreen.wrongFmt')!)
       return false
     }
 
@@ -171,12 +188,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const handleOnChangeText = useCallback(
     (text: string): void => {
       if (!isNumber(text)) {
-        setError(labelTranslateFn('sendScreen.invalidAmt')!)
+        // setError({msg: labelTranslateFn('sendScreen.invalidAmt'})!)
         return
       }
 
       if (!fiatRates) {
-        setError(labelTranslateFn('sendScreen.fiatRate')!)
+        // setError(labelTranslateFn('sendScreen.fiatRate')!)
         return
       }
 
@@ -236,158 +253,269 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     [addressInput, isCameraVisible],
   )
 
-  return (
-    <Box
-      flex={1}
-      paddingVertical="l"
-      paddingHorizontal="xl"
-      backgroundColor="mainBackground">
-      {isCameraVisible && chain && (
-        <QrCodeScanner chain={chain} onClose={handleCameraModalClose} />
-      )}
-      <Box>
-        <Box>
-          <Box
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="flex-end"
-            marginBottom="m">
-            <Box flex={1}>
-              <Box
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="flex-end"
-                marginBottom="m">
-                <Text variant="secondaryInputLabel" tx="sendScreen.snd" />
-                <Button
-                  label={
-                    showAmountsInFiat
-                      ? `${amountInNative} ${code}`
-                      : `$${amountInFiat}`
-                  }
-                  type="tertiary"
-                  variant="s"
-                  onPress={handleFiatBtnPress}
-                />
-              </Box>
-              <TextInput
-                style={[
-                  styles.sendInputCurrency,
-                  styles.sendInput,
-                  { color: chainDefaultColors[chain] },
-                ]}
-                keyboardType={'numeric'}
-                onChangeText={handleOnChangeText}
-                onFocus={() => setError('')}
-                value={amountInput.value}
-                autoCorrect={false}
-                returnKeyType="done"
+  const getCompatibleErrorMsg = React.useCallback(() => {
+    const { msg, type } = error
+    if (!msg) {
+      return null
+    }
+
+    const onGetPress = () => {}
+    const onMaxPress = () => {}
+
+    switch (type) {
+      case ErrorMessages.NotEnoughToken:
+        return (
+          <ErrMsgBanner>
+            <Box>
+              <Text>{`${i18n.t('sendScreen.notEnoughTkn', {
+                token: code,
+              })}`}</Text>
+              <ErrorBtn
+                label={`${i18n.t('sendScreen.getTkn', {
+                  token: code,
+                })}`}
+                onPress={onGetPress}
               />
             </Box>
-            <Box flexDirection="row" alignItems="flex-end">
-              <AssetIcon asset={code} chain={cryptoassets[code].chain} />
-              <Text style={styles.assetName}>{code}</Text>
-            </Box>
-          </Box>
-          <Box
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="flex-end"
-            marginBottom="m">
-            <Box flexDirection="row">
-              <Text variant="amountLabel" tx="sendScreen.available" />
-              <Text variant="amount">{` ${availableAmount} ${code}`}</Text>
-            </Box>
-            <Button
-              label={{ tx: 'sendScreen.max' }}
-              type="tertiary"
-              variant="s"
-              onPress={() => {
-                handleOnChangeText(availableAmount.toString())
-              }}
+          </ErrMsgBanner>
+        )
+      case ErrorMessages.NotEnoughTokenSelectMax:
+        return (
+          <ErrMsgBanner>
+            <Text padding={'vs'}>{`${i18n.t('sendScreen.notEnoughTkn', {
+              token: code,
+            })}`}</Text>
+            <ErrorBtn
+              label={`${i18n.t('sendScreen.getTkn', {
+                token: code,
+              })}`}
+              onPress={onGetPress}
             />
-          </Box>
-          <Box marginTop={'xl'}>
-            <Text variant="secondaryInputLabel" tx="sendScreen.sndTo" />
+            <Text padding={'vs'} tx={'sendScreen.orSelect'} />
+            <ErrorBtn
+              label={`${labelTranslateFn('sendScreen.max')}`}
+              onPress={onMaxPress}
+            />
+          </ErrMsgBanner>
+        )
+      case ErrorMessages.NotEnoughCoverFees:
+        return (
+          <ErrMsgBanner>
+            <Text padding={'vs'}>{`${i18n.t('sendScreen.notEnoughTknForFees', {
+              token: code,
+            })}`}</Text>
+            <ErrorBtn
+              label={`${i18n.t('sendScreen.getTkn', {
+                token: code,
+              })}`}
+              onPress={onGetPress}
+            />
+            <Text padding={'vs'} tx={'sendScreen.orSelect'} />
+            <ErrorBtn
+              label={`${labelTranslateFn('sendScreen.max')}`}
+              onPress={onMaxPress}
+            />
+          </ErrMsgBanner>
+        )
+      case ErrorMessages.NotEnoughGas:
+        return (
+          <ErrMsgBanner>
+            <Text padding={'vs'}>
+              {`${i18n.t('sendScreen.notEnoughGas', {
+                n: amountInput.value,
+                token: code,
+              })}`}
+            </Text>
+            <ErrorBtn
+              label={`${i18n.t('sendScreen.getTkn', {
+                token: code,
+              })}`}
+              onPress={onGetPress}
+            />
+          </ErrMsgBanner>
+        )
+      case ErrorMessages.AdjustSending:
+        return (
+          <ErrMsgBanner>
+            <Text padding={'vs'} tx="sendScreen.adjustSending" />
+            <ErrorBtn
+              label={`${i18n.t('sendScreen.getTkn', {
+                token: code,
+              })}`}
+              onPress={onGetPress}
+            />
+            <Text padding={'vs'} tx={'sendScreen.and'} />
+            <ErrorBtn
+              label={`${i18n.t('sendScreen.getTkn', {
+                token: code,
+              })}`}
+              onPress={onGetPress}
+            />
+          </ErrMsgBanner>
+        )
+      default:
+        return (
+          <ErrMsgBanner>
+            <Text>{msg}</Text>
+          </ErrMsgBanner>
+        )
+    }
+  }, [error, code, amountInput])
+
+  return (
+    <Box flex={1} backgroundColor="mainBackground">
+      {getCompatibleErrorMsg()}
+      <Box flex={1} paddingVertical="l" paddingHorizontal="xl">
+        {isCameraVisible && chain && (
+          <QrCodeScanner chain={chain} onClose={handleCameraModalClose} />
+        )}
+        <Box>
+          <Box>
             <Box
               flexDirection="row"
               justifyContent="space-between"
               alignItems="flex-end"
               marginBottom="m">
-              <TextInput
-                style={styles.sendToInput}
-                onChangeText={addressInput.onChangeText}
-                onFocus={() => setError('')}
-                value={addressInput.value}
-                placeholderTx="sendScreen.address"
-                autoCorrect={false}
-                returnKeyType="done"
+              <Box flex={1}>
+                <Box
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  alignItems="flex-end"
+                  marginBottom="m">
+                  <Text variant="secondaryInputLabel" tx="sendScreen.snd" />
+                  <Button
+                    label={
+                      showAmountsInFiat
+                        ? `${amountInNative} ${code}`
+                        : `$${amountInFiat}`
+                    }
+                    type="tertiary"
+                    variant="s"
+                    onPress={handleFiatBtnPress}
+                  />
+                </Box>
+                <TextInput
+                  style={[
+                    styles.sendInputCurrency,
+                    styles.sendInput,
+                    { color: chainDefaultColors[chain] },
+                  ]}
+                  keyboardType={'numeric'}
+                  onChangeText={handleOnChangeText}
+                  onFocus={() => setError({ msg: '', type: null })}
+                  value={amountInput.value}
+                  autoCorrect={false}
+                  returnKeyType="done"
+                />
+              </Box>
+              <Box flexDirection="row" alignItems="flex-end">
+                <AssetIcon asset={code} chain={cryptoassets[code].chain} />
+                <Text style={styles.assetName}>{code}</Text>
+              </Box>
+            </Box>
+            <Box
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="flex-end"
+              marginBottom="m">
+              <Box flexDirection="row">
+                <Text variant="amountLabel" tx="sendScreen.available" />
+                <Text variant="amount">{` ${availableAmount} ${code}`}</Text>
+              </Box>
+              <Button
+                label={{ tx: 'sendScreen.max' }}
+                type="tertiary"
+                variant="s"
+                onPress={() => {
+                  handleOnChangeText(availableAmount.toString())
+                }}
               />
-              <Pressable onPress={handleQRCodeBtnPress}>
-                <QRCode />
-              </Pressable>
+            </Box>
+            <Box marginTop={'xl'}>
+              <Text variant="secondaryInputLabel" tx="sendScreen.sndTo" />
+              <Box
+                flexDirection="row"
+                justifyContent="space-between"
+                alignItems="flex-end"
+                marginBottom="m">
+                <TextInput
+                  style={styles.sendToInput}
+                  onChangeText={addressInput.onChangeText}
+                  onFocus={() => setError({ msg: '', type: null })}
+                  value={addressInput.value}
+                  placeholderTx="sendScreen.address"
+                  autoCorrect={false}
+                  returnKeyType="done"
+                />
+                <Pressable onPress={handleQRCodeBtnPress}>
+                  <QRCode />
+                </Pressable>
+              </Box>
             </Box>
           </Box>
         </Box>
-      </Box>
-      <Box flex={0.3}>
-        <Box
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="flex-end"
-          marginBottom="m">
-          <Pressable
-            onPress={handleFeeOptionsPress}
-            style={styles.feeOptionsButton}>
-            {showFeeOptions ? (
-              <AngleDown style={styles.dropdown} />
-            ) : (
-              <AngleRight style={styles.dropdown} />
-            )}
+        <Box flex={0.3}>
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+            marginBottom="m">
+            <Pressable
+              onPress={handleFeeOptionsPress}
+              style={styles.feeOptionsButton}>
+              {showFeeOptions ? (
+                <AngleDown style={styles.dropdown} />
+              ) : (
+                <AngleRight style={styles.dropdown} />
+              )}
 
-            <Text variant="secondaryInputLabel" tx="sendScreen.networkSpeed" />
-          </Pressable>
-          {customFee ? (
-            <Text style={styles.speedValue}>
-              {`(Custom / ${dpUI(getSendFee(code, customFee), 9)} ${code})`}
-            </Text>
-          ) : (
-            <Text style={styles.speedValue}>
-              {`(${networkSpeed} / ${dpUI(
-                getSendFee(code, networkFee.current?.value || Number(fee)),
-                9,
-              )} ${code})`}
-            </Text>
+              <Text
+                variant="secondaryInputLabel"
+                tx="sendScreen.networkSpeed"
+              />
+            </Pressable>
+            {customFee ? (
+              <Text style={styles.speedValue}>
+                {`(Custom / ${dpUI(getSendFee(code, customFee), 9)} ${code})`}
+              </Text>
+            ) : (
+              <Text style={styles.speedValue}>
+                {`(${networkSpeed} / ${dpUI(
+                  getSendFee(code, networkFee.current?.value || Number(fee)),
+                  9,
+                )} ${code})`}
+              </Text>
+            )}
+          </Box>
+          {showFeeOptions && (
+            <SendFeeSelector
+              asset={code}
+              handleCustomPress={handleCustomPress}
+              networkFee={networkFee}
+              changeNetworkSpeed={setNetworkSpeed}
+            />
           )}
+          {/* {!!error && <Text variant="error">{error.msg}</Text>} */}
         </Box>
-        {showFeeOptions && (
-          <SendFeeSelector
-            asset={code}
-            handleCustomPress={handleCustomPress}
-            networkFee={networkFee}
-            changeNetworkSpeed={setNetworkSpeed}
+        <ButtonFooter>
+          <Button
+            type="secondary"
+            variant="m"
+            label={{ tx: 'common.cancel' }}
+            onPress={navigation.goBack}
+            isBorderless={false}
+            isActive={true}
           />
-        )}
-        {!!error && <Text variant="error">{error}</Text>}
+          <Button
+            type="primary"
+            variant="m"
+            label={{ tx: 'common.review' }}
+            onPress={handleReviewPress}
+            isBorderless={false}
+            isActive={true}
+          />
+        </ButtonFooter>
       </Box>
-      <ButtonFooter>
-        <Button
-          type="secondary"
-          variant="m"
-          label={{ tx: 'common.cancel' }}
-          onPress={navigation.goBack}
-          isBorderless={false}
-          isActive={true}
-        />
-        <Button
-          type="primary"
-          variant="m"
-          label={{ tx: 'common.review' }}
-          onPress={handleReviewPress}
-          isBorderless={false}
-          isActive={true}
-        />
-      </ButtonFooter>
     </Box>
   )
 }
@@ -441,6 +569,17 @@ const styles = StyleSheet.create({
   dropdown: {
     marginRight: 5,
     marginBottom: 5,
+  },
+  tertiaryButtonLabel: {
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '400',
+    fontSize: 12,
+    // lineHeight: 12,
+    color: palette.black,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'red',
+    backgroundColor: palette.white,
   },
 })
 
