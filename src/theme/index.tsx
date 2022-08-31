@@ -12,6 +12,7 @@ const palette = {
   red: '#F12274',
   transparentBlack: 'rgba(0,0,0,0.5)',
   turquoise: '#2CD2CF',
+  liqPink: '#FF007A',
 }
 
 const theme = createTheme({
@@ -36,6 +37,7 @@ const theme = createTheme({
     transparentBlack: palette.transparentBlack,
     progressDotColor: palette.turquoise,
     addressColor: palette.black2,
+    liqPink: palette.liqPink,
   },
   spacing: {
     s: 5,
@@ -62,6 +64,12 @@ const theme = createTheme({
       marginVertical: 's',
       marginRight: 's',
       color: 'secondaryForeground',
+    },
+    pinkText: {
+      fontFamily: 'Montserrat-Regular',
+      color: 'liqPink',
+      fontWeight: '600',
+      fontSize: 20,
     },
     tabHeader: {
       fontFamily: 'Montserrat-Regular',

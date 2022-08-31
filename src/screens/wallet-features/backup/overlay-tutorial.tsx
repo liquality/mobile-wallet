@@ -33,10 +33,15 @@ const BackupWarningScreen: React.FC<
       </Pressable>
       <View style={styles.textContainer}>
         <Text
+          variant="pinkText"
           style={styles.tapAndHold}
           tx="overlayTutorial.hiddenForSecurityTapAndHold"
         />
-        <Text style={styles.tryIt} tx="overlayTutorial.tryIt" />
+        <Text
+          variant="pinkText"
+          style={styles.tryIt}
+          tx="overlayTutorial.tryIt"
+        />
         <View style={styles.bentArrow}>
           <BentArrow width={85} height={85} />
         </View>
@@ -84,17 +89,7 @@ const styles = StyleSheet.create({
     marginLeft: 40,
     marginBottom: 10,
   },
-  tapAndHold: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#FF007A',
-    fontWeight: '600',
-    fontSize: 20,
-  },
   tryIt: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#FF007A',
-    fontWeight: '600',
-    fontSize: 20,
     marginRight: 240,
     marginTop: 30,
   },
