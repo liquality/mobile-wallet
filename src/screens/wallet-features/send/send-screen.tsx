@@ -135,6 +135,23 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   ])
 
   useEffect(() => {
+    let feeInUnit = customFee
+    if (feeInUnit) {
+      let total = new BigNumber(amountInput.value)
+        .plus(getSendFee(code, feeInUnit))
+        .dp(9)
+      const availAmtBN = new BigNumber(availableAmount)
+      const amtInpBN = new BigNumber(amountInput.value)
+      if (availAmtBN.eq(amtInpBN) && availAmtBN.lt(total)) {
+        setErrorMessage({
+          msg: 'error',
+          type: ErrorMessages.NotEnoughCoverFees,
+        })
+      }
+    }
+  }, [amountInput.value, code, customFee, setErrorMessage, availableAmount])
+
+  useEffect(() => {
     fetchFeesForAsset(code).then((gasFee) => {
       setFee(gasFee)
       const calculatedAmt = calculateAvailableAmnt(
