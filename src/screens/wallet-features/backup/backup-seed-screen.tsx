@@ -18,14 +18,13 @@ import GradientBackground from '../../../components/gradient-background'
 import Box from '../../../theme/box'
 import Text from '../../../theme/text'
 import OverlayTutorial from './overlay-tutorial'
-import OverlayContainer from './overlay-tutorial'
 
 type BackupSeedScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'BackupSeedScreen'
 >
 
-const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
+const BackupSeedScreen = ({ route, navigation }: BackupSeedScreenProps) => {
   const [revealedWord, setRevealedWord] = useState(0)
 
   const wallet = setupWallet({
@@ -90,16 +89,14 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
   const seedList = wallet.state.wallets[0].mnemonic.split(' ')
   return (
     <Box style={styles.container}>
-      {/*  */}
+      {route.params.quitOverlay ? null : <OverlayTutorial />}
 
       <GradientBackground
         width={Dimensions.get('screen').width}
         height={Dimensions.get('screen').height}
         isFullPage
       />
-      <View>
-        <OverlayTutorial />
-      </View>
+
       <View style={styles.eyeIcon}>
         <Eye width={150} height={150} />
       </View>
