@@ -186,7 +186,8 @@
     "notEnoughTknForFees": "Not enough {{token}} to cover fees for this transfer.",
     "notEnoughGas": "Not enough Gas (available {{n}} {{token}}) to cover fess for this transfer. Check speed/fee.",
     "adjustSending": "Adjust sending amount and speed/fee and try again, or get more.",
-    "and": "and"
+    "and": "and",
+    "insufficientFund": "Insufficient Funds"
   },
   "settingsScreen": {
     "reloadApp": "Please reload your app",

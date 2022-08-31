@@ -41,7 +41,6 @@ import { useRecoilValue } from 'recoil'
 import { balanceStateFamily, fiatRatesState } from '../../../atoms'
 import i18n from 'i18n-js'
 import ErrMsgBanner, { ErrorBtn } from '../../../components/ui/err-msg-banner'
-import { palette } from '../../../theme/index'
 const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {
@@ -67,12 +66,13 @@ interface ErrorMsgAndType {
 const SendScreen: FC<SendScreenProps> = (props) => {
   const { navigation, route } = props
   //TODO is there a better way to deal with this?
+  const { assetData } = route.params
   const {
     code = 'ETH',
     chain = ChainId.Ethereum,
     color,
     id = '',
-  } = route.params.assetData || {}
+  } = assetData || {}
   const [customFee, setCustomFee] = useState<number>(0)
   const fiatRates = useRecoilValue(fiatRatesState)
   const balance = useRecoilValue(
@@ -86,23 +86,26 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const [showAmountsInFiat, setShowAmountsInFiat] = useState<boolean>(false)
   const [isCameraVisible, setIsCameraVisible] = useState(false)
   const [networkSpeed, setNetworkSpeed] = useState<FeeLabel>(FeeLabel.Average)
-  const [error, setError] = useState<ErrorMsgAndType>({
-    msg: 'error',
-    type: ErrorMessages.AdjustSending,
+  const [error, setError] = useState('')
+  const [errorMessage, setErrorMessage] = useState<ErrorMsgAndType>({
+    msg: '',
+    type: null,
   })
   const amountInput = useInputState('0')
-  const addressInput = useInputState('')
+  const addressInput = useInputState(
+    'tb1qv87lrj2lprekaylh0drj3cyyvluapa7e2rjc9r',
+  )
   const networkFee = useRef<NetworkFeeType>()
 
   const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
-      // setError(labelTranslateFn('sendScreen.enterValidAmt')!)
+      setError(labelTranslateFn('sendScreen.enterValidAmt')!)
       return false
     } else if (new BigNumber(amountInput.value).gt(new BigNumber(balance))) {
-      // setError(labelTranslateFn('sendScreen.lowerAmt')!)
+      setError(labelTranslateFn('sendScreen.lowerAmt')!)
       return false
     } else if (!chain || !chains[chain].isValidAddress(addressInput.value)) {
-      // setError(labelTranslateFn('sendScreen.wrongFmt')!)
+      setError(labelTranslateFn('sendScreen.wrongFmt')!)
       return false
     }
 
@@ -113,9 +116,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     if (route.params.customFee && balance) {
       setFee(new BigNumber(route.params.customFee))
       setCustomFee(route.params.customFee)
-      setAvailableAmount(
-        calculateAvailableAmnt(code, route.params.customFee, balance),
+      const calculatedAmt = calculateAvailableAmnt(
+        code,
+        route.params.customFee,
+        balance,
       )
+      setAvailableAmount(calculatedAmt)
       if (route.params.speed) {
         setNetworkSpeed(route.params.speed)
       }
@@ -131,13 +137,16 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   useEffect(() => {
     fetchFeesForAsset(code).then((gasFee) => {
       setFee(gasFee)
-      setAvailableAmount(
-        calculateAvailableAmnt(
-          code,
-          getSendFee(code, gasFee.average.toNumber()).toNumber(),
-          balance,
-        ),
+      const calculatedAmt = calculateAvailableAmnt(
+        code,
+        getSendFee(code, gasFee.average.toNumber()).toNumber(),
+        balance,
       )
+      const calAmtInBn = new BigNumber(calculatedAmt)
+      if (calAmtInBn.lte(0)) {
+        setErrorMessage({ msg: 'error', type: ErrorMessages.NotEnoughToken })
+      }
+      setAvailableAmount(calculatedAmt)
     })
   }, [code, chain, balance])
 
@@ -188,13 +197,26 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const handleOnChangeText = useCallback(
     (text: string): void => {
       if (!isNumber(text)) {
-        // setError({msg: labelTranslateFn('sendScreen.invalidAmt'})!)
+        setError(labelTranslateFn('sendScreen.invalidAmt')!)
         return
       }
 
       if (!fiatRates) {
-        // setError(labelTranslateFn('sendScreen.fiatRate')!)
+        setError(labelTranslateFn('sendScreen.fiatRate')!)
         return
+      }
+
+      const textInBN = new BigNumber(text)
+      if (textInBN.gt(availableAmount)) {
+        setErrorMessage({
+          msg: 'error',
+          type: ErrorMessages.NotEnoughTokenSelectMax,
+        })
+      } else {
+        setErrorMessage({
+          msg: '',
+          type: null,
+        })
       }
 
       if (showAmountsInFiat) {
@@ -214,7 +236,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       }
       amountInput.onChangeText(text)
     },
-    [amountInput, code, fiatRates, showAmountsInFiat],
+    [amountInput, code, fiatRates, showAmountsInFiat, availableAmount],
   )
 
   const handleFeeOptionsPress = () => {
@@ -254,29 +276,35 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   )
 
   const getCompatibleErrorMsg = React.useCallback(() => {
-    const { msg, type } = error
+    const { msg, type } = errorMessage
     if (!msg) {
       return null
     }
 
-    const onGetPress = () => {}
-    const onMaxPress = () => {}
+    const onGetPress = () => {
+      navigation.navigate('ReceiveScreen', {
+        assetData,
+        includeBackBtn: true,
+        screenTitle: i18n.t('assetScreen.receiveCode', { code }),
+      })
+    }
+    const onMaxPress = () => {
+      handleOnChangeText(availableAmount.toString())
+    }
 
     switch (type) {
       case ErrorMessages.NotEnoughToken:
         return (
           <ErrMsgBanner>
-            <Box>
-              <Text>{`${i18n.t('sendScreen.notEnoughTkn', {
+            <Text>{`${i18n.t('sendScreen.notEnoughTkn', {
+              token: code,
+            })}`}</Text>
+            <ErrorBtn
+              label={`${i18n.t('sendScreen.getTkn', {
                 token: code,
-              })}`}</Text>
-              <ErrorBtn
-                label={`${i18n.t('sendScreen.getTkn', {
-                  token: code,
-                })}`}
-                onPress={onGetPress}
-              />
-            </Box>
+              })}`}
+              onPress={onGetPress}
+            />
           </ErrMsgBanner>
         )
       case ErrorMessages.NotEnoughTokenSelectMax:
@@ -360,7 +388,15 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           </ErrMsgBanner>
         )
     }
-  }, [error, code, amountInput])
+  }, [
+    errorMessage,
+    code,
+    amountInput,
+    assetData,
+    navigation,
+    handleOnChangeText,
+    availableAmount,
+  ])
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
@@ -402,7 +438,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                   ]}
                   keyboardType={'numeric'}
                   onChangeText={handleOnChangeText}
-                  onFocus={() => setError({ msg: '', type: null })}
+                  onFocus={() => setError('')}
                   value={amountInput.value}
                   autoCorrect={false}
                   returnKeyType="done"
@@ -441,7 +477,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 <TextInput
                   style={styles.sendToInput}
                   onChangeText={addressInput.onChangeText}
-                  onFocus={() => setError({ msg: '', type: null })}
+                  onFocus={() => setError('')}
                   value={addressInput.value}
                   placeholderTx="sendScreen.address"
                   autoCorrect={false}
@@ -495,7 +531,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               changeNetworkSpeed={setNetworkSpeed}
             />
           )}
-          {/* {!!error && <Text variant="error">{error.msg}</Text>} */}
+          {!!error && <Text variant="error">{error}</Text>}
         </Box>
         <ButtonFooter>
           <Button
@@ -508,11 +544,15 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           />
           <Button
             type="primary"
-            variant="m"
-            label={{ tx: 'common.review' }}
+            variant="l"
+            label={{
+              tx: errorMessage.msg
+                ? 'sendScreen.insufficientFund'
+                : 'common.review',
+            }}
             onPress={handleReviewPress}
             isBorderless={false}
-            isActive={true}
+            isActive={!errorMessage.msg}
           />
         </ButtonFooter>
       </Box>
@@ -569,17 +609,6 @@ const styles = StyleSheet.create({
   dropdown: {
     marginRight: 5,
     marginBottom: 5,
-  },
-  tertiaryButtonLabel: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    fontSize: 12,
-    // lineHeight: 12,
-    color: palette.black,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'red',
-    backgroundColor: palette.white,
   },
 })
 
