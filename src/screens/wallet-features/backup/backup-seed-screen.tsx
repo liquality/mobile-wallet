@@ -17,13 +17,14 @@ import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaul
 import GradientBackground from '../../../components/gradient-background'
 import Box from '../../../theme/box'
 import Text from '../../../theme/text'
+import OverlayTutorial from './overlay-tutorial'
 
 type BackupSeedScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'BackupSeedScreen'
 >
 
-const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
+const BackupSeedScreen = ({ route, navigation }: BackupSeedScreenProps) => {
   const [revealedWord, setRevealedWord] = useState(0)
 
   const wallet = setupWallet({
@@ -88,11 +89,14 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
   const seedList = wallet.state.wallets[0].mnemonic.split(' ')
   return (
     <Box style={styles.container}>
+      {route.params.quitOverlay ? null : <OverlayTutorial />}
+
       <GradientBackground
         width={Dimensions.get('screen').width}
         height={Dimensions.get('screen').height}
         isFullPage
       />
+
       <View style={styles.eyeIcon}>
         <Eye width={150} height={150} />
       </View>
@@ -109,6 +113,7 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
                 style={styles.explainHidden}
                 tx="backupSeedScreen.hidden4Security"
               />
+
               {/*  
               We might want to implement toggle between 12-24 words in the future, so keeping this code here  
               <Pressable

@@ -94,6 +94,11 @@
     "iAccept:": "I Accept",
     "cancel": "Cancel"
   },
+  "overlayTutorial": {
+    "hiddenForSecurityTapAndHold": "Hidden for security. Tap and hold to reveal phrase.",
+    "tryIt": "Try it.",
+    "gotIt": "GOT IT"
+  },
   "assetChooserScreen": {
     "searchCurrency": "Search for a Currency"
   },
