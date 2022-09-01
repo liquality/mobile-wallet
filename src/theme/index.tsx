@@ -38,6 +38,7 @@ const theme = createTheme({
     transparentBlack: palette.transparentBlack,
     progressDotColor: palette.turquoise,
     addressColor: palette.black2,
+    errorMsgBarColor: palette.yellowBar,
   },
   spacing: {
     vs: 2,
