@@ -1,22 +1,28 @@
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { accountsIdsState, isDoneFetchingData } from '../../atoms'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { populateWallet } from '../../store/store'
-import { Pressable, StyleSheet, View } from 'react-native'
-import Text from '../../theme/text'
-import Box from '../../theme/box'
+import { StyleSheet } from 'react-native'
+import { palette } from '../../theme'
 import ActivityFlatList from '../activity-flat-list'
 import AssetFlatList from './asset-flat-list'
 import * as React from 'react'
 import { Log } from '../../utils'
+import { useWindowDimensions } from 'react-native'
+import {
+  TabView,
+  TabBar,
+  SceneRendererProps,
+  NavigationState,
+  Route,
+} from 'react-native-tab-view'
+
+type RenderTabBar = SceneRendererProps & {
+  navigationState: NavigationState<Route>
+}
 
 const ContentBlock = () => {
-  enum ViewKind {
-    ASSETS,
-    ACTIVITY,
-  }
-  const [selectedView, setSelectedView] = useState(ViewKind.ASSETS)
   const accountsIds = useRecoilValue(accountsIdsState)
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
 
@@ -38,76 +44,56 @@ const ContentBlock = () => {
     )
   }, [setIsDoneFetchingData, accountsIds])
 
+  const layout = useWindowDimensions()
+  const [index, setIndex] = React.useState(0)
+  const [routes] = React.useState([
+    { key: 'asset', title: 'Assets' },
+    { key: 'activity', title: 'Activity' },
+  ])
+
+  const renderTabBar = (props: RenderTabBar) => (
+    <TabBar
+      {...props}
+      indicatorStyle={styles.indicatorStyle}
+      style={styles.tabBarBackgroundStyle}
+      labelStyle={styles.labelStyle}
+    />
+  )
+
   return (
-    <Fragment>
-      <View style={styles.tabsBlock}>
-        <Pressable
-          style={[
-            styles.tabHeader,
-            selectedView === ViewKind.ASSETS && styles.headerFocused,
-          ]}
-          onPress={() => setSelectedView(ViewKind.ASSETS)}>
-          <Text tx="asset" style={styles.headerText} />
-        </Pressable>
-        <Pressable
-          style={[
-            styles.tabHeader,
-            selectedView === ViewKind.ACTIVITY && styles.headerFocused,
-          ]}
-          onPress={() => setSelectedView(ViewKind.ACTIVITY)}>
-          <Text tx="activity" style={styles.headerText} />
-        </Pressable>
-      </View>
-      <Box flex={1}>
-        {selectedView === ViewKind.ACTIVITY &&
-          (accountsIds.length > 0 ? (
-            <ActivityFlatList />
-          ) : (
-            <Text
-              style={styles.noActivityMessageBlock}
-              tx="common.onceYouStart"
-            />
-          ))}
-        {selectedView === ViewKind.ASSETS && accountsIds && (
-          <AssetFlatList accounts={accountsIds} />
-        )}
-      </Box>
-    </Fragment>
+    <TabView
+      renderTabBar={renderTabBar}
+      navigationState={{ index, routes }}
+      renderScene={({ route }) => {
+        switch (route.key) {
+          case 'asset':
+            return <AssetFlatList accounts={accountsIds} />
+          case 'activity':
+            return <ActivityFlatList />
+          default:
+            return null
+        }
+      }}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+    />
   )
 }
 
 const styles = StyleSheet.create({
-  tabsBlock: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    alignContent: 'stretch',
+  indicatorStyle: {
+    backgroundColor: palette.black2,
+    height: 1,
   },
-  tabHeader: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderTopWidth: 1,
-    borderBottomColor: '#D9DFE5',
-    borderTopColor: '#D9DFE5',
+  tabBarBackgroundStyle: {
+    backgroundColor: palette.white,
   },
-  headerFocused: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#000',
-  },
-  headerText: {
+  labelStyle: {
+    color: palette.black2,
     fontFamily: 'Montserrat-Regular',
     fontSize: 13,
     lineHeight: 18,
     fontWeight: '600',
-  },
-  noActivityMessageBlock: {
-    fontFamily: 'Montserrat-Regular',
-    fontWeight: '400',
-    fontSize: 14,
-    marginHorizontal: 20,
-    marginTop: 15,
-    lineHeight: 20,
   },
 })
 
