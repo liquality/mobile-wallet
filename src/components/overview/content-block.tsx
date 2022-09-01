@@ -1,14 +1,13 @@
 import { useEffect } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { accountsIdsState, isDoneFetchingData } from '../../atoms'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { populateWallet } from '../../store/store'
+import { populateWallet, storageManager } from '../../store/store'
 import { StyleSheet } from 'react-native'
 import { palette } from '../../theme'
 import ActivityFlatList from '../activity-flat-list'
 import AssetFlatList from './asset-flat-list'
 import * as React from 'react'
-import { Log } from '../../utils'
+import { labelTranslateFn, Log } from '../../utils'
 import { useWindowDimensions } from 'react-native'
 import {
   TabView,
@@ -27,28 +26,28 @@ const ContentBlock = () => {
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
 
   useEffect(() => {
-    AsyncStorage.getItem(`${accountsIds[0].name}|${accountsIds[0].id}`).then(
-      (result) => {
-        if (result !== null) {
-          populateWallet()
-            .then(() => {
-              setIsDoneFetchingData(true)
-            })
-            .catch((e) => {
-              Log(`Failed to populateWallet: ${e}`, 'error')
-            })
-        } else {
-          setIsDoneFetchingData(true)
-        }
-      },
+    const result = storageManager.read<string | null>(
+      `${accountsIds[0].name}|${accountsIds[0].id}`,
+      '',
     )
+    if (result !== null && result) {
+      populateWallet()
+        .then(() => {
+          setIsDoneFetchingData(true)
+        })
+        .catch((e) => {
+          Log(`Failed to populateWallet: ${e}`, 'error')
+        })
+    } else {
+      setIsDoneFetchingData(true)
+    }
   }, [setIsDoneFetchingData, accountsIds])
 
   const layout = useWindowDimensions()
   const [index, setIndex] = React.useState(0)
   const [routes] = React.useState([
-    { key: 'asset', title: 'Assets' },
-    { key: 'activity', title: 'Activity' },
+    { key: 'asset', title: labelTranslateFn('asset') },
+    { key: 'activity', title: labelTranslateFn('activity') },
   ])
 
   const renderTabBar = (props: RenderTabBar) => (

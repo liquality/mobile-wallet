@@ -24,7 +24,6 @@ import {
   Network,
 } from '@liquality/wallet-core/dist/src/store/types'
 import { CustomRootState } from './reducers'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { KEYS } from './utils'
 import * as Localization from 'expo-localization'
 
@@ -54,11 +53,7 @@ export const swapPairState = atom<SwapAssetPairType>({
 
 export const historyIdsState = atom<string[]>({
   key: 'HistoryIds',
-  default: AsyncStorage.getItem('historyIds').then((savedValue) =>
-    savedValue !== null && typeof savedValue !== 'undefined'
-      ? JSON.parse(savedValue)
-      : [],
-  ),
+  default: [],
   effects: [localStorageEffect<string[]>('historyIds')],
 })
 
@@ -122,10 +117,7 @@ export const langSelected = atom<LanguageEnum | string>({
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',
-  default: (accountId) =>
-    AsyncStorage.getItem(`account-info-${accountId}`).then((savedValue) =>
-      savedValue !== null ? JSON.parse(savedValue) : {},
-    ),
+  default: {},
   effects: (accountId) => [localStorageEffect(`account-info-${accountId}`)],
 })
 
@@ -136,10 +128,7 @@ type AssetNameAssetKey = {
 
 export const balanceStateFamily = atomFamily<number, AssetNameAssetKey>({
   key: 'AssetBalance',
-  default: ({ asset, assetId }) =>
-    AsyncStorage.getItem(`${asset}|${assetId}`).then((savedValue) =>
-      savedValue !== null ? Number(savedValue) : -1,
-    ),
+  default: -1,
   effects: ({ asset, assetId }) => [
     localStorageEffect(`${asset}|${assetId}`),
     balanceEffect(`${asset}|${assetId}`),
@@ -148,10 +137,7 @@ export const balanceStateFamily = atomFamily<number, AssetNameAssetKey>({
 
 export const addressStateFamily = atomFamily<string, string>({
   key: 'AccountAddress',
-  default: (accountId) =>
-    AsyncStorage.getItem(`address-${accountId}`).then((savedValue) =>
-      savedValue !== null ? JSON.parse(savedValue) : '',
-    ),
+  default: '',
   effects: (accountId) => [
     localStorageEffect(`address-${accountId}`),
     addressEffect(accountId),
@@ -160,10 +146,7 @@ export const addressStateFamily = atomFamily<string, string>({
 
 export const historyStateFamily = atomFamily<Partial<HistoryItem>, string>({
   key: 'TransactionHistory',
-  default: (transactionId) =>
-    AsyncStorage.getItem(transactionId).then((savedValue) =>
-      savedValue !== null ? JSON.parse(savedValue) : '',
-    ),
+  default: {},
   effects: (transactionId) => [
     localStorageEffect(transactionId),
     transactionHistoryEffect(transactionId),
@@ -172,10 +155,7 @@ export const historyStateFamily = atomFamily<Partial<HistoryItem>, string>({
 
 export const enabledAssetsStateFamily = atomFamily<boolean, string>({
   key: 'EnabledAssetsState',
-  default: (asset) =>
-    AsyncStorage.getItem(asset).then((savedValue) =>
-      savedValue !== null ? JSON.parse(savedValue) : true,
-    ),
+  default: true,
   effects: (asset) => [localStorageEffect(`enabled-asset-${asset}`)],
 })
 

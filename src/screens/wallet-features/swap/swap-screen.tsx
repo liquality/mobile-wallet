@@ -1,5 +1,6 @@
 import React, {
   FC,
+  Reducer,
   useCallback,
   useEffect,
   useReducer,
@@ -24,7 +25,6 @@ import { ActionEnum, NetworkFeeType, RootStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
 import { labelTranslateFn, sortQuotes } from '../../../utils'
-import { Reducer } from '@reduxjs/toolkit'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
@@ -261,7 +261,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
   const handleMaxPress = () => {
     //TODO Fix this. maximumValue = fromBalance - Fee
-    //TODO Using redux here is just ugly. find a better solution
     if (swapPair && swapPair.fromAsset && swapPair.fromAsset.code) {
       const amnt = unitToCurrency(
         cryptoassets[swapPair.fromAsset.code],
