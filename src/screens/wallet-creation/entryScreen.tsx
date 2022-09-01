@@ -9,7 +9,7 @@ import Box from '../../theme/box'
 import { createWallet } from '../../store/store'
 import { MNEMONIC, PASSWORD } from '@env'
 import GradientBackground from '../../components/gradient-background'
-import { chains } from '@liquality/cryptoassets'
+import { getChain } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/src/utils/cryptoassets'
 import { useRecoilCallback, useSetRecoilState } from 'recoil'
 import {
@@ -59,16 +59,18 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
       const { accounts, activeWalletId, activeNetwork } = wallet
       const accountsIds: { id: string; name: string }[] = []
       accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
-        const nativeAsset = chains[account.chain].nativeAsset
+        console.log(getChain('testnet', account.chain), 'ACCOUNT GET CHAIN')
+        const nativeAsset = getChain('testnet', account.chain).nativeAsset
+        console.log(nativeAsset, 'wats native ass?')
         accountsIds.push({
           id: account.id,
-          name: nativeAsset,
+          name: nativeAsset[0],
         })
         const newAccount: AccountType = {
           id: account.id,
           chain: account.chain,
           name: account.name,
-          code: nativeAsset,
+          code: nativeAsset[0].code,
           address: account.addresses[0], //TODO why pick only the first address
           color: account.color,
           assets: {},

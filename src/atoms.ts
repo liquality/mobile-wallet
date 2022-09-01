@@ -15,7 +15,9 @@ import {
   localStorageLangEffect,
   transactionHistoryEffect,
 } from './store/store'
-import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
+
+
+import { getAssets, unitToCurrency } from '@liquality/cryptoassets'
 import { Asset } from '@liquality/wallet-core/dist/src/store/types'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import {
@@ -184,20 +186,20 @@ export const accountInfoState = selectorFamily<Partial<AccountType>, string>({
   key: 'AccountInfoState',
   get:
     (accountId) =>
-    ({ get }) => {
-      const address = get(addressStateFamily(accountId))
-      const account = get(accountInfoStateFamily(accountId))
-      if (account?.code) {
-        account.balance = get(
-          balanceStateFamily({ asset: account.code, assetId: accountId }),
-        )
-      }
-      account.address = address
-      for (let assetsKey in account.assets) {
-        account.assets[assetsKey].address = address
-      }
-      return account
-    },
+      ({ get }) => {
+        const address = get(addressStateFamily(accountId))
+        const account = get(accountInfoStateFamily(accountId))
+        if (account?.code) {
+          account.balance = get(
+            balanceStateFamily({ asset: account.code, assetId: accountId }),
+          )
+        }
+        account.address = address
+        for (let assetsKey in account.assets) {
+          account.assets[assetsKey].address = address
+        }
+        return account
+      },
 })
 export const accountListState = selector<Partial<AccountType>[]>({
   key: 'AccountList',
@@ -219,26 +221,26 @@ export const accountForAssetState = selectorFamily<
   key: 'AccountForAsset',
   get:
     (asset) =>
-    ({ get }) => {
-      const accountsIds = get(accountsIdsState)
-      const filteredAccounts = accountsIds
-        .map((item) => get(accountInfoStateFamily(item.id)))
-        .filter((account) => account.code === asset)
-      const account =
-        filteredAccounts.length > 0 ? filteredAccounts[0] : undefined
-      if (!account?.id) return account
-      return {
-        ...account,
-        address: get(addressStateFamily(account.id)),
-        assets: {
-          ...account.assets,
-          [asset]: {
-            ...account.assets[asset],
-            balance: get(balanceStateFamily({ asset, assetId: account.id })),
+      ({ get }) => {
+        const accountsIds = get(accountsIdsState)
+        const filteredAccounts = accountsIds
+          .map((item) => get(accountInfoStateFamily(item.id)))
+          .filter((account) => account.code === asset)
+        const account =
+          filteredAccounts.length > 0 ? filteredAccounts[0] : undefined
+        if (!account?.id) return account
+        return {
+          ...account,
+          address: get(addressStateFamily(account.id)),
+          assets: {
+            ...account.assets,
+            [asset]: {
+              ...account.assets[asset],
+              balance: get(balanceStateFamily({ asset, assetId: account.id })),
+            },
           },
-        },
-      }
-    },
+        }
+      },
 })
 
 export const historyItemsState = selector<HistoryItem[]>({
@@ -265,14 +267,14 @@ export const totalFiatBalanceState = selector<string>({
         acc,
         balanceState && fiatRates[account.name] > 0
           ? new BigNumber(
-              cryptoToFiat(
-                unitToCurrency(
-                  cryptoassets[getNativeAsset(account.name)],
-                  get(balanceState),
-                ).toNumber(),
-                fiatRates[account.name],
-              ),
-            )
+            cryptoToFiat(
+              unitToCurrency(
+                getAssets[getNativeAsset(account.name)],
+                get(balanceState),
+              ).toNumber(),
+              fiatRates[account.name],
+            ),
+          )
           : 0,
       )
     }, new BigNumber(0))

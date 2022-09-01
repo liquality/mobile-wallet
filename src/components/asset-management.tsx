@@ -1,7 +1,7 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import { Alert, FlatList, StyleSheet, Text, View } from 'react-native'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
-import { assets as cryptoassets } from '@liquality/cryptoassets'
+import { getAllAssets, getAsset } from '@liquality/cryptoassets'
 import AssetIcon from './asset-icon'
 import Switch from './ui/switch'
 import SearchBox from './ui/search-box'
@@ -48,19 +48,26 @@ const AssetManagement = ({
     //TODO we still need to handle custom tokens
     let myAssets: Asset[] = []
 
-    if (activeNetwork === Network.Testnet) {
+    // if (activeNetwork === Network.Testnet) {
+    if (activeNetwork === Network.Mainnet) {
       myAssets =
         enabledAssets?.reduce((assetList: Asset[], asset) => {
-          if (cryptoassets.hasOwnProperty(asset)) {
+          if (getAsset(activeNetwork, asset)) {
             assetList.push({
-              ...cryptoassets[asset],
-              contractAddress: cryptoassets[asset].contractAddress,
+              ...getAsset(activeNetwork, asset),
+              contractAddress: getAsset(activeNetwork, asset).contractAddress,
             })
           }
           return assetList
         }, []) || []
     } else {
-      myAssets = Object.keys(cryptoassets).map((key) => cryptoassets[key])
+      console.log('myassets ', getAllAssets().mainnet)
+      //myAssets = getAllAssets().mainnet
+      //TODO: Fix this
+      myAssets = Object.keys(getAllAssets()).map((key) => {
+        console.log(key, 'THIS IS KEY')
+        return getAllAssets()
+      })
     }
     setAssets(myAssets)
     setData(myAssets)

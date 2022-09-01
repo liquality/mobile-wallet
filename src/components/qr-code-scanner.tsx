@@ -35,6 +35,7 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
         setError('')
       }
       const address = qrCode.displayValue?.split(':')?.[1]
+      console.log(chain, 'wats chaain')
       if (address && chains[chain].isValidAddress(address)) {
         onClose(address)
       } else {
