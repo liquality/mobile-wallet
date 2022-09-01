@@ -194,3 +194,22 @@ export type LikelyWait = {
   average?: string | number
   fast?: string | number
 }
+
+export interface CustomRootState extends RootState {
+  digestedState?: {
+    totalFiatBalance: number
+    accounts: Record<Asset, AccountType>
+    fiatRates: FiatRates
+  }
+  assetFilter?: {
+    timeLimit?: string
+    actionTypes?: string[]
+    dateRange?: {
+      start: string | undefined
+      end: string | undefined
+    }
+    activityStatuses?: string[]
+    assetToggles?: string[]
+    sorter?: string | undefined
+  }
+}
