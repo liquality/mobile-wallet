@@ -171,4 +171,18 @@ async function fixBrowserCheck(path) {
     'node_modules/bitcoinjs-lib/src/payments/p2wsh.js',
     writeBufferN_To_Buffer_p2wsh,
   )
+
+  //Fix ZLIB FILE
+  const zLibFile = await fs.readFile(
+    'node_modules/@eth-optimism/core-utils/dist/optimism/batch-encoding.js',
+    { encoding: 'utf8' },
+  )
+  const fixedZLibFile = zLibFile.replaceAll(
+    'const zlib_1 = __importDefault(require("zlib"));',
+    'const zlib_1 = () => {}',
+  )
+  await fs.writeFile(
+    'node_modules/@eth-optimism/core-utils/dist/optimism/batch-encoding.js',
+    fixedZLibFile,
+  )
 })()
