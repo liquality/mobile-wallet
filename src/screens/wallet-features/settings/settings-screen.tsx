@@ -8,7 +8,6 @@ import {
   View,
   useColorScheme,
 } from 'react-native'
-import { useDispatch } from 'react-redux'
 import AngleRightIcon from '../../../assets/icons/angle-right.svg'
 import SignoutIcon from '../../../assets/icons/logout.svg'
 import DropdownIcon from '../../../assets/icons/dropdownMenu.svg'
@@ -47,28 +46,17 @@ type SettingsScreenProps = BottomTabScreenProps<
 
 const SettingsScreen = ({ route }: SettingsScreenProps) => {
   const walletStateCopy = useRecoilValue(walletState)
-  const analytics = useRecoilValue(optInAnalyticsState)
+  const [analytics, setAnalytics] = useRecoilState(optInAnalyticsState)
   const [activeNetwork, setActiveNetwork] = useRecoilState(networkState)
-  const isAnalyticsEnabledFromStart = analytics?.acceptedDate !== undefined
-  const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(
-    isAnalyticsEnabledFromStart,
-  )
   const [theme, setTheme] = useRecoilState(themeMode)
   const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
-  const dispatch = useDispatch()
   const navigation = useNavigation<NavigationProp<RootStackParamList>>()
   const [lang, setLangSelected] = useRecoilState(langSelected)
 
   const toggleAnalyticsOptin = () => {
-    setIsAnalyticsEnabled(!isAnalyticsEnabled)
-    dispatch({
-      type: 'ANALYTICS_UPDATE',
-      payload: {
-        analytics: {
-          ...analytics,
-          acceptedDate: analytics?.acceptedDate ? undefined : Date.now(),
-        },
-      },
+    setAnalytics({
+      ...analytics,
+      acceptedDate: analytics?.acceptedDate ? undefined : Date.now(),
     })
   }
 
@@ -100,9 +88,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
     if (route?.params?.shouldLogOut) {
       handleLockPress()
     }
-
-    setIsAnalyticsEnabled(!!analytics?.acceptedDate)
-  }, [activeNetwork, analytics, handleLockPress, route?.params?.shouldLogOut])
+  }, [activeNetwork, handleLockPress, route?.params?.shouldLogOut])
 
   const supportedLanguages = React.useMemo(
     () => [
@@ -240,7 +226,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
           <View style={styles.action}>
             <Text variant="settingLabel" tx="settingsScreen.analytics" />
             <GeneralSwitch
-              isEnabled={isAnalyticsEnabled}
+              isEnabled={!!analytics?.acceptedDate}
               onValueChange={toggleAnalyticsOptin}
             />
           </View>
