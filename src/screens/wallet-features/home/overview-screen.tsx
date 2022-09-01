@@ -15,30 +15,44 @@ import GradientBackground from '../../../components/gradient-background'
 import SummaryBlock from '../../../components/overview/summary-block'
 import ContentBlock from '../../../components/overview/content-block'
 import HandleLockWalletAndBackgroundTasks from '../../../components/handle-lock-wallet-and-background-tasks'
+import RefreshIndicator from '../../../components/refresh-indicator'
+import { populateWallet } from '../../../store/store'
 
 export type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
   'OverviewScreen'
 >
 
-const wait = (timeout: number) => {
-  return new Promise((resolve) => setTimeout(resolve, timeout))
-}
-
 const OverviewScreen = ({ navigation }: OverviewProps) => {
   const [refreshing, setRefreshing] = React.useState(false)
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
-    wait(2000).then(() => setRefreshing(false))
+    populateWallet().then(() => setRefreshing(false))
   }, [])
 
   return (
     <Box flex={1}>
+      {refreshing && (
+        <Box
+          position={'absolute'}
+          alignItems="center"
+          justifyContent={'center'}
+          height={60}
+          width={'100%'}>
+          <RefreshIndicator />
+        </Box>
+      )}
       <ScrollView
         contentContainerStyle={styles.contentContainerStyle}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            tintColor="transparent"
+            colors={['transparent']}
+            style={styles.indicatorBackgroundColor}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
         }>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <HandleLockWalletAndBackgroundTasks />
@@ -77,6 +91,9 @@ const styles = StyleSheet.create({
   },
   contentContainerStyle: {
     flex: 1,
+  },
+  indicatorBackgroundColor: {
+    backgroundColor: 'transparent',
   },
 })
 
