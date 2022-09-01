@@ -13,6 +13,7 @@ export const palette = {
   transparentBlack: 'rgba(0,0,0,0.5)',
   turquoise: '#2CD2CF',
   liqPink: '#FF007A',
+  yellowBar: '#FFF8DA',
 }
 
 const theme = createTheme({
@@ -37,9 +38,10 @@ const theme = createTheme({
     transparentBlack: palette.transparentBlack,
     progressDotColor: palette.turquoise,
     addressColor: palette.black2,
-    liqPink: palette.liqPink,
+    errorMsgBarColor: palette.yellowBar,
   },
   spacing: {
+    vs: 2,
     s: 5,
     m: 10,
     l: 15,

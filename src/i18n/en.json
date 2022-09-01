@@ -185,7 +185,15 @@
     "max": "Max",
     "sndTo": "SEND TO",
     "address": "Address",
-    "memoOpt": "MEMO (OPTIONAL)"
+    "memoOpt": "MEMO (OPTIONAL)",
+    "getTkn": "Get {{token}}",
+    "notEnoughTkn": "Not enough {{token}} to make this transfer.",
+    "orSelect": "or select",
+    "notEnoughTknForFees": "Not enough {{token}} to cover fees for this transfer.",
+    "notEnoughGas": "Not enough Gas (available {{n}} {{token}}) to cover fess for this transfer. Check speed/fee.",
+    "adjustSending": "Adjust sending amount and speed/fee and try again, or get more.",
+    "and": "and",
+    "insufficientFund": "Insufficient Funds"
   },
   "settingsScreen": {
     "reloadApp": "Please reload your app",
