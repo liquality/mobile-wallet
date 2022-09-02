@@ -1,6 +1,7 @@
 import { MMKV } from 'react-native-mmkv'
 import { CustomRootState } from '../types'
 import { initializeMMKVFlipper } from 'react-native-mmkv-flipper-plugin'
+
 /**
  * Implementation of the StorageManagerI interface for mobile
  */
@@ -19,7 +20,7 @@ export default class StorageManager {
   public write(storageKey: string, state: unknown): boolean | Error {
     try {
       if (typeof state === 'object') {
-        const data = { ...state }
+        const data = Array.isArray(state) ? [...state] : { ...state }
         if (!data || Object.keys(data).length === 0) {
           return new Error('Empty data')
         }
