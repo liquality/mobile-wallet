@@ -20,8 +20,7 @@ import Button from '../../theme/button'
 import Box from '../../theme/box'
 import { MNEMONIC, PASSWORD } from '@env'
 import GradientBackground from '../../components/gradient-background'
-import { chains, getChain } from '@liquality/cryptoassets'
-import cryptoassets from '@liquality/wallet-core/dist/src/utils/cryptoassets'
+import { getAsset, getChain } from '@liquality/cryptoassets'
 import { useRecoilCallback, useSetRecoilState } from 'recoil'
 import {
   accountInfoStateFamily,
@@ -94,18 +93,16 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       )
       const accountsIds: { id: string; name: string }[] = []
       accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
-        console.log(getChain('testnet', account.chain), 'ACCOUNT GET CHAIN')
-        const nativeAsset = getChain('testnet', account.chain).nativeAsset
-        console.log(nativeAsset, 'wats native ass?')
+        const nativeAsset = getChain(activeNetwork, account.chain).nativeAsset
         accountsIds.push({
           id: account.id,
-          name: nativeAsset[0],
+          name: nativeAsset[0].name,
         })
         const newAccount: AccountType = {
           id: account.id,
           chain: account.chain,
           name: account.name,
-          code: nativeAsset[0],
+          code: nativeAsset[0].code,
           address: account.addresses[0], //TODO why pick only the first address
           color: account.color,
           assets: {},
@@ -115,7 +112,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
         for (const asset of account.assets) {
           newAccount.assets[asset] = {
             id: asset,
-            name: cryptoassets[asset].name,
+            name: getAsset(activeNetwork, asset).name,
             code: asset,
             chain: account.chain,
             color: account.color,

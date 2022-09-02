@@ -21,7 +21,6 @@ const ContentBlock = () => {
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
 
   useEffect(() => {
-    console.log(accountsIds[0], 'acc ids??', accountsIds)
     AsyncStorage.getItem(`${accountsIds[0].name}|${accountsIds[0].id}`).then(
       (result) => {
         if (result !== null) {

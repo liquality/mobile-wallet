@@ -13,8 +13,7 @@ import {
   networkState,
   walletState,
 } from '../../atoms'
-import { chains, getChain } from '@liquality/cryptoassets'
-import cryptoassets from '@liquality/wallet-core/dist/src/utils/cryptoassets'
+import { getAsset, getChain } from '@liquality/cryptoassets'
 import { Alert } from 'react-native'
 import { labelTranslateFn } from '../../utils'
 
@@ -50,9 +49,10 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
         if (accounts) {
           const accountsIds: { id: string; name: string }[] = []
           accounts.map((account) => {
-            console.log(getChain('testnet', account.chain), 'ACCOUNT GET CHAIN')
-            const nativeAsset = getChain('testnet', account.chain).nativeAsset
-            console.log(nativeAsset, 'wats native ass?')
+            const nativeAsset = getChain(
+              activeNetwork,
+              account.chain,
+            ).nativeAsset
             accountsIds.push({
               id: account.id,
               name: nativeAsset[0].name,
@@ -71,7 +71,7 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
             for (const asset of account.assets) {
               newAccount.assets[asset] = {
                 id: asset,
-                name: cryptoassets[asset].name,
+                name: getAsset(activeNetwork, asset).name,
                 code: asset,
                 chain: account.chain,
                 color: account.color,

@@ -61,11 +61,9 @@ const AssetManagement = ({
           return assetList
         }, []) || []
     } else {
-      console.log('myassets ', getAllAssets().mainnet)
       //myAssets = getAllAssets().mainnet
-      //TODO: Fix this
+      //TODO: HÄÄR Fix this
       myAssets = Object.keys(getAllAssets()).map((key) => {
-        console.log(key, 'THIS IS KEY')
         return getAllAssets()
       })
     }

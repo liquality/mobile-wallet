@@ -9,8 +9,7 @@ import Box from '../../theme/box'
 import { createWallet } from '../../store/store'
 import { MNEMONIC, PASSWORD } from '@env'
 import GradientBackground from '../../components/gradient-background'
-import { getChain } from '@liquality/cryptoassets'
-import cryptoassets from '@liquality/wallet-core/dist/src/utils/cryptoassets'
+import { getAsset, getChain } from '@liquality/cryptoassets'
 import { useRecoilCallback, useSetRecoilState } from 'recoil'
 import {
   accountInfoStateFamily,
@@ -59,12 +58,10 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
       const { accounts, activeWalletId, activeNetwork } = wallet
       const accountsIds: { id: string; name: string }[] = []
       accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
-        console.log(getChain('testnet', account.chain), 'ACCOUNT GET CHAIN')
-        const nativeAsset = getChain('testnet', account.chain).nativeAsset
-        console.log(nativeAsset, 'wats native ass?')
+        const nativeAsset = getChain(activeNetwork, account.chain).nativeAsset
         accountsIds.push({
           id: account.id,
-          name: nativeAsset[0],
+          name: nativeAsset[0].name,
         })
         const newAccount: AccountType = {
           id: account.id,
@@ -80,7 +77,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
         for (const asset of account.assets) {
           newAccount.assets[asset] = {
             id: asset,
-            name: cryptoassets[asset].name,
+            name: getAsset(activeNetwork, asset).name,
             code: asset,
             chain: account.chain,
             color: account.color,

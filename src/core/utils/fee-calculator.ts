@@ -1,15 +1,15 @@
 import { BigNumber } from '@liquality/types'
 import {
-  assets as cryptoassets,
-  chains,
   currencyToUnit,
-  isEthereumChain,
+  getAsset,
+  getChain,
+  isEvmChain,
   unitToCurrency,
 } from '@liquality/cryptoassets'
 import { prettyBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 
-const isERC20 = (asset: string) => {
-  return cryptoassets[asset]?.type === 'erc20'
+const isERC20 = (network: string, asset: string) => {
+  return getAsset(network, asset)?.type === 'erc20'
 }
 
 /**
@@ -18,12 +18,16 @@ const isERC20 = (asset: string) => {
  * @param _feePrice fee price in units
  */
 //TODO double check this logic
-export const calculateGasFee = (_asset: string, _feePrice: number): number => {
+export const calculateGasFee = (
+  _network: string,
+  _asset: string,
+  _feePrice: number,
+): number => {
   if (!_asset || !_feePrice || _feePrice <= 0) {
     throw new Error('Invalid arguments')
   }
 
-  if (!cryptoassets[_asset]) {
+  if (!getAsset(_network, _asset)) {
     throw new Error('Invalid asset name')
   }
 
@@ -39,16 +43,16 @@ export const calculateGasFee = (_asset: string, _feePrice: number): number => {
     ARBETH: 620000,
   }
 
-  const chainId = cryptoassets[_asset].chain
-  const nativeAsset = chains[chainId].nativeAsset
-  const feePrice = isEthereumChain(chainId)
+  const chainId = getAsset(_network, _asset).chain
+  const nativeAsset = getChain(network, chainId)
+  const feePrice = isEvmChain(_network, chainId)
     ? new BigNumber(_feePrice).times(1e9)
     : _feePrice // ETH fee price is in gwei
-  const asset = isERC20(_asset) ? 'ERC20' : _asset
+  const asset = isERC20(_network, _asset) ? 'ERC20' : _asset
   const feeUnit = units[asset]
 
   return unitToCurrency(
-    cryptoassets[nativeAsset],
+    getAsset(_network, nativeAsset),
     new BigNumber(feeUnit).times(feePrice).toNumber(),
   )
     .dp(6)
@@ -62,6 +66,7 @@ export const calculateGasFee = (_asset: string, _feePrice: number): number => {
  * @param _balance balance amount in unit
  */
 export const calculateAvailableAmnt = (
+  _network: string,
   _asset: string,
   _feePrice: number,
   _balance: number,
@@ -70,16 +75,16 @@ export const calculateAvailableAmnt = (
     throw new Error('Invalid arguments')
   }
 
-  if (!cryptoassets[_asset]) {
+  if (!getAsset(_network, _asset)) {
     throw new Error('Invalid asset name')
   }
 
-  if (isERC20(_asset)) {
+  if (isERC20(_network, _asset)) {
     return prettyBalance(new BigNumber(_balance), _asset).toString()
   } else {
     const available = BigNumber.max(
       new BigNumber(_balance).minus(
-        currencyToUnit(cryptoassets[_asset], _feePrice),
+        currencyToUnit(getAsset(_network, _asset), _feePrice),
       ),
       0,
     )

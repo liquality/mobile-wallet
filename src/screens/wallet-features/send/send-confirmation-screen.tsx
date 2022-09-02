@@ -2,10 +2,10 @@ import React from 'react'
 import { StyleSheet, ScrollView, Pressable, View } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
-  chains,
   unitToCurrency,
-  assets as cryptoassets,
   ChainId,
+  getChain,
+  getAsset,
 } from '@liquality/cryptoassets'
 import { SendHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import { RootStackParamList } from '../../../types'
@@ -16,7 +16,7 @@ import Text from '../../../theme/text'
 import Box from '../../../theme/box'
 import { formatDate } from '../../../utils'
 import { useRecoilValue } from 'recoil'
-import { historyStateFamily } from '../../../atoms'
+import { historyStateFamily, networkState } from '../../../atoms'
 import { isEIP1559Fees } from '@liquality/wallet-core/dist/src/utils/fees'
 
 type SendConfirmationScreenProps = NativeStackScreenProps<
@@ -31,6 +31,7 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
     const historyItem = useRecoilValue(
       historyStateFamily(transaction.id),
     ) as SendHistoryItem
+    const activeNetwork = useRecoilValue(networkState)
 
     //TODO is there a better way to deal with this?
     const { code = 'ETH', chain = ChainId.Ethereum } =
@@ -70,12 +71,16 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
             <Text variant="content">
               {historyItem.status === 'SUCCESS'
                 ? `Completed / ${
-                    chains[cryptoassets[historyItem.from].chain]
-                      .safeConfirmations
+                    getChain(
+                      activeNetwork,
+                      getAsset(activeNetwork, historyItem.from).chain,
+                    ).safeConfirmations
                   } confirmations`
                 : `Pending / ${
-                    chains[cryptoassets[historyItem.from].chain]
-                      .safeConfirmations - (historyItem.tx.confirmations || 0)
+                    getChain(
+                      activeNetwork,
+                      getAsset(activeNetwork, historyItem.from).chain,
+                    ).safeConfirmations - (historyItem.tx.confirmations || 0)
                   } confirmations`}
             </Text>
           </Box>
@@ -86,7 +91,10 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
               radius={17}
               current={historyItem.tx.confirmations || 0}
               total={
-                chains[cryptoassets[historyItem.from].chain].safeConfirmations
+                getChain(
+                  activeNetwork,
+                  getAsset(activeNetwork, historyItem.from).chain,
+                ).safeConfirmations
               }
             />
           )}
@@ -106,7 +114,7 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
           <Text variant="content">
             {historyItem.fee &&
               `${unitToCurrency(
-                cryptoassets[historyItem.from],
+                getAsset(activeNetwork, historyItem.from),
                 historyItem.tx.value,
               ).toNumber()} ${historyItem.from}`}
           </Text>
@@ -125,7 +133,10 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
             <Text variant="header" tx="sendConfirmationScreeen.networkSpeed" />
             <Text variant="content">
               {`${historyItem.from} Fee: ${historyItem.fee} x ${
-                chains[cryptoassets[historyItem.from].chain].fees.unit
+                getChain(
+                  activeNetwork,
+                  getAsset(activeNetwork, historyItem.from).chain,
+                ).fees.unit
               }`}
             </Text>
           </Box>
