@@ -1,6 +1,10 @@
 import { useEffect } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { accountsIdsState, isDoneFetchingData } from '../../atoms'
+import {
+  accountsIdsState,
+  isDoneFetchingData,
+  langSelected as LS,
+} from '../../atoms'
 import { populateWallet, storageManager } from '../../store/store'
 import { StyleSheet } from 'react-native'
 import { palette } from '../../theme'
@@ -16,6 +20,7 @@ import {
   NavigationState,
   Route,
 } from 'react-native-tab-view'
+import i18n from 'i18n-js'
 
 type RenderTabBar = SceneRendererProps & {
   navigationState: NavigationState<Route>
@@ -24,7 +29,8 @@ type RenderTabBar = SceneRendererProps & {
 const ContentBlock = () => {
   const accountsIds = useRecoilValue(accountsIdsState)
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
-
+  const langSelected = useRecoilValue(LS)
+  i18n.locale = langSelected
   useEffect(() => {
     const result = storageManager.read<string | null>(
       `${accountsIds[0].name}|${accountsIds[0].id}`,
@@ -45,10 +51,17 @@ const ContentBlock = () => {
 
   const layout = useWindowDimensions()
   const [index, setIndex] = React.useState(0)
-  const [routes] = React.useState([
-    { key: 'asset', title: labelTranslateFn('asset') },
-    { key: 'activity', title: labelTranslateFn('activity') },
+  const [routes, setRoutes] = React.useState([
+    { key: 'asset', title: labelTranslateFn('asset')! },
+    { key: 'activity', title: labelTranslateFn('activity')! },
   ])
+
+  useEffect(() => {
+    setRoutes([
+      { key: 'asset', title: labelTranslateFn('asset')! },
+      { key: 'activity', title: labelTranslateFn('activity')! },
+    ])
+  }, [langSelected])
 
   const renderTabBar = (props: RenderTabBar) => (
     <TabBar
