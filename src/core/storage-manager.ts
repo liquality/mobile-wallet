@@ -1,6 +1,6 @@
 import { MMKV } from 'react-native-mmkv'
-import { CustomRootState } from '../reducers'
-
+import { CustomRootState } from '../types'
+import { initializeMMKVFlipper } from 'react-native-mmkv-flipper-plugin'
 /**
  * Implementation of the StorageManagerI interface for mobile
  */
@@ -11,6 +11,9 @@ export default class StorageManager {
   constructor(excludedProps: Array<keyof CustomRootState>) {
     this.excludedProps = excludedProps
     this.storage = new MMKV()
+    if (__DEV__) {
+      initializeMMKVFlipper({ default: this.storage })
+    }
   }
 
   public write(storageKey: string, state: unknown): boolean | Error {

@@ -604,7 +604,7 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
         : newValue !== null &&
           typeof newValue !== 'undefined' &&
           newValue !== -1
-      storageManager.write(key, JSON.stringify(newValue))
+      storageManager.write(key, newValue)
     })
   }
 
