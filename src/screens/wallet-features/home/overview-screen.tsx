@@ -68,14 +68,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
             }>
             <SummaryBlock navigation={navigation} />
           </React.Suspense>
-          <React.Suspense
-            fallback={
-              <Box>
-                <Text variant="loading" tx="overviewScreen.load" />
-              </Box>
-            }>
-            <ContentBlock />
-          </React.Suspense>
+          <ContentBlock />
         </ErrorBoundary>
       </ScrollView>
     </Box>

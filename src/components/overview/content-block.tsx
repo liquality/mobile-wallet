@@ -5,7 +5,7 @@ import {
   isDoneFetchingData,
   langSelected as LS,
 } from '../../atoms'
-import { populateWallet, storageManager } from '../../store/store'
+import { populateWallet } from '../../store/store'
 import { StyleSheet } from 'react-native'
 import { palette } from '../../theme'
 import ActivityFlatList from '../activity-flat-list'
@@ -32,21 +32,13 @@ const ContentBlock = () => {
   const langSelected = useRecoilValue(LS)
   i18n.locale = langSelected
   useEffect(() => {
-    const result = storageManager.read<string | null>(
-      `${accountsIds[0].name}|${accountsIds[0].id}`,
-      '',
-    )
-    if (result !== null && result) {
-      populateWallet()
-        .then(() => {
-          setIsDoneFetchingData(true)
-        })
-        .catch((e) => {
-          Log(`Failed to populateWallet: ${e}`, 'error')
-        })
-    } else {
-      setIsDoneFetchingData(true)
-    }
+    populateWallet()
+      .then(() => {
+        setIsDoneFetchingData(true)
+      })
+      .catch((e) => {
+        Log(`Failed to populateWallet: ${e}`, 'error')
+      })
   }, [setIsDoneFetchingData, accountsIds])
 
   const layout = useWindowDimensions()
