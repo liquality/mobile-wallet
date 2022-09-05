@@ -35,6 +35,7 @@ const ContentBlock = () => {
         setIsDoneFetchingData(true)
       })
       .catch((e) => {
+        setIsDoneFetchingData(true)
         Log(`Failed to populateWallet: ${e}`, 'error')
       })
   }, [setIsDoneFetchingData, accountsIds])

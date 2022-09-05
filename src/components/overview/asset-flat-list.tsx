@@ -32,9 +32,16 @@ const AssetFlatList = (props: AssetFlatListPropsType) => {
     [],
   )
 
-  return accounts.map((item) => {
-    return renderAsset({ item })
-  })
+  // accounts.map((item) => {
+  //   return renderAsset({ item })
+  // })
+  return (
+    <>
+      {accounts.map((item) => {
+        return renderAsset({ item })
+      })}
+    </>
+  )
 }
 
 const styles = StyleSheet.create({
