@@ -31,6 +31,7 @@ import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
+import ShowNFTForSpecificChainScreen from '../screens/wallet-features/NFT/show-nft-for-specific-chain-screen'
 
 import AssetToggleScreen from '../screens/wallet-features/asset/asset-toggle-screen'
 import SwapScreen from '../screens/wallet-features/swap/swap-screen'
@@ -46,6 +47,7 @@ import TimesIcon from '../assets/icons/times.svg'
 import CustomFeeEIP1559Screen from '../screens/wallet-features/custom-fee/custom-fee-eip-1559-screen'
 import Box from '../theme/box'
 import Text from '../theme/text'
+import ShowAllNFTsScreen from '../screens/wallet-features/NFT/show-all-nfts-screen'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
@@ -322,17 +324,27 @@ export const AppStackNavigator = () => (
         headerLeft: PlaceholderComp,
       })}
     />
+    <Stack.Screen
+      name="ShowNFTForSpecificChainScreen"
+      component={ShowNFTForSpecificChainScreen}
+      options={() => ({
+        headerRight: PlaceholderComp,
+      })}
+    />
   </Stack.Navigator>
 )
 
 const tabBarIcon = (focused: boolean, size: number, routeName: string) => {
+  let whichIconToReturn
+  if (routeName === 'SettingsScreen') {
+    whichIconToReturn = <UserCog width={size} height={size} />
+  } else if (routeName === 'ShowAllNFTsScreen') {
+    whichIconToReturn = <Text>NFT</Text>
+  } else whichIconToReturn = <Infinity height={size} />
+
   return (
     <View style={[styles.iconWrapper, focused && styles.tabFocused]}>
-      {routeName === 'SettingsScreen' ? (
-        <UserCog width={size} height={size} />
-      ) : (
-        <Infinity height={size} />
-      )}
+      {whichIconToReturn}
     </View>
   )
 }
@@ -367,6 +379,15 @@ export const MainNavigator = () => (
       tabBarIcon: ({ focused, size }) => tabBarIcon(focused, size, route.name),
     })}>
     <Tab.Screen name="AppStackNavigator" component={AppStackNavigator} />
+    <Tab.Screen
+      name="ShowAllNFTsScreen"
+      component={WithPopupMenu(ShowAllNFTsScreen)}
+      options={({}) => ({
+        headerShown: true,
+        headerTitle: '',
+        headerLeft: TabSettingsScreenHeaderLeft,
+      })}
+    />
     <Tab.Screen
       name="SettingsScreen"
       component={WithPopupMenu(SettingsScreen)}

@@ -23,10 +23,11 @@ type SubRowProps = {
   parentItem: AccountType
   item: AccountType
   onAssetSelected: () => void
+  nft: boolean
 }
 
 const SubRow: FC<SubRowProps> = (props) => {
-  const { parentItem, item, onAssetSelected } = props
+  const { parentItem, item, onAssetSelected, nft } = props
   const [prettyNativeBalance, setPrettyNativeBalance] = useState('')
   const [prettyFiatBalance, setPrettyFiatBalance] = useState('')
   const balance = useRecoilValue(
@@ -55,33 +56,56 @@ const SubRow: FC<SubRowProps> = (props) => {
     setPrettyFiatBalance(`$${formatFiat(new BigNumber(fiatBalance))}`)
   }, [balance, fiatRates, item.code])
 
+  const renderNFTRow = () => {
+    console.log('NFT ROW', item, 'wats item?')
+    return (
+      <View>
+        <Pressable
+          onPress={handlePressOnRow}
+          style={[
+            styles.row,
+            styles.subElement,
+            { borderLeftColor: parentItem.color },
+          ]}>
+          <Text>Haj</Text>
+        </Pressable>
+      </View>
+    )
+  }
+
   return (
-    <AssetListSwipeableRow
-      assetData={{
-        ...item,
-        address: address,
-      }}
-      assetSymbol={item.code}>
-      <Pressable
-        onPress={handlePressOnRow}
-        style={[
-          styles.row,
-          styles.subElement,
-          { borderLeftColor: parentItem.color },
-        ]}>
-        <View style={styles.col1}>
-          <AssetIcon size={25} asset={item.code} />
-          <Text style={styles.name}>{item.name}</Text>
-        </View>
-        <View style={styles.col2}>
-          <Text style={styles.balance}>{prettyNativeBalance}</Text>
-          <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
-        </View>
-        <View style={styles.col3}>
-          <ChevronRight width={12} height={12} />
-        </View>
-      </Pressable>
-    </AssetListSwipeableRow>
+    <View>
+      {nft ? (
+        renderNFTRow()
+      ) : (
+        <AssetListSwipeableRow
+          assetData={{
+            ...item,
+            address: address,
+          }}
+          assetSymbol={item.code}>
+          <Pressable
+            onPress={handlePressOnRow}
+            style={[
+              styles.row,
+              styles.subElement,
+              { borderLeftColor: parentItem.color },
+            ]}>
+            <View style={styles.col1}>
+              <AssetIcon size={25} asset={item.code} />
+              <Text style={styles.name}>{item.name}</Text>
+            </View>
+            <View style={styles.col2}>
+              <Text style={styles.balance}>{prettyNativeBalance}</Text>
+              <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
+            </View>
+            <View style={styles.col3}>
+              <ChevronRight width={12} height={12} />
+            </View>
+          </Pressable>
+        </AssetListSwipeableRow>
+      )}
+    </View>
   )
 }
 

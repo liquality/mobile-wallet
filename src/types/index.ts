@@ -116,6 +116,8 @@ export type RootStackParamList = {
   SwapReviewScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
+  ShowNFTForSpecificChainScreen: { screenTitle?: string; currentAccount: AccountType }
+
 }
 
 export type RootTabParamList = {
@@ -126,8 +128,8 @@ export type RootTabParamList = {
 export interface UseInputStateReturnType<T> {
   value: T
   onChangeText:
-    | Dispatch<SetStateAction<T>>
-    | Dispatch<SetStateAction<T | undefined>>
+  | Dispatch<SetStateAction<T>>
+  | Dispatch<SetStateAction<T | undefined>>
 }
 
 export interface SeedWordType {

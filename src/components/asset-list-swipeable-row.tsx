@@ -15,11 +15,12 @@ type AssetListSwipeableRowProps = {
   children: React.ReactElement
   assetSymbol: string
   assetData: AccountType
+  nft: boolean
 }
 
 const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
   const width = Dimensions.get('screen').width
-  const { children, assetData, assetSymbol } = props
+  const { children, assetData, assetSymbol, nft } = props
   const ref = useRef<Swipeable>()
   const navigation = useNavigation()
 

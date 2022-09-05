@@ -51,6 +51,13 @@ const WrappedRow: FC<{
     setIsExpanded(!isExpanded)
   }, [isExpanded])
 
+  const onNFTPress = (account: AccountType) => {
+    navigation.navigate('ShowNFTForSpecificChainScreen', {
+      screenTitle: `NFTs for CODE`,
+      currentAccount: account,
+    })
+  }
+
   const onAssetSelected = useCallback(
     (currentAccount: AccountType) => {
       // Make sure account assets have the same id (account id) as their parent
@@ -147,16 +154,27 @@ const WrappedRow: FC<{
         isNested={isNested}
         isExpanded={isExpanded}
       />
+      {isNested && isExpanded && (
+        <SubRow
+          key={1}
+          parentItem={account}
+          item={'bu'}
+          onAssetSelected={() => onNFTPress(account)}
+          nft={true}
+        />
+      )}
       {isNested &&
         isExpanded &&
         assets?.map((subItem) => {
           return (
-            <SubRow
-              key={subItem.id}
-              parentItem={account}
-              item={subItem}
-              onAssetSelected={() => onAssetSelected(subItem)}
-            />
+            <View>
+              <SubRow
+                key={subItem.id}
+                parentItem={account}
+                item={subItem}
+                onAssetSelected={() => onAssetSelected(subItem)}
+              />
+            </View>
           )
         })}
     </Fragment>
