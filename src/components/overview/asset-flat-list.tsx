@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { AccountType } from '../../types'
 import WrappedRow from './wrapped-row'
 import AssetIcon from '../asset-icon'
@@ -16,27 +16,25 @@ const AssetFlatList = (props: AssetFlatListPropsType) => {
   const renderAsset = useCallback(
     ({ item }: { item: { id: string; name: string } }) => {
       return (
-        <React.Suspense
-          fallback={
-            <View style={styles.row}>
-              <AssetIcon chain={cryptoassets[item.name].chain} />
-              <ActivityIndicator />
-            </View>
-          }>
-          <WrappedRow item={item} />
-        </React.Suspense>
+        <View key={item.id}>
+          <React.Suspense
+            fallback={
+              <View style={styles.row}>
+                <AssetIcon chain={cryptoassets[item.name].chain} />
+                <ActivityIndicator />
+              </View>
+            }>
+            <WrappedRow item={item} />
+          </React.Suspense>
+        </View>
       )
     },
     [],
   )
 
-  return (
-    <FlatList
-      data={accounts}
-      renderItem={renderAsset}
-      keyExtractor={(item) => item.id}
-    />
-  )
+  return accounts.map((item) => {
+    return renderAsset({ item })
+  })
 }
 
 const styles = StyleSheet.create({
