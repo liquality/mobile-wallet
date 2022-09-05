@@ -15,8 +15,8 @@ import GradientBackground from '../../../components/gradient-background'
 import SummaryBlock from '../../../components/overview/summary-block'
 import ContentBlock from '../../../components/overview/content-block'
 import HandleLockWalletAndBackgroundTasks from '../../../components/handle-lock-wallet-and-background-tasks'
-import RefreshIndicator from '../../../components/refresh-indicator'
 import { populateWallet } from '../../../store/store'
+import RefreshIndicator from '../../../components/refresh-indicator'
 
 export type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
@@ -40,7 +40,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           justifyContent={'center'}
           height={60}
           width={'100%'}>
-          <RefreshIndicator />
+          <RefreshIndicator variant={'refreshContainer'} />
         </Box>
       )}
       <ScrollView

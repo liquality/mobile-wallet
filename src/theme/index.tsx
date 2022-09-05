@@ -366,6 +366,16 @@ const theme = createTheme({
       lineHeight: 18,
     },
   },
+  refreshIndicatorVariants: {
+    refreshContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'mainForeground',
+      opacity: 0.9,
+      height: 100,
+      width: '100%',
+    },
+  },
 })
 
 export type Theme = typeof theme

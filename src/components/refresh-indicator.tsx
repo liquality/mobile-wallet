@@ -1,4 +1,3 @@
-import { StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
 import Loader from '../assets/icons/loader.svg'
 import Animated, {
@@ -8,8 +7,11 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
+import RefInd from '../theme/refresh-indcator'
 
-const RefreshIndicator = () => {
+type Props = React.ComponentProps<typeof RefInd>
+
+const RefreshIndicator: React.FC<Props> = ({ variant }) => {
   const angle = useSharedValue(0)
   const animatedStyle = useAnimatedStyle(() => {
     return { transform: [{ rotate: `${angle.value}deg` }] }
@@ -24,23 +26,12 @@ const RefreshIndicator = () => {
   })
 
   return (
-    <View style={styles.container}>
+    <RefInd variant={variant}>
       <Animated.View style={animatedStyle}>
         <Loader height={30} width={30} />
       </Animated.View>
-    </View>
+    </RefInd>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    opacity: 0.9,
-    height: 100,
-    width: '100%',
-  },
-})
 
 export default RefreshIndicator
