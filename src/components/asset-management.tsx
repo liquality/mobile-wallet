@@ -48,11 +48,10 @@ const AssetManagement = ({
     //TODO we still need to handle custom tokens
     let myAssets: Asset[] = []
 
-    // if (activeNetwork === Network.Testnet) {
-    if (activeNetwork === Network.Mainnet) {
+    if (activeNetwork === Network.Testnet) {
       myAssets =
         enabledAssets?.reduce((assetList: Asset[], asset) => {
-          if (getAsset(activeNetwork, asset)) {
+          if (getAllAssets().testnet.hasOwnProperty(asset)) {
             assetList.push({
               ...getAsset(activeNetwork, asset),
               contractAddress: getAsset(activeNetwork, asset).contractAddress,
@@ -61,11 +60,9 @@ const AssetManagement = ({
           return assetList
         }, []) || []
     } else {
-      //myAssets = getAllAssets().mainnet
-      //TODO: HÄÄR Fix this
-      myAssets = Object.keys(getAllAssets()).map((key) => {
-        return getAllAssets()
-      })
+      myAssets = Object.keys(getAllAssets().mainnet).map((key) =>
+        getAsset(activeNetwork, key),
+      )
     }
     setAssets(myAssets)
     setData(myAssets)
