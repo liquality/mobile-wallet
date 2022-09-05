@@ -32,9 +32,6 @@ const AssetFlatList = (props: AssetFlatListPropsType) => {
     [],
   )
 
-  // accounts.map((item) => {
-  //   return renderAsset({ item })
-  // })
   return (
     <>
       {accounts.map((item) => {
