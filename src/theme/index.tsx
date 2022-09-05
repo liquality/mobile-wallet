@@ -334,6 +334,38 @@ const theme = createTheme({
     },
   },
   textInputVariants: {},
+  tabBarStyleVariants: {
+    light: {
+      backgroundColor: 'mainBackground',
+    },
+    dark: {
+      backgroundColor: 'secondaryForeground',
+    },
+  },
+  indicatorStyle: {
+    light: {
+      backgroundColor: palette.black,
+      height: 1,
+    },
+    dark: {
+      backgroundColor: palette.white,
+      height: 1,
+    },
+  },
+  labelStyle: {
+    light: {
+      color: palette.black2,
+      fontFamily: 'Montserrat-Regular',
+      fontSize: 13,
+      lineHeight: 18,
+    },
+    dark: {
+      color: palette.white,
+      fontFamily: 'Montserrat-Regular',
+      fontSize: 13,
+      lineHeight: 18,
+    },
+  },
 })
 
 export type Theme = typeof theme

@@ -6,8 +6,6 @@ import {
   langSelected as LS,
 } from '../../atoms'
 import { populateWallet } from '../../store/store'
-import { StyleSheet } from 'react-native'
-import { palette } from '../../theme'
 import ActivityFlatList from '../activity-flat-list'
 import AssetFlatList from './asset-flat-list'
 import * as React from 'react'
@@ -15,12 +13,12 @@ import { labelTranslateFn, Log } from '../../utils'
 import { useWindowDimensions } from 'react-native'
 import {
   TabView,
-  TabBar,
   SceneRendererProps,
   NavigationState,
   Route,
 } from 'react-native-tab-view'
 import i18n from 'i18n-js'
+import TabBar from '../../theme/tabBar'
 
 type RenderTabBar = SceneRendererProps & {
   navigationState: NavigationState<Route>
@@ -56,12 +54,8 @@ const ContentBlock = () => {
   }, [langSelected])
 
   const renderTabBar = (props: RenderTabBar) => (
-    <TabBar
-      {...props}
-      indicatorStyle={styles.indicatorStyle}
-      style={styles.tabBarBackgroundStyle}
-      labelStyle={styles.labelStyle}
-    />
+    // Redline because of theme issue with TabBar props
+    <TabBar {...props} variant="light" />
   )
 
   return (
@@ -83,22 +77,5 @@ const ContentBlock = () => {
     />
   )
 }
-
-const styles = StyleSheet.create({
-  indicatorStyle: {
-    backgroundColor: palette.black2,
-    height: 1,
-  },
-  tabBarBackgroundStyle: {
-    backgroundColor: palette.white,
-  },
-  labelStyle: {
-    color: palette.black2,
-    fontFamily: 'Montserrat-Regular',
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: '600',
-  },
-})
 
 export default ContentBlock
