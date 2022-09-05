@@ -1,6 +1,6 @@
 import { DarkModeEnum, LanguageEnum } from './types/index'
 import { atom, atomFamily, selector, selectorFamily } from 'recoil'
-import { AccountType, SwapAssetPairType } from './types'
+import { AccountType, SwapAssetPairType, CustomRootState } from './types'
 import { BigNumber } from '@liquality/types'
 import {
   cryptoToFiat,
@@ -23,7 +23,6 @@ import {
   HistoryItem,
   Network,
 } from '@liquality/wallet-core/dist/src/store/types'
-import { CustomRootState } from './reducers'
 import { KEYS } from './utils'
 import * as Localization from 'expo-localization'
 
@@ -111,7 +110,7 @@ const setDefaultIfLangSupported = (deviceLang = '') => {
 export const langSelected = atom<LanguageEnum | string>({
   key: 'LanguageSelected',
   default: setDefaultIfLangSupported(Localization.locale),
-  effects: [localStorageLangEffect<string>(KEYS.ACTIVE_LANG)],
+  effects: [localStorageLangEffect(KEYS.ACTIVE_LANG)],
 })
 
 //---------- ATOM FAMILIES----------------

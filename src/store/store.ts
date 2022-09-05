@@ -570,10 +570,10 @@ export const localStorageLangEffect: <T>(key: string) => AtomEffect<T> =
   (key) =>
   ({ setSelf, onSet, trigger }) => {
     const loadPersisted = async () => {
-      const savedValue = storageManager.read<string>(key, '')
+      const savedValue = storageManager.read(key, '')
 
       if (savedValue) {
-        setSelf(JSON.parse(savedValue))
+        setSelf(savedValue)
       }
     }
     if (trigger === 'get') {
@@ -581,9 +581,7 @@ export const localStorageLangEffect: <T>(key: string) => AtomEffect<T> =
     }
 
     onSet((newValue, _, isReset) => {
-      isReset
-        ? storageManager.remove(key)
-        : storageManager.write(key, JSON.stringify(newValue))
+      isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
     })
   }
 
@@ -604,7 +602,7 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
         : newValue !== null &&
           typeof newValue !== 'undefined' &&
           newValue !== -1
-      storageManager.write(key, JSON.stringify(newValue))
+      storageManager.write(key, newValue)
     })
   }
 

@@ -1,5 +1,10 @@
 import * as React from 'react'
-import { Dimensions, StyleSheet } from 'react-native'
+import {
+  Dimensions,
+  StyleSheet,
+  ScrollView,
+  RefreshControl,
+} from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import ErrorBoundary from 'react-native-error-boundary'
@@ -10,6 +15,8 @@ import GradientBackground from '../../../components/gradient-background'
 import SummaryBlock from '../../../components/overview/summary-block'
 import ContentBlock from '../../../components/overview/content-block'
 import HandleLockWalletAndBackgroundTasks from '../../../components/handle-lock-wallet-and-background-tasks'
+import { populateWallet } from '../../../store/store'
+import RefreshIndicator from '../../../components/refresh-indicator'
 
 export type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
@@ -17,31 +24,53 @@ export type OverviewProps = NativeStackScreenProps<
 >
 
 const OverviewScreen = ({ navigation }: OverviewProps) => {
+  const [refreshing, setRefreshing] = React.useState(false)
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    populateWallet().then(() => setRefreshing(false))
+  }, [])
+
   return (
     <Box flex={1}>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <HandleLockWalletAndBackgroundTasks />
-        <React.Suspense
-          fallback={
-            <Box style={styles.overviewBlock}>
-              <GradientBackground
-                width={Dimensions.get('screen').width}
-                height={225}
-              />
-              <Text variant="loading" tx="overviewScreen.load" />
-            </Box>
-          }>
-          <SummaryBlock navigation={navigation} />
-        </React.Suspense>
-        <React.Suspense
-          fallback={
-            <Box>
-              <Text variant="loading" tx="overviewScreen.load" />
-            </Box>
-          }>
+      {refreshing && (
+        <Box
+          position={'absolute'}
+          alignItems="center"
+          justifyContent={'center'}
+          height={60}
+          width={'100%'}>
+          <RefreshIndicator variant={'refreshContainer'} />
+        </Box>
+      )}
+      <ScrollView
+        contentContainerStyle={styles.contentContainerStyle}
+        refreshControl={
+          <RefreshControl
+            tintColor="transparent"
+            colors={['transparent']}
+            style={styles.indicatorBackgroundColor}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <HandleLockWalletAndBackgroundTasks />
+          <React.Suspense
+            fallback={
+              <Box style={styles.overviewBlock}>
+                <GradientBackground
+                  width={Dimensions.get('screen').width}
+                  height={225}
+                />
+                <Text variant="loading" tx="overviewScreen.load" />
+              </Box>
+            }>
+            <SummaryBlock navigation={navigation} />
+          </React.Suspense>
           <ContentBlock />
-        </React.Suspense>
-      </ErrorBoundary>
+        </ErrorBoundary>
+      </ScrollView>
     </Box>
   )
 }
@@ -52,6 +81,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 225,
     paddingVertical: 10,
+  },
+  contentContainerStyle: {
+    flex: 1,
+  },
+  indicatorBackgroundColor: {
+    backgroundColor: 'transparent',
   },
 })
 

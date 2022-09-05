@@ -11,7 +11,6 @@ import {
   addressStateFamily,
   balanceStateFamily,
   networkState,
-  walletState,
 } from '../../atoms'
 import { chains } from '@liquality/cryptoassets'
 import cryptoassets from '@liquality/wallet-core/dist/src/utils/cryptoassets'
@@ -24,7 +23,6 @@ type LoadingScreenProps = NativeStackScreenProps<
 >
 
 const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
-  const setWallet = useSetRecoilState(walletState)
   const setAccountsIds = useSetRecoilState(accountsIdsState)
   const setActiveNetwork = useSetRecoilState(networkState)
   const addAssetBalance = useRecoilCallback(
@@ -84,7 +82,6 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
 
           setAccountsIds(accountsIds)
           setActiveNetwork(activeNetwork)
-          setWallet(wallet)
           navigation.navigate('CongratulationsScreen')
         } else {
           Alert.alert(labelTranslateFn('loadingScreen.failedImport')!)
