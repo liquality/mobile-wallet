@@ -96,7 +96,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
         const nativeAsset = getChain(activeNetwork, account.chain).nativeAsset
         accountsIds.push({
           id: account.id,
-          name: nativeAsset[0].name,
+          name: nativeAsset[0].code,
         })
         const newAccount: AccountType = {
           id: account.id,

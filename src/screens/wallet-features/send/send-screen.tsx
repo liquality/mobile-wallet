@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { Pressable, StyleSheet } from 'react-native'
-import { ChainId, getAsset } from '@liquality/cryptoassets'
+import { ChainId, getAsset, getChain } from '@liquality/cryptoassets'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
   NetworkFeeType,
@@ -101,13 +101,19 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       setFee(new BigNumber(route.params.customFee))
       setCustomFee(route.params.customFee)
       setAvailableAmount(
-        calculateAvailableAmnt(code, route.params.customFee, balance),
+        calculateAvailableAmnt(
+          activeNetwork,
+          code,
+          route.params.customFee,
+          balance,
+        ),
       )
       if (route.params.speed) {
         setNetworkSpeed(route.params.speed)
       }
     }
   }, [
+    activeNetwork,
     balance,
     code,
     route.params.customFee,
