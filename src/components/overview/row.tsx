@@ -24,6 +24,7 @@ import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import I18n from 'i18n-js'
 import GestureDetector from '../gesture-detector/gesture-detector'
+import Box from '../../theme/box'
 
 type RowProps = {
   item: AccountType
@@ -77,7 +78,7 @@ const Row = (props: RowProps) => {
     if (address) setShortAddress(shortenAddress(address))
   }, [address, balance, fiatRates, item.code])
 
-  item.id === doubleOrLongTapSelectedAsset
+  const showPopup = item.id === doubleOrLongTapSelectedAsset
 
   /**
    * GestureDetector component added as child component to avoid
@@ -89,6 +90,47 @@ const Row = (props: RowProps) => {
         onSingleTap={handlePressOnRow}
         doubleOrLongPress={handleDoubleOrLongPress}>
         <View style={[styles.row, { borderLeftColor: item.color }]}>
+          {showPopup ? (
+            <Box
+              position={'absolute'}
+              left={0}
+              right={0}
+              top={0}
+              bottom={0}
+              zIndex={1}>
+              <Box flex={1} alignItems="center" justifyContent={'center'}>
+                <View
+                  style={{
+                    width: '60%',
+                    height: '90%',
+                    alignItems: 'center',
+                    borderRadius: 5,
+                    borderLeftWidth: 5,
+                    backgroundColor: 'grey',
+                    borderLeftColor: item.color,
+                  }}>
+                  <Text>Working</Text>
+                  <Box
+                    position={'absolute'}
+                    right={-7}
+                    top={0}
+                    bottom={0}
+                    zIndex={100}>
+                    <Box flex={1} alignItems="center" justifyContent={'center'}>
+                      <View
+                        style={{
+                          width: 15,
+                          height: 15,
+                          backgroundColor: 'grey',
+                          borderRadius: 3,
+                          transform: [{ rotate: '135deg' }],
+                        }}></View>
+                    </Box>
+                  </Box>
+                </View>
+              </Box>
+            </Box>
+          ) : null}
           <View style={styles.col1}>
             <>
               {isExpanded ? (
