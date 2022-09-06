@@ -22,6 +22,7 @@ import {
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import I18n from 'i18n-js'
+import GestureDetector from '../gesture-detector/gesture-detector'
 
 type RowProps = {
   item: AccountType
@@ -72,51 +73,57 @@ const Row = (props: RowProps) => {
     if (address) setShortAddress(shortenAddress(address))
   }, [address, balance, fiatRates, item.code])
 
+  /**
+   * GestureDetector component added as child component to avoid
+   * Invariant Violation: error on LongPress with Swipeable Gesture component
+   */
   return (
     <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
-      <Pressable
-        style={[styles.row, { borderLeftColor: item.color }]}
-        onPress={handlePressOnRow}>
-        <View style={styles.col1}>
-          <Pressable onPress={handleToggleRow}>
-            {isExpanded ? (
-              <MinusSign
-                width={15}
-                height={15}
-                fill={isNested ? '#A8AEB7' : '#FFF'}
-                style={styles.plusSign}
-              />
-            ) : (
-              <PlusSign
-                width={15}
-                height={15}
-                fill={isNested ? '#A8AEB7' : '#FFF'}
-                style={styles.plusSign}
-              />
-            )}
-          </Pressable>
-          <AssetIcon chain={item.chain} />
-        </View>
-        <View style={styles.col2}>
-          <Text style={styles.code}>{name}</Text>
-          <Text style={styles.address}>{shortAddress}</Text>
-        </View>
-        {isNested ? (
-          <View style={styles.col3}>
-            <Text style={styles.TotalBalanceInUSD}>
-              {I18n.t('common.totalPrettyFiatBal', { prettyFiatBalance })}
-            </Text>
+      <GestureDetector>
+        <Pressable
+          style={[styles.row, { borderLeftColor: item.color }]}
+          onPress={handlePressOnRow}>
+          <View style={styles.col1}>
+            <Pressable onPress={handleToggleRow}>
+              {isExpanded ? (
+                <MinusSign
+                  width={15}
+                  height={15}
+                  fill={isNested ? '#A8AEB7' : '#FFF'}
+                  style={styles.plusSign}
+                />
+              ) : (
+                <PlusSign
+                  width={15}
+                  height={15}
+                  fill={isNested ? '#A8AEB7' : '#FFF'}
+                  style={styles.plusSign}
+                />
+              )}
+            </Pressable>
+            <AssetIcon chain={item.chain} />
           </View>
-        ) : (
-          <View style={styles.col3}>
-            <Text style={styles.balance}>{prettyNativeBalance}</Text>
-            <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
+          <View style={styles.col2}>
+            <Text style={styles.code}>{name}</Text>
+            <Text style={styles.address}>{shortAddress}</Text>
           </View>
-        )}
-        <View style={styles.col4}>
-          {!isNested ? <ChevronRight width={12} height={12} /> : null}
-        </View>
-      </Pressable>
+          {isNested ? (
+            <View style={styles.col3}>
+              <Text style={styles.TotalBalanceInUSD}>
+                {I18n.t('common.totalPrettyFiatBal', { prettyFiatBalance })}
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.col3}>
+              <Text style={styles.balance}>{prettyNativeBalance}</Text>
+              <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
+            </View>
+          )}
+          <View style={styles.col4}>
+            {!isNested ? <ChevronRight width={12} height={12} /> : null}
+          </View>
+        </Pressable>
+      </GestureDetector>
     </AssetListSwipeableRow>
   )
 }

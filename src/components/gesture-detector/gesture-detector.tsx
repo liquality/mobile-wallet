@@ -9,7 +9,7 @@ type GestDectProps = {
 }
 
 const GestureDetector: React.FC<GestDectProps> = ({ children }) => {
-  const singleTap = Gesture.Tap().onEnd((_event, success) => {
+  const longPress = Gesture.LongPress().onEnd((_event, success) => {
     if (success) {
     }
   })
@@ -20,7 +20,7 @@ const GestureDetector: React.FC<GestDectProps> = ({ children }) => {
       }
     })
 
-  const taps = Gesture.Exclusive(doubleTap, singleTap)
+  const taps = Gesture.Exclusive(doubleTap, longPress)
 
   return <GestDect gesture={taps}>{children}</GestDect>
 }

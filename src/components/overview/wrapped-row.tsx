@@ -17,7 +17,6 @@ import { OverviewProps } from '../../screens/wallet-features/home/overview-scree
 import AssetIcon from '../asset-icon'
 import { assets as cryptoassets } from '@liquality/cryptoassets'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
-import GestureDetector from '../gesture-detector/gesture-detector'
 
 const WrappedRow: FC<{
   item: { id: string; name: string }
@@ -139,30 +138,28 @@ const WrappedRow: FC<{
       </View>
     )
   return (
-    <GestureDetector>
-      <Fragment key={item.id}>
-        <Row
-          key={item.id}
-          item={account}
-          toggleRow={toggleRow}
-          onAssetSelected={() => onAssetSelected(account)}
-          isNested={isNested}
-          isExpanded={isExpanded}
-        />
-        {isNested &&
-          isExpanded &&
-          assets?.map((subItem) => {
-            return (
-              <SubRow
-                key={subItem.id}
-                parentItem={account}
-                item={subItem}
-                onAssetSelected={() => onAssetSelected(subItem)}
-              />
-            )
-          })}
-      </Fragment>
-    </GestureDetector>
+    <Fragment key={item.id}>
+      <Row
+        key={item.id}
+        item={account}
+        toggleRow={toggleRow}
+        onAssetSelected={() => onAssetSelected(account)}
+        isNested={isNested}
+        isExpanded={isExpanded}
+      />
+      {isNested &&
+        isExpanded &&
+        assets?.map((subItem) => {
+          return (
+            <SubRow
+              key={subItem.id}
+              parentItem={account}
+              item={subItem}
+              onAssetSelected={() => onAssetSelected(subItem)}
+            />
+          )
+        })}
+    </Fragment>
   )
 }
 
