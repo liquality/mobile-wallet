@@ -14,7 +14,7 @@ import {
   UseInputStateReturnType,
 } from '../../types'
 import Header from '../header'
-import { createWallet, restoreWallet } from '../../store/store'
+import { createWallet, restoreWallet, storageManager } from '../../store/store'
 import Text from '../../theme/text'
 import Button from '../../theme/button'
 import Box from '../../theme/box'
@@ -29,7 +29,6 @@ import {
   balanceStateFamily,
   networkState,
 } from '../../atoms'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { labelTranslateFn } from '../../utils'
 
 type LoginScreenProps = NativeStackScreenProps<
@@ -86,7 +85,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const onSesamePress = async () => {
     try {
       setLoading(true)
-      await AsyncStorage.clear()
+      storageManager.clearAll()
       const { accounts, activeWalletId, activeNetwork } = await createWallet(
         PASSWORD,
         MNEMONIC,

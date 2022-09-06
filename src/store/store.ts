@@ -1,17 +1,9 @@
-import {
-  configureStore,
-  Middleware,
-  MiddlewareArray,
-  PayloadAction,
-} from '@reduxjs/toolkit'
-import thunk from 'redux-thunk'
-import rootReducer, { CustomRootState } from '../reducers'
 import StorageManager from '../core/storage-manager'
 import { BigNumber, FeeDetail } from '@liquality/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
-import { AccountType, GasFees } from '../types'
+import { AccountType, CustomRootState, GasFees } from '../types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import {
   Notification,
@@ -37,7 +29,6 @@ import {
 } from '@liquality/wallet-core/dist/src/utils/timeline'
 import { Asset, WalletId } from '@liquality/wallet-core/dist/src/store/types'
 import { AtomEffect, DefaultValue } from 'recoil'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import dayjs from 'dayjs'
 import { showNotification } from './pushNotification'
 
@@ -50,32 +41,10 @@ const excludedProps: Array<keyof CustomRootState> = [
   'wallets',
   'unlockedAt',
 ]
-const storageManager = new StorageManager(excludedProps)
+export const storageManager = new StorageManager(excludedProps)
 let wallet: Awaited<ReturnType<typeof setupWallet>>
 
-//-------------------------2. CONFIGURE THE STORE---------------------------------------------------------------------
-const persistenceMiddleware: Middleware<
-  (action: PayloadAction<any>) => any,
-  any
-> = ({ getState }) => {
-  return (next) => async (action) => {
-    await storageManager.write('@local-storage', {
-      ...getState(),
-      ...action.payload,
-    })
-    return next(action)
-  }
-}
-
-const middlewares = new MiddlewareArray().concat([persistenceMiddleware, thunk])
-
-export const store = configureStore({
-  reducer: rootReducer,
-  preloadedState: {},
-  middleware: middlewares,
-})
-
-//-------------------------3. REGISTER THE CALLBACKS / SUBSCRIBE TO MEANINGFULL EVENTS-----------------------------
+//-------------------------2. REGISTER THE CALLBACKS / SUBSCRIBE TO MEANINGFULL EVENTS-----------------------------
 export const initWallet = async (initialState?: CustomRootState) => {
   const start = dayjs().unix()
   const walletOptions: WalletOptions = {
@@ -111,15 +80,10 @@ export const initWallet = async (initialState?: CustomRootState) => {
   return wallet
 }
 
-//-------------------------4. PERFORM ACTIONS ON THE WALLET-------------------------------------------------------------
-export const isNewInstallation = async (): Promise<boolean> => {
-  const result = await storageManager.read('wallet')
-  if (result) {
-    store.dispatch({ type: 'INIT_STORE', payload: result })
-    return false
-  }
-
-  return true
+//-------------------------3. PERFORM ACTIONS ON THE WALLET-------------------------------------------------------------
+export const isNewInstallation = (): boolean => {
+  const result = storageManager.read<Object>('wallet', {})
+  return !(result && Object.keys(result).length > 0)
 }
 
 /**
@@ -137,8 +101,8 @@ export const createWallet = async (
     mnemonic: mnemonic,
     imported: true,
   })
-  await storageManager.write('wallet', wallet.state)
-  return wallet.state
+  storageManager.write('wallet', wallet.state)
+  return wallet.state as CustomRootState
 }
 
 /**
@@ -243,7 +207,7 @@ export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {
 }
 
 export const fetchSwapProvider = (providerId: string) => {
-  const { activeNetwork } = store.getState()
+  const { activeNetwork } = wallet.state
   if (!providerId) return
 
   return getSwapProvider(activeNetwork, providerId)
@@ -255,10 +219,6 @@ export const fetchSwapProvider = (providerId: string) => {
  */
 export const toggleNetwork = async (network: any): Promise<void> => {
   await wallet.dispatch.changeActiveNetwork(network)
-  // store.dispatch({
-  //   type: 'NETWORK_UPDATE',
-  //   payload: { activeNetwork: network },
-  // })
 }
 
 /**
@@ -303,7 +263,7 @@ export const updateWallet = async (): Promise<void> => {
  * @param password
  */
 export const restoreWallet = async (password: string): Promise<void> => {
-  const result = await storageManager.read<RootState>('wallet')
+  const result = storageManager.read<CustomRootState>('wallet', {})
   await initWallet(result)
   await wallet.dispatch.unlockWallet({
     key: password,
@@ -610,10 +570,10 @@ export const localStorageLangEffect: <T>(key: string) => AtomEffect<T> =
   (key) =>
   ({ setSelf, onSet, trigger }) => {
     const loadPersisted = async () => {
-      const savedValue = await AsyncStorage.getItem(key)
+      const savedValue = storageManager.read(key, '')
 
-      if (savedValue != null) {
-        setSelf(JSON.parse(savedValue))
+      if (savedValue) {
+        setSelf(savedValue)
       }
     }
     if (trigger === 'get') {
@@ -621,9 +581,7 @@ export const localStorageLangEffect: <T>(key: string) => AtomEffect<T> =
     }
 
     onSet((newValue, _, isReset) => {
-      isReset
-        ? AsyncStorage.removeItem(key)
-        : AsyncStorage.setItem(key, JSON.stringify(newValue))
+      isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
     })
   }
 
@@ -631,27 +589,21 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
   (key) =>
   ({ setSelf, onSet, trigger }) => {
     if (trigger === 'get') {
+      const savedValue = storageManager.read(key, '')
       setSelf(
-        AsyncStorage.getItem(key).then((savedValue) => {
-          return savedValue !== null
-            ? JSON.parse(savedValue)
-            : new DefaultValue()
-        }),
+        savedValue !== null && savedValue ? savedValue : new DefaultValue(),
       )
     }
 
     onSet((newValue, _, isReset) => {
       if (newValue instanceof DefaultValue && trigger === 'get') return
       isReset
-        ? AsyncStorage.removeItem(key)
+        ? storageManager.remove(key)
         : newValue !== null &&
           typeof newValue !== 'undefined' &&
           newValue !== -1
-      AsyncStorage.setItem(key, JSON.stringify(newValue)).catch(() => {})
+      storageManager.write(key, newValue)
     })
   }
 
-//Infer the types from the rootReducer
-export type AppDispatch = typeof store.dispatch
-
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = typeof wallet.state

@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AppState } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { updateBalanceRatesMarketLoop } from '../store/store'
+import { storageManager, updateBalanceRatesMarketLoop } from '../store/store'
 import { Log } from '../utils'
 import { useInterval } from '../hooks'
 import BackgroundService from 'react-native-background-actions'
@@ -62,7 +61,7 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
           BackgroundService.stop()
 
           var end = new Date().getTime()
-          const started = await AsyncStorage.getItem('inactiveUserTime')
+          const started = storageManager.read<string>('inactiveUserTime', '')
 
           var time = end - Number(started)
           if (time > 30000) {
@@ -79,7 +78,7 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
         ) {
           //Now we are in the background/inactive state
           var start = new Date().getTime().toString()
-          await AsyncStorage.setItem('inactiveUserTime', start)
+          storageManager.write('inactiveUserTime', start)
           BackgroundService.start(performBackgroundTask, options).then(() => {
             // Only Android, iOS will ignore this call
             // iOS will also run everything here in the background until .stop() is called

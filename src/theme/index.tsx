@@ -13,6 +13,7 @@ export const palette = {
   transparentBlack: 'rgba(0,0,0,0.5)',
   turquoise: '#2CD2CF',
   liqPink: '#FF007A',
+  yellowBar: '#FFF8DA',
 }
 
 const theme = createTheme({
@@ -37,9 +38,10 @@ const theme = createTheme({
     transparentBlack: palette.transparentBlack,
     progressDotColor: palette.turquoise,
     addressColor: palette.black2,
-    liqPink: palette.liqPink,
+    errorMsgBarColor: palette.yellowBar,
   },
   spacing: {
+    vs: 2,
     s: 5,
     m: 10,
     l: 15,
@@ -319,6 +321,9 @@ const theme = createTheme({
       borderColor: 'mainBackground',
       backgroundColor: 'buttonBackgroundPrimary',
     },
+    defaults: {
+      marginBottom: 'm',
+    },
   },
   cardVariants: {},
   dropDownVariants: {
@@ -329,6 +334,48 @@ const theme = createTheme({
     },
   },
   textInputVariants: {},
+  tabBarStyleVariants: {
+    light: {
+      backgroundColor: 'mainBackground',
+    },
+    dark: {
+      backgroundColor: 'secondaryForeground',
+    },
+  },
+  indicatorStyle: {
+    light: {
+      backgroundColor: palette.black,
+      height: 1,
+    },
+    dark: {
+      backgroundColor: palette.white,
+      height: 1,
+    },
+  },
+  labelStyle: {
+    light: {
+      color: palette.black2,
+      fontFamily: 'Montserrat-Regular',
+      fontSize: 13,
+      lineHeight: 18,
+    },
+    dark: {
+      color: palette.white,
+      fontFamily: 'Montserrat-Regular',
+      fontSize: 13,
+      lineHeight: 18,
+    },
+  },
+  refreshIndicatorVariants: {
+    refreshContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'mainForeground',
+      opacity: 0.9,
+      height: 100,
+      width: '100%',
+    },
+  },
 })
 
 export type Theme = typeof theme

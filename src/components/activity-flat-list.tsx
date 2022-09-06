@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FlatList, Pressable, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import ChevronRight from '../assets/icons/activity-status/chevron-right.svg'
 import PendingSwap from '../assets/icons/activity-status/pending-swap.svg'
 import CompletedSwap from '../assets/icons/activity-status/completed-swap.svg'
@@ -155,14 +155,12 @@ const ActivityFlatList = ({ selectedAsset }: { selectedAsset?: string }) => {
   }, [history.length])
 
   return (
-    <FlatList
-      data={history}
-      renderItem={renderActivity}
-      keyExtractor={(item) => item.id}
-      ListHeaderComponent={
-        <ActivityFilter numOfResults={history.length} onExport={handleExport} />
-      }
-    />
+    <>
+      <ActivityFilter numOfResults={history.length} onExport={handleExport} />
+      {history.map((item) => {
+        return renderActivity({ item })
+      })}
+    </>
   )
 }
 

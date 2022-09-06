@@ -6,7 +6,7 @@ import Header from '../header'
 import Text from '../../theme/text'
 import Button from '../../theme/button'
 import Box from '../../theme/box'
-import { createWallet } from '../../store/store'
+import { createWallet, storageManager } from '../../store/store'
 import { MNEMONIC, PASSWORD } from '@env'
 import GradientBackground from '../../components/gradient-background'
 import { getAsset, getChain } from '@liquality/cryptoassets'
@@ -18,7 +18,6 @@ import {
   walletState,
   balanceStateFamily,
 } from '../../atoms'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { labelTranslateFn } from '../../utils'
 
 type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
@@ -52,7 +51,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
   const handleOpenSesamePress = async () => {
     try {
       setLoading(true)
-      await AsyncStorage.clear()
+      storageManager.clearAll()
       const wallet = await createWallet(PASSWORD, MNEMONIC)
       setWallet(wallet)
       const { accounts, activeWalletId, activeNetwork } = wallet
