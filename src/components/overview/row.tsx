@@ -115,7 +115,7 @@ const Row = (props: RowProps) => {
                     right={-7}
                     top={0}
                     bottom={0}
-                    zIndex={100}>
+                    zIndex={1}>
                     <Box flex={1} alignItems="center" justifyContent={'center'}>
                       <View
                         style={{
