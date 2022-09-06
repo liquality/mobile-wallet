@@ -10,10 +10,11 @@ import { AccountType } from '../../types'
 import AssetIcon from '../asset-icon'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   addressStateFamily,
   balanceStateFamily,
+  doubleOrLongTapSelectedAsset,
   fiatRatesState,
 } from '../../atoms'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
@@ -35,9 +36,14 @@ const SubRow: FC<SubRowProps> = (props) => {
   const address = useRecoilValue(addressStateFamily(item.id))
   const fiatRates = useRecoilValue(fiatRatesState)
 
+  const clearDoubleOrLongTapSelectedAsset = useSetRecoilState(
+    doubleOrLongTapSelectedAsset,
+  )
+
   const handlePressOnRow = useCallback(() => {
+    clearDoubleOrLongTapSelectedAsset('')
     onAssetSelected()
-  }, [onAssetSelected])
+  }, [onAssetSelected, clearDoubleOrLongTapSelectedAsset])
 
   useEffect(() => {
     const fiatBalance = fiatRates[item.code]

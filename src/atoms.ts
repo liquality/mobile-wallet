@@ -113,6 +113,11 @@ export const langSelected = atom<LanguageEnum | string>({
   effects: [localStorageLangEffect(KEYS.ACTIVE_LANG)],
 })
 
+export const doubleOrLongTapSelectedAsset = atom<string>({
+  key: 'doubleOrLongTapSelectedAsset',
+  default: '',
+})
+
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',

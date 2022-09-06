@@ -13,11 +13,12 @@ import {
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useRecoilState } from 'recoil'
 import {
   addressStateFamily,
   balanceStateFamily,
   fiatRatesState,
+  doubleOrLongTapSelectedAsset as doubTap,
 } from '../../atoms'
 import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
@@ -43,14 +44,21 @@ const Row = (props: RowProps) => {
   )
   const address = useRecoilValue(addressStateFamily(item.id))
   const fiatRates = useRecoilValue(fiatRatesState)
+  const [doubleOrLongTapSelectedAsset, setDoubleOrLongTapSelectedAsset] =
+    useRecoilState(doubTap)
 
   const handlePressOnRow = useCallback(() => {
+    setDoubleOrLongTapSelectedAsset('')
     if (isNested) {
       toggleRow()
     } else {
       onAssetSelected()
     }
-  }, [isNested, onAssetSelected, toggleRow])
+  }, [isNested, onAssetSelected, toggleRow, setDoubleOrLongTapSelectedAsset])
+
+  const handleDoubleOrLongPress = useCallback(() => {
+    setDoubleOrLongTapSelectedAsset(item.id)
+  }, [setDoubleOrLongTapSelectedAsset, item.id])
 
   useEffect(() => {
     const fiatBalance = fiatRates[item.code]
@@ -69,13 +77,17 @@ const Row = (props: RowProps) => {
     if (address) setShortAddress(shortenAddress(address))
   }, [address, balance, fiatRates, item.code])
 
+  item.id === doubleOrLongTapSelectedAsset
+
   /**
    * GestureDetector component added as child component to avoid
    * Invariant Violation: error on LongPress with Swipeable Gesture component
    */
   return (
     <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
-      <GestureDetector onSingleTap={handlePressOnRow}>
+      <GestureDetector
+        onSingleTap={handlePressOnRow}
+        doubleOrLongPress={handleDoubleOrLongPress}>
         <View style={[styles.row, { borderLeftColor: item.color }]}>
           <View style={styles.col1}>
             <>

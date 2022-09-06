@@ -4,6 +4,7 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
+  TouchableWithoutFeedback,
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
@@ -17,6 +18,8 @@ import ContentBlock from '../../../components/overview/content-block'
 import HandleLockWalletAndBackgroundTasks from '../../../components/handle-lock-wallet-and-background-tasks'
 import { populateWallet } from '../../../store/store'
 import RefreshIndicator from '../../../components/refresh-indicator'
+import { doubleOrLongTapSelectedAsset } from '../../../atoms'
+import { useSetRecoilState } from 'recoil'
 
 export type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
@@ -25,6 +28,10 @@ export type OverviewProps = NativeStackScreenProps<
 
 const OverviewScreen = ({ navigation }: OverviewProps) => {
   const [refreshing, setRefreshing] = React.useState(false)
+
+  const clearDoubleOrLongTapSelectedAsset = useSetRecoilState(
+    doubleOrLongTapSelectedAsset,
+  )
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
@@ -43,35 +50,40 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           <RefreshIndicator variant={'refreshContainer'} />
         </Box>
       )}
-      <ScrollView
-        contentContainerStyle={styles.contentContainerStyle}
-        scrollEnabled
-        refreshControl={
-          <RefreshControl
-            tintColor="transparent"
-            colors={['transparent']}
-            style={styles.indicatorBackgroundColor}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <HandleLockWalletAndBackgroundTasks />
-          <React.Suspense
-            fallback={
-              <Box style={styles.overviewBlock}>
-                <GradientBackground
-                  width={Dimensions.get('screen').width}
-                  height={225}
-                />
-                <Text variant="loading" tx="overviewScreen.load" />
-              </Box>
+      <TouchableWithoutFeedback
+        onPress={() => clearDoubleOrLongTapSelectedAsset('')}>
+        <Box flex={1}>
+          <ScrollView
+            contentContainerStyle={styles.contentContainerStyle}
+            scrollEnabled
+            refreshControl={
+              <RefreshControl
+                tintColor="transparent"
+                colors={['transparent']}
+                style={styles.indicatorBackgroundColor}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
             }>
-            <SummaryBlock navigation={navigation} />
-          </React.Suspense>
-          <ContentBlock />
-        </ErrorBoundary>
-      </ScrollView>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <HandleLockWalletAndBackgroundTasks />
+              <React.Suspense
+                fallback={
+                  <Box style={styles.overviewBlock}>
+                    <GradientBackground
+                      width={Dimensions.get('screen').width}
+                      height={225}
+                    />
+                    <Text variant="loading" tx="overviewScreen.load" />
+                  </Box>
+                }>
+                <SummaryBlock navigation={navigation} />
+              </React.Suspense>
+              <ContentBlock />
+            </ErrorBoundary>
+          </ScrollView>
+        </Box>
+      </TouchableWithoutFeedback>
     </Box>
   )
 }

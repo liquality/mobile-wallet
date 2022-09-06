@@ -7,16 +7,19 @@ import {
 type GestDectProps = {
   children: React.ReactNode
   onSingleTap?: () => void
+  doubleOrLongPress: () => void
 }
 
 const GestureDetector: React.FC<GestDectProps> = ({
   children,
   onSingleTap,
+  doubleOrLongPress,
 }) => {
   const longPress = Gesture.LongPress()
     .runOnJS(true)
     .onEnd((_event, success) => {
       if (success) {
+        doubleOrLongPress()
       }
     })
 
@@ -35,6 +38,7 @@ const GestureDetector: React.FC<GestDectProps> = ({
     .numberOfTaps(2)
     .onEnd((_event, success) => {
       if (success) {
+        doubleOrLongPress()
       }
     })
 
