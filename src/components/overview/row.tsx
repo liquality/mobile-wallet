@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { AccountType } from '../../types'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import MinusSign from '../../assets/icons/minus-sign.svg'
@@ -52,10 +52,6 @@ const Row = (props: RowProps) => {
     }
   }, [isNested, onAssetSelected, toggleRow])
 
-  const handleToggleRow = useCallback(() => {
-    toggleRow()
-  }, [toggleRow])
-
   useEffect(() => {
     const fiatBalance = fiatRates[item.code]
       ? cryptoToFiat(
@@ -79,12 +75,10 @@ const Row = (props: RowProps) => {
    */
   return (
     <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
-      <GestureDetector>
-        <Pressable
-          style={[styles.row, { borderLeftColor: item.color }]}
-          onPress={handlePressOnRow}>
+      <GestureDetector onSingleTap={handlePressOnRow}>
+        <View style={[styles.row, { borderLeftColor: item.color }]}>
           <View style={styles.col1}>
-            <Pressable onPress={handleToggleRow}>
+            <>
               {isExpanded ? (
                 <MinusSign
                   width={15}
@@ -100,7 +94,7 @@ const Row = (props: RowProps) => {
                   style={styles.plusSign}
                 />
               )}
-            </Pressable>
+            </>
             <AssetIcon chain={item.chain} />
           </View>
           <View style={styles.col2}>
@@ -122,7 +116,7 @@ const Row = (props: RowProps) => {
           <View style={styles.col4}>
             {!isNested ? <ChevronRight width={12} height={12} /> : null}
           </View>
-        </Pressable>
+        </View>
       </GestureDetector>
     </AssetListSwipeableRow>
   )
