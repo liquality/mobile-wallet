@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
 import { AccountType } from '../../types'
 import WrappedRow from './wrapped-row'
 import AssetIcon from '../asset-icon'
@@ -33,11 +33,11 @@ const AssetFlatList = (props: AssetFlatListPropsType) => {
   )
 
   return (
-    <>
+    <ScrollView>
       {accounts.map((item) => {
         return renderAsset({ item })
       })}
-    </>
+    </ScrollView>
   )
 }
 
