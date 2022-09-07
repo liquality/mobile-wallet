@@ -219,12 +219,15 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     })
   }
 
-  const onDoubleTapOrLongPress = (popUpTypes: SwapScreenPopUpTypes) => () => {
-    setSwapScreenPopTypes(popUpTypes)
-    setTimeout(() => {
-      setSwapScreenPopTypes(SwapScreenPopUpTypes.Null)
-    }, 3000)
-  }
+  const onDoubleTapOrLongPress = useCallback(
+    (popUpTypes: SwapScreenPopUpTypes) => () => {
+      setSwapScreenPopTypes(popUpTypes)
+      setTimeout(() => {
+        setSwapScreenPopTypes(SwapScreenPopUpTypes.Null)
+      }, 3000)
+    },
+    [setSwapScreenPopTypes],
+  )
 
   const handleToAssetPress = () => {
     setSwapPair((prevVal) => ({ ...prevVal, toAsset: undefined }))
@@ -649,7 +652,6 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             alignItems="flex-end"
             marginHorizontal="xl">
             <GestureDetector
-              onSingleTap={handleFromAssetPress}
               doubleOrLongPress={onDoubleTapOrLongPress(
                 SwapScreenPopUpTypes.FromAsset,
               )}>
