@@ -27,6 +27,7 @@ import GestureDetector from '../gesture-detector/gesture-detector'
 import Box from '../../theme/box'
 import Card from '../../theme/card'
 import Text from '../../theme/text'
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 
 type RowProps = {
   item: AccountType
@@ -61,6 +62,9 @@ const Row = (props: RowProps) => {
 
   const handleDoubleOrLongPress = useCallback(() => {
     setDoubleOrLongTapSelectedAsset(item.id)
+    setTimeout(() => {
+      setDoubleOrLongTapSelectedAsset('')
+    }, 3000)
   }, [setDoubleOrLongTapSelectedAsset, item.id])
 
   useEffect(() => {
@@ -103,41 +107,49 @@ const Row = (props: RowProps) => {
               bottom={0}
               zIndex={1}>
               <Box flex={1} alignItems="center" justifyContent={'center'}>
-                <Card
-                  variant={'popUpCard'}
-                  style={{ borderLeftColor: item.color }}>
-                  <Box flexDirection={'row'} alignItems={'center'} flex={1}>
-                    <Box
-                      width={30}
-                      height={30}
-                      borderRadius={15}
-                      marginHorizontal={'s'}
-                      style={{ backgroundColor: item.color }}
-                    />
-                    <Box flex={1}>
-                      <Text>{item.name}</Text>
-                      <Text fontSize={12} color="tertiaryForeground">
-                        {shortAddress}
-                      </Text>
-                      <Text fontSize={12} color="tertiaryForeground">
-                        {availableGas}
-                      </Text>
-                    </Box>
-                  </Box>
-                  <Box
-                    position={'absolute'}
-                    right={-7}
-                    top={0}
-                    bottom={0}
-                    zIndex={1}>
-                    <Box flex={1} alignItems="center" justifyContent={'center'}>
-                      <Card
-                        variant={'rightArrowCard'}
-                        style={{ transform: [{ rotate: '-45deg' }] }}
+                <Animated.View
+                  key={'popUpCard'}
+                  entering={FadeIn.duration(500)}
+                  exiting={FadeOut.duration(500)}>
+                  <Card
+                    variant={'popUpCard'}
+                    style={{ borderLeftColor: item.color }}>
+                    <Box flexDirection={'row'} alignItems={'center'} flex={1}>
+                      <Box
+                        width={30}
+                        height={30}
+                        borderRadius={15}
+                        marginHorizontal={'s'}
+                        style={{ backgroundColor: item.color }}
                       />
+                      <Box flex={1}>
+                        <Text>{item.name}</Text>
+                        <Text fontSize={12} color="tertiaryForeground">
+                          {shortAddress}
+                        </Text>
+                        <Text fontSize={12} color="tertiaryForeground">
+                          {availableGas}
+                        </Text>
+                      </Box>
                     </Box>
-                  </Box>
-                </Card>
+                    <Box
+                      position={'absolute'}
+                      right={-7}
+                      top={0}
+                      bottom={0}
+                      zIndex={1}>
+                      <Box
+                        flex={1}
+                        alignItems="center"
+                        justifyContent={'center'}>
+                        <Card
+                          variant={'rightArrowCard'}
+                          style={{ transform: [{ rotate: '-45deg' }] }}
+                        />
+                      </Box>
+                    </Box>
+                  </Card>
+                </Animated.View>
               </Box>
             </Box>
           ) : null}

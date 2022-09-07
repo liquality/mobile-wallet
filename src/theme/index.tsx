@@ -328,7 +328,7 @@ const theme = createTheme({
   cardVariants: {
     popUpCard: {
       width: '65%',
-      height: '85%',
+      height: '95%',
       alignItems: 'center',
       borderRadius: 5,
       borderLeftWidth: 6,
