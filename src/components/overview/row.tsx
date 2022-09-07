@@ -105,9 +105,15 @@ const Row = (props: RowProps) => {
                     height: '90%',
                     alignItems: 'center',
                     borderRadius: 5,
-                    borderLeftWidth: 5,
-                    backgroundColor: 'grey',
+                    borderLeftWidth: 6,
+                    backgroundColor: 'white',
                     borderLeftColor: item.color,
+                    shadowOffset: {
+                      width: 2,
+                      height: 3,
+                    },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 1,
                   }}>
                   <Text>Working</Text>
                   <Box
@@ -121,9 +127,16 @@ const Row = (props: RowProps) => {
                         style={{
                           width: 15,
                           height: 15,
-                          backgroundColor: 'grey',
+                          backgroundColor: 'white',
                           borderRadius: 3,
-                          transform: [{ rotate: '135deg' }],
+                          transform: [{ rotate: '-45deg' }],
+                          borderLeftColor: item.color,
+                          shadowOffset: {
+                            width: 2,
+                            height: 3,
+                          },
+                          shadowOpacity: 0.1,
+                          shadowRadius: 1,
                         }}></View>
                     </Box>
                   </Box>
@@ -184,7 +197,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D9DFE5',
     borderLeftWidth: 3,
     paddingVertical: 10,
-    height: 60,
+    height: 70,
   },
   col1: {
     flex: 0.15,

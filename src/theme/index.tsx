@@ -325,7 +325,9 @@ const theme = createTheme({
       marginBottom: 'm',
     },
   },
-  cardVariants: {},
+  cardVariants: {
+    popUpCard: {},
+  },
   dropDownVariants: {
     language: {
       width: '50%',
