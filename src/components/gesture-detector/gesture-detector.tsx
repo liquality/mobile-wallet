@@ -22,6 +22,7 @@ const GestureDetector: React.FC<GestDectProps> = ({
         doubleOrLongPress()
       }
     })
+    .withTestId('longPress')
 
   const singleTap = Gesture.Tap()
     .runOnJS(true)
@@ -32,6 +33,7 @@ const GestureDetector: React.FC<GestDectProps> = ({
         }
       }
     })
+    .withTestId('singleTap')
 
   const doubleTap = Gesture.Tap()
     .runOnJS(true)
@@ -41,6 +43,7 @@ const GestureDetector: React.FC<GestDectProps> = ({
         doubleOrLongPress()
       }
     })
+    .withTestId('doubleTap')
 
   const taps = Gesture.Exclusive(longPress, doubleTap, singleTap)
 
