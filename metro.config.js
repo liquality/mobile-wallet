@@ -13,6 +13,7 @@ module.exports = (async () => {
         },
       }),
       babelTransformerPath: require.resolve('react-native-svg-transformer'),
+      minifierPath: 'metro-minify-terser',
     },
     resolver: {
       assetExts: assetExts.filter((ext) => ext !== 'svg'),

@@ -89,7 +89,7 @@
     "react-native-tab-view": "3.1.1",
     "react-native-vision-camera": "^2.9.4",
     "readable-stream": "^1.0.33",
-    "recoil": "^0.7.3",
+    "recoil": "0.7.3",
     "stream-browserify": "^1.0.0",
     "tty-browserify": "^0.0.0",
     "url": "^0.10.3",
@@ -121,6 +121,7 @@
     "jest": "^26.6.3",
     "jest-transform-stub": "^2.0.0",
     "metro-babel-register": "^0.71.3",
+    "metro-minify-terser": "^0.72.2",
     "metro-react-native-babel-preset": "^0.67.0",
     "prettier": "^2.7.1",
     "react-devtools": "^4.10.4",
@@ -132,7 +133,6 @@
   },
   "resolutions": {
     "@types/react": "^17",
-    "@solana/web3.js": "1.47.3",
     "direct-vuex": "0.12.1",
     "vue": "2.7.0",
     "vuex": "4.0.2"
@@ -147,15 +147,16 @@
       "core",
       "core-android",
       "core-ios",
+      "filesystem",
       "gestures",
       "jest",
       "navigation/native",
       "navigation/stack",
       "react",
+      "react-dom",
       "react-test-renderer",
       "safe-area",
       "screens",
-      "storage",
       "svg"
     ]
   },
