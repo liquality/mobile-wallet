@@ -119,6 +119,19 @@ export const doubleOrLongTapSelectedAsset = atom<string>({
   default: '',
 })
 
+export enum SwapScreenPopUpTypes {
+  FromAsset = 'fromAsset',
+  Fast = 'fast',
+  Slow = 'slow',
+  ToAsset = 'toAsset',
+  Null = '',
+}
+
+export const swapScreenDoubleLongEvent = atom<SwapScreenPopUpTypes>({
+  key: 'swapScreenDoubleLongEvent',
+  default: SwapScreenPopUpTypes.Null,
+})
+
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',
