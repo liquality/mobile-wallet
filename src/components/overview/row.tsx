@@ -83,6 +83,10 @@ const Row = (props: RowProps) => {
   const showPopup = item.id === doubleOrLongTapSelectedAsset
 
   const gas = 0.1234
+  const availableGas = I18n.t('overviewScreen.availableGas', {
+    gas,
+    token: item.code,
+  })
 
   return (
     <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
@@ -116,7 +120,7 @@ const Row = (props: RowProps) => {
                         {shortAddress}
                       </Text>
                       <Text fontSize={12} color="tertiaryForeground">
-                        Available Gas {gas} {item.code}
+                        {availableGas}
                       </Text>
                     </Box>
                   </Box>
