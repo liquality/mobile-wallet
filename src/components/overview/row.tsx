@@ -99,7 +99,15 @@ const Row = (props: RowProps) => {
       <GestureDetector
         onSingleTap={handlePressOnRow}
         doubleOrLongPress={handleDoubleOrLongPress}>
-        <View style={[styles.row, { borderLeftColor: item.color }]}>
+        <Box
+          flexDirection={'row'}
+          justifyContent="space-around"
+          borderBottomWidth={1}
+          borderBottomColor={'secondaryButtonBorderColor'}
+          borderLeftWidth={3}
+          paddingVertical={'m'}
+          height={70}
+          style={{ borderLeftColor: item.color }}>
           {showPopup ? (
             <Box
               position={'absolute'}
@@ -194,22 +202,13 @@ const Row = (props: RowProps) => {
           <View style={styles.col4}>
             {!isNested ? <ChevronRight width={12} height={12} /> : null}
           </View>
-        </View>
+        </Box>
       </GestureDetector>
     </AssetListSwipeableRow>
   )
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
-    borderLeftWidth: 3,
-    paddingVertical: 10,
-    height: 70,
-  },
   col1: {
     flex: 0.15,
     flexDirection: 'row',
