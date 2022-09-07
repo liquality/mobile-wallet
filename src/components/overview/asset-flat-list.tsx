@@ -19,15 +19,17 @@ const AssetFlatList = (props: AssetFlatListPropsType) => {
   const renderAsset = useCallback(
     ({ item }: { item: { id: string; name: string } }) => {
       return (
-        <React.Suspense
-          fallback={
-            <View style={styles.row}>
-              <AssetIcon chain={getAsset(activeNetwork, item.name).chain} />
-              <ActivityIndicator />
-            </View>
-          }>
-          <WrappedRow item={item} />
-        </React.Suspense>
+        <React.Fragment key={item.id}>
+          <React.Suspense
+            fallback={
+              <View style={styles.row}>
+                <AssetIcon chain={getAsset(activeNetwork, item.name).chain} />
+                <ActivityIndicator />
+              </View>
+            }>
+            <WrappedRow item={item} />
+          </React.Suspense>
+        </React.Fragment>
       )
     },
     [activeNetwork],
