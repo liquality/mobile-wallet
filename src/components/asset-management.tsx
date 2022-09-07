@@ -1,7 +1,7 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import { Alert, FlatList, StyleSheet, Text, View } from 'react-native'
 import { Asset } from '@liquality/cryptoassets/dist/src/types'
-import { assets as cryptoassets } from '@liquality/cryptoassets'
+import { getAllAssets, getAsset } from '@liquality/cryptoassets'
 import AssetIcon from './asset-icon'
 import Switch from './ui/switch'
 import SearchBox from './ui/search-box'
@@ -51,16 +51,18 @@ const AssetManagement = ({
     if (activeNetwork === Network.Testnet) {
       myAssets =
         enabledAssets?.reduce((assetList: Asset[], asset) => {
-          if (cryptoassets.hasOwnProperty(asset)) {
+          if (getAllAssets().testnet.hasOwnProperty(asset)) {
             assetList.push({
-              ...cryptoassets[asset],
-              contractAddress: cryptoassets[asset].contractAddress,
+              ...getAsset(activeNetwork, asset),
+              contractAddress: getAsset(activeNetwork, asset).contractAddress,
             })
           }
           return assetList
         }, []) || []
     } else {
-      myAssets = Object.keys(cryptoassets).map((key) => cryptoassets[key])
+      myAssets = Object.keys(getAllAssets().mainnet).map((key) =>
+        getAsset(activeNetwork, key),
+      )
     }
     setAssets(myAssets)
     setData(myAssets)

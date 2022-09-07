@@ -10,12 +10,13 @@ import {
   balanceStateFamily,
   enabledAssetsStateFamily,
   isDoneFetchingData,
+  networkState,
   swapPairState,
 } from '../../atoms'
 import { useNavigation, useRoute } from '@react-navigation/core'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
 import AssetIcon from '../asset-icon'
-import { assets as cryptoassets } from '@liquality/cryptoassets'
+import { getAsset } from '@liquality/cryptoassets'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
 const WrappedRow: FC<{
@@ -30,6 +31,8 @@ const WrappedRow: FC<{
   const balance = useRecoilValue(
     balanceStateFamily({ asset: item.name, assetId: item.id }),
   )
+  const activeNetwork = useRecoilValue(networkState)
+
   const account = useRecoilValue(accountInfoStateFamily(item.id))
   const isDoneFetching = useRecoilValue(isDoneFetchingData)
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
@@ -133,7 +136,7 @@ const WrappedRow: FC<{
   if (balance < 0 || !address)
     return (
       <View style={styles.row}>
-        <AssetIcon chain={cryptoassets[item.name].chain} />
+        <AssetIcon chain={getAsset(activeNetwork, item.name.code)?.chain} />
         <ActivityIndicator />
       </View>
     )

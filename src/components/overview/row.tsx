@@ -19,8 +19,9 @@ import {
   balanceStateFamily,
   fiatRatesState,
   doubleOrLongTapSelectedAsset as doubTap,
+  networkState,
 } from '../../atoms'
-import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import I18n from 'i18n-js'
 import GestureDetector from '../gesture-detector/gesture-detector'
@@ -50,6 +51,7 @@ const Row = (props: RowProps) => {
   const fiatRates = useRecoilValue(fiatRatesState)
   const [doubleOrLongTapSelectedAsset, setDoubleOrLongTapSelectedAsset] =
     useRecoilState(doubTap)
+  const activeNetwork = useRecoilValue(networkState)
 
   const handlePressOnRow = useCallback(() => {
     setDoubleOrLongTapSelectedAsset('')
@@ -71,7 +73,7 @@ const Row = (props: RowProps) => {
     const fiatBalance = fiatRates[item.code]
       ? cryptoToFiat(
           unitToCurrency(
-            cryptoassets[getNativeAsset(item.code)],
+            getAsset(activeNetwork, getNativeAsset(item.code)),
             balance,
           ).toNumber(),
           fiatRates[item.code],
@@ -82,7 +84,7 @@ const Row = (props: RowProps) => {
     )
     setPrettyFiatBalance(`$${formatFiat(new BigNumber(fiatBalance))}`)
     if (address) setShortAddress(shortenAddress(address))
-  }, [address, balance, fiatRates, item.code])
+  }, [activeNetwork, address, balance, fiatRates, item.code])
 
   const showPopup = item.id === doubleOrLongTapSelectedAsset
 

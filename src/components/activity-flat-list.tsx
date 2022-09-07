@@ -4,7 +4,7 @@ import ChevronRight from '../assets/icons/activity-status/chevron-right.svg'
 import PendingSwap from '../assets/icons/activity-status/pending-swap.svg'
 import CompletedSwap from '../assets/icons/activity-status/completed-swap.svg'
 import Send from '../assets/icons/activity-status/send.svg'
-import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
+import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import {
   HistoryItem,
@@ -23,10 +23,14 @@ import { downloadAssetAcitivity, formatDate } from '../utils'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { useNavigation } from '@react-navigation/core'
 import { OverviewProps } from '../screens/wallet-features/home/overview-screen'
+import { useRecoilValue } from 'recoil'
+import { networkState } from '../atoms'
 
 const ActivityFlatList = ({ selectedAsset }: { selectedAsset?: string }) => {
   const navigation = useNavigation<OverviewProps['navigation']>()
   const historyItems = useFilteredHistory()
+  const activeNetwork = useRecoilValue(networkState)
+
   const history = selectedAsset
     ? historyItems.filter((item) => item.from === selectedAsset)
     : historyItems.filter((item) => !!item.id)
@@ -54,7 +58,7 @@ const ActivityFlatList = ({ selectedAsset }: { selectedAsset?: string }) => {
       currentStep = 2
     if (item.type === TransactionType.Swap) {
       amount = unitToCurrency(
-        cryptoassets[from],
+        getAsset(activeNetwork, from),
         new BigNumber(item.fromAmount),
       ).toNumber()
       amountInUsd = item.fromAmountUsd
@@ -63,7 +67,7 @@ const ActivityFlatList = ({ selectedAsset }: { selectedAsset?: string }) => {
       currentStep = swapProvider.statuses[status].step + 1
     } else if (item.type === TransactionType.Send) {
       amount = unitToCurrency(
-        cryptoassets[from],
+        getAsset(activeNetwork, from),
         new BigNumber(item.amount),
       ).toNumber()
       amountInUsd = prettyFiatBalance(amount, item.fiatRate)

@@ -2,8 +2,7 @@ import StorageManager from '../core/storage-manager'
 import { BigNumber, FeeDetail } from '@liquality/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
-import { currencyToUnit } from '@liquality/cryptoassets'
-import cryptoassets from '@liquality/wallet-core/dist/src/utils/cryptoassets'
+import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
 import { AccountType, CustomRootState, GasFees } from '../types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import {
@@ -291,6 +290,7 @@ export const checkPendingActionsInBackground = async () => {
  * @param toGasSpeed
  */
 export const performSwap = async (
+  network: Network,
   from: AccountType,
   to: AccountType,
   fromAmount: BigNumber,
@@ -308,10 +308,10 @@ export const performSwap = async (
     from: from.code,
     to: to.code,
     fromAmount: new BigNumber(
-      currencyToUnit(cryptoassets[from.code], fromAmount.toNumber()),
+      currencyToUnit(getAsset(network, from.code), fromAmount.toNumber()),
     ),
     toAmount: new BigNumber(
-      currencyToUnit(cryptoassets[to.code], toAmount.toNumber()),
+      currencyToUnit(getAsset(network, to.code), toAmount.toNumber()),
     ),
     fee: fromNetworkFee,
     claimFee: toNetworkFee,

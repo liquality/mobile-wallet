@@ -3,11 +3,7 @@ import { View, StyleSheet, Pressable, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import SwapTransactionDetails from '../../../components/swap/swap-transaction-details'
-import {
-  unitToCurrency,
-  assets as cryptoassets,
-  chains,
-} from '@liquality/cryptoassets'
+import { unitToCurrency, getAsset, getChain } from '@liquality/cryptoassets'
 import AngleDown from '../../../assets/icons/angle-down.svg'
 import AngleRight from '../../../assets/icons/angle-right.svg'
 import Label from '../../../components/ui/label'
@@ -31,7 +27,11 @@ import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import SwapRates from '../../../components/swap/swap-rates'
 import { formatDate, labelTranslateFn } from '../../../utils'
 import { useRecoilValue } from 'recoil'
-import { fiatRatesState, historyStateFamily } from '../../../atoms'
+import {
+  fiatRatesState,
+  historyStateFamily,
+  networkState,
+} from '../../../atoms'
 import I18n from 'i18n-js'
 
 type SwapConfirmationScreenProps = NativeStackScreenProps<
@@ -47,6 +47,8 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   const fiatRates = useRecoilValue(fiatRatesState)
 
   const historyItem = useRecoilValue(historyStateFamily(transaction!.id!))
+  const activeNetwork = useRecoilValue(networkState)
+
   const [isExpanded, setIsExpanded] = useState(false)
   const [isSecretRevealed, setIsSecretRevealed] = useState(false)
   const [swapProvider, setSwapProvider] = useState<SwapProvider>()
@@ -149,7 +151,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
             {fromAmount &&
               from &&
               `${unitToCurrency(
-                cryptoassets[from],
+                getAsset(activeNetwork, from),
                 new BigNumber(fromAmount),
               )} ${from}`}
           </Text>
@@ -157,7 +159,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
             {fromAmount &&
               from &&
               `$${prettyFiatBalance(
-                unitToCurrency(cryptoassets[from], new BigNumber(fromAmount)),
+                unitToCurrency(
+                  getAsset(activeNetwork, from),
+                  new BigNumber(fromAmount),
+                ),
                 fiatRates?.[from] || 0,
               )}`}
           </Text>
@@ -172,7 +177,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
             {to &&
               toAmount &&
               `${unitToCurrency(
-                cryptoassets[to],
+                getAsset(activeNetwork, to),
                 new BigNumber(toAmount),
               )} ${to}`}
           </Text>
@@ -180,7 +185,10 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
             {to &&
               toAmount &&
               `$${prettyFiatBalance(
-                unitToCurrency(cryptoassets[to], new BigNumber(toAmount)),
+                unitToCurrency(
+                  getAsset(activeNetwork, to),
+                  new BigNumber(toAmount),
+                ),
                 fiatRates?.[to] || 0,
               )}`}
           </Text>
@@ -201,12 +209,16 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
         <Text variant="secondaryInputLabel" tx="common.networkSpeed" />
         <Text style={styles.content}>
           {from &&
-            `${from} Fee: ${fee} ${chains[cryptoassets[from].chain].fees.unit}`}
+            `${from} Fee: ${fee} ${
+              getChain(activeNetwork, getAsset(activeNetwork, to).chain).fees
+                .unit
+            }`}
         </Text>
         <Text style={styles.content}>
           {to &&
             `${to} Fee: ${claimFee} ${
-              chains[cryptoassets[to].chain].fees.unit
+              getChain(activeNetwork, getAsset(activeNetwork, to).chain).fees
+                .unit
             }`}
         </Text>
       </View>

@@ -3,7 +3,9 @@ import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
 import { AccountType } from '../../types'
 import WrappedRow from './wrapped-row'
 import AssetIcon from '../asset-icon'
-import { assets as cryptoassets } from '@liquality/cryptoassets'
+import { getAsset } from '@liquality/cryptoassets'
+import { useRecoilValue } from 'recoil'
+import { networkState } from '../../atoms'
 
 type AssetFlatListPropsType = {
   assets?: AccountType[]
@@ -13,23 +15,22 @@ type AssetFlatListPropsType = {
 const AssetFlatList = (props: AssetFlatListPropsType) => {
   const { accounts } = props
 
+  const activeNetwork = useRecoilValue(networkState)
   const renderAsset = useCallback(
     ({ item }: { item: { id: string; name: string } }) => {
       return (
-        <View key={item.id}>
-          <React.Suspense
-            fallback={
-              <View style={styles.row}>
-                <AssetIcon chain={cryptoassets[item.name].chain} />
-                <ActivityIndicator />
-              </View>
-            }>
-            <WrappedRow item={item} />
-          </React.Suspense>
-        </View>
+        <React.Suspense
+          fallback={
+            <View style={styles.row}>
+              <AssetIcon chain={getAsset(activeNetwork, item.name).chain} />
+              <ActivityIndicator />
+            </View>
+          }>
+          <WrappedRow item={item} />
+        </React.Suspense>
       )
     },
-    [],
+    [activeNetwork],
   )
 
   return (

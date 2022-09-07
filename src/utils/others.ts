@@ -1,4 +1,4 @@
-import { assets as cryptoassets } from '@liquality/cryptoassets'
+import { getAsset } from '@liquality/cryptoassets'
 import { AES } from 'crypto-js'
 import { fetchFeesForAsset, fetchSwapProvider } from '../store/store'
 import { BigNumber } from '@liquality/types'
@@ -13,7 +13,10 @@ import Pbkdf2 from 'react-native-fast-pbkdf2'
 import { Buffer } from '@craftzdog/react-native-buffer'
 import { translate, TxKeyPath } from '../i18n'
 
-export const sortQuotes = (quotes: SwapQuote[]): SwapQuote[] => {
+export const sortQuotes = (
+  network: string,
+  quotes: SwapQuote[],
+): SwapQuote[] => {
   if (!quotes) {
     throw new Error('Can not sort a null array')
   }
@@ -23,7 +26,8 @@ export const sortQuotes = (quotes: SwapQuote[]): SwapQuote[] => {
   }
 
   return quotes.slice(0).sort((a, b): number => {
-    const isCrossChain = cryptoassets[a.from].chain !== cryptoassets[a.to].chain
+    const isCrossChain =
+      getAsset(network, a.from).chain !== getAsset(network, a.to).chain
     if (isCrossChain) {
       // Prefer Liquality for crosschain swaps where liquidity is available
       if (a.provider?.toUpperCase() === 'LIQUALITY') {
