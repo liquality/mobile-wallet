@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { AccountType } from '../../types'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import MinusSign from '../../assets/icons/minus-sign.svg'
@@ -13,16 +13,23 @@ import {
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useRecoilState } from 'recoil'
 import {
   addressStateFamily,
   balanceStateFamily,
   fiatRatesState,
+  doubleOrLongTapSelectedAsset as doubTap,
   networkState,
 } from '../../atoms'
 import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import I18n from 'i18n-js'
+import GestureDetector from '../gesture-detector/gesture-detector'
+import Box from '../../theme/box'
+import Card from '../../theme/card'
+import Text from '../../theme/text'
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
+import { fetchFeesForAsset } from '../../store/store'
 
 type RowProps = {
   item: AccountType
@@ -43,19 +50,26 @@ const Row = (props: RowProps) => {
   )
   const address = useRecoilValue(addressStateFamily(item.id))
   const fiatRates = useRecoilValue(fiatRatesState)
+  const [doubleOrLongTapSelectedAsset, setDoubleOrLongTapSelectedAsset] =
+    useRecoilState(doubTap)
   const activeNetwork = useRecoilValue(networkState)
+  const [gas, setGasFee] = useState<BigNumber>(new BigNumber(0))
 
   const handlePressOnRow = useCallback(() => {
+    setDoubleOrLongTapSelectedAsset('')
     if (isNested) {
       toggleRow()
     } else {
       onAssetSelected()
     }
-  }, [isNested, onAssetSelected, toggleRow])
+  }, [isNested, onAssetSelected, toggleRow, setDoubleOrLongTapSelectedAsset])
 
-  const handleToggleRow = useCallback(() => {
-    toggleRow()
-  }, [toggleRow])
+  const handleDoubleOrLongPress = useCallback(() => {
+    setDoubleOrLongTapSelectedAsset(item.id)
+    setTimeout(() => {
+      setDoubleOrLongTapSelectedAsset('')
+    }, 3000)
+  }, [setDoubleOrLongTapSelectedAsset, item.id])
 
   useEffect(() => {
     const fiatBalance = fiatRates[item.code]
@@ -74,65 +88,134 @@ const Row = (props: RowProps) => {
     if (address) setShortAddress(shortenAddress(address))
   }, [activeNetwork, address, balance, fiatRates, item.code])
 
+  useEffect(() => {
+    fetchFeesForAsset(item.code).then((gasFee) => {
+      setGasFee(gasFee.average)
+    })
+  }, [item.code])
+
+  const showPopup = item.id === doubleOrLongTapSelectedAsset
+
+  const availableGas = I18n.t('overviewScreen.availableGas', {
+    gas,
+    token: item.code,
+  })
+
   return (
     <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
-      <Pressable
-        style={[styles.row, { borderLeftColor: item.color }]}
-        onPress={handlePressOnRow}>
-        <View style={styles.col1}>
-          <Pressable onPress={handleToggleRow}>
-            {isExpanded ? (
-              <MinusSign
-                width={15}
-                height={15}
-                fill={isNested ? '#A8AEB7' : '#FFF'}
-                style={styles.plusSign}
-              />
-            ) : (
-              <PlusSign
-                width={15}
-                height={15}
-                fill={isNested ? '#A8AEB7' : '#FFF'}
-                style={styles.plusSign}
-              />
-            )}
-          </Pressable>
-          <AssetIcon chain={item.chain} />
-        </View>
-        <View style={styles.col2}>
-          <Text style={styles.code}>{name}</Text>
-          <Text style={styles.address}>{shortAddress}</Text>
-        </View>
-        {isNested ? (
-          <View style={styles.col3}>
-            <Text style={styles.TotalBalanceInUSD}>
-              {I18n.t('common.totalPrettyFiatBal', { prettyFiatBalance })}
-            </Text>
+      <GestureDetector
+        onSingleTap={handlePressOnRow}
+        doubleOrLongPress={handleDoubleOrLongPress}>
+        <Box
+          flexDirection={'row'}
+          justifyContent="space-around"
+          borderBottomWidth={1}
+          borderBottomColor={'secondaryButtonBorderColor'}
+          borderLeftWidth={3}
+          paddingVertical={'m'}
+          height={70}
+          style={{ borderLeftColor: item.color }}>
+          {showPopup ? (
+            <Box
+              position={'absolute'}
+              left={0}
+              right={0}
+              top={0}
+              bottom={0}
+              zIndex={1}>
+              <Box flex={1} alignItems="center" justifyContent={'center'}>
+                <Animated.View
+                  key={'popUpCard'}
+                  entering={FadeIn.duration(500)}
+                  exiting={FadeOut.duration(500)}>
+                  <Card
+                    variant={'popUpCard'}
+                    style={{ borderLeftColor: item.color }}>
+                    <Box flexDirection={'row'} alignItems={'center'} flex={1}>
+                      <Box
+                        width={30}
+                        height={30}
+                        borderRadius={15}
+                        marginHorizontal={'s'}
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <Box flex={1}>
+                        <Text>{item.name}</Text>
+                        <Text fontSize={12} color="tertiaryForeground">
+                          {shortAddress}
+                        </Text>
+                        <Text fontSize={12} color="tertiaryForeground">
+                          {availableGas}
+                        </Text>
+                      </Box>
+                    </Box>
+                    <Box
+                      position={'absolute'}
+                      right={-7}
+                      top={0}
+                      bottom={0}
+                      zIndex={1}>
+                      <Box
+                        flex={1}
+                        alignItems="center"
+                        justifyContent={'center'}>
+                        <Card
+                          variant={'rightArrowCard'}
+                          style={{ transform: [{ rotate: '-45deg' }] }}
+                        />
+                      </Box>
+                    </Box>
+                  </Card>
+                </Animated.View>
+              </Box>
+            </Box>
+          ) : null}
+          <View style={styles.col1}>
+            <>
+              {isExpanded ? (
+                <MinusSign
+                  width={15}
+                  height={15}
+                  fill={isNested ? '#A8AEB7' : '#FFF'}
+                  style={styles.plusSign}
+                />
+              ) : (
+                <PlusSign
+                  width={15}
+                  height={15}
+                  fill={isNested ? '#A8AEB7' : '#FFF'}
+                  style={styles.plusSign}
+                />
+              )}
+            </>
+            <AssetIcon chain={item.chain} />
           </View>
-        ) : (
-          <View style={styles.col3}>
-            <Text style={styles.balance}>{prettyNativeBalance}</Text>
-            <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
+          <View style={styles.col2}>
+            <Text style={styles.code}>{name}</Text>
+            <Text style={styles.address}>{shortAddress}</Text>
           </View>
-        )}
-        <View style={styles.col4}>
-          {!isNested ? <ChevronRight width={12} height={12} /> : null}
-        </View>
-      </Pressable>
+          {isNested ? (
+            <View style={styles.col3}>
+              <Text style={styles.TotalBalanceInUSD}>
+                {I18n.t('common.totalPrettyFiatBal', { prettyFiatBalance })}
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.col3}>
+              <Text style={styles.balance}>{prettyNativeBalance}</Text>
+              <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
+            </View>
+          )}
+          <View style={styles.col4}>
+            {!isNested ? <ChevronRight width={12} height={12} /> : null}
+          </View>
+        </Box>
+      </GestureDetector>
     </AssetListSwipeableRow>
   )
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
-    borderLeftWidth: 3,
-    paddingVertical: 10,
-    height: 60,
-  },
   col1: {
     flex: 0.15,
     flexDirection: 'row',

@@ -190,5 +190,11 @@
     "http": "@tradle/react-native-http",
     "https": "https-browserify",
     "buffer": "@craftzdog/react-native-buffer"
+  },
+  "jest": {
+    "preset": "react-native",
+    "setupFiles": [
+      "./node_modules/react-native-gesture-handler/jestSetup.js"
+    ]
   }
 }

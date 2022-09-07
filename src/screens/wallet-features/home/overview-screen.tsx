@@ -45,6 +45,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
       )}
       <ScrollView
         contentContainerStyle={styles.contentContainerStyle}
+        scrollEnabled
         refreshControl={
           <RefreshControl
             tintColor="transparent"

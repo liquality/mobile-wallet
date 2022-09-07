@@ -135,7 +135,8 @@
     "signIn": "Sign In"
   },
   "overviewScreen": {
-    "load": "Loading..."
+    "load": "Loading...",
+    "availableGas": "Available Gas {{gas} {{token}}"
   },
   "receiveScreen": {
     "yourCurrent": "Your current {{code}}/{{activeNetwork}} address",
