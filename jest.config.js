@@ -6,7 +6,7 @@ const config = {
     '\\.js$': '<rootDir>/node_modules/react-native/jest/preprocessor.js',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|react-native-reanimated|@liquality|react-native-background-actions|recoil|react-native-flipper)/)',
+    'node_modules/(?!(react-native|@react-native|react-native-reanimated|@liquality|react-native-background-actions|recoil|react-native-flipper|react-native-mmkv-flipper-plugin)/)',
   ],
   moduleNameMapper: {
     '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$':

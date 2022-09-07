@@ -17,9 +17,10 @@ import {
   addressStateFamily,
   balanceStateFamily,
   fiatRatesState,
+  networkState,
   swapPairState,
 } from '../../../atoms'
-import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
 import I18n from 'i18n-js'
 import { labelTranslateFn } from '../../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
@@ -37,6 +38,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
     balanceStateFamily({ asset: code, assetId: id }),
   )
   const fiatRates = useRecoilValue(fiatRatesState)
+  const activeNetwork = useRecoilValue(networkState)
 
   const handleSendPress = useCallback(() => {
     navigation.navigate('SendScreen', {
@@ -79,7 +81,10 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             alignItems="flex-end">
             <Text style={styles.balanceInUSD}>
               {`$${prettyFiatBalance(
-                unitToCurrency(cryptoassets[code], new BigNumber(balance)),
+                unitToCurrency(
+                  getAsset(activeNetwork, code),
+                  new BigNumber(balance),
+                ),
                 fiatRates?.[code] || 0,
               )}`}
             </Text>

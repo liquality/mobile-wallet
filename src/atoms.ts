@@ -1,6 +1,6 @@
 import { DarkModeEnum, LanguageEnum } from './types/index'
 import { atom, atomFamily, selector, selectorFamily } from 'recoil'
-import { AccountType, SwapAssetPairType } from './types'
+import { AccountType, SwapAssetPairType, CustomRootState } from './types'
 import { BigNumber } from '@liquality/types'
 import {
   cryptoToFiat,
@@ -15,7 +15,8 @@ import {
   localStorageLangEffect,
   transactionHistoryEffect,
 } from './store/store'
-import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
+
+import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import { Asset } from '@liquality/wallet-core/dist/src/store/types'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import {
@@ -23,7 +24,6 @@ import {
   HistoryItem,
   Network,
 } from '@liquality/wallet-core/dist/src/store/types'
-import { CustomRootState } from './reducers'
 import { KEYS } from './utils'
 import * as Localization from 'expo-localization'
 
@@ -111,7 +111,7 @@ const setDefaultIfLangSupported = (deviceLang = '') => {
 export const langSelected = atom<LanguageEnum | string>({
   key: 'LanguageSelected',
   default: setDefaultIfLangSupported(Localization.locale),
-  effects: [localStorageLangEffect<string>(KEYS.ACTIVE_LANG)],
+  effects: [localStorageLangEffect(KEYS.ACTIVE_LANG)],
 })
 
 //---------- ATOM FAMILIES----------------
@@ -234,6 +234,7 @@ export const totalFiatBalanceState = selector<string>({
   get: ({ get }) => {
     const accountsIds = get(accountsIdsState)
     const fiatRates = get(fiatRatesState)
+    const activeNetwork = get(networkState)
 
     const totalFiatBalance = accountsIds.reduce((acc, account) => {
       const balanceState = balanceStateFamily({
@@ -247,7 +248,7 @@ export const totalFiatBalanceState = selector<string>({
           ? new BigNumber(
               cryptoToFiat(
                 unitToCurrency(
-                  cryptoassets[getNativeAsset(account.name)],
+                  getAsset(activeNetwork, getNativeAsset(account.name)),
                   get(balanceState),
                 ).toNumber(),
                 fiatRates[account.name],

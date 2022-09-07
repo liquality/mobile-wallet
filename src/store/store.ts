@@ -2,8 +2,7 @@ import StorageManager from '../core/storage-manager'
 import { BigNumber, FeeDetail } from '@liquality/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
-import { currencyToUnit } from '@liquality/cryptoassets'
-import cryptoassets from '@liquality/wallet-core/dist/src/utils/cryptoassets'
+import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
 import { AccountType, CustomRootState, GasFees } from '../types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import {
@@ -291,6 +290,7 @@ export const checkPendingActionsInBackground = async () => {
  * @param toGasSpeed
  */
 export const performSwap = async (
+  network: Network,
   from: AccountType,
   to: AccountType,
   fromAmount: BigNumber,
@@ -308,10 +308,10 @@ export const performSwap = async (
     from: from.code,
     to: to.code,
     fromAmount: new BigNumber(
-      currencyToUnit(cryptoassets[from.code], fromAmount.toNumber()),
+      currencyToUnit(getAsset(network, from.code), fromAmount.toNumber()),
     ),
     toAmount: new BigNumber(
-      currencyToUnit(cryptoassets[to.code], toAmount.toNumber()),
+      currencyToUnit(getAsset(network, to.code), toAmount.toNumber()),
     ),
     fee: fromNetworkFee,
     claimFee: toNetworkFee,
@@ -570,10 +570,10 @@ export const localStorageLangEffect: <T>(key: string) => AtomEffect<T> =
   (key) =>
   ({ setSelf, onSet, trigger }) => {
     const loadPersisted = async () => {
-      const savedValue = storageManager.read<string>(key, '')
+      const savedValue = storageManager.read(key, '')
 
       if (savedValue) {
-        setSelf(JSON.parse(savedValue))
+        setSelf(savedValue)
       }
     }
     if (trigger === 'get') {
@@ -581,9 +581,7 @@ export const localStorageLangEffect: <T>(key: string) => AtomEffect<T> =
     }
 
     onSet((newValue, _, isReset) => {
-      isReset
-        ? storageManager.remove(key)
-        : storageManager.write(key, JSON.stringify(newValue))
+      isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
     })
   }
 
@@ -604,7 +602,7 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
         : newValue !== null &&
           typeof newValue !== 'undefined' &&
           newValue !== -1
-      storageManager.write(key, JSON.stringify(newValue))
+      storageManager.write(key, newValue)
     })
   }
 

@@ -23,7 +23,7 @@ import SwapRates from '../../../components/swap/swap-rates'
 import { getQuotes } from '../../../store/store'
 import { ActionEnum, NetworkFeeType, RootStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
-import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
+import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import { labelTranslateFn, sortQuotes } from '../../../utils'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
@@ -263,7 +263,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     //TODO Fix this. maximumValue = fromBalance - Fee
     if (swapPair && swapPair.fromAsset && swapPair.fromAsset.code) {
       const amnt = unitToCurrency(
-        cryptoassets[swapPair.fromAsset.code],
+        getAsset(activeNetwork, swapPair.fromAsset.code),
         fromBalance || 0,
       )
       amountInputRef.current?.setAfterDispatch(amnt?.toString()!)
@@ -327,7 +327,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           type: ErrorMessaging.PairsList,
         })
       } else {
-        const sortedQuotes = sortQuotes(quoteList)
+        const sortedQuotes = sortQuotes(activeNetwork, quoteList)
         setQuotes(sortedQuotes)
         if (sortedQuotes.length) {
           const swapProvider = getSwapProvider(
@@ -357,7 +357,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             txType: fromTxType,
             quote: sortedQuotes[0],
             feePrices: Object.values(assetFees).map((fee) =>
-              feePerUnit(fee.fee, cryptoassets[swapPair.fromAsset.code].chain),
+              feePerUnit(
+                fee.fee,
+                getAsset(activeNetwork, swapPair.fromAsset.code).chain,
+              ),
             ),
           })
           if (!totalFees) return
@@ -365,7 +368,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           for (const [speed, fee] of Object.entries(assetFees)) {
             const feePrice = feePerUnit(
               fee.fee,
-              cryptoassets[swapPair.fromAsset.code].chain,
+              getAsset(activeNetwork, swapPair.fromAsset.code).chain,
             )
 
             feesToPopulate[activeNetwork][speed] =
@@ -381,7 +384,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           })
           bestQuoteAmount = new BigNumber(
             unitToCurrency(
-              cryptoassets[swapPair.toAsset.code],
+              getAsset(activeNetwork, swapPair.toAsset.code),
               new BigNumber(sortedQuotes[0].toAmount || 0),
             ),
           )

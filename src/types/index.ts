@@ -5,6 +5,7 @@ import { BigNumber } from '@liquality/types'
 import {
   FeeLabel,
   Network,
+  RootState,
   SendHistoryItem,
   SwapHistoryItem,
 } from '@liquality/wallet-core/dist/src/store/types'
