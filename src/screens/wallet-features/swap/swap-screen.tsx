@@ -60,7 +60,6 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import Card from '../../../theme/card'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import AssetIcon from '../../../components/asset-icon'
-import GestureDetector from '../../../components/gesture-detector/gesture-detector'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -657,20 +656,18 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             justifyContent="center"
             alignItems="flex-end"
             marginHorizontal="xl">
-            <GestureDetector
+            <AmountTextInputBlock
+              type="FROM"
+              defaultAmount={state.fromAmount}
+              label={labelTranslateFn('common.send')!}
+              chain={swapPair.fromAsset?.chain || ChainId.Bitcoin}
+              assetSymbol={swapPair.fromAsset?.code || 'BTC'}
+              dispatch={dispatch}
+              ref={amountInputRef}
               doubleOrLongPress={onDoubleTapOrLongPress(
                 SwapScreenPopUpTypes.FromAsset,
-              )}>
-              <AmountTextInputBlock
-                type="FROM"
-                defaultAmount={state.fromAmount}
-                label={labelTranslateFn('common.send')!}
-                chain={swapPair.fromAsset?.chain || ChainId.Bitcoin}
-                assetSymbol={swapPair.fromAsset?.code || 'BTC'}
-                dispatch={dispatch}
-                ref={amountInputRef}
-              />
-            </GestureDetector>
+              )}
+            />
             <Pressable style={styles.chevronBtn} onPress={handleFromAssetPress}>
               <ChevronRight width={15} height={15} />
             </Pressable>
