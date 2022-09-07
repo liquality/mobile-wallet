@@ -442,9 +442,15 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
   useEffect(() => {
     updateBestQuote()
-    let nativeCustomFeeCode = getNativeAsset(route.params.code)
-    let nativeToCode = getNativeAsset(swapPair.toAsset.code)
-    let nativeFromCode = getNativeAsset(swapPair.fromAsset.code)
+    let nativeCustomFeeCode = route.params.code
+      ? getNativeAsset(route.params.code)
+      : ''
+    let nativeToCode = swapPair.toAsset
+      ? getNativeAsset(swapPair.toAsset.code)
+      : ''
+    let nativeFromCode = swapPair.fromAsset
+      ? getNativeAsset(swapPair.fromAsset.code)
+      : ''
     if (swapPair && route.params.customFee) {
       let params = {
         speed: 'custom',
