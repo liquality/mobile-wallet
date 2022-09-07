@@ -15,8 +15,9 @@ import {
   addressStateFamily,
   balanceStateFamily,
   fiatRatesState,
+  networkState,
 } from '../../atoms'
-import { unitToCurrency, assets as cryptoassets } from '@liquality/cryptoassets'
+import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 
 type SubRowProps = {
@@ -34,6 +35,7 @@ const SubRow: FC<SubRowProps> = (props) => {
   )
   const address = useRecoilValue(addressStateFamily(item.id))
   const fiatRates = useRecoilValue(fiatRatesState)
+  const activeNetwork = useRecoilValue(networkState)
 
   const handlePressOnRow = useCallback(() => {
     onAssetSelected()
@@ -43,7 +45,7 @@ const SubRow: FC<SubRowProps> = (props) => {
     const fiatBalance = fiatRates[item.code]
       ? cryptoToFiat(
           unitToCurrency(
-            cryptoassets[getNativeAsset(item.code)],
+            getAsset(activeNetwork, getNativeAsset(item.code)),
             balance,
           ).toNumber(),
           fiatRates[item.code],
@@ -53,7 +55,7 @@ const SubRow: FC<SubRowProps> = (props) => {
       `${prettyBalance(new BigNumber(balance), item.code)} ${item.code}`,
     )
     setPrettyFiatBalance(`$${formatFiat(new BigNumber(fiatBalance))}`)
-  }, [balance, fiatRates, item.code])
+  }, [activeNetwork, balance, fiatRates, item.code])
 
   return (
     <AssetListSwipeableRow

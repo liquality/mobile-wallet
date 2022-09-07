@@ -16,6 +16,7 @@ import {
   fiatRatesState,
   historyIdsState,
   historyStateFamily,
+  networkState,
 } from '../../../atoms'
 import I18n from 'i18n-js'
 
@@ -32,6 +33,8 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   } = route
   const fiatRates = useRecoilValue(fiatRatesState)
   const ids = useRecoilValue(historyIdsState)
+  const activeNetwork = useRecoilValue(networkState)
+
   const addTransaction = useRecoilCallback(
     ({ set }) =>
       (transactionId: string, historyItem: SwapHistoryItem) => {
@@ -57,6 +60,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
 
       try {
         const transaction = await performSwap(
+          activeNetwork,
           fromAsset,
           toAsset,
           new BigNumber(fromAmount),

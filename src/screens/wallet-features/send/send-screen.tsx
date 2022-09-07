@@ -1,10 +1,6 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { Pressable, StyleSheet } from 'react-native'
-import {
-  assets as cryptoassets,
-  ChainId,
-  chains,
-} from '@liquality/cryptoassets'
+import { ChainId, getAsset, getChain } from '@liquality/cryptoassets'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
   NetworkFeeType,
@@ -38,7 +34,11 @@ import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import ButtonFooter from '../../../components/button-footer'
 import { isNumber, labelTranslateFn } from '../../../utils'
 import { useRecoilValue } from 'recoil'
-import { balanceStateFamily, fiatRatesState } from '../../../atoms'
+import {
+  balanceStateFamily,
+  fiatRatesState,
+  networkState,
+} from '../../../atoms'
 import i18n from 'i18n-js'
 import ErrMsgBanner, { ErrorBtn } from '../../../components/ui/err-msg-banner'
 const useInputState = (
@@ -96,6 +96,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     'tb1qv87lrj2lprekaylh0drj3cyyvluapa7e2rjc9r',
   )
   const networkFee = useRef<NetworkFeeType>()
+  const activeNetwork = useRecoilValue(networkState)
 
   const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
@@ -104,19 +105,24 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     } else if (new BigNumber(amountInput.value).gt(new BigNumber(balance))) {
       setError(labelTranslateFn('sendScreen.lowerAmt')!)
       return false
-    } else if (!chain || !chains[chain].isValidAddress(addressInput.value)) {
+    } else if (
+      !chain ||
+      !getChain(activeNetwork, chain).isValidAddress(addressInput.value)
+    ) {
       setError(labelTranslateFn('sendScreen.wrongFmt')!)
       return false
     }
 
     return true
-  }, [addressInput.value, amountInput.value, balance, chain])
+  }, [activeNetwork, addressInput.value, amountInput.value, balance, chain])
 
   useEffect(() => {
     if (route.params.customFee && balance) {
       setFee(new BigNumber(route.params.customFee))
       setCustomFee(route.params.customFee)
+
       const calculatedAmt = calculateAvailableAmnt(
+        activeNetwork,
         code,
         route.params.customFee,
         balance,
@@ -127,6 +133,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       }
     }
   }, [
+    activeNetwork,
     balance,
     code,
     route.params.customFee,
@@ -462,7 +469,10 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 />
               </Box>
               <Box flexDirection="row" alignItems="flex-end">
-                <AssetIcon asset={code} chain={cryptoassets[code].chain} />
+                <AssetIcon
+                  asset={code}
+                  chain={getAsset(activeNetwork, code).chain}
+                />
                 <Text style={styles.assetName}>{code}</Text>
               </Box>
             </Box>

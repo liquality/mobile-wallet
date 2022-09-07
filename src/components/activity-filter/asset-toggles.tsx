@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
-import { assets as cryptoassets } from '@liquality/cryptoassets'
+import { getAsset } from '@liquality/cryptoassets'
 
 import { capitalizeFirstLetter } from '../../utils'
 import SectionTitle from './section-title'
@@ -8,7 +8,7 @@ import AssetIcon from '../asset-icon'
 import { useNavigation } from '@react-navigation/native'
 import SwapCheck from '../../assets/icons/swap-check.svg'
 import { useRecoilValue } from 'recoil'
-import { enabledAssetsState } from '../../atoms'
+import { enabledAssetsState, networkState } from '../../atoms'
 
 const getItemsFromAssets = (assets: Array<string>): any[] => {
   if (assets.length < 6) {
@@ -23,6 +23,7 @@ const AssetToggles: FC<{
   onChange: (assets: string[]) => void
 }> = ({ value, onChange }) => {
   const assetCodes = useRecoilValue(enabledAssetsState)
+  const activeNetwork = useRecoilValue(networkState)
   const items = getItemsFromAssets([...assetCodes, ...assetCodes])
   const navigation = useNavigation()
 
@@ -56,7 +57,10 @@ const AssetToggles: FC<{
             {assetCode === 'more' ? (
               <View style={styles.more} />
             ) : (
-              <AssetIcon chain={cryptoassets[assetCode].chain} size={32} />
+              <AssetIcon
+                chain={getAsset(activeNetwork, assetCode).chain}
+                size={32}
+              />
             )}
             {isSelected && (
               <SwapCheck style={styles.check} width={20} height={20} />

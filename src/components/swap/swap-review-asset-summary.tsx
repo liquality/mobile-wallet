@@ -5,11 +5,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import Label from '../ui/label'
 import { chainDefaultColors } from '../../core/config'
-import {
-  assets as cryptoassets,
-  chains,
-  unitToCurrency,
-} from '@liquality/cryptoassets'
+import { getChain, getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import {
   cryptoToFiat,
   formatFiat,
@@ -19,7 +15,7 @@ import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import CopyIcon from '../../assets/icons/copy.svg'
 import CheckIcon from '../../assets/icons/swap-check.svg'
 import { useRecoilValue } from 'recoil'
-import { addressStateFamily } from '../../atoms'
+import { addressStateFamily, networkState } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
 
 type SwapReviewAssetSummaryProps = {
@@ -34,6 +30,7 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
   const { asset, fiatRates, networkFee, amount, type } = props
   const [isCopied, setIsCopied] = useState(false)
   const address = useRecoilValue(addressStateFamily(asset.id))
+  const activeNetwork = useRecoilValue(networkState)
 
   const handleCopyPress = () => {
     if (address) {
@@ -53,7 +50,8 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
             styles.font,
             styles.mainAmount,
             {
-              color: chainDefaultColors[cryptoassets[asset.code]?.chain],
+              color:
+                chainDefaultColors[getAsset(activeNetwork, asset.code)?.chain],
             },
           ]}>
           {`${amount.dp(6)} ${asset.code}`}
@@ -71,7 +69,8 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
       <Label text={{ tx: 'swapRevAstSumComp.networkFee' }} variant="light" />
       <View style={styles.row}>
         <Text style={[styles.font, styles.amount]}>{`${networkFee.toNumber()} ${
-          chains[cryptoassets[asset.code].chain].fees.unit
+          getChain(activeNetwork, getAsset(activeNetwork, asset.code)?.chain)
+            .fees.unit
         }`}</Text>
         <Text style={[styles.font, styles.amount]}>{`${prettyFiatBalance(
           getSendFee(asset.code, networkFee.toNumber()).toNumber(),
@@ -81,7 +80,10 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
       <Label text={{ tx: 'swapRevAstSumComp.amtFee' }} variant="light" />
       <View style={styles.row}>
         <Text style={[styles.font, styles.amountStrong]}>{`${amount.plus(
-          unitToCurrency(cryptoassets[asset.code], networkFee.toNumber()),
+          unitToCurrency(
+            getAsset(activeNetwork, asset.code),
+            networkFee.toNumber(),
+          ),
         )} ${asset.code}`}</Text>
         <Text style={[styles.font, styles.amountStrong]}>{`$${formatFiat(
           cryptoToFiat(

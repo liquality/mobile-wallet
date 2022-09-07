@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from 'react'
 import { View, StyleSheet, Modal, SafeAreaView, Pressable } from 'react-native'
-import { ChainId, chains } from '@liquality/cryptoassets'
+import { ChainId, getChain } from '@liquality/cryptoassets'
 import Svg, { Rect } from 'react-native-svg'
 import Error from '../components/ui/error'
 import {
@@ -16,6 +16,8 @@ import {
 import { runOnJS } from 'react-native-reanimated'
 import TimesIcon from '../assets/icons/times.svg'
 import { labelTranslateFn } from '../utils'
+import { useRecoilValue } from 'recoil'
+import { networkState } from '../atoms'
 
 type QrCodeScannerPropsType = {
   onClose: (address: string) => void
@@ -26,6 +28,8 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
   const [hasPermission, setHasPermission] = React.useState(false)
   const { onClose, chain } = props
   const [error, setError] = useState('')
+  const activeNetwork = useRecoilValue(networkState)
+
   const devices = useCameraDevices()
   const device = devices.back
 
@@ -35,13 +39,13 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
         setError('')
       }
       const address = qrCode.displayValue?.split(':')?.[1]
-      if (address && chains[chain].isValidAddress(address)) {
+      if (address && getChain(activeNetwork, chain).isValidAddress(address)) {
         onClose(address)
       } else {
         setError(labelTranslateFn('invalidQRCode')!)
       }
     },
-    [chain, error, onClose],
+    [activeNetwork, chain, error, onClose],
   )
 
   const frameProcessor = useFrameProcessor(

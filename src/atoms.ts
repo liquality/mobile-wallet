@@ -15,7 +15,8 @@ import {
   localStorageLangEffect,
   transactionHistoryEffect,
 } from './store/store'
-import { assets as cryptoassets, unitToCurrency } from '@liquality/cryptoassets'
+
+import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import { Asset } from '@liquality/wallet-core/dist/src/store/types'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import {
@@ -233,6 +234,7 @@ export const totalFiatBalanceState = selector<string>({
   get: ({ get }) => {
     const accountsIds = get(accountsIdsState)
     const fiatRates = get(fiatRatesState)
+    const activeNetwork = get(networkState)
 
     const totalFiatBalance = accountsIds.reduce((acc, account) => {
       const balanceState = balanceStateFamily({
@@ -246,7 +248,7 @@ export const totalFiatBalanceState = selector<string>({
           ? new BigNumber(
               cryptoToFiat(
                 unitToCurrency(
-                  cryptoassets[getNativeAsset(account.name)],
+                  getAsset(activeNetwork, getNativeAsset(account.name)),
                   get(balanceState),
                 ).toNumber(),
                 fiatRates[account.name],

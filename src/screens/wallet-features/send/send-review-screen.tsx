@@ -6,7 +6,7 @@ import {
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { sendTransaction } from '../../../store/store'
-import { assets as cryptoassets, currencyToUnit } from '@liquality/cryptoassets'
+import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
@@ -61,7 +61,7 @@ const ReviewComponent = ({ navigation, route }: SendReviewScreenProps) => {
         activeNetwork,
         to: destinationAddress,
         value: new BigNumber(
-          currencyToUnit(cryptoassets[asset], amount).toNumber(),
+          currencyToUnit(getAsset(activeNetwork, asset), amount).toNumber(),
         ),
         fee: gasFee,
         feeLabel: speedLabel,
