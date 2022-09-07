@@ -44,6 +44,10 @@ import {
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
+import Card from '../../../theme/card'
+import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
+import AssetIcon from '../../../components/asset-icon'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -608,6 +612,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     }
   }
 
+  const showPopup = true
+
   return (
     <Box
       flex={1}
@@ -671,6 +677,36 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       </Box>
       <Box alignItems="center" marginVertical="m" paddingHorizontal="xl">
         <ArrowDown />
+        {showPopup ? (
+          <Box position={'absolute'} right={20} bottom={10} zIndex={1}>
+            <Animated.View
+              key={'swapPopup'}
+              entering={FadeIn.duration(500)}
+              exiting={FadeOut.duration(500)}>
+              <Card variant={'swapPopup'} width={180} height={60}>
+                <Box flexDirection={'row'} alignItems={'center'} flex={1}>
+                  <Box
+                    width={34}
+                    height={34}
+                    borderRadius={17}
+                    marginHorizontal={'m'}>
+                    <AssetIcon
+                      size={33}
+                      asset={swapPair.fromAsset?.code}
+                      chain={swapPair.fromAsset?.chain}
+                    />
+                  </Box>
+                  <Box flex={1}>
+                    <Text>{swapPair.fromAsset?.code}</Text>
+                    <Text fontSize={12} color="tertiaryForeground">
+                      {shortenAddress(swapPair.fromAsset?.address || '')}
+                    </Text>
+                  </Box>
+                </Box>
+              </Card>
+            </Animated.View>
+          </Box>
+        ) : null}
       </Box>
       <Box
         flexDirection="row"

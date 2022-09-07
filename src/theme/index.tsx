@@ -352,6 +352,17 @@ const theme = createTheme({
       shadowOpacity: 0.1,
       shadowRadius: 1,
     },
+    swapPopup: {
+      alignItems: 'center',
+      borderRadius: 8,
+      backgroundColor: 'mainBackground',
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+    },
   },
   dropDownVariants: {
     language: {
