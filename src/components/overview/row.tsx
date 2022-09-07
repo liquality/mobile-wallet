@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { AccountType } from '../../types'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import MinusSign from '../../assets/icons/minus-sign.svg'
@@ -26,6 +26,7 @@ import I18n from 'i18n-js'
 import GestureDetector from '../gesture-detector/gesture-detector'
 import Box from '../../theme/box'
 import Card from '../../theme/card'
+import Text from '../../theme/text'
 
 type RowProps = {
   item: AccountType
@@ -81,6 +82,8 @@ const Row = (props: RowProps) => {
 
   const showPopup = item.id === doubleOrLongTapSelectedAsset
 
+  const gas = 0.1234
+
   return (
     <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
       <GestureDetector
@@ -99,7 +102,24 @@ const Row = (props: RowProps) => {
                 <Card
                   variant={'popUpCard'}
                   style={{ borderLeftColor: item.color }}>
-                  <Text>Card</Text>
+                  <Box flexDirection={'row'} alignItems={'center'} flex={1}>
+                    <Box
+                      width={30}
+                      height={30}
+                      borderRadius={15}
+                      marginHorizontal={'s'}
+                      style={{ backgroundColor: item.color }}
+                    />
+                    <Box flex={1}>
+                      <Text>{item.name}</Text>
+                      <Text fontSize={12} color="tertiaryForeground">
+                        {shortAddress}
+                      </Text>
+                      <Text fontSize={12} color="tertiaryForeground">
+                        Available Gas {gas} {item.code}
+                      </Text>
+                    </Box>
+                  </Box>
                   <Box
                     position={'absolute'}
                     right={-7}
