@@ -29,6 +29,7 @@ import Box from '../../theme/box'
 import Card from '../../theme/card'
 import Text from '../../theme/text'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
+import { fetchFeesForAsset } from '../../store/store'
 
 type RowProps = {
   item: AccountType
@@ -52,6 +53,7 @@ const Row = (props: RowProps) => {
   const [doubleOrLongTapSelectedAsset, setDoubleOrLongTapSelectedAsset] =
     useRecoilState(doubTap)
   const activeNetwork = useRecoilValue(networkState)
+  const [gas, setGasFee] = useState<BigNumber>(new BigNumber(0))
 
   const handlePressOnRow = useCallback(() => {
     setDoubleOrLongTapSelectedAsset('')
@@ -86,9 +88,14 @@ const Row = (props: RowProps) => {
     if (address) setShortAddress(shortenAddress(address))
   }, [activeNetwork, address, balance, fiatRates, item.code])
 
+  useEffect(() => {
+    fetchFeesForAsset(item.code).then((gasFee) => {
+      setGasFee(gasFee.average)
+    })
+  }, [item.code])
+
   const showPopup = item.id === doubleOrLongTapSelectedAsset
 
-  const gas = 0.1234
   const availableGas = I18n.t('overviewScreen.availableGas', {
     gas,
     token: item.code,
