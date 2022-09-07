@@ -25,6 +25,7 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import I18n from 'i18n-js'
 import GestureDetector from '../gesture-detector/gesture-detector'
 import Box from '../../theme/box'
+import Card from '../../theme/card'
 
 type RowProps = {
   item: AccountType
@@ -80,10 +81,6 @@ const Row = (props: RowProps) => {
 
   const showPopup = item.id === doubleOrLongTapSelectedAsset
 
-  /**
-   * GestureDetector component added as child component to avoid
-   * Invariant Violation: error on LongPress with Swipeable Gesture component
-   */
   return (
     <AssetListSwipeableRow assetData={item} assetSymbol={item.code}>
       <GestureDetector
@@ -99,23 +96,10 @@ const Row = (props: RowProps) => {
               bottom={0}
               zIndex={1}>
               <Box flex={1} alignItems="center" justifyContent={'center'}>
-                <View
-                  style={{
-                    width: '60%',
-                    height: '90%',
-                    alignItems: 'center',
-                    borderRadius: 5,
-                    borderLeftWidth: 6,
-                    backgroundColor: 'white',
-                    borderLeftColor: item.color,
-                    shadowOffset: {
-                      width: 2,
-                      height: 3,
-                    },
-                    shadowOpacity: 0.1,
-                    shadowRadius: 1,
-                  }}>
-                  <Text>Working</Text>
+                <Card
+                  variant={'popUpCard'}
+                  style={{ borderLeftColor: item.color }}>
+                  <Text>Card</Text>
                   <Box
                     position={'absolute'}
                     right={-7}
@@ -123,24 +107,13 @@ const Row = (props: RowProps) => {
                     bottom={0}
                     zIndex={1}>
                     <Box flex={1} alignItems="center" justifyContent={'center'}>
-                      <View
-                        style={{
-                          width: 15,
-                          height: 15,
-                          backgroundColor: 'white',
-                          borderRadius: 3,
-                          transform: [{ rotate: '-45deg' }],
-                          borderLeftColor: item.color,
-                          shadowOffset: {
-                            width: 2,
-                            height: 3,
-                          },
-                          shadowOpacity: 0.1,
-                          shadowRadius: 1,
-                        }}></View>
+                      <Card
+                        variant={'rightArrowCard'}
+                        style={{ transform: [{ rotate: '-45deg' }] }}
+                      />
                     </Box>
                   </Box>
-                </View>
+                </Card>
               </Box>
             </Box>
           ) : null}

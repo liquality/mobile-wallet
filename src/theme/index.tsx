@@ -326,7 +326,32 @@ const theme = createTheme({
     },
   },
   cardVariants: {
-    popUpCard: {},
+    popUpCard: {
+      width: '65%',
+      height: '85%',
+      alignItems: 'center',
+      borderRadius: 5,
+      borderLeftWidth: 6,
+      backgroundColor: 'mainBackground',
+      shadowOffset: {
+        width: 2,
+        height: 3,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 1,
+    },
+    rightArrowCard: {
+      width: 15,
+      height: 15,
+      backgroundColor: 'mainBackground',
+      borderRadius: 3,
+      shadowOffset: {
+        width: 2,
+        height: 3,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 1,
+    },
   },
   dropDownVariants: {
     language: {
