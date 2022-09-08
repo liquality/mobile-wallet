@@ -1,7 +1,7 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import {
@@ -9,6 +9,7 @@ import {
   accountsIdsState,
   networkState,
 } from '../../../atoms'
+import { updateNFTs } from '../../../store/store'
 import { RootTabParamList } from '../../../types'
 type ShowAllNFTsScreenProps = BottomTabScreenProps<
   RootTabParamList,
@@ -18,21 +19,33 @@ const wallet = setupWallet({
   ...defaultOptions,
 })
 const ShowAllNFTsScreen = ({ route }: ShowAllNFTsScreenProps) => {
-  const accountsIds = useRecoilValue(accountsIdsState)
   const activeNetwork = useRecoilValue(networkState)
-  const accounts = useRecoilValue(accountListState)
+  const [allNftData, setAllNftData] = useState({})
   const { activeWalletId } = wallet.state
+  const enabledAccountsToSendIn = wallet.getters.accountsData
+  const accountIdsToSendIn = enabledAccountsToSendIn.map((account) => {
+    return account.id
+  })
 
-  const fetchAllNfts = () => {
-    console.log(route.params, 'route params, is their acc id here?')
-    const hej = wallet.getters.allNftCollections
-    //const specificNft = wallet.getters.accountNftCollections()
-    console.log(hej, 'wats hej?')
+  const fetchAllNfts = async () => {
+    console.log(wallet.getters.allNftCollections, 'all NFT collections')
+    return wallet.getters.allNftCollections
   }
 
-  //accounts.find(a => a.chain === 'polygon' && a.index = 0)
+  useEffect(() => {
+    async function fetchData() {
+      await updateNFTs({
+        walletId: activeWalletId,
+        network: activeNetwork,
+        accountIds: accountIdsToSendIn,
+      })
+      let allNfts = await fetchAllNfts()
+      setAllNftData(allNfts)
+    }
+    fetchData()
+  }, [accountIdsToSendIn, activeNetwork, activeWalletId])
 
-  fetchAllNfts()
+  console.log(allNftData, 'ALL NFT DATA??')
   return (
     <View style={[styles.container, styles.fragmentContainer]}>
       <Text style={[styles.label, styles.headerLabel]}>NFT SCreen</Text>

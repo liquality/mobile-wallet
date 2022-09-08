@@ -19,37 +19,31 @@ const wallet = setupWallet({
   ...defaultOptions,
 })
 const ShowNFTForSpecificChainScreen = ({ route }: ShowAllNFTsScreenProps) => {
-  const accountIds = useRecoilValue(accountsIdsState)
   const activeNetwork = useRecoilValue(networkState)
-  const accounts = useRecoilValue(accountListState)
   const { activeWalletId } = wallet.state
-  console.log(accounts, 'FULL STATE ACCOUNTS')
-  const accountIdsToSendIn = accounts.map((account) => {
+
+  const enabledAccountsToSendIn = wallet.getters.accountsData
+  const accountIdsToSendIn = enabledAccountsToSendIn.map((account) => {
     return account.id
   })
 
   const fetchAllNfts = () => {
-    const hej = wallet.getters.allNftCollections
     const specificNft = wallet.getters.accountNftCollections(
       route.params.currentAccount.id,
     )
-    console.log(specificNft, 'Specific NFT')
-    console.log(hej, 'ALL NFTS')
   }
 
   useEffect(() => {
     async function fetchData() {
-      let Obj = {
+      await updateNFTs({
         walletId: activeWalletId,
         network: activeNetwork,
         accountIds: accountIdsToSendIn,
-      }
-
-      await updateNFTs(Obj)
+      })
       fetchAllNfts()
     }
     fetchData()
-  }, [accountIdsToSendIn, activeNetwork, activeWalletId]) // Or [] if effect doesn't need props or state
+  }, [accountIdsToSendIn, activeNetwork, activeWalletId])
 
   return (
     <View style={[styles.container, styles.fragmentContainer]}>

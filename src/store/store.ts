@@ -225,12 +225,9 @@ export const toggleNetwork = async (network: any): Promise<void> => {
  * Toggle network between mainnet and testnet
  * @param network
  */
-export const updateNFTs = async (Obj): Promise<void> => {
-  console.log(Obj.walletId, 'WalletID')
-  console.log(Obj.network, 'Netwokr')
-  console.log(Obj.accountIds, 'ACCOUNTIDSS')
+export const updateNFTs = async (paramObj): Promise<void> => {
   if (wallet) {
-    await wallet.dispatch.updateNFTs(Obj).catch((e) => {
+    await wallet.dispatch.updateNFTs(paramObj).catch((e) => {
       console.log(`Failed to FETCH NFTS: ${e}`, 'error')
     })
   } else console.log(wallet, 'NO WALLET DISPATCH')
