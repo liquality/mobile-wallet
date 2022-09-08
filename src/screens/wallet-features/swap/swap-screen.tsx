@@ -192,7 +192,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   )
   const [state, dispatch] = useReducer(reducer, initialSwapSEventState)
 
-  const [popTypes, setSwapScreenPopTypes] = useRecoilState(SSDLE)
+  const [swapScreenPopTypes, setSwapScreenPopTypes] = useRecoilState(SSDLE)
 
   const toggleFeeSelectors = () => {
     setFeeSelectorsVisible(!areFeeSelectorsVisible)
@@ -711,7 +711,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           </Box>
           <Box alignItems="center" marginVertical="m" paddingHorizontal="xl">
             <ArrowDown />
-            {popTypes === SwapScreenPopUpTypes.FromAsset ? (
+            {swapScreenPopTypes === SwapScreenPopUpTypes.FromAsset ? (
               <Box position={'absolute'} right={20} bottom={10} zIndex={1}>
                 <Animated.View
                   key={'swapPopup'}
