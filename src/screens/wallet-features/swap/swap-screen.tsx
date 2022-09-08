@@ -586,6 +586,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               setGasFees={setGasFees}
               customFee={route.params.customFee}
               customFeeAsset={route.params.code}
+              fromAsset={getNativeAsset(swapPair.fromAsset?.code)}
+              doubleLongTapFeelabel={swapScreenPopTypes}
             />
           ) : null}
         </>
@@ -613,6 +615,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               setGasFees={setGasFees}
               customFee={route.params.customFee}
               customFeeAsset={route.params.code}
+              fromAsset={getNativeAsset(swapPair.fromAsset?.code)}
+              doubleLongTapFeelabel={swapScreenPopTypes}
             />
           ) : null}
           {swapPair.toAsset?.code ? (
@@ -635,6 +639,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               setGasFees={setGasFees}
               customFee={route.params.customFee}
               customFeeAsset={route.params.code}
+              toAsset={getNativeAsset(swapPair.toAsset?.code)}
+              doubleLongTapFeelabel={swapScreenPopTypes}
             />
           ) : null}
         </>

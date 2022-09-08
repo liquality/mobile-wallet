@@ -121,9 +121,13 @@ export const doubleOrLongTapSelectedAsset = atom<string>({
 
 export enum SwapScreenPopUpTypes {
   FromAsset = 'fromAsset',
-  Fast = 'fast',
-  Slow = 'slow',
   ToAsset = 'toAsset',
+  FromSlow = 'fromSlow',
+  FromAverage = 'fromAverage',
+  FromFast = 'fromFast',
+  ToSlow = 'toSlow',
+  ToAverage = 'toAverage',
+  ToFast = 'toFast',
   Null = '',
 }
 

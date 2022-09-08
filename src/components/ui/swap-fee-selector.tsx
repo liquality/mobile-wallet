@@ -10,6 +10,7 @@ import ErrorFallback from '../error-fallback'
 import ErrorBoundary from 'react-native-error-boundary'
 import Box from '../../theme/box'
 import { labelTranslateFn } from '../../utils'
+import { SwapScreenPopUpTypes } from '../../atoms'
 
 type SwapFeeSelectorProps = {
   asset: string
@@ -22,6 +23,9 @@ type SwapFeeSelectorProps = {
   setGasFees: (gasFee: GasFees) => void
   customFee: number | undefined
   customFeeAsset: string
+  toAsset?: string // to render double tap or long press popup accordingly
+  fromAsset?: string // to render double tap or long press popup accordingly
+  doubleLongTapFeelabel?: SwapScreenPopUpTypes
 }
 
 const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
@@ -36,6 +40,9 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
     setGasFees,
     customFee,
     customFeeAsset,
+    toAsset,
+    fromAsset,
+    doubleLongTapFeelabel,
   } = props
   const [alertStatus, setAlertStatus] = useState(false)
   useEffect(() => {
@@ -68,6 +75,9 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
         changeNetworkSpeed={changeNetworkSpeed}
         customFeeProps={customFee}
         customFeeAsset={customFeeAsset}
+        toAsset={toAsset}
+        fromAsset={fromAsset}
+        doubleLongTapFeelabel={doubleLongTapFeelabel}
       />
     </ErrorBoundary>
   )

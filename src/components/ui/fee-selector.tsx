@@ -2,9 +2,11 @@ import React, { FC, MutableRefObject, useEffect, useState } from 'react'
 import { Alert, Pressable, StyleSheet } from 'react-native'
 import { FeeDetails } from '@liquality/types'
 import Box from '../../theme/box'
+import Card from '../../theme/card'
 import Text from '../../theme/text'
 import { GasFees, NetworkFeeType } from '../../types'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
+import { SwapScreenPopUpTypes } from '../../atoms'
 
 const gasSpeeds: Array<FeeLabel> = [
   FeeLabel.Slow,
@@ -19,6 +21,28 @@ type FeeSelectorProps = {
   gasFees: GasFees
   customFeeProps: number | undefined
   customFeeAsset: string
+  toAsset?: string // to render double tap or long press popup accordingly
+  fromAsset?: string // to render double tap or long press popup accordingly
+  doubleLongTapFeelabel?: SwapScreenPopUpTypes
+}
+
+type NetworkPopUpCardProps = {
+  speed: string
+  fee: string
+}
+
+const NetworkPopUpCard = ({ speed, fee }: NetworkPopUpCardProps) => {
+  return (
+    <Card
+      justifyContent={'center'}
+      variant={'swapPopup'}
+      width={100}
+      alignItems={'center'}
+      height={60}>
+      <Text color="tertiaryForeground">{speed}</Text>
+      <Text color="tertiaryForeground">{fee}</Text>
+    </Card>
+  )
 }
 
 const FeeSelector: FC<FeeSelectorProps> = (props) => {
@@ -30,6 +54,9 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
     changeNetworkSpeed,
     customFeeProps,
     customFeeAsset,
+    toAsset = '',
+    fromAsset = '',
+    doubleLongTapFeelabel,
   } = props
   const [customFee, setCustomFee] = useState()
   const [speedMode, setSpeedMode] = useState<keyof FeeDetails>('average')
@@ -69,6 +96,66 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
     speedMode,
   ])
 
+  const getCompatibleNetworkCardPopupPosition = React.useCallback(() => {
+    switch (true) {
+      //ToAsset conditions start from here
+      case assetSymbol === toAsset &&
+        doubleLongTapFeelabel === SwapScreenPopUpTypes.ToFast:
+        return (
+          <Box position={'absolute'} right={40} top={-65} zIndex={1}>
+            <NetworkPopUpCard speed="600sec" fee={'7 sat/b'} />
+          </Box>
+        )
+      case assetSymbol === toAsset &&
+        doubleLongTapFeelabel === SwapScreenPopUpTypes.ToAverage:
+        return (
+          <Box
+            position={'absolute'}
+            left={'30%'}
+            right={'70%'}
+            top={-65}
+            zIndex={1}>
+            <NetworkPopUpCard speed="600sec" fee="7 sat/b" />
+          </Box>
+        )
+      case assetSymbol === toAsset &&
+        doubleLongTapFeelabel === SwapScreenPopUpTypes.ToSlow:
+        return (
+          <Box position={'absolute'} left={20} top={-65} zIndex={1}>
+            <NetworkPopUpCard speed="600sec" fee="7 sat/b" />
+          </Box>
+        )
+
+      //FromAsset conditions start from here
+      case assetSymbol === fromAsset &&
+        doubleLongTapFeelabel === SwapScreenPopUpTypes.FromFast:
+        return (
+          <Box position={'absolute'} right={40} top={-65} zIndex={1}>
+            <NetworkPopUpCard speed="600sec" fee={'7 sat/b'} />
+          </Box>
+        )
+      case assetSymbol === fromAsset &&
+        doubleLongTapFeelabel === SwapScreenPopUpTypes.FromAverage:
+        return (
+          <Box
+            position={'absolute'}
+            left={'30%'}
+            right={'70%'}
+            top={-65}
+            zIndex={1}>
+            <NetworkPopUpCard speed="600sec" fee="7 sat/b" />
+          </Box>
+        )
+      case assetSymbol === fromAsset &&
+        doubleLongTapFeelabel === SwapScreenPopUpTypes.FromSlow:
+        return (
+          <Box position={'absolute'} left={20} top={-65} zIndex={1}>
+            <NetworkPopUpCard speed="600sec" fee="7 sat/b" />
+          </Box>
+        )
+    }
+  }, [assetSymbol, doubleLongTapFeelabel, toAsset, fromAsset])
+
   return (
     <Box
       flexDirection="row"
@@ -103,6 +190,7 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
       <Pressable onPress={handleCustomPress}>
         <Text style={styles.customFee} tx="common.custom" />
       </Pressable>
+      {getCompatibleNetworkCardPopupPosition()}
     </Box>
   )
 }
