@@ -56,7 +56,7 @@ const WrappedRow: FC<{
 
   const onNFTPress = (account: AccountType) => {
     navigation.navigate('ShowNFTForSpecificChainScreen', {
-      screenTitle: `NFTs for CODE`,
+      screenTitle: 'NFTs for CODE',
       currentAccount: account,
     })
   }

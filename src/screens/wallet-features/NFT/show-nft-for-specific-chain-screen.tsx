@@ -43,7 +43,7 @@ const ShowNFTForSpecificChainScreen = ({ route }: ShowAllNFTsScreenProps) => {
       fetchAllNfts()
     }
     fetchData()
-  }, [accountIdsToSendIn, activeNetwork, activeWalletId])
+  }, [activeNetwork, activeWalletId])
 
   return (
     <View style={[styles.container, styles.fragmentContainer]}>
@@ -63,6 +63,12 @@ const styles = StyleSheet.create({
   },
   fragmentContainer: {
     paddingHorizontal: 20,
+  },
+
+  checkmark: {
+    width: 102,
+    height: 102,
+    marginTop: 20,
   },
   row: {
     flexDirection: 'row',
