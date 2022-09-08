@@ -1,14 +1,56 @@
+import { setupWallet } from '@liquality/wallet-core'
+import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
+import { useRecoilValue } from 'recoil'
+import {
+  accountListState,
+  accountsIdsState,
+  networkState,
+} from '../../../atoms'
+import { updateNFTs } from '../../../store/store'
 import { RootTabParamList } from '../../../types'
 type ShowAllNFTsScreenProps = BottomTabScreenProps<
   RootTabParamList,
   'ShowAllNFTsScreen'
 >
-
+const wallet = setupWallet({
+  ...defaultOptions,
+})
 const ShowNFTForSpecificChainScreen = ({ route }: ShowAllNFTsScreenProps) => {
-  console.log(route.params, 'ROUTE PARAMOOS in specific chain nfts')
+  const accountIds = useRecoilValue(accountsIdsState)
+  const activeNetwork = useRecoilValue(networkState)
+  const accounts = useRecoilValue(accountListState)
+  const { activeWalletId } = wallet.state
+  console.log(accounts, 'FULL STATE ACCOUNTS')
+  const accountIdsToSendIn = accounts.map((account) => {
+    return account.id
+  })
+
+  const fetchAllNfts = () => {
+    const hej = wallet.getters.allNftCollections
+    const specificNft = wallet.getters.accountNftCollections(
+      route.params.currentAccount.id,
+    )
+    console.log(specificNft, 'Specific NFT')
+    console.log(hej, 'ALL NFTS')
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      let Obj = {
+        walletId: activeWalletId,
+        network: activeNetwork,
+        accountIds: accountIdsToSendIn,
+      }
+
+      await updateNFTs(Obj)
+      fetchAllNfts()
+    }
+    fetchData()
+  }, [accountIdsToSendIn, activeNetwork, activeWalletId]) // Or [] if effect doesn't need props or state
+
   return (
     <View style={[styles.container, styles.fragmentContainer]}>
       <Text style={[styles.label, styles.headerLabel]}>

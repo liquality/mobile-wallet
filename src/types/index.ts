@@ -84,7 +84,6 @@ export type StackPayload = {
   action?: ActionEnum
   selectedAssetCodes?: string[]
   onSelectAssetCodes?: (selectedAssetCodes: string[]) => void
-  amountInput?: string
   code?: string
 }
 

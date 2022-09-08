@@ -305,6 +305,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     const suggestedFees = wallet.getters.suggestedFeePrices(
       getNativeAsset(swapPair.fromAsset.code),
     )
+
     if (suggestedFees) {
       Object.assign(assetFees, suggestedFees)
     }

@@ -59,7 +59,6 @@ const SubRow: FC<SubRowProps> = (props) => {
   }, [activeNetwork, balance, fiatRates, item.code])
 
   const renderNFTRow = () => {
-    console.log('NFT ROW', item, 'wats item?')
     return (
       <View>
         <Pressable

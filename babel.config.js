@@ -1,5 +1,7 @@
 module.exports = {
-  presets: ['module:metro-react-native-babel-preset'],
+  presets: ['module:metro-react-native-babel-preset',  ["babel-preset-expo", {
+    lazyImports: true, // <<< The fix
+  ]],
   plugins: [
     [
       'react-native-reanimated/plugin',

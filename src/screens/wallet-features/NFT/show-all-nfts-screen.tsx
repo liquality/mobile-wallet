@@ -1,13 +1,38 @@
+import { setupWallet } from '@liquality/wallet-core'
+import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
+import { useRecoilValue } from 'recoil'
+import {
+  accountListState,
+  accountsIdsState,
+  networkState,
+} from '../../../atoms'
 import { RootTabParamList } from '../../../types'
 type ShowAllNFTsScreenProps = BottomTabScreenProps<
   RootTabParamList,
   'ShowAllNFTsScreen'
 >
-
+const wallet = setupWallet({
+  ...defaultOptions,
+})
 const ShowAllNFTsScreen = ({ route }: ShowAllNFTsScreenProps) => {
+  const accountsIds = useRecoilValue(accountsIdsState)
+  const activeNetwork = useRecoilValue(networkState)
+  const accounts = useRecoilValue(accountListState)
+  const { activeWalletId } = wallet.state
+
+  const fetchAllNfts = () => {
+    console.log(route.params, 'route params, is their acc id here?')
+    const hej = wallet.getters.allNftCollections
+    //const specificNft = wallet.getters.accountNftCollections()
+    console.log(hej, 'wats hej?')
+  }
+
+  //accounts.find(a => a.chain === 'polygon' && a.index = 0)
+
+  fetchAllNfts()
   return (
     <View style={[styles.container, styles.fragmentContainer]}>
       <Text style={[styles.label, styles.headerLabel]}>NFT SCreen</Text>
