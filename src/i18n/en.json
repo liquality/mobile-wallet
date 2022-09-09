@@ -86,7 +86,7 @@
   },
   "seedPhraseScreen": {
     "backupYourWallet": "Backup your Wallet",
-    "restoreYourWallet": "The seed phrase is the only way to restore your wallet. Write itdown. Next you will confirm it."
+    "restoreYourWallet": "The seed phrase is the only way to restore your wallet. Write it down. Next you will confirm it."
   },
 
   "termsScreen": {
