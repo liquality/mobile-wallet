@@ -19,7 +19,10 @@ const providersInfo = [
   {
     name: 'Liquality',
     icon: () => <Liquality width={15} height={15} style={styles.icon} />,
-    description: labelTranslateFn('swapTypesInfo.atomicSwapSwap')!,
+    description:
+      labelTranslateFn('swapTypesInfo.atomicSwap')! +
+      ' ' +
+      labelTranslateFn('swapTypesInfo.swapNativeAssets')!,
     pros: ['Cross-chain', 'Secure', 'Native assets'],
     cons: ['Low-quality', 'Few pairs'],
     tip: labelTranslateFn('swapTypesInfo.feeStruct')!,
@@ -27,7 +30,10 @@ const providersInfo = [
   {
     name: 'LiqualityBoost',
     icon: () => <LiqualityBoost width={15} height={15} style={styles.icon} />,
-    description: labelTranslateFn('swapTypesInfo.atomicSwapSwap')!,
+    description:
+      labelTranslateFn('swapTypesInfo.atomicSwap')! +
+      ' ' +
+      labelTranslateFn('swapTypesInfo.swapNativeAssets')!,
     pros: ['Cross-chain', 'Secure', 'Native assets'],
     cons: ['Low-quality', 'Few pairs'],
     tip: labelTranslateFn('swapTypesInfo.feeStruct')!,

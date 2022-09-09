@@ -128,6 +128,7 @@ export enum SwapScreenPopUpTypes {
   ToSlow = 'toSlow',
   ToAverage = 'toAverage',
   ToFast = 'toFast',
+  AtomicSwap = 'atomicSwap',
   Null = '',
 }
 

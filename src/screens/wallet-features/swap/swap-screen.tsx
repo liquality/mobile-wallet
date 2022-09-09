@@ -804,6 +804,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             flexDirection="row"
             justifyContent="center"
             alignItems="flex-end"
+            zIndex={1}
             marginHorizontal="xl">
             <AmountTextInputBlock
               type="TO"
@@ -820,7 +821,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               <ChevronRight width={15} height={15} />
             </Pressable>
             {swapScreenPopTypes === SwapScreenPopUpTypes.ToAsset ? (
-              <Box position={'absolute'} right={10} top={80} zIndex={1}>
+              <Box position={'absolute'} right={10} top={80}>
                 <Box flex={1} alignItems="center" justifyContent={'center'}>
                   <Animated.View
                     key={'swapPopupForToAsset'}
@@ -869,18 +870,57 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                 </Box>
               </Box>
             ) : null}
+            {swapScreenPopTypes === SwapScreenPopUpTypes.AtomicSwap ? (
+              <Box position={'absolute'} left={0} bottom={-20}>
+                <Box width={180} height={100}>
+                  <Card
+                    variant={'swapPopup'}
+                    alignItems={'center'}
+                    flex={1}
+                    justifyContent={'center'}
+                    paddingHorizontal="m">
+                    <Text color="secondaryForeground" fontSize={14}>
+                      {labelTranslateFn('swapTypesInfo.atomicSwap')}{' '}
+                      <Text color="tertiaryForeground" fontSize={14}>
+                        {labelTranslateFn('swapTypesInfo.swapNativeAssets')}
+                      </Text>
+                    </Text>
+                    <Box
+                      position={'absolute'}
+                      left={'40%'}
+                      bottom={-5}
+                      zIndex={1}>
+                      <Box
+                        flex={1}
+                        alignItems="center"
+                        justifyContent={'center'}>
+                        <Card
+                          variant={'rightArrowCard'}
+                          style={{ transform: [{ rotate: '45deg' }] }}
+                        />
+                      </Box>
+                    </Box>
+                  </Card>
+                </Box>
+              </Box>
+            ) : null}
           </Box>
 
           {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
-            <SwapRates
-              fromAsset={swapPair.fromAsset.code}
-              toAsset={swapPair.toAsset.code}
-              quotes={quotes}
-              selectQuote={handleSelectQuote}
-              selectedQuote={selectedQuote}
-              clickable
-              style={styles.paddingHorizontal}
-            />
+            <Box>
+              <SwapRates
+                fromAsset={swapPair.fromAsset.code}
+                toAsset={swapPair.toAsset.code}
+                quotes={quotes}
+                selectQuote={handleSelectQuote}
+                selectedQuote={selectedQuote}
+                clickable
+                style={styles.paddingHorizontal}
+                doubleOrLongPress={onDoubleTapOrLongPress(
+                  SwapScreenPopUpTypes.AtomicSwap,
+                )}
+              />
+            </Box>
           ) : null}
           <Box
             flexDirection="row"

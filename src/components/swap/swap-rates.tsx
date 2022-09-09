@@ -24,6 +24,7 @@ import { capitalizeFirstLetter, labelTranslateFn } from '../../utils'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
 import TimesIcon from '../../assets/icons/times.svg'
 import CheckIcon from '../../assets/icons/swap-check.svg'
+import GestureDetector from '../gesture-detector/gesture-detector'
 
 type SwapRatesProps = {
   fromAsset: string
@@ -33,6 +34,7 @@ type SwapRatesProps = {
   selectQuote: (quote: any) => void
   clickable: boolean
   style?: StyleProp<ViewStyle>
+  doubleOrLongPress: () => void
 }
 
 const SwapRates: FC<SwapRatesProps> = (props) => {
@@ -44,6 +46,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
     fromAsset,
     toAsset,
     clickable,
+    doubleOrLongPress,
   } = props
   const [selectedItem, setSelectedItem] = useState<SwapQuote>(selectedQuote)
   const [isRatesModalVisible, setIsRatesModalVisible] = useState(false)
@@ -106,7 +109,6 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
       marginVertical="m"
       flexDirection="row"
       justifyContent="space-between"
-      zIndex={-1}
       style={style}>
       <Box
         flexDirection="row"
@@ -114,25 +116,31 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
         alignItems="center">
         <Box>
           <Text variant="secondaryInputLabel" tx="swapRatesComp.rate" />
-          <Button
-            type="tertiary"
-            variant="s"
-            label={
-              selectedItem
-                ? capitalizeFirstLetter(selectedItem.provider)
-                : 'Liquality'
-            }
-            onPress={() => {
+          <GestureDetector
+            doubleOrLongPress={doubleOrLongPress}
+            onSingleTap={() => {
               if (clickable) setIsRatesModalVisible(true)
-            }}
-            isBorderless={false}
-            isActive={true}>
-            {selectedItem ? (
-              getSwapProviderIcon(selectedItem)
-            ) : (
-              <Logo width={20} style={styles.icon} />
-            )}
-          </Button>
+            }}>
+            <Button
+              type="tertiary"
+              variant="s"
+              label={
+                selectedItem
+                  ? capitalizeFirstLetter(selectedItem.provider)
+                  : 'Liquality'
+              }
+              onPress={() => {
+                if (clickable) setIsRatesModalVisible(true)
+              }}
+              isBorderless={false}
+              onlyDisabled={true}>
+              {selectedItem ? (
+                getSwapProviderIcon(selectedItem)
+              ) : (
+                <Logo width={20} style={styles.icon} />
+              )}
+            </Button>
+          </GestureDetector>
           {selectedQuote && (
             <Box flexDirection="row" marginTop="s">
               <Text variant="amountLabel">{`${fromAsset} = `}</Text>
