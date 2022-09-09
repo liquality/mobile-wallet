@@ -30,6 +30,7 @@ import Card from '../../theme/card'
 import Text from '../../theme/text'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { fetchFeesForAsset } from '../../store/store'
+import { FADE_IN_OUT_DURATION } from '../../utils'
 
 type RowProps = {
   item: AccountType
@@ -126,8 +127,8 @@ const Row = (props: RowProps) => {
               <Box flex={1} alignItems="center" justifyContent={'center'}>
                 <Animated.View
                   key={'popUpCard'}
-                  entering={FadeIn.duration(500)}
-                  exiting={FadeOut.duration(500)}>
+                  entering={FadeIn.duration(FADE_IN_OUT_DURATION)}
+                  exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
                   <Card
                     variant={'popUpCard'}
                     style={{ borderLeftColor: item.color }}>

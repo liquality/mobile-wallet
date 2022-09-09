@@ -6,7 +6,7 @@ import Card from '../../theme/card'
 import Text from '../../theme/text'
 import { GasFees, NetworkFeeType } from '../../types'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
-import { labelTranslateFn } from '../../utils'
+import { FADE_IN_OUT_DURATION, labelTranslateFn } from '../../utils'
 import I18n from 'i18n-js'
 import { getChain, getAsset } from '@liquality/cryptoassets'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
@@ -16,6 +16,7 @@ import {
   SwapScreenPopUpTypes,
 } from '../../atoms'
 import GestureDetector from '../gesture-detector/gesture-detector'
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 
 const gasSpeeds: Array<FeeLabel> = [
   FeeLabel.Slow,
@@ -52,16 +53,21 @@ type NetworkPopUpCardProps = {
 
 const NetworkPopUpCard = ({ speed, fee }: NetworkPopUpCardProps) => {
   return (
-    <Card
-      justifyContent={'center'}
-      variant={'swapPopup'}
-      flex={1}
-      paddingHorizontal="s"
-      alignItems={'center'}
-      height={60}>
-      <Text color="tertiaryForeground">{speed}</Text>
-      <Text color="tertiaryForeground">{fee}</Text>
-    </Card>
+    <Animated.View
+      key={'networkSpeedFeePopUp'}
+      entering={FadeIn.duration(FADE_IN_OUT_DURATION)}
+      exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
+      <Card
+        justifyContent={'center'}
+        variant={'swapPopup'}
+        flex={1}
+        paddingHorizontal="s"
+        alignItems={'center'}
+        height={60}>
+        <Text color="tertiaryForeground">{speed}</Text>
+        <Text color="tertiaryForeground">{fee}</Text>
+      </Card>
+    </Animated.View>
   )
 }
 

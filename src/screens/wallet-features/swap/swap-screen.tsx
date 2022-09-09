@@ -30,7 +30,11 @@ import { getQuotes } from '../../../store/store'
 import { ActionEnum, NetworkFeeType, RootStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
-import { labelTranslateFn, sortQuotes } from '../../../utils'
+import {
+  FADE_IN_OUT_DURATION,
+  labelTranslateFn,
+  sortQuotes,
+} from '../../../utils'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
@@ -753,8 +757,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               <Box position={'absolute'} right={20} bottom={10} zIndex={1}>
                 <Animated.View
                   key={'swapPopup'}
-                  entering={FadeIn.duration(500)}
-                  exiting={FadeOut.duration(500)}>
+                  entering={FadeIn.duration(FADE_IN_OUT_DURATION)}
+                  exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
                   <Card variant={'swapPopup'} width={180} height={60}>
                     <Box flexDirection={'row'} alignItems={'center'} flex={1}>
                       <Box
