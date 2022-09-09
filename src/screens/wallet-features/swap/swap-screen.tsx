@@ -65,6 +65,7 @@ import Card from '../../../theme/card'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import AssetIcon from '../../../components/asset-icon'
 import { LikelyWaitProps } from '../../../components/ui/fee-selector'
+import { fetchFeesForAsset } from '../../../store/store'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -198,6 +199,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [state, dispatch] = useReducer(reducer, initialSwapSEventState)
 
   const [swapScreenPopTypes, setSwapScreenPopTypes] = useRecoilState(SSDLE)
+
+  const [gas, setGasFee] = useState('0')
 
   const toggleFeeSelectors = () => {
     setFeeSelectorsVisible(!areFeeSelectorsVisible)
@@ -445,6 +448,14 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   ])
 
   useEffect(() => {
+    if (swapPair.toAsset) {
+      fetchFeesForAsset(swapPair.toAsset?.code).then((gasFee) => {
+        setGasFee(gasFee.average.toFixed(2))
+      })
+    }
+  }, [swapPair.toAsset])
+
+  useEffect(() => {
     updateBestQuote()
     let nativeCustomFeeCode = route.params.code
       ? getNativeAsset(route.params.code)
@@ -684,6 +695,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     }
   }
 
+  const availableGas = I18n.t('overviewScreen.availableGas', {
+    gas,
+    token: swapPair.toAsset?.code,
+  })
+
   return (
     <Box flex={1}>
       <TouchableWithoutFeedback
@@ -756,7 +772,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             {swapScreenPopTypes === SwapScreenPopUpTypes.FromAsset ? (
               <Box position={'absolute'} right={20} bottom={10} zIndex={1}>
                 <Animated.View
-                  key={'swapPopup'}
+                  key={'swapPopupForFromAsset'}
                   entering={FadeIn.duration(FADE_IN_OUT_DURATION)}
                   exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
                   <Card variant={'swapPopup'} width={180} height={60}>
@@ -796,10 +812,63 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               chain={swapPair.toAsset?.chain || ChainId.Ethereum}
               assetSymbol={swapPair.toAsset?.code || 'ETH'}
               ref={amountInputRefTo}
+              doubleOrLongPress={onDoubleTapOrLongPress(
+                SwapScreenPopUpTypes.ToAsset,
+              )}
             />
             <Pressable style={styles.chevronBtn} onPress={handleToAssetPress}>
               <ChevronRight width={15} height={15} />
             </Pressable>
+            {swapScreenPopTypes === SwapScreenPopUpTypes.ToAsset ? (
+              <Box position={'absolute'} right={10} top={80} zIndex={1}>
+                <Box flex={1} alignItems="center" justifyContent={'center'}>
+                  <Animated.View
+                    key={'swapPopupForToAsset'}
+                    entering={FadeIn.duration(FADE_IN_OUT_DURATION)}
+                    exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
+                    <Card
+                      variant={'swapPopUpForToAsset'}
+                      height={60}
+                      width={200}
+                      style={{ borderLeftColor: swapPair.toAsset?.color }}>
+                      <Box flexDirection={'row'} alignItems={'center'} flex={1}>
+                        <Box
+                          width={30}
+                          height={30}
+                          borderRadius={15}
+                          marginHorizontal={'s'}
+                          style={{ backgroundColor: swapPair.toAsset?.color }}
+                        />
+                        <Box flex={1}>
+                          <Text>{swapPair.toAsset?.name}</Text>
+                          <Text fontSize={12} color="tertiaryForeground">
+                            {shortenAddress(swapPair.toAsset?.address || '')}
+                          </Text>
+                          <Text fontSize={12} color="tertiaryForeground">
+                            {availableGas}
+                          </Text>
+                        </Box>
+                      </Box>
+                      <Box
+                        position={'absolute'}
+                        right={'30%'}
+                        top={-7}
+                        zIndex={1}>
+                        <Box
+                          flex={1}
+                          alignItems="center"
+                          justifyContent={'center'}>
+                          <Card
+                            variant={'rightArrowCard'}
+                            style={{ transform: [{ rotate: '-135deg' }] }}
+                          />
+                        </Box>
+                      </Box>
+                    </Card>
+                  </Animated.View>
+                </Box>
+              </Box>
+            ) : null}
           </Box>
 
           {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (

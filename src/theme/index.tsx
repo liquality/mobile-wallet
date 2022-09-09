@@ -327,8 +327,6 @@ const theme = createTheme({
   },
   cardVariants: {
     popUpCard: {
-      width: '65%',
-      height: '95%',
       alignItems: 'center',
       borderRadius: 5,
       borderLeftWidth: 6,
@@ -355,6 +353,18 @@ const theme = createTheme({
     swapPopup: {
       alignItems: 'center',
       borderRadius: 8,
+      backgroundColor: 'mainBackground',
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+    },
+    swapPopUpForToAsset: {
+      alignItems: 'center',
+      borderRadius: 5,
+      borderLeftWidth: 6,
       backgroundColor: 'mainBackground',
       shadowOffset: {
         width: 0,

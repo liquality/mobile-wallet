@@ -106,6 +106,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
       marginVertical="m"
       flexDirection="row"
       justifyContent="space-between"
+      zIndex={-1}
       style={style}>
       <Box
         flexDirection="row"

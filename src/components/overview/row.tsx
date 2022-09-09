@@ -131,6 +131,8 @@ const Row = (props: RowProps) => {
                   exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
                   <Card
                     variant={'popUpCard'}
+                    width={'65%'}
+                    height={'95%'}
                     style={{ borderLeftColor: item.color }}>
                     <Box flexDirection={'row'} alignItems={'center'} flex={1}>
                       <Box
