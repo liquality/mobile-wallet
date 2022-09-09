@@ -373,14 +373,17 @@ PODS:
     - React
   - react-native-background-actions (2.6.7):
     - React-Core
-  - react-native-fast-pbkdf2 (0.3.1):
-    - React-Core
   - react-native-flipper (0.162.0):
     - React-Core
   - react-native-mmkv (2.4.3):
     - MMKV (>= 1.2.13)
     - React-Core
   - react-native-pager-view (5.4.25):
+    - React-Core
+  - react-native-quick-crypto (0.4.5):
+    - OpenSSL-Universal
+    - React
+    - React-callinvoker
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
@@ -578,10 +581,10 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-aes-cipher (from `../node_modules/react-native-aes-cipher`)
   - react-native-background-actions (from `../node_modules/react-native-background-actions`)
-  - react-native-fast-pbkdf2 (from `../node_modules/react-native-fast-pbkdf2`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
+  - react-native-quick-crypto (from `../node_modules/react-native-quick-crypto`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -707,14 +710,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-aes-cipher"
   react-native-background-actions:
     :path: "../node_modules/react-native-background-actions"
-  react-native-fast-pbkdf2:
-    :path: "../node_modules/react-native-fast-pbkdf2"
   react-native-flipper:
     :path: "../node_modules/react-native-flipper"
   react-native-mmkv:
     :path: "../node_modules/react-native-mmkv"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
+  react-native-quick-crypto:
+    :path: "../node_modules/react-native-quick-crypto"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
   react-native-safe-area-context:
@@ -833,10 +836,10 @@ SPEC CHECKSUMS:
   React-logger: f790bd10f86b38012e108fb4b564023602702270
   react-native-aes-cipher: 87362294a7e70f99e19576137818121aeab74962
   react-native-background-actions: 2c251c986f23347f9c1722f05fd296938f60edb1
-  react-native-fast-pbkdf2: 44d6ffa0346863e14100294004a1595ec76b2e9f
   react-native-flipper: 7eeb9b59b667dd0619372c7349cf7c78032d1de2
   react-native-mmkv: 1265a348a4711097ba29c8bcefd5971f48220f2b
   react-native-pager-view: da490aa1f902c9a5aeecf0909cc975ad0e92e53e
+  react-native-quick-crypto: b4e02e045076ea6bbcb9f3d2d53b427328bbc1cb
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: b456e1c40ec86f5593d58b275bd0e9603169daca
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457

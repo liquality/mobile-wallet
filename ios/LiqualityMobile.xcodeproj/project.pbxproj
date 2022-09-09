@@ -23,6 +23,8 @@
 		A6AC6665CA5C40F3BC406E73 /* Montserrat-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A04C782E4C7F4778B430C1EB /* Montserrat-ExtraLight.ttf */; };
 		A9607C075563483FBE678B0F /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B4A612A69124EBC9537BCD2 /* Montserrat-Bold.ttf */; };
 		BDE31449D0A341EDB965AB9C /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CAF9395E95024EEC91C8A475 /* Montserrat-Regular.ttf */; };
+		E4AA1E9128CBA141001D63E7 /* OpenSSL.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E8680628B55955003EACCC /* OpenSSL.xcframework */; };
+		E4AA1E9228CBA141001D63E7 /* OpenSSL.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E4E8680628B55955003EACCC /* OpenSSL.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F1F23B96C5BD41B2AC6C5F92 /* Montserrat-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E417885473EB46718A92E91E /* Montserrat-Black.ttf */; };
 		F559EBC5B69845828EC0B25B /* Montserrat-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 996F33021AD3443B80FA05E1 /* Montserrat-Medium.ttf */; };
 /* End PBXBuildFile section */
@@ -36,6 +38,20 @@
 			remoteInfo = LiqualityMobile;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E4AA1E9328CBA141001D63E7 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E4AA1E9228CBA141001D63E7 /* OpenSSL.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00069467639F4F4C914179F8 /* Montserrat-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-MediumItalic.ttf"; path = "../src/assets/fonts/Montserrat-MediumItalic.ttf"; sourceTree = "<group>"; };
@@ -88,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4AA1E9128CBA141001D63E7 /* OpenSSL.xcframework in Frameworks */,
 				0C80B921A6F3F58F76C31292 /* BuildFile in Frameworks */,
 				8FE80D0E5A56365677406F38 /* libPods-Liquality.a in Frameworks */,
 			);
@@ -254,6 +271,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				0FF36EA2C301DE3C7847450F /* [CP] Copy Pods Resources */,
 				F73A918EDD66B31CF0EC2432 /* [CP] Embed Pods Frameworks */,
+				E4AA1E9328CBA141001D63E7 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
