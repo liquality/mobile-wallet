@@ -377,5 +377,9 @@
   "settings": "SETTINGS",
   "warning": "WARNING",
   "asset": "ASSET 🇨🇳",
-  "activity": "ACTIVITY 🇨🇳"
+  "activity": "ACTIVITY 🇨🇳",
+  "sec": "{{sec}} sec",
+  "maybeIn30": "maybe in 30 sec",
+  "likelyLess30": "likely in < 30 sec",
+  "likelyLess15": "likely in < 15 sec"
 }

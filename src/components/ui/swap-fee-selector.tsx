@@ -2,7 +2,7 @@ import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import React, { FC, useEffect, useState } from 'react'
 import Text from '../../theme/text'
 import { GasFees } from '../../types'
-import FeeSelector from './fee-selector'
+import FeeSelector, { LikelyWaitProps } from './fee-selector'
 import { fetchFeesForAsset } from '../../store/store'
 import { Alert } from 'react-native'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
@@ -26,6 +26,7 @@ type SwapFeeSelectorProps = {
   toAsset?: string // to render double tap or long press popup accordingly
   fromAsset?: string // to render double tap or long press popup accordingly
   doubleLongTapFeelabel?: SwapScreenPopUpTypes
+  likelyWait?: LikelyWaitProps
 }
 
 const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
@@ -43,6 +44,7 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
     toAsset,
     fromAsset,
     doubleLongTapFeelabel,
+    likelyWait,
   } = props
   const [alertStatus, setAlertStatus] = useState(false)
   useEffect(() => {
@@ -78,6 +80,7 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
         toAsset={toAsset}
         fromAsset={fromAsset}
         doubleLongTapFeelabel={doubleLongTapFeelabel}
+        likelyWait={likelyWait}
       />
     </ErrorBoundary>
   )

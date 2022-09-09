@@ -60,6 +60,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import Card from '../../../theme/card'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import AssetIcon from '../../../components/asset-icon'
+import { LikelyWaitProps } from '../../../components/ui/fee-selector'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -562,6 +563,34 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }, [error, swapPair.fromAsset?.code])
 
   const renderSwapFeeSelector = () => {
+    const { fees } = wallet.state
+
+    let feeForAsset
+
+    const isEthFromAsset = swapPair.fromAsset
+      ? swapPair.fromAsset.code === 'ETH'
+      : false
+    if (isEthFromAsset) {
+      feeForAsset = swapPair.toAsset
+        ? fees[activeNetwork]?.[activeWalletId]?.[swapPair.toAsset?.code]
+        : null
+    } else {
+      feeForAsset = swapPair.fromAsset
+        ? fees[activeNetwork]?.[activeWalletId]?.[swapPair.fromAsset?.code]
+        : null
+    }
+
+    const likelyWaitForAsset: LikelyWaitProps = feeForAsset
+      ? {
+          slow: feeForAsset?.slow.wait || 0,
+          average: feeForAsset?.average.wait || 0,
+          fast: feeForAsset?.fast.wait || 0,
+        }
+      : {
+          slow: 0,
+          average: 0,
+          fast: 0,
+        }
     //If swap is on the same chain, there is just 1 type of gasfees
     if (assetsAreSameChain)
       return (
@@ -588,6 +617,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               customFeeAsset={route.params.code}
               fromAsset={getNativeAsset(swapPair.fromAsset?.code)}
               doubleLongTapFeelabel={swapScreenPopTypes}
+              likelyWait={likelyWaitForAsset}
             />
           ) : null}
         </>
@@ -617,6 +647,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               customFeeAsset={route.params.code}
               fromAsset={getNativeAsset(swapPair.fromAsset?.code)}
               doubleLongTapFeelabel={swapScreenPopTypes}
+              likelyWait={likelyWaitForAsset}
             />
           ) : null}
           {swapPair.toAsset?.code ? (
@@ -641,6 +672,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               customFeeAsset={route.params.code}
               toAsset={getNativeAsset(swapPair.toAsset?.code)}
               doubleLongTapFeelabel={swapScreenPopTypes}
+              likelyWait={likelyWaitForAsset}
             />
           ) : null}
         </>

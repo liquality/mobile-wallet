@@ -7,12 +7,21 @@ import Text from '../../theme/text'
 import { GasFees, NetworkFeeType } from '../../types'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import { SwapScreenPopUpTypes } from '../../atoms'
+import { labelTranslateFn } from '../../utils'
+import I18n from 'i18n-js'
 
 const gasSpeeds: Array<FeeLabel> = [
   FeeLabel.Slow,
   FeeLabel.Average,
   FeeLabel.Fast,
 ]
+
+export type LikelyWaitProps = {
+  slow: number
+  average: number
+  fast: number
+}
+
 type FeeSelectorProps = {
   assetSymbol: string
   handleCustomPress: (...args: unknown[]) => void
@@ -24,6 +33,7 @@ type FeeSelectorProps = {
   toAsset?: string // to render double tap or long press popup accordingly
   fromAsset?: string // to render double tap or long press popup accordingly
   doubleLongTapFeelabel?: SwapScreenPopUpTypes
+  likelyWait?: LikelyWaitProps
 }
 
 type NetworkPopUpCardProps = {
@@ -36,7 +46,9 @@ const NetworkPopUpCard = ({ speed, fee }: NetworkPopUpCardProps) => {
     <Card
       justifyContent={'center'}
       variant={'swapPopup'}
-      width={100}
+      flex={1}
+      paddingHorizontal="m"
+      paddingVertical="s"
       alignItems={'center'}
       height={60}>
       <Text color="tertiaryForeground">{speed}</Text>
@@ -57,6 +69,7 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
     toAsset = '',
     fromAsset = '',
     doubleLongTapFeelabel,
+    likelyWait,
   } = props
   const [customFee, setCustomFee] = useState()
   const [speedMode, setSpeedMode] = useState<keyof FeeDetails>('average')
@@ -97,17 +110,27 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
   ])
 
   const getCompatibleNetworkCardPopupPosition = React.useCallback(() => {
+    const ethereumFastSpeed = labelTranslateFn('likelyLess15')!
+    const ethereumAverageSpeed = labelTranslateFn('likelyLess30')!
+    const ethereumSlowSpeed = labelTranslateFn('maybeIn30')!
+    const notEthFastSpeed = I18n.t('sec', { sec: likelyWait?.fast })
+    const notEthAverageSpeed = I18n.t('sec', { sec: likelyWait?.average })
+    const notEthSlowSpeed = I18n.t('sec', { sec: likelyWait?.slow })
     switch (true) {
       //ToAsset conditions start from here
       case assetSymbol === toAsset &&
-        doubleLongTapFeelabel === SwapScreenPopUpTypes.ToFast:
+        doubleLongTapFeelabel === SwapScreenPopUpTypes.ToFast: {
+        let speed = toAsset === 'ETH' ? ethereumFastSpeed : notEthFastSpeed
         return (
           <Box position={'absolute'} right={40} top={-65} zIndex={1}>
-            <NetworkPopUpCard speed="600sec" fee={'7 sat/b'} />
+            <NetworkPopUpCard speed={speed} fee={'7 sat/b'} />
           </Box>
         )
+      }
       case assetSymbol === toAsset &&
-        doubleLongTapFeelabel === SwapScreenPopUpTypes.ToAverage:
+        doubleLongTapFeelabel === SwapScreenPopUpTypes.ToAverage: {
+        let speed =
+          toAsset === 'ETH' ? ethereumAverageSpeed : notEthAverageSpeed
         return (
           <Box
             position={'absolute'}
@@ -115,27 +138,33 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
             right={'70%'}
             top={-65}
             zIndex={1}>
-            <NetworkPopUpCard speed="600sec" fee="7 sat/b" />
+            <NetworkPopUpCard speed={speed} fee="7 sat/b" />
           </Box>
         )
+      }
       case assetSymbol === toAsset &&
-        doubleLongTapFeelabel === SwapScreenPopUpTypes.ToSlow:
+        doubleLongTapFeelabel === SwapScreenPopUpTypes.ToSlow: {
+        let speed = toAsset === 'ETH' ? ethereumSlowSpeed : notEthSlowSpeed
         return (
           <Box position={'absolute'} left={20} top={-65} zIndex={1}>
-            <NetworkPopUpCard speed="600sec" fee="7 sat/b" />
+            <NetworkPopUpCard speed={speed} fee="7 sat/b" />
           </Box>
         )
-
+      }
       //FromAsset conditions start from here
       case assetSymbol === fromAsset &&
-        doubleLongTapFeelabel === SwapScreenPopUpTypes.FromFast:
+        doubleLongTapFeelabel === SwapScreenPopUpTypes.FromFast: {
+        let speed = fromAsset === 'ETH' ? ethereumFastSpeed : notEthFastSpeed
         return (
           <Box position={'absolute'} right={40} top={-65} zIndex={1}>
-            <NetworkPopUpCard speed="600sec" fee={'7 sat/b'} />
+            <NetworkPopUpCard speed={speed} fee={'7 sat/b'} />
           </Box>
         )
+      }
       case assetSymbol === fromAsset &&
-        doubleLongTapFeelabel === SwapScreenPopUpTypes.FromAverage:
+        doubleLongTapFeelabel === SwapScreenPopUpTypes.FromAverage: {
+        let speed =
+          fromAsset === 'ETH' ? ethereumAverageSpeed : notEthAverageSpeed
         return (
           <Box
             position={'absolute'}
@@ -143,18 +172,21 @@ const FeeSelector: FC<FeeSelectorProps> = (props) => {
             right={'70%'}
             top={-65}
             zIndex={1}>
-            <NetworkPopUpCard speed="600sec" fee="7 sat/b" />
+            <NetworkPopUpCard speed={speed} fee="7 sat/b" />
           </Box>
         )
+      }
       case assetSymbol === fromAsset &&
-        doubleLongTapFeelabel === SwapScreenPopUpTypes.FromSlow:
+        doubleLongTapFeelabel === SwapScreenPopUpTypes.FromSlow: {
+        let speed = fromAsset === 'ETH' ? ethereumSlowSpeed : notEthSlowSpeed
         return (
           <Box position={'absolute'} left={20} top={-65} zIndex={1}>
-            <NetworkPopUpCard speed="600sec" fee="7 sat/b" />
+            <NetworkPopUpCard speed={speed} fee="7 sat/b" />
           </Box>
         )
+      }
     }
-  }, [assetSymbol, doubleLongTapFeelabel, toAsset, fromAsset])
+  }, [assetSymbol, doubleLongTapFeelabel, toAsset, fromAsset, likelyWait])
 
   return (
     <Box
