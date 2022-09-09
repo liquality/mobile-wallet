@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Platform } from 'react-native'
 import { AccountType } from '../../types'
 import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import MinusSign from '../../assets/icons/minus-sign.svg'
@@ -98,7 +98,7 @@ const Row = (props: RowProps) => {
   const showPopup = item.id === doubleOrLongTapSelectedAsset
 
   const availableGas = I18n.t('overviewScreen.availableGas', {
-    gas,
+    gas: new BigNumber(gas.toFixed(3)),
     token: item.code,
   })
 
@@ -116,63 +116,6 @@ const Row = (props: RowProps) => {
           paddingVertical={'m'}
           height={70}
           style={{ borderLeftColor: item.color }}>
-          {showPopup ? (
-            <Box
-              position={'absolute'}
-              left={0}
-              right={0}
-              top={0}
-              bottom={0}
-              zIndex={1}>
-              <Box flex={1} alignItems="center" justifyContent={'center'}>
-                <Animated.View
-                  key={'popUpCard'}
-                  entering={FadeIn.duration(FADE_IN_OUT_DURATION)}
-                  exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
-                  <Card
-                    variant={'popUpCard'}
-                    width={'65%'}
-                    height={'95%'}
-                    style={{ borderLeftColor: item.color }}>
-                    <Box flexDirection={'row'} alignItems={'center'} flex={1}>
-                      <Box
-                        width={30}
-                        height={30}
-                        borderRadius={15}
-                        marginHorizontal={'s'}
-                        style={{ backgroundColor: item.color }}
-                      />
-                      <Box flex={1}>
-                        <Text>{item.name}</Text>
-                        <Text fontSize={12} color="tertiaryForeground">
-                          {shortAddress}
-                        </Text>
-                        <Text fontSize={12} color="tertiaryForeground">
-                          {availableGas}
-                        </Text>
-                      </Box>
-                    </Box>
-                    <Box
-                      position={'absolute'}
-                      right={-7}
-                      top={0}
-                      bottom={0}
-                      zIndex={1}>
-                      <Box
-                        flex={1}
-                        alignItems="center"
-                        justifyContent={'center'}>
-                        <Card
-                          variant={'rightArrowCard'}
-                          style={{ transform: [{ rotate: '-45deg' }] }}
-                        />
-                      </Box>
-                    </Box>
-                  </Card>
-                </Animated.View>
-              </Box>
-            </Box>
-          ) : null}
           <View style={styles.col1}>
             <>
               {isExpanded ? (
@@ -212,6 +155,55 @@ const Row = (props: RowProps) => {
           <View style={styles.col4}>
             {!isNested ? <ChevronRight width={12} height={12} /> : null}
           </View>
+          {showPopup ? (
+            <Box position={'absolute'} left={0} right={0} top={0} bottom={0}>
+              <Box flex={1} alignItems="center" justifyContent={'center'}>
+                <Animated.View
+                  key={'popUpCard'}
+                  entering={FadeIn.duration(FADE_IN_OUT_DURATION)}
+                  exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
+                  <Card
+                    variant={'popUpCard'}
+                    width={'65%'}
+                    height={'95%'}
+                    paddingHorizontal={'s'}
+                    style={{ borderLeftColor: item.color }}>
+                    <Box flexDirection={'row'} alignItems={'center'} flex={1}>
+                      <Box
+                        width={30}
+                        height={30}
+                        borderRadius={15}
+                        marginHorizontal={'s'}
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <Box flex={1}>
+                        <Text>{item.name}</Text>
+                        <Text fontSize={12} color="tertiaryForeground">
+                          {shortAddress}
+                        </Text>
+                        <Text fontSize={12} color="tertiaryForeground">
+                          {availableGas}
+                        </Text>
+                      </Box>
+                    </Box>
+                    {Platform.OS === 'ios' && (
+                      <Box position={'absolute'} right={-7} top={0} bottom={0}>
+                        <Box
+                          flex={1}
+                          alignItems="center"
+                          justifyContent={'center'}>
+                          <Card
+                            variant={'rightArrowCard'}
+                            style={{ transform: [{ rotate: '-45deg' }] }}
+                          />
+                        </Box>
+                      </Box>
+                    )}
+                  </Card>
+                </Animated.View>
+              </Box>
+            </Box>
+          ) : null}
         </Box>
       </GestureDetector>
     </AssetListSwipeableRow>

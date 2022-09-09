@@ -337,6 +337,7 @@ const theme = createTheme({
       },
       shadowOpacity: 0.1,
       shadowRadius: 1,
+      elevation: 3,
     },
     rightArrowCard: {
       width: 15,
@@ -360,6 +361,7 @@ const theme = createTheme({
       },
       shadowOpacity: 0.2,
       shadowRadius: 2,
+      elevation: 3,
     },
     swapPopUpForToAsset: {
       alignItems: 'center',
@@ -372,6 +374,7 @@ const theme = createTheme({
       },
       shadowOpacity: 0.2,
       shadowRadius: 2,
+      elevation: 3,
     },
   },
   dropDownVariants: {

@@ -13,6 +13,7 @@ import {
   Pressable,
   StyleSheet,
   TouchableWithoutFeedback,
+  Platform,
 } from 'react-native'
 import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -850,21 +851,23 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                           </Text>
                         </Box>
                       </Box>
-                      <Box
-                        position={'absolute'}
-                        right={'30%'}
-                        top={-7}
-                        zIndex={1}>
+                      {Platform.OS === 'ios' && (
                         <Box
-                          flex={1}
-                          alignItems="center"
-                          justifyContent={'center'}>
-                          <Card
-                            variant={'rightArrowCard'}
-                            style={{ transform: [{ rotate: '-135deg' }] }}
-                          />
+                          position={'absolute'}
+                          right={'30%'}
+                          top={-7}
+                          zIndex={1}>
+                          <Box
+                            flex={1}
+                            alignItems="center"
+                            justifyContent={'center'}>
+                            <Card
+                              variant={'rightArrowCard'}
+                              style={{ transform: [{ rotate: '-135deg' }] }}
+                            />
+                          </Box>
                         </Box>
-                      </Box>
+                      )}
                     </Card>
                   </Animated.View>
                 </Box>
@@ -872,11 +875,15 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             ) : null}
             {swapScreenPopTypes === SwapScreenPopUpTypes.AtomicSwap ? (
               <Box position={'absolute'} left={0} bottom={-20}>
-                <Box width={180} height={100}>
+                <Animated.View
+                  key={'atomicSwap'}
+                  entering={FadeIn.duration(FADE_IN_OUT_DURATION)}
+                  exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
                   <Card
                     variant={'swapPopup'}
                     alignItems={'center'}
-                    flex={1}
+                    width={180}
+                    height={100}
                     justifyContent={'center'}
                     paddingHorizontal="m">
                     <Text color="secondaryForeground" fontSize={14}>
@@ -885,23 +892,25 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                         {labelTranslateFn('swapTypesInfo.swapNativeAssets')}
                       </Text>
                     </Text>
-                    <Box
-                      position={'absolute'}
-                      left={'40%'}
-                      bottom={-5}
-                      zIndex={1}>
+                    {Platform.OS === 'ios' && (
                       <Box
-                        flex={1}
-                        alignItems="center"
-                        justifyContent={'center'}>
-                        <Card
-                          variant={'rightArrowCard'}
-                          style={{ transform: [{ rotate: '45deg' }] }}
-                        />
+                        position={'absolute'}
+                        left={'40%'}
+                        bottom={-5}
+                        zIndex={1}>
+                        <Box
+                          flex={1}
+                          alignItems="center"
+                          justifyContent={'center'}>
+                          <Card
+                            variant={'rightArrowCard'}
+                            style={{ transform: [{ rotate: '45deg' }] }}
+                          />
+                        </Box>
                       </Box>
-                    </Box>
+                    )}
                   </Card>
-                </Box>
+                </Animated.View>
               </Box>
             ) : null}
           </Box>
