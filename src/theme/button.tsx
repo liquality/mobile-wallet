@@ -32,6 +32,7 @@ type Props = React.ComponentProps<typeof BaseButton> &
     isActive?: boolean
     isBorderless?: boolean
     txOptions?: i18n.TranslateOptions
+    onlyDisabled?: boolean
   }
 
 const Button: FC<Props> = (props) => {
@@ -46,6 +47,7 @@ const Button: FC<Props> = (props) => {
     children,
     appendChildren = false,
     txOptions,
+    onlyDisabled,
   } = props
   const langSelected = useRecoilValue(LS)
   i18n.locale = langSelected
@@ -68,9 +70,9 @@ const Button: FC<Props> = (props) => {
 
   const opacity = useMemo(
     () => ({
-      opacity: isActive ? 1 : 0.7,
+      opacity: onlyDisabled ? 1 : isActive ? 1 : 0.7,
     }),
-    [isActive],
+    [isActive, onlyDisabled],
   )
 
   const backgroundColor = useMemo(
@@ -87,7 +89,7 @@ const Button: FC<Props> = (props) => {
 
   return (
     <BaseButton
-      disabled={!isActive}
+      disabled={onlyDisabled ? onlyDisabled : !isActive}
       variant={variant}
       style={[borderWidth, opacity, backgroundColor]}
       onPress={onPress}>
