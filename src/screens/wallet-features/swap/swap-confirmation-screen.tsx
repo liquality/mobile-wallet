@@ -26,13 +26,16 @@ import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import SwapRates from '../../../components/swap/swap-rates'
 import { formatDate, labelTranslateFn } from '../../../utils'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useRecoilState } from 'recoil'
 import {
   fiatRatesState,
   historyStateFamily,
   networkState,
+  swapScreenDoubleLongEvent as SSDLE,
+  SwapScreenPopUpTypes,
 } from '../../../atoms'
 import I18n from 'i18n-js'
+import AtomicSwapPopUp from './atomic-swap-popup'
 
 type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -52,6 +55,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
   const [isExpanded, setIsExpanded] = useState(false)
   const [isSecretRevealed, setIsSecretRevealed] = useState(false)
   const [swapProvider, setSwapProvider] = useState<SwapProvider>()
+  const [swapScreenPopTypes, setSwapScreenPopTypes] = useRecoilState(SSDLE)
 
   const {
     id,
@@ -80,6 +84,13 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
       screenTitle: labelTranslateFn('swapConfirmationScreen.networkSpeed')!,
     })
   }
+
+  const onDoubleTapOrLongPress = useCallback(() => {
+    setSwapScreenPopTypes(SwapScreenPopUpTypes.AtomicSwap)
+    setTimeout(() => {
+      setSwapScreenPopTypes(SwapScreenPopUpTypes.Null)
+    }, 3000)
+  }, [setSwapScreenPopTypes])
 
   const handleRetrySwapPress = async () => {
     if (transaction) await retrySwap(transaction)
@@ -193,6 +204,9 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
               )}`}
           </Text>
         </View>
+        {swapScreenPopTypes === SwapScreenPopUpTypes.AtomicSwap ? (
+          <AtomicSwapPopUp left={20} bottom={-35} />
+        ) : null}
       </Box>
       {from && to && (
         <SwapRates
@@ -203,6 +217,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           selectQuote={() => ({})}
           clickable={false}
           style={{ paddingHorizontal: 20 }}
+          doubleOrLongPress={onDoubleTapOrLongPress}
         />
       )}
       <View style={styles.border}>

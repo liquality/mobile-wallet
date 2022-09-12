@@ -34,6 +34,7 @@ const TimelineComponent: React.FC<{
                 asset={historyItem.from}
                 fiatRates={fiatRates}
                 url={item.tx?.explorerLink}
+                txHash={historyItem.id}
               />
             ) : (
               <EmptyBlock />
