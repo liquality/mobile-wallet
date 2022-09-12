@@ -1,15 +1,15 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import React, { useEffect } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, StyleSheet, Image } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { updateNFTs } from '../../../store/store'
 import { RootTabParamList } from '../../../types'
 type ShowAllNFTsScreenProps = BottomTabScreenProps<
   RootTabParamList,
-  'ShowAllNFTsScreen'
+  'ShowNFTForSpecificChainScreen'
 >
 const wallet = setupWallet({
   ...defaultOptions,
@@ -17,17 +17,14 @@ const wallet = setupWallet({
 const ShowNFTForSpecificChainScreen = ({ route }: ShowAllNFTsScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
+  const [chainSpecificNfts, setChainSpecificNfts] = useState({})
+  const [iterableNftArray, setIterableNftArray] = useState([])
+  const { currentAccount } = route.params
 
   const enabledAccountsToSendIn = wallet.getters.accountsData
   const accountIdsToSendIn = enabledAccountsToSendIn.map((account) => {
     return account.id
   })
-
-  const fetchAllNfts = () => {
-    const specificNft = wallet.getters.accountNftCollections(
-      route.params.currentAccount.id,
-    )
-  }
 
   useEffect(() => {
     async function fetchData() {
@@ -36,17 +33,51 @@ const ShowNFTForSpecificChainScreen = ({ route }: ShowAllNFTsScreenProps) => {
         network: activeNetwork,
         accountIds: accountIdsToSendIn,
       })
-      fetchAllNfts()
+      setChainSpecificNfts(
+        wallet.getters.accountNftCollections(currentAccount.id),
+      )
+      //Manipulate NFT object to be iterable
+      let wholeNftArr = Object.values(chainSpecificNfts).map((val) => {
+        return val
+      })
+      setIterableNftArray(wholeNftArr)
     }
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeNetwork, activeWalletId])
+  }, [activeNetwork, activeWalletId, chainSpecificNfts, currentAccount.id])
+
+  const renderNftArray = () => {
+    let rows = []
+    if (iterableNftArray) {
+      rows = iterableNftArray.map((nftItem) => {
+        return (
+          <View style={[styles.container, styles.fragmentContainer]}>
+            <Text style={[styles.label, styles.headerLabel]}>NFT SCreen</Text>
+            <Text>{nftItem[0].collection.name}</Text>
+            <Text>{nftItem[0].description}</Text>
+
+            <Image
+              source={{
+                uri: nftItem[0].image_thumbnail_url,
+              }}
+              style={{ width: 150, height: 100 }}
+            />
+          </View>
+        )
+      })
+    } else {
+      return <Text>No data available</Text>
+    }
+
+    return rows
+  }
 
   return (
     <View style={[styles.container, styles.fragmentContainer]}>
       <Text style={[styles.label, styles.headerLabel]}>
         Specific CHAIN NFT SCreen
       </Text>
+      {renderNftArray()}
     </View>
   )
 }
