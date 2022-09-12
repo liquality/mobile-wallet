@@ -5,16 +5,16 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import { updateNFTs } from '../../../store/store'
+import { getNftsForAccount, updateNFTs } from '../../../store/store'
 import { RootTabParamList } from '../../../types'
-type ShowAllNFTsScreenProps = BottomTabScreenProps<
+type ShowAllNftsScreenProps = BottomTabScreenProps<
   RootTabParamList,
-  'ShowNFTForSpecificChainScreen'
+  'NftForSpecificChainScreen'
 >
 const wallet = setupWallet({
   ...defaultOptions,
 })
-const ShowNFTForSpecificChainScreen = ({ route }: ShowAllNFTsScreenProps) => {
+const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
   const [chainSpecificNfts, setChainSpecificNfts] = useState({})
@@ -33,9 +33,8 @@ const ShowNFTForSpecificChainScreen = ({ route }: ShowAllNFTsScreenProps) => {
         network: activeNetwork,
         accountIds: accountIdsToSendIn,
       })
-      setChainSpecificNfts(
-        wallet.getters.accountNftCollections(currentAccount.id),
-      )
+      let nfts = await getNftsForAccount(currentAccount.id)
+      setChainSpecificNfts(nfts)
       //Manipulate NFT object to be iterable
       let wholeNftArr = Object.values(chainSpecificNfts).map((val) => {
         return val
@@ -44,7 +43,7 @@ const ShowNFTForSpecificChainScreen = ({ route }: ShowAllNFTsScreenProps) => {
     }
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeNetwork, activeWalletId, chainSpecificNfts, currentAccount.id])
+  }, [activeNetwork, activeWalletId, currentAccount.id])
 
   const renderNftArray = () => {
     let rows = []
@@ -57,9 +56,10 @@ const ShowNFTForSpecificChainScreen = ({ route }: ShowAllNFTsScreenProps) => {
             <Text>{nftItem[0].description}</Text>
 
             <Image
-              source={{
+              /*    source={{
                 uri: nftItem[0].image_thumbnail_url,
-              }}
+              }} */
+              source={require('../../../assets/icons/checkmark.png')}
               style={{ width: 150, height: 100 }}
             />
           </View>
@@ -104,4 +104,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default ShowNFTForSpecificChainScreen
+export default NftForSpecificChainScreen

@@ -31,7 +31,6 @@ import { RootStackParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
-import ShowNFTForSpecificChainScreen from '../screens/wallet-features/NFT/show-nft-for-specific-chain-screen'
 
 import AssetToggleScreen from '../screens/wallet-features/asset/asset-toggle-screen'
 import SwapScreen from '../screens/wallet-features/swap/swap-screen'
@@ -47,7 +46,10 @@ import TimesIcon from '../assets/icons/times.svg'
 import CustomFeeEIP1559Screen from '../screens/wallet-features/custom-fee/custom-fee-eip-1559-screen'
 import Box from '../theme/box'
 import Text from '../theme/text'
-import ShowAllNFTsScreen from '../screens/wallet-features/NFT/show-all-nfts-screen'
+import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-screen'
+import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
+import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
+import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
@@ -325,8 +327,22 @@ export const AppStackNavigator = () => (
       })}
     />
     <Stack.Screen
-      name="ShowNFTForSpecificChainScreen"
-      component={ShowNFTForSpecificChainScreen}
+      name="NftForSpecificChainScreen"
+      component={NftForSpecificChainScreen}
+      options={() => ({
+        headerRight: PlaceholderComp,
+      })}
+    />
+    <Stack.Screen
+      name="NftDetailScreen"
+      component={NftDetailScreen}
+      options={() => ({
+        headerRight: PlaceholderComp,
+      })}
+    />
+    <Stack.Screen
+      name="NftSendScreen"
+      component={NftSendScreen}
       options={() => ({
         headerRight: PlaceholderComp,
       })}
@@ -338,7 +354,7 @@ const tabBarIcon = (focused: boolean, size: number, routeName: string) => {
   let whichIconToReturn
   if (routeName === 'SettingsScreen') {
     whichIconToReturn = <UserCog width={size} height={size} />
-  } else if (routeName === 'ShowAllNFTsScreen') {
+  } else if (routeName === 'ShowAllNftsScreen') {
     whichIconToReturn = <Text>NFT</Text>
   } else whichIconToReturn = <Infinity height={size} />
 
@@ -380,8 +396,8 @@ export const MainNavigator = () => (
     })}>
     <Tab.Screen name="AppStackNavigator" component={AppStackNavigator} />
     <Tab.Screen
-      name="ShowAllNFTsScreen"
-      component={WithPopupMenu(ShowAllNFTsScreen)}
+      name="ShowAllNftsScreen"
+      component={WithPopupMenu(ShowAllNftsScreen)}
       options={({}) => ({
         headerShown: true,
         headerTitle: '',

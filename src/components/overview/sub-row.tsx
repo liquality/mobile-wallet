@@ -19,6 +19,7 @@ import {
 } from '../../atoms'
 import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
+import { getNftsForAccount } from '../../store/store'
 
 type SubRowProps = {
   parentItem: AccountType
@@ -31,6 +32,8 @@ const SubRow: FC<SubRowProps> = (props) => {
   const { parentItem, item, onAssetSelected, nft } = props
   const [prettyNativeBalance, setPrettyNativeBalance] = useState('')
   const [prettyFiatBalance, setPrettyFiatBalance] = useState('')
+  const [nftsForAccount, setNftsForAccount] = useState({})
+
   const balance = useRecoilValue(
     balanceStateFamily({ asset: item.code, assetId: parentItem.id }),
   )
@@ -43,48 +46,31 @@ const SubRow: FC<SubRowProps> = (props) => {
   }, [onAssetSelected])
 
   useEffect(() => {
-    const fiatBalance = fiatRates[item.code]
-      ? cryptoToFiat(
-          unitToCurrency(
-            getAsset(activeNetwork, getNativeAsset(item.code)),
-            balance,
-          ).toNumber(),
-          fiatRates[item.code],
-        )
-      : 0
-    setPrettyNativeBalance(
-      `${prettyBalance(new BigNumber(balance), item.code)} ${item.code}`,
-    )
-    setPrettyFiatBalance(`$${formatFiat(new BigNumber(fiatBalance))}`)
-  }, [activeNetwork, balance, fiatRates, item.code])
+    async function fetchData() {
+      fetchData()
+      const fiatBalance = fiatRates[item.code]
+        ? cryptoToFiat(
+            unitToCurrency(
+              getAsset(activeNetwork, getNativeAsset(item.code)),
+              balance,
+            ).toNumber(),
+            fiatRates[item.code],
+          )
+        : 0
+      setPrettyNativeBalance(
+        `${prettyBalance(new BigNumber(balance), item.code)} ${item.code}`,
+      )
+      setPrettyFiatBalance(`$${formatFiat(new BigNumber(fiatBalance))}`)
+      setNftsForAccount(await getNftsForAccount(parentItem.id))
+    }
+    fetchData()
+  }, [activeNetwork, balance, fiatRates, item.code, parentItem.id])
 
-  const renderNFTRow = () => {
-    return (
-      <View>
-        <Pressable
-          onPress={handlePressOnRow}
-          style={[
-            styles.row,
-            styles.subElement,
-            { borderLeftColor: parentItem.color },
-          ]}>
-          <Text>Haj</Text>
-        </Pressable>
-      </View>
-    )
-  }
-
-  return (
-    <View>
-      {nft ? (
-        renderNFTRow()
-      ) : (
-        <AssetListSwipeableRow
-          assetData={{
-            ...item,
-            address: address,
-          }}
-          assetSymbol={item.code}>
+  console.log(nftsForAccount, 'nfts for acc?')
+  const renderNftRow = async () => {
+    if (parentItem.id) {
+      return null
+      /*  <View>
           <Pressable
             onPress={handlePressOnRow}
             style={[
@@ -92,20 +78,43 @@ const SubRow: FC<SubRowProps> = (props) => {
               styles.subElement,
               { borderLeftColor: parentItem.color },
             ]}>
-            <View style={styles.col1}>
-              <AssetIcon size={25} asset={item.code} />
-              <Text style={styles.name}>{item.name}</Text>
-            </View>
-            <View style={styles.col2}>
-              <Text style={styles.balance}>{prettyNativeBalance}</Text>
-              <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
-            </View>
-            <View style={styles.col3}>
-              <ChevronRight width={12} height={12} />
-            </View>
+            <Text>Haj</Text>
           </Pressable>
-        </AssetListSwipeableRow>
-      )}
+        </View> */
+    } else return null
+  }
+
+  return (
+    <View>
+      {/*    {nft ? (
+        renderNftRow()
+      ) : ( */}
+      <AssetListSwipeableRow
+        assetData={{
+          ...item,
+          address: address,
+        }}
+        assetSymbol={item.code}>
+        <Pressable
+          onPress={handlePressOnRow}
+          style={[
+            styles.row,
+            styles.subElement,
+            { borderLeftColor: parentItem.color },
+          ]}>
+          <View style={styles.col1}>
+            <AssetIcon size={25} asset={item.code} />
+            <Text style={styles.name}>{item.name}</Text>
+          </View>
+          <View style={styles.col2}>
+            <Text style={styles.balance}>{prettyNativeBalance}</Text>
+            <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
+          </View>
+          <View style={styles.col3}>
+            <ChevronRight width={12} height={12} />
+          </View>
+        </Pressable>
+      </AssetListSwipeableRow>
     </View>
   )
 }

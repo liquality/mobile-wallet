@@ -1,15 +1,23 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
+import React, { useEffect, useCallback, useState } from 'react'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Pressable,
+} from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { updateNFTs } from '../../../store/store'
+import Box from '../../../theme/box'
 import { RootTabParamList } from '../../../types'
-type ShowAllNFTsScreenProps = BottomTabScreenProps<
+type ShowAllNftsScreenProps = BottomTabScreenProps<
   RootTabParamList,
-  'ShowAllNFTsScreen'
+  'ShowAllNftsScreen'
 >
 
 /* const hardCodedNftList = {
@@ -89,7 +97,7 @@ type ShowAllNFTsScreenProps = BottomTabScreenProps<
 const wallet = setupWallet({
   ...defaultOptions,
 })
-const ShowAllNFTsScreen = ({ route }: ShowAllNFTsScreenProps) => {
+const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
   const [allNftData, setAllNftData] = useState({})
   const [iterableNftArray, setIterableNftArray] = useState([])
@@ -121,25 +129,42 @@ const ShowAllNFTsScreen = ({ route }: ShowAllNFTsScreenProps) => {
     }
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeNetwork, activeWalletId])
+  }, [allNftData, activeNetwork, activeWalletId])
+
+  const seeNftDetail = useCallback(
+    (nftItem) => {
+      console.log(nftItem, 'NFT ITEEEEM')
+      navigation.navigate('NftDetailScreen', { nftItem: nftItem })
+    },
+    [navigation],
+  )
 
   const renderNftArray = () => {
     let rows = []
     if (iterableNftArray) {
       rows = iterableNftArray.map((nftItem) => {
         return (
-          <View style={[styles.container, styles.fragmentContainer]}>
-            <Text style={[styles.label, styles.headerLabel]}>NFT SCreen</Text>
-            <Text>{nftItem[0].collection.name}</Text>
-            <Text>{nftItem[0].description}</Text>
-
-            <Image
-              source={{
-                uri: nftItem[0].image_thumbnail_url,
-              }}
-              style={{ width: 150, height: 100 }}
-            />
-          </View>
+          <ScrollView horizontal={true}>
+            <Box
+              flex={0.1}
+              flexDirection="row"
+              alignItems="center"
+              paddingHorizontal="s">
+              <Text style={[styles.label, styles.headerLabel]}>NFT SCreen</Text>
+              <Text>{nftItem[0].collection.name}</Text>
+              {/*               <Text>{nftItem[0].description}</Text>
+               */}
+              <Pressable onPress={() => seeNftDetail(nftItem[0])}>
+                <Image
+                  /*   source={{
+                  uri: nftItem[0].image_thumbnail_url,
+                }} */
+                  source={require('../../../assets/icons/nft_thumbnail.png')}
+                  style={{ width: 150, height: 100 }}
+                />
+              </Pressable>
+            </Box>
+          </ScrollView>
         )
       })
     } else {
@@ -178,4 +203,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default ShowAllNFTsScreen
+export default ShowAllNftsScreen
