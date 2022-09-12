@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, StyleSheet, Pressable, ScrollView, Platform } from 'react-native'
+import { View, StyleSheet, Pressable, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import SwapTransactionDetails from '../../../components/swap/swap-transaction-details'
@@ -25,11 +25,7 @@ import Box from '../../../theme/box'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import SwapRates from '../../../components/swap/swap-rates'
-import {
-  FADE_IN_OUT_DURATION,
-  formatDate,
-  labelTranslateFn,
-} from '../../../utils'
+import { formatDate, labelTranslateFn } from '../../../utils'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import {
   fiatRatesState,
@@ -39,8 +35,7 @@ import {
   SwapScreenPopUpTypes,
 } from '../../../atoms'
 import I18n from 'i18n-js'
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
-import Card from '../../../theme/card'
+import AtomicSwapPopUp from './atomic-swap-popup'
 
 type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -210,41 +205,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           </Text>
         </View>
         {swapScreenPopTypes === SwapScreenPopUpTypes.AtomicSwap ? (
-          <Box position={'absolute'} left={20} bottom={-35}>
-            <Animated.View
-              key={'atomicSwap'}
-              entering={FadeIn.duration(FADE_IN_OUT_DURATION)}
-              exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
-              <Card
-                variant={'swapPopup'}
-                alignItems={'center'}
-                width={180}
-                height={100}
-                justifyContent={'center'}
-                paddingHorizontal="m">
-                <Text color="secondaryForeground" fontSize={14}>
-                  {labelTranslateFn('swapTypesInfo.atomicSwap')}{' '}
-                  <Text color="tertiaryForeground" fontSize={14}>
-                    {labelTranslateFn('swapTypesInfo.swapNativeAssets')}
-                  </Text>
-                </Text>
-                {Platform.OS === 'ios' && (
-                  <Box
-                    position={'absolute'}
-                    left={'40%'}
-                    bottom={-5}
-                    zIndex={1}>
-                    <Box flex={1} alignItems="center" justifyContent={'center'}>
-                      <Card
-                        variant={'rightArrowCard'}
-                        style={{ transform: [{ rotate: '45deg' }] }}
-                      />
-                    </Box>
-                  </Box>
-                )}
-              </Card>
-            </Animated.View>
-          </Box>
+          <AtomicSwapPopUp left={20} bottom={-35} />
         ) : null}
       </Box>
       {from && to && (

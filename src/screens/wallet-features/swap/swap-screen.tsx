@@ -67,6 +67,7 @@ import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import AssetIcon from '../../../components/asset-icon'
 import { LikelyWaitProps } from '../../../components/ui/fee-selector'
 import { fetchFeesForAsset } from '../../../store/store'
+import AtomicSwapPopUp from './atomic-swap-popup'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -874,44 +875,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               </Box>
             ) : null}
             {swapScreenPopTypes === SwapScreenPopUpTypes.AtomicSwap ? (
-              <Box position={'absolute'} left={0} bottom={-20}>
-                <Animated.View
-                  key={'atomicSwap'}
-                  entering={FadeIn.duration(FADE_IN_OUT_DURATION)}
-                  exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
-                  <Card
-                    variant={'swapPopup'}
-                    alignItems={'center'}
-                    width={180}
-                    height={100}
-                    justifyContent={'center'}
-                    paddingHorizontal="m">
-                    <Text color="secondaryForeground" fontSize={14}>
-                      {labelTranslateFn('swapTypesInfo.atomicSwap')}{' '}
-                      <Text color="tertiaryForeground" fontSize={14}>
-                        {labelTranslateFn('swapTypesInfo.swapNativeAssets')}
-                      </Text>
-                    </Text>
-                    {Platform.OS === 'ios' && (
-                      <Box
-                        position={'absolute'}
-                        left={'40%'}
-                        bottom={-5}
-                        zIndex={1}>
-                        <Box
-                          flex={1}
-                          alignItems="center"
-                          justifyContent={'center'}>
-                          <Card
-                            variant={'rightArrowCard'}
-                            style={{ transform: [{ rotate: '45deg' }] }}
-                          />
-                        </Box>
-                      </Box>
-                    )}
-                  </Card>
-                </Animated.View>
-              </Box>
+              <AtomicSwapPopUp bottom={-20} />
             ) : null}
           </Box>
 
