@@ -228,9 +228,9 @@ export const toggleNetwork = async (network: any): Promise<void> => {
 export const updateNFTs = async (paramObj): Promise<void> => {
   if (wallet) {
     await wallet.dispatch.updateNFTs(paramObj).catch((e) => {
-      console.log(`Failed to FETCH NFTS: ${e}`, 'error')
+      Log(`Failed to FETCH NFTS: ${e}`, 'error')
     })
-  } else console.log(wallet, 'NO WALLET DISPATCH')
+  } else Log(`Failed to fetch WALLET DISPATCH: ${e}`, 'error')
 }
 
 /**
@@ -251,7 +251,6 @@ export const toggleAsset = async (
       assets: [asset],
     })
   } else {
-    console.log(wallet, 'wat is wallet')
     await wallet.dispatch.disableAssets({
       network: activeNetwork,
       walletId: activeWalletId,
