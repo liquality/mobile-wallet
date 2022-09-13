@@ -4,6 +4,7 @@ import {
   accountsIdsState,
   isDoneFetchingData,
   langSelected as LS,
+  networkState,
 } from '../../atoms'
 import { populateWallet } from '../../store/store'
 import ActivityFlatList from '../activity-flat-list'
@@ -26,6 +27,7 @@ type RenderTabBar = SceneRendererProps & {
 
 const ContentBlock = () => {
   const accountsIds = useRecoilValue(accountsIdsState)
+  const network = useRecoilValue(networkState)
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
   const langSelected = useRecoilValue(LS)
   i18n.locale = langSelected
@@ -38,7 +40,7 @@ const ContentBlock = () => {
         setIsDoneFetchingData(true)
         Log(`Failed to populateWallet: ${e}`, 'error')
       })
-  }, [setIsDoneFetchingData, accountsIds])
+  }, [setIsDoneFetchingData, accountsIds, network])
 
   const layout = useWindowDimensions()
   const [index, setIndex] = React.useState(0)
