@@ -51,7 +51,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
         scrollEnabled
         refreshControl={
           <RefreshControl
-            tintColor="red"
+            tintColor="transparent"
             colors={['transparent']}
             style={styles.indicatorBackgroundColor}
             refreshing={refreshing}
