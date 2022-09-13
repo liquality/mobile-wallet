@@ -7,6 +7,7 @@ import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import Box from '../../../theme/box'
+import Button from '../../../theme/button'
 import { RootTabParamList, UseInputStateReturnType } from '../../../types'
 
 const useInputState = (
@@ -40,6 +41,7 @@ const NftSendScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
   }, [activeNetwork, activeWalletId])
 
   const sendNft = async () => {
+    console.log('IN SEND NFT')
     try {
       /*  const fee = this.feesAvailable
         ? this.assetFees[this.selectedFee].fee
@@ -48,7 +50,7 @@ const NftSendScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
         network: activeNetwork,
         accountId: nftItem.accountId,
         walletId: activeWalletId,
-        receiver: addressInput,
+        receiver: addressInput.value,
         contract: nftItem.asset_contract.address,
         tokenIDs: [nftItem.token_id],
         values: [1],
@@ -56,6 +58,7 @@ const NftSendScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
         feeLabel: 'average',
         nft: nftItem,
       }
+      console.log('DO I GET HER EIN TRY')
       await sendNFTTransaction(data)
       await updateNFTs({
         walletId: activeWalletId,
@@ -70,9 +73,16 @@ const NftSendScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
   return (
     <View style={[styles.container, styles.fragmentContainer]}>
       <Text>NFT SEND SCREEEN</Text>
-      <Pressable onPress={() => sendNft()}>
-        <Text>SEND NFT</Text>
-      </Pressable>
+
+      <Button
+        type="primary"
+        variant="l"
+        label={'Send NFT'}
+        isBorderless={false}
+        isActive={true}
+        onPress={() => sendNft()}
+      />
+
       <Box
         flexDirection="row"
         justifyContent="space-between"

@@ -224,8 +224,8 @@ export const toggleNetwork = async (network: any): Promise<void> => {
 }
 
 /**
- * Toggle network between mainnet and testnet
- * @param network
+ * Update NFTs to refresh nft info for all accounts
+ * @param paramObj
  */
 export const updateNFTs = async (paramObj): Promise<void> => {
   if (wallet) {
@@ -235,9 +235,14 @@ export const updateNFTs = async (paramObj): Promise<void> => {
   } else Log(`Failed to fetch WALLET DISPATCH: ${paramObj}`, 'error')
 }
 
+/**
+ * Send NFT transaction
+ * @param paramObj
+ */
 export const sendNFTTransaction = async (paramObj): Promise<void> => {
+  console.log(paramObj, 'nft data obj')
   await wallet.dispatch.sendNFTTransaction(paramObj).catch((e) => {
-    Log(`Failed to SEND NFTs: ${e}`, 'error')
+    console.log(`Failed to SEND NFTs: ${e}`, 'error')
   })
 }
 

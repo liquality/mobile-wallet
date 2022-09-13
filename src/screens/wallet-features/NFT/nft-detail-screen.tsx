@@ -5,6 +5,7 @@ import React, { useEffect, useCallback } from 'react'
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
+import Button from '../../../theme/button'
 
 import { RootTabParamList } from '../../../types'
 type ShowAllNftsScreenProps = BottomTabScreenProps<
@@ -37,8 +38,16 @@ const NftDetailScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
   return (
     <View style={[styles.container, styles.fragmentContainer]}>
       <Text>NFT DETAIL SCREEN</Text>
+      <Button
+        type="primary"
+        variant="l"
+        label={'Send NFT'}
+        isBorderless={false}
+        isActive={true}
+        onPress={() => navigateToSendNftScreen()}
+      />
+
       <Pressable onPress={() => navigateToSendNftScreen()}>
-        <Text>SEND NFT</Text>
         <Image
           /*   source={{
                   uri: nftItem.image_thumbnail_url,
