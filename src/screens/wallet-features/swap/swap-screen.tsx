@@ -7,7 +7,14 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Alert, Dimensions, Pressable, StyleSheet } from 'react-native'
+import {
+  Alert,
+  Dimensions,
+  Pressable,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Platform,
+} from 'react-native'
 import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ChevronRight from '../../../assets/icons/activity-status/chevron-right.svg'
@@ -24,7 +31,11 @@ import { getQuotes } from '../../../store/store'
 import { ActionEnum, NetworkFeeType, RootStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
-import { labelTranslateFn, sortQuotes } from '../../../utils'
+import {
+  FADE_IN_OUT_DURATION,
+  labelTranslateFn,
+  sortQuotes,
+} from '../../../utils'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
@@ -33,7 +44,13 @@ import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { prettyBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { balanceStateFamily, swapPairState, networkState } from '../../../atoms'
+import {
+  balanceStateFamily,
+  swapPairState,
+  networkState,
+  swapScreenDoubleLongEvent as SSDLE,
+  SwapScreenPopUpTypes,
+} from '../../../atoms'
 import I18n from 'i18n-js'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import {
@@ -44,6 +61,13 @@ import {
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
+import Card from '../../../theme/card'
+import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
+import AssetIcon from '../../../components/asset-icon'
+import { LikelyWaitProps } from '../../../components/ui/fee-selector'
+import { fetchFeesForAsset } from '../../../store/store'
+import AtomicSwapPopUp from './atomic-swap-popup'
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -176,6 +200,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   )
   const [state, dispatch] = useReducer(reducer, initialSwapSEventState)
 
+  const [swapScreenPopTypes, setSwapScreenPopTypes] = useRecoilState(SSDLE)
+
+  const [gas, setGasFee] = useState('0')
+
   const toggleFeeSelectors = () => {
     setFeeSelectorsVisible(!areFeeSelectorsVisible)
   }
@@ -199,6 +227,16 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       action: ActionEnum.SWAP,
     })
   }
+
+  const onDoubleTapOrLongPress = useCallback(
+    (popUpTypes: SwapScreenPopUpTypes) => () => {
+      setSwapScreenPopTypes(popUpTypes)
+      setTimeout(() => {
+        setSwapScreenPopTypes(SwapScreenPopUpTypes.Null)
+      }, 3000)
+    },
+    [setSwapScreenPopTypes],
+  )
 
   const handleToAssetPress = () => {
     setSwapPair((prevVal) => ({ ...prevVal, toAsset: undefined }))
@@ -413,10 +451,24 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   ])
 
   useEffect(() => {
+    if (swapPair.toAsset) {
+      fetchFeesForAsset(swapPair.toAsset?.code).then((gasFee) => {
+        setGasFee(gasFee.average.toFixed(2))
+      })
+    }
+  }, [swapPair.toAsset])
+
+  useEffect(() => {
     updateBestQuote()
-    let nativeCustomFeeCode = getNativeAsset(route.params.code)
-    let nativeToCode = getNativeAsset(swapPair.toAsset.code)
-    let nativeFromCode = getNativeAsset(swapPair.fromAsset.code)
+    let nativeCustomFeeCode = route.params.code
+      ? getNativeAsset(route.params.code)
+      : ''
+    let nativeToCode = swapPair.toAsset
+      ? getNativeAsset(swapPair.toAsset.code)
+      : ''
+    let nativeFromCode = swapPair.fromAsset
+      ? getNativeAsset(swapPair.fromAsset.code)
+      : ''
     if (swapPair && route.params.customFee) {
       let params = {
         speed: 'custom',
@@ -529,6 +581,34 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }, [error, swapPair.fromAsset?.code])
 
   const renderSwapFeeSelector = () => {
+    const { fees } = wallet.state
+
+    let feeForAsset
+
+    const isEthFromAsset = swapPair.fromAsset
+      ? swapPair.fromAsset.code === 'ETH'
+      : false
+    if (isEthFromAsset) {
+      feeForAsset = swapPair.toAsset
+        ? fees[activeNetwork]?.[activeWalletId]?.[swapPair.toAsset?.code]
+        : null
+    } else {
+      feeForAsset = swapPair.fromAsset
+        ? fees[activeNetwork]?.[activeWalletId]?.[swapPair.fromAsset?.code]
+        : null
+    }
+
+    const likelyWaitForAsset: LikelyWaitProps = feeForAsset
+      ? {
+          slow: feeForAsset?.slow.wait || 0,
+          average: feeForAsset?.average.wait || 0,
+          fast: feeForAsset?.fast.wait || 0,
+        }
+      : {
+          slow: 0,
+          average: 0,
+          fast: 0,
+        }
     //If swap is on the same chain, there is just 1 type of gasfees
     if (assetsAreSameChain)
       return (
@@ -553,6 +633,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               setGasFees={setGasFees}
               customFee={route.params.customFee}
               customFeeAsset={route.params.code}
+              fromAsset={getNativeAsset(swapPair.fromAsset?.code)}
+              doubleLongTapFeelabel={swapScreenPopTypes}
+              likelyWait={likelyWaitForAsset}
             />
           ) : null}
         </>
@@ -580,6 +663,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               setGasFees={setGasFees}
               customFee={route.params.customFee}
               customFeeAsset={route.params.code}
+              fromAsset={getNativeAsset(swapPair.fromAsset?.code)}
+              doubleLongTapFeelabel={swapScreenPopTypes}
+              likelyWait={likelyWaitForAsset}
             />
           ) : null}
           {swapPair.toAsset?.code ? (
@@ -602,6 +688,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               setGasFees={setGasFees}
               customFee={route.params.customFee}
               customFeeAsset={route.params.code}
+              toAsset={getNativeAsset(swapPair.toAsset?.code)}
+              doubleLongTapFeelabel={swapScreenPopTypes}
+              likelyWait={likelyWaitForAsset}
             />
           ) : null}
         </>
@@ -609,166 +698,275 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     }
   }
 
-  return (
-    <Box
-      flex={1}
-      width={Dimensions.get('window').width}
-      backgroundColor="mainBackground">
-      {getCompatibleErrorMsg()}
-      <Box
-        flexDirection="row"
-        justifyContent="center"
-        alignItems="flex-end"
-        marginHorizontal="xl">
-        <AmountTextInputBlock
-          type="FROM"
-          defaultAmount={state.fromAmount}
-          label={labelTranslateFn('common.send')!}
-          chain={swapPair.fromAsset?.chain || ChainId.Bitcoin}
-          assetSymbol={swapPair.fromAsset?.code || 'BTC'}
-          dispatch={dispatch}
-          ref={amountInputRef}
-        />
-        <Pressable style={styles.chevronBtn} onPress={handleFromAssetPress}>
-          <ChevronRight width={15} height={15} />
-        </Pressable>
-      </Box>
-      <Box
-        flexDirection="row"
-        justifyContent="space-between"
-        alignItems="flex-end"
-        marginVertical="m"
-        paddingHorizontal="xl">
-        <Box flexDirection="row">
-          <Button
-            type="tertiary"
-            variant="s"
-            label={{ tx: 'common.min' }}
-            onPress={handleMinPress}
-            isBorderless={false}
-            isActive={true}
-          />
-          <Button
-            type="tertiary"
-            variant="s"
-            label={{ tx: 'common.max' }}
-            onPress={handleMaxPress}
-            isBorderless={false}
-            isActive={true}
-          />
-        </Box>
-        <Box flexDirection="row">
-          <Label text={{ tx: 'common.available' }} variant="light" />
-          {fromBalance && swapPair.fromAsset?.code ? (
-            <Text style={[styles.font, styles.amount]}>
-              {fromBalance &&
-                `${prettyBalance(
-                  new BigNumber(fromBalance),
-                  swapPair.fromAsset.code,
-                )} ${swapPair.fromAsset.code}`}
-            </Text>
-          ) : null}
-        </Box>
-      </Box>
-      <Box alignItems="center" marginVertical="m" paddingHorizontal="xl">
-        <ArrowDown />
-      </Box>
-      <Box
-        flexDirection="row"
-        justifyContent="center"
-        alignItems="flex-end"
-        marginHorizontal="xl">
-        <AmountTextInputBlock
-          type="TO"
-          defaultAmount={state.toAmount}
-          label={labelTranslateFn('common.receive')!}
-          chain={swapPair.toAsset?.chain || ChainId.Ethereum}
-          assetSymbol={swapPair.toAsset?.code || 'ETH'}
-          ref={amountInputRefTo}
-        />
-        <Pressable style={styles.chevronBtn} onPress={handleToAssetPress}>
-          <ChevronRight width={15} height={15} />
-        </Pressable>
-      </Box>
+  const availableGas = I18n.t('overviewScreen.availableGas', {
+    gas,
+    token: swapPair.toAsset?.code,
+  })
 
-      {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
-        <SwapRates
-          fromAsset={swapPair.fromAsset.code}
-          toAsset={swapPair.toAsset.code}
-          quotes={quotes}
-          selectQuote={handleSelectQuote}
-          selectedQuote={selectedQuote}
-          clickable
-          style={styles.paddingHorizontal}
-        />
-      ) : null}
-      <Box
-        flexDirection="row"
-        justifyContent="space-between"
-        alignItems="center"
-        marginVertical="m"
-        paddingHorizontal="xl">
-        <Pressable onPress={toggleFeeSelectors} style={styles.feeOptionsButton}>
-          {areFeeSelectorsVisible ? (
-            <AngleDown style={styles.dropdown} />
-          ) : (
-            <AngleRight style={styles.dropdown} />
-          )}
-          <Label text={{ tx: 'common.networkSpeed' }} variant="strong" />
-          {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
-            <Label
-              text={
-                assetsAreSameChain
-                  ? `${getNativeAsset(
-                      swapPair.fromAsset?.code,
-                    )} ${fromNetworkSpeed}`
-                  : `${swapPair.fromAsset?.code} ${fromNetworkSpeed} / ${swapPair.toAsset?.code} ${toNetworkSpeed}`
-              }
-              variant="light"
+  return (
+    <Box flex={1}>
+      <TouchableWithoutFeedback
+        onPress={() => setSwapScreenPopTypes(SwapScreenPopUpTypes.Null)}>
+        <Box
+          flex={1}
+          width={Dimensions.get('window').width}
+          backgroundColor="mainBackground">
+          {getCompatibleErrorMsg()}
+          <Box
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="flex-end"
+            marginHorizontal="xl">
+            <AmountTextInputBlock
+              type="FROM"
+              defaultAmount={state.fromAmount}
+              label={labelTranslateFn('common.send')!}
+              chain={swapPair.fromAsset?.chain || ChainId.Bitcoin}
+              assetSymbol={swapPair.fromAsset?.code || 'BTC'}
+              dispatch={dispatch}
+              ref={amountInputRef}
+              doubleOrLongPress={onDoubleTapOrLongPress(
+                SwapScreenPopUpTypes.FromAsset,
+              )}
             />
+            <Pressable style={styles.chevronBtn} onPress={handleFromAssetPress}>
+              <ChevronRight width={15} height={15} />
+            </Pressable>
+          </Box>
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+            marginVertical="m"
+            paddingHorizontal="xl">
+            <Box flexDirection="row">
+              <Button
+                type="tertiary"
+                variant="s"
+                label={{ tx: 'common.min' }}
+                onPress={handleMinPress}
+                isBorderless={false}
+                isActive={true}
+              />
+              <Button
+                type="tertiary"
+                variant="s"
+                label={{ tx: 'common.max' }}
+                onPress={handleMaxPress}
+                isBorderless={false}
+                isActive={true}
+              />
+            </Box>
+            <Box flexDirection="row">
+              <Label text={{ tx: 'common.available' }} variant="light" />
+              {fromBalance && swapPair.fromAsset?.code ? (
+                <Text style={[styles.font, styles.amount]}>
+                  {fromBalance &&
+                    `${prettyBalance(
+                      new BigNumber(fromBalance),
+                      swapPair.fromAsset.code,
+                    )} ${swapPair.fromAsset.code}`}
+                </Text>
+              ) : null}
+            </Box>
+          </Box>
+          <Box alignItems="center" marginVertical="m" paddingHorizontal="xl">
+            <ArrowDown />
+            {swapScreenPopTypes === SwapScreenPopUpTypes.FromAsset ? (
+              <Box position={'absolute'} right={20} bottom={10} zIndex={1}>
+                <Animated.View
+                  key={'swapPopupForFromAsset'}
+                  entering={FadeIn.duration(FADE_IN_OUT_DURATION)}
+                  exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
+                  <Card variant={'swapPopup'} width={180} height={60}>
+                    <Box flexDirection={'row'} alignItems={'center'} flex={1}>
+                      <Box
+                        width={34}
+                        height={34}
+                        borderRadius={17}
+                        marginHorizontal={'m'}>
+                        <AssetIcon
+                          size={33}
+                          asset={swapPair.fromAsset?.code}
+                          chain={swapPair.fromAsset?.chain}
+                        />
+                      </Box>
+                      <Box flex={1}>
+                        <Text>{swapPair.fromAsset?.code}</Text>
+                        <Text fontSize={12} color="tertiaryForeground">
+                          {shortenAddress(swapPair.fromAsset?.address || '')}
+                        </Text>
+                      </Box>
+                    </Box>
+                  </Card>
+                </Animated.View>
+              </Box>
+            ) : null}
+          </Box>
+          <Box
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="flex-end"
+            zIndex={1}
+            marginHorizontal="xl">
+            <AmountTextInputBlock
+              type="TO"
+              defaultAmount={state.toAmount}
+              label={labelTranslateFn('common.receive')!}
+              chain={swapPair.toAsset?.chain || ChainId.Ethereum}
+              assetSymbol={swapPair.toAsset?.code || 'ETH'}
+              ref={amountInputRefTo}
+              doubleOrLongPress={onDoubleTapOrLongPress(
+                SwapScreenPopUpTypes.ToAsset,
+              )}
+            />
+            <Pressable style={styles.chevronBtn} onPress={handleToAssetPress}>
+              <ChevronRight width={15} height={15} />
+            </Pressable>
+            {swapScreenPopTypes === SwapScreenPopUpTypes.ToAsset ? (
+              <Box position={'absolute'} right={10} top={80}>
+                <Box flex={1} alignItems="center" justifyContent={'center'}>
+                  <Animated.View
+                    key={'swapPopupForToAsset'}
+                    entering={FadeIn.duration(FADE_IN_OUT_DURATION)}
+                    exiting={FadeOut.duration(FADE_IN_OUT_DURATION)}>
+                    <Card
+                      variant={'swapPopUpForToAsset'}
+                      height={60}
+                      width={200}
+                      style={{ borderLeftColor: swapPair.toAsset?.color }}>
+                      <Box flexDirection={'row'} alignItems={'center'} flex={1}>
+                        <Box
+                          width={30}
+                          height={30}
+                          borderRadius={15}
+                          marginHorizontal={'s'}
+                          style={{ backgroundColor: swapPair.toAsset?.color }}
+                        />
+                        <Box flex={1}>
+                          <Text>{swapPair.toAsset?.name}</Text>
+                          <Text fontSize={12} color="tertiaryForeground">
+                            {shortenAddress(swapPair.toAsset?.address || '')}
+                          </Text>
+                          <Text fontSize={12} color="tertiaryForeground">
+                            {availableGas}
+                          </Text>
+                        </Box>
+                      </Box>
+                      {Platform.OS === 'ios' && (
+                        <Box
+                          position={'absolute'}
+                          right={'30%'}
+                          top={-7}
+                          zIndex={1}>
+                          <Box
+                            flex={1}
+                            alignItems="center"
+                            justifyContent={'center'}>
+                            <Card
+                              variant={'rightArrowCard'}
+                              style={{ transform: [{ rotate: '-135deg' }] }}
+                            />
+                          </Box>
+                        </Box>
+                      )}
+                    </Card>
+                  </Animated.View>
+                </Box>
+              </Box>
+            ) : null}
+            {swapScreenPopTypes === SwapScreenPopUpTypes.AtomicSwap ? (
+              <AtomicSwapPopUp bottom={-20} />
+            ) : null}
+          </Box>
+
+          {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
+            <Box>
+              <SwapRates
+                fromAsset={swapPair.fromAsset.code}
+                toAsset={swapPair.toAsset.code}
+                quotes={quotes}
+                selectQuote={handleSelectQuote}
+                selectedQuote={selectedQuote}
+                clickable
+                style={styles.paddingHorizontal}
+                doubleOrLongPress={onDoubleTapOrLongPress(
+                  SwapScreenPopUpTypes.AtomicSwap,
+                )}
+              />
+            </Box>
           ) : null}
-        </Pressable>
-      </Box>
-      {areFeeSelectorsVisible &&
-      fromNetworkFee &&
-      toNetworkFee &&
-      selectedQuote ? (
-        <>
-          {renderSwapFeeSelector()}
-          <Warning
-            text1={{ tx1: 'common.maxSlippage' }}
-            text2={I18n.t('common.swapDoesnotComp', {
-              date: `${new Date(
-                new Date().getTime() + 3 * 60 * 60 * 1000,
-              ).toTimeString()}`,
-            })}>
-            <Clock width={15} height={15} style={styles.icon} />
-          </Warning>
-        </>
-      ) : null}
-      <Box
-        position="absolute"
-        bottom={20}
-        width={Dimensions.get('screen').width}>
-        <Box flexDirection="row" justifyContent="space-around">
-          <Button
-            type="secondary"
-            variant="m"
-            label={{ tx: 'common.cancel' }}
-            onPress={handleCancelPress}
-            isBorderless={false}
-            isActive={true}
-          />
-          <Button
-            type="primary"
-            variant="m"
-            label={{ tx: 'common.review' }}
-            onPress={handleReviewBtnPress}
-            isBorderless={false}
-            isActive={true}
-          />
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+            marginVertical="m"
+            paddingHorizontal="xl">
+            <Pressable
+              onPress={toggleFeeSelectors}
+              style={styles.feeOptionsButton}>
+              {areFeeSelectorsVisible ? (
+                <AngleDown style={styles.dropdown} />
+              ) : (
+                <AngleRight style={styles.dropdown} />
+              )}
+              <Label text={{ tx: 'common.networkSpeed' }} variant="strong" />
+              {swapPair.fromAsset?.code && swapPair.toAsset?.code ? (
+                <Label
+                  text={
+                    assetsAreSameChain
+                      ? `${getNativeAsset(
+                          swapPair.fromAsset?.code,
+                        )} ${fromNetworkSpeed}`
+                      : `${swapPair.fromAsset?.code} ${fromNetworkSpeed} / ${swapPair.toAsset?.code} ${toNetworkSpeed}`
+                  }
+                  variant="light"
+                />
+              ) : null}
+            </Pressable>
+          </Box>
+          {areFeeSelectorsVisible &&
+          fromNetworkFee &&
+          toNetworkFee &&
+          selectedQuote ? (
+            <>
+              {renderSwapFeeSelector()}
+              <Warning
+                text1={{ tx1: 'common.maxSlippage' }}
+                text2={I18n.t('common.swapDoesnotComp', {
+                  date: `${new Date(
+                    new Date().getTime() + 3 * 60 * 60 * 1000,
+                  ).toTimeString()}`,
+                })}>
+                <Clock width={15} height={15} style={styles.icon} />
+              </Warning>
+            </>
+          ) : null}
+          <Box
+            position="absolute"
+            bottom={20}
+            width={Dimensions.get('screen').width}>
+            <Box flexDirection="row" justifyContent="space-around">
+              <Button
+                type="secondary"
+                variant="m"
+                label={{ tx: 'common.cancel' }}
+                onPress={handleCancelPress}
+                isBorderless={false}
+                isActive={true}
+              />
+              <Button
+                type="primary"
+                variant="m"
+                label={{ tx: 'common.review' }}
+                onPress={handleReviewBtnPress}
+                isBorderless={false}
+                isActive={true}
+              />
+            </Box>
+          </Box>
         </Box>
-      </Box>
+      </TouchableWithoutFeedback>
     </Box>
   )
 }

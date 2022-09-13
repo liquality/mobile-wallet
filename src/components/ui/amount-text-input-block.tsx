@@ -25,6 +25,7 @@ import {
 import Button from '../../theme/button'
 import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms'
+import GestureDetector from '../gesture-detector/gesture-detector'
 
 type AmountTextInputBlockProps = {
   type: 'FROM' | 'TO'
@@ -35,6 +36,7 @@ type AmountTextInputBlockProps = {
   minimumValue?: BigNumber
   defaultAmount?: BigNumber
   dispatch?: React.Dispatch<SwapEventAction>
+  doubleOrLongPress?: () => void
 }
 
 type AmountTextInputHandle = {
@@ -45,7 +47,15 @@ const AmountTextInputBlock: ForwardRefRenderFunction<
   AmountTextInputHandle,
   AmountTextInputBlockProps
 > = (props, forwardedRef) => {
-  const { label, assetSymbol, chain, defaultAmount, dispatch, type } = props
+  const {
+    label,
+    assetSymbol,
+    chain,
+    defaultAmount,
+    dispatch,
+    type,
+    doubleOrLongPress,
+  } = props
   const fiatRates = useRecoilValue(fiatRatesState)
   const { value, onChangeText } = useInputState(
     defaultAmount?.toString() || '0',
@@ -164,7 +174,13 @@ const AmountTextInputBlock: ForwardRefRenderFunction<
           />
         </View>
         <AssetIcon asset={assetSymbol} chain={chain} />
-        <Text style={[styles.font, styles.description]}>{assetSymbol}</Text>
+        {doubleOrLongPress ? (
+          <GestureDetector doubleOrLongPress={doubleOrLongPress}>
+            <Text style={[styles.font, styles.description]}>{assetSymbol}</Text>
+          </GestureDetector>
+        ) : (
+          <Text style={[styles.font, styles.description]}>{assetSymbol}</Text>
+        )}
       </View>
     </View>
   )

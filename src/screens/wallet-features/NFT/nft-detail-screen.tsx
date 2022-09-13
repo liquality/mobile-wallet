@@ -16,7 +16,7 @@ const wallet = setupWallet({
   ...defaultOptions,
 })
 const NftDetailScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
-  const { nftItem } = route.params
+  const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
 
   const { activeWalletId } = wallet.state
@@ -30,8 +30,9 @@ const NftDetailScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
   const navigateToSendNftScreen = useCallback(() => {
     navigation.navigate('NftSendScreen', {
       nftItem: nftItem,
+      accountIdsToSendIn: accountIdsToSendIn,
     })
-  }, [navigation, nftItem])
+  }, [accountIdsToSendIn, navigation, nftItem])
 
   return (
     <View style={[styles.container, styles.fragmentContainer]}>

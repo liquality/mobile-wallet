@@ -114,6 +114,30 @@ export const langSelected = atom<LanguageEnum | string>({
   effects: [localStorageLangEffect(KEYS.ACTIVE_LANG)],
 })
 
+export const doubleOrLongTapSelectedAsset = atom<string>({
+  key: 'doubleOrLongTapSelectedAsset',
+  default: '',
+})
+
+export enum SwapScreenPopUpTypes {
+  FromAsset = 'fromAsset',
+  ToAsset = 'toAsset',
+  FromSlow = 'fromSlow',
+  FromAverage = 'fromAverage',
+  FromFast = 'fromFast',
+  ToSlow = 'toSlow',
+  ToAverage = 'toAverage',
+  ToFast = 'toFast',
+  AtomicSwap = 'atomicSwap',
+  TransId = 'transId',
+  Null = '',
+}
+
+export const swapScreenDoubleLongEvent = atom<SwapScreenPopUpTypes>({
+  key: 'swapScreenDoubleLongEvent',
+  default: SwapScreenPopUpTypes.Null,
+})
+
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',

@@ -134,7 +134,10 @@ const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
   const seeNftDetail = useCallback(
     (nftItem) => {
       console.log(nftItem, 'NFT ITEEEEM')
-      navigation.navigate('NftDetailScreen', { nftItem: nftItem })
+      navigation.navigate('NftDetailScreen', {
+        nftItem: nftItem,
+        accountIdsToSendIn: accountIdsToSendIn,
+      })
     },
     [navigation],
   )
@@ -142,15 +145,14 @@ const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
   const renderNftArray = () => {
     let rows = []
     if (iterableNftArray) {
-      rows = iterableNftArray.map((nftItem) => {
+      rows = iterableNftArray.map((nftItem, index) => {
         return (
-          <ScrollView horizontal={true}>
+          <ScrollView key={index} horizontal={true}>
             <Box
               flex={0.1}
               flexDirection="row"
               alignItems="center"
               paddingHorizontal="s">
-              <Text style={[styles.label, styles.headerLabel]}>NFT SCreen</Text>
               <Text>{nftItem[0].collection.name}</Text>
               {/*               <Text>{nftItem[0].description}</Text>
                */}
@@ -176,6 +178,8 @@ const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
 
   return (
     <View style={[styles.container, styles.fragmentContainer]}>
+      <Text style={[styles.label, styles.headerLabel]}>NFT SCreen</Text>
+
       {renderNftArray()}
     </View>
   )

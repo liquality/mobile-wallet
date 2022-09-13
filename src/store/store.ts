@@ -232,7 +232,13 @@ export const updateNFTs = async (paramObj): Promise<void> => {
     await wallet.dispatch.updateNFTs(paramObj).catch((e) => {
       Log(`Failed to FETCH NFTS: ${e}`, 'error')
     })
-  } else Log(`Failed to fetch WALLET DISPATCH: ${e}`, 'error')
+  } else Log(`Failed to fetch WALLET DISPATCH: ${paramObj}`, 'error')
+}
+
+export const sendNFTTransaction = async (paramObj): Promise<void> => {
+  await wallet.dispatch.sendNFTTransaction(paramObj).catch((e) => {
+    Log(`Failed to SEND NFTs: ${e}`, 'error')
+  })
 }
 
 export const getNftsForAccount = async (

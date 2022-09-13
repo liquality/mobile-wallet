@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Pressable, TextInput } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
+import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import Box from '../../../theme/box'
 import { RootTabParamList, UseInputStateReturnType } from '../../../types'
 
@@ -23,7 +24,7 @@ const wallet = setupWallet({
   ...defaultOptions,
 })
 const NftSendScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
-  const { nftItem } = route.params
+  const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
 
@@ -31,14 +32,40 @@ const NftSendScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
     'tb1qv87lrj2lprekaylh0drj3cyyvluapa7e2rjc9r',
   )
 
-  console.log(nftItem, 'NFT TEM IN SEEND SCREEN')
+  console.log(nftItem, 'NFT TEM IN SEEND SCREEN s')
   useEffect(() => {
     async function fetchData() {}
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeNetwork, activeWalletId])
 
-  const sendNft = () => {}
+  const sendNft = async () => {
+    try {
+      /*  const fee = this.feesAvailable
+        ? this.assetFees[this.selectedFee].fee
+        : undefined */
+      const data = {
+        network: activeNetwork,
+        accountId: nftItem.accountId,
+        walletId: activeWalletId,
+        receiver: addressInput,
+        contract: nftItem.asset_contract.address,
+        tokenIDs: [nftItem.token_id],
+        values: [1],
+        fee: undefined,
+        feeLabel: 'average',
+        nft: nftItem,
+      }
+      await sendNFTTransaction(data)
+      await updateNFTs({
+        walletId: activeWalletId,
+        network: activeNetwork,
+        accountIds: accountIdsToSendIn,
+      })
+    } catch (error) {
+      console.log(error, 'could not send NFTs')
+    }
+  }
 
   return (
     <View style={[styles.container, styles.fragmentContainer]}>

@@ -135,7 +135,8 @@
     "signIn": "Sign In"
   },
   "overviewScreen": {
-    "load": "Loading..."
+    "load": "Loading...",
+    "availableGas": "Available Gas {{gas} {{token}}"
   },
   "receiveScreen": {
     "yourCurrent": "Your current {{code}}/{{activeNetwork}} address",
@@ -355,13 +356,14 @@
     "receiveAt": "RECEIVED AT"
   },
   "swapTypesInfo": {
-    "atomicSwapSwap": "Atomic Swap Swap native assets across blockchains without counterparty risks.",
     "feeStruct": "Fee structure: 1%, 0 slippage, $100 minimum trade size",
     "ammSwapSwap": "AMM Swap  Swap Ethereum tokens through liquidity pools.",
     "learnMoreAboutSwap": "Learn about swap types",
     "whenTradingAssets": "When trading assets provider vary regards the way its done: assets, chain, fees, slippage etc. At a glance:",
     "pro": "Pro",
-    "con": "Con"
+    "con": "Con",
+    "atomicSwap": "Atomic Swap",
+    "swapNativeAssets": "Swap native assets across blockchains without counterparty risks."
   },
   "searchForCurrency": "Search for a Currency",
   "failedToFetchGasFee": "Failed to fetch gas fees",
@@ -376,5 +378,10 @@
   "settings": "SETTINGS",
   "warning": "WARNING",
   "asset": "ASSET 🇪🇸",
-  "activity": "ACTIVITY 🇪🇸"
+  "activity": "ACTIVITY 🇪🇸",
+  "sec": "{{sec}} sec",
+  "maybeIn30": "maybe in 30 sec",
+  "likelyLess30": "likely in < 30 sec",
+  "likelyLess15": "likely in < 15 sec",
+  "txId": "Transaction Id"
 }

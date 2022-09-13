@@ -325,7 +325,58 @@ const theme = createTheme({
       marginBottom: 'm',
     },
   },
-  cardVariants: {},
+  cardVariants: {
+    popUpCard: {
+      alignItems: 'center',
+      borderRadius: 5,
+      borderLeftWidth: 6,
+      backgroundColor: 'mainBackground',
+      shadowOffset: {
+        width: 2,
+        height: 3,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 1,
+      elevation: 3,
+    },
+    rightArrowCard: {
+      width: 15,
+      height: 15,
+      backgroundColor: 'mainBackground',
+      borderRadius: 3,
+      shadowOffset: {
+        width: 2,
+        height: 3,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 1,
+    },
+    swapPopup: {
+      alignItems: 'center',
+      borderRadius: 8,
+      backgroundColor: 'mainBackground',
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+      elevation: 3,
+    },
+    swapPopUpForToAsset: {
+      alignItems: 'center',
+      borderRadius: 5,
+      borderLeftWidth: 6,
+      backgroundColor: 'mainBackground',
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+      elevation: 3,
+    },
+  },
   dropDownVariants: {
     language: {
       width: '50%',
