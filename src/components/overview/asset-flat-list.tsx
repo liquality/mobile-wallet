@@ -36,7 +36,7 @@ const AssetFlatList = (props: AssetFlatListPropsType) => {
   )
 
   return (
-    <ScrollView>
+    <ScrollView nestedScrollEnabled={true}>
       {accounts.map((item) => {
         return renderAsset({ item })
       })}
