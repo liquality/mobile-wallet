@@ -22,12 +22,13 @@ import {
   Network,
   SendHistoryItem,
   SwapHistoryItem,
+  Asset,
+  WalletId,
 } from '@liquality/wallet-core/dist/src/store/types'
 import {
   getSwapTimeline,
   TimelineStep,
 } from '@liquality/wallet-core/dist/src/utils/timeline'
-import { Asset, WalletId } from '@liquality/wallet-core/dist/src/store/types'
 import { AtomEffect, DefaultValue } from 'recoil'
 import dayjs from 'dayjs'
 import { showNotification } from './pushNotification'
@@ -217,8 +218,8 @@ export const fetchSwapProvider = (providerId: string) => {
  * Toggle network between mainnet and testnet
  * @param network
  */
-export const toggleNetwork = async (network: any): Promise<void> => {
-  await wallet.dispatch.changeActiveNetwork(network)
+export const toggleNetwork = async (network: Network): Promise<void> => {
+  await wallet.dispatch.changeActiveNetwork({ network })
 }
 
 /**
