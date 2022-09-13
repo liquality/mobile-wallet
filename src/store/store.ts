@@ -263,9 +263,12 @@ export const updateWallet = async (): Promise<void> => {
  * Restores an already created wallet from local storage
  * @param password
  */
-export const restoreWallet = async (password: string): Promise<void> => {
+export const restoreWallet = async (
+  password: string,
+  activeNetwork = Network.Testnet,
+): Promise<void> => {
   const result = storageManager.read<CustomRootState>('wallet', {})
-  await initWallet(result)
+  await initWallet({ ...result, activeNetwork })
   await wallet.dispatch.unlockWallet({
     key: password,
   })

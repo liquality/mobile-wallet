@@ -21,7 +21,7 @@ import Box from '../../theme/box'
 import { MNEMONIC, PASSWORD } from '@env'
 import GradientBackground from '../../components/gradient-background'
 import { getAsset, getChain } from '@liquality/cryptoassets'
-import { useRecoilCallback, useSetRecoilState } from 'recoil'
+import { useRecoilCallback, useSetRecoilState, useRecoilState } from 'recoil'
 import {
   accountInfoStateFamily,
   accountsIdsState,
@@ -48,7 +48,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const setAccountsIds = useSetRecoilState(accountsIdsState)
-  const setActiveNetwork = useSetRecoilState(networkState)
+  const [activeNetwork, setActiveNetwork] = useRecoilState(networkState)
   const addAssetBalance = useRecoilCallback(
     ({ set }) =>
       (accountId: string, accountCode: string) => {
@@ -71,7 +71,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     } else {
       try {
         setLoading(true)
-        await restoreWallet(passwordInput.value)
+        await restoreWallet(passwordInput.value, activeNetwork)
         navigation.navigate('MainNavigator')
       } catch (_error) {
         passwordInput.onChangeText('')
