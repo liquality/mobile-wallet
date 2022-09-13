@@ -41,20 +41,17 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   return (
     <Box flex={1}>
       {refreshing && (
-        <Box
+        <RefreshIndicator
           position={'absolute'}
-          alignItems="center"
-          justifyContent={'center'}
-          height={60}
-          width={'100%'}>
-          <RefreshIndicator variant={'refreshContainer'} />
-        </Box>
+          top={15}
+          variant={'refreshContainer'}
+        />
       )}
       <ScrollView
         scrollEnabled
         refreshControl={
           <RefreshControl
-            tintColor="transparent"
+            tintColor="red"
             colors={['transparent']}
             style={styles.indicatorBackgroundColor}
             refreshing={refreshing}
