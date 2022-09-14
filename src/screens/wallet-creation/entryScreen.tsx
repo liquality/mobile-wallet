@@ -14,7 +14,6 @@ import { useRecoilCallback, useSetRecoilState } from 'recoil'
 import {
   accountInfoStateFamily,
   accountsIdsState,
-  networkState,
   accountsIdsForMainnetState,
   addressStateFamily,
   balanceStateFamily,
@@ -29,7 +28,6 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
   const [loading, setLoading] = useState(false)
   const setAccountsIds = useSetRecoilState(accountsIdsState)
   const setAccountsIdsForMainnet = useSetRecoilState(accountsIdsForMainnetState)
-  const setActiveNetwork = useSetRecoilState(networkState)
   const addAssetBalance = useRecoilCallback(
     ({ set }) =>
       (accountId: string, accountCode: string) => {
@@ -105,7 +103,6 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
         }
       }
       setLoading(false)
-      setActiveNetwork(Network.Testnet)
       navigation.navigate('MainNavigator')
     } catch (error) {
       setLoading(false)

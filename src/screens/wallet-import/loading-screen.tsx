@@ -11,7 +11,6 @@ import {
   accountsIdsForMainnetState,
   addressStateFamily,
   balanceStateFamily,
-  networkState,
 } from '../../atoms'
 import { getAsset, getChain } from '@liquality/cryptoassets'
 import { Alert } from 'react-native'
@@ -26,7 +25,6 @@ type LoadingScreenProps = NativeStackScreenProps<
 const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
   const setAccountsIds = useSetRecoilState(accountsIdsState)
   const setAccountsIdsForMainnet = useSetRecoilState(accountsIdsForMainnetState)
-  const setActiveNetwork = useSetRecoilState(networkState)
   const addAssetBalance = useRecoilCallback(
     ({ set }) =>
       (accountId: string, accountCode: string) => {
@@ -92,7 +90,6 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
             Alert.alert(labelTranslateFn('loadingScreen.failedImport')!)
             return
           }
-          setActiveNetwork(Network.Testnet)
           navigation.navigate('CongratulationsScreen')
         }
       },
