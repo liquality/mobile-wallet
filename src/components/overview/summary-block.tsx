@@ -3,6 +3,8 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   accountsIdsState,
   swapPairState,
+  networkState,
+  accountsIdsForMainnetState,
   totalFiatBalanceState,
 } from '../../atoms'
 import { ActionEnum } from '../../types'
@@ -15,6 +17,7 @@ import RoundButton from '../../theme/round-button'
 import * as React from 'react'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
 import { labelTranslateFn } from '../../utils'
+import { Network } from '@liquality/cryptoassets/dist/src/types'
 
 type SummaryBlockProps = {
   navigation: OverviewProps['navigation']
@@ -22,7 +25,10 @@ type SummaryBlockProps = {
 
 const SummaryBlock: FC<SummaryBlockProps> = (props) => {
   const { navigation } = props
-  const accountsIds = useRecoilValue(accountsIdsState)
+  const network = useRecoilValue(networkState)
+  const accountsIds = useRecoilValue(
+    network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
+  )
   const totalFiatBalance = useRecoilValue(totalFiatBalanceState)
   const setSwapPair = useSetRecoilState(swapPairState)
 

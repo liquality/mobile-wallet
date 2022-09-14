@@ -15,10 +15,12 @@ import {
   accountInfoStateFamily,
   accountsIdsState,
   networkState,
+  accountsIdsForMainnetState,
   walletState,
   balanceStateFamily,
 } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
+import { Network } from '@liquality/cryptoassets/dist/src/types'
 
 type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
@@ -26,6 +28,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
   const { navigation } = props
   const [loading, setLoading] = useState(false)
   const setAccountsIds = useSetRecoilState(accountsIdsState)
+  const setAccountsIdsForMainnet = useSetRecoilState(accountsIdsForMainnetState)
   const setActiveNetwork = useSetRecoilState(networkState)
   const setWallet = useSetRecoilState(walletState)
   const addAssetBalance = useRecoilCallback(
@@ -55,44 +58,48 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
       const wallet = await createWallet(PASSWORD, MNEMONIC)
       setWallet(wallet)
       const { accounts, activeWalletId, activeNetwork } = wallet
-      const accountsIds: { id: string; name: string }[] = []
-      accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
-        const nativeAsset = getChain(activeNetwork, account.chain).nativeAsset
-        accountsIds.push({
-          id: account.id,
-          name: nativeAsset[0].code,
-        })
-        const newAccount: AccountType = {
-          id: account.id,
-          chain: account.chain,
-          name: account.name,
-          code: nativeAsset[0].code,
-          address: account.addresses[0], //TODO why pick only the first address
-          color: account.color,
-          assets: {},
-          balance: 0,
-        }
-
-        for (const asset of account.assets) {
-          newAccount.assets[asset] = {
-            id: asset,
-            name: getAsset(activeNetwork, asset).name,
-            code: asset,
+      let supportedNetWorks = [Network.Mainnet, Network.Testnet]
+      for (let network of supportedNetWorks) {
+        const accountsIds: { id: string; name: string }[] = []
+        accounts?.[activeWalletId]?.[network].map((account) => {
+          const nativeAsset = getChain(network, account.chain).nativeAsset
+          accountsIds.push({
+            id: account.id,
+            name: nativeAsset[0].code,
+          })
+          const newAccount: AccountType = {
+            id: account.id,
             chain: account.chain,
+            name: account.name,
+            code: nativeAsset[0].code,
+            address: account.addresses[0], //TODO why pick only the first address
             color: account.color,
-            balance: 0,
             assets: {},
+            balance: 0,
           }
-          addAssetBalance(account.id, asset)
-        }
 
-        addAccount(account.id, newAccount)
-      })
+          for (const asset of account.assets) {
+            newAccount.assets[asset] = {
+              id: asset,
+              name: getAsset(network, asset).name,
+              code: asset,
+              chain: account.chain,
+              color: account.color,
+              balance: 0,
+              assets: {},
+            }
+            addAssetBalance(account.id, asset)
+          }
 
-      setAccountsIds(accountsIds)
-      setActiveNetwork(activeNetwork)
+          addAccount(account.id, newAccount)
+        })
 
-      setLoading(false)
+        network === Network.Testnet
+          ? setAccountsIds(accountsIds)
+          : setAccountsIdsForMainnet(accountsIds)
+        setActiveNetwork(activeNetwork)
+        setLoading(false)
+      }
       navigation.navigate('MainNavigator')
     } catch (error) {
       setLoading(false)

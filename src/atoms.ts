@@ -212,7 +212,12 @@ export const accountInfoState = selectorFamily<Partial<AccountType>, string>({
 export const accountListState = selector<Partial<AccountType>[]>({
   key: 'AccountList',
   get: ({ get }) => {
-    const accountsIds = get(accountsIdsState)
+    const activeNetwork = get(networkState)
+    const accountsIds = get(
+      activeNetwork === Network.Testnet
+        ? accountsIdsState
+        : accountsIdsForMainnetState,
+    )
     return accountsIds.map((item) => {
       const address = get(addressStateFamily(item.id))
       const account = get(accountInfoStateFamily(item.id))
@@ -262,9 +267,13 @@ export const historyItemsState = selector<HistoryItem[]>({
 export const totalFiatBalanceState = selector<string>({
   key: 'TotalFiatBalance',
   get: ({ get }) => {
-    const accountsIds = get(accountsIdsState)
-    const fiatRates = get(fiatRatesState)
     const activeNetwork = get(networkState)
+    const accountsIds = get(
+      activeNetwork === Network.Testnet
+        ? accountsIdsState
+        : accountsIdsForMainnetState,
+    )
+    const fiatRates = get(fiatRatesState)
 
     const totalFiatBalance = accountsIds.reduce((acc, account) => {
       const balanceState = balanceStateFamily({
