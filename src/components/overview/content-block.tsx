@@ -36,6 +36,7 @@ const ContentBlock = () => {
   const langSelected = useRecoilValue(LS)
   i18n.locale = langSelected
   useEffect(() => {
+    setIsDoneFetchingData(false)
     populateWallet()
       .then(() => {
         setIsDoneFetchingData(true)
