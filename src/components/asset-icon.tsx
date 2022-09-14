@@ -143,7 +143,7 @@ const AssetIcon: FC<AssetIconType> = (props) => {
     }
   }
 
-  return <BlankIcon width={25} height={25} style={styles.icon} />
+  return <BlankIcon width={size} height={size} style={styles.icon} />
 }
 
 const styles = StyleSheet.create({
