@@ -89,52 +89,59 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     try {
       setLoading(true)
       storageManager.clearAll()
-      const { accounts, activeWalletId } = await createWallet(
-        PASSWORD,
-        MNEMONIC,
-      )
-      let supportedNetWorks = [Network.Mainnet, Network.Testnet]
-      for (let network of supportedNetWorks) {
+      const wallet = await createWallet(PASSWORD, MNEMONIC)
+      const { activeWalletId } = wallet
+
+      let supportedNetworks = [Network.Mainnet, Network.Testnet]
+      for (let network of supportedNetworks) {
+        const accounts = wallet?.accounts?.[activeWalletId]?.[network]
         const accountsIds: { id: string; name: string }[] = []
-        accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
-          const nativeAsset = getChain(activeNetwork, account.chain).nativeAsset
-          accountsIds.push({
-            id: account.id,
-            name: nativeAsset[0].code,
-          })
-          const newAccount: AccountType = {
-            id: account.id,
-            chain: account.chain,
-            name: account.name,
-            code: nativeAsset[0].code,
-            address: account.addresses[0], //TODO why pick only the first address
-            color: account.color,
-            assets: {},
-            balance: 0,
-          }
 
-          for (const asset of account.assets) {
-            newAccount.assets[asset] = {
-              id: asset,
-              name: getAsset(activeNetwork, asset).name,
-              code: asset,
+        if (accounts) {
+          accounts.map((account) => {
+            const nativeAsset = getChain(network, account.chain).nativeAsset
+            accountsIds.push({
+              id: account.id,
+              name: nativeAsset[0].code,
+            })
+            const newAccount: AccountType = {
+              id: account.id,
               chain: account.chain,
+              name: account.name,
+              code: nativeAsset[0].code,
+              address: account.addresses[0], //TODO why pick only the first address
               color: account.color,
-              balance: 0,
               assets: {},
+              balance: 0,
             }
-            addAssetBalance(account.id, asset)
-          }
 
-          addAccount(account.id, newAccount)
-        })
+            for (const asset of account.assets) {
+              newAccount.assets[asset] = {
+                id: asset,
+                name: getAsset(network, asset).name,
+                code: asset,
+                chain: account.chain,
+                color: account.color,
+                balance: 0,
+                assets: {},
+              }
+              addAssetBalance(account.id, asset)
+            }
 
-        network === Network.Testnet
-          ? setAccountsIds(accountsIds)
-          : setAccountsIdsForMainnet(accountsIds)
-        setActiveNetwork(activeNetwork)
-        setLoading(false)
+            addAccount(account.id, newAccount)
+          })
+
+          network === Network.Testnet
+            ? setAccountsIds(accountsIds)
+            : setAccountsIdsForMainnet(accountsIds)
+        } else {
+          setLoading(false)
+          Alert.alert(labelTranslateFn('loadingScreen.failedImport')!)
+          return
+        }
       }
+      setLoading(false)
+      setActiveNetwork(Network.Testnet)
       navigation.navigate('MainNavigator')
     } catch (_err) {
       setLoading(false)
