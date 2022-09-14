@@ -11,7 +11,7 @@ import RefInd from '../theme/refresh-indcator'
 
 type Props = React.ComponentProps<typeof RefInd>
 
-const RefreshIndicator: React.FC<Props> = ({ variant }) => {
+const RefreshIndicator: React.FC<Props> = ({ variant, ...rest }: Props) => {
   const angle = useSharedValue(0)
   const animatedStyle = useAnimatedStyle(() => {
     return { transform: [{ rotate: `${angle.value}deg` }] }
@@ -26,7 +26,7 @@ const RefreshIndicator: React.FC<Props> = ({ variant }) => {
   })
 
   return (
-    <RefInd variant={variant}>
+    <RefInd {...rest} variant={variant}>
       <Animated.View style={animatedStyle}>
         <Loader height={30} width={30} />
       </Animated.View>

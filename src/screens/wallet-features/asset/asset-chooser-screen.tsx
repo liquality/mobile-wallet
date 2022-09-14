@@ -7,8 +7,14 @@ import { AccountType, RootStackParamList } from '../../../types'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import { useInputState } from '../../../hooks'
 import { useRecoilValue } from 'recoil'
-import { accountListState, accountsIdsState } from '../../../atoms'
+import {
+  accountListState,
+  accountsIdsState,
+  networkState,
+  accountsIdsForMainnetState,
+} from '../../../atoms'
 import TextInput from '../../../theme/textInput'
+import { Network } from '@liquality/wallet-core/dist/src/store/types'
 
 type AssetChooserProps = NativeStackScreenProps<
   RootStackParamList,
@@ -16,7 +22,10 @@ type AssetChooserProps = NativeStackScreenProps<
 >
 
 const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
-  const accountIds = useRecoilValue(accountsIdsState)
+  const network = useRecoilValue(networkState)
+  const accountIds = useRecoilValue(
+    Network.Testnet === network ? accountsIdsState : accountsIdsForMainnetState,
+  )
   const accountList = useRecoilValue(accountListState)
   const searchInput = useInputState('')
   const [data, setData] =

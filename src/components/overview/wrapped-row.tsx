@@ -136,7 +136,7 @@ const WrappedRow: FC<{
   if (balance < 0 || !address)
     return (
       <View style={styles.row}>
-        <AssetIcon chain={getAsset(activeNetwork, item.name.code)?.chain} />
+        <AssetIcon chain={getAsset(activeNetwork, item.name)?.chain} />
         <ActivityIndicator />
       </View>
     )
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignContent: 'center',
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#D9DFE5',
     borderLeftWidth: 3,

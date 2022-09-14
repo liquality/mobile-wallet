@@ -419,10 +419,8 @@ const theme = createTheme({
   },
   refreshIndicatorVariants: {
     refreshContainer: {
-      justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: 'mainForeground',
-      opacity: 0.9,
       height: 100,
       width: '100%',
     },
