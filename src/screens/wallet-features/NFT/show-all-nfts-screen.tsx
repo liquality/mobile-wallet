@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import { updateNFTs } from '../../../store/store'
+import { getAllEnabledAccounts, updateNFTs } from '../../../store/store'
 import Box from '../../../theme/box'
 import { RootTabParamList } from '../../../types'
 type ShowAllNftsScreenProps = BottomTabScreenProps<
@@ -101,12 +101,9 @@ const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
   const [allNftData, setAllNftData] = useState({})
   const [iterableNftArray, setIterableNftArray] = useState([])
+  const [accountIdsToSendIn, setAccountIdsToSendIn] = useState([])
 
   const { activeWalletId } = wallet.state
-  const enabledAccountsToSendIn = wallet.getters.accountsData
-  const accountIdsToSendIn = enabledAccountsToSendIn.map((account) => {
-    return account.id
-  })
 
   const fetchAllNfts = async () => {
     return wallet.getters.allNftCollections
@@ -114,6 +111,11 @@ const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
 
   useEffect(() => {
     async function fetchData() {
+      const enabledAccountsToSendIn = await getAllEnabledAccounts()
+      const accIds = enabledAccountsToSendIn.map((account) => {
+        return account.id
+      })
+      setAccountIdsToSendIn(accIds)
       await updateNFTs({
         walletId: activeWalletId,
         network: activeNetwork,
@@ -121,19 +123,16 @@ const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
       })
       let allNfts = await fetchAllNfts()
       setAllNftData(allNfts)
-      //Manipulate NFT object to be iterable
       let wholeNftArr = Object.values(allNftData).map((val) => {
         return val
       })
       setIterableNftArray(wholeNftArr)
     }
     fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allNftData, activeNetwork, activeWalletId])
+  }, [activeWalletId, activeNetwork])
 
   const seeNftDetail = useCallback(
     (nftItem) => {
-      console.log(nftItem, 'NFT ITEEEEM')
       navigation.navigate('NftDetailScreen', {
         nftItem: nftItem,
         accountIdsToSendIn: accountIdsToSendIn,
@@ -144,7 +143,7 @@ const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
 
   const renderNftArray = () => {
     let rows = []
-    if (iterableNftArray) {
+    if (iterableNftArray.length !== 0) {
       rows = iterableNftArray.map((nftItem, index) => {
         return (
           <ScrollView key={index} horizontal={true}>
@@ -154,8 +153,7 @@ const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
               alignItems="center"
               paddingHorizontal="s">
               <Text>{nftItem[0].collection.name}</Text>
-              {/*               <Text>{nftItem[0].description}</Text>
-               */}
+
               <Pressable onPress={() => seeNftDetail(nftItem[0])}>
                 <Image
                   /*   source={{
@@ -170,7 +168,7 @@ const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
         )
       })
     } else {
-      return <Text>No data available</Text>
+      return <Text>No NFTs to show</Text>
     }
 
     return rows

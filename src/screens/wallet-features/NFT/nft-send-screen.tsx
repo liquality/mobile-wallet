@@ -28,12 +28,13 @@ const NftSendScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
+  const [sendSuccess, setSendSuccess] = useState('')
 
+  //Hardcoded my own metamask mumbai testnet for testing purposes
   const addressInput = useInputState(
-    'tb1qv87lrj2lprekaylh0drj3cyyvluapa7e2rjc9r',
+    '0xb81B9B88e764cb6b4E02c5D0F6D6D9051A61E020',
   )
 
-  console.log(nftItem, 'NFT TEM IN SEEND SCREEN s')
   useEffect(() => {
     async function fetchData() {}
     fetchData()
@@ -41,9 +42,13 @@ const NftSendScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
   }, [activeNetwork, activeWalletId])
 
   const sendNft = async () => {
-    console.log('IN SEND NFT')
+    console.log('IN SEND NF T')
     try {
-      /*  const fee = this.feesAvailable
+      /* 
+      TODO add NFT fees, currently the fees sent in in extension 
+      has wrong calculation (diff fees for NFTs and tokens and 
+      a problem with NFT providers not giving fee estimations)
+       const fee = this.feesAvailable
         ? this.assetFees[this.selectedFee].fee
         : undefined */
       const data = {
@@ -65,6 +70,7 @@ const NftSendScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
         network: activeNetwork,
         accountIds: accountIdsToSendIn,
       })
+      setSendSuccess('Success! You sent the NFT')
     } catch (error) {
       console.log(error, 'could not send NFTs')
     }
@@ -82,6 +88,7 @@ const NftSendScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
         isActive={true}
         onPress={() => sendNft()}
       />
+      {sendSuccess ? <Text>{sendSuccess}</Text> : null}
 
       <Box
         flexDirection="row"

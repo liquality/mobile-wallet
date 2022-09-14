@@ -229,10 +229,11 @@ export const toggleNetwork = async (network: any): Promise<void> => {
  */
 export const updateNFTs = async (paramObj): Promise<void> => {
   if (wallet) {
+    console.log('UPDATE NFT?')
     await wallet.dispatch.updateNFTs(paramObj).catch((e) => {
-      Log(`Failed to FETCH NFTS: ${e}`, 'error')
+      console.log(`Failed to FETCH NFTS: ${e}`, 'error')
     })
-  } else Log(`Failed to fetch WALLET DISPATCH: ${paramObj}`, 'error')
+  } else console.log(`Failed to fetch WALLET DISPATCH: ${paramObj}`, 'error')
 }
 
 /**
@@ -252,6 +253,10 @@ export const getNftsForAccount = async (
   return wallet.getters.accountNftCollections(accountId)
 }
 
+
+export const getAllEnabledAccounts = async () => {
+  return wallet.getters.accountsData
+}
 /**
  * Enable/Disable a given asset
  * @param asset

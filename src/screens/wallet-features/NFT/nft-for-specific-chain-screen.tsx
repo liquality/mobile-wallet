@@ -5,7 +5,11 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import { getNftsForAccount, updateNFTs } from '../../../store/store'
+import {
+  getAllEnabledAccounts,
+  getNftsForAccount,
+  updateNFTs,
+} from '../../../store/store'
 import { RootTabParamList } from '../../../types'
 type ShowAllNftsScreenProps = BottomTabScreenProps<
   RootTabParamList,
@@ -21,13 +25,12 @@ const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
   const [iterableNftArray, setIterableNftArray] = useState([])
   const { currentAccount } = route.params
 
-  const enabledAccountsToSendIn = wallet.getters.accountsData
-  const accountIdsToSendIn = enabledAccountsToSendIn.map((account) => {
-    return account.id
-  })
-
   useEffect(() => {
     async function fetchData() {
+      const enabledAccountsToSendIn = await getAllEnabledAccounts()
+      const accountIdsToSendIn = enabledAccountsToSendIn.map((account) => {
+        return account.id
+      })
       await updateNFTs({
         walletId: activeWalletId,
         network: activeNetwork,
@@ -42,8 +45,7 @@ const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
       setIterableNftArray(wholeNftArr)
     }
     fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeNetwork, activeWalletId, currentAccount.id])
+  }, [activeNetwork, activeWalletId])
 
   const renderNftArray = () => {
     let rows = []
@@ -59,7 +61,7 @@ const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
               /*    source={{
                 uri: nftItem[0].image_thumbnail_url,
               }} */
-              source={require('../../../assets/icons/checkmark.png')}
+              source={require('../../../assets/icons/nft_thumbnail.png')}
               style={{ width: 150, height: 100 }}
             />
           </View>

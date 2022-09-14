@@ -10,17 +10,18 @@ import { AccountType } from '../../types'
 import AssetIcon from '../asset-icon'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilValue } from 'recoil'
 import {
   addressStateFamily,
   balanceStateFamily,
-  doubleOrLongTapSelectedAsset,
   fiatRatesState,
   networkState,
 } from '../../atoms'
 import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
-import { getNftsForAccount } from '../../store/store'
+import { getNftsForAccount, updateNFTs } from '../../store/store'
+import { setupWallet } from '@liquality/wallet-core'
+import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 
 type SubRowProps = {
   parentItem: AccountType
@@ -28,55 +29,61 @@ type SubRowProps = {
   onAssetSelected: () => void
   nft: boolean
 }
+const wallet = setupWallet({
+  ...defaultOptions,
+})
 
 const SubRow: FC<SubRowProps> = (props) => {
   const { parentItem, item, onAssetSelected, nft } = props
   const [prettyNativeBalance, setPrettyNativeBalance] = useState('')
   const [prettyFiatBalance, setPrettyFiatBalance] = useState('')
-  const [nftsForAccount, setNftsForAccount] = useState({})
-
   const balance = useRecoilValue(
     balanceStateFamily({ asset: item.code, assetId: parentItem.id }),
   )
   const address = useRecoilValue(addressStateFamily(item.id))
   const fiatRates = useRecoilValue(fiatRatesState)
   const activeNetwork = useRecoilValue(networkState)
+  const [chainSpecificNfts, setChainSpecificNfts] = useState({})
+  const [accountIdsToSendIn, setAccountIdsToSendIn] = useState([])
 
-  const clearDoubleOrLongTapSelectedAsset = useSetRecoilState(
-    doubleOrLongTapSelectedAsset,
-  )
+  const { activeWalletId } = wallet.state
 
   const handlePressOnRow = useCallback(() => {
-    clearDoubleOrLongTapSelectedAsset('')
     onAssetSelected()
-  }, [onAssetSelected, clearDoubleOrLongTapSelectedAsset])
+  }, [onAssetSelected])
 
   useEffect(() => {
     async function fetchData() {
-      fetchData()
-      const fiatBalance = fiatRates[item.code]
-        ? cryptoToFiat(
-            unitToCurrency(
-              getAsset(activeNetwork, getNativeAsset(item.code)),
-              balance,
-            ).toNumber(),
-            fiatRates[item.code],
-          )
-        : 0
-      setPrettyNativeBalance(
-        `${prettyBalance(new BigNumber(balance), item.code)} ${item.code}`,
-      )
-      setPrettyFiatBalance(`$${formatFiat(new BigNumber(fiatBalance))}`)
-      setNftsForAccount(await getNftsForAccount(parentItem.id))
+      await updateNFTs({
+        walletId: activeWalletId,
+        network: activeNetwork,
+        accountIds: accountIdsToSendIn,
+      })
+      let nfts = await getNftsForAccount(parentItem.id)
+      setChainSpecificNfts(nfts)
+      console.log(nfts, 'NFTS FOR ACC SUB ROW!!')
     }
     fetchData()
-  }, [activeNetwork, balance, fiatRates, item.code, parentItem.id])
+    const fiatBalance = fiatRates[item.code]
+      ? cryptoToFiat(
+          unitToCurrency(
+            getAsset(activeNetwork, getNativeAsset(item.code)),
+            balance,
+          ).toNumber(),
+          fiatRates[item.code],
+        )
+      : 0
+    setPrettyNativeBalance(
+      `${prettyBalance(new BigNumber(balance), item.code)} ${item.code}`,
+    )
+    setPrettyFiatBalance(`$${formatFiat(new BigNumber(fiatBalance))}`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeNetwork, balance, fiatRates, item.code])
 
-  console.log(nftsForAccount, 'nfts for acc?')
-  const renderNftRow = async () => {
-    if (parentItem.id) {
-      return null
-      /*  <View>
+  const renderNFTRow = () => {
+    if (Object.keys(chainSpecificNfts).length > 0)
+      return (
+        <View>
           <Pressable
             onPress={handlePressOnRow}
             style={[
@@ -84,43 +91,45 @@ const SubRow: FC<SubRowProps> = (props) => {
               styles.subElement,
               { borderLeftColor: parentItem.color },
             ]}>
-            <Text>Haj</Text>
+            <Text>NFT</Text>
           </Pressable>
-        </View> */
-    } else return null
+        </View>
+      )
+    else return null
   }
 
   return (
     <View>
-      {/*    {nft ? (
-        renderNftRow()
-      ) : ( */}
-      <AssetListSwipeableRow
-        assetData={{
-          ...item,
-          address: address,
-        }}
-        assetSymbol={item.code}>
-        <Pressable
-          onPress={handlePressOnRow}
-          style={[
-            styles.row,
-            styles.subElement,
-            { borderLeftColor: parentItem.color },
-          ]}>
-          <View style={styles.col1}>
-            <AssetIcon size={25} asset={item.code} />
-            <Text style={styles.name}>{item.name}</Text>
-          </View>
-          <View style={styles.col2}>
-            <Text style={styles.balance}>{prettyNativeBalance}</Text>
-            <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
-          </View>
-          <View style={styles.col3}>
-            <ChevronRight width={12} height={12} />
-          </View>
-        </Pressable>
-      </AssetListSwipeableRow>
+      {nft ? (
+        renderNFTRow()
+      ) : (
+        <AssetListSwipeableRow
+          assetData={{
+            ...item,
+            address: address,
+          }}
+          assetSymbol={item.code}>
+          <Pressable
+            onPress={handlePressOnRow}
+            style={[
+              styles.row,
+              styles.subElement,
+              { borderLeftColor: parentItem.color },
+            ]}>
+            <View style={styles.col1}>
+              <AssetIcon size={25} asset={item.code} />
+              <Text style={styles.name}>{item.name}</Text>
+            </View>
+            <View style={styles.col2}>
+              <Text style={styles.balance}>{prettyNativeBalance}</Text>
+              <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
+            </View>
+            <View style={styles.col3}>
+              <ChevronRight width={12} height={12} />
+            </View>
+          </Pressable>
+        </AssetListSwipeableRow>
+      )}
     </View>
   )
 }
