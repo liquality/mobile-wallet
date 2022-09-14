@@ -29,9 +29,15 @@ import * as Localization from 'expo-localization'
 
 //------------ATOMS---------------------
 export const accountsIdsState = atom<{ id: string; name: Asset }[]>({
-  key: 'AccountsIds',
+  key: KEYS.ACCOUNTS_IDS_FOR_TESTNET,
   default: [],
-  effects: [localStorageEffect('accountIds')],
+  effects: [localStorageEffect(KEYS.ACCOUNTS_IDS_FOR_TESTNET)],
+})
+
+export const accountsIdsForMainnetState = atom<{ id: string; name: Asset }[]>({
+  key: KEYS.ACCOUNTS_IDS_FOR_MAINNET,
+  default: [],
+  effects: [localStorageEffect(KEYS.ACCOUNTS_IDS_FOR_MAINNET)],
 })
 
 export const fiatRatesState = atom<FiatRates>({

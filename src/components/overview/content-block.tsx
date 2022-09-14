@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   accountsIdsState,
+  accountsIdsForMainnetState,
   isDoneFetchingData,
   langSelected as LS,
   networkState,
@@ -20,14 +21,17 @@ import {
 } from 'react-native-tab-view'
 import i18n from 'i18n-js'
 import TabBar from '../../theme/tabBar'
+import { Network } from '@liquality/wallet-core/dist/src/store/types'
 
 type RenderTabBar = SceneRendererProps & {
   navigationState: NavigationState<Route>
 }
 
 const ContentBlock = () => {
-  const accountsIds = useRecoilValue(accountsIdsState)
   const network = useRecoilValue(networkState)
+  const accountsIds = useRecoilValue(
+    network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
+  )
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
   const langSelected = useRecoilValue(LS)
   i18n.locale = langSelected

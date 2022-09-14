@@ -5,4 +5,6 @@ export const KEYS = {
   ACTIVE_NETWORK_KEY: 'activeNetworkKey',
   ACTIVE_THEME: 'activeTheme',
   ACTIVE_LANG: 'activeLang',
+  ACCOUNTS_IDS_FOR_TESTNET: 'accountsIdsForTestnet',
+  ACCOUNTS_IDS_FOR_MAINNET: 'accountsIdsForMainnet',
 }
