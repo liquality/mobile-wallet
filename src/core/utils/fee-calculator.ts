@@ -1,6 +1,7 @@
 import { BigNumber } from '@liquality/types'
 import { currencyToUnit, getAsset, isEvmChain } from '@liquality/cryptoassets'
 import { prettyBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import { Network } from '@liquality/cryptoassets/dist/src/types'
 
 /**
  *
@@ -10,7 +11,7 @@ import { prettyBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatt
  * @param _balance balance amount in unit
  */
 export const calculateAvailableAmnt = (
-  _network: string,
+  _network: Network,
   _asset: string,
   _feePrice: number,
   _balance: number,

@@ -3,6 +3,7 @@ import { Pressable, StyleSheet } from 'react-native'
 import { ChainId, getAsset, getChain } from '@liquality/cryptoassets'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
+  GasFees,
   NetworkFeeType,
   RootStackParamList,
   UseInputStateReturnType,
@@ -41,6 +42,13 @@ import {
 } from '../../../atoms'
 import i18n from 'i18n-js'
 import ErrMsgBanner, { ErrorBtn } from '../../../components/ui/err-msg-banner'
+import Animated, {
+  interpolateColor,
+  FadeIn,
+  FadeOut,
+} from 'react-native-reanimated'
+import { palette } from '../../../theme'
+
 const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {
@@ -79,7 +87,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     balanceStateFamily({ asset: code, assetId: id }),
   )
   const [showFeeOptions, setShowFeeOptions] = useState(true)
-  const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
+  const [fee, setFee] = useState<GasFees | null>(null)
   const [availableAmount, setAvailableAmount] = useState<string>('')
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
   const [amountInNative, setAmountInNative] = useState<number>(0)
@@ -95,6 +103,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const addressInput = useInputState('')
   const networkFee = useRef<NetworkFeeType>()
   const activeNetwork = useRecoilValue(networkState)
+  const [showText, setShowText] = useState(true)
 
   const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
@@ -116,9 +125,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
   useEffect(() => {
     if (route.params.customFee && balance) {
-      setFee(new BigNumber(route.params.customFee))
       setCustomFee(route.params.customFee)
-
       const calculatedAmt = calculateAvailableAmnt(
         activeNetwork,
         code,
@@ -140,37 +147,71 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   ])
 
   useEffect(() => {
-    let feeInUnit = customFee
+    let feeInUnit
+    customFee
+      ? (feeInUnit = customFee)
+      : (feeInUnit = networkFee?.current?.value)
     if (feeInUnit) {
       let total = new BigNumber(amountInput.value)
         .plus(getSendFee(code, feeInUnit))
         .dp(9)
       const availAmtBN = new BigNumber(availableAmount)
       const amtInpBN = new BigNumber(amountInput.value)
-      if (availAmtBN.eq(amtInpBN) && availAmtBN.lt(total)) {
+      if (
+        !availAmtBN.eq(0) &&
+        availAmtBN.eq(amtInpBN) &&
+        availAmtBN.lt(total)
+      ) {
         setErrorMessage({
           msg: 'error',
-          type: ErrorMessages.NotEnoughCoverFees,
+          type: customFee
+            ? ErrorMessages.NotEnoughCoverFees
+            : ErrorMessages.NotEnoughGas,
         })
       }
     }
-  }, [amountInput.value, code, customFee, setErrorMessage, availableAmount])
+  }, [
+    amountInput.value,
+    code,
+    customFee,
+    setErrorMessage,
+    availableAmount,
+    fee,
+  ])
+
+  useEffect(() => {
+    let interval: NodeJS.Timer
+    const { NotEnoughCoverFees, NotEnoughGas } = ErrorMessages
+    if (
+      NotEnoughCoverFees === errorMessage.type ||
+      NotEnoughGas === errorMessage.type
+    ) {
+      interval = setInterval(() => {
+        setShowText((preState) => !preState)
+      }, 1000)
+    }
+    return () => {
+      if (interval) {
+        clearInterval(interval)
+      }
+    }
+  }, [errorMessage.type])
 
   useEffect(() => {
     fetchFeesForAsset(code).then((gasFee) => {
       setFee(gasFee)
       const calculatedAmt = calculateAvailableAmnt(
+        activeNetwork,
         code,
         getSendFee(code, gasFee.average.toNumber()).toNumber(),
         balance,
       )
-      const calAmtInBn = new BigNumber(calculatedAmt)
-      if (calAmtInBn.lte(0)) {
+      if (balance === 0) {
         setErrorMessage({ msg: 'error', type: ErrorMessages.NotEnoughToken })
       }
       setAvailableAmount(calculatedAmt)
     })
-  }, [code, chain, balance])
+  }, [code, chain, balance, activeNetwork])
 
   const handleReviewPress = useCallback(() => {
     let feeInUnit
@@ -420,6 +461,19 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     availableAmount,
   ])
 
+  let currentTextColorValue = 0
+  if (errorMessage.type === ErrorMessages.NotEnoughGas) {
+    currentTextColorValue = 1
+  } else if (errorMessage.type === ErrorMessages.NotEnoughCoverFees) {
+    currentTextColorValue = 2
+  }
+
+  const showtextColor = interpolateColor(
+    currentTextColorValue,
+    [0, 1, 2],
+    [palette.black2, palette.red, palette.turquoise],
+  )
+
   return (
     <Box flex={1} backgroundColor="mainBackground">
       {getCompatibleErrorMsg()}
@@ -428,90 +482,94 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           <QrCodeScanner chain={chain} onClose={handleCameraModalClose} />
         )}
         <Box>
-          <Box>
-            <Box
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems="flex-end"
-              marginBottom="m">
-              <Box flex={1}>
-                <Box
-                  flexDirection="row"
-                  justifyContent="space-between"
-                  alignItems="flex-end"
-                  marginBottom="m">
-                  <Text variant="secondaryInputLabel" tx="sendScreen.snd" />
-                  <Button
-                    label={
-                      showAmountsInFiat
-                        ? `${amountInNative} ${code}`
-                        : `$${amountInFiat}`
-                    }
-                    type="tertiary"
-                    variant="s"
-                    onPress={handleFiatBtnPress}
-                  />
-                </Box>
-                <TextInput
-                  style={[
-                    styles.sendInputCurrency,
-                    styles.sendInput,
-                    { color: chainDefaultColors[chain] },
-                  ]}
-                  keyboardType={'numeric'}
-                  onChangeText={handleOnChangeText}
-                  onFocus={() => setError('')}
-                  value={amountInput.value}
-                  autoCorrect={false}
-                  returnKeyType="done"
-                />
-              </Box>
-              <Box flexDirection="row" alignItems="flex-end">
-                <AssetIcon
-                  asset={code}
-                  chain={getAsset(activeNetwork, code).chain}
-                />
-                <Text style={styles.assetName}>{code}</Text>
-              </Box>
-            </Box>
-            <Box
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems="flex-end"
-              marginBottom="m">
-              <Box flexDirection="row">
-                <Text variant="amountLabel" tx="sendScreen.available" />
-                <Text variant="amount">{` ${availableAmount} ${code}`}</Text>
-              </Box>
-              <Button
-                label={{ tx: 'sendScreen.max' }}
-                type="tertiary"
-                variant="s"
-                onPress={() => {
-                  handleOnChangeText(availableAmount.toString())
-                }}
-              />
-            </Box>
-            <Box marginTop={'xl'}>
-              <Text variant="secondaryInputLabel" tx="sendScreen.sndTo" />
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+            marginBottom="m">
+            <Box flex={1}>
               <Box
                 flexDirection="row"
                 justifyContent="space-between"
                 alignItems="flex-end"
                 marginBottom="m">
-                <TextInput
-                  style={styles.sendToInput}
-                  onChangeText={addressInput.onChangeText}
-                  onFocus={() => setError('')}
-                  value={addressInput.value}
-                  placeholderTx="sendScreen.address"
-                  autoCorrect={false}
-                  returnKeyType="done"
+                <Text variant="secondaryInputLabel" tx="sendScreen.snd" />
+                <Button
+                  label={
+                    showAmountsInFiat
+                      ? `${amountInNative} ${code}`
+                      : `$${amountInFiat}`
+                  }
+                  type="tertiary"
+                  variant="s"
+                  onPress={handleFiatBtnPress}
                 />
-                <Pressable onPress={handleQRCodeBtnPress}>
-                  <QRCode />
-                </Pressable>
               </Box>
+              <TextInput
+                style={[
+                  styles.sendInputCurrency,
+                  styles.sendInput,
+                  { color: chainDefaultColors[chain] },
+                ]}
+                keyboardType={'numeric'}
+                onChangeText={handleOnChangeText}
+                onFocus={() => setError('')}
+                value={amountInput.value}
+                autoCorrect={false}
+                returnKeyType="done"
+              />
+            </Box>
+            <Box flexDirection="row" alignItems="flex-end">
+              <AssetIcon
+                asset={code}
+                chain={getAsset(activeNetwork, code).chain}
+              />
+              <Text style={styles.assetName}>{code}</Text>
+            </Box>
+          </Box>
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+            marginBottom="m">
+            <Box flexDirection="row">
+              <Text variant="amountLabel" tx="sendScreen.available" />
+              <Text variant="amount">{` ${availableAmount} ${code}`}</Text>
+            </Box>
+            <Button
+              label={{ tx: 'sendScreen.max' }}
+              type="tertiary"
+              variant="s"
+              onPress={() => {
+                let afterFeeDeduction = new BigNumber(availableAmount)
+                if (networkFee.current?.value) {
+                  afterFeeDeduction = afterFeeDeduction
+                    .minus(getSendFee(code, networkFee.current?.value))
+                    .dp(9)
+                }
+                handleOnChangeText(afterFeeDeduction.toString())
+              }}
+            />
+          </Box>
+          <Box marginTop={'xl'}>
+            <Text variant="secondaryInputLabel" tx="sendScreen.sndTo" />
+            <Box
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="flex-end"
+              marginBottom="m">
+              <TextInput
+                style={styles.sendToInput}
+                onChangeText={addressInput.onChangeText}
+                onFocus={() => setError('')}
+                value={addressInput.value}
+                placeholderTx="sendScreen.address"
+                autoCorrect={false}
+                returnKeyType="done"
+              />
+              <Pressable onPress={handleQRCodeBtnPress}>
+                <QRCode />
+              </Pressable>
             </Box>
           </Box>
         </Box>
@@ -535,18 +593,22 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 tx="sendScreen.networkSpeed"
               />
             </Pressable>
-            {customFee ? (
-              <Text style={styles.speedValue}>
-                {`(Custom / ${dpUI(getSendFee(code, customFee), 9)} ${code})`}
-              </Text>
-            ) : (
-              <Text style={styles.speedValue}>
-                {`(${networkSpeed} / ${dpUI(
-                  getSendFee(code, networkFee.current?.value || Number(fee)),
-                  9,
-                )} ${code})`}
-              </Text>
-            )}
+            {showText ? (
+              <Animated.Text
+                entering={FadeIn.duration(200)}
+                exiting={FadeOut.duration(200)}
+                style={[styles.speedValue, { color: showtextColor }]}>
+                {customFee
+                  ? `(Custom / ${dpUI(getSendFee(code, customFee), 9)} ${code})`
+                  : `(${networkSpeed} / ${dpUI(
+                      getSendFee(
+                        code,
+                        networkFee.current?.value || Number(fee),
+                      ),
+                      9,
+                    )} ${code})`}
+              </Animated.Text>
+            ) : null}
           </Box>
           {showFeeOptions && (
             <SendFeeSelector
