@@ -24,12 +24,13 @@ import {
   NFTWithAccount,
   SendHistoryItem,
   SwapHistoryItem,
+  Asset,
+  WalletId,
 } from '@liquality/wallet-core/dist/src/store/types'
 import {
   getSwapTimeline,
   TimelineStep,
 } from '@liquality/wallet-core/dist/src/utils/timeline'
-import { Asset, WalletId } from '@liquality/wallet-core/dist/src/store/types'
 import { AtomEffect, DefaultValue } from 'recoil'
 import dayjs from 'dayjs'
 import { showNotification } from './pushNotification'
@@ -219,8 +220,8 @@ export const fetchSwapProvider = (providerId: string) => {
  * Toggle network between mainnet and testnet
  * @param network
  */
-export const toggleNetwork = async (network: any): Promise<void> => {
-  await wallet.dispatch.changeActiveNetwork(network)
+export const toggleNetwork = async (network: Network): Promise<void> => {
+  await wallet.dispatch.changeActiveNetwork({ network })
 }
 
 /**
@@ -298,9 +299,12 @@ export const updateWallet = async (): Promise<void> => {
  * Restores an already created wallet from local storage
  * @param password
  */
-export const restoreWallet = async (password: string): Promise<void> => {
+export const restoreWallet = async (
+  password: string,
+  activeNetwork = Network.Testnet,
+): Promise<void> => {
   const result = storageManager.read<CustomRootState>('wallet', {})
-  await initWallet(result)
+  await initWallet({ ...result, activeNetwork })
   await wallet.dispatch.unlockWallet({
     key: password,
   })
