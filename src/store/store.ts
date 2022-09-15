@@ -1,5 +1,6 @@
 import StorageManager from '../core/storage-manager'
-import { BigNumber, FeeDetail } from '@liquality/types'
+import { BigNumber } from '@liquality/types'
+import { FeeDetail } from '@chainify/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
@@ -182,10 +183,10 @@ export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {
     if (typeof feeDetail.fee === 'number') {
       return feeDetail.fee
     } else {
-      return (
-        feeDetail.fee.maxPriorityFeePerGas +
-        feeDetail.fee.suggestedBaseFeePerGas
-      )
+      const { suggestedBaseFeePerGas, maxPriorityFeePerGas } = feeDetail.fee
+      return suggestedBaseFeePerGas
+        ? maxPriorityFeePerGas + suggestedBaseFeePerGas
+        : maxPriorityFeePerGas
     }
   }
 
@@ -202,7 +203,7 @@ export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {
   return {
     slow: new BigNumber(extractFee(fees.slow)),
     average: new BigNumber(extractFee(fees.average)),
-    fast: new BigNumber(extractFee(fees.fast)),
+    fast: new BigNumber(extractFee(fees.slow)),
     custom: new BigNumber(0),
   }
 }

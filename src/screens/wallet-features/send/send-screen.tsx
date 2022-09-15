@@ -3,6 +3,7 @@ import { Pressable, StyleSheet } from 'react-native'
 import { ChainId, getAsset, getChain } from '@liquality/cryptoassets'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
+  GasFees,
   NetworkFeeType,
   RootStackParamList,
   UseInputStateReturnType,
@@ -79,7 +80,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     balanceStateFamily({ asset: code, assetId: id }),
   )
   const [showFeeOptions, setShowFeeOptions] = useState(true)
-  const [fee, setFee] = useState<BigNumber>(new BigNumber(0))
+  const [fee, setFee] = useState<BigNumber | GasFees>(new BigNumber(0))
   const [availableAmount, setAvailableAmount] = useState<string>('')
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
   const [amountInNative, setAmountInNative] = useState<number>(0)
@@ -160,6 +161,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     fetchFeesForAsset(code).then((gasFee) => {
       setFee(gasFee)
       const calculatedAmt = calculateAvailableAmnt(
+        activeNetwork,
         code,
         getSendFee(code, gasFee.average.toNumber()).toNumber(),
         balance,
@@ -170,7 +172,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       }
       setAvailableAmount(calculatedAmt)
     })
-  }, [code, chain, balance])
+  }, [code, chain, balance, activeNetwork])
 
   const handleReviewPress = useCallback(() => {
     let feeInUnit
