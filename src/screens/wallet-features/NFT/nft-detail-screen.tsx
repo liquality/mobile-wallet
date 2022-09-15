@@ -26,7 +26,6 @@ const NftDetailScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
   useEffect(() => {
     async function fetchData() {}
     fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeNetwork, activeWalletId])
 
   const navigateToSendNftScreen = useCallback(() => {

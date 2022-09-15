@@ -20,7 +20,7 @@ type AssetListSwipeableRowProps = {
 
 const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
   const width = Dimensions.get('screen').width
-  const { children, assetData, assetSymbol, nft } = props
+  const { children, assetData, assetSymbol } = props
   const ref = useRef<Swipeable>()
   const navigation = useNavigation()
 

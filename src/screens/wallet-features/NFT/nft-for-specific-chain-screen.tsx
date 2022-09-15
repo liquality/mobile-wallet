@@ -45,14 +45,17 @@ const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
       setIterableNftArray(wholeNftArr)
     }
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeNetwork, activeWalletId])
 
   const renderNftArray = () => {
     let rows = []
     if (iterableNftArray) {
-      rows = iterableNftArray.map((nftItem) => {
+      rows = iterableNftArray.map((nftItem, index) => {
         return (
-          <View style={[styles.container, styles.fragmentContainer]}>
+          <View
+            key={index}
+            style={[styles.container, styles.fragmentContainer]}>
             <Text style={[styles.label, styles.headerLabel]}>NFT SCreen</Text>
             <Text>{nftItem[0].collection.name}</Text>
             <Text>{nftItem[0].description}</Text>

@@ -30,7 +30,7 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
-  const [sendSuccess, setSendSuccess] = useState('')
+  const [statusMsg, setStatusMsg] = useState('')
 
   //Hardcoded my own metamask mumbai testnet for testing purposes
   const addressInput = useInputState(
@@ -40,11 +40,9 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
   useEffect(() => {
     async function fetchData() {}
     fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeNetwork, activeWalletId])
 
   const sendNft = async () => {
-    console.log('IN SEND NF T')
     try {
       /* 
       TODO add NFT fees, currently the fees sent in in extension 
@@ -71,9 +69,9 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
         network: activeNetwork,
         accountIds: accountIdsToSendIn,
       })
-      setSendSuccess('Success! You sent the NFT')
+      setStatusMsg('Success! You sent the NFT')
     } catch (error) {
-      console.log(error, 'could not send NFTs')
+      setStatusMsg('Failed to send the NFT')
     }
   }
 
@@ -89,7 +87,7 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
         isActive={true}
         onPress={() => sendNft()}
       />
-      {sendSuccess ? <Text>{sendSuccess}</Text> : null}
+      {statusMsg ? <Text>{statusMsg}</Text> : null}
 
       <Box
         flexDirection="row"

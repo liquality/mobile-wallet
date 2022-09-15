@@ -55,6 +55,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
       setIterableNftArray(wholeNftArr)
     }
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeWalletId, activeNetwork])
 
   const seeNftDetail = useCallback(
@@ -65,7 +66,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
         accountIdsToSendIn: accountIdsToSendIn,
       })
     },
-    [navigation],
+    [navigation, accountIdsToSendIn],
   )
 
   const renderNftArray = () => {
