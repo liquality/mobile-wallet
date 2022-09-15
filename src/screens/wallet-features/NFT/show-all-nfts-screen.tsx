@@ -20,88 +20,14 @@ type ShowAllNftsScreenProps = BottomTabScreenProps<
   'ShowAllNftsScreen'
 >
 
-/* const hardCodedNftList = {
-  'Neon District Season One Item': [
-    {
-      asset_contract: {
-        address: '0x7227e371540cf7b8e512544ba6871472031f3335',
-        name: 'Neon District Season One Item',
-        symbol: 'NDITEM1',
-      },
-      collection: {
-        name: 'Neon District Season One Item',
-      },
-      token_id: '158456337646102184554375542858',
-      amount: '1',
-      standard: 'ERC721',
-      name: 'Factor Fabricator: Paragon',
-      description:
-        'Armor found within Neon District.\n\nA Neon District: Season One game item, playable on https://portal.neondistrict.io.\n\nNeon District is a free-to-play cyberpunk role-playing game. Collect characters and gear, craft and level up teams, and battle against other players through competitive multiplayer and in turn-based combat.',
-      image_original_url:
-        'https://neon-district-season-one.s3.amazonaws.com/images/factorfabricatorp-uncommon-arms-female-thumb.png',
-      image_preview_url:
-        'https://neon-district-season-one.s3.amazonaws.com/images/factorfabricatorp-uncommon-arms-female-thumb.png',
-      image_thumbnail_url:
-        'https://neon-district-season-one.s3.amazonaws.com/images/factorfabricatorp-uncommon-arms-female-thumb.png',
-      external_link:
-        'https://portal.neondistrict.io/asset/158456337646102184554375542858',
-      starred: false,
-      accountId: '9a44ded7-b621-486f-9e07-d722c5b2e60b',
-    },
-  ],
-  'Sunflower Land': [
-    {
-      asset_contract: {
-        address: '0x2b4a66557a79263275826ad31a4cddc2789334bd',
-        name: 'Sunflower Land',
-        symbol: 'SL',
-      },
-      collection: {
-        name: 'Sunflower Land',
-      },
-      token_id: '95834',
-      amount: '1',
-      standard: 'ERC721',
-      name: 'Sunflower Land #95834',
-      description:
-        'A new farm at Sunflower Land. It is still being verified and not recommended to buy as it may be blacklisted.',
-      image_original_url:
-        'https://sunflower-land.com/testnet/farms/verifying.png',
-      image_preview_url:
-        'https://sunflower-land.com/testnet/farms/verifying.png',
-      image_thumbnail_url:
-        'https://sunflower-land.com/testnet/farms/verifying.png',
-      external_link: 'https://sunflower-land.com/play/?farmId=95834',
-      starred: false,
-      accountId: '9a44ded7-b621-486f-9e07-d722c5b2e60b',
-    },
-  ],
-  'Galaxy OAT': [
-    {
-      asset_contract: {
-        address: '0x1871464f087db27823cff66aa88599aa4815ae95',
-        name: 'Galaxy OAT',
-        symbol: 'OAT',
-      },
-      collection: {
-        name: 'Galaxy OAT',
-      },
-      token_id: '824888',
-      amount: '1',
-      standard: 'ERC721',
-      starred: false,
-      accountId: '9a44ded7-b621-486f-9e07-d722c5b2e60b',
-    },
-  ],
-} */
 const wallet = setupWallet({
   ...defaultOptions,
 })
-const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
+const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
-  const [allNftData, setAllNftData] = useState({})
+  const [, setAllNftData] = useState({})
   const [iterableNftArray, setIterableNftArray] = useState([])
-  const [accountIdsToSendIn, setAccountIdsToSendIn] = useState([])
+  const [accountIdsToSendIn, setAccountIdsToSendIn] = useState<string[]>([])
 
   const { activeWalletId } = wallet.state
 
@@ -123,7 +49,7 @@ const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
       })
       let allNfts = await fetchAllNfts()
       setAllNftData(allNfts)
-      let wholeNftArr = Object.values(allNftData).map((val) => {
+      let wholeNftArr = Object.values(allNfts).map((val) => {
         return val
       })
       setIterableNftArray(wholeNftArr)
@@ -134,6 +60,7 @@ const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
   const seeNftDetail = useCallback(
     (nftItem) => {
       navigation.navigate('NftDetailScreen', {
+        screenTitle: 'NFT Detail',
         nftItem: nftItem,
         accountIdsToSendIn: accountIdsToSendIn,
       })
@@ -156,9 +83,13 @@ const ShowAllNftsScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
 
               <Pressable onPress={() => seeNftDetail(nftItem[0])}>
                 <Image
-                  /*   source={{
-                  uri: nftItem[0].image_thumbnail_url,
-                }} */
+                  /*          source={{
+            uri: nftItem[0].image_thumbnail_url,
+          }} 
+                //Hardcoded icon for now since i'm waiting for this PR 
+                (https://github.com/liquality/wallet-core/pull/166) to be merged so I dont have to handle
+                different URLs and manipulating strings to https in frontend code
+          */
                   source={require('../../../assets/icons/nft_thumbnail.png')}
                   style={{ width: 150, height: 100 }}
                 />

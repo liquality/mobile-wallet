@@ -1,14 +1,14 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Pressable, TextInput } from 'react-native'
+import { View, Text, StyleSheet, TextInput } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import Box from '../../../theme/box'
 import Button from '../../../theme/button'
-import { RootTabParamList, UseInputStateReturnType } from '../../../types'
+import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 
 const useInputState = (
   initialValue: string,
@@ -16,15 +16,17 @@ const useInputState = (
   const [value, setValue] = useState<string>(initialValue)
   return { value, onChangeText: setValue }
 }
-type ShowAllNftsScreenProps = BottomTabScreenProps<
-  RootTabParamList,
-  'NftDetailScreen'
+
+type NftSendScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'NftSendScreen'
 >
 
 const wallet = setupWallet({
   ...defaultOptions,
 })
-const NftSendScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
+
+const NftSendScreen = ({ route }: NftSendScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
@@ -53,17 +55,16 @@ const NftSendScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
         : undefined */
       const data = {
         network: activeNetwork,
-        accountId: nftItem.accountId,
+        accountId: nftItem?.accountId,
         walletId: activeWalletId,
         receiver: addressInput.value,
-        contract: nftItem.asset_contract.address,
-        tokenIDs: [nftItem.token_id],
+        contract: nftItem?.asset_contract.address,
+        tokenIDs: [nftItem?.token_id],
         values: [1],
         fee: undefined,
         feeLabel: 'average',
         nft: nftItem,
       }
-      console.log('DO I GET HER EIN TRY')
       await sendNFTTransaction(data)
       await updateNFTs({
         walletId: activeWalletId,

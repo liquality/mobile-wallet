@@ -24,8 +24,8 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 
 type SubRowProps = {
-  parentItem: AccountType
-  item: AccountType
+  parentItem: Partial<AccountType>
+  item: AccountType | {}
   onAssetSelected: () => void
   nft: boolean
 }
@@ -44,7 +44,7 @@ const SubRow: FC<SubRowProps> = (props) => {
   const fiatRates = useRecoilValue(fiatRatesState)
   const activeNetwork = useRecoilValue(networkState)
   const [chainSpecificNfts, setChainSpecificNfts] = useState({})
-  const [accountIdsToSendIn, setAccountIdsToSendIn] = useState([])
+  const [accountIdsToSendIn] = useState<string[]>([])
 
   const { activeWalletId } = wallet.state
 
@@ -61,7 +61,6 @@ const SubRow: FC<SubRowProps> = (props) => {
       })
       let nfts = await getNftsForAccount(parentItem.id)
       setChainSpecificNfts(nfts)
-      console.log(nfts, 'NFTS FOR ACC SUB ROW!!')
     }
     fetchData()
     const fiatBalance = fiatRates[item.code]

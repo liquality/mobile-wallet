@@ -1,6 +1,6 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import { useRecoilValue } from 'recoil'
@@ -10,10 +10,10 @@ import {
   getNftsForAccount,
   updateNFTs,
 } from '../../../store/store'
-import { RootTabParamList } from '../../../types'
-type ShowAllNftsScreenProps = BottomTabScreenProps<
-  RootTabParamList,
-  'NftForSpecificChainScreen'
+import { RootStackParamList } from '../../../types'
+type ShowAllNftsScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'NftDetailScreen'
 >
 const wallet = setupWallet({
   ...defaultOptions,
@@ -21,7 +21,7 @@ const wallet = setupWallet({
 const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
-  const [chainSpecificNfts, setChainSpecificNfts] = useState({})
+  const [, setChainSpecificNfts] = useState({})
   const [iterableNftArray, setIterableNftArray] = useState([])
   const { currentAccount } = route.params
 
@@ -39,7 +39,7 @@ const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
       let nfts = await getNftsForAccount(currentAccount.id)
       setChainSpecificNfts(nfts)
       //Manipulate NFT object to be iterable
-      let wholeNftArr = Object.values(chainSpecificNfts).map((val) => {
+      let wholeNftArr = Object.values(nfts).map((val) => {
         return val
       })
       setIterableNftArray(wholeNftArr)
@@ -58,9 +58,13 @@ const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
             <Text>{nftItem[0].description}</Text>
 
             <Image
-              /*    source={{
-                uri: nftItem[0].image_thumbnail_url,
-              }} */
+              /*         source={{
+            uri: nftItem[0].image_thumbnail_url,
+          }} 
+                //Hardcoded icon for now since i'm waiting for this PR 
+                (https://github.com/liquality/wallet-core/pull/166) to be merged so I dont have to handle
+                different URLs and manipulating strings to https in frontend code
+          */
               source={require('../../../assets/icons/nft_thumbnail.png')}
               style={{ width: 150, height: 100 }}
             />

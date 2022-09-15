@@ -161,7 +161,7 @@ const WrappedRow: FC<{
         <SubRow
           key={1}
           parentItem={account}
-          item={'bu'}
+          item={{}}
           onAssetSelected={() => onNFTPress(account)}
           nft={true}
         />

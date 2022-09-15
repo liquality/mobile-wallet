@@ -1,15 +1,16 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useCallback } from 'react'
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import Button from '../../../theme/button'
 
-import { RootTabParamList } from '../../../types'
-type ShowAllNftsScreenProps = BottomTabScreenProps<
-  RootTabParamList,
+import { RootStackParamList } from '../../../types'
+
+type ShowAllNftsScreenProps = NativeStackScreenProps<
+  RootStackParamList,
   'NftDetailScreen'
 >
 
@@ -49,9 +50,14 @@ const NftDetailScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
 
       <Pressable onPress={() => navigateToSendNftScreen()}>
         <Image
-          /*   source={{
-                  uri: nftItem.image_thumbnail_url,
-                }} */
+          /*   
+          source={{
+            uri: nftItem.image_thumbnail_url,
+          }} 
+                //Hardcoded icon for now since i'm waiting for this PR 
+                (https://github.com/liquality/wallet-core/pull/166) to be merged so I dont have to handle
+                different URLs and manipulating strings to https in frontend code
+          */
           source={require('../../../assets/icons/nft_thumbnail.png')}
           style={{ width: 150, height: 100 }}
         />
