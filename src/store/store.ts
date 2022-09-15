@@ -203,7 +203,7 @@ export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {
   return {
     slow: new BigNumber(extractFee(fees.slow)),
     average: new BigNumber(extractFee(fees.average)),
-    fast: new BigNumber(extractFee(fees.slow)),
+    fast: new BigNumber(extractFee(fees.fast)),
     custom: new BigNumber(0),
   }
 }
