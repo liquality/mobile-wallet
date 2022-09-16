@@ -1,13 +1,14 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, TextInput } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, TextInput } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import Box from '../../../theme/box'
 import Button from '../../../theme/button'
+import Text from '../../../theme/text'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 
 const useInputState = (
@@ -36,11 +37,6 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
   const addressInput = useInputState(
     '0xb81B9B88e764cb6b4E02c5D0F6D6D9051A61E020',
   )
-
-  useEffect(() => {
-    async function fetchData() {}
-    fetchData()
-  }, [activeNetwork, activeWalletId])
 
   const sendNft = async () => {
     try {
@@ -76,7 +72,7 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
   }
 
   return (
-    <View style={[styles.container, styles.fragmentContainer]}>
+    <Box style={[styles.container, styles.fragmentContainer]}>
       <Text>NFT SEND SCREEEN</Text>
 
       <Button
@@ -101,11 +97,12 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
           autoCorrect={false}
           returnKeyType="done"
         />
-        {/*  <Pressable onPress={handleQRCodeBtnPress}>
+        {/*  Todo: implement send NFT with QR code (waiting for design)
+        <Pressable onPress={handleQRCodeBtnPress}>
           <QRCode />
         </Pressable> */}
       </Box>
-    </View>
+    </Box>
   )
 }
 

@@ -2997,7 +2997,7 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-6.10.1-nightly.0.tgz#d87889a5fa30c93ed615d6fae0ffdefeb93e2a72"
   integrity sha512-hwoUwlC7le37kQ72W8hAzVq070zuY6IEpssYNXDTr3pEfc3cprTAgEnaBsb0jXQGiLdONPvxc7nPp8nSyGD3hQ==
 
-"@liquality/cryptoassets@1.14.11", "@liquality/cryptoassets@^1.14.7":
+"@liquality/cryptoassets@1.14.11":
   version "1.14.11"
   resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.14.11.tgz#eb011debf9ddacf2a7d1290c7fe52d761421ea4d"
   integrity sha512-ThRaoG9EyZ0R7Oai8uNRKhWGMqSjFrMJmeFnQcKAvKYDH0MHvGHsAi56CKFMb5sc28KyLDhSRzJ3v8bceRUKmA==
@@ -3010,7 +3010,7 @@
     ethereumjs-util "7.1.5"
     lodash "4.17.21"
 
-"@liquality/cryptoassets@^1.13.3":
+"@liquality/cryptoassets@1.14.7", "@liquality/cryptoassets@^1.13.3":
   version "1.14.7"
   resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.14.7.tgz#39eaaa8efedc68cc21c60e7dc0b0690d06ad0353"
   integrity sha512-D9AL0d0zE2p7adKzRR0VbkEGce3tqYD4WugG5umJ6SGY1NhRQdX1fF648Tiwty/y2Po/6iGJqFze5S68r1GsxA==
@@ -3033,14 +3033,14 @@
     ethers "5.6.0"
     moving-averages "^4.0.6"
 
-"@liquality/types@^1.13.12":
+"@liquality/types@1.13.12":
   version "1.13.12"
   resolved "https://registry.yarnpkg.com/@liquality/types/-/types-1.13.12.tgz#d4ba6e774b597eb726e8434c570b63fd811a6e32"
   integrity sha512-42+ZfdmuZmGPDoYNJ7oCqR+3NtfLePBwtfpveoF2XQVu8FgzG/noH0/Nqz2Aw/TE1GD40n+ZrPRv6YDjDv+4xw==
   dependencies:
     bignumber.js "^9.0.1"
 
-"@liquality/wallet-core@^1.29.16":
+"@liquality/wallet-core@1.29.16":
   version "1.29.16"
   resolved "https://registry.yarnpkg.com/@liquality/wallet-core/-/wallet-core-1.29.16.tgz#fcf73e07cfa3c5c0c35fd1568ea16172eee0b746"
   integrity sha512-X+a6+06vVxrPzVprjhIH3A+J6kdGxrPQzelHUE4QV3Ziv5scuFaQagtXrLIli//4qV6WQJWfHHDyXyHjLdq+JQ==
@@ -5203,7 +5203,7 @@ better-opn@~3.0.2:
   dependencies:
     open "^8.0.4"
 
-big-integer@1.6.x, big-integer@^1.6.51:
+big-integer@1.6.x:
   version "1.6.51"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.51.tgz#0df92a5d9880560d3ff2d5fd20245c889d130686"
   integrity sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==

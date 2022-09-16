@@ -15,7 +15,6 @@ type AssetListSwipeableRowProps = {
   children: React.ReactElement
   assetSymbol: string
   assetData: AccountType
-  nft: boolean
 }
 
 const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {

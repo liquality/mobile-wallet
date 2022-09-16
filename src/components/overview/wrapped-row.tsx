@@ -170,14 +170,12 @@ const WrappedRow: FC<{
         isExpanded &&
         assets?.map((subItem) => {
           return (
-            <View>
-              <SubRow
-                key={subItem.id}
-                parentItem={account}
-                item={subItem}
-                onAssetSelected={() => onAssetSelected(subItem)}
-              />
-            </View>
+            <SubRow
+              key={subItem.id}
+              parentItem={account}
+              item={subItem}
+              onAssetSelected={() => onAssetSelected(subItem)}
+            />
           )
         })}
     </Fragment>

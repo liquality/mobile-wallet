@@ -2,7 +2,7 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, StyleSheet, Image } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import {
@@ -10,6 +10,8 @@ import {
   getNftsForAccount,
   updateNFTs,
 } from '../../../store/store'
+import Box from '../../../theme/box'
+import Text from '../../../theme/text'
 import { RootStackParamList } from '../../../types'
 type ShowAllNftsScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -53,9 +55,7 @@ const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
     if (iterableNftArray) {
       rows = iterableNftArray.map((nftItem, index) => {
         return (
-          <View
-            key={index}
-            style={[styles.container, styles.fragmentContainer]}>
+          <Box key={index} style={[styles.container, styles.fragmentContainer]}>
             <Text style={[styles.label, styles.headerLabel]}>NFT SCreen</Text>
             <Text>{nftItem[0].collection.name}</Text>
             <Text>{nftItem[0].description}</Text>
@@ -71,7 +71,7 @@ const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
               source={require('../../../assets/icons/nft_thumbnail.png')}
               style={{ width: 150, height: 100 }}
             />
-          </View>
+          </Box>
         )
       })
     } else {

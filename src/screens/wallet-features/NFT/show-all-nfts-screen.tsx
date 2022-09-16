@@ -2,14 +2,7 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import React, { useEffect, useCallback, useState } from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  ScrollView,
-  Pressable,
-} from 'react-native'
+import { Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { getAllEnabledAccounts, updateNFTs } from '../../../store/store'
@@ -107,11 +100,11 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
   }
 
   return (
-    <View style={[styles.container, styles.fragmentContainer]}>
+    <Box style={[styles.container, styles.fragmentContainer]}>
       <Text style={[styles.label, styles.headerLabel]}>NFT SCreen</Text>
 
       {renderNftArray()}
-    </View>
+    </Box>
   )
 }
 

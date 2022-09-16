@@ -10,10 +10,11 @@ import { AccountType } from '../../types'
 import AssetIcon from '../asset-icon'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   addressStateFamily,
   balanceStateFamily,
+  doubleOrLongTapSelectedAsset,
   fiatRatesState,
   networkState,
 } from '../../atoms'
@@ -27,7 +28,7 @@ type SubRowProps = {
   parentItem: Partial<AccountType>
   item: AccountType | {}
   onAssetSelected: () => void
-  nft: boolean
+  nft?: boolean
 }
 const wallet = setupWallet({
   ...defaultOptions,
@@ -48,9 +49,15 @@ const SubRow: FC<SubRowProps> = (props) => {
 
   const { activeWalletId } = wallet.state
 
+  const clearDoubleOrLongTapSelectedAsset = useSetRecoilState(
+    doubleOrLongTapSelectedAsset,
+  )
+
   const handlePressOnRow = useCallback(() => {
+    clearDoubleOrLongTapSelectedAsset('')
+
     onAssetSelected()
-  }, [onAssetSelected])
+  }, [clearDoubleOrLongTapSelectedAsset, onAssetSelected])
 
   useEffect(() => {
     async function fetchData() {

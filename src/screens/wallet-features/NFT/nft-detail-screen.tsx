@@ -44,10 +44,10 @@ const NftDetailScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
         label={'Send NFT'}
         isBorderless={false}
         isActive={true}
-        onPress={() => navigateToSendNftScreen()}
+        onPress={navigateToSendNftScreen}
       />
 
-      <Pressable onPress={() => navigateToSendNftScreen()}>
+      <Pressable onPress={navigateToSendNftScreen}>
         <Image
           /*   
           source={{
