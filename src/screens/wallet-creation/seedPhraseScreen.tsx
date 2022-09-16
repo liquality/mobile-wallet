@@ -15,6 +15,7 @@ import { Box, Button } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 import { generateMnemonic } from 'bip39'
 import { Text } from '../../components/text/text'
+import { Fonts } from '../../assets'
 
 type WalletBackupProps = NativeStackScreenProps<
   RootStackParamList,
@@ -114,11 +115,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   wordId: {
-    fontFamily: 'Montserrat-Bold',
+    fontFamily: Fonts.Bold,
     fontSize: 12,
+    color: 'red',
   },
   wordText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 16,
     marginTop: 5,
   },
@@ -146,13 +148,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   promptText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: '#FFFFFF',
     fontSize: 30,
     lineHeight: 28,
   },
   description: {
-    fontFamily: 'Montserrat-SemiBold',
+    fontFamily: Fonts.SemiBold,
     marginTop: 10,
     marginBottom: 18,
     alignSelf: 'center',

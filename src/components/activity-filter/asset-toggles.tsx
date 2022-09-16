@@ -7,7 +7,7 @@ import AssetIcon from '../asset-icon'
 import { useNavigation } from '@react-navigation/native'
 import { useRecoilValue } from 'recoil'
 import { enabledAssetsState, networkState } from '../../atoms'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 
 const { SwapCheck } = AppIcons
 
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
   label: {
     marginTop: 6,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: '#1D1E21',
     fontSize: 13,
   },

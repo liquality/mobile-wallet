@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { StyleSheet, Dimensions } from 'react-native'
 import ModalFilterPicker from 'react-native-modal-filter-picker'
+import { Fonts } from '../../assets'
 import { labelTranslateFn } from '../../utils'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen')
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     marginTop: (screenHeight - 560) * 0.5,
   },
   optionText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '400',
     color: '#1D1E21',
     fontSize: 14,

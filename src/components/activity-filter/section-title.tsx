@@ -4,6 +4,7 @@ import { TxKeyPath, translate } from '../../i18n'
 import i18n from 'i18n-js'
 import { langSelected as LS } from '../../../src/atoms'
 import { useRecoilValue } from 'recoil'
+import { Fonts } from '../../assets'
 interface SectionTitleProps {
   title: string
   tx?: TxKeyPath
@@ -21,7 +22,7 @@ const SectionTitle: FC<SectionTitleProps> = (props: SectionTitleProps) => {
 
 const styles = StyleSheet.create({
   title: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '700',
     fontSize: 12,
     color: '#3D4767',

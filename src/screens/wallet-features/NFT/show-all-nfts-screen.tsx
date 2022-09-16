@@ -4,6 +4,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import React, { useEffect, useCallback, useState } from 'react'
 import { Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native'
 import { useRecoilValue } from 'recoil'
+import { Fonts } from '../../../assets'
 import { networkState } from '../../../atoms'
 import { getAllEnabledAccounts, updateNFTs } from '../../../store/store'
 import { Box } from '../../../theme'
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '700',
     fontSize: 12,
   },

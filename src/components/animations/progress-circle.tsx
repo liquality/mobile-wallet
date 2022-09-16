@@ -6,6 +6,7 @@ import Animated, {
   withTiming,
   withRepeat,
 } from 'react-native-reanimated'
+import { Fonts } from '../../assets'
 
 type ProgressCircleProps = {
   radius: number
@@ -54,7 +55,7 @@ const ProgressCircle: FC<ProgressCircleProps> = (props) => {
         <Text
           x={radius}
           y={radius + 4}
-          fontFamily="Montserrat-Regular"
+          fontFamily={Fonts.Regular}
           fontWeight="200"
           fontSize={10}
           textAnchor="middle"

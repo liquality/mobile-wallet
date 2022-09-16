@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text } from 'react-native'
 import { networkState } from '../../atoms'
 import { useRecoilValue } from 'recoil'
 import { Box } from '../../theme'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 
 const { ChevronLeft } = AppIcons
 
@@ -33,12 +33,14 @@ const OverviewHeaderLeft: FC<OverviewHeaderLeftProps> = (
 
 const styles = StyleSheet.create({
   overviewText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontSize: 14,
     fontWeight: '600',
   },
   chainText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontSize: 14,
     fontWeight: '300',
     marginLeft: 5,

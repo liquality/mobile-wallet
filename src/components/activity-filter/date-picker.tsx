@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { Modal, View, Pressable, StyleSheet, Dimensions } from 'react-native'
 import { Calendar, DateData } from 'react-native-calendars'
 import { Theme } from 'react-native-calendars/src/types'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 import Label from '../ui/label'
 
 const { TimesIcon } = AppIcons
@@ -14,9 +14,9 @@ const CALENDAR_THEME = {
   textDisabledColor: 'rgba(0, 13, 53, 0.5)',
   arrowColor: '#646F85',
   monthTextColor: '#000D35',
-  textDayFontFamily: 'Montserrat-Regular',
-  textMonthFontFamily: 'Montserrat-Regular',
-  textDayHeaderFontFamily: 'Montserrat-Light',
+  textDayFontFamily: Fonts.Regular,
+  textMonthFontFamily: Fonts.Regular,
+  textDayHeaderFontFamily: Fonts.Regular,
   textDayFontWeight: '300',
   textMonthFontWeight: '400',
   textDayHeaderFontWeight: '500',

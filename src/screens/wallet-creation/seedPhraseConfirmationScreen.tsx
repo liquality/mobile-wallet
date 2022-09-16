@@ -17,6 +17,7 @@ import { Box, Button } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 import { Text } from '../../components/text/text'
 import { labelTranslateFn } from '../../utils'
+import { Fonts } from '../../assets'
 
 type SeedPhraseConfirmationProps = NativeStackScreenProps<
   RootStackParamList,
@@ -264,13 +265,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   promptText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: '#FFFFFF',
     fontSize: 30,
     lineHeight: 30,
   },
   description: {
-    fontFamily: 'Montserrat-SemiBold',
+    fontFamily: Fonts.SemiBold,
     marginTop: 10,
     marginBottom: 18,
     alignSelf: 'center',

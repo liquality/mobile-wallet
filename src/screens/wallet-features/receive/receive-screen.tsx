@@ -18,7 +18,7 @@ import i18n from 'i18n-js'
 import { addressStateFamily, networkState } from '../../../atoms'
 import { labelTranslateFn, COPY_BUTTON_TIMEOUT } from '../../../utils'
 import BuyCryptoModal from './buyCryptoModal'
-import { AppIcons } from '../../../assets'
+import { AppIcons, Fonts } from '../../../assets'
 const { SwapCheck: CheckIcon, CopyIcon, TransakIcon } = AppIcons
 
 const PowerByTransak = () => (
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addressLabel: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 12,
     fontWeight: '700',
     textTransform: 'uppercase',
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   address: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 12,
     fontWeight: '300',
     textTransform: 'uppercase',
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scanPrompt: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 12,
     fontWeight: '400',
     textAlign: 'center',
@@ -244,14 +244,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   linkLabel: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 12,
     fontWeight: '500',
     marginTop: 20,
     lineHeight: 18,
   },
   link: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 18,

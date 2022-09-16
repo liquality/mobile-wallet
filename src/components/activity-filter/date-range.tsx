@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View, Text } from 'react-native'
 import SectionTitle from './section-title'
 import DatePicker from './date-picker'
 import { labelTranslateFn } from '../../utils'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 
 const { CalendarIcon } = AppIcons
 
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   label: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: '#1D1E21',
     fontSize: 13,
   },

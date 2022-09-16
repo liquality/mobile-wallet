@@ -4,6 +4,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Image } from 'react-native'
 import { useRecoilValue } from 'recoil'
+import { Fonts } from '../../../assets'
 import { networkState } from '../../../atoms'
 import {
   getAllEnabledAccounts,
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '700',
     fontSize: 12,
   },

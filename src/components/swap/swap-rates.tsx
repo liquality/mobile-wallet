@@ -17,7 +17,7 @@ import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { capitalizeFirstLetter, labelTranslateFn } from '../../utils'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
 import GestureDetector from '../gesture-detector/gesture-detector'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 
 const {
   InfinityIcon: Logo,
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   text: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     textTransform: 'capitalize',
     color: '#000D35',
     fontWeight: '300',

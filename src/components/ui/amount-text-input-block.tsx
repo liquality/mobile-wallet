@@ -26,6 +26,7 @@ import { Button } from '../../theme'
 import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms'
 import GestureDetector from '../gesture-detector/gesture-detector'
+import { Fonts } from '../../assets'
 
 type AmountTextInputBlockProps = {
   type: 'FROM' | 'TO'
@@ -207,7 +208,8 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   font: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontWeight: '400',
   },
   input: {

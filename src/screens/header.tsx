@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Text } from '../theme'
-import { AppIcons } from '../assets'
+import { AppIcons, Fonts } from '../assets'
 
 const { Logo } = AppIcons
 
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   headerText: {
-    fontFamily: 'MontserratAlternates-Light',
+    fontFamily: Fonts.AlternatesLight,
     color: '#fff',
     fontSize: 22,
     fontWeight: '300',

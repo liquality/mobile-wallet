@@ -17,6 +17,7 @@ import { MNEMONIC, PASSWORD } from '@env'
 import CheckBox from '../../../components/checkbox'
 import GradientBackground from '../../../components/gradient-background'
 import { labelTranslateFn } from '../../../utils'
+import { Fonts } from '../../../assets'
 
 type LoginScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   checkBoxText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '600',
     color: 'white',
     fontSize: 14,

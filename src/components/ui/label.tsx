@@ -4,6 +4,7 @@ import { TxKeyPath, translate } from '../../i18n'
 import i18n from 'i18n-js'
 import { langSelected as LS } from '../../../src/atoms'
 import { useRecoilValue } from 'recoil'
+import { Fonts } from '../../assets'
 
 type LabelProps = {
   text: string | { tx: TxKeyPath }
@@ -45,7 +46,7 @@ const Label: FC<LabelProps> = (props) => {
 
 const styles = StyleSheet.create({
   font: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
   },
   spacing: {
     marginVertical: 5,

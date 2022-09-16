@@ -32,6 +32,7 @@ import {
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { speedUpTransaction } from '../../../store/store'
+import { Fonts } from '../../../assets'
 
 const scrollViewStyle: ViewStyle = {
   flex: 1,
@@ -258,7 +259,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   labelNormal: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 12,
   },
@@ -268,7 +269,7 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '700',
     fontSize: 12,
     marginRight: 5,
@@ -277,7 +278,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   preset: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 14,
     lineHeight: 26,
@@ -303,7 +304,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   inputLabel: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 14,
     marginRight: 10,

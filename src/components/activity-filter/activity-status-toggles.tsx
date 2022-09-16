@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 
 import { ActivityStatusEnum } from '../../types'
 import { capitalizeFirstLetter } from '../../utils'
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   label: {
     marginLeft: 5,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: '#1D1E21',
     fontSize: 13,
   },

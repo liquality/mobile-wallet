@@ -15,7 +15,7 @@ import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import { useRecoilValue } from 'recoil'
 import { addressStateFamily, networkState } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 
 const { CopyIcon, SwapCheck: CheckIcon } = AppIcons
 
@@ -129,7 +129,7 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
 
 const styles = StyleSheet.create({
   font: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
   },
   mainAmount: {
     fontWeight: '300',

@@ -45,7 +45,7 @@ import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-scre
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
 import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
-import { AppIcons } from '../assets'
+import { AppIcons, Fonts } from '../assets'
 const { UserCog, SwapCheck, InfinityIcon, TimesIcon } = AppIcons
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   settingsTitle: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 20,

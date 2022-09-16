@@ -6,6 +6,7 @@ import CheckBox from '../../components/checkbox'
 import { useRecoilState } from 'recoil'
 import { optInAnalyticsState } from '../../atoms'
 import { Text } from '../../components/text/text'
+import { Fonts } from '../../assets'
 
 type AnalyticsModalProps = {
   onAction: (params: boolean) => void
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   content: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '500',
     fontSize: 14,
     color: '#000D35',
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   checkBoxText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '600',
     fontSize: 14,
     marginLeft: 10,

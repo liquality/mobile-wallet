@@ -16,6 +16,7 @@ import * as React from 'react'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
 import { labelTranslateFn } from '../../utils'
 import { Network } from '@liquality/cryptoassets/dist/src/types'
+import { Fonts } from '../../assets'
 
 type SummaryBlockProps = {
   navigation: OverviewProps['navigation']
@@ -115,7 +116,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   assets: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontSize: 20,
     fontWeight: '400',
     color: '#FFFFFF',
@@ -129,7 +131,8 @@ const styles = StyleSheet.create({
   },
   totalValue: {
     color: '#FFFFFF',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontWeight: '500',
     fontSize: 36,
     marginTop: 15,
@@ -137,7 +140,8 @@ const styles = StyleSheet.create({
   },
   currency: {
     color: '#FFFFFF',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontWeight: '500',
     fontSize: 18,
     paddingBottom: 3,

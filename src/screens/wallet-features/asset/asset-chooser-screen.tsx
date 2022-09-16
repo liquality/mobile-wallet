@@ -14,7 +14,7 @@ import {
 } from '../../../atoms'
 import { TextInput } from '../../../theme'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
-import { AppIcons } from '../../../assets'
+import { AppIcons, Fonts } from '../../../assets'
 
 const { SearchIcon } = AppIcons
 
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
   },
   sendInput: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 13,
     textAlign: 'left',

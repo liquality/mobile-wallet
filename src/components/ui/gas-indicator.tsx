@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { FeeDetails } from '@liquality/types/lib/fees'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 
 const { GasIcon } = AppIcons
 
@@ -16,7 +16,7 @@ const GasIndicator = ({
   const [label, setLabel] = useState<string>()
   const styles = StyleSheet.create({
     gasLabel: {
-      fontFamily: 'Montserrat-Regular',
+      fontFamily: Fonts.Regular,
       fontSize: 12,
       color: '#646F85',
     },

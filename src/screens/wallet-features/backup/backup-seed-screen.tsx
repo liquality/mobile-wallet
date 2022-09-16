@@ -15,7 +15,7 @@ import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaul
 import GradientBackground from '../../../components/gradient-background'
 import { Text, Box, Button } from '../../../theme'
 import OverlayTutorial from './overlay-tutorial'
-import { AppIcons } from '../../../assets'
+import { AppIcons, Fonts } from '../../../assets'
 
 const { Eye } = AppIcons
 
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   eyeIcon: { marginTop: 50, alignItems: 'center' },
   explainHidden: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     marginTop: 10,
     marginBottom: 10,
     fontSize: 13,
@@ -198,13 +198,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   promptText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: '#FFFFFF',
     fontSize: 30,
     lineHeight: 28,
   },
   description: {
-    fontFamily: 'Montserrat-SemiBold',
+    fontFamily: Fonts.SemiBold,
     marginTop: 10,
     marginBottom: 18,
     alignSelf: 'center',
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   placeHolderText: {
     color: 'white',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 8,
     lineHeight: 17,
     borderBottomWidth: 1,
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   missingWordText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 16,
     lineHeight: 17,
     borderBottomWidth: 1,

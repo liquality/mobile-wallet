@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 import { TimeLimitEnum } from '../../types'
 
 const { Circle } = AppIcons
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   label: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: '#1D1E21',
     marginLeft: 5,
     fontSize: 14,

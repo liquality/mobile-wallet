@@ -3,7 +3,7 @@ import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import Label from '../ui/label'
 import { Text } from '../../theme'
 import { labelTranslateFn } from '../../utils'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 
 const { TimesIcon, Uniswap, LiqualityBoost, Liquality } = AppIcons
 
@@ -178,7 +178,8 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
   },
   description: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontWeight: '400',
     fontSize: 14,
     lineHeight: 20,
@@ -191,13 +192,15 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   prosConsItem: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 15,
   },
   text: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     color: '#000D35',
     fontWeight: '300',
     fontSize: 12,

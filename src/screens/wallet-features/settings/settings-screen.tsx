@@ -32,7 +32,7 @@ import { toggleNetwork } from '../../../store/store'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { Dropdown, Box, Button, Text } from '../../../theme'
-import { AppIcons } from '../../../assets'
+import { AppIcons, Fonts } from '../../../assets'
 
 const { AngleRightIcon, SignOut: SignoutIcon, DropdownIcon } = AppIcons
 
@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '500',
     fontSize: 16,
     color: '#000D35',
@@ -450,7 +450,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   description: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 12,
     lineHeight: 18,

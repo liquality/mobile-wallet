@@ -9,7 +9,7 @@ import {
 import React from 'react'
 import { Box, Button } from '../../../theme'
 import { Text } from '../../../components/text/text'
-import { AppIcons } from '../../../assets'
+import { AppIcons, Fonts } from '../../../assets'
 
 const { XIcon } = AppIcons
 
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   content: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 14,
     color: '#000D35',
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   transakContentStyle: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 13,
     color: '#000D35',

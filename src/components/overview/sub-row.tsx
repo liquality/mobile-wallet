@@ -22,7 +22,7 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { getNftsForAccount, updateNFTs } from '../../store/store'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 
 const { ChevronRightIcon: ChevronRight } = AppIcons
 
@@ -172,18 +172,21 @@ const styles = StyleSheet.create({
     paddingLeft: 50,
   },
   name: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     color: '#000',
     fontWeight: '500',
     fontSize: 12,
   },
   balance: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     color: '#000',
     fontSize: 13,
   },
   balanceInUSD: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     color: '#646F85',
     fontSize: 12,
   },

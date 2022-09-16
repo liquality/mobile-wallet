@@ -5,7 +5,7 @@ import { Text, Button } from '../../../theme'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import { labelTranslateFn } from '../../../utils'
-import { AppIcons } from '../../../assets'
+import { AppIcons, Fonts } from '../../../assets'
 
 const { Eye } = AppIcons
 
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   warningBackupSeedTitle: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: 'black',
     fontWeight: '600',
     fontSize: 35,
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   warningBackupSeedSubtitle: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '500',
     color: 'black',
     fontSize: 20,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     marginBottom: 70,
   },
   warningBackupSeedNoCamera: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: 'black',
     fontSize: 18,
     textAlign: 'center',

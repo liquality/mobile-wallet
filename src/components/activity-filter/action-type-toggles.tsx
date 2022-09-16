@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 import { ActionEnum } from '../../types'
 import { capitalizeFirstLetter } from '../../utils'
 const { SendIcon, SwapIcon, ReceiveIcon } = AppIcons
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   label: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: '#1D1E21',
     fontSize: 13,
   },

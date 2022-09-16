@@ -61,7 +61,7 @@ import AssetIcon from '../../../components/asset-icon'
 import { LikelyWaitProps } from '../../../components/ui/fee-selector'
 import { fetchFeesForAsset } from '../../../store/store'
 import AtomicSwapPopUp from './atomic-swap-popup'
-import { AppIcons } from '../../../assets'
+import { AppIcons, Fonts } from '../../../assets'
 
 const {
   ChevronRightIcon: ChevronRight,
@@ -975,7 +975,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
 const styles = StyleSheet.create({
   font: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 15,

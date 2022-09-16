@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { AppIcons } from '../assets'
+import { AppIcons, Fonts } from '../assets'
 const { SwapCheck: Check } = AppIcons
 
 const ProgressCircle = ({
@@ -33,7 +33,7 @@ const ProgressCircle = ({
     text: {
       fontSize: 11,
       fontWeight: '500',
-      fontFamily: 'Montserrat-Regular',
+      fontFamily: Fonts.Regular,
       textAlign: 'center',
     },
   })

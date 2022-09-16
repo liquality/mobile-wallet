@@ -17,6 +17,7 @@ import Header from '../header'
 import { Box, Text, Button } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 import { labelTranslateFn } from '../../utils'
+import { Fonts } from '../../assets'
 
 type UnlockWalletScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -187,13 +188,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   promptText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: '#FFFFFF',
     fontSize: 28,
     lineHeight: 28,
   },
   description: {
-    fontFamily: 'Montserrat-SemiBold',
+    fontFamily: Fonts.SemiBold,
     marginTop: 20,
     marginBottom: 18,
     alignSelf: 'center',
@@ -251,7 +252,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   missingWordText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 16,
     lineHeight: 20,
     borderBottomWidth: 1,

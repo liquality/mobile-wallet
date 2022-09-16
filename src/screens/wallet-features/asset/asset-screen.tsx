@@ -22,6 +22,7 @@ import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
 import I18n from 'i18n-js'
 import { labelTranslateFn } from '../../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
+import { Fonts } from '../../../assets'
 
 type AssetScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -144,21 +145,21 @@ const styles = StyleSheet.create({
   },
   balanceInUSD: {
     color: '#FFFFFF',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 12,
     textAlignVertical: 'bottom',
   },
   balanceInNative: {
     color: '#FFFFFF',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '500',
     fontSize: 36,
     textAlignVertical: 'bottom',
   },
   nativeCurrency: {
     color: '#FFFFFF',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '500',
     fontSize: 18,
     paddingBottom: 3,
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'bottom',
   },
   address: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 20,
     fontWeight: '300',
     color: '#FFFFFF',

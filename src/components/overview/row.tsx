@@ -26,7 +26,7 @@ import { Text, Box, Card } from '../../theme'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { fetchFeesForAsset } from '../../store/store'
 import { FADE_IN_OUT_DURATION } from '../../utils'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 
 const { ChevronRightIcon: ChevronRight, MinusSign, PlusSign } = AppIcons
 
@@ -234,29 +234,34 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   code: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     color: '#000',
     fontWeight: '500',
     fontSize: 12,
     marginBottom: 5,
   },
   address: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     color: '#646F85',
     fontSize: 12,
   },
   balance: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     color: '#000',
     fontSize: 13,
   },
   balanceInUSD: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     color: '#646F85',
     fontSize: 12,
   },
   TotalBalanceInUSD: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontSize: 12,
     marginBottom: 5,
   },

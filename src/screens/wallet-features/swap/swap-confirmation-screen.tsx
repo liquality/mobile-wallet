@@ -30,7 +30,7 @@ import {
 } from '../../../atoms'
 import I18n from 'i18n-js'
 import AtomicSwapPopUp from './atomic-swap-popup'
-import { AppIcons } from '../../../assets'
+import { AppIcons, Fonts } from '../../../assets'
 
 const {
   AngleDownIcon: AngleDown,
@@ -529,7 +529,7 @@ const styles = StyleSheet.create({
     borderColor: '#D9DFE5',
   },
   content: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 12,
     color: '#646F85',
@@ -542,7 +542,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   transactionInfo: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 12,

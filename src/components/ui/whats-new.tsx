@@ -1,6 +1,7 @@
 import { Modal, StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Text, Button } from '../../theme'
+import { Fonts } from '../../assets'
 
 const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
   const styles = StyleSheet.create({
@@ -30,7 +31,7 @@ const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
       elevation: 5,
     },
     content: {
-      fontFamily: 'Montserrat-Regular',
+      fontFamily: Fonts.Regular,
       fontWeight: '500',
       fontSize: 14,
       color: '#000D35',

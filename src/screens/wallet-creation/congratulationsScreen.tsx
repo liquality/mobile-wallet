@@ -6,6 +6,7 @@ import { RootStackParamList } from '../../types'
 import Confetti from '../../components/confetti'
 import { Box } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
+import { Fonts } from '../../assets'
 
 type CongratulationsProps = NativeStackScreenProps<
   RootStackParamList,
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   messageText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: '#FFFFFF',
     fontSize: 28,
     lineHeight: 27,

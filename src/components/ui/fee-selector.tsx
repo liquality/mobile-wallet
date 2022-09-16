@@ -15,6 +15,7 @@ import {
 } from '../../atoms'
 import GestureDetector from '../gesture-detector/gesture-detector'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
+import { Fonts } from '../../assets'
 
 const gasSpeeds: Array<FeeLabel> = [
   FeeLabel.Slow,
@@ -327,7 +328,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
   },
   speedBtnLabel: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '400',
     fontSize: 11,
     textTransform: 'capitalize',
@@ -340,14 +341,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   speedAssetName: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '700',
     fontSize: 12,
     lineHeight: 15,
     color: '#3D4767',
   },
   customFee: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 15,

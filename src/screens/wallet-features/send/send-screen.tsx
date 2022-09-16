@@ -42,7 +42,7 @@ import Animated, {
   FadeOut,
 } from 'react-native-reanimated'
 import { palette } from '../../../theme'
-import { AppIcons } from '../../../assets'
+import { AppIcons, Fonts } from '../../../assets'
 
 const {
   AngleDownIcon: AngleDown,
@@ -650,7 +650,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
 const styles = StyleSheet.create({
   sendInput: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 28,
     textAlign: 'right',
@@ -662,7 +662,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   sendInputCurrency: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 28,
     textAlign: 'right',
@@ -672,7 +672,7 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   assetName: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 24,
     lineHeight: 30,
@@ -685,7 +685,7 @@ const styles = StyleSheet.create({
   },
   speedValue: {
     alignSelf: 'flex-start',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '400',
     fontSize: 12,
   },

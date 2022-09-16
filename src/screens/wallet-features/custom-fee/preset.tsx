@@ -13,6 +13,7 @@ import { FeeDetails } from '@liquality/types/lib/fees'
 import { FiatRates, Network } from '@liquality/wallet-core/dist/src/store/types'
 import { FeeDetails as FDs } from '@chainify/types'
 import { labelTranslateFn } from '../../../utils'
+import { Fonts } from '../../../assets'
 
 type SpeedMode = keyof FeeDetails
 
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '700',
     fontSize: 12,
   },
@@ -220,7 +221,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   preset: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 14,
     lineHeight: 18,

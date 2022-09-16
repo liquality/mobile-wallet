@@ -12,7 +12,7 @@ import { useRecoilState } from 'recoil'
 import { activityFilterState } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
 import { Text } from '../../theme'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 
 const {
   ChevronRightIcon,
@@ -228,14 +228,16 @@ const styles = StyleSheet.create({
   },
   filterLabel: {
     marginLeft: 5,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontWeight: '400',
     color: '#1D1E21',
     fontSize: 14,
   },
   resetLabel: {
     marginLeft: 5,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     color: '#1D1E21',
     fontWeight: '300',
     fontSize: 14,
@@ -243,7 +245,8 @@ const styles = StyleSheet.create({
   exportLabel: {
     marginLeft: 5,
     color: '#646F85',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontWeight: '300',
     fontSize: 14,
   },
@@ -252,7 +255,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
     color: '#646F85',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontWeight: '300',
     fontSize: 14,
     width: '60%',
@@ -264,7 +268,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sorterLabel: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontWeight: '400',
     color: '#1D1E21',
     fontSize: 14,

@@ -8,6 +8,7 @@ import { Box, Button } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 import AnalyticsModal from './optInAnalyticsModal'
 import { Text } from '../../components/text/text'
+import { Fonts } from '../../assets'
 
 type TermsProps = NativeStackScreenProps<RootStackParamList, 'TermsScreen'>
 
@@ -98,14 +99,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   termsTitle: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     marginTop: 20,
     fontSize: 28,
     fontWeight: '600',
     textAlign: 'center',
   },
   termsCopy: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     marginHorizontal: 20,
     marginTop: 20,
     justifyContent: 'center',

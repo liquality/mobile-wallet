@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native'
 import Fuse from 'fuse.js'
 import { useInputState } from '../../hooks'
 import { Text, TextInput } from '../../theme'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 
 const { SearchIcon, TimesIcon } = AppIcons
 
@@ -65,7 +65,7 @@ const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
 
 const styles = StyleSheet.create({
   sendInput: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 13,
     textAlign: 'left',
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   clearBtnText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 13,
     color: '#646F85',

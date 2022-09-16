@@ -9,6 +9,7 @@ import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../atoms'
 import { Box } from '../theme'
+import { Fonts } from '../assets'
 
 const AssetManagement = ({
   enabledAssets,
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   code: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: '#000',
     fontSize: 12,
     marginBottom: 5,
