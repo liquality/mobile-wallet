@@ -5,7 +5,7 @@ import React, { useEffect, useCallback } from 'react'
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import Button from '../../../theme/button'
+import { Button } from '../../../theme'
 
 import { RootStackParamList } from '../../../types'
 

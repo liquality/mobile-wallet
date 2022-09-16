@@ -6,8 +6,7 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native'
-import Button from '../../theme/button'
-import Text from '../../theme/text'
+import { Text, Button } from '../../theme'
 import { TxKeyPath, translate } from '../../i18n'
 import i18n from 'i18n-js'
 import { langSelected as LS } from '../../../src/atoms'

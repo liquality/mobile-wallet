@@ -6,7 +6,7 @@ import { Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { getAllEnabledAccounts, updateNFTs } from '../../../store/store'
-import Box from '../../../theme/box'
+import { Box } from '../../../theme'
 import { RootTabParamList } from '../../../types'
 type ShowAllNftsScreenProps = BottomTabScreenProps<
   RootTabParamList,

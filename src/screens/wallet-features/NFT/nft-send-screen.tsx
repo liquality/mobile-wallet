@@ -6,9 +6,7 @@ import { StyleSheet, TextInput } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
-import Box from '../../../theme/box'
-import Button from '../../../theme/button'
-import Text from '../../../theme/text'
+import { Text, Button, Box } from '../../../theme'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 
 const useInputState = (

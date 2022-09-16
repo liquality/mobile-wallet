@@ -6,7 +6,7 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import RefInd from '../theme/refresh-indcator'
+import { RefreshIndBox as RefInd } from '../theme'
 import { AppIcons } from '../assets'
 const { Loader } = AppIcons
 

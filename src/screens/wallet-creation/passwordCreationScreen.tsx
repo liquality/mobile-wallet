@@ -5,9 +5,7 @@ import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import Header from '../header'
 import ButtonFooter from '../../components/button-footer'
-import Button from '../../theme/button'
-import Text from '../../theme/text'
-import Box from '../../theme/box'
+import { Box, Text, Button } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 
 type PasswordCreationProps = NativeStackScreenProps<

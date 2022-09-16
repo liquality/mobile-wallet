@@ -6,7 +6,6 @@ import SwapTransactionDetails from '../../../components/swap/swap-transaction-de
 import { unitToCurrency, getAsset, getChain } from '@liquality/cryptoassets'
 import Label from '../../../components/ui/label'
 import ProgressCircle from '../../../components/animations/progress-circle'
-import Button from '../../../theme/button'
 import {
   dpUI,
   prettyBalance,
@@ -16,8 +15,7 @@ import { BigNumber } from '@liquality/types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import { SwapProvider } from '@liquality/wallet-core/dist/src/swaps/SwapProvider'
 import { retrySwap } from '../../../store/store'
-import Text from '../../../theme/text'
-import Box from '../../../theme/box'
+import { Box, Text, Button } from '../../../theme'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import SwapRates from '../../../components/swap/swap-rates'

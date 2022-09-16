@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { Linking, Pressable, StyleSheet } from 'react-native'
-import Box from '../../theme/box'
-import Text from '../../theme/text'
 import {
   dpUI,
   prettyFiatBalance,
@@ -11,7 +9,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import { FADE_IN_OUT_DURATION } from '../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
-import Card from '../../theme/card'
+import { Card, Box, Text } from '../../theme'
 import GestureDetector from '../gesture-detector/gesture-detector'
 import { useRecoilState } from 'recoil'
 import {

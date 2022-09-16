@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import Box from '../../theme/box'
-import Text from '../../theme/text'
+import { Text, Box } from '../../theme'
 
 const ListHeader: FC = () => {
   return (

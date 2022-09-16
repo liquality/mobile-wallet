@@ -22,7 +22,7 @@ import {
   SwapEventActionKind,
   SwapEventAction,
 } from '../../screens/wallet-features/swap/swap-screen'
-import Button from '../../theme/button'
+import { Button } from '../../theme'
 import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms'
 import GestureDetector from '../gesture-detector/gesture-detector'

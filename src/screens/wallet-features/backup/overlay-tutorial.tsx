@@ -1,13 +1,11 @@
 import React, { useCallback } from 'react'
 import { View, StyleSheet, Dimensions, Pressable } from 'react-native'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
-import Button from '../../../theme/button'
-import Text from '../../../theme/text'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import { labelTranslateFn } from '../../../utils'
 import ButtonFooter from '../../../components/button-footer'
-import Box from '../../../theme/box'
+import { Box, Button, Text } from '../../../theme'
 import { AppIcons } from '../../../assets'
 const { XPinkIcon: XIcon, PointingFinger, BentArrow } = AppIcons
 

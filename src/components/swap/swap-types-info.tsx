@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import Label from '../ui/label'
-import Text from '../../theme/text'
+import { Text } from '../../theme'
 import { labelTranslateFn } from '../../utils'
 import { AppIcons } from '../../assets'
 

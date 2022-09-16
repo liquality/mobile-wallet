@@ -7,15 +7,15 @@ import {
   createVariant,
 } from '@shopify/restyle'
 
-import Text from './text'
-import { Theme } from './'
+import { Text } from './text'
+import { ThemeType as Theme } from './theme'
 import React, { FC, useMemo } from 'react'
 import i18n from 'i18n-js'
 import { TxKeyPath, translate } from '../i18n'
 import { langSelected as LS } from '../../src/atoms'
 import { useRecoilValue } from 'recoil'
 
-const BaseButton = createRestyleComponent<
+export const BaseButton = createRestyleComponent<
   VariantProps<Theme, 'buttonVariants'> & PressableProps,
   Theme
 >([createVariant({ themeKey: 'buttonVariants' })], Pressable)
@@ -35,7 +35,7 @@ type Props = React.ComponentProps<typeof BaseButton> &
     onlyDisabled?: boolean
   }
 
-const Button: FC<Props> = (props) => {
+export const Button: FC<Props> = (props) => {
   const {
     type = 'primary',
     variant = 'm',
@@ -118,5 +118,3 @@ const Button: FC<Props> = (props) => {
     </BaseButton>
   )
 }
-
-export default Button

@@ -8,7 +8,6 @@ import {
   RootStackParamList,
   UseInputStateReturnType,
 } from '../../../types'
-import Button from '../../../theme/button'
 import { useRecoilValue } from 'recoil'
 import {
   accountForAssetState,
@@ -28,8 +27,7 @@ import {
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails as FDs } from '@chainify/types'
-import Box from '../../../theme/box'
-import Text from '../../../theme/text'
+import { Text, Box, Button } from '../../../theme'
 import { labelTranslateFn } from '../../../utils'
 import { speedUpTransaction } from '../../../store/store'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'

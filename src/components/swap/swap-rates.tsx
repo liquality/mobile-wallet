@@ -10,10 +10,8 @@ import {
   ViewStyle,
 } from 'react-native'
 import SwapTypesInfo from './swap-types-info'
-import Button from '../../theme/button'
 import { dpUI } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
-import Box from '../../theme/box'
-import Text from '../../theme/text'
+import { Text, Box, Button } from '../../theme'
 import ListHeader from './list-header'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { capitalizeFirstLetter, labelTranslateFn } from '../../utils'

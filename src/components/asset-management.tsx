@@ -8,7 +8,7 @@ import SearchBox from './ui/search-box'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../atoms'
-import Box from '../theme/box'
+import { Box } from '../theme'
 
 const AssetManagement = ({
   enabledAssets,

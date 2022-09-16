@@ -4,7 +4,7 @@ import {
   VariantProps,
   createVariant,
 } from '@shopify/restyle'
-import { Theme } from './'
+import { ThemeType as Theme } from './theme'
 import React, { FC } from 'react'
 import i18n from 'i18n-js'
 import { TxKeyPath, translate } from '../i18n'
@@ -21,7 +21,7 @@ type Props = React.ComponentProps<typeof BaseTextInput> & {
   txOptions?: i18n.TranslateOptions
 }
 
-const TextInput: FC<Props> = (props) => {
+export const TextInput: FC<Props> = (props) => {
   const { placeholderTx, txOptions, ...rest } = props
   const langSelected = useRecoilValue(LS)
   i18n.locale = langSelected
@@ -33,5 +33,3 @@ const TextInput: FC<Props> = (props) => {
     return <BaseTextInput {...rest} />
   }
 }
-
-export default TextInput

@@ -1,0 +1,15 @@
+export const palette = {
+  black: '#1D1E21',
+  black2: '#000D35',
+  white: '#FFFFFF',
+  gray: '#D9DFE5',
+  darkGray: '#646F85',
+  blueVioletPrimary: '#9D4DFA',
+  blueVioletSecondary: '#F8FAFF',
+  purplePrimary: '#5A31F4',
+  red: '#F12274',
+  transparentBlack: 'rgba(0,0,0,0.5)',
+  turquoise: '#2CD2CF',
+  liqPink: '#FF007A',
+  yellowBar: '#FFF8DA',
+}

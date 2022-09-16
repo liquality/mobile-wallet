@@ -11,7 +11,7 @@ import { ActionEnum, ActivityStatusEnum, TimeLimitEnum } from '../../types'
 import { useRecoilState } from 'recoil'
 import { activityFilterState } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
-import Text from '../../theme/text'
+import { Text } from '../../theme'
 import { AppIcons } from '../../assets'
 
 const {

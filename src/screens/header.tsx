@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import Text from '../theme/text'
+import { Text } from '../theme'
 import { AppIcons } from '../assets'
 
 const { Logo } = AppIcons

@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { Defs, LinearGradient, Rect, Stop, Svg } from 'react-native-svg'
 import React, { FC, memo } from 'react'
-import Box from '../theme/box'
+import { Box } from '../theme'
 
 interface Props {
   width: number

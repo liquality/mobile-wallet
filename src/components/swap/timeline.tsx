@@ -4,7 +4,7 @@ import {
   FiatRates,
   SwapHistoryItem,
 } from '@liquality/wallet-core/dist/src/store/types'
-import Box from '../../theme/box'
+import { Box } from '../../theme'
 import { v4 as uuidv4 } from 'uuid'
 import ConfirmationBlock from './confirmation-block'
 import { StyleSheet, View } from 'react-native'

@@ -7,8 +7,7 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import Text from '../theme/text'
-import { Theme } from '../theme'
+import { ThemeType as Theme, Text } from '../theme'
 import { useTheme } from '@shopify/restyle'
 import { AppIcons } from '../assets'
 

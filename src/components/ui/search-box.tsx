@@ -2,8 +2,7 @@ import React, { Dispatch, SetStateAction, useCallback } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import Fuse from 'fuse.js'
 import { useInputState } from '../../hooks'
-import TextInput from '../../theme/textInput'
-import Text from '../../theme/text'
+import { Text, TextInput } from '../../theme'
 import { AppIcons } from '../../assets'
 
 const { SearchIcon, TimesIcon } = AppIcons

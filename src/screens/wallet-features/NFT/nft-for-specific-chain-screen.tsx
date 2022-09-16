@@ -10,8 +10,7 @@ import {
   getNftsForAccount,
   updateNFTs,
 } from '../../../store/store'
-import Box from '../../../theme/box'
-import Text from '../../../theme/text'
+import { Text, Box } from '../../../theme'
 import { RootStackParamList } from '../../../types'
 type ShowAllNftsScreenProps = NativeStackScreenProps<
   RootStackParamList,

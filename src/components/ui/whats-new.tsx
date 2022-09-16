@@ -1,7 +1,6 @@
 import { Modal, StyleSheet, View } from 'react-native'
 import React from 'react'
-import Button from '../../theme/button'
-import Text from '../../theme/text'
+import { Text, Button } from '../../theme'
 
 const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
   const styles = StyleSheet.create({

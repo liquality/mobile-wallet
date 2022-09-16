@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../types'
-import Text from '../theme/text'
+import { Text } from '../theme'
 import { AppIcons } from '../assets'
 
 const { LockIcon, ManageAssetsIcon } = AppIcons

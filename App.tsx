@@ -6,7 +6,6 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createSwitchNavigator } from '@react-navigation/compat'
 import { ThemeProvider } from '@shopify/restyle'
 import { isNewInstallation } from './src/store/store'
-import theme from './src/theme'
 import {
   WalletCreationNavigator,
   WalletImportNavigator,
@@ -15,7 +14,7 @@ import {
 import LoginScreen from './src/screens/wallet-creation/loginScreen'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { RecoilRoot } from 'recoil'
-import Box from './src/theme/box'
+import { Box, theme } from './src/theme'
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(

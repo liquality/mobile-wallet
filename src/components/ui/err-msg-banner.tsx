@@ -1,7 +1,6 @@
 import React, { FC } from 'react'
 import { Dimensions } from 'react-native'
-import Box from '../../theme/box'
-import Button from '../../theme/button'
+import { Button, Box } from '../../theme'
 
 const width = Dimensions.get('screen').width
 

@@ -4,7 +4,7 @@ import { Text } from '../../components/text/text'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import Confetti from '../../components/confetti'
-import Box from '../../theme/box'
+import { Box } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 
 type CongratulationsProps = NativeStackScreenProps<

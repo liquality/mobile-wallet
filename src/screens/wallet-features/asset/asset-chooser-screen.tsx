@@ -12,7 +12,7 @@ import {
   networkState,
   accountsIdsForMainnetState,
 } from '../../../atoms'
-import TextInput from '../../../theme/textInput'
+import { TextInput } from '../../../theme'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { AppIcons } from '../../../assets'
 

@@ -1,6 +1,6 @@
 import { Modal, StyleSheet, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import Button from '../../theme/button'
+import { Button } from '../../theme'
 import { useNavigation } from '@react-navigation/core'
 import CheckBox from '../../components/checkbox'
 import { useRecoilState } from 'recoil'

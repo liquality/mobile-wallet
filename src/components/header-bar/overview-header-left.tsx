@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { Pressable, StyleSheet, Text } from 'react-native'
 import { networkState } from '../../atoms'
 import { useRecoilValue } from 'recoil'
-import Box from '../../theme/box'
+import { Box } from '../../theme'
 import { AppIcons } from '../../assets'
 
 const { ChevronLeft } = AppIcons

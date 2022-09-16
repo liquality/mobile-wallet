@@ -7,8 +7,7 @@ import {
   Pressable,
 } from 'react-native'
 import React from 'react'
-import Button from '../../../theme/button'
-import Box from '../../../theme/box'
+import { Box, Button } from '../../../theme'
 import { Text } from '../../../components/text/text'
 import { AppIcons } from '../../../assets'
 

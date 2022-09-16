@@ -1,9 +1,7 @@
 import React, { FC } from 'react'
 import { useTheme } from '@shopify/restyle'
-import { Theme } from '../theme'
-import Box from '../theme/box'
+import { ThemeType as Theme, Box, RoundButton } from '../theme'
 import { Animated, StyleSheet } from 'react-native'
-import RoundButton from '../theme/round-button'
 
 type AnimatedBoxProps = {
   translateX: any

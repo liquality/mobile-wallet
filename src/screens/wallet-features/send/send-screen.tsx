@@ -18,10 +18,7 @@ import {
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import { chainDefaultColors } from '../../../core/config'
-import Button from '../../../theme/button'
-import Text from '../../../theme/text'
-import TextInput from '../../../theme/textInput'
-import Box from '../../../theme/box'
+import { Box, TextInput, Text, Button } from '../../../theme'
 import {
   getSendFee,
   isEIP1559Fees,

@@ -1,7 +1,6 @@
 import { SendHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import React, { memo } from 'react'
-import Box from '../../theme/box'
-import Text from '../../theme/text'
+import { Text, Box } from '../../theme'
 import { formatDate } from '../../utils'
 import Label from '../ui/label'
 import { v4 as uuidv4 } from 'uuid'
