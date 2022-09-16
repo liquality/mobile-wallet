@@ -21,10 +21,12 @@ import {
   FiatRates,
   HistoryItem,
   Network,
+  NFTWithAccount,
   SendHistoryItem,
   SwapHistoryItem,
   Asset,
   WalletId,
+  NFTSendTransactionParams,
 } from '@liquality/wallet-core/dist/src/store/types'
 import {
   getSwapTimeline,
@@ -223,6 +225,43 @@ export const toggleNetwork = async (network: Network): Promise<void> => {
   await wallet.dispatch.changeActiveNetwork({ network })
 }
 
+/**
+ * Update NFTs to refresh nft info for all accounts
+ * @param paramObj
+ */
+export const updateNFTs = async (paramObj: {
+  walletId: string
+  network: Network
+  accountIds: string[]
+}): Promise<void> => {
+  if (wallet) {
+    await wallet.dispatch.updateNFTs(paramObj).catch((e) => {
+      Log(`Failed to FETCH NFTS: ${e}`, 'error')
+    })
+  } else Log(`Failed to fetch WALLET DISPATCH: ${wallet}`, 'error')
+}
+
+/**
+ * Send NFT transaction
+ * @param paramObj
+ */
+export const sendNFTTransaction = async (
+  paramObj: NFTSendTransactionParams,
+): Promise<void> => {
+  await wallet.dispatch.sendNFTTransaction(paramObj).catch((e) => {
+    Log(`Failed to SEND NFTs: ${e}`, 'error')
+  })
+}
+
+export const getNftsForAccount = async (
+  accountId: string,
+): Promise<NFTWithAccount> => {
+  return wallet.getters.accountNftCollections(accountId)
+}
+
+export const getAllEnabledAccounts = async () => {
+  return wallet.getters.accountsData
+}
 /**
  * Enable/Disable a given asset
  * @param asset
