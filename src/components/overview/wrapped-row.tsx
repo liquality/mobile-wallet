@@ -54,6 +54,13 @@ const WrappedRow: FC<{
     setIsExpanded(!isExpanded)
   }, [isExpanded])
 
+  const onNFTPress = (account: AccountType) => {
+    navigation.navigate('NftForSpecificChainScreen', {
+      screenTitle: 'NFTs for CODE',
+      currentAccount: account,
+    })
+  }
+
   const onAssetSelected = useCallback(
     (currentAccount: AccountType) => {
       // Make sure account assets have the same id (account id) as their parent
@@ -136,7 +143,7 @@ const WrappedRow: FC<{
   if (balance < 0 || !address)
     return (
       <View style={styles.row}>
-        <AssetIcon chain={getAsset(activeNetwork, item.name.code)?.chain} />
+        <AssetIcon chain={getAsset(activeNetwork, item.name)?.chain} />
         <ActivityIndicator />
       </View>
     )
@@ -150,6 +157,15 @@ const WrappedRow: FC<{
         isNested={isNested}
         isExpanded={isExpanded}
       />
+      {isNested && isExpanded && (
+        <SubRow
+          key={1}
+          parentItem={account}
+          item={{}}
+          onAssetSelected={() => onNFTPress(account)}
+          nft={true}
+        />
+      )}
       {isNested &&
         isExpanded &&
         assets?.map((subItem) => {
@@ -170,7 +186,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignContent: 'center',
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#D9DFE5',
     borderLeftWidth: 3,

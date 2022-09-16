@@ -1,5 +1,6 @@
 import StorageManager from '../core/storage-manager'
-import { BigNumber, FeeDetail } from '@liquality/types'
+import { BigNumber } from '@liquality/types'
+import { FeeDetail } from '@chainify/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
@@ -20,14 +21,17 @@ import {
   FiatRates,
   HistoryItem,
   Network,
+  NFTWithAccount,
   SendHistoryItem,
   SwapHistoryItem,
+  Asset,
+  WalletId,
+  NFTSendTransactionParams,
 } from '@liquality/wallet-core/dist/src/store/types'
 import {
   getSwapTimeline,
   TimelineStep,
 } from '@liquality/wallet-core/dist/src/utils/timeline'
-import { Asset, WalletId } from '@liquality/wallet-core/dist/src/store/types'
 import { AtomEffect, DefaultValue } from 'recoil'
 import dayjs from 'dayjs'
 import { showNotification } from './pushNotification'
@@ -181,10 +185,10 @@ export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {
     if (typeof feeDetail.fee === 'number') {
       return feeDetail.fee
     } else {
-      return (
-        feeDetail.fee.maxPriorityFeePerGas +
-        feeDetail.fee.suggestedBaseFeePerGas
-      )
+      const { suggestedBaseFeePerGas, maxPriorityFeePerGas } = feeDetail.fee
+      return suggestedBaseFeePerGas
+        ? maxPriorityFeePerGas + suggestedBaseFeePerGas
+        : maxPriorityFeePerGas
     }
   }
 
@@ -217,10 +221,47 @@ export const fetchSwapProvider = (providerId: string) => {
  * Toggle network between mainnet and testnet
  * @param network
  */
-export const toggleNetwork = async (network: any): Promise<void> => {
-  await wallet.dispatch.changeActiveNetwork(network)
+export const toggleNetwork = async (network: Network): Promise<void> => {
+  await wallet.dispatch.changeActiveNetwork({ network })
 }
 
+/**
+ * Update NFTs to refresh nft info for all accounts
+ * @param paramObj
+ */
+export const updateNFTs = async (paramObj: {
+  walletId: string
+  network: Network
+  accountIds: string[]
+}): Promise<void> => {
+  if (wallet) {
+    await wallet.dispatch.updateNFTs(paramObj).catch((e) => {
+      Log(`Failed to FETCH NFTS: ${e}`, 'error')
+    })
+  } else Log(`Failed to fetch WALLET DISPATCH: ${wallet}`, 'error')
+}
+
+/**
+ * Send NFT transaction
+ * @param paramObj
+ */
+export const sendNFTTransaction = async (
+  paramObj: NFTSendTransactionParams,
+): Promise<void> => {
+  await wallet.dispatch.sendNFTTransaction(paramObj).catch((e) => {
+    Log(`Failed to SEND NFTs: ${e}`, 'error')
+  })
+}
+
+export const getNftsForAccount = async (
+  accountId: string,
+): Promise<NFTWithAccount> => {
+  return wallet.getters.accountNftCollections(accountId)
+}
+
+export const getAllEnabledAccounts = async () => {
+  return wallet.getters.accountsData
+}
 /**
  * Enable/Disable a given asset
  * @param asset
@@ -262,9 +303,12 @@ export const updateWallet = async (): Promise<void> => {
  * Restores an already created wallet from local storage
  * @param password
  */
-export const restoreWallet = async (password: string): Promise<void> => {
+export const restoreWallet = async (
+  password: string,
+  activeNetwork = Network.Testnet,
+): Promise<void> => {
   const result = storageManager.read<CustomRootState>('wallet', {})
-  await initWallet(result)
+  await initWallet({ ...result, activeNetwork })
   await wallet.dispatch.unlockWallet({
     key: password,
   })

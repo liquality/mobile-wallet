@@ -16,6 +16,7 @@ import {
   DarkModeEnum,
   RootTabParamList,
   RootStackParamList,
+  CustomRootState,
 } from '../../../types'
 import WhatsNew from '../../../components/ui/whats-new'
 import Button from '../../../theme/button'
@@ -35,7 +36,6 @@ import i18n from 'i18n-js'
 import { toggleNetwork } from '../../../store/store'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import { CustomRootState } from '../../../reducers'
 import Box from '../../../theme/box'
 import Dropdown from '../../../theme/dropdown'
 

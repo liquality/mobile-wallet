@@ -14,11 +14,12 @@ import { useRecoilCallback, useSetRecoilState } from 'recoil'
 import {
   accountInfoStateFamily,
   accountsIdsState,
-  networkState,
-  walletState,
+  accountsIdsForMainnetState,
+  addressStateFamily,
   balanceStateFamily,
 } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
+import { Network } from '@liquality/cryptoassets/dist/src/types'
 
 type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
@@ -26,8 +27,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
   const { navigation } = props
   const [loading, setLoading] = useState(false)
   const setAccountsIds = useSetRecoilState(accountsIdsState)
-  const setActiveNetwork = useSetRecoilState(networkState)
-  const setWallet = useSetRecoilState(walletState)
+  const setAccountsIdsForMainnet = useSetRecoilState(accountsIdsForMainnetState)
   const addAssetBalance = useRecoilCallback(
     ({ set }) =>
       (accountId: string, accountCode: string) => {
@@ -37,6 +37,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
   const addAccount = useRecoilCallback(
     ({ set }) =>
       (accountId: string, account: AccountType) => {
+        set(addressStateFamily(accountId), '')
         set(accountInfoStateFamily(accountId), account)
       },
   )
@@ -53,45 +54,54 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
       setLoading(true)
       storageManager.clearAll()
       const wallet = await createWallet(PASSWORD, MNEMONIC)
-      setWallet(wallet)
-      const { accounts, activeWalletId, activeNetwork } = wallet
-      const accountsIds: { id: string; name: string }[] = []
-      accounts?.[activeWalletId]?.[activeNetwork].map((account) => {
-        const nativeAsset = getChain(activeNetwork, account.chain).nativeAsset
-        accountsIds.push({
-          id: account.id,
-          name: nativeAsset[0].code,
-        })
-        const newAccount: AccountType = {
-          id: account.id,
-          chain: account.chain,
-          name: account.name,
-          code: nativeAsset[0].code,
-          address: account.addresses[0], //TODO why pick only the first address
-          color: account.color,
-          assets: {},
-          balance: 0,
+      const { activeWalletId } = wallet
+      let supportedNetworks = [Network.Mainnet, Network.Testnet]
+      for (let network of supportedNetworks) {
+        const accounts = wallet?.accounts?.[activeWalletId]?.[network]
+        const accountsIds: { id: string; name: string }[] = []
+
+        if (accounts) {
+          accounts.map((account) => {
+            const nativeAsset = getChain(network, account.chain).nativeAsset
+            accountsIds.push({
+              id: account.id,
+              name: nativeAsset[0].code,
+            })
+            const newAccount: AccountType = {
+              id: account.id,
+              chain: account.chain,
+              name: account.name,
+              code: nativeAsset[0].code,
+              address: account.addresses[0], //TODO why pick only the first address
+              color: account.color,
+              assets: {},
+              balance: 0,
+            }
+
+            for (const asset of account.assets) {
+              newAccount.assets[asset] = {
+                id: asset,
+                name: getAsset(network, asset).name,
+                code: asset,
+                chain: account.chain,
+                color: account.color,
+                balance: 0,
+                assets: {},
+              }
+              addAssetBalance(account.id, asset)
+            }
+            addAccount(account.id, newAccount)
+          })
+
+          network === Network.Testnet
+            ? setAccountsIds(accountsIds)
+            : setAccountsIdsForMainnet(accountsIds)
+        } else {
+          setLoading(false)
+          Alert.alert(labelTranslateFn('loadingScreen.failedImport')!)
+          return
         }
-
-        for (const asset of account.assets) {
-          newAccount.assets[asset] = {
-            id: asset,
-            name: getAsset(activeNetwork, asset).name,
-            code: asset,
-            chain: account.chain,
-            color: account.color,
-            balance: 0,
-            assets: {},
-          }
-          addAssetBalance(account.id, asset)
-        }
-
-        addAccount(account.id, newAccount)
-      })
-
-      setAccountsIds(accountsIds)
-      setActiveNetwork(activeNetwork)
-
+      }
       setLoading(false)
       navigation.navigate('MainNavigator')
     } catch (error) {

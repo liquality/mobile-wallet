@@ -29,9 +29,15 @@ import * as Localization from 'expo-localization'
 
 //------------ATOMS---------------------
 export const accountsIdsState = atom<{ id: string; name: Asset }[]>({
-  key: 'AccountsIds',
+  key: KEYS.ACCOUNTS_IDS_FOR_TESTNET,
   default: [],
-  effects: [localStorageEffect('accountIds')],
+  effects: [localStorageEffect(KEYS.ACCOUNTS_IDS_FOR_TESTNET)],
+})
+
+export const accountsIdsForMainnetState = atom<{ id: string; name: Asset }[]>({
+  key: KEYS.ACCOUNTS_IDS_FOR_MAINNET,
+  default: [],
+  effects: [localStorageEffect(KEYS.ACCOUNTS_IDS_FOR_MAINNET)],
 })
 
 export const fiatRatesState = atom<FiatRates>({
@@ -119,6 +125,25 @@ export const doubleOrLongTapSelectedAsset = atom<string>({
   default: '',
 })
 
+export enum SwapScreenPopUpTypes {
+  FromAsset = 'fromAsset',
+  ToAsset = 'toAsset',
+  FromSlow = 'fromSlow',
+  FromAverage = 'fromAverage',
+  FromFast = 'fromFast',
+  ToSlow = 'toSlow',
+  ToAverage = 'toAverage',
+  ToFast = 'toFast',
+  AtomicSwap = 'atomicSwap',
+  TransId = 'transId',
+  Null = '',
+}
+
+export const swapScreenDoubleLongEvent = atom<SwapScreenPopUpTypes>({
+  key: 'swapScreenDoubleLongEvent',
+  default: SwapScreenPopUpTypes.Null,
+})
+
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',
@@ -187,7 +212,12 @@ export const accountInfoState = selectorFamily<Partial<AccountType>, string>({
 export const accountListState = selector<Partial<AccountType>[]>({
   key: 'AccountList',
   get: ({ get }) => {
-    const accountsIds = get(accountsIdsState)
+    const activeNetwork = get(networkState)
+    const accountsIds = get(
+      activeNetwork === Network.Testnet
+        ? accountsIdsState
+        : accountsIdsForMainnetState,
+    )
     return accountsIds.map((item) => {
       const address = get(addressStateFamily(item.id))
       const account = get(accountInfoStateFamily(item.id))
@@ -237,9 +267,13 @@ export const historyItemsState = selector<HistoryItem[]>({
 export const totalFiatBalanceState = selector<string>({
   key: 'TotalFiatBalance',
   get: ({ get }) => {
-    const accountsIds = get(accountsIdsState)
-    const fiatRates = get(fiatRatesState)
     const activeNetwork = get(networkState)
+    const accountsIds = get(
+      activeNetwork === Network.Testnet
+        ? accountsIdsState
+        : accountsIdsForMainnetState,
+    )
+    const fiatRates = get(fiatRatesState)
 
     const totalFiatBalance = accountsIds.reduce((acc, account) => {
       const balanceState = balanceStateFamily({

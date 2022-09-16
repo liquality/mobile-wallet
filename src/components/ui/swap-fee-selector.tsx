@@ -2,7 +2,7 @@ import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import React, { FC, useEffect, useState } from 'react'
 import Text from '../../theme/text'
 import { GasFees } from '../../types'
-import FeeSelector from './fee-selector'
+import FeeSelector, { LikelyWaitProps } from './fee-selector'
 import { fetchFeesForAsset } from '../../store/store'
 import { Alert } from 'react-native'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
@@ -10,6 +10,7 @@ import ErrorFallback from '../error-fallback'
 import ErrorBoundary from 'react-native-error-boundary'
 import Box from '../../theme/box'
 import { labelTranslateFn } from '../../utils'
+import { SwapScreenPopUpTypes } from '../../atoms'
 
 type SwapFeeSelectorProps = {
   asset: string
@@ -22,6 +23,10 @@ type SwapFeeSelectorProps = {
   setGasFees: (gasFee: GasFees) => void
   customFee: number | undefined
   customFeeAsset: string
+  toAsset?: string // to render double tap or long press popup accordingly
+  fromAsset?: string // to render double tap or long press popup accordingly
+  doubleLongTapFeelabel?: SwapScreenPopUpTypes
+  likelyWait?: LikelyWaitProps
 }
 
 const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
@@ -36,6 +41,10 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
     setGasFees,
     customFee,
     customFeeAsset,
+    toAsset,
+    fromAsset,
+    doubleLongTapFeelabel,
+    likelyWait,
   } = props
   const [alertStatus, setAlertStatus] = useState(false)
   useEffect(() => {
@@ -68,6 +77,10 @@ const SwapFeeSelector: FC<SwapFeeSelectorProps> = (props) => {
         changeNetworkSpeed={changeNetworkSpeed}
         customFeeProps={customFee}
         customFeeAsset={customFeeAsset}
+        toAsset={toAsset}
+        fromAsset={fromAsset}
+        doubleLongTapFeelabel={doubleLongTapFeelabel}
+        likelyWait={likelyWait}
       />
     </ErrorBoundary>
   )

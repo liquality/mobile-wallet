@@ -327,8 +327,6 @@ const theme = createTheme({
   },
   cardVariants: {
     popUpCard: {
-      width: '65%',
-      height: '95%',
       alignItems: 'center',
       borderRadius: 5,
       borderLeftWidth: 6,
@@ -339,6 +337,7 @@ const theme = createTheme({
       },
       shadowOpacity: 0.1,
       shadowRadius: 1,
+      elevation: 3,
     },
     rightArrowCard: {
       width: 15,
@@ -351,6 +350,31 @@ const theme = createTheme({
       },
       shadowOpacity: 0.1,
       shadowRadius: 1,
+    },
+    swapPopup: {
+      alignItems: 'center',
+      borderRadius: 8,
+      backgroundColor: 'mainBackground',
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+      elevation: 3,
+    },
+    swapPopUpForToAsset: {
+      alignItems: 'center',
+      borderRadius: 5,
+      borderLeftWidth: 6,
+      backgroundColor: 'mainBackground',
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+      elevation: 3,
     },
   },
   dropDownVariants: {
@@ -395,10 +419,8 @@ const theme = createTheme({
   },
   refreshIndicatorVariants: {
     refreshContainer: {
-      justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: 'mainForeground',
-      opacity: 0.9,
       height: 100,
       width: '100%',
     },

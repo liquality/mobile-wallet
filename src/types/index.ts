@@ -39,6 +39,25 @@ export interface AccountType {
   activeNetwork?: Network
 }
 
+export interface NftObj {
+  String: [
+    {
+      amount: Number
+      asset_contract: Object
+      collection: [Object]
+      description: String
+      external_link: undefined
+      image_original_url: String
+      image_preview_url: String
+      image_thumbnail_url: String
+      name: String
+      standard: String
+      starred: boolean
+      token_id: Number
+    },
+  ]
+}
+
 export type SwapAssetPairType = {
   fromAsset?: AccountType
   toAsset?: AccountType
@@ -84,7 +103,6 @@ export type StackPayload = {
   action?: ActionEnum
   selectedAssetCodes?: string[]
   onSelectAssetCodes?: (selectedAssetCodes: string[]) => void
-  amountInput?: string
   code?: string
 }
 
@@ -117,11 +135,25 @@ export type RootStackParamList = {
   SwapReviewScreen: StackPayload
   WalletImportNavigator: undefined
   MainNavigator: undefined
+  NftForSpecificChainScreen: {
+    screenTitle?: string
+    currentAccount?: AccountType
+  }
+  NftSendScreen: {
+    nftItem?: NftObj
+    accountIdsToSendIn: Object
+  }
+  NftDetailScreen: {
+    screenTitle?: string
+    nftItem?: NftObj
+    accountIdsToSendIn: string[]
+  }
 }
 
 export type RootTabParamList = {
   AppStackNavigator: undefined
   SettingsScreen: { shouldLogOut?: boolean }
+  ShowAllNftsScreen: undefined
 }
 
 export interface UseInputStateReturnType<T> {
