@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import Label from '../ui/label'
-import { Text } from '../../theme'
+import { palette, Text } from '../../theme'
 import { labelTranslateFn } from '../../utils'
 import { AppIcons, Fonts } from '../../assets'
 
@@ -60,7 +60,7 @@ const SwapTypesInfo: FC<SwapTypesInfoProps> = (props) => {
                 variant="strong"
               />
               <Pressable onPress={toggleModal}>
-                <TimesIcon fill={'#000'} />
+                <TimesIcon fill={palette.black2} />
               </Pressable>
             </View>
             <ScrollView>
@@ -127,20 +127,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000',
+    backgroundColor: palette.black2,
     opacity: 0.3,
   },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: palette.black2,
   },
   content: {
-    backgroundColor: '#FFF',
+    backgroundColor: palette.white,
     width: '90%',
     height: '70%',
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
     borderWidth: 1,
     paddingVertical: 10,
   },
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   providersLogos: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderBottomColor: '#A8AEB7',
+    borderBottomColor: palette.nestedColor,
     marginHorizontal: 20,
     paddingBottom: 10,
     flexWrap: 'wrap',
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: '#A8AEB7',
+    borderColor: palette.nestedColor,
     borderRadius: 50,
   },
   borderless: {
@@ -200,8 +200,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: Fonts.Regular,
-
-    color: '#000D35',
+    color: palette.black2,
     fontWeight: '300',
     fontSize: 12,
     lineHeight: 20,

@@ -13,7 +13,7 @@ import ButtonFooter from '../../../components/button-footer'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import GradientBackground from '../../../components/gradient-background'
-import { Text, Box, Button } from '../../../theme'
+import { Text, Box, Button, palette } from '../../../theme'
 import OverlayTutorial from './overlay-tutorial'
 import { AppIcons, Fonts } from '../../../assets'
 
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     width: Dimensions.get('window').width,
-    backgroundColor: '#fff',
+    backgroundColor: palette.white,
   },
   eyeIcon: { marginTop: 50, alignItems: 'center' },
   explainHidden: {
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   },
   promptText: {
     fontFamily: Fonts.Regular,
-    color: '#FFFFFF',
+    color: palette.white,
     fontSize: 30,
     lineHeight: 28,
   },
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     alignSelf: 'center',
     textAlign: 'center',
-    color: '#fff',
+    color: palette.white,
     fontSize: 15,
     fontWeight: '600',
     lineHeight: 24,
@@ -263,13 +263,13 @@ const styles = StyleSheet.create({
     fontSize: 8,
     lineHeight: 17,
     borderBottomWidth: 1,
-    borderBottomColor: '#2CD2CF',
+    borderBottomColor: palette.turquoise,
     width: '100%',
   },
   wordOrderText: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: '#3D4767',
+    color: palette.sectionTitleColor,
     marginBottom: 3,
   },
   missingWordText: {
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 17,
     borderBottomWidth: 1,
-    borderBottomColor: '#2CD2CF',
+    borderBottomColor: palette.turquoise,
     width: '100%',
   },
 })

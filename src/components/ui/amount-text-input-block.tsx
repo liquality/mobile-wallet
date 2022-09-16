@@ -22,7 +22,7 @@ import {
   SwapEventActionKind,
   SwapEventAction,
 } from '../../screens/wallet-features/swap/swap-screen'
-import { Button } from '../../theme'
+import { Button, palette } from '../../theme'
 import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms'
 import GestureDetector from '../gesture-detector/gesture-detector'
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    borderBottomColor: '#38FFFB',
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
     marginRight: 5,
   },
@@ -219,11 +219,11 @@ const styles = StyleSheet.create({
     height: 35,
     paddingBottom: 0,
     width: '100%',
-    color: '#EAB300',
+    color: palette.darkYellow,
   },
   description: {
     fontSize: 25,
-    color: '#1D1E21',
+    color: palette.black,
     lineHeight: 25,
     height: 24,
     textAlign: 'left',

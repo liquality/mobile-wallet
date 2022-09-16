@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { Dimensions, StyleSheet } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { palette } from '../theme'
 const diamand = require('../assets/confetti/diamand.png')
 const emaralCircle = require('../assets/confetti/emrald-circle.png')
 const grenBar = require('../assets/confetti/green-bar.png')
@@ -17,7 +18,13 @@ const pinkCircle = require('../assets/confetti/pink-circle.png')
 const purpleTriangle = require('../assets/confetti/purple-triangle.png')
 
 const NUM_CONFETTI = 100
-const COLORS = ['#00e4b2', '#09aec5', '#AC39FD', '#F41973', '#107ed5']
+const COLORS = [
+  palette.confetti_color_0,
+  palette.confetti_color_1,
+  palette.confetti_color_2,
+  palette.confetti_color_3,
+  palette.confetti_color_4,
+]
 const CONFETTI_SIZE = 16
 const shapes = [
   diamand,

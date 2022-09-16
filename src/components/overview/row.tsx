@@ -22,7 +22,7 @@ import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import I18n from 'i18n-js'
 import GestureDetector from '../gesture-detector/gesture-detector'
-import { Text, Box, Card } from '../../theme'
+import { Text, Box, Card, palette } from '../../theme'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { fetchFeesForAsset } from '../../store/store'
 import { FADE_IN_OUT_DURATION } from '../../utils'
@@ -120,14 +120,14 @@ const Row = (props: RowProps) => {
                 <MinusSign
                   width={15}
                   height={15}
-                  fill={isNested ? '#A8AEB7' : '#FFF'}
+                  fill={isNested ? palette.nestedColor : palette.white}
                   style={styles.plusSign}
                 />
               ) : (
                 <PlusSign
                   width={15}
                   height={15}
-                  fill={isNested ? '#A8AEB7' : '#FFF'}
+                  fill={isNested ? palette.nestedColor : palette.white}
                   style={styles.plusSign}
                 />
               )}
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   code: {
     fontFamily: Fonts.Regular,
 
-    color: '#000',
+    color: palette.black2,
     fontWeight: '500',
     fontSize: 12,
     marginBottom: 5,
@@ -244,19 +244,19 @@ const styles = StyleSheet.create({
   address: {
     fontFamily: Fonts.Regular,
 
-    color: '#646F85',
+    color: palette.darkGray,
     fontSize: 12,
   },
   balance: {
     fontFamily: Fonts.Regular,
 
-    color: '#000',
+    color: palette.black2,
     fontSize: 13,
   },
   balanceInUSD: {
     fontFamily: Fonts.Regular,
 
-    color: '#646F85',
+    color: palette.darkGray,
     fontSize: 12,
   },
   TotalBalanceInUSD: {

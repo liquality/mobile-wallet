@@ -14,6 +14,7 @@ import { FiatRates, Network } from '@liquality/wallet-core/dist/src/store/types'
 import { FeeDetails as FDs } from '@chainify/types'
 import { labelTranslateFn } from '../../../utils'
 import { Fonts } from '../../../assets'
+import { palette } from '../../../theme'
 
 type SpeedMode = keyof FeeDetails
 
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
   fragmentContainer: {
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
   },
   col: {
     paddingLeft: 5,
-    borderColor: '#d9dfe5',
+    borderColor: palette.gray,
     borderWidth: 1,
     width: '33%',
   },
@@ -234,16 +235,16 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   fiatFast: {
-    color: '#088513',
+    color: palette.green,
   },
   fiatSlow: {
-    color: '#ff007a',
+    color: palette.liqPink,
   },
   amount: {
     fontSize: 16,
   },
   selected: {
-    backgroundColor: '#F0F7F9',
+    backgroundColor: palette.selectedColor,
   },
 })
 

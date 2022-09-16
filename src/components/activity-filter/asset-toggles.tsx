@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useRecoilValue } from 'recoil'
 import { enabledAssetsState, networkState } from '../../atoms'
 import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
 
 const { SwapCheck } = AppIcons
 
@@ -103,14 +104,14 @@ const styles = StyleSheet.create({
   label: {
     marginTop: 6,
     fontFamily: Fonts.Regular,
-    color: '#1D1E21',
+    color: palette.black,
     fontSize: 13,
   },
   more: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#D421EB',
+    backgroundColor: palette.darkPink,
   },
   iconContainer: {
     width: 68,

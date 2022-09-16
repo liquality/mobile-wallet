@@ -11,7 +11,7 @@ import { ActionEnum } from '../../types'
 import { Dimensions, Platform, StyleSheet, View } from 'react-native'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
 import GradientBackground from '../gradient-background'
-import { RoundButton, Box, Text } from '../../theme'
+import { RoundButton, Box, Text, palette } from '../../theme'
 import * as React from 'react'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
 import { labelTranslateFn } from '../../utils'
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
 
     fontSize: 20,
     fontWeight: '400',
-    color: '#FFFFFF',
+    color: palette.white,
     textAlign: 'center',
   },
   totalValueSection: {
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   totalValue: {
-    color: '#FFFFFF',
+    color: palette.white,
     fontFamily: Fonts.Regular,
 
     fontWeight: '500',
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'bottom',
   },
   currency: {
-    color: '#FFFFFF',
+    color: palette.white,
     fontFamily: Fonts.Regular,
 
     fontWeight: '500',

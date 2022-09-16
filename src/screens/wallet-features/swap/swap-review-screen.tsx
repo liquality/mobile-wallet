@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, SwapInfoType } from '../../../types'
 import Warning from '../../../components/ui/warning'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
-import { Button } from '../../../theme'
+import { Button, palette } from '../../../theme'
 import { BigNumber } from '@liquality/types'
 import { performSwap } from '../../../store/store'
 import { labelTranslateFn, Log } from '../../../utils'
@@ -182,7 +182,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.get('screen').width,
-    backgroundColor: '#FFF',
+    backgroundColor: palette.white,
     padding: 20,
   },
   buttonWrapper: {

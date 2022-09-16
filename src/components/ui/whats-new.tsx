@@ -1,6 +1,6 @@
 import { Modal, StyleSheet, View } from 'react-native'
 import React from 'react'
-import { Text, Button } from '../../theme'
+import { Text, Button, palette } from '../../theme'
 import { Fonts } from '../../assets'
 
 const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
@@ -17,11 +17,11 @@ const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
     contentWrapper: {
       width: '90%',
       alignItems: 'center',
-      backgroundColor: '#FFF',
-      borderColor: '#D9DFE5',
+      backgroundColor: palette.white,
+      borderColor: palette.gray,
       borderWidth: 1,
       padding: 20,
-      shadowColor: '#000',
+      shadowColor: palette.black2,
       shadowOffset: {
         width: 0,
         height: 2,
@@ -34,7 +34,7 @@ const WhatsNew = ({ onAction }: { onAction: (visible: boolean) => any }) => {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
       fontSize: 14,
-      color: '#000D35',
+      color: palette.black2,
       textAlign: 'justify',
       paddingHorizontal: 20,
       paddingVertical: 10,

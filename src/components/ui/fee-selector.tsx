@@ -1,7 +1,7 @@
 import React, { FC, MutableRefObject, useEffect, useState } from 'react'
 import { Alert, Pressable, StyleSheet } from 'react-native'
 import { FeeDetails } from '@liquality/types'
-import { Text, Box, Card } from '../../theme'
+import { Text, Box, Card, palette } from '../../theme'
 import { GasFees, NetworkFeeType } from '../../types'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import { FADE_IN_OUT_DURATION, labelTranslateFn } from '../../utils'
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     height: 26,
     borderWidth: 1,
     paddingHorizontal: 10,
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
   },
   speedLeftBtn: {
     borderBottomLeftRadius: 50,
@@ -332,10 +332,10 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 11,
     textTransform: 'capitalize',
-    color: '#1D1E21',
+    color: palette.black,
   },
   speedBtnSelected: {
-    backgroundColor: '#F0F7F9',
+    backgroundColor: palette.selectedColor,
   },
   speedTxtSelected: {
     fontWeight: '600',
@@ -345,14 +345,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 12,
     lineHeight: 15,
-    color: '#3D4767',
+    color: palette.sectionTitleColor,
   },
   customFee: {
     fontFamily: Fonts.Regular,
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 15,
-    color: '#9D4DFA',
+    color: palette.blueVioletPrimary,
   },
 })
 

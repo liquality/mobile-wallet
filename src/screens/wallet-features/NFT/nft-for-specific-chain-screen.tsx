@@ -11,7 +11,7 @@ import {
   getNftsForAccount,
   updateNFTs,
 } from '../../../store/store'
-import { Text, Box } from '../../../theme'
+import { Text, Box, palette } from '../../../theme'
 import { RootStackParamList } from '../../../types'
 type ShowAllNftsScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
   fragmentContainer: {

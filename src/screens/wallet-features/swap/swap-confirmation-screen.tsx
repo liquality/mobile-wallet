@@ -15,7 +15,7 @@ import { BigNumber } from '@liquality/types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import { SwapProvider } from '@liquality/wallet-core/dist/src/swaps/SwapProvider'
 import { retrySwap } from '../../../store/store'
-import { Box, Text, Button } from '../../../theme'
+import { Box, Text, Button, palette } from '../../../theme'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import SwapRates from '../../../components/swap/swap-rates'
@@ -516,7 +516,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
   border: {
@@ -526,13 +526,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
   },
   content: {
     fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 12,
-    color: '#646F85',
+    color: palette.darkGray,
     marginTop: 5,
   },
   expandable: {

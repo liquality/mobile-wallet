@@ -12,7 +12,7 @@ import {
   networkState,
   accountsIdsForMainnetState,
 } from '../../../atoms'
-import { TextInput } from '../../../theme'
+import { palette, TextInput } from '../../../theme'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { AppIcons, Fonts } from '../../../assets'
 
@@ -84,7 +84,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: palette.white,
   },
   sendInput: {
     fontFamily: Fonts.Regular,
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     height: 14,
     width: '90%',
-    color: '#747E8DB2',
+    color: palette.seedInputColor,
   },
   searchBox: {
     flexDirection: 'row',
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 15,
     paddingVertical: 10,
-    borderBottomColor: '#38FFFB',
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
   },
 })

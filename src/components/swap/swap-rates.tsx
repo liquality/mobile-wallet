@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import SwapTypesInfo from './swap-types-info'
 import { dpUI } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
-import { Text, Box, Button } from '../../theme'
+import { Text, Box, Button, palette } from '../../theme'
 import ListHeader from './list-header'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { capitalizeFirstLetter, labelTranslateFn } from '../../utils'
@@ -98,7 +98,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
           {getSwapProviderIcon(item)}
           <Text style={styles.text}>{item.provider}</Text>
           {selectedItem?.provider === item.provider && (
-            <CheckIcon stroke={'#2CD2CF'} />
+            <CheckIcon stroke={palette.turquoise} />
           )}
         </View>
       </Pressable>
@@ -182,7 +182,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
                     'swapRatesComp.availQuotes',
                   )}`}</Text>
                   <Pressable onPress={() => setIsRatesModalVisible(false)}>
-                    <TimesIcon fill={'#000'} />
+                    <TimesIcon fill={palette.black2} />
                   </Pressable>
                 </View>
                 <Text
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: Fonts.Regular,
     textTransform: 'capitalize',
-    color: '#000D35',
+    color: palette.black2,
     fontWeight: '300',
     fontSize: 12,
     lineHeight: 20,
@@ -254,12 +254,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
+    borderBottomColor: palette.darkGray,
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
   selected: {
-    backgroundColor: '#F0F7F9',
+    backgroundColor: palette.selectedColor,
   },
   providerCell: {
     flex: 0.5,

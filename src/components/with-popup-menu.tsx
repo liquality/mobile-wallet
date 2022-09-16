@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../types'
-import { Text } from '../theme'
+import { palette, Text } from '../theme'
 import { AppIcons } from '../assets'
 
 const { LockIcon, ManageAssetsIcon } = AppIcons
@@ -66,14 +66,14 @@ const WithPopupMenu = <T extends FctType>(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: palette.white,
   },
   modalContainer: {
     zIndex: 5,
     position: 'absolute',
-    backgroundColor: '#FFF',
+    backgroundColor: palette.white,
     borderWidth: 1,
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
     top: 0,
     right: 0,
     width: '50%',
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
     paddingHorizontal: 20,
     paddingVertical: 5,
   },

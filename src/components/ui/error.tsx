@@ -1,6 +1,7 @@
 import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native'
 import React, { FC } from 'react'
 import { Fonts } from '../../assets'
+import { palette } from '../../theme'
 
 type ErrorPropsType = {
   message: string
@@ -15,9 +16,9 @@ const Error: FC<ErrorPropsType> = (props) => {
 const styles = StyleSheet.create({
   error: {
     fontFamily: Fonts.Light,
-    color: '#F12274',
+    color: palette.red,
     fontSize: 12,
-    backgroundColor: '#FFF',
+    backgroundColor: palette.white,
     textAlignVertical: 'center',
     textAlign: 'center',
     marginTop: 5,

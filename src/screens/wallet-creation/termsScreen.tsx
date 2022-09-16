@@ -4,7 +4,7 @@ import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
-import { Box, Button } from '../../theme'
+import { Box, Button, palette } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 import AnalyticsModal from './optInAnalyticsModal'
 import { Text } from '../../components/text/text'
@@ -89,13 +89,13 @@ const styles = StyleSheet.create({
   },
   containerWrapper: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: palette.white,
     marginTop: 20,
     paddingBottom: 20,
   },
   termsSection: {
     paddingBottom: 20,
-    backgroundColor: '#fff',
+    backgroundColor: palette.white,
     alignItems: 'center',
   },
   termsTitle: {

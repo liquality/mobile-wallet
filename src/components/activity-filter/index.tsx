@@ -11,7 +11,7 @@ import { ActionEnum, ActivityStatusEnum, TimeLimitEnum } from '../../types'
 import { useRecoilState } from 'recoil'
 import { activityFilterState } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
-import { Text } from '../../theme'
+import { palette, Text } from '../../theme'
 import { AppIcons, Fonts } from '../../assets'
 
 const {
@@ -123,7 +123,7 @@ const ActivityFilter: FC<{
         </Pressable>
         <View style={styles.spacer} />
         <Pressable style={styles.iconBtn} onPress={onExport}>
-          <ExportIcon width={16} fill={'#646F85'} />
+          <ExportIcon width={16} fill={palette.darkGray} />
           <Text style={styles.exportLabel} tx="common.export" />
         </Pressable>
       </View>
@@ -205,10 +205,10 @@ const ActivityFilter: FC<{
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F8FAFF',
+    backgroundColor: palette.blueVioletSecondary,
     paddingHorizontal: 18,
     borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
+    borderBottomColor: palette.gray,
     paddingVertical: 11,
   },
   activityActionBar: {
@@ -231,20 +231,20 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Regular,
 
     fontWeight: '400',
-    color: '#1D1E21',
+    color: palette.black,
     fontSize: 14,
   },
   resetLabel: {
     marginLeft: 5,
     fontFamily: Fonts.Regular,
 
-    color: '#1D1E21',
+    color: palette.black,
     fontWeight: '300',
     fontSize: 14,
   },
   exportLabel: {
     marginLeft: 5,
-    color: '#646F85',
+    color: palette.darkGray,
     fontFamily: Fonts.Regular,
 
     fontWeight: '300',
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 8,
-    color: '#646F85',
+    color: palette.darkGray,
     fontFamily: Fonts.Regular,
 
     fontWeight: '300',
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Regular,
 
     fontWeight: '400',
-    color: '#1D1E21',
+    color: palette.black,
     fontSize: 14,
     marginLeft: 12,
   },

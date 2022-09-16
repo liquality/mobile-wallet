@@ -7,7 +7,7 @@ import { useRecoilValue } from 'recoil'
 import { Fonts } from '../../../assets'
 import { networkState } from '../../../atoms'
 import { getAllEnabledAccounts, updateNFTs } from '../../../store/store'
-import { Box } from '../../../theme'
+import { Box, palette } from '../../../theme'
 import { RootTabParamList } from '../../../types'
 type ShowAllNftsScreenProps = BottomTabScreenProps<
   RootTabParamList,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
   fragmentContainer: {

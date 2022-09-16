@@ -6,7 +6,7 @@ import Label from '../ui/label'
 import { TimelineStep } from '@liquality/wallet-core/dist/src/utils/timeline'
 import { SwapHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import { getTimeline } from '../../store/store'
-import { Text, Box } from '../../theme'
+import { Text, Box, palette } from '../../theme'
 import Timeline from './timeline'
 import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms'
@@ -16,7 +16,12 @@ export const EmptyBlock = () => <View style={styles.emptyBlock} />
 export const Step = ({ completed }: { completed: boolean }) => (
   <View>
     <Svg height="10" width="10">
-      <Circle cx="5" cy="5" r="5" fill={completed ? '#2CD2CF' : '#A8AEB7'} />
+      <Circle
+        cx="5"
+        cy="5"
+        r="5"
+        fill={completed ? palette.turquoise : palette.nestedColor}
+      />
     </Svg>
   </View>
 )
@@ -32,7 +37,7 @@ export const Separator = ({ completed }: { completed: boolean }) => (
         strokeWidth={2}
         strokeDasharray={[1, 1]}
         fill="none"
-        stroke={completed ? '#2CD2CF' : '#A8AEB7'}
+        stroke={completed ? palette.turquoise : palette.nestedColor}
       />
     </Svg>
   </View>

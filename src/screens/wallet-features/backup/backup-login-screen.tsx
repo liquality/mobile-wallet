@@ -12,7 +12,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import Header from '../../header'
 import { createWallet, restoreWallet } from '../../../store/store'
-import { Box, Button, Text } from '../../../theme'
+import { Box, Button, palette, Text } from '../../../theme'
 import { MNEMONIC, PASSWORD } from '@env'
 import CheckBox from '../../../components/checkbox'
 import GradientBackground from '../../../components/gradient-background'
@@ -171,8 +171,8 @@ const styles = StyleSheet.create({
   input: {
     marginTop: 5,
     padding: 10,
-    color: '#FFF',
-    borderBottomColor: '#38FFFB',
+    color: palette.white,
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
   },
   keyboard: {

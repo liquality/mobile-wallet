@@ -31,7 +31,7 @@ import {
   labelTranslateFn,
   sortQuotes,
 } from '../../../utils'
-import { Box, Text, Button } from '../../../theme'
+import { Box, Text, Button, palette } from '../../../theme'
 import SwapFeeSelector from '../../../components/ui/swap-fee-selector'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { prettyBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
@@ -981,7 +981,7 @@ const styles = StyleSheet.create({
     lineHeight: 15,
   },
   amount: {
-    color: '#000D35',
+    color: palette.black2,
     marginVertical: 5,
     lineHeight: 18,
   },

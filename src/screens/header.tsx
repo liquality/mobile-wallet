@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { Text } from '../theme'
+import { palette, Text } from '../theme'
 import { AppIcons, Fonts } from '../assets'
 
 const { Logo } = AppIcons
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: Fonts.AlternatesLight,
-    color: '#fff',
+    color: palette.white,
     fontSize: 22,
     fontWeight: '300',
     lineHeight: 27,

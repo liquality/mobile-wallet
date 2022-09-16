@@ -11,7 +11,7 @@ import { SendHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import { RootStackParamList } from '../../../types'
 import SendTransactionDetails from '../../../components/send/send-transaction-details'
 import ProgressCircle from '../../../components/animations/progress-circle'
-import { Box, Text } from '../../../theme'
+import { Box, palette, Text } from '../../../theme'
 import { formatDate } from '../../../utils'
 import { useRecoilValue } from 'recoil'
 import { historyStateFamily, networkState } from '../../../atoms'
@@ -172,7 +172,7 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
 })

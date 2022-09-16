@@ -5,7 +5,7 @@ import React, { useEffect, useCallback } from 'react'
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import { Button } from '../../../theme'
+import { Button, palette } from '../../../theme'
 
 import { RootStackParamList } from '../../../types'
 
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
   fragmentContainer: {

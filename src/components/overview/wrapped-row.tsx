@@ -18,6 +18,7 @@ import { OverviewProps } from '../../screens/wallet-features/home/overview-scree
 import AssetIcon from '../asset-icon'
 import { getAsset } from '@liquality/cryptoassets'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { palette } from '../../theme'
 
 const WrappedRow: FC<{
   item: { id: string; name: string }
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
+    borderBottomColor: palette.gray,
     borderLeftWidth: 3,
     paddingVertical: 10,
     height: 60,

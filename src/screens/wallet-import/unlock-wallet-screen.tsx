@@ -14,7 +14,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
-import { Box, Text, Button } from '../../theme'
+import { Box, Text, Button, palette } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 import { labelTranslateFn } from '../../utils'
 import { Fonts } from '../../assets'
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
   promptText: {
     fontFamily: Fonts.Regular,
-    color: '#FFFFFF',
+    color: palette.white,
     fontSize: 28,
     lineHeight: 28,
   },
@@ -199,13 +199,13 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     alignSelf: 'center',
     textAlign: 'center',
-    color: '#fff',
+    color: palette.white,
     fontSize: 14,
     fontWeight: '600',
     lineHeight: 24,
   },
   seedPhrase: {
-    backgroundColor: '#fff',
+    backgroundColor: palette.white,
     width: Dimensions.get('window').width,
   },
   flatList: {
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   seedWordOptionAction: {
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
     borderWidth: 1,
   },
   btnLeftSide: {
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
   },
   optionActive: {
-    backgroundColor: '#F0F7F9',
+    backgroundColor: palette.selectedColor,
   },
   seedWordOptionText: {
     paddingHorizontal: 20,
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   wordOrderText: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: '#3D4767',
+    color: palette.sectionTitleColor,
     marginBottom: 3,
   },
   missingWordText: {
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#2CD2CF',
+    borderBottomColor: palette.turquoise,
     width: '100%',
   },
   keyboard: {

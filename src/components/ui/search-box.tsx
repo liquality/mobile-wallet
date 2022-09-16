@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useCallback } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import Fuse from 'fuse.js'
 import { useInputState } from '../../hooks'
-import { Text, TextInput } from '../../theme'
+import { palette, Text, TextInput } from '../../theme'
 import { AppIcons, Fonts } from '../../assets'
 
 const { SearchIcon, TimesIcon } = AppIcons
@@ -55,7 +55,7 @@ const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
       />
       {searchInput.value.length > 0 && (
         <Pressable style={styles.clearBtn} onPress={handleClearBtnPress}>
-          <TimesIcon fill={'#646F85'} />
+          <TimesIcon fill={palette.darkGray} />
           <Text style={styles.clearBtnText} tx="common.reset" />
         </Pressable>
       )}
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     height: 14,
     width: '80%',
-    color: '#747E8DB2',
+    color: palette.seedInputColor,
   },
   searchBox: {
     flexDirection: 'row',
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 15,
     paddingVertical: 10,
-    borderBottomColor: '#38FFFB',
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
   },
   clearBtn: {
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 13,
-    color: '#646F85',
+    color: palette.darkGray,
     lineHeight: 14,
   },
   icon: {

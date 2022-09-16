@@ -1,6 +1,7 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
 import { TimeLimitEnum } from '../../types'
 
 const { Circle } = AppIcons
@@ -19,13 +20,18 @@ const TimeLimitOptions: FC<{
           onChange(key)
         }}>
         {value === key ? (
-          <Circle width={16} height={16} fill="#2CD2CF" {...commonIconProps} />
+          <Circle
+            width={16}
+            height={16}
+            fill={palette.turquoise}
+            {...commonIconProps}
+          />
         ) : (
           <Circle
             width={16}
             height={16}
-            stroke="#646F85"
-            fill="#FFFFFF"
+            stroke={palette.darkGray}
+            fill={palette.white}
             {...commonIconProps}
           />
         )}
@@ -55,7 +61,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: Fonts.Regular,
-    color: '#1D1E21',
+    color: palette.black,
     marginLeft: 5,
     fontSize: 14,
   },

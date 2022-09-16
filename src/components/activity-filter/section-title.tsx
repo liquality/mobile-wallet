@@ -5,6 +5,7 @@ import i18n from 'i18n-js'
 import { langSelected as LS } from '../../../src/atoms'
 import { useRecoilValue } from 'recoil'
 import { Fonts } from '../../assets'
+import { palette } from '../../theme'
 interface SectionTitleProps {
   title: string
   tx?: TxKeyPath
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Regular,
     fontWeight: '700',
     fontSize: 12,
-    color: '#3D4767',
+    color: palette.sectionTitleColor,
   },
 })
 

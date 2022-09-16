@@ -23,6 +23,7 @@ import { getNftsForAccount, updateNFTs } from '../../store/store'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
 
 const { ChevronRightIcon: ChevronRight } = AppIcons
 
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
+    borderBottomColor: palette.gray,
     borderLeftWidth: 3,
     paddingVertical: 10,
     height: 60,
@@ -174,20 +175,18 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: Fonts.Regular,
 
-    color: '#000',
+    color: palette.black2,
     fontWeight: '500',
     fontSize: 12,
   },
   balance: {
     fontFamily: Fonts.Regular,
-
-    color: '#000',
+    color: palette.black2,
     fontSize: 13,
   },
   balanceInUSD: {
     fontFamily: Fonts.Regular,
-
-    color: '#646F85',
+    color: palette.darkGray,
     fontSize: 12,
   },
 })

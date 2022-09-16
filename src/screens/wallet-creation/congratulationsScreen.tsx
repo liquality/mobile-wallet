@@ -4,7 +4,7 @@ import { Text } from '../../components/text/text'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import Confetti from '../../components/confetti'
-import { Box } from '../../theme'
+import { Box, palette } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 import { Fonts } from '../../assets'
 
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontFamily: Fonts.Regular,
-    color: '#FFFFFF',
+    color: palette.white,
     fontSize: 28,
     lineHeight: 27,
   },

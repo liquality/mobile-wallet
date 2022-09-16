@@ -9,7 +9,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import { FADE_IN_OUT_DURATION } from '../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
-import { Card, Box, Text } from '../../theme'
+import { Card, Box, Text, palette } from '../../theme'
 import GestureDetector from '../gesture-detector/gesture-detector'
 import { useRecoilState } from 'recoil'
 import {
@@ -139,7 +139,7 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
           <Text variant="boldLink">{status}</Text>
         </Pressable>
         <Pressable style={styles.copyBtn} onPress={handleCopyAddressPress}>
-          <CopyIcon width={10} stroke={'#9D4DFA'} />
+          <CopyIcon width={10} stroke={palette.blueVioletPrimary} />
         </Pressable>
       </Box>
       {txHash ? (

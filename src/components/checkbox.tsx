@@ -5,6 +5,7 @@ import { TxKeyPath, translate } from '../i18n'
 import { langSelected as LS } from '../../src/atoms'
 import { useRecoilValue } from 'recoil'
 import { AppIcons } from '../assets'
+import { palette } from '../theme'
 
 const { SwapCheck: CheckIcon } = AppIcons
 
@@ -26,7 +27,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
   style,
   textStyle,
   size = 20,
-  color = '#FFF',
+  color = palette.white,
   text = '',
   txOptions,
   ...props

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
-import { Text, Button } from '../../../theme'
+import { Text, Button, palette } from '../../../theme'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import { labelTranslateFn } from '../../../utils'
@@ -65,7 +65,7 @@ const BackupWarningScreen: React.FC<
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: palette.white,
     padding: 15,
   },
   eyeIcon: {

@@ -27,7 +27,7 @@ import {
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails as FDs } from '@chainify/types'
-import { Text, Box, Button } from '../../../theme'
+import { Text, Box, Button, palette } from '../../../theme'
 import { labelTranslateFn } from '../../../utils'
 import { speedUpTransaction } from '../../../store/store'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
   fragmentContainer: {
@@ -520,8 +520,8 @@ const styles = StyleSheet.create({
   },
 
   summary: {
-    backgroundColor: '#F0F7F9',
-    borderColor: '#d9dfe5',
+    backgroundColor: palette.selectedColor,
+    borderColor: palette.gray,
     borderWidth: 1,
     paddingVertical: 15,
     paddingLeft: 10,
@@ -536,12 +536,12 @@ const styles = StyleSheet.create({
   },
   gasInput: {
     marginTop: 5,
-    borderBottomColor: '#38FFFB',
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
     width: '30%',
     textAlign: 'right',
     paddingBottom: 0,
-    color: '#000D35',
+    color: palette.black2,
   },
   actions: {
     justifyContent: 'space-around',
@@ -556,24 +556,24 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
+    borderBottomColor: palette.gray,
   },
   headerFocused: {
     borderBottomWidth: 1,
-    borderBottomColor: '#000',
+    borderBottomColor: palette.black2,
   },
   headerText: {
     fontFamily: Fonts.Regular,
     fontSize: 13,
     lineHeight: 18,
     fontWeight: '600',
-    color: '#D9DFE5',
+    color: palette.gray,
   },
   headerTextFocused: {
-    color: '#000',
+    color: palette.black2,
   },
   fiatFast: {
-    color: '#088513',
+    color: palette.green,
   },
 })
 

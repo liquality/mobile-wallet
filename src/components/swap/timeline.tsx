@@ -4,7 +4,7 @@ import {
   FiatRates,
   SwapHistoryItem,
 } from '@liquality/wallet-core/dist/src/store/types'
-import { Box } from '../../theme'
+import { Box, palette } from '../../theme'
 import { v4 as uuidv4 } from 'uuid'
 import ConfirmationBlock from './confirmation-block'
 import { StyleSheet, View } from 'react-native'
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     height: 1,
     borderStyle: 'solid',
     borderWidth: 1,
-    borderColor: '#2CD2CF',
+    borderColor: palette.turquoise,
   },
 })
 

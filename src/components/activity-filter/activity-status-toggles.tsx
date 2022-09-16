@@ -1,6 +1,7 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
 
 import { ActivityStatusEnum } from '../../types'
 import { capitalizeFirstLetter } from '../../utils'
@@ -89,7 +90,7 @@ const commonStyles = StyleSheet.create({
   button: {
     height: 34,
     borderWidth: 1,
-    borderColor: '#646F85',
+    borderColor: palette.darkGray,
     borderRadius: 17,
     flexDirection: 'row',
     alignItems: 'center',
@@ -111,16 +112,16 @@ const styles = StyleSheet.create({
   },
   selectedButton: {
     ...commonStyles.button,
-    backgroundColor: '#1CE5C3',
+    backgroundColor: palette.lightGreen,
   },
   button: {
     ...commonStyles.button,
-    backgroundColor: '#D9DFE5',
+    backgroundColor: palette.gray,
   },
   label: {
     marginLeft: 5,
     fontFamily: Fonts.Regular,
-    color: '#1D1E21',
+    color: palette.black,
     fontSize: 13,
   },
 })

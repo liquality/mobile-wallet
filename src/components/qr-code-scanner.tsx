@@ -18,6 +18,7 @@ import { labelTranslateFn } from '../utils'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../atoms'
 import { AppIcons } from '../assets'
+import { palette } from '../theme'
 const { TimesIcon } = AppIcons
 
 type QrCodeScannerPropsType = {
@@ -77,7 +78,7 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
         <View style={styles.actionWrapper}>
           <Pressable onPress={handleCloseBtnPress}>
             <TimesIcon
-              fill={'#FFF'}
+              fill={palette.white}
               style={styles.icon}
               width={30}
               height={30}
@@ -92,10 +93,34 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
             height="260"
             width="260"
             style={styles.svg}>
-            <Rect x="0" y="0" width="50" height="50" fill="#fefefe" />
-            <Rect x="0" y="210" width="50" height="49" fill="#fefefe" />
-            <Rect x="210" y="0" width="49" height="50" fill="#fefefe" />
-            <Rect x="210" y="210" width="49" height="49" fill="#fefefe" />
+            <Rect
+              x="0"
+              y="0"
+              width="50"
+              height="50"
+              fill={palette.qrCodeColor}
+            />
+            <Rect
+              x="0"
+              y="210"
+              width="50"
+              height="49"
+              fill={palette.qrCodeColor}
+            />
+            <Rect
+              x="210"
+              y="0"
+              width="49"
+              height="50"
+              fill={palette.qrCodeColor}
+            />
+            <Rect
+              x="210"
+              y="210"
+              width="49"
+              height="49"
+              fill={palette.qrCodeColor}
+            />
             {device && hasPermission && (
               <Camera
                 style={styles.preview}
@@ -115,14 +140,14 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
 
 const styles = StyleSheet.create({
   modalView: {
-    backgroundColor: '#000',
+    backgroundColor: palette.black2,
   },
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: palette.black2,
   },
   actionWrapper: {
-    backgroundColor: '#000',
+    backgroundColor: palette.black2,
     alignItems: 'flex-end',
   },
   icon: {
@@ -136,14 +161,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   svg: {
-    borderColor: '#FFF',
+    borderColor: palette.white,
     justifyContent: 'center',
     alignItems: 'center',
   },
   preview: {
     width: 257,
     height: 257,
-    borderColor: '#fefefe',
+    borderColor: palette.qrCodeColor,
     marginTop: 1,
     marginLeft: 1,
     padding: 5,

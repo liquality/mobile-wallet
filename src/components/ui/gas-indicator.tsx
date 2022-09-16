@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
 
 const { GasIcon } = AppIcons
 
@@ -18,7 +19,7 @@ const GasIndicator = ({
     gasLabel: {
       fontFamily: Fonts.Regular,
       fontSize: 12,
-      color: '#646F85',
+      color: palette.darkGray,
     },
     gas: {
       flexDirection: 'row',
@@ -34,7 +35,7 @@ const GasIndicator = ({
       paddingHorizontal: 10,
       borderWidth: 1,
       borderRadius: 50,
-      borderColor: '#D9DFE5',
+      borderColor: palette.gray,
     },
   })
 

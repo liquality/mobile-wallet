@@ -10,8 +10,8 @@ const SwitchEnabledColor = palette.blueVioletPrimary
 const SwitchDisabledColor = palette.gray
 
 const trackColor = {
-  false: '#FFF',
-  true: '#FFF',
+  false: palette.white,
+  true: palette.white,
 }
 
 const GeneralSwitch = (props: GeneralSwitchProps) => {

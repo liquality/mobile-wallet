@@ -16,6 +16,7 @@ import { useRecoilValue } from 'recoil'
 import { addressStateFamily, networkState } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
 import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
 
 const { CopyIcon, SwapCheck: CheckIcon } = AppIcons
 
@@ -115,11 +116,11 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
             <CheckIcon
               width={15}
               height={15}
-              stroke={'#9D4DFA'}
+              stroke={palette.blueVioletPrimary}
               style={styles.icon}
             />
           ) : (
-            <CopyIcon width={10} stroke={'#9D4DFA'} />
+            <CopyIcon width={10} stroke={palette.blueVioletPrimary} />
           )}
         </Pressable>
       </View>

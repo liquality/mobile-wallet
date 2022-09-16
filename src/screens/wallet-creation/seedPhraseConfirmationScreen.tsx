@@ -13,7 +13,7 @@ import { RootStackParamList, SeedWordType } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import Header from '../header'
 import ButtonFooter from '../../components/button-footer'
-import { Box, Button } from '../../theme'
+import { Box, Button, palette } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 import { Text } from '../../components/text/text'
 import { labelTranslateFn } from '../../utils'
@@ -210,18 +210,18 @@ const styles = StyleSheet.create({
   },
   missingWordView: {
     borderBottomWidth: 1,
-    borderBottomColor: '#2CD2CF',
+    borderBottomColor: palette.turquoise,
   },
   wordOrderText: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: '#3D4767',
+    color: palette.sectionTitleColor,
     marginBottom: 3,
   },
   missingWordText: {
     fontSize: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#2CD2CF',
+    borderBottomColor: palette.turquoise,
   },
   seedWordLengthOptions: {
     flexDirection: 'row',
@@ -236,15 +236,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
-    backgroundColor: '#fff',
-    borderColor: '#D9DFE5',
+    backgroundColor: palette.white,
+    borderColor: palette.gray,
     borderWidth: 1,
   },
 
   wordText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#9D4DFA',
+    color: palette.blueVioletPrimary,
   },
 
   container: {
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
   },
   promptText: {
     fontFamily: Fonts.Regular,
-    color: '#FFFFFF',
+    color: palette.white,
     fontSize: 30,
     lineHeight: 30,
   },
@@ -276,13 +276,13 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     alignSelf: 'center',
     textAlign: 'center',
-    color: '#fff',
+    color: palette.white,
     fontSize: 15,
     fontWeight: '600',
     lineHeight: 24,
   },
   seedPhrase: {
-    backgroundColor: '#fff',
+    backgroundColor: palette.white,
     width: Dimensions.get('window').width,
     height: '100%',
   },
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   pressedWord: {
-    color: '#A8AEB7',
+    color: palette.nestedColor,
   },
 })
 

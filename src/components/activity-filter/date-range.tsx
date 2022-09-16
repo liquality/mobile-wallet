@@ -4,6 +4,7 @@ import SectionTitle from './section-title'
 import DatePicker from './date-picker'
 import { labelTranslateFn } from '../../utils'
 import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
 
 const { CalendarIcon } = AppIcons
 
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 34,
     borderBottomWidth: 1,
-    borderBottomColor: '#646F85',
+    borderBottomColor: palette.darkGray,
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 7,
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: Fonts.Regular,
-    color: '#1D1E21',
+    color: palette.black,
     fontSize: 13,
   },
 })

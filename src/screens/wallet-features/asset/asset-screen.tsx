@@ -8,7 +8,7 @@ import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, RootStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
-import { Text, Box, RoundButton } from '../../../theme'
+import { Text, Box, RoundButton, palette } from '../../../theme'
 import GradientBackground from '../../../components/gradient-background'
 import { useRecoilValue } from 'recoil'
 import {
@@ -144,21 +144,21 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   balanceInUSD: {
-    color: '#FFFFFF',
+    color: palette.white,
     fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 12,
     textAlignVertical: 'bottom',
   },
   balanceInNative: {
-    color: '#FFFFFF',
+    color: palette.white,
     fontFamily: Fonts.Regular,
     fontWeight: '500',
     fontSize: 36,
     textAlignVertical: 'bottom',
   },
   nativeCurrency: {
-    color: '#FFFFFF',
+    color: palette.white,
     fontFamily: Fonts.Regular,
     fontWeight: '500',
     fontSize: 18,
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Regular,
     fontSize: 20,
     fontWeight: '300',
-    color: '#FFFFFF',
+    color: palette.white,
     textAlign: 'center',
   },
   tabBlack: {
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     alignContent: 'stretch',
     width: '50%',
     borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
+    borderBottomColor: palette.gray,
   },
   leftHeader: {
     flex: 1,
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   },
   headerFocused: {
     borderBottomWidth: 1,
-    borderBottomColor: '#000',
+    borderBottomColor: palette.black,
   },
 })
 

@@ -40,7 +40,7 @@ import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-scre
 import BackupLoginScreen from '../screens/wallet-features/backup/backup-login-screen'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/core'
 import CustomFeeEIP1559Screen from '../screens/wallet-features/custom-fee/custom-fee-eip-1559-screen'
-import { Box, Text } from '../theme'
+import { Box, palette, Text } from '../theme'
 import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-screen'
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
@@ -181,7 +181,7 @@ const BackupWarningHeaderRight = (navProps: NavigationProps) => {
       <TimesIcon
         width={30}
         height={30}
-        color={'#5F5F5F'}
+        color={palette.timesIconColor}
         style={styles.checkIcon}
       />
     </Pressable>
@@ -423,12 +423,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: '#D9DFE5',
-    backgroundColor: '#FFF',
+    borderTopColor: palette.gray,
+    backgroundColor: palette.white,
   },
   tabFocused: {
-    backgroundColor: '#FFF',
-    borderTopColor: '#000',
+    backgroundColor: palette.white,
+    borderTopColor: palette.black2,
   },
   checkIcon: {
     marginRight: 20,

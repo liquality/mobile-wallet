@@ -6,7 +6,7 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native'
-import { Text, Button } from '../../theme'
+import { Text, Button, palette } from '../../theme'
 import { TxKeyPath, translate } from '../../i18n'
 import i18n from 'i18n-js'
 import { langSelected as LS } from '../../../src/atoms'
@@ -91,7 +91,7 @@ const MessageBanner: FC<MessageBannerProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFF8DA',
+    backgroundColor: palette.yellowBar,
     width: Dimensions.get('screen').width,
     padding: 20,
   },
