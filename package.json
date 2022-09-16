@@ -19,7 +19,7 @@
     "reset-cache": "react-native start -- --reset-cache",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint '*/**/*.{js,ts,tsx}' --fix",
+    "prettier": "prettier --write '*.js' './src/**/*.{ts,tsx}'",
     "prepare": "husky install",
     "postinstall": "rn-nodeify --install 'crypto,stream,assert,fs,os,path,tty,http,https,url' --hack && node patch.js"
   },
