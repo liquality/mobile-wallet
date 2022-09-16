@@ -179,7 +179,7 @@ const ActivityFilter: FC<{
                 : ` ${labelTranslateFn('common.results')}`}
             </Text>
             <View style={styles.spacer} />
-            <SectionTitle tx="common.sort" />
+            <SectionTitle title={{ tx: 'common.sort' }} />
             <Pressable style={styles.iconBtn} onPress={handleShowPicker}>
               <Text style={styles.sorterLabel}>
                 {

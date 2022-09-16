@@ -80,7 +80,7 @@ const AssetToggles: FC<{
 
   return (
     <View style={styles.container}>
-      <SectionTitle tx="common.assets" />
+      <SectionTitle title={{ tx: 'common.assets' }} />
       <View style={styles.content}>{items.map(renderItem)}</View>
     </View>
   )

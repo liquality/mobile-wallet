@@ -44,7 +44,7 @@ const DateRange: FC<{
 
   return (
     <View style={styles.container}>
-      <SectionTitle tx="common.dateRange" />
+      <SectionTitle title={{ tx: 'common.dateRange' }} />
       <View style={styles.content}>
         <Pressable style={styles.button} onPress={handleOpenStartDate}>
           <Text style={styles.label}>

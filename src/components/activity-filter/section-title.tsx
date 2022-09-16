@@ -7,17 +7,21 @@ import { useRecoilValue } from 'recoil'
 import { Fonts } from '../../assets'
 import { palette } from '../../theme'
 interface SectionTitleProps {
-  title: string
-  tx?: TxKeyPath
+  title: string | { tx: TxKeyPath }
   txOptions?: i18n.TranslateOptions
 }
 
 const SectionTitle: FC<SectionTitleProps> = (props: SectionTitleProps) => {
-  const { tx, txOptions, title } = props
+  const { txOptions, title } = props
   const langSelected = useRecoilValue(LS)
   i18n.locale = langSelected
-  const i18nText = tx && translate(tx, txOptions)
-  const content = i18nText || title
+  let content
+  if (typeof title !== 'string') {
+    const { tx } = title
+    content = tx && translate(tx, txOptions)
+  } else {
+    content = title
+  }
   return <Text style={styles.title}>{content}</Text>
 }
 
