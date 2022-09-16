@@ -1,32 +1,34 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import BitcoinChainIcon from '../assets/icons/crypto/bitcoin_chain.svg'
-import EthereumChainIcon from '../assets/icons/crypto/ethereum_chain.svg'
-import RootstockChainIcon from '../assets/icons/crypto/rsk_chain.svg'
-import BinanceSmartChainIcon from '../assets/icons/crypto/bsc_chain.svg'
-import NearChainIcon from '../assets/icons/crypto/near_chain.svg'
-import PolygonChainIcon from '../assets/icons/crypto/polygon_chain.svg'
-import ArbitrumChainIcon from '../assets/icons/crypto/arbitrum.svg'
-import TerraChainIcon from '../assets/icons/crypto/terra_chain.svg'
-import FuseChainIcon from '../assets/icons/crypto/fuse.svg'
-import AvalancheChainIcon from '../assets/icons/crypto/avax.svg'
-import SolanaChainIcon from '../assets/icons/crypto/sol_account.svg'
-
-import ETHIcon from '../assets/icons/crypto/eth.svg'
-import BTCIcon from '../assets/icons/crypto/bitcoin_chain.svg'
-import RBTCIcon from '../assets/icons/crypto/rbtc.svg'
-import SovrynIcon from '../assets/icons/crypto/sov.svg'
-import DAIIcon from '../assets/icons/crypto/dai.svg'
-import LunaIcon from '../assets/icons/crypto/luna.svg'
-import TerraIcon from '../assets/icons/crypto/terra.svg'
-import BNBIcon from '../assets/icons/crypto/bnb.svg'
-import Nearcon from '../assets/icons/crypto/near.svg'
-import MaticIcon from '../assets/icons/crypto/matic.svg'
-import PwethIcon from '../assets/icons/crypto/pweth.svg'
-import ArbitrumIcon from '../assets/icons/crypto/arbeth.svg'
-import AvalancheIcon from '../assets/icons/crypto/avax.svg'
-import SolanaIcon from '../assets/icons/crypto/sol.svg'
-import BlankIcon from '../assets/icons/crypto/blank.svg'
+import { AppIcons } from '../assets'
+const {
+  BitcoinChainIcon,
+  BitcoinChainIcon: BTCIcon,
+  EthereumChainIcon,
+  RootstockChainIcon,
+  BinanceSmartChainIcon,
+  NearChainIcon,
+  PolygonChainIcon,
+  ArbitrumChainIcon,
+  TerraChainIcon,
+  FuseChainIcon,
+  AvalancheChainIcon,
+  AvalancheChainIcon: AvalancheIcon,
+  SolanaChainIcon,
+  ETHIcon,
+  RBTCIcon,
+  SovrynIcon,
+  DAIIcon,
+  LunaIcon,
+  TerraIcon,
+  BNBIcon,
+  Nearcon,
+  MaticIcon,
+  PwethIcon,
+  ArbitrumIcon,
+  SolanaIcon,
+  BlankIcon,
+} = AppIcons
 
 import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import { FC } from 'react'

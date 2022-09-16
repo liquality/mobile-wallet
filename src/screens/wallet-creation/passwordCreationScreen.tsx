@@ -5,9 +5,7 @@ import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import Header from '../header'
 import ButtonFooter from '../../components/button-footer'
-import Button from '../../theme/button'
-import Text from '../../theme/text'
-import Box from '../../theme/box'
+import { Box, Text, Button, palette } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 
 type PasswordCreationProps = NativeStackScreenProps<
@@ -165,8 +163,8 @@ const styles = StyleSheet.create({
   },
   input: {
     marginTop: 5,
-    color: '#FFF',
-    borderBottomColor: '#38FFFB',
+    color: palette.white,
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
     padding: 10,
   },

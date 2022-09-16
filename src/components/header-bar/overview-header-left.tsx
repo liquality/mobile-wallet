@@ -1,10 +1,11 @@
 import React, { FC } from 'react'
 import { Pressable, StyleSheet, Text } from 'react-native'
-import ChevronLeft from '../../assets/icons/chevron-left.svg'
-
 import { networkState } from '../../atoms'
 import { useRecoilValue } from 'recoil'
-import Box from '../../theme/box'
+import { Box } from '../../theme'
+import { AppIcons, Fonts } from '../../assets'
+
+const { ChevronLeft } = AppIcons
 
 type OverviewHeaderLeftProps = {
   includeBackBtn: boolean
@@ -32,12 +33,14 @@ const OverviewHeaderLeft: FC<OverviewHeaderLeftProps> = (
 
 const styles = StyleSheet.create({
   overviewText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontSize: 14,
     fontWeight: '600',
   },
   chainText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontSize: 14,
     fontWeight: '300',
     marginLeft: 5,

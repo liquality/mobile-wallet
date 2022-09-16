@@ -4,12 +4,10 @@ import {
   createVariant,
   VariantProps,
 } from '@shopify/restyle'
-import { Theme } from './index'
+import { ThemeType as Theme } from './theme'
 import { Dropdown as Dd } from 'react-native-element-dropdown'
 
-const Dropdown = createRestyleComponent<
+export const Dropdown = createRestyleComponent<
   VariantProps<Theme, 'dropDownVariants'> & React.ComponentProps<typeof Dd>,
   Theme
 >([createVariant({ themeKey: 'dropDownVariants' })], Dd)
-
-export default Dropdown

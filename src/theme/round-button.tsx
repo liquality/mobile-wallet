@@ -1,10 +1,7 @@
 import * as React from 'react'
 import { FC, useCallback } from 'react'
 import { Pressable, PressableProps } from 'react-native'
-import Text from './text'
-import SwapIcon from '../assets/icons/exchange.svg'
-import SendIcon from '../assets/icons/up.svg'
-import ReceiveIcon from '../assets/icons/down.svg'
+import { Text } from './text'
 import {
   ColorProps,
   createRestyleComponent,
@@ -12,14 +9,16 @@ import {
   useTheme,
   VariantProps,
 } from '@shopify/restyle'
-import { Theme } from './index'
-import Box from './box'
+import { ThemeType as Theme } from './theme'
+import { Box } from './box'
 import { TxKeyPath } from '../i18n'
 import i18n from 'i18n-js'
 import { langSelected as LS } from '../../src/atoms'
 import { useRecoilValue } from 'recoil'
+import { AppIcons } from '../assets'
+const { Exchange: SwapIcon, UpIcon: SendIcon, DownIcon: ReceiveIcon } = AppIcons
 
-const RoundBaseButton = createRestyleComponent<
+export const RoundBaseButton = createRestyleComponent<
   VariantProps<Theme, 'roundButtonVariants'> & PressableProps,
   Theme
 >([createVariant({ themeKey: 'roundButtonVariants' })], Pressable)
@@ -34,7 +33,7 @@ type RoundButtonProps = React.ComponentProps<typeof RoundBaseButton> &
     txOptions?: i18n.TranslateOptions
   }
 
-const RoundButton: FC<RoundButtonProps> = (props) => {
+export const RoundButton: FC<RoundButtonProps> = (props) => {
   const theme = useTheme<Theme>()
   const { onPress, label, tx, txOptions, type, variant } = props
   const langSelected = useRecoilValue(LS)
@@ -79,5 +78,3 @@ const RoundButton: FC<RoundButtonProps> = (props) => {
     </Box>
   )
 }
-
-export default RoundButton

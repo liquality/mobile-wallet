@@ -15,9 +15,7 @@ import {
 } from '../../types'
 import Header from '../header'
 import { createWallet, restoreWallet, storageManager } from '../../store/store'
-import Text from '../../theme/text'
-import Button from '../../theme/button'
-import Box from '../../theme/box'
+import { Box, Button, palette, Text } from '../../theme'
 import { MNEMONIC, PASSWORD } from '@env'
 import GradientBackground from '../../components/gradient-background'
 import { getAsset, getChain } from '@liquality/cryptoassets'
@@ -229,8 +227,8 @@ const styles = StyleSheet.create({
   input: {
     marginTop: 5,
     padding: 10,
-    color: '#FFF',
-    borderBottomColor: '#38FFFB',
+    color: palette.white,
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
   },
   forgotPassword: {

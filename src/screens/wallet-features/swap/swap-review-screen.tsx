@@ -1,12 +1,10 @@
 import React, { FC, useState } from 'react'
 import { Dimensions, StyleSheet, View, ScrollView, Alert } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import Clock from '../../../assets/icons/clock.svg'
-import Exchange from '../../../assets/icons/exchange.svg'
 import { RootStackParamList, SwapInfoType } from '../../../types'
 import Warning from '../../../components/ui/warning'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
-import Button from '../../../theme/button'
+import { Button, palette } from '../../../theme'
 import { BigNumber } from '@liquality/types'
 import { performSwap } from '../../../store/store'
 import { labelTranslateFn, Log } from '../../../utils'
@@ -19,6 +17,9 @@ import {
   networkState,
 } from '../../../atoms'
 import I18n from 'i18n-js'
+import { AppIcons } from '../../../assets'
+
+const { Clock, Exchange } = AppIcons
 
 type SwapReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -181,7 +182,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.get('screen').width,
-    backgroundColor: '#FFF',
+    backgroundColor: palette.white,
     padding: 20,
   },
   buttonWrapper: {

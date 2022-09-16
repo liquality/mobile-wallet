@@ -1,13 +1,15 @@
 import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import Check from '../assets/icons/swap-check.svg'
+import { AppIcons, Fonts } from '../assets'
+import { palette } from '../theme'
+const { SwapCheck: Check } = AppIcons
 
 const ProgressCircle = ({
   size,
   completed,
   total,
-  color = '#D5D8DD',
-  secondaryColor = '#2CD2CF',
+  color = palette.progressColor,
+  secondaryColor = palette.turquoise,
 }: {
   size: number
   completed: 1 | 2 | 3
@@ -32,7 +34,7 @@ const ProgressCircle = ({
     text: {
       fontSize: 11,
       fontWeight: '500',
-      fontFamily: 'Montserrat-Regular',
+      fontFamily: Fonts.Regular,
       textAlign: 'center',
     },
   })
@@ -40,7 +42,7 @@ const ProgressCircle = ({
   return (
     <View style={styles.progressCircle}>
       {completed === total ? (
-        <Check width={20} height={20} fill={'#2CD2CF'} />
+        <Check width={20} height={20} fill={palette.turquoise} />
       ) : (
         <Text style={styles.text}>
           {completed}/{total}

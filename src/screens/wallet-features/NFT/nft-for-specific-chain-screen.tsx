@@ -4,14 +4,14 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Image } from 'react-native'
 import { useRecoilValue } from 'recoil'
+import { Fonts } from '../../../assets'
 import { networkState } from '../../../atoms'
 import {
   getAllEnabledAccounts,
   getNftsForAccount,
   updateNFTs,
 } from '../../../store/store'
-import Box from '../../../theme/box'
-import Text from '../../../theme/text'
+import { Text, Box, palette } from '../../../theme'
 import { RootStackParamList } from '../../../types'
 type ShowAllNftsScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
   fragmentContainer: {
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '700',
     fontSize: 12,
   },

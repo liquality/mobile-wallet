@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { Platform } from 'react-native'
-import Box from '../../../theme/box'
-import Card from '../../../theme/card'
-import Text from '../../../theme/text'
+import { Text, Card, Box } from '../../../theme'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { FADE_IN_OUT_DURATION, labelTranslateFn } from '../../../utils'
 

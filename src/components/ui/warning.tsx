@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import Box from '../../theme/box'
-import Text from '../../theme/text'
+import { Text, Box } from '../../theme'
 import { TxKeyPath, translate } from '../../i18n'
 import i18n from 'i18n-js'
 import { langSelected as LS } from '../../../src/atoms'

@@ -10,14 +10,13 @@ import {
 import { ActionEnum } from '../../types'
 import { Dimensions, Platform, StyleSheet, View } from 'react-native'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
-import Box from '../../theme/box'
 import GradientBackground from '../gradient-background'
-import Text from '../../theme/text'
-import RoundButton from '../../theme/round-button'
+import { RoundButton, Box, Text, palette } from '../../theme'
 import * as React from 'react'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
 import { labelTranslateFn } from '../../utils'
 import { Network } from '@liquality/cryptoassets/dist/src/types'
+import { Fonts } from '../../assets'
 
 type SummaryBlockProps = {
   navigation: OverviewProps['navigation']
@@ -117,10 +116,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   assets: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontSize: 20,
     fontWeight: '400',
-    color: '#FFFFFF',
+    color: palette.white,
     textAlign: 'center',
   },
   totalValueSection: {
@@ -130,16 +130,18 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   totalValue: {
-    color: '#FFFFFF',
-    fontFamily: 'Montserrat-Regular',
+    color: palette.white,
+    fontFamily: Fonts.Regular,
+
     fontWeight: '500',
     fontSize: 36,
     marginTop: 15,
     textAlignVertical: 'bottom',
   },
   currency: {
-    color: '#FFFFFF',
-    fontFamily: 'Montserrat-Regular',
+    color: palette.white,
+    fontFamily: Fonts.Regular,
+
     fontWeight: '500',
     fontSize: 18,
     paddingBottom: 3,

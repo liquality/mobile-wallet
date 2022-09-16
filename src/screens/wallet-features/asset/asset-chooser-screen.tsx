@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import SearchIcon from '../../../assets/icons/search.svg'
 
 import { AccountType, RootStackParamList } from '../../../types'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
@@ -13,8 +12,11 @@ import {
   networkState,
   accountsIdsForMainnetState,
 } from '../../../atoms'
-import TextInput from '../../../theme/textInput'
+import { palette, TextInput } from '../../../theme'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
+import { AppIcons, Fonts } from '../../../assets'
+
+const { SearchIcon } = AppIcons
 
 type AssetChooserProps = NativeStackScreenProps<
   RootStackParamList,
@@ -82,17 +84,17 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: palette.white,
   },
   sendInput: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 13,
     textAlign: 'left',
     lineHeight: 14,
     height: 14,
     width: '90%',
-    color: '#747E8DB2',
+    color: palette.seedInputColor,
   },
   searchBox: {
     flexDirection: 'row',
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 15,
     paddingVertical: 10,
-    borderBottomColor: '#38FFFB',
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
   },
 })

@@ -12,13 +12,12 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import Header from '../../header'
 import { createWallet, restoreWallet } from '../../../store/store'
-import Text from '../../../theme/text'
-import Button from '../../../theme/button'
-import Box from '../../../theme/box'
+import { Box, Button, palette, Text } from '../../../theme'
 import { MNEMONIC, PASSWORD } from '@env'
 import CheckBox from '../../../components/checkbox'
 import GradientBackground from '../../../components/gradient-background'
 import { labelTranslateFn } from '../../../utils'
+import { Fonts } from '../../../assets'
 
 type LoginScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -172,8 +171,8 @@ const styles = StyleSheet.create({
   input: {
     marginTop: 5,
     padding: 10,
-    color: '#FFF',
-    borderBottomColor: '#38FFFB',
+    color: palette.white,
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
   },
   keyboard: {
@@ -189,7 +188,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   checkBoxText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '600',
     color: 'white',
     fontSize: 14,

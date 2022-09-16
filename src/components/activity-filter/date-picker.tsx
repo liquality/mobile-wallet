@@ -1,20 +1,23 @@
 import React, { FC } from 'react'
 import { Modal, View, Pressable, StyleSheet, Dimensions } from 'react-native'
-import TimesIcon from '../../assets/icons/times.svg'
 import { Calendar, DateData } from 'react-native-calendars'
 import { Theme } from 'react-native-calendars/src/types'
+import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
 import Label from '../ui/label'
 
+const { TimesIcon } = AppIcons
+
 const CALENDAR_THEME = {
-  textSectionTitleColor: '#646F85',
-  todayTextColor: '#9D4DFA',
-  dayTextColor: '#000D35',
-  textDisabledColor: 'rgba(0, 13, 53, 0.5)',
-  arrowColor: '#646F85',
-  monthTextColor: '#000D35',
-  textDayFontFamily: 'Montserrat-Regular',
-  textMonthFontFamily: 'Montserrat-Regular',
-  textDayHeaderFontFamily: 'Montserrat-Light',
+  textSectionTitleColor: palette.darkGray,
+  todayTextColor: palette.blueVioletPrimary,
+  dayTextColor: palette.black2,
+  textDisabledColor: palette.textDisabledColor,
+  arrowColor: palette.darkGray,
+  monthTextColor: palette.black2,
+  textDayFontFamily: Fonts.Regular,
+  textMonthFontFamily: Fonts.Regular,
+  textDayHeaderFontFamily: Fonts.Regular,
   textDayFontWeight: '300',
   textMonthFontWeight: '400',
   textDayHeaderFontWeight: '500',
@@ -36,12 +39,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: palette.black2,
   },
   modalContent: {
-    backgroundColor: '#FFF',
+    backgroundColor: palette.white,
     width: '90%',
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
     borderWidth: 1,
     paddingVertical: 10,
   },

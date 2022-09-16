@@ -6,9 +6,7 @@ import { StyleSheet, TextInput } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
-import Box from '../../../theme/box'
-import Button from '../../../theme/button'
-import Text from '../../../theme/text'
+import { Text, Button, Box, palette } from '../../../theme'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 
 const useInputState = (
@@ -110,7 +108,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
   fragmentContainer: {
@@ -118,7 +116,7 @@ const styles = StyleSheet.create({
   },
   sendToInput: {
     marginTop: 5,
-    borderBottomColor: '#38FFFB',
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
     width: '90%',
   },

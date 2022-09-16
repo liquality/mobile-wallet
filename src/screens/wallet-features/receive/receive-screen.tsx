@@ -12,16 +12,14 @@ import QRCode from 'react-native-qrcode-svg'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, RootStackParamList } from '../../../types'
 import AssetIcon from '../../../components/asset-icon'
-import Button from '../../../theme/button'
-import Text from '../../../theme/text'
-import CheckIcon from '../../../assets/icons/swap-check.svg'
-import CopyIcon from '../../../assets/icons/copy.svg'
-import TransakIcon from '../../../assets/icons/transak.svg'
+import { Text, Button, palette } from '../../../theme'
 import { useRecoilValue } from 'recoil'
 import i18n from 'i18n-js'
 import { addressStateFamily, networkState } from '../../../atoms'
 import { labelTranslateFn, COPY_BUTTON_TIMEOUT } from '../../../utils'
 import BuyCryptoModal from './buyCryptoModal'
+import { AppIcons, Fonts } from '../../../assets'
+const { SwapCheck: CheckIcon, CopyIcon, TransakIcon } = AppIcons
 
 const PowerByTransak = () => (
   <View style={styles.poweredTransakIconView}>
@@ -29,7 +27,7 @@ const PowerByTransak = () => (
     <TransakIcon
       width={85}
       height={24}
-      stroke={'#FFFFFF'}
+      stroke={palette.white}
       style={styles.icon}
     />
   </View>
@@ -130,7 +128,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
         <View style={styles.addressWrapper}>
           <Text style={styles.address}>{address}</Text>
           <Pressable onPress={handleCopyAddressPress}>
-            <CopyIcon width={10} stroke={'#9D4DFA'} />
+            <CopyIcon width={10} stroke={palette.blueVioletPrimary} />
           </Pressable>
         </View>
       </View>
@@ -185,14 +183,14 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
             <CheckIcon
               width={15}
               height={15}
-              stroke={'#FFFFFF'}
+              stroke={palette.white}
               style={styles.icon}
             />
           ) : (
             <CopyIcon
               width={15}
               height={15}
-              stroke={'#FFFFFF'}
+              stroke={palette.white}
               style={styles.icon}
             />
           )}
@@ -205,7 +203,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
   },
   headerBlock: {
     flex: 0.2,
@@ -213,22 +211,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addressLabel: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 12,
     fontWeight: '700',
     textTransform: 'uppercase',
-    color: '#3D4767',
+    color: palette.sectionTitleColor,
     marginVertical: 5,
   },
   addressWrapper: {
     flexDirection: 'row',
   },
   address: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 12,
     fontWeight: '300',
     textTransform: 'uppercase',
-    color: '#1D1E21',
+    color: palette.black,
     marginRight: 5,
   },
   ContentBlock: {
@@ -236,28 +234,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scanPrompt: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 12,
     fontWeight: '400',
     textAlign: 'center',
     lineHeight: 20,
-    color: '#000D35',
+    color: palette.black2,
     width: '70%',
     marginBottom: 20,
   },
   linkLabel: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 12,
     fontWeight: '500',
     marginTop: 20,
     lineHeight: 18,
   },
   link: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 18,
-    color: '#9D4DFA',
+    color: palette.blueVioletPrimary,
   },
   actionBlock: {
     flex: 0.2,
@@ -281,7 +279,7 @@ const styles = StyleSheet.create({
   poweredBuyTextStyle: {
     fontSize: 12,
     lineHeight: 18,
-    color: '#646F85',
+    color: palette.darkGray,
   },
 })
 

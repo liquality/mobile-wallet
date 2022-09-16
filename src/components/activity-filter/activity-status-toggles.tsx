@@ -1,15 +1,20 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
+import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
 
 import { ActivityStatusEnum } from '../../types'
 import { capitalizeFirstLetter } from '../../utils'
-import PendingIcon from '../../assets/icons/activity-status/pending.svg'
-import CompletedIcon from '../../assets/icons/activity-status/completed.svg'
-import CancelledIcon from '../../assets/icons/activity-status/canceled.svg'
-import RefundedIcon from '../../assets/icons/activity-status/refunded.svg'
-import NeedsAttentionIcon from '../../assets/icons/activity-status/needs_attention.svg'
-import FailedIcon from '../../assets/icons/activity-status/failed.svg'
 import SectionTitle from './section-title'
+
+const {
+  PendingIcon,
+  CompletedIcon,
+  CancelledIcon,
+  RefundedIcon,
+  NeedsAttentionIcon,
+  FailedIcon,
+} = AppIcons
 
 const ITEMS = Object.values(ActivityStatusEnum)
 const ICON_MAP = {
@@ -75,7 +80,7 @@ const ActivityStatusToggles: FC<{
 
   return (
     <View style={styles.container}>
-      <SectionTitle tx="common.activities" />
+      <SectionTitle title={{ tx: 'common.activities' }} />
       <View style={styles.content}>{ITEMS.map(renderItem)}</View>
     </View>
   )
@@ -85,7 +90,7 @@ const commonStyles = StyleSheet.create({
   button: {
     height: 34,
     borderWidth: 1,
-    borderColor: '#646F85',
+    borderColor: palette.darkGray,
     borderRadius: 17,
     flexDirection: 'row',
     alignItems: 'center',
@@ -107,16 +112,16 @@ const styles = StyleSheet.create({
   },
   selectedButton: {
     ...commonStyles.button,
-    backgroundColor: '#1CE5C3',
+    backgroundColor: palette.lightGreen,
   },
   button: {
     ...commonStyles.button,
-    backgroundColor: '#D9DFE5',
+    backgroundColor: palette.gray,
   },
   label: {
     marginLeft: 5,
-    fontFamily: 'Montserrat-Regular',
-    color: '#1D1E21',
+    fontFamily: Fonts.Regular,
+    color: palette.black,
     fontSize: 13,
   },
 })

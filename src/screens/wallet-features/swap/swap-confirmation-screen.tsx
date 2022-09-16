@@ -4,12 +4,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import SwapTransactionDetails from '../../../components/swap/swap-transaction-details'
 import { unitToCurrency, getAsset, getChain } from '@liquality/cryptoassets'
-import AngleDown from '../../../assets/icons/angle-down.svg'
-import AngleRight from '../../../assets/icons/angle-right.svg'
 import Label from '../../../components/ui/label'
 import ProgressCircle from '../../../components/animations/progress-circle'
-import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
-import Button from '../../../theme/button'
 import {
   dpUI,
   prettyBalance,
@@ -19,9 +15,7 @@ import { BigNumber } from '@liquality/types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import { SwapProvider } from '@liquality/wallet-core/dist/src/swaps/SwapProvider'
 import { retrySwap } from '../../../store/store'
-import RefundedIcon from '../../../assets/icons/activity-status/refunded.svg'
-import Text from '../../../theme/text'
-import Box from '../../../theme/box'
+import { Box, Text, Button, palette } from '../../../theme'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import SwapRates from '../../../components/swap/swap-rates'
@@ -36,6 +30,14 @@ import {
 } from '../../../atoms'
 import I18n from 'i18n-js'
 import AtomicSwapPopUp from './atomic-swap-popup'
+import { AppIcons, Fonts } from '../../../assets'
+
+const {
+  AngleDownIcon: AngleDown,
+  AngleRightIcon: AngleRight,
+  CompletedIcon: SuccessIcon,
+  RefundedIcon,
+} = AppIcons
 
 type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -514,7 +516,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
   border: {
@@ -524,13 +526,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
   },
   content: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 12,
-    color: '#646F85',
+    color: palette.darkGray,
     marginTop: 5,
   },
   expandable: {
@@ -540,7 +542,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   transactionInfo: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 12,

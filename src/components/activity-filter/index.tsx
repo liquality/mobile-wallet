@@ -1,13 +1,5 @@
 import React, { FC, useCallback, useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
-import ChevronRightIcon from '../../assets/icons/activity-status/chevron-right.svg'
-import AngleRightIcon from '../../assets/icons/angle-right.svg'
-import AngleDownIcon from '../../assets/icons/angle-down.svg'
-import PlusSign from '../../assets/icons/plus-icon.svg'
-import MinusSign from '../../assets/icons/minus-sign.svg'
-import TimeIcon from '../../assets/icons/times.svg'
-import ExportIcon from '../../assets/icons/export-icon.svg'
-
 import TimeLimitOptions from './time-limit-options'
 import ActionTypeToggles from './action-type-toggles'
 import DateRange from './date-range'
@@ -19,7 +11,18 @@ import { ActionEnum, ActivityStatusEnum, TimeLimitEnum } from '../../types'
 import { useRecoilState } from 'recoil'
 import { activityFilterState } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
-import Text from '../../theme/text'
+import { palette, Text } from '../../theme'
+import { AppIcons, Fonts } from '../../assets'
+
+const {
+  ChevronRightIcon,
+  AngleRightIcon,
+  AngleDownIcon,
+  PlusSign,
+  MinusSign,
+  TimesIcon: TimeIcon,
+  ExportIcon,
+} = AppIcons
 
 const ActivityFilter: FC<{
   numOfResults: number
@@ -120,7 +123,7 @@ const ActivityFilter: FC<{
         </Pressable>
         <View style={styles.spacer} />
         <Pressable style={styles.iconBtn} onPress={onExport}>
-          <ExportIcon width={16} fill={'#646F85'} />
+          <ExportIcon width={16} fill={palette.darkGray} />
           <Text style={styles.exportLabel} tx="common.export" />
         </Pressable>
       </View>
@@ -176,7 +179,7 @@ const ActivityFilter: FC<{
                 : ` ${labelTranslateFn('common.results')}`}
             </Text>
             <View style={styles.spacer} />
-            <SectionTitle tx="common.sort" />
+            <SectionTitle title={{ tx: 'common.sort' }} />
             <Pressable style={styles.iconBtn} onPress={handleShowPicker}>
               <Text style={styles.sorterLabel}>
                 {
@@ -202,10 +205,10 @@ const ActivityFilter: FC<{
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F8FAFF',
+    backgroundColor: palette.blueVioletSecondary,
     paddingHorizontal: 18,
     borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
+    borderBottomColor: palette.gray,
     paddingVertical: 11,
   },
   activityActionBar: {
@@ -225,22 +228,25 @@ const styles = StyleSheet.create({
   },
   filterLabel: {
     marginLeft: 5,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontWeight: '400',
-    color: '#1D1E21',
+    color: palette.black,
     fontSize: 14,
   },
   resetLabel: {
     marginLeft: 5,
-    fontFamily: 'Montserrat-Regular',
-    color: '#1D1E21',
+    fontFamily: Fonts.Regular,
+
+    color: palette.black,
     fontWeight: '300',
     fontSize: 14,
   },
   exportLabel: {
     marginLeft: 5,
-    color: '#646F85',
-    fontFamily: 'Montserrat-Regular',
+    color: palette.darkGray,
+    fontFamily: Fonts.Regular,
+
     fontWeight: '300',
     fontSize: 14,
   },
@@ -248,8 +254,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 8,
-    color: '#646F85',
-    fontFamily: 'Montserrat-Regular',
+    color: palette.darkGray,
+    fontFamily: Fonts.Regular,
+
     fontWeight: '300',
     fontSize: 14,
     width: '60%',
@@ -261,9 +268,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sorterLabel: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontWeight: '400',
-    color: '#1D1E21',
+    color: palette.black,
     fontSize: 14,
     marginLeft: 12,
   },

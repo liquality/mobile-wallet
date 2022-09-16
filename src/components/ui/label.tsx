@@ -4,6 +4,8 @@ import { TxKeyPath, translate } from '../../i18n'
 import i18n from 'i18n-js'
 import { langSelected as LS } from '../../../src/atoms'
 import { useRecoilValue } from 'recoil'
+import { Fonts } from '../../assets'
+import { palette } from '../../theme'
 
 type LabelProps = {
   text: string | { tx: TxKeyPath }
@@ -12,7 +14,7 @@ type LabelProps = {
 }
 
 const light: TextStyle = {
-  color: '#646F85',
+  color: palette.darkGray,
   fontWeight: '400',
   fontSize: 12,
   lineHeight: 18,
@@ -45,7 +47,7 @@ const Label: FC<LabelProps> = (props) => {
 
 const styles = StyleSheet.create({
   font: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
   },
   spacing: {
     marginVertical: 5,

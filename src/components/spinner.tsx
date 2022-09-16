@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
-import Loader from '../assets/icons/loader.svg'
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -8,9 +7,11 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import Text from '../theme/text'
-import { Theme } from '../theme'
+import { ThemeType as Theme, Text, palette } from '../theme'
 import { useTheme } from '@shopify/restyle'
+import { AppIcons } from '../assets'
+
+const { Loader } = AppIcons
 
 const Spinner = () => {
   const angle = useSharedValue(0)
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: palette.white,
     opacity: 0.9,
   },
   loadingView: {

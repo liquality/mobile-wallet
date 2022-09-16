@@ -8,14 +8,15 @@ import SearchBox from './ui/search-box'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../atoms'
-import Box from '../theme/box'
+import { Box, palette } from '../theme'
+import { Fonts } from '../assets'
 
+const DEFAULT_COLOR = palette.defaultColor
 const AssetManagement = ({
   enabledAssets,
 }: {
   enabledAssets: string[] | undefined
 }) => {
-  const DEFAULT_COLOR = '#EFEFEF'
   const [data, setData] = useState<Asset[]>([])
   const [assets, setAssets] = useState<Asset[]>([])
   const activeNetwork = useRecoilValue(networkState)
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     borderTopWidth: 1,
-    borderTopColor: '#D9DFE5',
+    borderTopColor: palette.gray,
     borderLeftWidth: 3,
     paddingVertical: 10,
   },
@@ -106,8 +107,8 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   code: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#000',
+    fontFamily: Fonts.Regular,
+    color: palette.black2,
     fontSize: 12,
     marginBottom: 5,
   },

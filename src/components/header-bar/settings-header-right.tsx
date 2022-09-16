@@ -1,6 +1,8 @@
-import SignOut from '../../assets/icons/logout.svg'
 import { Pressable, StyleSheet } from 'react-native'
 import React from 'react'
+import { AppIcons } from '../../assets'
+
+const { SignOut } = AppIcons
 
 type SettingsHeaderRightPropsType = {
   navigate: (screen: string) => void

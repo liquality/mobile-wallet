@@ -12,11 +12,13 @@ import {
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
-import CopyIcon from '../../assets/icons/copy.svg'
-import CheckIcon from '../../assets/icons/swap-check.svg'
 import { useRecoilValue } from 'recoil'
 import { addressStateFamily, networkState } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
+import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
+
+const { CopyIcon, SwapCheck: CheckIcon } = AppIcons
 
 type SwapReviewAssetSummaryProps = {
   type: 'SEND' | 'RECEIVE'
@@ -114,11 +116,11 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
             <CheckIcon
               width={15}
               height={15}
-              stroke={'#9D4DFA'}
+              stroke={palette.blueVioletPrimary}
               style={styles.icon}
             />
           ) : (
-            <CopyIcon width={10} stroke={'#9D4DFA'} />
+            <CopyIcon width={10} stroke={palette.blueVioletPrimary} />
           )}
         </Pressable>
       </View>
@@ -128,7 +130,7 @@ const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
 
 const styles = StyleSheet.create({
   font: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
   },
   mainAmount: {
     fontWeight: '300',

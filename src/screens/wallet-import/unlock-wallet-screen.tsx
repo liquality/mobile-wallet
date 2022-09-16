@@ -14,11 +14,10 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
-import Button from '../../theme/button'
-import Text from '../../theme/text'
-import Box from '../../theme/box'
+import { Box, Text, Button, palette } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 import { labelTranslateFn } from '../../utils'
+import { Fonts } from '../../assets'
 
 type UnlockWalletScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -189,24 +188,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   promptText: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#FFFFFF',
+    fontFamily: Fonts.Regular,
+    color: palette.white,
     fontSize: 28,
     lineHeight: 28,
   },
   description: {
-    fontFamily: 'Montserrat-SemiBold',
+    fontFamily: Fonts.SemiBold,
     marginTop: 20,
     marginBottom: 18,
     alignSelf: 'center',
     textAlign: 'center',
-    color: '#fff',
+    color: palette.white,
     fontSize: 14,
     fontWeight: '600',
     lineHeight: 24,
   },
   seedPhrase: {
-    backgroundColor: '#fff',
+    backgroundColor: palette.white,
     width: Dimensions.get('window').width,
   },
   flatList: {
@@ -223,7 +222,7 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   seedWordOptionAction: {
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
     borderWidth: 1,
   },
   btnLeftSide: {
@@ -236,7 +235,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
   },
   optionActive: {
-    backgroundColor: '#F0F7F9',
+    backgroundColor: palette.selectedColor,
   },
   seedWordOptionText: {
     paddingHorizontal: 20,
@@ -249,15 +248,15 @@ const styles = StyleSheet.create({
   wordOrderText: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: '#3D4767',
+    color: palette.sectionTitleColor,
     marginBottom: 3,
   },
   missingWordText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 16,
     lineHeight: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#2CD2CF',
+    borderBottomColor: palette.turquoise,
     width: '100%',
   },
   keyboard: {

@@ -5,7 +5,6 @@ import {
   formatFiat,
   prettyBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
-import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import { AccountType } from '../../types'
 import AssetIcon from '../asset-icon'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
@@ -23,6 +22,10 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { getNftsForAccount, updateNFTs } from '../../store/store'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
+import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
+
+const { ChevronRightIcon: ChevronRight } = AppIcons
 
 type SubRowProps = {
   parentItem: Partial<AccountType>
@@ -145,7 +148,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
+    borderBottomColor: palette.gray,
     borderLeftWidth: 3,
     paddingVertical: 10,
     height: 60,
@@ -170,19 +173,20 @@ const styles = StyleSheet.create({
     paddingLeft: 50,
   },
   name: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#000',
+    fontFamily: Fonts.Regular,
+
+    color: palette.black2,
     fontWeight: '500',
     fontSize: 12,
   },
   balance: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#000',
+    fontFamily: Fonts.Regular,
+    color: palette.black2,
     fontSize: 13,
   },
   balanceInUSD: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#646F85',
+    fontFamily: Fonts.Regular,
+    color: palette.darkGray,
     fontSize: 12,
   },
 })

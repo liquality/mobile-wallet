@@ -10,9 +10,7 @@ import { FeeDetails } from '@liquality/types/lib/fees'
 import AssetIcon from '../../../components/asset-icon'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, TotalFees } from '../../../types'
-import Button from '../../../theme/button'
-import Text from '../../../theme/text'
-import Box from '../../../theme/box'
+import { Box, Text, Button, palette } from '../../../theme'
 import Preset from './preset'
 import { useRecoilValue } from 'recoil'
 import {
@@ -34,6 +32,7 @@ import {
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { speedUpTransaction } from '../../../store/store'
+import { Fonts } from '../../../assets'
 
 const scrollViewStyle: ViewStyle = {
   flex: 1,
@@ -246,7 +245,7 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
   row: {
@@ -260,7 +259,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   labelNormal: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 12,
   },
@@ -270,7 +269,7 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '700',
     fontSize: 12,
     marginRight: 5,
@@ -279,7 +278,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   preset: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 14,
     lineHeight: 26,
@@ -297,26 +296,26 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   summary: {
-    backgroundColor: '#F0F7F9',
-    borderColor: '#d9dfe5',
+    backgroundColor: palette.selectedColor,
+    borderColor: palette.gray,
     borderWidth: 1,
     paddingVertical: 15,
     paddingLeft: 10,
     flexDirection: 'column',
   },
   inputLabel: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 14,
     marginRight: 10,
     alignSelf: 'flex-end',
   },
   gasInput: {
-    borderBottomColor: '#38FFFB',
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
     textAlign: 'right',
     width: '85%',
-    color: '#000D35',
+    color: palette.black2,
     paddingBottom: 0,
     height: 35,
   },

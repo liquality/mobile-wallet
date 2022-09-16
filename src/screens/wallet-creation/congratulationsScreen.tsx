@@ -4,8 +4,9 @@ import { Text } from '../../components/text/text'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import Confetti from '../../components/confetti'
-import Box from '../../theme/box'
+import { Box, palette } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
+import { Fonts } from '../../assets'
 
 type CongratulationsProps = NativeStackScreenProps<
   RootStackParamList,
@@ -55,8 +56,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   messageText: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#FFFFFF',
+    fontFamily: Fonts.Regular,
+    color: palette.white,
     fontSize: 28,
     lineHeight: 27,
   },

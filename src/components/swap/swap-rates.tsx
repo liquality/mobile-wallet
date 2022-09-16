@@ -9,22 +9,24 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native'
-import Logo from '../../assets/icons/infinity.svg'
-import LiqualityBoost from '../../assets/icons/swap-providers/liqualityboost.svg'
-import Sovryn from '../../assets/icons/swap-providers/sovryn.svg'
-import Thorchain from '../../assets/icons/swap-providers/thorchain.svg'
 import SwapTypesInfo from './swap-types-info'
-import Button from '../../theme/button'
 import { dpUI } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
-import Box from '../../theme/box'
-import Text from '../../theme/text'
+import { Text, Box, Button, palette } from '../../theme'
 import ListHeader from './list-header'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { capitalizeFirstLetter, labelTranslateFn } from '../../utils'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
-import TimesIcon from '../../assets/icons/times.svg'
-import CheckIcon from '../../assets/icons/swap-check.svg'
 import GestureDetector from '../gesture-detector/gesture-detector'
+import { AppIcons, Fonts } from '../../assets'
+
+const {
+  InfinityIcon: Logo,
+  LiqualityBoost,
+  Sovryn,
+  Thorchain,
+  TimesIcon,
+  SwapCheck: CheckIcon,
+} = AppIcons
 
 type SwapRatesProps = {
   fromAsset: string
@@ -96,7 +98,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
           {getSwapProviderIcon(item)}
           <Text style={styles.text}>{item.provider}</Text>
           {selectedItem?.provider === item.provider && (
-            <CheckIcon stroke={'#2CD2CF'} />
+            <CheckIcon stroke={palette.turquoise} />
           )}
         </View>
       </Pressable>
@@ -180,7 +182,7 @@ const SwapRates: FC<SwapRatesProps> = (props) => {
                     'swapRatesComp.availQuotes',
                   )}`}</Text>
                   <Pressable onPress={() => setIsRatesModalVisible(false)}>
-                    <TimesIcon fill={'#000'} />
+                    <TimesIcon fill={palette.black2} />
                   </Pressable>
                 </View>
                 <Text
@@ -236,9 +238,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   text: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     textTransform: 'capitalize',
-    color: '#000D35',
+    color: palette.black2,
     fontWeight: '300',
     fontSize: 12,
     lineHeight: 20,
@@ -252,12 +254,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
+    borderBottomColor: palette.darkGray,
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
   selected: {
-    backgroundColor: '#F0F7F9',
+    backgroundColor: palette.selectedColor,
   },
   providerCell: {
     flex: 0.5,

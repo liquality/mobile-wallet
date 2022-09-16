@@ -17,11 +17,6 @@ import {
 } from 'react-native'
 import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import ChevronRight from '../../../assets/icons/activity-status/chevron-right.svg'
-import AngleDown from '../../../assets/icons/angle-down.svg'
-import AngleRight from '../../../assets/icons/angle-right.svg'
-import ArrowDown from '../../../assets/icons/arrow-down.svg'
-import Clock from '../../../assets/icons/clock.svg'
 import MessageBanner from '../../../components/ui/message-banner'
 import AmountTextInputBlock from '../../../components/ui/amount-text-input-block'
 import Label from '../../../components/ui/label'
@@ -36,9 +31,7 @@ import {
   labelTranslateFn,
   sortQuotes,
 } from '../../../utils'
-import Button from '../../../theme/button'
-import Text from '../../../theme/text'
-import Box from '../../../theme/box'
+import { Box, Text, Button, palette } from '../../../theme'
 import SwapFeeSelector from '../../../components/ui/swap-fee-selector'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { prettyBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
@@ -62,12 +55,21 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
-import Card from '../../../theme/card'
+import { Card } from '../../../theme'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import AssetIcon from '../../../components/asset-icon'
 import { LikelyWaitProps } from '../../../components/ui/fee-selector'
 import { fetchFeesForAsset } from '../../../store/store'
 import AtomicSwapPopUp from './atomic-swap-popup'
+import { AppIcons, Fonts } from '../../../assets'
+
+const {
+  ChevronRightIcon: ChevronRight,
+  AngleDownIcon: AngleDown,
+  AngleRightIcon: AngleRight,
+  ArrowDown,
+  Clock,
+} = AppIcons
 
 export type SwapEventType = {
   fromAmount?: BigNumber
@@ -973,13 +975,13 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
 const styles = StyleSheet.create({
   font: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 15,
   },
   amount: {
-    color: '#000D35',
+    color: palette.black2,
     marginVertical: 5,
     lineHeight: 18,
   },

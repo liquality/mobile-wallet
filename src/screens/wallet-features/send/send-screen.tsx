@@ -8,9 +8,6 @@ import {
   RootStackParamList,
   UseInputStateReturnType,
 } from '../../../types'
-import AngleDown from '../../../assets/icons/angle-down.svg'
-import AngleRight from '../../../assets/icons/angle-right.svg'
-import QRCode from '../../../assets/icons/qr-code.svg'
 import { BigNumber } from '@liquality/types'
 import { calculateAvailableAmnt } from '../../../core/utils/fee-calculator'
 import {
@@ -21,10 +18,7 @@ import {
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import { chainDefaultColors } from '../../../core/config'
-import Button from '../../../theme/button'
-import Text from '../../../theme/text'
-import TextInput from '../../../theme/textInput'
-import Box from '../../../theme/box'
+import { Box, TextInput, Text, Button } from '../../../theme'
 import {
   getSendFee,
   isEIP1559Fees,
@@ -48,6 +42,13 @@ import Animated, {
   FadeOut,
 } from 'react-native-reanimated'
 import { palette } from '../../../theme'
+import { AppIcons, Fonts } from '../../../assets'
+
+const {
+  AngleDownIcon: AngleDown,
+  AngleRightIcon: AngleRight,
+  QRCode,
+} = AppIcons
 
 const useInputState = (
   initialValue: string,
@@ -230,7 +231,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           destinationAddress: addressInput.value,
           asset: code,
           memo: '',
-          color: color || '#EAB300',
+          color: color || palette.darkYellow,
         },
         fee: fee,
         customFee: customFee,
@@ -649,42 +650,42 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
 const styles = StyleSheet.create({
   sendInput: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 28,
     textAlign: 'right',
     lineHeight: 40,
     height: 40,
     width: '100%',
-    color: '#EAB300',
-    borderBottomColor: '#38FFFB',
+    color: palette.darkYellow,
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
   },
   sendInputCurrency: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 28,
     textAlign: 'right',
-    color: '#EAB300',
+    color: palette.darkYellow,
     lineHeight: 50,
     height: 40,
     paddingRight: 5,
   },
   assetName: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 24,
     lineHeight: 30,
   },
   sendToInput: {
     marginTop: 5,
-    borderBottomColor: '#38FFFB',
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
     width: '90%',
   },
   speedValue: {
     alignSelf: 'flex-start',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '400',
     fontSize: 12,
   },

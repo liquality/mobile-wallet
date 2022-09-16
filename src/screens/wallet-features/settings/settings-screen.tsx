@@ -8,9 +8,6 @@ import {
   View,
   useColorScheme,
 } from 'react-native'
-import AngleRightIcon from '../../../assets/icons/angle-right.svg'
-import SignoutIcon from '../../../assets/icons/logout.svg'
-import DropdownIcon from '../../../assets/icons/dropdownMenu.svg'
 import GeneralSwitch from '../../../components/ui/general-switch'
 import {
   DarkModeEnum,
@@ -19,8 +16,6 @@ import {
   CustomRootState,
 } from '../../../types'
 import WhatsNew from '../../../components/ui/whats-new'
-import Button from '../../../theme/button'
-import Text from '../../../theme/text'
 import { downloadWalletLogs, labelTranslateFn } from '../../../utils'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import {
@@ -36,8 +31,10 @@ import i18n from 'i18n-js'
 import { toggleNetwork } from '../../../store/store'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import Box from '../../../theme/box'
-import Dropdown from '../../../theme/dropdown'
+import { Dropdown, Box, Button, Text, palette } from '../../../theme'
+import { AppIcons, Fonts } from '../../../assets'
+
+const { AngleRightIcon, SignOut: SignoutIcon, DropdownIcon } = AppIcons
 
 type SettingsScreenProps = BottomTabScreenProps<
   RootTabParamList,
@@ -328,7 +325,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
               <SignoutIcon
                 width={40}
                 height={40}
-                color={'#5F5F5F'}
+                color={palette.timesIconColor}
                 style={styles.signOutIcon}
               />
             </Pressable>
@@ -361,25 +358,25 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: palette.white,
     alignItems: 'center',
   },
   row: {
     borderTopWidth: 1,
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
     paddingVertical: 10,
     paddingHorizontal: 20,
     width: '100%',
   },
   lastRow: {
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
     paddingVertical: 10,
     paddingHorizontal: 20,
     width: '100%',
   },
   rowDesign: {
     borderTopWidth: 1,
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
     paddingVertical: 0,
     paddingHorizontal: 20,
     width: '100%',
@@ -392,10 +389,10 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '500',
     fontSize: 16,
-    color: '#000D35',
+    color: palette.black2,
     marginRight: 5,
   },
   lockLabel: {
@@ -418,7 +415,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     borderWidth: 1,
-    borderColor: '#D9DFE5',
+    borderColor: palette.gray,
     paddingHorizontal: 10,
   },
   leftBtn: {
@@ -432,11 +429,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
   },
   btnSelected: {
-    backgroundColor: '#F0F7F9',
+    backgroundColor: palette.selectedColor,
   },
   link: {
     fontSize: 14,
-    color: '#9D4DFA',
+    color: palette.blueVioletPrimary,
   },
   version: {
     fontSize: 14,
@@ -453,17 +450,17 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   description: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 12,
     lineHeight: 18,
-    color: '#646F85',
+    color: palette.darkGray,
   },
   small: {
     fontWeight: '300',
     fontSize: 11,
     lineHeight: 26,
-    color: '#1D1E21',
+    color: palette.black,
   },
   selectedFontStyle: {
     fontSize: 14,

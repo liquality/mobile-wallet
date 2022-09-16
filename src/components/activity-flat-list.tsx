@@ -1,9 +1,5 @@
 import * as React from 'react'
 import { Pressable, View } from 'react-native'
-import ChevronRight from '../assets/icons/activity-status/chevron-right.svg'
-import PendingSwap from '../assets/icons/activity-status/pending-swap.svg'
-import CompletedSwap from '../assets/icons/activity-status/completed-swap.svg'
-import Send from '../assets/icons/activity-status/send.svg'
 import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import {
@@ -12,19 +8,26 @@ import {
 } from '@liquality/wallet-core/dist/src/store/types'
 
 import ProgressCircle from './animations/progress-circle'
-import SuccessIcon from '../assets/icons/activity-status/completed.svg'
-import RefundedIcon from '../assets/icons/activity-status/refunded.svg'
 import ActivityFilter from './activity-filter'
 import { useFilteredHistory } from '../custom-hooks'
-import Text from '../theme/text'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
-import Box from '../theme/box'
 import { downloadAssetAcitivity, formatDate } from '../utils'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { useNavigation } from '@react-navigation/core'
 import { OverviewProps } from '../screens/wallet-features/home/overview-screen'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../atoms'
+import { Text, Box } from '../theme'
+import { AppIcons } from '../assets'
+
+const {
+  ChevronRightIcon: ChevronRight,
+  PendingSwap,
+  CompletedSwap,
+  CompletedIcon: SuccessIcon,
+  RefundedIcon,
+  SendIcon: Send,
+} = AppIcons
 
 const ActivityFlatList = ({ selectedAsset }: { selectedAsset?: string }) => {
   const navigation = useNavigation<OverviewProps['navigation']>()

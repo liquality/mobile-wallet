@@ -1,6 +1,8 @@
 import React, { FC } from 'react'
 import { StyleSheet, Dimensions } from 'react-native'
 import ModalFilterPicker from 'react-native-modal-filter-picker'
+import { Fonts } from '../../assets'
+import { palette } from '../../theme'
 import { labelTranslateFn } from '../../utils'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen')
@@ -46,20 +48,20 @@ const SorterPicker: FC<{
 const styles = StyleSheet.create({
   sortOverlay: {
     height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: palette.black2,
   },
   sortList: {
     width: screenWidth * 0.8,
-    backgroundColor: '#fff',
+    backgroundColor: palette.white,
     borderRadius: 0,
     marginBottom: 15,
     marginLeft: screenWidth * 0.1,
     marginTop: (screenHeight - 560) * 0.5,
   },
   optionText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '400',
-    color: '#1D1E21',
+    color: palette.black,
     fontSize: 14,
   },
   selectedOptionText: {

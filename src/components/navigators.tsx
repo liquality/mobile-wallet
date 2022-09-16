@@ -4,9 +4,6 @@ import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack'
-import UserCog from '../assets/icons/user-cog.svg'
-import SwapCheck from '../assets/icons/swap-check.svg'
-import Infinity from '../assets/icons/infinity.svg'
 import Entry from '../screens/wallet-creation/entryScreen'
 import TermsScreen from '../screens/wallet-creation/termsScreen'
 import PasswordCreationScreen from '../screens/wallet-creation/passwordCreationScreen'
@@ -42,14 +39,14 @@ import BackupWarningScreen from '../screens/wallet-features/backup/backup-warnin
 import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-screen'
 import BackupLoginScreen from '../screens/wallet-features/backup/backup-login-screen'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/core'
-import TimesIcon from '../assets/icons/times.svg'
 import CustomFeeEIP1559Screen from '../screens/wallet-features/custom-fee/custom-fee-eip-1559-screen'
-import Box from '../theme/box'
-import Text from '../theme/text'
+import { Box, palette, Text } from '../theme'
 import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-screen'
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
 import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
+import { AppIcons, Fonts } from '../assets'
+const { UserCog, SwapCheck, InfinityIcon, TimesIcon } = AppIcons
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator()
@@ -184,7 +181,7 @@ const BackupWarningHeaderRight = (navProps: NavigationProps) => {
       <TimesIcon
         width={30}
         height={30}
-        color={'#5F5F5F'}
+        color={palette.timesIconColor}
         style={styles.checkIcon}
       />
     </Pressable>
@@ -356,7 +353,7 @@ const tabBarIcon = (focused: boolean, size: number, routeName: string) => {
     whichIconToReturn = <UserCog width={size} height={size} />
   } else if (routeName === 'ShowAllNftsScreen') {
     whichIconToReturn = <Text>NFT</Text>
-  } else whichIconToReturn = <Infinity height={size} />
+  } else whichIconToReturn = <InfinityIcon height={size} />
 
   return (
     <View style={[styles.iconWrapper, focused && styles.tabFocused]}>
@@ -426,18 +423,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: '#D9DFE5',
-    backgroundColor: '#FFF',
+    borderTopColor: palette.gray,
+    backgroundColor: palette.white,
   },
   tabFocused: {
-    backgroundColor: '#FFF',
-    borderTopColor: '#000',
+    backgroundColor: palette.white,
+    borderTopColor: palette.black2,
   },
   checkIcon: {
     marginRight: 20,
   },
   settingsTitle: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 20,

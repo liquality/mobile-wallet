@@ -7,10 +7,11 @@ import {
   Pressable,
 } from 'react-native'
 import React from 'react'
-import Button from '../../../theme/button'
-import Box from '../../../theme/box'
+import { Box, Button, palette } from '../../../theme'
 import { Text } from '../../../components/text/text'
-import XIcon from '../../../assets/icons/X.svg'
+import { AppIcons, Fonts } from '../../../assets'
+
+const { XIcon } = AppIcons
 
 type BuyCryptoModalProps = {
   onPress: () => void
@@ -100,15 +101,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: palette.black2,
   },
   contentWrapper: {
     width: '90%',
-    backgroundColor: '#FFF',
-    borderColor: '#D9DFE5',
+    backgroundColor: palette.white,
+    borderColor: palette.gray,
     borderWidth: 1,
     padding: 20,
-    shadowColor: '#000',
+    shadowColor: palette.black2,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -118,10 +119,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   content: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 14,
-    color: '#000D35',
+    color: palette.black2,
     textAlign: 'justify',
     paddingVertical: 10,
   },
@@ -132,10 +133,10 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   transakContentStyle: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 13,
-    color: '#000D35',
+    color: palette.black2,
     paddingVertical: 10,
   },
 })

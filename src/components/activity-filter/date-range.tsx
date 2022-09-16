@@ -1,9 +1,12 @@
 import React, { FC, useCallback, useState } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
-import CalendarIcon from '../../assets/icons/calendar.svg'
 import SectionTitle from './section-title'
 import DatePicker from './date-picker'
 import { labelTranslateFn } from '../../utils'
+import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
+
+const { CalendarIcon } = AppIcons
 
 const DateRange: FC<{
   start: string | undefined
@@ -41,7 +44,7 @@ const DateRange: FC<{
 
   return (
     <View style={styles.container}>
-      <SectionTitle tx="common.dateRange" />
+      <SectionTitle title={{ tx: 'common.dateRange' }} />
       <View style={styles.content}>
         <Pressable style={styles.button} onPress={handleOpenStartDate}>
           <Text style={styles.label}>
@@ -90,7 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 34,
     borderBottomWidth: 1,
-    borderBottomColor: '#646F85',
+    borderBottomColor: palette.darkGray,
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 7,
@@ -99,8 +102,8 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   label: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#1D1E21',
+    fontFamily: Fonts.Regular,
+    color: palette.black,
     fontSize: 13,
   },
 })

@@ -1,7 +1,9 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import Text from '../theme/text'
-import Logo from '../assets/icons/logo.svg'
+import { palette, Text } from '../theme'
+import { AppIcons, Fonts } from '../assets'
+
+const { Logo } = AppIcons
 
 const Header = ({
   width,
@@ -36,8 +38,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   headerText: {
-    fontFamily: 'MontserratAlternates-Light',
-    color: '#fff',
+    fontFamily: Fonts.AlternatesLight,
+    color: palette.white,
     fontSize: 22,
     fontWeight: '300',
     lineHeight: 27,

@@ -1,11 +1,12 @@
 import { Modal, StyleSheet, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import Button from '../../theme/button'
+import { Button, palette } from '../../theme'
 import { useNavigation } from '@react-navigation/core'
 import CheckBox from '../../components/checkbox'
 import { useRecoilState } from 'recoil'
 import { optInAnalyticsState } from '../../atoms'
 import { Text } from '../../components/text/text'
+import { Fonts } from '../../assets'
 
 type AnalyticsModalProps = {
   onAction: (params: boolean) => void
@@ -64,7 +65,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
             onPress={handleCheckBox}
             textStyle={styles.checkBoxText}
             style={styles.checkBoxStyle}
-            color={'#000D35'}
+            color={palette.black2}
             text={{ tx: 'optInAnalyticsModal.shareMyClicks' }}
           />
           <Button
@@ -94,11 +95,11 @@ const styles = StyleSheet.create({
   contentWrapper: {
     width: '90%',
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderColor: '#D9DFE5',
+    backgroundColor: palette.white,
+    borderColor: palette.gray,
     borderWidth: 1,
     padding: 20,
-    shadowColor: '#000',
+    shadowColor: palette.black2,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -108,10 +109,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   content: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '500',
     fontSize: 14,
-    color: '#000D35',
+    color: palette.black2,
     textAlign: 'justify',
     paddingHorizontal: 20,
     paddingVertical: 10,
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   checkBoxText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '600',
     fontSize: 14,
     marginLeft: 10,

@@ -10,14 +10,14 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import ButtonFooter from '../../../components/button-footer'
-import Button from '../../../theme/button'
-import Eye from '../../../assets/icons/eye.svg'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import GradientBackground from '../../../components/gradient-background'
-import Box from '../../../theme/box'
-import Text from '../../../theme/text'
+import { Text, Box, Button, palette } from '../../../theme'
 import OverlayTutorial from './overlay-tutorial'
+import { AppIcons, Fonts } from '../../../assets'
+
+const { Eye } = AppIcons
 
 type BackupSeedScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -181,11 +181,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     width: Dimensions.get('window').width,
-    backgroundColor: '#fff',
+    backgroundColor: palette.white,
   },
   eyeIcon: { marginTop: 50, alignItems: 'center' },
   explainHidden: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     marginTop: 10,
     marginBottom: 10,
     fontSize: 13,
@@ -198,18 +198,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   promptText: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#FFFFFF',
+    fontFamily: Fonts.Regular,
+    color: palette.white,
     fontSize: 30,
     lineHeight: 28,
   },
   description: {
-    fontFamily: 'Montserrat-SemiBold',
+    fontFamily: Fonts.SemiBold,
     marginTop: 10,
     marginBottom: 18,
     alignSelf: 'center',
     textAlign: 'center',
-    color: '#fff',
+    color: palette.white,
     fontSize: 15,
     fontWeight: '600',
     lineHeight: 24,
@@ -259,25 +259,25 @@ const styles = StyleSheet.create({
   },
   placeHolderText: {
     color: 'white',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 8,
     lineHeight: 17,
     borderBottomWidth: 1,
-    borderBottomColor: '#2CD2CF',
+    borderBottomColor: palette.turquoise,
     width: '100%',
   },
   wordOrderText: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: '#3D4767',
+    color: palette.sectionTitleColor,
     marginBottom: 3,
   },
   missingWordText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 16,
     lineHeight: 17,
     borderBottomWidth: 1,
-    borderBottomColor: '#2CD2CF',
+    borderBottomColor: palette.turquoise,
     width: '100%',
   },
 })

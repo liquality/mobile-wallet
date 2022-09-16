@@ -4,11 +4,11 @@ import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
-import Button from '../../theme/button'
-import Box from '../../theme/box'
+import { Box, Button, palette } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 import AnalyticsModal from './optInAnalyticsModal'
 import { Text } from '../../components/text/text'
+import { Fonts } from '../../assets'
 
 type TermsProps = NativeStackScreenProps<RootStackParamList, 'TermsScreen'>
 
@@ -89,24 +89,24 @@ const styles = StyleSheet.create({
   },
   containerWrapper: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: palette.white,
     marginTop: 20,
     paddingBottom: 20,
   },
   termsSection: {
     paddingBottom: 20,
-    backgroundColor: '#fff',
+    backgroundColor: palette.white,
     alignItems: 'center',
   },
   termsTitle: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     marginTop: 20,
     fontSize: 28,
     fontWeight: '600',
     textAlign: 'center',
   },
   termsCopy: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     marginHorizontal: 20,
     marginTop: 20,
     justifyContent: 'center',

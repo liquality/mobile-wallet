@@ -1,9 +1,6 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { StyleSheet, View, Platform } from 'react-native'
 import { AccountType } from '../../types'
-import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
-import MinusSign from '../../assets/icons/minus-sign.svg'
-import PlusSign from '../../assets/icons/plus-icon.svg'
 import AssetIcon from '../asset-icon'
 import {
   cryptoToFiat,
@@ -25,12 +22,13 @@ import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import I18n from 'i18n-js'
 import GestureDetector from '../gesture-detector/gesture-detector'
-import Box from '../../theme/box'
-import Card from '../../theme/card'
-import Text from '../../theme/text'
+import { Text, Box, Card, palette } from '../../theme'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { fetchFeesForAsset } from '../../store/store'
 import { FADE_IN_OUT_DURATION } from '../../utils'
+import { AppIcons, Fonts } from '../../assets'
+
+const { ChevronRightIcon: ChevronRight, MinusSign, PlusSign } = AppIcons
 
 type RowProps = {
   item: AccountType
@@ -122,14 +120,14 @@ const Row = (props: RowProps) => {
                 <MinusSign
                   width={15}
                   height={15}
-                  fill={isNested ? '#A8AEB7' : '#FFF'}
+                  fill={isNested ? palette.nestedColor : palette.white}
                   style={styles.plusSign}
                 />
               ) : (
                 <PlusSign
                   width={15}
                   height={15}
-                  fill={isNested ? '#A8AEB7' : '#FFF'}
+                  fill={isNested ? palette.nestedColor : palette.white}
                   style={styles.plusSign}
                 />
               )}
@@ -236,29 +234,34 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   code: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#000',
+    fontFamily: Fonts.Regular,
+
+    color: palette.black2,
     fontWeight: '500',
     fontSize: 12,
     marginBottom: 5,
   },
   address: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#646F85',
+    fontFamily: Fonts.Regular,
+
+    color: palette.darkGray,
     fontSize: 12,
   },
   balance: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#000',
+    fontFamily: Fonts.Regular,
+
+    color: palette.black2,
     fontSize: 13,
   },
   balanceInUSD: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#646F85',
+    fontFamily: Fonts.Regular,
+
+    color: palette.darkGray,
     fontSize: 12,
   },
   TotalBalanceInUSD: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontSize: 12,
     marginBottom: 5,
   },

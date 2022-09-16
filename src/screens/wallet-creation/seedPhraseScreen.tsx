@@ -11,11 +11,11 @@ import { RootStackParamList, SeedWordType } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ButtonFooter from '../../components/button-footer'
 import Header from '../header'
-import Button from '../../theme/button'
-import Box from '../../theme/box'
+import { Box, Button, palette } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 import { generateMnemonic } from 'bip39'
 import { Text } from '../../components/text/text'
+import { Fonts } from '../../assets'
 
 type WalletBackupProps = NativeStackScreenProps<
   RootStackParamList,
@@ -115,11 +115,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   wordId: {
-    fontFamily: 'Montserrat-Bold',
+    fontFamily: Fonts.Bold,
     fontSize: 12,
+    color: 'red',
   },
   wordText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 16,
     marginTop: 5,
   },
@@ -147,24 +148,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   promptText: {
-    fontFamily: 'Montserrat-Regular',
-    color: '#FFFFFF',
+    fontFamily: Fonts.Regular,
+    color: palette.white,
     fontSize: 30,
     lineHeight: 28,
   },
   description: {
-    fontFamily: 'Montserrat-SemiBold',
+    fontFamily: Fonts.SemiBold,
     marginTop: 10,
     marginBottom: 18,
     alignSelf: 'center',
     textAlign: 'center',
-    color: '#fff',
+    color: palette.white,
     fontSize: 15,
     fontWeight: '600',
     lineHeight: 24,
   },
   seedPhrase: {
-    backgroundColor: '#fff',
+    backgroundColor: palette.white,
     width: Dimensions.get('window').width,
     height: '100%',
   },

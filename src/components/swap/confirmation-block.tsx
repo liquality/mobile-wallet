@@ -1,24 +1,24 @@
 import React, { useCallback } from 'react'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { Linking, Pressable, StyleSheet } from 'react-native'
-import Box from '../../theme/box'
-import Text from '../../theme/text'
 import {
   dpUI,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
-import CopyIcon from '../../assets/icons/copy.svg'
 import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import { FADE_IN_OUT_DURATION } from '../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
-import Card from '../../theme/card'
+import { Card, Box, Text, palette } from '../../theme'
 import GestureDetector from '../gesture-detector/gesture-detector'
 import { useRecoilState } from 'recoil'
 import {
   swapScreenDoubleLongEvent as SSDLE,
   SwapScreenPopUpTypes,
 } from '../../atoms'
+import { AppIcons } from '../../assets'
+
+const { CopyIcon } = AppIcons
 
 type ConfirmationsPopUpCardProps = {
   txId: string
@@ -139,7 +139,7 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
           <Text variant="boldLink">{status}</Text>
         </Pressable>
         <Pressable style={styles.copyBtn} onPress={handleCopyAddressPress}>
-          <CopyIcon width={10} stroke={'#9D4DFA'} />
+          <CopyIcon width={10} stroke={palette.blueVioletPrimary} />
         </Pressable>
       </Box>
       {txHash ? (

@@ -20,7 +20,7 @@ import {
   Route,
 } from 'react-native-tab-view'
 import i18n from 'i18n-js'
-import TabBar from '../../theme/tabBar'
+import { TabBar } from '../../theme'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 
 type RenderTabBar = SceneRendererProps & {

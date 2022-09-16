@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
-import Eye from '../../../assets/icons/eye.svg'
-import Button from '../../../theme/button'
-import Text from '../../../theme/text'
+import { Text, Button, palette } from '../../../theme'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import { labelTranslateFn } from '../../../utils'
+import { AppIcons, Fonts } from '../../../assets'
+
+const { Eye } = AppIcons
 
 const BackupWarningScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'BackupWarningScreen'>
@@ -64,7 +65,7 @@ const BackupWarningScreen: React.FC<
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: palette.white,
     padding: 15,
   },
   eyeIcon: {
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   warningBackupSeedTitle: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: 'black',
     fontWeight: '600',
     fontSize: 35,
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   warningBackupSeedSubtitle: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '500',
     color: 'black',
     fontSize: 20,
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
     marginBottom: 70,
   },
   warningBackupSeedNoCamera: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     color: 'black',
     fontSize: 18,
     textAlign: 'center',

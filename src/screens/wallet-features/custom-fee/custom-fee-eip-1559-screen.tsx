@@ -8,7 +8,6 @@ import {
   RootStackParamList,
   UseInputStateReturnType,
 } from '../../../types'
-import Button from '../../../theme/button'
 import { useRecoilValue } from 'recoil'
 import {
   accountForAssetState,
@@ -28,11 +27,11 @@ import {
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { FeeDetails as FDs } from '@chainify/types'
-import Box from '../../../theme/box'
-import Text from '../../../theme/text'
+import { Text, Box, Button, palette } from '../../../theme'
 import { labelTranslateFn } from '../../../utils'
 import { speedUpTransaction } from '../../../store/store'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
+import { Fonts } from '../../../assets'
 
 type CustomFeeEIP1559ScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -457,7 +456,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
   fragmentContainer: {
@@ -486,12 +485,12 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '700',
     fontSize: 12,
   },
   labelNormal: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 12,
   },
@@ -502,7 +501,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   preset: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 14,
     lineHeight: 18,
@@ -521,15 +520,15 @@ const styles = StyleSheet.create({
   },
 
   summary: {
-    backgroundColor: '#F0F7F9',
-    borderColor: '#d9dfe5',
+    backgroundColor: palette.selectedColor,
+    borderColor: palette.gray,
     borderWidth: 1,
     paddingVertical: 15,
     paddingLeft: 10,
     flexDirection: 'column',
   },
   inputLabel: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontWeight: '300',
     fontSize: 14,
     marginRight: 5,
@@ -537,12 +536,12 @@ const styles = StyleSheet.create({
   },
   gasInput: {
     marginTop: 5,
-    borderBottomColor: '#38FFFB',
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
     width: '30%',
     textAlign: 'right',
     paddingBottom: 0,
-    color: '#000D35',
+    color: palette.black2,
   },
   actions: {
     justifyContent: 'space-around',
@@ -557,24 +556,24 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#D9DFE5',
+    borderBottomColor: palette.gray,
   },
   headerFocused: {
     borderBottomWidth: 1,
-    borderBottomColor: '#000',
+    borderBottomColor: palette.black2,
   },
   headerText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 13,
     lineHeight: 18,
     fontWeight: '600',
-    color: '#D9DFE5',
+    color: palette.gray,
   },
   headerTextFocused: {
-    color: '#000',
+    color: palette.black2,
   },
   fiatFast: {
-    color: '#088513',
+    color: palette.green,
   },
 })
 

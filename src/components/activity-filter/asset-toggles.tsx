@@ -1,14 +1,16 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 import { getAsset } from '@liquality/cryptoassets'
-
 import { capitalizeFirstLetter } from '../../utils'
 import SectionTitle from './section-title'
 import AssetIcon from '../asset-icon'
 import { useNavigation } from '@react-navigation/native'
-import SwapCheck from '../../assets/icons/swap-check.svg'
 import { useRecoilValue } from 'recoil'
 import { enabledAssetsState, networkState } from '../../atoms'
+import { AppIcons, Fonts } from '../../assets'
+import { palette } from '../../theme'
+
+const { SwapCheck } = AppIcons
 
 const getItemsFromAssets = (assets: Array<string>): any[] => {
   if (assets.length < 6) {
@@ -78,7 +80,7 @@ const AssetToggles: FC<{
 
   return (
     <View style={styles.container}>
-      <SectionTitle tx="common.assets" />
+      <SectionTitle title={{ tx: 'common.assets' }} />
       <View style={styles.content}>{items.map(renderItem)}</View>
     </View>
   )
@@ -101,15 +103,15 @@ const styles = StyleSheet.create({
   },
   label: {
     marginTop: 6,
-    fontFamily: 'Montserrat-Regular',
-    color: '#1D1E21',
+    fontFamily: Fonts.Regular,
+    color: palette.black,
     fontSize: 13,
   },
   more: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#D421EB',
+    backgroundColor: palette.darkPink,
   },
   iconContainer: {
     width: 68,

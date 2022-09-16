@@ -22,10 +22,11 @@ import {
   SwapEventActionKind,
   SwapEventAction,
 } from '../../screens/wallet-features/swap/swap-screen'
-import Button from '../../theme/button'
+import { Button, palette } from '../../theme'
 import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms'
 import GestureDetector from '../gesture-detector/gesture-detector'
+import { Fonts } from '../../assets'
 
 type AmountTextInputBlockProps = {
   type: 'FROM' | 'TO'
@@ -202,12 +203,13 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    borderBottomColor: '#38FFFB',
+    borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,
     marginRight: 5,
   },
   font: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: Fonts.Regular,
+
     fontWeight: '400',
   },
   input: {
@@ -217,11 +219,11 @@ const styles = StyleSheet.create({
     height: 35,
     paddingBottom: 0,
     width: '100%',
-    color: '#EAB300',
+    color: palette.darkYellow,
   },
   description: {
     fontSize: 25,
-    color: '#1D1E21',
+    color: palette.black,
     lineHeight: 25,
     height: 24,
     textAlign: 'left',

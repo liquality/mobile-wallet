@@ -11,13 +11,14 @@ import { SendHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import { RootStackParamList } from '../../../types'
 import SendTransactionDetails from '../../../components/send/send-transaction-details'
 import ProgressCircle from '../../../components/animations/progress-circle'
-import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
-import Text from '../../../theme/text'
-import Box from '../../../theme/box'
+import { Box, palette, Text } from '../../../theme'
 import { formatDate } from '../../../utils'
 import { useRecoilValue } from 'recoil'
 import { historyStateFamily, networkState } from '../../../atoms'
 import { isEIP1559Fees } from '@liquality/wallet-core/dist/src/utils/fees'
+import { AppIcons } from '../../../assets'
+
+const { CompletedIcon: SuccessIcon } = AppIcons
 
 type SendConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -171,7 +172,7 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.white,
     paddingVertical: 15,
   },
 })
