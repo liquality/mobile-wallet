@@ -9,8 +9,9 @@ import {
 } from '@liquality/wallet-core/dist/src/swaps/types'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import dayjs from 'dayjs'
-import Pbkdf2 from 'react-native-fast-pbkdf2'
 import { Buffer } from '@craftzdog/react-native-buffer'
+import QuickCrypto from 'react-native-quick-crypto'
+
 import { translate, TxKeyPath } from '../i18n'
 
 export const sortQuotes = (
@@ -56,14 +57,22 @@ export const pbkdf2 = async (
   length: number,
   digest: string,
 ): Promise<string> => {
-  const generatedValue = await Pbkdf2.derive(
-    password.toString(),
-    salt.toString(),
-    iterations,
-    length,
-    digest?.toLowerCase().replace('sha', 'sha-') || 'sha-256',
-  )
-  return Buffer.from(atob(generatedValue)).toString('hex')
+  return new Promise((resolve, reject) => {
+    QuickCrypto.pbkdf2(
+      Buffer.from(password),
+      Buffer.from(salt),
+      iterations,
+      length,
+      digest,
+      (error, derivedKey) => {
+        if (error || !derivedKey) {
+          reject(error)
+        } else {
+          resolve(derivedKey.toString())
+        }
+      },
+    )
+  })
 }
 
 export const pbkdf2Sync = (
@@ -73,16 +82,17 @@ export const pbkdf2Sync = (
   length: number,
   digest: string,
 ): string => {
-  const generatedValue = Pbkdf2.deriveSync(
-    password.toString(),
-    salt.toString(),
+  const derivedKey = QuickCrypto.pbkdf2Sync(
+    Buffer.from(password),
+    Buffer.from(salt),
     iterations,
     length,
-    digest?.toLowerCase().replace('sha', 'sha-') || 'sha-256',
+    digest,
   )
 
-  return Buffer.from(generatedValue).toString('hex')
+  return derivedKey.toString()
 }
+
 global.pbkdf2Sync = pbkdf2Sync
 export const encrypt = async (
   value: string,
