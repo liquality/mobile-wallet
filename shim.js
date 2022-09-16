@@ -12,7 +12,8 @@ if (typeof process === 'undefined') {
 }
 
 process.browser = false
-if (typeof Buffer === 'undefined') global.Buffer = require('@craftzdog/react-native-buffer').Buffer
+if (typeof Buffer === 'undefined')
+  global.Buffer = require('@craftzdog/react-native-buffer').Buffer
 
 const isDev = typeof __DEV__ === 'boolean' && __DEV__
 Object.assign(process.env, { NODE_ENV: isDev ? 'development' : 'production' })
