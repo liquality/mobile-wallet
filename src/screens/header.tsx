@@ -1,7 +1,9 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import Text from '../theme/text'
-import Logo from '../assets/icons/logo.svg'
+import { AppIcons } from '../assets'
+
+const { Logo } = AppIcons
 
 const Header = ({
   width,

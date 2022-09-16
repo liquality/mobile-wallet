@@ -1,10 +1,11 @@
 import React, { Suspense } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
-import LockIcon from '../assets/icons/lock.svg'
-import ManageAssetsIcon from '../assets/icons/manage-assets.svg'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../types'
 import Text from '../theme/text'
+import { AppIcons } from '../assets'
+
+const { LockIcon, ManageAssetsIcon } = AppIcons
 
 type FctType = (...args: any) => any
 type Props = NativeStackScreenProps<

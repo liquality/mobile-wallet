@@ -4,11 +4,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import SwapTransactionDetails from '../../../components/swap/swap-transaction-details'
 import { unitToCurrency, getAsset, getChain } from '@liquality/cryptoassets'
-import AngleDown from '../../../assets/icons/angle-down.svg'
-import AngleRight from '../../../assets/icons/angle-right.svg'
 import Label from '../../../components/ui/label'
 import ProgressCircle from '../../../components/animations/progress-circle'
-import SuccessIcon from '../../../assets/icons/activity-status/completed.svg'
 import Button from '../../../theme/button'
 import {
   dpUI,
@@ -19,7 +16,6 @@ import { BigNumber } from '@liquality/types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import { SwapProvider } from '@liquality/wallet-core/dist/src/swaps/SwapProvider'
 import { retrySwap } from '../../../store/store'
-import RefundedIcon from '../../../assets/icons/activity-status/refunded.svg'
 import Text from '../../../theme/text'
 import Box from '../../../theme/box'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
@@ -36,6 +32,14 @@ import {
 } from '../../../atoms'
 import I18n from 'i18n-js'
 import AtomicSwapPopUp from './atomic-swap-popup'
+import { AppIcons } from '../../../assets'
+
+const {
+  AngleDownIcon: AngleDown,
+  AngleRightIcon: AngleRight,
+  CompletedIcon: SuccessIcon,
+  RefundedIcon,
+} = AppIcons
 
 type SwapConfirmationScreenProps = NativeStackScreenProps<
   RootStackParamList,

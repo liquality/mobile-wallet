@@ -1,6 +1,8 @@
 import React from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
-import Bars from '../../assets/icons/menu-bars.svg'
+import { AppIcons } from '../../assets'
+
+const { Bars } = AppIcons
 
 const OverviewHeaderRight = ({
   onPress,

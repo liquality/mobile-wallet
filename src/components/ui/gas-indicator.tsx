@@ -2,7 +2,9 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { FeeDetails } from '@liquality/types/lib/fees'
-import GasIcon from '../../assets/icons/gas-indicator.svg'
+import { AppIcons } from '../../assets'
+
+const { GasIcon } = AppIcons
 
 const GasIndicator = ({
   balance,

@@ -1,13 +1,5 @@
 import React, { FC, useCallback, useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
-import ChevronRightIcon from '../../assets/icons/activity-status/chevron-right.svg'
-import AngleRightIcon from '../../assets/icons/angle-right.svg'
-import AngleDownIcon from '../../assets/icons/angle-down.svg'
-import PlusSign from '../../assets/icons/plus-icon.svg'
-import MinusSign from '../../assets/icons/minus-sign.svg'
-import TimeIcon from '../../assets/icons/times.svg'
-import ExportIcon from '../../assets/icons/export-icon.svg'
-
 import TimeLimitOptions from './time-limit-options'
 import ActionTypeToggles from './action-type-toggles'
 import DateRange from './date-range'
@@ -20,6 +12,17 @@ import { useRecoilState } from 'recoil'
 import { activityFilterState } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
 import Text from '../../theme/text'
+import { AppIcons } from '../../assets'
+
+const {
+  ChevronRightIcon,
+  AngleRightIcon,
+  AngleDownIcon,
+  PlusSign,
+  MinusSign,
+  TimesIcon: TimeIcon,
+  ExportIcon,
+} = AppIcons
 
 const ActivityFilter: FC<{
   numOfResults: number

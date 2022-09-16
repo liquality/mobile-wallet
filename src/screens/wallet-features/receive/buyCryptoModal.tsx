@@ -10,7 +10,9 @@ import React from 'react'
 import Button from '../../../theme/button'
 import Box from '../../../theme/box'
 import { Text } from '../../../components/text/text'
-import XIcon from '../../../assets/icons/X.svg'
+import { AppIcons } from '../../../assets'
+
+const { XIcon } = AppIcons
 
 type BuyCryptoModalProps = {
   onPress: () => void

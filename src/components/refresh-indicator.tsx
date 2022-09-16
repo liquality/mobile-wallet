@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import Loader from '../assets/icons/loader.svg'
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -8,6 +7,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import RefInd from '../theme/refresh-indcator'
+import { AppIcons } from '../assets'
+const { Loader } = AppIcons
 
 type Props = React.ComponentProps<typeof RefInd>
 

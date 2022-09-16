@@ -8,9 +8,6 @@ import {
   View,
   useColorScheme,
 } from 'react-native'
-import AngleRightIcon from '../../../assets/icons/angle-right.svg'
-import SignoutIcon from '../../../assets/icons/logout.svg'
-import DropdownIcon from '../../../assets/icons/dropdownMenu.svg'
 import GeneralSwitch from '../../../components/ui/general-switch'
 import {
   DarkModeEnum,
@@ -38,6 +35,9 @@ import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import Box from '../../../theme/box'
 import Dropdown from '../../../theme/dropdown'
+import { AppIcons } from '../../../assets'
+
+const { AngleRightIcon, SignOut: SignoutIcon, DropdownIcon } = AppIcons
 
 type SettingsScreenProps = BottomTabScreenProps<
   RootTabParamList,

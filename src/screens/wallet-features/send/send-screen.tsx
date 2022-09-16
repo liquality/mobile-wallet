@@ -8,9 +8,6 @@ import {
   RootStackParamList,
   UseInputStateReturnType,
 } from '../../../types'
-import AngleDown from '../../../assets/icons/angle-down.svg'
-import AngleRight from '../../../assets/icons/angle-right.svg'
-import QRCode from '../../../assets/icons/qr-code.svg'
 import { BigNumber } from '@liquality/types'
 import { calculateAvailableAmnt } from '../../../core/utils/fee-calculator'
 import {
@@ -48,6 +45,13 @@ import Animated, {
   FadeOut,
 } from 'react-native-reanimated'
 import { palette } from '../../../theme'
+import { AppIcons } from '../../../assets'
+
+const {
+  AngleDownIcon: AngleDown,
+  AngleRightIcon: AngleRight,
+  QRCode,
+} = AppIcons
 
 const useInputState = (
   initialValue: string,

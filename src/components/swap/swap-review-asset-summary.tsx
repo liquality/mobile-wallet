@@ -12,11 +12,12 @@ import {
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
-import CopyIcon from '../../assets/icons/copy.svg'
-import CheckIcon from '../../assets/icons/swap-check.svg'
 import { useRecoilValue } from 'recoil'
 import { addressStateFamily, networkState } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
+import { AppIcons } from '../../assets'
+
+const { CopyIcon, SwapCheck: CheckIcon } = AppIcons
 
 type SwapReviewAssetSummaryProps = {
   type: 'SEND' | 'RECEIVE'

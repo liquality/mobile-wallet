@@ -1,11 +1,12 @@
 import React, { Dispatch, SetStateAction, useCallback } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
-import SearchIcon from '../../assets/icons/search.svg'
-import TimesIcon from '../../assets/icons/times.svg'
 import Fuse from 'fuse.js'
 import { useInputState } from '../../hooks'
 import TextInput from '../../theme/textInput'
 import Text from '../../theme/text'
+import { AppIcons } from '../../assets'
+
+const { SearchIcon, TimesIcon } = AppIcons
 
 type SearchBoxPropsType<T> = {
   updateData: Dispatch<SetStateAction<T[]>>

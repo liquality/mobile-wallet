@@ -14,14 +14,13 @@ import { AccountType, RootStackParamList } from '../../../types'
 import AssetIcon from '../../../components/asset-icon'
 import Button from '../../../theme/button'
 import Text from '../../../theme/text'
-import CheckIcon from '../../../assets/icons/swap-check.svg'
-import CopyIcon from '../../../assets/icons/copy.svg'
-import TransakIcon from '../../../assets/icons/transak.svg'
 import { useRecoilValue } from 'recoil'
 import i18n from 'i18n-js'
 import { addressStateFamily, networkState } from '../../../atoms'
 import { labelTranslateFn, COPY_BUTTON_TIMEOUT } from '../../../utils'
 import BuyCryptoModal from './buyCryptoModal'
+import { AppIcons } from '../../../assets'
+const { SwapCheck: CheckIcon, CopyIcon, TransakIcon } = AppIcons
 
 const PowerByTransak = () => (
   <View style={styles.poweredTransakIconView}>

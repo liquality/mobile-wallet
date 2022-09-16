@@ -1,8 +1,6 @@
 import React, { FC, useState } from 'react'
 import { Dimensions, StyleSheet, View, ScrollView, Alert } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import Clock from '../../../assets/icons/clock.svg'
-import Exchange from '../../../assets/icons/exchange.svg'
 import { RootStackParamList, SwapInfoType } from '../../../types'
 import Warning from '../../../components/ui/warning'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
@@ -19,6 +17,9 @@ import {
   networkState,
 } from '../../../atoms'
 import I18n from 'i18n-js'
+import { AppIcons } from '../../../assets'
+
+const { Clock, Exchange } = AppIcons
 
 type SwapReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,

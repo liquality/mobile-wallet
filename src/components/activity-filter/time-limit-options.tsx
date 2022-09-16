@@ -1,8 +1,9 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
-import Circle from '../../assets/icons/circle.svg'
+import { AppIcons } from '../../assets'
 import { TimeLimitEnum } from '../../types'
 
+const { Circle } = AppIcons
 const ITEMS = Object.values(TimeLimitEnum)
 
 const TimeLimitOptions: FC<{

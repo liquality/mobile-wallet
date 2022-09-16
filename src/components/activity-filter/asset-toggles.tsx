@@ -1,14 +1,15 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
 import { getAsset } from '@liquality/cryptoassets'
-
 import { capitalizeFirstLetter } from '../../utils'
 import SectionTitle from './section-title'
 import AssetIcon from '../asset-icon'
 import { useNavigation } from '@react-navigation/native'
-import SwapCheck from '../../assets/icons/swap-check.svg'
 import { useRecoilValue } from 'recoil'
 import { enabledAssetsState, networkState } from '../../atoms'
+import { AppIcons } from '../../assets'
+
+const { SwapCheck } = AppIcons
 
 const getItemsFromAssets = (assets: Array<string>): any[] => {
   if (assets.length < 6) {

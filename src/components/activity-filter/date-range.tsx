@@ -1,9 +1,11 @@
 import React, { FC, useCallback, useState } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
-import CalendarIcon from '../../assets/icons/calendar.svg'
 import SectionTitle from './section-title'
 import DatePicker from './date-picker'
 import { labelTranslateFn } from '../../utils'
+import { AppIcons } from '../../assets'
+
+const { CalendarIcon } = AppIcons
 
 const DateRange: FC<{
   start: string | undefined

@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
-import Loader from '../assets/icons/loader.svg'
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -11,6 +10,9 @@ import Animated, {
 import Text from '../theme/text'
 import { Theme } from '../theme'
 import { useTheme } from '@shopify/restyle'
+import { AppIcons } from '../assets'
+
+const { Loader } = AppIcons
 
 const Spinner = () => {
   const angle = useSharedValue(0)

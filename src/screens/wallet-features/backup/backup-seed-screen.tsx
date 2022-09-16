@@ -11,13 +11,15 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../types'
 import ButtonFooter from '../../../components/button-footer'
 import Button from '../../../theme/button'
-import Eye from '../../../assets/icons/eye.svg'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import GradientBackground from '../../../components/gradient-background'
 import Box from '../../../theme/box'
 import Text from '../../../theme/text'
 import OverlayTutorial from './overlay-tutorial'
+import { AppIcons } from '../../../assets'
+
+const { Eye } = AppIcons
 
 type BackupSeedScreenProps = NativeStackScreenProps<
   RootStackParamList,

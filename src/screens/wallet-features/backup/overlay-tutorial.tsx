@@ -8,9 +8,8 @@ import { RootStackParamList } from '../../../types'
 import { labelTranslateFn } from '../../../utils'
 import ButtonFooter from '../../../components/button-footer'
 import Box from '../../../theme/box'
-import XIcon from '../../../assets/icons/XPink.svg'
-import PointingFinger from '../../../assets/icons/pointingFinger.svg'
-import BentArrow from '../../../assets/icons/bentArrow.svg'
+import { AppIcons } from '../../../assets'
+const { XPinkIcon: XIcon, PointingFinger, BentArrow } = AppIcons
 
 const BackupWarningScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'BackupWarningScreen'>

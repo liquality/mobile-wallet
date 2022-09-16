@@ -9,10 +9,6 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native'
-import Logo from '../../assets/icons/infinity.svg'
-import LiqualityBoost from '../../assets/icons/swap-providers/liqualityboost.svg'
-import Sovryn from '../../assets/icons/swap-providers/sovryn.svg'
-import Thorchain from '../../assets/icons/swap-providers/thorchain.svg'
 import SwapTypesInfo from './swap-types-info'
 import Button from '../../theme/button'
 import { dpUI } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
@@ -22,9 +18,17 @@ import ListHeader from './list-header'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { capitalizeFirstLetter, labelTranslateFn } from '../../utils'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
-import TimesIcon from '../../assets/icons/times.svg'
-import CheckIcon from '../../assets/icons/swap-check.svg'
 import GestureDetector from '../gesture-detector/gesture-detector'
+import { AppIcons } from '../../assets'
+
+const {
+  InfinityIcon: Logo,
+  LiqualityBoost,
+  Sovryn,
+  Thorchain,
+  TimesIcon,
+  SwapCheck: CheckIcon,
+} = AppIcons
 
 type SwapRatesProps = {
   fromAsset: string

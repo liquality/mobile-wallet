@@ -14,10 +14,11 @@ import {
   scanBarcodes,
 } from 'vision-camera-code-scanner'
 import { runOnJS } from 'react-native-reanimated'
-import TimesIcon from '../assets/icons/times.svg'
 import { labelTranslateFn } from '../utils'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../atoms'
+import { AppIcons } from '../assets'
+const { TimesIcon } = AppIcons
 
 type QrCodeScannerPropsType = {
   onClose: (address: string) => void

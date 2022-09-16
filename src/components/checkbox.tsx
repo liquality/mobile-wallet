@@ -1,11 +1,12 @@
 import React from 'react'
-import CheckIcon from '../assets/icons/swap-check.svg'
-
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native'
 import i18n from 'i18n-js'
 import { TxKeyPath, translate } from '../i18n'
 import { langSelected as LS } from '../../src/atoms'
 import { useRecoilValue } from 'recoil'
+import { AppIcons } from '../assets'
+
+const { SwapCheck: CheckIcon } = AppIcons
 
 type CheckBoxProps = {
   chi?: React.ReactElement[]

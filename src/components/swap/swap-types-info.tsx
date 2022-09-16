@@ -2,11 +2,10 @@ import React, { FC } from 'react'
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import Label from '../ui/label'
 import Text from '../../theme/text'
-import TimesIcon from '../../assets/icons/times.svg'
-import Uniswap from '../../assets/icons/swap-providers/uniswap.svg'
-import LiqualityBoost from '../../assets/icons/swap-providers/liqualityboost.svg'
-import Liquality from '../../assets/icons/swap-providers/liquality.svg'
 import { labelTranslateFn } from '../../utils'
+import { AppIcons } from '../../assets'
+
+const { TimesIcon, Uniswap, LiqualityBoost, Liquality } = AppIcons
 
 type SwapTypesInfoProps = {
   swapProviders: any[]

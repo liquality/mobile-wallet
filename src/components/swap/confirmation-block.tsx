@@ -8,7 +8,6 @@ import {
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
-import CopyIcon from '../../assets/icons/copy.svg'
 import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import { FADE_IN_OUT_DURATION } from '../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
@@ -19,6 +18,9 @@ import {
   swapScreenDoubleLongEvent as SSDLE,
   SwapScreenPopUpTypes,
 } from '../../atoms'
+import { AppIcons } from '../../assets'
+
+const { CopyIcon } = AppIcons
 
 type ConfirmationsPopUpCardProps = {
   txId: string

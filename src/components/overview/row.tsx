@@ -1,9 +1,6 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { StyleSheet, View, Platform } from 'react-native'
 import { AccountType } from '../../types'
-import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
-import MinusSign from '../../assets/icons/minus-sign.svg'
-import PlusSign from '../../assets/icons/plus-icon.svg'
 import AssetIcon from '../asset-icon'
 import {
   cryptoToFiat,
@@ -31,6 +28,9 @@ import Text from '../../theme/text'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { fetchFeesForAsset } from '../../store/store'
 import { FADE_IN_OUT_DURATION } from '../../utils'
+import { AppIcons } from '../../assets'
+
+const { ChevronRightIcon: ChevronRight, MinusSign, PlusSign } = AppIcons
 
 type RowProps = {
   item: AccountType

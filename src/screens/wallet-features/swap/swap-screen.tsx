@@ -17,11 +17,6 @@ import {
 } from 'react-native'
 import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import ChevronRight from '../../../assets/icons/activity-status/chevron-right.svg'
-import AngleDown from '../../../assets/icons/angle-down.svg'
-import AngleRight from '../../../assets/icons/angle-right.svg'
-import ArrowDown from '../../../assets/icons/arrow-down.svg'
-import Clock from '../../../assets/icons/clock.svg'
 import MessageBanner from '../../../components/ui/message-banner'
 import AmountTextInputBlock from '../../../components/ui/amount-text-input-block'
 import Label from '../../../components/ui/label'
@@ -68,6 +63,15 @@ import AssetIcon from '../../../components/asset-icon'
 import { LikelyWaitProps } from '../../../components/ui/fee-selector'
 import { fetchFeesForAsset } from '../../../store/store'
 import AtomicSwapPopUp from './atomic-swap-popup'
+import { AppIcons } from '../../../assets'
+
+const {
+  ChevronRightIcon: ChevronRight,
+  AngleDownIcon: AngleDown,
+  AngleRightIcon: AngleRight,
+  ArrowDown,
+  Clock,
+} = AppIcons
 
 export type SwapEventType = {
   fromAmount?: BigNumber

@@ -5,7 +5,6 @@ import {
   formatFiat,
   prettyBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
-import ChevronRight from '../../assets/icons/activity-status/chevron-right.svg'
 import { AccountType } from '../../types'
 import AssetIcon from '../asset-icon'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
@@ -23,6 +22,9 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { getNftsForAccount, updateNFTs } from '../../store/store'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
+import { AppIcons } from '../../assets'
+
+const { ChevronRightIcon: ChevronRight } = AppIcons
 
 type SubRowProps = {
   parentItem: Partial<AccountType>

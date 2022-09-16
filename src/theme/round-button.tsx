@@ -2,9 +2,6 @@ import * as React from 'react'
 import { FC, useCallback } from 'react'
 import { Pressable, PressableProps } from 'react-native'
 import Text from './text'
-import SwapIcon from '../assets/icons/exchange.svg'
-import SendIcon from '../assets/icons/up.svg'
-import ReceiveIcon from '../assets/icons/down.svg'
 import {
   ColorProps,
   createRestyleComponent,
@@ -18,6 +15,8 @@ import { TxKeyPath } from '../i18n'
 import i18n from 'i18n-js'
 import { langSelected as LS } from '../../src/atoms'
 import { useRecoilValue } from 'recoil'
+import { AppIcons } from '../assets'
+const { Exchange: SwapIcon, UpIcon: SendIcon, DownIcon: ReceiveIcon } = AppIcons
 
 const RoundBaseButton = createRestyleComponent<
   VariantProps<Theme, 'roundButtonVariants'> & PressableProps,

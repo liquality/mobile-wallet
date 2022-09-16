@@ -1,10 +1,9 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
-import SendIcon from '../../assets/icons/activity-status/send.svg'
-import SwapIcon from '../../assets/icons/exchange-red.svg'
-import ReceiveIcon from '../../assets/icons/receive.svg'
+import { AppIcons } from '../../assets'
 import { ActionEnum } from '../../types'
 import { capitalizeFirstLetter } from '../../utils'
+const { SendIcon, SwapIcon, ReceiveIcon } = AppIcons
 
 const ITEMS = Object.values(ActionEnum)
 const ICON_MAP: Record<ActionEnum, typeof SendIcon> = {

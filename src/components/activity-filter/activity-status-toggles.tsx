@@ -1,15 +1,19 @@
 import React, { FC, useCallback } from 'react'
 import { Pressable, StyleSheet, View, Text } from 'react-native'
+import { AppIcons } from '../../assets'
 
 import { ActivityStatusEnum } from '../../types'
 import { capitalizeFirstLetter } from '../../utils'
-import PendingIcon from '../../assets/icons/activity-status/pending.svg'
-import CompletedIcon from '../../assets/icons/activity-status/completed.svg'
-import CancelledIcon from '../../assets/icons/activity-status/canceled.svg'
-import RefundedIcon from '../../assets/icons/activity-status/refunded.svg'
-import NeedsAttentionIcon from '../../assets/icons/activity-status/needs_attention.svg'
-import FailedIcon from '../../assets/icons/activity-status/failed.svg'
 import SectionTitle from './section-title'
+
+const {
+  PendingIcon,
+  CompletedIcon,
+  CancelledIcon,
+  RefundedIcon,
+  NeedsAttentionIcon,
+  FailedIcon,
+} = AppIcons
 
 const ITEMS = Object.values(ActivityStatusEnum)
 const ICON_MAP = {

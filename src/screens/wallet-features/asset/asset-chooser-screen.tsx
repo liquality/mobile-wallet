@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import SearchIcon from '../../../assets/icons/search.svg'
 
 import { AccountType, RootStackParamList } from '../../../types'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
@@ -15,6 +14,9 @@ import {
 } from '../../../atoms'
 import TextInput from '../../../theme/textInput'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
+import { AppIcons } from '../../../assets'
+
+const { SearchIcon } = AppIcons
 
 type AssetChooserProps = NativeStackScreenProps<
   RootStackParamList,

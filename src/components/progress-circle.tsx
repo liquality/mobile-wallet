@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import Check from '../assets/icons/swap-check.svg'
+import { AppIcons } from '../assets'
+const { SwapCheck: Check } = AppIcons
 
 const ProgressCircle = ({
   size,

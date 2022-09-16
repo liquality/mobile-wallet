@@ -1,9 +1,11 @@
 import React, { FC } from 'react'
 import { Modal, View, Pressable, StyleSheet, Dimensions } from 'react-native'
-import TimesIcon from '../../assets/icons/times.svg'
 import { Calendar, DateData } from 'react-native-calendars'
 import { Theme } from 'react-native-calendars/src/types'
+import { AppIcons } from '../../assets'
 import Label from '../ui/label'
+
+const { TimesIcon } = AppIcons
 
 const CALENDAR_THEME = {
   textSectionTitleColor: '#646F85',
