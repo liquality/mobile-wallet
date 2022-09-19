@@ -16,11 +16,12 @@ import {
 import { runOnJS } from 'react-native-reanimated'
 import { labelTranslateFn } from '../utils'
 import { useRecoilValue } from 'recoil'
-import { networkState } from '../atoms'
+import { networkState, accountForAssetState } from '../atoms'
 import { AppIcons } from '../assets'
 import { palette } from '../theme'
 const { TimesIcon } = AppIcons
 import { walletConnect } from '../WalletConnect'
+
 type QrCodeScannerPropsType = {
   onClose: (address: string) => void
   chain: ChainId
@@ -31,6 +32,7 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
   const { onClose, chain } = props
   const [error, setError] = useState('')
   const activeNetwork = useRecoilValue(networkState)
+  const ethAccount = useRecoilValue(accountForAssetState('ETH'))
 
   const devices = useCameraDevices()
   const device = devices.back
@@ -46,7 +48,8 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
       } else if (qrCode.displayValue?.startsWith('wc')) {
         console.log('inside if')
 
-        await walletConnect(qrCode.displayValue)
+        //Wallet connect currently only supports EVM, so only eth accounts
+        await walletConnect(qrCode.displayValue, ethAccount, activeNetwork)
         setError('Wallet connect connected')
       } else {
         console.log(address, 'address and full:', qrCode.displayValue)

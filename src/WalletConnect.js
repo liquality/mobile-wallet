@@ -1,4 +1,5 @@
 import WalletConnect from '@walletconnect/client'
+import { sendTransaction } from './store/store'
 let connectors = []
 let initialized = false
 const tempCallIds = []
@@ -43,7 +44,7 @@ connector.rejectRequest({
   },
 }) */
 
-export const walletConnect = async (uri, accountAddress) => {
+export const walletConnect = async (uri, account, activeNetwork) => {
   const connector = new WalletConnect({
     // Required
     uri,
@@ -58,11 +59,11 @@ export const walletConnect = async (uri, accountAddress) => {
 
   // Subscribe to session requests
   connector.on('session_request', (error, payload) => {
-    console.log(payload, 'PAYLOOOAD', payload.params[0].chainId)
+    console.log(payload, 'PAYLOOOAD', payload.params[0].chainId, account)
     connector.approveSession({
       accounts: [
         // required
-        '0xb81B9B88e764cb6b4E02c5D0F6D6D9051A61E020',
+        account.address,
       ],
       chainId: payload.params[0].chainId, // required
     })
@@ -77,7 +78,37 @@ export const walletConnect = async (uri, accountAddress) => {
     console.log(payload, 'call req payload')
     //payload should include eth switch network, eth sign transaction/msg
     //call walletcore/chainify to sign/send transaction here
+    /* 
+    let hej = {
+      id: 1663594160919539,
+      jsonrpc: '2.0',
+      method: 'eth_sendTransaction',
+      params: [
+        {
+          data: '0x7ff36ab50000000000000000000000000000000000000000000000000a48faea65305f850000000000000000000000000000000000000000000000000000000000000080000000000000000000000000d8cebecb8a26864812e73a35b59f318890a7696600000000000000000000000000000000000000000000000000000000c650e1f900000000000000000000000000000000000000000000000000000000000000020000000000000000000000000d500b1d8e8ef31e21c99d1db9a6444d3adf12700000000000000000000000008f3cf7ad23cd3cadbd9735aff958023239c6a063',
+          from: '0xd8cebecb8a26864812e73a35b59f318890a76966',
+          gas: '0x4365c',
+          to: '0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff',
+          value: '0xde0b6b3a7640000',
+        },
+      ],
+    } */
+    let params = {
+      activeNetwork,
+      asset: 'ETH',
+      fee: parseInt(payload.params[0].gas, 16),
+      feeLabel: 'average',
+      memo: payload.params[0].data,
+      to: payload.params[0].to,
+      value: parseInt(payload.params[0].value, 16),
+    }
+    console.log(params, 'params sent in sendtransaction')
 
+    try {
+      sendTransaction(params)
+    } catch (err) {
+      console.log(err, 'error sending TRANSACTION')
+    }
     if (error) {
       throw error
     }
