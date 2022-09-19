@@ -1,6 +1,10 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { AppIcons } from '../assets'
+import { ChainId } from '@liquality/cryptoassets/dist/src/types'
+import { FC } from 'react'
+import { ICON_SIZE } from '../utils'
+
 const {
   BitcoinChainIcon,
   BitcoinChainIcon: BTCIcon,
@@ -30,122 +34,140 @@ const {
   BlankIcon,
 } = AppIcons
 
-import { ChainId } from '@liquality/cryptoassets/dist/src/types'
-import { FC } from 'react'
-
 type AssetIconType = {
   chain?: ChainId
   asset?: string
   size?: number
 }
 
-//TODO this approach does not scale, refactor to a better one
-//TODO Match the name of the icon to the name of the asset and load icons dynamically
+const extractSpecificIcon = {
+  [`${ChainId.Bitcoin}`]: {
+    assetName: BitcoinChainIcon,
+    viewBoxValue: '',
+  },
+  [`${ChainId.Ethereum}`]: {
+    assetName: EthereumChainIcon,
+    viewBoxValue: '',
+  },
+  [`${ChainId.Rootstock}`]: {
+    assetName: RootstockChainIcon,
+    viewBoxValue: '',
+  },
+  [`${ChainId.BinanceSmartChain}`]: {
+    assetName: BinanceSmartChainIcon,
+    viewBoxValue: '',
+  },
+  [`${ChainId.Near}`]: {
+    assetName: NearChainIcon,
+    viewBoxValue: '',
+  },
+  [`${ChainId.Polygon}`]: {
+    assetName: PolygonChainIcon,
+    viewBoxValue: '',
+  },
+  [`${ChainId.Arbitrum}`]: {
+    assetName: ArbitrumChainIcon,
+    viewBoxValue: '',
+  },
+  [`${ChainId.Terra}`]: {
+    assetName: TerraChainIcon,
+    viewBoxValue: '',
+  },
+  [`${ChainId.Fuse}`]: {
+    assetName: FuseChainIcon,
+    viewBoxValue: '',
+  },
+  [`${ChainId.Avalanche}`]: {
+    assetName: AvalancheChainIcon,
+    viewBoxValue: '',
+  },
+  [`${ChainId.Solana}`]: {
+    assetName: SolanaChainIcon,
+    viewBoxValue: '',
+  },
+  eth: {
+    assetName: ETHIcon,
+    viewBoxValue: '',
+  },
+  rbtc: {
+    assetName: RBTCIcon,
+    viewBoxValue: '',
+  },
+  dai: {
+    assetName: DAIIcon,
+    viewBoxValue: '',
+  },
+  sov: {
+    assetName: SovrynIcon,
+    viewBoxValue: '',
+  },
+  btc: {
+    assetName: BTCIcon,
+    viewBoxValue: '',
+  },
+  luna: {
+    assetName: LunaIcon,
+    viewBoxValue: '',
+  },
+  ust: {
+    assetName: TerraIcon,
+    viewBoxValue: '',
+  },
+  bnb: {
+    assetName: BNBIcon,
+    viewBoxValue: '0 0 32 32',
+  },
+  near: {
+    assetName: Nearcon,
+    viewBoxValue: '',
+  },
+  matic: {
+    assetName: MaticIcon,
+    viewBoxValue: '',
+  },
+  pweth: {
+    assetName: PwethIcon,
+    viewBoxValue: '0 0 32 32',
+  },
+  arbeth: {
+    assetName: ArbitrumIcon,
+    viewBoxValue: '0 0 32 32',
+  },
+  avax: {
+    assetName: AvalancheIcon,
+    viewBoxValue: '0 0 32 32',
+  },
+  sol: {
+    assetName: SolanaIcon,
+    viewBoxValue: '0 0 32 32',
+  },
+}
+
 const AssetIcon: FC<AssetIconType> = (props) => {
-  const SIZE = 25
-  const { chain, asset, size = SIZE } = props
-  if (chain) {
-    if (chain?.toLowerCase() === ChainId.Bitcoin) {
-      return <BitcoinChainIcon width={size} height={size} style={styles.icon} />
-    } else if (chain?.toLowerCase() === ChainId.Ethereum) {
+  const { chain, asset, size = ICON_SIZE } = props
+  const extractedIcon = chain
+    ? extractSpecificIcon[chain.toLowerCase()]
+    : asset
+    ? extractSpecificIcon[asset.toLowerCase()]
+    : null
+  if (extractedIcon) {
+    const AssetName = extractedIcon.assetName
+    const viewBoxValue = extractedIcon.viewBoxValue
+    if (viewBoxValue) {
       return (
-        <EthereumChainIcon width={size} height={size} style={styles.icon} />
+        <AssetName
+          viewBox={viewBoxValue}
+          width={size}
+          height={size}
+          style={styles.icon}
+        />
       )
-    } else if (chain?.toLowerCase() === ChainId.Rootstock) {
-      return (
-        <RootstockChainIcon width={size} height={size} style={styles.icon} />
-      )
-    } else if (chain?.toLowerCase() === ChainId.BinanceSmartChain) {
-      return (
-        <BinanceSmartChainIcon width={size} height={size} style={styles.icon} />
-      )
-    } else if (chain?.toLowerCase() === ChainId.Near) {
-      return <NearChainIcon width={size} height={size} style={styles.icon} />
-    } else if (chain?.toLowerCase() === ChainId.Polygon) {
-      return <PolygonChainIcon width={size} height={size} style={styles.icon} />
-    } else if (chain?.toLowerCase() === ChainId.Arbitrum) {
-      return (
-        <ArbitrumChainIcon width={size} height={size} style={styles.icon} />
-      )
-    } else if (chain?.toLowerCase() === ChainId.Terra) {
-      return <TerraChainIcon width={size} height={size} style={styles.icon} />
-    } else if (chain?.toLowerCase() === ChainId.Fuse) {
-      return <FuseChainIcon width={size} height={size} style={styles.icon} />
-    } else if (chain?.toLowerCase() === ChainId.Avalanche) {
-      return (
-        <AvalancheChainIcon width={size} height={size} style={styles.icon} />
-      )
-    } else if (chain?.toLowerCase() === ChainId.Solana) {
-      return <SolanaChainIcon width={size} height={size} style={styles.icon} />
+    } else {
+      return <AssetName width={size} height={size} style={styles.icon} />
     }
   } else {
-    if (asset?.toLowerCase() === 'eth') {
-      return <ETHIcon width={size} height={size} style={styles.icon} />
-    } else if (asset?.toLowerCase() === 'rbtc') {
-      return <RBTCIcon width={size} height={size} style={styles.icon} />
-    } else if (asset?.toLowerCase() === 'dai') {
-      return <DAIIcon width={size} height={size} style={styles.icon} />
-    } else if (asset?.toLowerCase() === 'sov') {
-      return <SovrynIcon width={size} height={size} style={styles.icon} />
-    } else if (asset?.toLowerCase() === 'btc') {
-      return <BTCIcon width={size} height={size} style={styles.icon} />
-    } else if (asset?.toLowerCase() === 'luna') {
-      return <LunaIcon width={size} height={size} style={styles.icon} />
-    } else if (asset?.toLowerCase() === 'ust') {
-      return <TerraIcon width={size} height={size} style={styles.icon} />
-    } else if (asset?.toLowerCase() === 'bnb') {
-      return (
-        <BNBIcon
-          viewBox="0 0 32 32"
-          width={25}
-          height={25}
-          style={styles.icon}
-        />
-      )
-    } else if (asset?.toLowerCase() === 'near') {
-      return <Nearcon width={size} height={size} style={styles.icon} />
-    } else if (asset?.toLowerCase() === 'matic') {
-      return <MaticIcon width={size} height={size} style={styles.icon} />
-    } else if (asset?.toLowerCase() === 'pweth') {
-      return (
-        <PwethIcon
-          viewBox="0 0 32 32"
-          width={size}
-          height={size}
-          style={styles.icon}
-        />
-      )
-    } else if (asset?.toLowerCase() === 'arbeth') {
-      return (
-        <ArbitrumIcon
-          viewBox="0 0 32 32"
-          width={size}
-          height={size}
-          style={styles.icon}
-        />
-      )
-    } else if (asset?.toLowerCase() === 'avax') {
-      return (
-        <AvalancheIcon
-          viewBox="0 0 32 32"
-          width={size}
-          height={size}
-          style={styles.icon}
-        />
-      )
-    } else if (asset?.toLowerCase() === 'sol') {
-      return (
-        <SolanaIcon
-          viewBox="0 0 32 32"
-          width={size}
-          height={size}
-          style={styles.icon}
-        />
-      )
-    }
+    return <BlankIcon width={size} height={size} style={styles.icon} />
   }
-
-  return <BlankIcon width={size} height={size} style={styles.icon} />
 }
 
 const styles = StyleSheet.create({
