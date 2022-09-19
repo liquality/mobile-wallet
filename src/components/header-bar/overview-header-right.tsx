@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { AppIcons } from '../../assets'
+import QrCodeScanner from '../qr-code-scanner'
+import { Text } from '../text/text'
 
 const { Bars } = AppIcons
 
@@ -9,8 +11,18 @@ const OverviewHeaderRight = ({
 }: {
   onPress: () => void
 }): React.ReactElement => {
-  return (
+  const [showQRScanner, setShowQRScanner] = useState(false)
+
+  return showQRScanner ? (
+    <QrCodeScanner
+      onClose={() => setShowQRScanner(false)}
+      chain={'ethereum'}></QrCodeScanner>
+  ) : (
     <View style={styles.container}>
+      <Pressable onPress={() => setShowQRScanner(true)}>
+        <Text>QR SCANNER</Text>
+      </Pressable>
+
       <Pressable onPress={onPress}>
         <Bars width={25} height={25} />
       </Pressable>

@@ -20,7 +20,7 @@ import { networkState } from '../atoms'
 import { AppIcons } from '../assets'
 import { palette } from '../theme'
 const { TimesIcon } = AppIcons
-
+import { walletConnect } from '../WalletConnect'
 type QrCodeScannerPropsType = {
   onClose: (address: string) => void
   chain: ChainId
@@ -36,14 +36,20 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
   const device = devices.back
 
   const onQRCodeDetected = useCallback(
-    (qrCode: Barcode) => {
+    async (qrCode: Barcode) => {
       if (error) {
         setError('')
       }
       const address = qrCode.displayValue?.split(':')?.[1]
       if (address && getChain(activeNetwork, chain).isValidAddress(address)) {
         onClose(address)
+      } else if (qrCode.displayValue?.startsWith('wc')) {
+        console.log('inside if')
+
+        await walletConnect(qrCode.displayValue)
+        setError('Wallet connect connected')
       } else {
+        console.log(address, 'address and full:', qrCode.displayValue)
         setError(labelTranslateFn('invalidQRCode')!)
       }
     },
