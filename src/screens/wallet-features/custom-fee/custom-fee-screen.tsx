@@ -78,7 +78,9 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
       )
       setTotalFees(totalFeesData)
     }
-    setSpeedMode(route.params.speedMode)
+    if (route.params.speedMode) {
+      setSpeedMode(route.params.speedMode)
+    }
 
     fetchData()
 

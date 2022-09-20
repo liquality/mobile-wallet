@@ -22,7 +22,12 @@ import {
 import { HistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import { labelTranslateFn } from '../../../utils'
 import i18n from 'i18n-js'
-import { View } from 'react-native'
+import { View, TextStyle } from 'react-native'
+
+const ERROR_STYLES: TextStyle = {
+  flex: 1,
+  flexWrap: 'wrap',
+}
 
 type SendReviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -172,7 +177,11 @@ const ReviewComponent = ({ navigation, route }: SendReviewScreenProps) => {
         <Text variant="address">{shortenAddress(destinationAddress)}</Text>
       </Box>
 
-      {!!error && <Text variant="error">{error}</Text>}
+      {!!error && (
+        <Text variant="error" style={ERROR_STYLES}>
+          {error}
+        </Text>
+      )}
       <ButtonFooter>
         <Button
           type="secondary"

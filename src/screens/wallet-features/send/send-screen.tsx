@@ -171,14 +171,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         })
       }
     }
-  }, [
-    amountInput.value,
-    code,
-    customFee,
-    setErrorMessage,
-    availableAmount,
-    fee,
-  ])
+  }, [amountInput.value, code, customFee, setErrorMessage, availableAmount])
 
   useEffect(() => {
     let interval: NodeJS.Timer
@@ -226,14 +219,13 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         screenTitle: i18n.t('sendScreen.sendReview', { code }),
         sendTransaction: {
           amount: new BigNumber(amountInput.value).toNumber(),
-          gasFee: feeInUnit,
+          gasFee: feeInUnit || 0,
           speedLabel: networkFee.current?.speed,
           destinationAddress: addressInput.value,
           asset: code,
           memo: '',
           color: color || palette.darkYellow,
         },
-        fee: fee,
         customFee: customFee,
       })
     }
@@ -246,7 +238,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     amountInput.value,
     addressInput.value,
     color,
-    fee,
   ])
 
   const handleFiatBtnPress = useCallback(() => {
@@ -260,8 +251,9 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
   const handleOnChangeText = useCallback(
     (text: string): void => {
-      if (!isNumber(text)) {
-        setError(labelTranslateFn('sendScreen.invalidAmt')!)
+      // avoid more than one decimal points and only number are allowed
+      const validated = text.match(/^(\d*\.{0,1}\d{0,20}$)/)
+      if (!validated) {
         return
       }
 
@@ -286,17 +278,17 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       if (showAmountsInFiat) {
         setAmountInNative(
           new BigNumber(
-            fiatToCrypto(new BigNumber(text), fiatRates[code!]),
+            fiatToCrypto(new BigNumber(text || 0), fiatRates[code!]),
           ).toNumber(),
         )
-        setAmountInFiat(new BigNumber(text).toNumber())
+        setAmountInFiat(new BigNumber(text || 0).toNumber())
       } else {
         setAmountInFiat(
           new BigNumber(
-            cryptoToFiat(new BigNumber(text).toNumber(), fiatRates[code]),
+            cryptoToFiat(new BigNumber(text || 0).toNumber(), fiatRates[code]),
           ).toNumber(),
         )
-        setAmountInNative(new BigNumber(text).toNumber())
+        setAmountInNative(new BigNumber(text || 0).toNumber())
       }
       amountInput.onChangeText(text)
     },

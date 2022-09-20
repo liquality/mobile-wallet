@@ -7,7 +7,10 @@ import {
   EstimateFeeRequest,
   SwapQuote,
 } from '@liquality/wallet-core/dist/src/swaps/types'
-import { Network } from '@liquality/wallet-core/dist/src/store/types'
+import {
+  Network,
+  SwapProviderType,
+} from '@liquality/wallet-core/dist/src/store/types'
 import dayjs from 'dayjs'
 import { Buffer } from '@craftzdog/react-native-buffer'
 import QuickCrypto from 'react-native-quick-crypto'
@@ -135,7 +138,9 @@ export const calculateFees = async (
     custom: new BigNumber(0),
   }
   const assetFees = await fetchFeesForAsset(asset)
-  const swapProvider = fetchSwapProvider(selectedQuote.provider)
+  const swapProvider = fetchSwapProvider(
+    selectedQuote.provider as SwapProviderType,
+  )
   const feePrices = Object.values(assetFees).map((fee: BigNumber) =>
     fee.toNumber(),
   )
