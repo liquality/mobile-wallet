@@ -41,6 +41,7 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
 
   const devices = useCameraDevices()
   const device = devices.back
+  console.log(walletConnectPayload, 'WC PAYLOAD STATE')
 
   const onQRCodeDetected = useCallback(
     async (qrCode: Barcode) => {
@@ -53,15 +54,18 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
       } else if (qrCode.displayValue?.startsWith('wc')) {
         console.log('inside if')
         //Wallet connect currently only supports EVM, so only eth accounts
-        let wcPayload = await initWalletConnect(qrCode.displayValue)
-        console.log(wcPayload, 'wcPayload')
-        setWalletConnectPayload({
-          payload: wcPayload,
-          uri: qrCode.displayValue,
+        /*   let wcPayload = await initWalletConnect(qrCode.displayValue)
+        console.log(wcPayload, 'wcPayload') */
+
+        await initWalletConnect(qrCode.displayValue, function (wcPayload) {
+          console.log(wcPayload, 'wcPayload IN CALLBACKKK')
+          setWalletConnectPayload({
+            payload: wcPayload,
+            uri: qrCode.displayValue,
+          })
+          setError('Wallet connect connected')
+          setShowInjectionFlow(true)
         })
-        setError('Wallet connect connected')
-        setShowInjectionFlow(true)
-        address ? onClose(address) : null
       } else {
         setError(labelTranslateFn('invalidQRCode')!)
       }
@@ -89,11 +93,19 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
       const status = await Camera.requestCameraPermission()
       setHasPermission(status === 'authorized')
     })()
-    if (showInjectionFlow && Object.keys(walletConnectPayload).length !== 0) {
-      navigation.navigate('OverviewScreen', {
-        walletConnectPayload,
-      })
+  }, [])
+
+  useEffect(() => {
+    async function fetchData() {
+      if (showInjectionFlow && Object.keys(walletConnectPayload).length !== 0) {
+        console.log(walletConnectPayload, 'WC payload')
+        await navigation.navigate('OverviewScreen', {
+          walletConnectPayload,
+        })
+        onClose(walletConnectPayload.uri)
+      }
     }
+    fetchData()
   }, [showInjectionFlow, navigation, walletConnectPayload])
 
   return (

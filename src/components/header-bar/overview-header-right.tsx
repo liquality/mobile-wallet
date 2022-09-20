@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { AppIcons } from '../../assets'
 import QrCodeScanner from '../qr-code-scanner'

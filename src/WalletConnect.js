@@ -59,20 +59,17 @@ export const createConnector = async (uri) => {
   return connector
 }
 
-export const initWalletConnect = async (uri) => {
+export const initWalletConnect = async (uri, callback) => {
   let connector = await createConnector(uri)
 
   // Subscribe to session requests
-  let payloadResult = connector.on(
-    'session_request',
-    async (error, payload) => {
-      if (error) {
-        throw error
-      } else return payload
-    },
-  )
-  console.log(payloadResult, 'return ???')
-  return payloadResult
+  connector.on('session_request', async (error, payload) => {
+    if (error) {
+      throw error
+    } else {
+      callback(payload)
+    }
+  })
 }
 
 export const approveWalletConnect = async (uri, account, chainId) => {
@@ -86,6 +83,27 @@ export const approveWalletConnect = async (uri, account, chainId) => {
     chainId, // required
   })
 }
+
+//OLD ONE
+/* function foo(address){
+  var returnvalue;    
+  geocoder.geocode( { 'address': address}, function(results, status) {
+      returnvalue = results[0].geometry.location; 
+  })
+  return returnvalue; 
+}
+foo(); //still undefined
+
+
+function foo(address, fn){
+  geocoder.geocode( { 'address': address}, function(results, status) {
+     fn(results[0].geometry.location); 
+  });
+}
+
+foo("address", function(location){
+  alert(location); // this is where you get the return value
+}); */
 
 export const signWalletConnectTransaction = async (uri, activeNetwork) => {
   // Subscribe to call requests
