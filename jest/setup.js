@@ -1,9 +1,9 @@
 require('../shim.js')
-require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests()
 import 'react-native-gesture-handler/jestSetup'
 import mockClipboard from '@react-native-clipboard/clipboard/jest/clipboard-mock.js'
 import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock'
 
+jest.mock('react-native-reanimated')
 jest.mock('@react-native-clipboard/clipboard', () => mockClipboard)
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
 jest.mock('react-native-qrcode-svg', () => {
