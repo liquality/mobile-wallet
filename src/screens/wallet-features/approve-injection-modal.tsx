@@ -8,24 +8,23 @@ import { Button, palette, Text } from '../../theme'
 import { approveWalletConnect } from '../../WalletConnect'
 
 type ApproveInjectionModal = {
-  onClose: (address: string) => void
+  setShowInjectionModal: (param: boolean) => void
   payload: Object
 }
 
 const ApproveInjectionModal: FC<ApproveInjectionModal> = (props) => {
   const ethAccount = useRecoilValue(accountForAssetState('ETH'))
 
-  const { onClose, payload } = props
+  const { setShowInjectionModal, payload } = props
   console.log(payload, 'payload URI FUUULLLin approve inj')
   const handleClickOk = () => {
-    console.log()
     approveWalletConnect(
       payload.uri,
       ethAccount,
       payload.payload.params[0].chainId,
       payload.connector,
     )
-    //onClose('')
+    setShowInjectionModal(false)
   }
 
   useEffect(() => {}, [])

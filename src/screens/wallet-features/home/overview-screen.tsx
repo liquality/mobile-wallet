@@ -60,7 +60,7 @@ const OverviewScreen = ({ navigation, route }: OverviewProps) => {
       {showInjectionModal ? (
         <ApproveInjectionModal
           payload={route.params.walletConnectPayload}
-          onClose={() => console.log('I WAS dCLOSED')}
+          setShowInjectionModal={setShowInjectionModal}
         />
       ) : null}
       <ScrollView
