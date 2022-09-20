@@ -634,6 +634,25 @@ export const localStorageLangEffect: <T>(key: string) => AtomEffect<T> =
     })
   }
 
+export const localStorageAssetEffect: <T>(key: string) => AtomEffect<T> =
+  (key) =>
+  ({ setSelf, onSet, trigger }) => {
+    const loadPersisted = async () => {
+      const savedValue = storageManager.read(key, '')
+
+      if (savedValue !== '') {
+        setSelf(savedValue)
+      }
+    }
+    if (trigger === 'get') {
+      loadPersisted()
+    }
+
+    onSet((newValue, _, isReset) => {
+      isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
+    })
+  }
+
 export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
   (key) =>
   ({ setSelf, onSet, trigger }) => {
