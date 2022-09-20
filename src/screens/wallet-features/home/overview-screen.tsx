@@ -43,7 +43,7 @@ const OverviewScreen = ({ navigation, route }: OverviewProps) => {
     if (route.params) {
       setShowInjectionModal(true)
     }
-  }, [])
+  }, [route.params])
 
   const { height } = useWindowDimensions()
   const tabBarBottomHeight = useBottomTabBarHeight()
@@ -60,7 +60,7 @@ const OverviewScreen = ({ navigation, route }: OverviewProps) => {
       {showInjectionModal ? (
         <ApproveInjectionModal
           payload={route.params.walletConnectPayload}
-          onClose={() => console.log('I WAS CLOSED')}
+          onClose={() => console.log('I WAS dCLOSED')}
         />
       ) : null}
       <ScrollView

@@ -1,8 +1,11 @@
 import React, { FC, useEffect } from 'react'
 import { View, StyleSheet, Modal } from 'react-native'
+import { useRecoilValue } from 'recoil'
 
 import { Fonts } from '../../assets'
+import { accountForAssetState } from '../../atoms'
 import { Button, palette, Text } from '../../theme'
+import { approveWalletConnect } from '../../WalletConnect'
 
 type ApproveInjectionModal = {
   onClose: (address: string) => void
@@ -10,10 +13,18 @@ type ApproveInjectionModal = {
 }
 
 const ApproveInjectionModal: FC<ApproveInjectionModal> = (props) => {
-  const [hasPermission, setHasPermission] = React.useState(false)
+  const ethAccount = useRecoilValue(accountForAssetState('ETH'))
 
-  console.log(props, 'was proppys?')
-  const handleCloseBtnPress = () => {
+  const { onClose, payload } = props
+  console.log(payload, 'payload URI FUUULLLin approve inj')
+  const handleClickOk = () => {
+    console.log()
+    approveWalletConnect(
+      payload.uri,
+      ethAccount,
+      payload.payload.params[0].chainId,
+      payload.connector,
+    )
     //onClose('')
   }
 
@@ -37,7 +48,7 @@ const ApproveInjectionModal: FC<ApproveInjectionModal> = (props) => {
             type="secondary"
             variant="l"
             label={{ tx: 'common.ok' }}
-            onPress={handleCloseBtnPress}
+            onPress={handleClickOk}
             isBorderless={false}
             isActive={true}
           />

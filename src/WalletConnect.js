@@ -45,6 +45,7 @@ connector.rejectRequest({
 }) */
 
 export const createConnector = async (uri) => {
+  console.log(uri, 'wats uri?')
   const connector = new WalletConnect({
     // Required
     uri,
@@ -67,13 +68,19 @@ export const initWalletConnect = async (uri, callback) => {
     if (error) {
       throw error
     } else {
-      callback(payload)
+      callback({ payload, connector })
     }
   })
 }
 
-export const approveWalletConnect = async (uri, account, chainId) => {
-  let connector = await createConnector(uri)
+export const approveWalletConnect = async (
+  uri,
+  account,
+  chainId,
+  connector,
+) => {
+  console.log(uri, account.address, chainId, 'All of the things I need')
+  // let connector = await createConnector(uri)
 
   connector.approveSession({
     accounts: [

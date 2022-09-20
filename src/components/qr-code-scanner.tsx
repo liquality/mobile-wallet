@@ -35,7 +35,6 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
 
   const [error, setError] = useState('')
   const activeNetwork = useRecoilValue(networkState)
-  const ethAccount = useRecoilValue(accountForAssetState('ETH'))
   const [showInjectionFlow, setShowInjectionFlow] = useState(false)
   const [walletConnectPayload, setWalletConnectPayload] = useState({})
 
@@ -57,8 +56,9 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
         await initWalletConnect(qrCode.displayValue, function (wcPayload) {
           console.log(wcPayload, 'wcPayload IN CALLBACKKK')
           setWalletConnectPayload({
-            payload: wcPayload,
+            payload: wcPayload.payload,
             uri: qrCode.displayValue,
+            connector: wcPayload.connector,
           })
           setError('Wallet connect connected')
           setShowInjectionFlow(true)
