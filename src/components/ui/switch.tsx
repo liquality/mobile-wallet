@@ -8,16 +8,15 @@ const SettingsSwitch = ({ asset }: { asset: string }) => {
   const [isFeatureEnabled, toggleFeature] = useRecoilState(
     enabledAssetsStateFamily(asset),
   )
-  const styles = StyleSheet.create({
-    switch: {
-      borderColor: isFeatureEnabled ? palette.blueVioletPrimary : palette.gray,
-      borderWidth: 1,
-    },
-  })
+
+  const borderColor = isFeatureEnabled
+    ? palette.blueVioletPrimary
+    : palette.gray
+
   return (
     <Switch
       trackColor={{ false: palette.white, true: palette.white }}
-      style={styles.switch}
+      style={[styles.switch, { borderColor }]}
       thumbColor={isFeatureEnabled ? palette.blueVioletPrimary : palette.gray}
       ios_backgroundColor={palette.white}
       onValueChange={() => toggleFeature(!isFeatureEnabled)}
@@ -25,5 +24,11 @@ const SettingsSwitch = ({ asset }: { asset: string }) => {
     />
   )
 }
+
+const styles = StyleSheet.create({
+  switch: {
+    borderWidth: 1,
+  },
+})
 
 export default SettingsSwitch
