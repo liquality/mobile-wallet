@@ -26,8 +26,9 @@ export type OverviewProps = NativeStackScreenProps<
   'OverviewScreen'
 >
 
-const OverviewScreen = ({ navigation }: OverviewProps) => {
+const OverviewScreen = ({ navigation, route }: OverviewProps) => {
   const [refreshing, setRefreshing] = React.useState(false)
+  console.log(route.params, 'what is route params?')
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)

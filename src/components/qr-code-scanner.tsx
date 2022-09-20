@@ -20,7 +20,8 @@ import { networkState, accountForAssetState } from '../atoms'
 import { AppIcons } from '../assets'
 import { palette } from '../theme'
 const { TimesIcon } = AppIcons
-import { walletConnect } from '../WalletConnect'
+import { initWalletConnect } from '../WalletConnect'
+import { useNavigation } from '@react-navigation/native'
 
 type QrCodeScannerPropsType = {
   onClose: (address: string) => void
@@ -30,9 +31,13 @@ type QrCodeScannerPropsType = {
 const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
   const [hasPermission, setHasPermission] = React.useState(false)
   const { onClose, chain } = props
+  const navigation = useNavigation()
+
   const [error, setError] = useState('')
   const activeNetwork = useRecoilValue(networkState)
   const ethAccount = useRecoilValue(accountForAssetState('ETH'))
+  const [showInjectionFlow, setShowInjectionFlow] = useState(false)
+  const [walletConnectPayload, setWalletConnectPayload] = useState({})
 
   const devices = useCameraDevices()
   const device = devices.back
@@ -47,12 +52,17 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
         onClose(address)
       } else if (qrCode.displayValue?.startsWith('wc')) {
         console.log('inside if')
-
         //Wallet connect currently only supports EVM, so only eth accounts
-        await walletConnect(qrCode.displayValue, ethAccount, activeNetwork)
+        let wcPayload = await initWalletConnect(qrCode.displayValue)
+        console.log(wcPayload, 'wcPayload')
+        setWalletConnectPayload({
+          payload: wcPayload,
+          uri: qrCode.displayValue,
+        })
         setError('Wallet connect connected')
+        setShowInjectionFlow(true)
+        address ? onClose(address) : null
       } else {
-        console.log(address, 'address and full:', qrCode.displayValue)
         setError(labelTranslateFn('invalidQRCode')!)
       }
     },
@@ -79,7 +89,12 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
       const status = await Camera.requestCameraPermission()
       setHasPermission(status === 'authorized')
     })()
-  }, [])
+    if (showInjectionFlow && Object.keys(walletConnectPayload).length !== 0) {
+      navigation.navigate('OverviewScreen', {
+        walletConnectPayload,
+      })
+    }
+  }, [showInjectionFlow, navigation, walletConnectPayload])
 
   return (
     <Modal style={styles.modalView}>

@@ -45,6 +45,7 @@ import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-scre
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
 import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
+
 import { AppIcons, Fonts } from '../assets'
 const { UserCog, SwapCheck, InfinityIcon, TimesIcon } = AppIcons
 

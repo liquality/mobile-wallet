@@ -44,7 +44,7 @@ connector.rejectRequest({
   },
 }) */
 
-export const walletConnect = async (uri, account, activeNetwork) => {
+export const createConnector = async (uri) => {
   const connector = new WalletConnect({
     // Required
     uri,
@@ -56,24 +56,41 @@ export const walletConnect = async (uri, account, activeNetwork) => {
       name: 'WalletConnect',
     },
   })
+  return connector
+}
+
+export const initWalletConnect = async (uri) => {
+  let connector = await createConnector(uri)
 
   // Subscribe to session requests
-  connector.on('session_request', (error, payload) => {
-    console.log(payload, 'PAYLOOOAD', payload.params[0].chainId, account)
-    connector.approveSession({
-      accounts: [
-        // required
-        account.address,
-      ],
-      chainId: payload.params[0].chainId, // required
-    })
+  let payloadResult = connector.on(
+    'session_request',
+    async (error, payload) => {
+      if (error) {
+        throw error
+      } else return payload
+    },
+  )
+  console.log(payloadResult, 'return ???')
+  return payloadResult
+}
 
-    if (error) {
-      throw error
-    }
+export const approveWalletConnect = async (uri, account, chainId) => {
+  let connector = await createConnector(uri)
+
+  connector.approveSession({
+    accounts: [
+      // required
+      account.address,
+    ],
+    chainId, // required
   })
+}
 
+export const signWalletConnectTransaction = async (uri, activeNetwork) => {
   // Subscribe to call requests
+  let connector = await createConnector(uri)
+
   connector.on('call_request', (error, payload) => {
     console.log(payload, 'call req payload')
     //payload should include eth switch network, eth sign transaction/msg
@@ -95,12 +112,12 @@ export const walletConnect = async (uri, account, activeNetwork) => {
     } */
     let params = {
       activeNetwork,
-      asset: 'ETH',
-      fee: parseInt(payload.params[0].gas, 16),
+      asset: 'MATIC',
+      fee: payload.params[0].gas,
       feeLabel: 'average',
       memo: payload.params[0].data,
       to: payload.params[0].to,
-      value: parseInt(payload.params[0].value, 16),
+      value: payload.params[0].value,
     }
     console.log(params, 'params sent in sendtransaction')
 
