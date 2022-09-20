@@ -1,18 +1,18 @@
 import React, { FC, useEffect } from 'react'
 import { View, StyleSheet, Modal } from 'react-native'
-import { ChainId } from '@liquality/cryptoassets'
 
 import { Fonts } from '../../assets'
-import { palette, Text } from '../../theme'
+import { Button, palette, Text } from '../../theme'
 
 type ApproveInjectionModal = {
   onClose: (address: string) => void
-  chain: ChainId
+  payload: Object
 }
 
 const ApproveInjectionModal: FC<ApproveInjectionModal> = (props) => {
   const [hasPermission, setHasPermission] = React.useState(false)
 
+  console.log(props, 'was proppys?')
   const handleCloseBtnPress = () => {
     //onClose('')
   }

@@ -53,9 +53,6 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
         onClose(address)
       } else if (qrCode.displayValue?.startsWith('wc')) {
         console.log('inside if')
-        //Wallet connect currently only supports EVM, so only eth accounts
-        /*   let wcPayload = await initWalletConnect(qrCode.displayValue)
-        console.log(wcPayload, 'wcPayload') */
 
         await initWalletConnect(qrCode.displayValue, function (wcPayload) {
           console.log(wcPayload, 'wcPayload IN CALLBACKKK')
@@ -106,6 +103,7 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
       }
     }
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showInjectionFlow, navigation, walletConnectPayload])
 
   return (

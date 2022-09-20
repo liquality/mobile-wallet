@@ -20,6 +20,8 @@ import RefreshIndicator from '../../../components/refresh-indicator'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
+import { useEffect } from 'react'
+import ApproveInjectionModal from '../approve-injection-modal'
 
 export type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
@@ -28,11 +30,19 @@ export type OverviewProps = NativeStackScreenProps<
 
 const OverviewScreen = ({ navigation, route }: OverviewProps) => {
   const [refreshing, setRefreshing] = React.useState(false)
+  const [showInjectionModal, setShowInjectionModal] = React.useState(false)
+
   console.log(route.params, 'what is route params?')
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
     populateWallet().then(() => setRefreshing(false))
+  }, [])
+
+  useEffect(() => {
+    if (route.params) {
+      setShowInjectionModal(true)
+    }
   }, [])
 
   const { height } = useWindowDimensions()
@@ -47,6 +57,12 @@ const OverviewScreen = ({ navigation, route }: OverviewProps) => {
           variant={'refreshContainer'}
         />
       )}
+      {showInjectionModal ? (
+        <ApproveInjectionModal
+          payload={route.params.walletConnectPayload}
+          onClose={() => console.log('I WAS CLOSED')}
+        />
+      ) : null}
       <ScrollView
         scrollEnabled
         refreshControl={
