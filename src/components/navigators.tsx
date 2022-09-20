@@ -24,7 +24,7 @@ import SendScreen from '../screens/wallet-features/send/send-screen'
 import SendReviewScreen from '../screens/wallet-features/send/send-review-screen'
 import CustomFeeScreen from '../screens/wallet-features/custom-fee/custom-fee-screen'
 import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
-import { RootStackParamList } from '../types'
+import { RootStackParamList, RootTabParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
@@ -49,7 +49,7 @@ import { AppIcons, Fonts } from '../assets'
 const { UserCog, SwapCheck, InfinityIcon, TimesIcon } = AppIcons
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator<RootTabParamList>()
 
 export const OnboardingContext = createContext({})
 
@@ -394,7 +394,7 @@ export const MainNavigator = () => (
     <Tab.Screen name="AppStackNavigator" component={AppStackNavigator} />
     <Tab.Screen
       name="ShowAllNftsScreen"
-      component={WithPopupMenu(ShowAllNftsScreen)}
+      component={ShowAllNftsScreen}
       options={({}) => ({
         headerShown: true,
         headerTitle: '',
@@ -403,7 +403,7 @@ export const MainNavigator = () => (
     />
     <Tab.Screen
       name="SettingsScreen"
-      component={WithPopupMenu(SettingsScreen)}
+      component={SettingsScreen}
       options={({}) => ({
         headerShown: true,
         headerTitle: '',

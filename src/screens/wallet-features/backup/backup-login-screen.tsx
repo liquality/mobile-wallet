@@ -19,9 +19,9 @@ import GradientBackground from '../../../components/gradient-background'
 import { labelTranslateFn } from '../../../utils'
 import { Fonts } from '../../../assets'
 
-type LoginScreenProps = NativeStackScreenProps<
+type BackupLoginScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'LoginScreen'
+  'BackupLoginScreen'
 >
 const useInputState = (
   initialValue: string,
@@ -31,7 +31,7 @@ const useInputState = (
   return { value, onChangeText: setValue }
 }
 
-const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
+const BackupLoginScreen = ({ navigation }: BackupLoginScreenProps) => {
   const PASSWORD_LENGTH = 8
   const passwordInput = useInputState('')
   const [error, setError] = useState('')

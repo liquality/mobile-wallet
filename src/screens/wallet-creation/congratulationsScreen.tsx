@@ -10,7 +10,7 @@ import { Fonts } from '../../assets'
 
 type CongratulationsProps = NativeStackScreenProps<
   RootStackParamList,
-  'SeedPhraseConfirmationScreen'
+  'CongratulationsScreen'
 >
 
 const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {

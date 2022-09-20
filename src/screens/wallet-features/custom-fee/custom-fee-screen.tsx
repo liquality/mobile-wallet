@@ -40,7 +40,7 @@ const scrollViewStyle: ViewStyle = {
 
 type CustomFeeScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'SendScreen'
+  'CustomFeeScreen'
 >
 type SpeedMode = keyof FeeDetails
 
