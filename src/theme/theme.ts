@@ -84,7 +84,7 @@ export const theme = createTheme({
       fontSize: 24,
     },
     slogan2: {
-      fontFamily: Fonts.AlternatesLight,
+      fontFamily: Fonts.Thin,
       color: 'mainForeground',
       fontSize: 55,
       marginVertical: 'l',
@@ -216,7 +216,7 @@ export const theme = createTheme({
       color: 'mainForeground',
     },
     loginToSeePhraseTitle: {
-      fontFamily: Fonts.AlternatesLight,
+      fontFamily: Fonts.Thin,
       color: 'mainForeground',
       fontSize: 35,
       textAlign: 'center',
