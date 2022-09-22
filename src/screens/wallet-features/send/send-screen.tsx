@@ -525,7 +525,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             justifyContent="space-between"
             alignItems="flex-end"
             marginBottom="m">
-            <Box flexDirection="row">
+            <Box flexDirection="row" alignItems={'baseline'}>
               <Text variant="amountLabel" tx="sendScreen.available" />
               <Text variant="amount">{` ${availableAmount} ${code}`}</Text>
             </Box>

@@ -268,7 +268,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Regular,
     color: palette.white,
     fontSize: 30,
-    lineHeight: 30,
   },
   description: {
     fontFamily: Fonts.SemiBold,

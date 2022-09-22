@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Regular,
     color: palette.white,
     fontSize: 28,
-    lineHeight: 27,
   },
   checkmark: {
     width: 102,

@@ -29,7 +29,7 @@ import UserCog from '../assets/icons/user-cog.svg'
 import SwapCheck from '../assets/icons/facelift/rightTick.svg'
 import InfinityIcon from '../assets/icons/infinity.svg'
 import TimesIcon from '../assets/icons/facelift/swapCancelStateDefault.svg'
-// import Loader from '../assets/icons/facelift/progresssIndicatorLg.svg'
+import Loader from '../assets/icons/facelift/progresssIndicatorLg.svg'
 import LockIcon from '../assets/icons/facelift/lock.svg'
 import ManageAssetsIcon from '../assets/icons/facelift/chart.svg'
 import SendIcon from '../assets/icons/facelift/sendStateDefault.svg'
@@ -106,7 +106,7 @@ export default {
   SwapCheck,
   InfinityIcon,
   TimesIcon,
-  // Loader,
+  Loader,
   LockIcon,
   ManageAssetsIcon,
   SendIcon,
