@@ -3,7 +3,7 @@ import { View, StyleSheet, Modal } from 'react-native'
 import { useRecoilValue } from 'recoil'
 
 import { Fonts } from '../../assets'
-import { accountForAssetState } from '../../atoms'
+import { accountForAssetState, networkState } from '../../atoms'
 import { Button, palette, Text } from '../../theme'
 import { approveWalletConnect } from '../../WalletConnect'
 
@@ -14,15 +14,18 @@ type ApproveInjectionModal = {
 
 const ApproveInjectionModal: FC<ApproveInjectionModal> = (props) => {
   const ethAccount = useRecoilValue(accountForAssetState('ETH'))
+  const activeNetwork = useRecoilValue(networkState)
 
   const { setShowInjectionModal, payload } = props
   console.log(payload, 'payload URI FUUULLLin approve inj')
+  console.log(payload.payload.params[0], 'metadata paramos')
   const handleClickOk = () => {
     approveWalletConnect(
       payload.uri,
       ethAccount,
       payload.payload.params[0].chainId,
       payload.connector,
+      activeNetwork,
     )
     setShowInjectionModal(false)
   }

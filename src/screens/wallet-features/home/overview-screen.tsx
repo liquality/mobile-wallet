@@ -22,6 +22,9 @@ import { useHeaderHeight } from '@react-navigation/elements'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
 import { useEffect } from 'react'
 import ApproveInjectionModal from '../approve-injection-modal'
+import { EventEmitter } from 'events'
+
+const hub = new EventEmitter()
 
 export type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
@@ -31,6 +34,7 @@ export type OverviewProps = NativeStackScreenProps<
 const OverviewScreen = ({ navigation, route }: OverviewProps) => {
   const [refreshing, setRefreshing] = React.useState(false)
   const [showInjectionModal, setShowInjectionModal] = React.useState(false)
+  const [eventData, setEventData] = React.useState({})
 
   console.log(route.params, 'what is route params?')
 
@@ -43,7 +47,20 @@ const OverviewScreen = ({ navigation, route }: OverviewProps) => {
     if (route.params) {
       setShowInjectionModal(true)
     }
-  }, [route.params])
+
+    const onNewEvent = (eventData) => {
+      console.log(eventData, 'EVEEENTDATAA')
+      setEventData(eventData)
+    }
+    console.log(hub, 'wats hub inside component')
+
+    const listener = hub.addListener('signWalletConnectTransaction', onNewEvent)
+    return () => {
+      listener.removeListener('signWalletConnectTransaction', onNewEvent)
+    }
+  }, [route.params, eventData])
+
+  console.log(eventData, 'EVENT DATA SHOULD BE SET WITH PAYLOAD')
 
   const { height } = useWindowDimensions()
   const tabBarBottomHeight = useBottomTabBarHeight()

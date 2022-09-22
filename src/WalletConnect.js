@@ -1,8 +1,8 @@
 import WalletConnect from '@walletconnect/client'
 import { sendTransaction } from './store/store'
-let connectors = []
-let initialized = false
-const tempCallIds = []
+import { EventEmitter } from 'events'
+
+const hub = new EventEmitter()
 
 /* connector.on('disconnect', (error, payload) => {
   if (error) {
@@ -68,6 +68,7 @@ export const initWalletConnect = async (uri, callback) => {
     if (error) {
       throw error
     } else {
+      console.log(payload, 'wats payload')
       callback({ payload, connector })
     }
   })
@@ -78,6 +79,7 @@ export const approveWalletConnect = async (
   account,
   chainId,
   connector,
+  activeNetwork,
 ) => {
   console.log(uri, account.address, chainId, 'All of the things I need')
   // let connector = await createConnector(uri)
@@ -88,6 +90,36 @@ export const approveWalletConnect = async (
       account.address,
     ],
     chainId, // required
+  })
+
+  connector.on('call_request', (error, payload) => {
+    console.log(payload, 'call req payload')
+
+    hub.emit('signWalletConnectTransaction', {
+      payload,
+      createdAt: new Date(),
+    })
+    console.log(hub, 'wats hub inside WALLETCONNECT')
+
+    let params = {
+      activeNetwork,
+      asset: 'MATIC',
+      fee: payload.params[0].gas,
+      feeLabel: 'average',
+      memo: payload.params[0].data,
+      to: payload.params[0].to,
+      value: payload.params[0].value,
+    }
+    console.log(params, 'params sent in sendtransaction')
+
+    try {
+      sendTransaction(params)
+    } catch (err) {
+      console.log(err, 'error sending TRANSACTION')
+    }
+    if (error) {
+      throw error
+    }
   })
 }
 
@@ -112,11 +144,18 @@ foo("address", function(location){
   alert(location); // this is where you get the return value
 }); */
 
-export const signWalletConnectTransaction = async (uri, activeNetwork) => {
+export const signWalletConnectTransaction = async (
+  connector,
+  activeNetwork,
+) => {
   // Subscribe to call requests
-  let connector = await createConnector(uri)
+  //let connector = await createConnector(uri)
 
   connector.on('call_request', (error, payload) => {
+    hub.emit('signWalletConnectTransaction', {
+      payload,
+      createdAt: new Date(),
+    })
     console.log(payload, 'call req payload')
     //payload should include eth switch network, eth sign transaction/msg
     //call walletcore/chainify to sign/send transaction here
