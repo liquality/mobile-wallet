@@ -421,13 +421,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     alignItems: 'center',
-    paddingTop: 10,
+    justifyContent: 'center',
     borderTopWidth: 1,
     borderTopColor: palette.gray,
-    backgroundColor: palette.white,
   },
   tabFocused: {
-    backgroundColor: palette.white,
     borderTopColor: palette.black2,
   },
   checkIcon: {
