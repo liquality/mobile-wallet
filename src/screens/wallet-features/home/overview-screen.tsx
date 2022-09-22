@@ -15,17 +15,28 @@ import GradientBackground from '../../../components/gradient-background'
 import SummaryBlock from '../../../components/overview/summary-block'
 import ContentBlock from '../../../components/overview/content-block'
 import HandleLockWalletAndBackgroundTasks from '../../../components/handle-lock-wallet-and-background-tasks'
-import { populateWallet } from '../../../store/store'
+import {
+  getAllEnabledAccounts,
+  populateWallet,
+  updateNFTs,
+} from '../../../store/store'
 import RefreshIndicator from '../../../components/refresh-indicator'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
+import { setupWallet } from '@liquality/wallet-core'
+import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
+import { useRecoilValue } from 'recoil'
+import { networkState } from '../../../atoms'
 
 export type OverviewProps = NativeStackScreenProps<
   RootStackParamList,
   'OverviewScreen'
 >
 
+const wallet = setupWallet({
+  ...defaultOptions,
+})
 const OverviewScreen = ({ navigation }: OverviewProps) => {
   const [refreshing, setRefreshing] = React.useState(false)
 
@@ -34,9 +45,29 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
     populateWallet().then(() => setRefreshing(false))
   }, [])
 
+  const activeNetwork = useRecoilValue(networkState)
+
+  const { activeWalletId } = wallet.state
+
   const { height } = useWindowDimensions()
   const tabBarBottomHeight = useBottomTabBarHeight()
   const headerHeight = useHeaderHeight()
+
+  React.useEffect(() => {
+    async function fetchData() {
+      const enabledAccountsToSendIn = await getAllEnabledAccounts()
+      const accIds = enabledAccountsToSendIn.map((account) => {
+        return account.id
+      })
+      await updateNFTs({
+        walletId: activeWalletId,
+        network: activeNetwork,
+        accountIds: accIds,
+      })
+    }
+    fetchData()
+  }, [activeWalletId, activeNetwork])
+
   return (
     <Box flex={1}>
       {refreshing && (

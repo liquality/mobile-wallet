@@ -26,6 +26,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
   const { activeWalletId } = wallet.state
 
   const fetchAllNfts = async () => {
+    console.log(wallet.getters.allNftCollections, 'getters all nft collec')
     return wallet.getters.allNftCollections
   }
 
@@ -39,9 +40,10 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
       await updateNFTs({
         walletId: activeWalletId,
         network: activeNetwork,
-        accountIds: accountIdsToSendIn,
+        accountIds: accIds,
       })
       let allNfts = await fetchAllNfts()
+      console.log(allNfts, 'allNfts')
       setAllNftData(allNfts)
       let wholeNftArr = Object.values(allNfts).map((val) => {
         return val
@@ -49,7 +51,6 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
       setIterableNftArray(wholeNftArr)
     }
     fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeWalletId, activeNetwork])
 
   const seeNftDetail = useCallback(
@@ -65,8 +66,10 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
 
   const renderNftArray = () => {
     let rows = []
+    console.log(iterableNftArray.length, 'iterable length?s')
     if (iterableNftArray.length !== 0) {
       rows = iterableNftArray.map((nftItem, index) => {
+        console.log(nftItem[0].collection.name, 'name of each row')
         return (
           <ScrollView key={index} horizontal={true}>
             <Box
