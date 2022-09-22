@@ -46,16 +46,10 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>AnekKannada-Bold.ttf</string>
-		<string>AnekKannada-ExtraBold.ttf</string>
-		<string>AnekKannada-ExtraLight.ttf</string>
 		<string>AnekKannada-Light.ttf</string>
-		<string>AnekKannada-Medium.ttf</string>
 		<string>AnekKannada-Regular.ttf</string>
 		<string>AnekKannada-SemiBold.ttf</string>
 		<string>AnekKannada-Thin.ttf</string>
-		<string>JetBrainsMono-Bold.ttf</string>
-		<string>JetBrainsMono-Medium.ttf</string>
-		<string>JetBrainsMono-Regular.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
