@@ -399,6 +399,7 @@ export const MainNavigator = () => (
         headerShown: true,
         headerTitle: '',
         headerLeft: TabSettingsScreenHeaderLeft,
+        headerShadowVisible: false,
       })}
     />
     <Tab.Screen
