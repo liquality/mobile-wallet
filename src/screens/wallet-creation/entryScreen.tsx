@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { View, StyleSheet, Dimensions, Alert } from 'react-native'
+import { View, StyleSheet, Dimensions, Alert, StatusBar } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, RootStackParamList } from '../../types'
 import Header from '../header'
@@ -110,6 +110,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
 
   return (
     <Box style={styles.container}>
+      <StatusBar hidden />
       <GradientBackground
         width={Dimensions.get('screen').width}
         height={Dimensions.get('screen').height}
