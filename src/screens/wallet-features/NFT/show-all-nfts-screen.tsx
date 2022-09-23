@@ -31,7 +31,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
   const [, setAllNftData] = useState({})
   const [iterableNftArray, setIterableNftArray] = useState([])
   const [accountIdsToSendIn, setAccountIdsToSendIn] = useState<string[]>([])
-  const [showBasic, setShowBasic] = useState<boolean[]>(false)
+  const [showNfts, setShowNfts] = useState<boolean>(false)
 
   const { activeWalletId } = wallet.state
 
@@ -115,15 +115,15 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
     return (
       <Box flex="1" flexDirection="row">
         <Pressable
-          style={[styles.tabText, showBasic && styles.tabBarFocused]}
-          onPress={() => setShowBasic(!showBasic)}>
-          <Text style={[styles.tabText, showBasic && styles.headerTextFocused]}>
+          style={[styles.tabText, showNfts && styles.tabBarFocused]}
+          onPress={() => setShowNfts(!showNfts)}>
+          <Text style={[styles.tabText, showNfts && styles.headerTextFocused]}>
             Nfts
           </Text>
         </Pressable>
         <Pressable
-          style={[styles.tabText, !showBasic && styles.tabBarFocused]}
-          onPress={() => setShowBasic(!showBasic)}>
+          style={[styles.tabText, !showNfts && styles.tabBarFocused]}
+          onPress={() => setShowNfts(!showNfts)}>
           <Text style={[styles.tabText]}>Activity</Text>
         </Pressable>
       </Box>
@@ -147,18 +147,16 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
             height={225}></NftHeader>
           <Text variant="loading" tx="overviewScreen.load" />
         </Box>
-        <Box styles={styles.container}>{renderTabBar()}</Box>
+        <Box styles={styles.container}>
+          {renderTabBar()}
+          {showNfts ? renderNftArray() : null}
+        </Box>
       </ScrollView>
     </Box>
   )
 }
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    width: '100%',
-    padding: 30,
-    margin: 50,
-  },
+  container: {},
 
   tabText: {
     //fontFamily: 'Anek Kannada';
