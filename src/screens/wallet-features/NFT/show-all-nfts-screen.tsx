@@ -36,7 +36,6 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
   const { activeWalletId } = wallet.state
 
   const fetchAllNfts = async () => {
-    console.log(wallet.getters.allNftCollections, 'getters all nft collec')
     return wallet.getters.allNftCollections
   }
 
@@ -53,7 +52,6 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
         accountIds: accIds,
       })
       let allNfts = await fetchAllNfts()
-      console.log(allNfts, 'allNfts')
       setAllNftData(allNfts)
       let wholeNftArr = Object.values(allNfts).map((val) => {
         return val
@@ -76,14 +74,13 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
 
   const renderNftArray = () => {
     let rows = []
-    console.log(iterableNftArray.length, 'iterable length?s')
     if (iterableNftArray.length !== 0) {
       rows = iterableNftArray.map((nftItem, index) => {
         //If NFT collection array is 1, image should cover full width
         if (nftItem.length === 1) {
-          console.log(nftItem, 'OPENSEA COLLEC BÄÄ')
           return (
             <Box style={{ margin: 20 }}>
+              <Text></Text>
               <Pressable onPress={() => seeNftDetail(nftItem[0])}>
                 <Image
                   source={{
@@ -111,32 +108,47 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
                     height: Dimensions.get('screen').width / 2,
                   }}
                 />
+                <Image
+                  source={{
+                    uri: nftItem[1].image_thumbnail_url,
+                  }}
+                  style={{
+                    width: Dimensions.get('screen').width / 2,
+                    height: Dimensions.get('screen').width / 2,
+                  }}
+                />
               </Pressable>
             </Box>
           )
         } else {
-          // rows = iterableNftArray.map((nftItem, index) => {
-          return (
-            <ScrollView key={index} horizontal={true}>
-              <Box
-                flex={0.1}
-                flexDirection="row"
-                alignItems="center"
-                paddingHorizontal="s">
-                <Text>{nftItem[0].collection.name}</Text>
+          let bu = nftItem.map((nftItemInsideCollection, index) => {
+            console.log(
+              nftItemInsideCollection.image_thumbnail_url,
+              'nft item inside collec',
+            )
+            return (
+              <ScrollView key={index} horizontal={true}>
+                <Box
+                  flex={0.1}
+                  flexDirection="row"
+                  alignItems="center"
+                  paddingHorizontal="s">
+                  <Text>{nftItemInsideCollection.collection.name}</Text>
 
-                <Pressable onPress={() => seeNftDetail(nftItem[0])}>
-                  <Image
-                    source={{
-                      uri: nftItem[0].image_thumbnail_url,
-                    }}
-                    style={{ width: 150, height: 100 }}
-                  />
-                </Pressable>
-              </Box>
-            </ScrollView>
-          )
-          // }
+                  <Pressable
+                    onPress={() => seeNftDetail(nftItemInsideCollection)}>
+                    <Image
+                      source={{
+                        uri: nftItemInsideCollection.image_thumbnail_url,
+                      }}
+                      style={{ width: 150, height: 100 }}
+                    />
+                  </Pressable>
+                </Box>
+              </ScrollView>
+            )
+          })
+          return bu
         }
       })
     } else {
