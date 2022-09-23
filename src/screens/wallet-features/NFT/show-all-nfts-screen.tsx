@@ -31,7 +31,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
   const [, setAllNftData] = useState({})
   const [iterableNftArray, setIterableNftArray] = useState([])
   const [accountIdsToSendIn, setAccountIdsToSendIn] = useState<string[]>([])
-  const [showNfts, setShowNfts] = useState<boolean>(false)
+  const [showNfts, setShowNfts] = useState<boolean>(true)
 
   const { activeWalletId } = wallet.state
 
