@@ -79,30 +79,65 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
     console.log(iterableNftArray.length, 'iterable length?s')
     if (iterableNftArray.length !== 0) {
       rows = iterableNftArray.map((nftItem, index) => {
-        if (nftItem[0].collection.name === 'OpenSea Collections') {
-          console.log(nftItem[0], 'name of eachd row')
-        }
-        return (
-          <ScrollView key={index} horizontal={true}>
-            <Box
-              flex={0.1}
-              flexDirection="row"
-              alignItems="center"
-              paddingHorizontal="s">
-              <Text>{nftItem[0].collection.name}</Text>
-
+        //If NFT collection array is 1, image should cover full width
+        if (nftItem.length === 1) {
+          console.log(nftItem, 'OPENSEA COLLEC BÄÄ')
+          return (
+            <Box style={{ margin: 20 }}>
               <Pressable onPress={() => seeNftDetail(nftItem[0])}>
                 <Image
                   source={{
                     uri: nftItem[0].image_thumbnail_url,
                   }}
-                  /*                   source={require('../../../assets/icons/nft_thumbnail.png')}
-                   */ style={{ width: 150, height: 100 }}
+                  style={{
+                    width: Dimensions.get('screen').width,
+                    resizeMode: 'contain',
+                    aspectRatio: 1, // Your aspect ratio
+                  }}
                 />
               </Pressable>
             </Box>
-          </ScrollView>
-        )
+          )
+        } else if (nftItem.length === 2) {
+          return (
+            <Box style={{ margin: 20 }}>
+              <Pressable onPress={() => seeNftDetail(nftItem[0])}>
+                <Image
+                  source={{
+                    uri: nftItem[0].image_thumbnail_url,
+                  }}
+                  style={{
+                    width: Dimensions.get('screen').width / 2,
+                    height: Dimensions.get('screen').width / 2,
+                  }}
+                />
+              </Pressable>
+            </Box>
+          )
+        } else {
+          // rows = iterableNftArray.map((nftItem, index) => {
+          return (
+            <ScrollView key={index} horizontal={true}>
+              <Box
+                flex={0.1}
+                flexDirection="row"
+                alignItems="center"
+                paddingHorizontal="s">
+                <Text>{nftItem[0].collection.name}</Text>
+
+                <Pressable onPress={() => seeNftDetail(nftItem[0])}>
+                  <Image
+                    source={{
+                      uri: nftItem[0].image_thumbnail_url,
+                    }}
+                    style={{ width: 150, height: 100 }}
+                  />
+                </Pressable>
+              </Box>
+            </ScrollView>
+          )
+          // }
+        }
       })
     } else {
       return <Text>No NFTs to show</Text>
