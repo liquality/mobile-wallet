@@ -121,34 +121,36 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
             </Box>
           )
         } else {
-          let bu = nftItem.map((nftItemInsideCollection, index) => {
-            console.log(
-              nftItemInsideCollection.image_thumbnail_url,
-              'nft item inside collec',
-            )
-            return (
-              <ScrollView key={index} horizontal={true}>
-                <Box
-                  flex={0.1}
-                  flexDirection="row"
-                  alignItems="center"
-                  paddingHorizontal="s">
-                  <Text>{nftItemInsideCollection.collection.name}</Text>
-
-                  <Pressable
-                    onPress={() => seeNftDetail(nftItemInsideCollection)}>
-                    <Image
-                      source={{
-                        uri: nftItemInsideCollection.image_thumbnail_url,
-                      }}
-                      style={{ width: 150, height: 100 }}
-                    />
-                  </Pressable>
-                </Box>
-              </ScrollView>
-            )
-          })
-          return bu
+          let nftImagesScrollable = nftItem.map(
+            (nftItemInsideCollection, index) => {
+              console.log(
+                nftItemInsideCollection.image_thumbnail_url,
+                'nft item inside collec',
+              )
+              return (
+                <Pressable
+                  onPress={() => seeNftDetail(nftItemInsideCollection)}>
+                  <Image
+                    source={{
+                      uri: nftItemInsideCollection.image_thumbnail_url,
+                    }}
+                    style={{ width: 150, height: 100 }}
+                  />
+                </Pressable>
+              )
+            },
+          )
+          return (
+            <ScrollView key={index} horizontal={true}>
+              <Box
+                flex={0.1}
+                flexDirection="row"
+                alignItems="center"
+                paddingHorizontal="s">
+                {nftImagesScrollable}
+              </Box>
+            </ScrollView>
+          )
         }
       })
     } else {
