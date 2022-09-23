@@ -111,6 +111,25 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
     return rows
   }
 
+  const renderTabBar = () => {
+    return (
+      <Box flex="1" flexDirection="row">
+        <Pressable
+          style={[styles.tabText, showBasic && styles.tabBarFocused]}
+          onPress={() => setShowBasic(!showBasic)}>
+          <Text style={[styles.tabText, showBasic && styles.headerTextFocused]}>
+            Nfts
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[styles.tabText, !showBasic && styles.tabBarFocused]}
+          onPress={() => setShowBasic(!showBasic)}>
+          <Text style={[styles.tabText]}>Activity</Text>
+        </Pressable>
+      </Box>
+    )
+  }
+
   return (
     /*    <Box style={[styles.container, styles.fragmentContainer]}>
       <NftHeader></NftHeader>
@@ -128,130 +147,47 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
             height={225}></NftHeader>
           <Text variant="loading" tx="overviewScreen.load" />
         </Box>
-        <Box height={225}>
-          <Text>halo</Text>
-        </Box>
+        <Box styles={styles.container}>{renderTabBar()}</Box>
       </ScrollView>
     </Box>
-    /* 
-<Box flex={1}>
-      <Box style={styles.container}>
-        <Box style={styles.block}>
-          <Box style={styles.tabsBlock}>
-            <Pressable
-              style={[styles.tabHeader, showBasic && styles.headerFocused]}
-              onPress={() => setShowBasic(!showBasic)}>
-              <Text
-                style={[
-                  styles.headerText,
-                  showBasic && styles.headerTextFocused,
-                ]}>
-                BASIC
-              </Text>
-            </Pressable>
-            <Pressable
-              style={[styles.tabHeader, !showBasic && styles.headerFocused]}
-              onPress={() => setShowBasic(!showBasic)}>
-              <Text style={[styles.headerText]}>CUSTOMIZE</Text>
-            </Pressable>
-          </Box>
-          <Box style={styles.rowEnd}>
-            <Text style={[styles.headerText, styles.headerTextFocused]}></Text>
-          </Box>
-        </Box>
-        <Box style={[styles.row, styles.actions]}>
-          <Button
-            type="secondary"
-            variant="m"
-            label="Cancel"
-            onPress={navigation.goBack}
-            isBorderless={false}
-            isActive={true}
-          />
-          <Button
-            type="primary"
-            variant="m"
-            label="Apply"
-            isBorderless={false}
-            isActive={true}
-          />
-        </Box>
-      </Box>
-      </Box> */
   )
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: palette.white,
-    paddingVertical: 15,
+    justifyContent: 'center',
+    width: '100%',
+    padding: 30,
+    margin: 50,
   },
+
+  tabText: {
+    //fontFamily: 'Anek Kannada';
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 17,
+    lineHeight: 28,
+    letterSpacing: 0.75,
+    textTransform: 'capitalize',
+    color: '#646F85',
+
+    /* Light Mode_Asset & Activity Rows/Grey Meta Data */
+  },
+
   overviewBlock: {
     justifyContent: 'center',
     width: '100%',
     height: 225,
     paddingVertical: 10,
   },
-  indicatorBackgroundColor: {
-    backgroundColor: 'transparent',
-  },
-  fragmentContainer: {
-    paddingHorizontal: 20,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  rowEnd: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15,
+
+  tabBarFocused: {
+    borderBottomWidth: 2,
+    lineHeight: '1em',
+
+    color: palette.purplePrimary,
+    borderBottomColor: palette.purplePrimary,
   },
 
-  inputLabel: {
-    fontFamily: Fonts.Regular,
-    fontWeight: '300',
-    fontSize: 14,
-    marginRight: 5,
-    alignSelf: 'flex-end',
-  },
-  gasInput: {
-    marginTop: 5,
-    borderBottomColor: palette.mediumGreen,
-    borderBottomWidth: 1,
-    width: '30%',
-    textAlign: 'right',
-    paddingBottom: 0,
-    color: palette.black2,
-  },
-  actions: {
-    justifyContent: 'space-around',
-  },
-  tabsBlock: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    alignContent: 'stretch',
-  },
-  tabHeader: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: palette.gray,
-  },
-  headerFocused: {
-    borderBottomWidth: 1,
-    borderBottomColor: palette.black2,
-  },
-  headerText: {
-    fontFamily: Fonts.Regular,
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: '600',
-    color: palette.gray,
-  },
   headerTextFocused: {
     color: palette.black2,
   },

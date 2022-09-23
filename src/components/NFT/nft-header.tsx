@@ -16,21 +16,18 @@ type NftHeaderProps = {
 const NftHeader: React.FC<NftHeaderProps> = (props) => {
   const { width, height, isFullPage } = props
 
-  return (
-    /*     <Box
-      alignItems="center"
-      justifyContent="center"
-      style={StyleSheet.absoluteFill}>
-      <Box style={styles.insideHeader} width={`${width}`} height={`${height}`}>
-        <Text>Hej</Text>
+  const renderAllNftsHeaderText = () => {
+    return (
+      <Box flex="1" flexDirection="column">
+        <Text style={styles.nftText}>X NFTS</Text>
+        <Text style={[styles.nftText, styles.accountText]}>X ACCOUNTS</Text>
       </Box>
-    </Box> */
+    )
+  }
+  return (
     <Box style={styles.containerBox}>
       <Box width={width} height={height} style={styles.insideHeader}>
-        <Box flex="1" flexDirection="column">
-          <Text style={styles.nftText}>X NFffTS</Text>
-          <Text style={[styles.nftText, styles.accountText]}>X ACCffOUNTS</Text>
-        </Box>
+        {renderAllNftsHeaderText()}
       </Box>
     </Box>
   )
@@ -50,12 +47,12 @@ const styles = StyleSheet.create({
   nftText: {
     padding: 20,
     paddingBottom: 0,
-    marginVertical: 85,
+    marginVertical: 105,
+    //TODO add this font fontFamily: 'Anek Kannada',
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 40,
     lineHeight: 35,
-    letterSpacing: 0.25,
     color: '#000000',
     marginBottom: 0,
   },
