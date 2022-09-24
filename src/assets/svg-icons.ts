@@ -73,6 +73,7 @@ import ArrowDown from '../assets/icons/arrowDown.svg'
 import Exchange from '../assets/icons/doubleArrowThick.svg'
 import DownIcon from '../assets/icons/arrowDownThick.svg'
 import UpIcon from '../assets/icons/arrowUpThick.svg'
+import LogoFull from '../assets/icons/logoFull.svg'
 
 export default {
   PendingSwap,
@@ -150,4 +151,5 @@ export default {
   ArrowDown,
   DownIcon,
   UpIcon,
+  LogoFull,
 }

@@ -40,7 +40,7 @@ import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-scre
 import BackupLoginScreen from '../screens/wallet-features/backup/backup-login-screen'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/core'
 import CustomFeeEIP1559Screen from '../screens/wallet-features/custom-fee/custom-fee-eip-1559-screen'
-import { Box, palette, Text } from '../theme'
+import { Box, faceliftPalette, palette, Text } from '../theme'
 import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-screen'
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
@@ -69,7 +69,16 @@ export const WalletCreationNavigator = () => (
         gestureEnabled: true,
         ...TransitionPresets.SlideFromRightIOS,
       }}>
-      <Stack.Screen name="Entry" component={Entry} />
+      <Stack.Screen
+        name="Entry"
+        component={Entry}
+        options={{
+          headerShown: true,
+          headerTitle: '',
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: faceliftPalette.gradientEndColor },
+        }}
+      />
       <Stack.Screen name="TermsScreen" component={TermsScreen} />
       <Stack.Screen
         name="PasswordCreationScreen"

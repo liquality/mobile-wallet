@@ -4,7 +4,7 @@
     "wallet": "wallet 🇨🇳",
     "all_chains": "all chains 🇨🇳",
     "forgotPassword": "Forgot password? ",
-    "importWithSeedPhrase": "Import with seed phrase",
+    "importWithSeedPhrase": "Import with seed phrase.",
     "openSesame": "Open Sesame",
     "ok": "OK",
     "pleaseTryAgain": "Please try again",
@@ -57,7 +57,7 @@
     "congrats": "Congrats!"
   },
   "entryScreen": {
-    "createNewWallet": "Create a new Wallet"
+    "createNewWallet": "Create a New Wallet"
   },
   "loginScreen": {
     "password": "PASSWORD",

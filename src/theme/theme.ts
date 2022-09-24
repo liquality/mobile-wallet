@@ -1,5 +1,6 @@
 import { createTheme } from '@shopify/restyle'
 import { Fonts } from '../assets'
+import { faceliftPalette } from './faceliftPalette'
 import { palette } from './palette'
 
 export const theme = createTheme({
@@ -25,6 +26,10 @@ export const theme = createTheme({
     progressDotColor: palette.turquoise,
     addressColor: palette.black2,
     errorMsgBarColor: palette.yellowBar,
+    transparent: 'transparent',
+    // new colours
+    white: faceliftPalette.white,
+    activeButton: faceliftPalette.buttonActive,
   },
   spacing: {
     vs: 2,
@@ -32,7 +37,8 @@ export const theme = createTheme({
     m: 10,
     l: 15,
     xl: 20,
-    xxl: 70,
+    xxl: 50,
+    xxxl: 70,
   },
   breakpoints: {
     phone: 0,
@@ -234,6 +240,35 @@ export const theme = createTheme({
       fontSize: 16,
       color: 'addressColor',
       marginRight: 's',
+    },
+    pressableLabel: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: 17,
+      color: 'white',
+    },
+    whiteLabel: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: 15,
+      color: 'white',
+    },
+  },
+  pressableVariants: {
+    outline: {
+      height: 60,
+      width: '100%',
+      borderWidth: 2,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderColor: 'white',
+    },
+    solid: {
+      height: 60,
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'activeButton',
     },
   },
   buttonVariants: {

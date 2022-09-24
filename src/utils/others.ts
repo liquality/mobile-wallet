@@ -194,3 +194,9 @@ export const isNumber = (value: string): boolean => {
 }
 
 export const labelTranslateFn = (value: TxKeyPath) => translate(value)
+
+export const widthInPerFn = (value: number) => {
+  return {
+    width: `${value}%`,
+  }
+}

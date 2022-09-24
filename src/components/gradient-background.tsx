@@ -33,11 +33,11 @@ const GradientBackground: FC<Props> = (props) => {
               gradientUnits="userSpaceOnUse">
               <Stop stopColor={faceliftPalette.gradientStartColor} />
               <Stop
-                offset="0.385417"
+                offset={0.55}
                 stopColor={faceliftPalette.gradientMiddeColor}
               />
               <Stop
-                offset="0.833333"
+                offset={0.95}
                 stopColor={faceliftPalette.gradientEndColor}
               />
             </LinearGradient>

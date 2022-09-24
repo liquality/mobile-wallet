@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from 'react'
-import { StatusBar } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { NavigationContainer } from '@react-navigation/native'
 import {
@@ -64,7 +63,6 @@ const App: FC = () => {
         initialMetrics={initialWindowMetrics}
         testID={'app-test'}>
         <ThemeProvider theme={theme}>
-          <StatusBar barStyle={'light-content'} backgroundColor="white" />
           <GestureHandlerRootView style={backgroundStyle}>
             <NavigationContainer>
               <AppNavigator initialRouteName={initialRouteName} />

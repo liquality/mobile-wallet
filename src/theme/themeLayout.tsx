@@ -1,14 +1,18 @@
 import { createBox } from '@shopify/restyle'
 import React from 'react'
 import { ThemeType as Theme } from './theme'
-import { useColorScheme } from 'react-native'
+import { useColorScheme, StatusBar } from 'react-native'
 import { themeMode } from '../atoms'
 import { useRecoilValue } from 'recoil'
 import { faceliftPalette } from './faceliftPalette'
 
 const Box = createBox<Theme>()
 
-export const ThemeLayout = ({ children }: { children: React.ReactNode }) => {
+type Props = React.ComponentProps<typeof Box>
+
+export const ThemeLayout = (props: Props) => {
+  const { children, style, ...rest } = props
+
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
   if (theme) {
@@ -20,8 +24,11 @@ export const ThemeLayout = ({ children }: { children: React.ReactNode }) => {
       ? faceliftPalette.mainBackground
       : faceliftPalette.white
 
+  const statusBar = currentTheme === 'dark' ? 'light-content' : 'dark-content'
+
   return (
-    <Box flex={1} style={{ backgroundColor }}>
+    <Box {...rest} flex={1} style={[style, { backgroundColor }]}>
+      <StatusBar translucent barStyle={statusBar} />
       {children}
     </Box>
   )
