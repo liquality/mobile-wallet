@@ -1,5 +1,5 @@
 import React, { createContext } from 'react'
-import { View, StyleSheet, Pressable } from 'react-native'
+import { View, StyleSheet, Pressable, useColorScheme } from 'react-native'
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
@@ -46,6 +46,9 @@ import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
 import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
 import { AppIcons, Fonts } from '../assets'
+import { themeMode } from '../atoms'
+import { useRecoilValue } from 'recoil'
+
 const { UserCog, SwapCheck, InfinityIcon, TimesIcon } = AppIcons
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -55,59 +58,70 @@ export const OnboardingContext = createContext({})
 
 const PlaceholderComp = () => <Box />
 
-export const WalletCreationNavigator = () => (
-  <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
-    <Stack.Navigator
-      initialRouteName="Entry"
-      /**
-       * TransitionPresets types exist only on @react-navigation/stack
-       * but we are using @react-navigation/native-stack that is the
-       * reason for red squiggly line
-       */
-      screenOptions={{
-        headerShown: false,
-        gestureEnabled: true,
-        ...TransitionPresets.SlideFromRightIOS,
-      }}>
-      <Stack.Screen
-        name="Entry"
-        component={Entry}
-        options={{
-          headerShown: true,
-          headerTitle: '',
-          headerShadowVisible: false,
-          statusBarColor: faceliftPalette.gradientEndColor,
-          headerStyle: { backgroundColor: faceliftPalette.gradientEndColor },
-        }}
-      />
-      <Stack.Screen
-        name="TermsScreen"
-        component={TermsScreen}
-        options={{
-          headerShown: true,
-          headerTitle: '',
-          headerShadowVisible: false,
-          headerBackVisible: false,
-          headerStyle: { backgroundColor: faceliftPalette.white },
-        }}
-      />
-      <Stack.Screen
-        name="PasswordCreationScreen"
-        component={PasswordCreationScreen}
-      />
-      <Stack.Screen name="SeedPhraseScreen" component={SeedPhraseScreen} />
-      <Stack.Screen
-        name="SeedPhraseConfirmationScreen"
-        component={SeedPhraseConfirmationScreen}
-      />
-      <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-      <Stack.Screen
-        name="CongratulationsScreen"
-        component={CongratulationsScreen}
-      />
-    </Stack.Navigator>
-  </OnboardingContext.Provider>
-)
+export const WalletCreationNavigator = () => {
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
+
+  const backgroundColor =
+    currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
+
+  return (
+    <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
+      <Stack.Navigator
+        initialRouteName="Entry"
+        /**
+         * TransitionPresets types exist only on @react-navigation/stack
+         * but we are using @react-navigation/native-stack that is the
+         * reason for red squiggly line
+         */
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: true,
+          ...TransitionPresets.SlideFromRightIOS,
+        }}>
+        <Stack.Screen
+          name="Entry"
+          component={Entry}
+          options={{
+            headerShown: true,
+            headerTitle: '',
+            headerShadowVisible: false,
+            statusBarColor: faceliftPalette.gradientEndColor,
+            headerStyle: { backgroundColor: faceliftPalette.gradientEndColor },
+          }}
+        />
+        <Stack.Screen
+          name="TermsScreen"
+          component={TermsScreen}
+          options={{
+            headerShown: true,
+            headerTitle: '',
+            headerShadowVisible: false,
+            headerBackVisible: false,
+            headerStyle: { backgroundColor },
+          }}
+        />
+        <Stack.Screen
+          name="PasswordCreationScreen"
+          component={PasswordCreationScreen}
+        />
+        <Stack.Screen name="SeedPhraseScreen" component={SeedPhraseScreen} />
+        <Stack.Screen
+          name="SeedPhraseConfirmationScreen"
+          component={SeedPhraseConfirmationScreen}
+        />
+        <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <Stack.Screen
+          name="CongratulationsScreen"
+          component={CongratulationsScreen}
+        />
+      </Stack.Navigator>
+    </OnboardingContext.Provider>
+  )
+}
 
 export const WalletImportNavigator = () => (
   <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>

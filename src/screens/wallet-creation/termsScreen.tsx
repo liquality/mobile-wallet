@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView } from 'react-native'
+import { ScrollView, useColorScheme } from 'react-native'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
@@ -8,16 +8,18 @@ import {
   ThemeLayout,
   ThemeText,
   Text,
+  ThemeIcon,
   Pressable,
 } from '../../theme'
-import { Fonts, AppIcons } from '../../assets'
+import { Fonts } from '../../assets'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import { ONBOARDING_SCREEN_DEFAULT_PADDING } from '../../utils'
 import { LinearGradient } from 'expo-linear-gradient'
 import { CommonActions } from '@react-navigation/native'
+import { themeMode } from '../../atoms'
+import { useRecoilValue } from 'recoil'
 
-const { OnlyLqLogo } = AppIcons
-const transparentToWhiteGradient = [
+const lightGradient = [
   'rgba(255,255,255,0.6)',
   faceliftPalette.white,
   faceliftPalette.white,
@@ -25,9 +27,25 @@ const transparentToWhiteGradient = [
   faceliftPalette.white,
 ]
 
+const darkGradient = [
+  'rgba(61, 71, 103, 0.6)',
+  faceliftPalette.darkGrey,
+  faceliftPalette.darkGrey,
+  faceliftPalette.darkGrey,
+  faceliftPalette.darkGrey,
+]
+
 type TermsProps = NativeStackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation }: TermsProps) => {
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() || 'light'
+  if (theme) {
+    currentTheme = theme
+  }
+
+  const gradientType = currentTheme === 'light' ? lightGradient : darkGradient
+
   const navigateToSeedPhraseScreen = () => {
     navigation.dispatch(
       CommonActions.reset({
@@ -48,7 +66,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
   return (
     <ThemeLayout
       style={{ paddingHorizontal: ONBOARDING_SCREEN_DEFAULT_PADDING }}>
-      <OnlyLqLogo />
+      <ThemeIcon iconName="OnlyLqLogo" />
       <Box marginTop={'xxl'}>
         <ThemeText style={styles.termsTitle} tx="termsScreen.termPrivacy" />
       </Box>
@@ -59,10 +77,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
           </ScrollView>
         </Box>
         <Box flex={0.3} backgroundColor="transparent">
-          <LinearGradient
-            colors={transparentToWhiteGradient}
-            style={styles.linearStyle}
-          />
+          <LinearGradient colors={gradientType} style={styles.linearStyle} />
           <Box marginVertical={'xl'}>
             <Pressable
               label={{ tx: 'termsScreen.iAgree:' }}

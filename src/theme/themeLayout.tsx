@@ -20,9 +20,7 @@ export const ThemeLayout = (props: Props) => {
   }
 
   const backgroundColor =
-    currentTheme === 'dark'
-      ? faceliftPalette.mainBackground
-      : faceliftPalette.white
+    currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
 
   const statusBar = currentTheme === 'dark' ? 'light-content' : 'dark-content'
 

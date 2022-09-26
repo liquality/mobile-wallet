@@ -74,7 +74,8 @@ import Exchange from '../assets/icons/doubleArrowThick.svg'
 import DownIcon from '../assets/icons/arrowDownThick.svg'
 import UpIcon from '../assets/icons/arrowUpThick.svg'
 import LogoFull from '../assets/icons/logoFull.svg'
-import OnlyLqLogo from '../assets/icons/onlyLqLogo.svg'
+import OnlyLqLogoDark from '../assets/icons/onlyLqLogoDark.svg'
+import OnlyLqLogoLight from '../assets/icons/onlyLqLogoLight.svg'
 
 export default {
   PendingSwap,
@@ -153,5 +154,6 @@ export default {
   DownIcon,
   UpIcon,
   LogoFull,
-  OnlyLqLogo,
+  OnlyLqLogoDark,
+  OnlyLqLogoLight,
 }
