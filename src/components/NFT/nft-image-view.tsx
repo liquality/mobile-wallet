@@ -10,7 +10,7 @@ import { AppIcons } from '../../assets'
 import { Box, palette } from '../../theme'
 import { Text } from '../text/text'
 
-const { SignOut } = AppIcons
+const { SeeAllNftsIcon, LongArrow, Star, Ellipse } = AppIcons
 
 type NftImageViewProps = {
   width: number
@@ -21,6 +21,19 @@ type NftImageViewProps = {
 const NftImageView: React.FC<NftImageViewProps> = (props) => {
   const { iterableNftArray, seeNftDetail } = props
 
+  const renderStarFavorite = () => {
+    return (
+      <Pressable
+        onPress={() => {
+          console.log('Go to favorites!')
+        }}
+        style={styles.ellipse}>
+        <Ellipse style={styles.ellipse}></Ellipse>
+        <Star style={styles.star}></Star>
+      </Pressable>
+    )
+  }
+
   const renderNftArray = () => {
     let rows = []
     if (iterableNftArray.length !== 0) {
@@ -29,6 +42,9 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
         if (nftItem.length === 1) {
           return (
             <Box style={{ margin: 20 }}>
+              <Text>
+                {nftItem[0].collection.name} | {nftItem.length}
+              </Text>
               <Pressable onPress={() => seeNftDetail(nftItem[0])}>
                 <Image
                   source={{
@@ -46,7 +62,12 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
         } else if (nftItem.length === 2) {
           return (
             <Box style={{ margin: 20 }}>
-              <Pressable onPress={() => seeNftDetail(nftItem[0])}>
+              <Text>
+                {nftItem[0].collection.name} | {nftItem.length}
+              </Text>
+              <Pressable
+                style={styles.pressable}
+                onPress={() => seeNftDetail(nftItem[0])}>
                 <Image
                   source={{
                     uri: nftItem[0].image_thumbnail_url,
@@ -72,28 +93,52 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
           let nftImagesScrollable = nftItem.map(
             (nftItemInsideCollection, index) => {
               return (
-                <Pressable
-                  onPress={() => seeNftDetail(nftItemInsideCollection)}>
-                  <Image
-                    source={{
-                      uri: nftItemInsideCollection.image_thumbnail_url,
-                    }}
-                    style={{ width: 150, height: 100 }}
-                  />
-                </Pressable>
+                <Box>
+                  <Pressable
+                    style={styles.pressable}
+                    onPress={() => seeNftDetail(nftItemInsideCollection)}>
+                    <Image
+                      source={{
+                        uri: nftItemInsideCollection.image_thumbnail_url,
+                      }}
+                      style={{
+                        marginRight: 5,
+                        width: 105,
+                        height: 105,
+                      }}
+                    />
+                  </Pressable>
+
+                  {renderStarFavorite()}
+                </Box>
               )
             },
           )
           return (
-            <ScrollView key={index} horizontal={true}>
-              <Box
-                flex={0.1}
-                flexDirection="row"
-                alignItems="center"
-                paddingHorizontal="s">
-                {nftImagesScrollable}
-              </Box>
-            </ScrollView>
+            <Box style={{ margin: 20 }}>
+              <Text>
+                {nftItem[0].collection.name} | {nftItem.length}
+              </Text>
+              <ScrollView key={index} horizontal={true}>
+                <Box
+                  flex={0.1}
+                  flexDirection="row"
+                  alignItems="center"
+                  paddingHorizontal="s">
+                  {nftImagesScrollable}
+
+                  <Pressable
+                    onPress={() =>
+                      console.log('Go to full collection screen here!')
+                    }
+                    style={styles.pressable}>
+                    <SeeAllNftsIcon width={105} height={105}></SeeAllNftsIcon>
+                    <Text style={styles.seeAllText}>See {'\n'}All</Text>
+                    <LongArrow style={styles.longArrow}></LongArrow>
+                  </Pressable>
+                </Box>
+              </ScrollView>
+            </Box>
           )
         }
       })
@@ -110,17 +155,47 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
 const styles = StyleSheet.create({
   container: {},
 
-  tabText: {
-    //fontFamily: 'Anek Kannada';
+  seeAllText: {
+    position: 'absolute',
+    left: '17.14%',
+    right: '56.19%',
+    top: '16.19%',
+    bottom: '15.24%',
+
+    //fontFamily: 'Anek Kannada',
     fontStyle: 'normal',
     fontWeight: '500',
-    fontSize: 17,
-    lineHeight: 28,
-    letterSpacing: 0.75,
-    textTransform: 'capitalize',
-    color: '#646F85',
-
-    /* Light Mode_Asset & Activity Rows/Grey Meta Data */
+    fontSize: 16,
+    lineHeight: 18,
+    color: palette.white,
+  },
+  longArrow: {
+    position: 'absolute',
+    left: '60%',
+    right: '50%',
+    top: '60%',
+    bottom: '50%',
+  },
+  ellipse: {
+    position: 'absolute',
+    left: '0%',
+    right: '0%',
+    top: '0%',
+    bottom: '0%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  star: {
+    position: 'absolute',
+    left: '8%',
+    right: '8%',
+    top: '8%',
+    bottom: '8%',
   },
 
   overviewBlock: {
@@ -137,13 +212,7 @@ const styles = StyleSheet.create({
     color: palette.purplePrimary,
     borderBottomColor: palette.purplePrimary,
   },
-
-  headerTextFocused: {
-    color: palette.black2,
-  },
-  fiatFast: {
-    color: palette.green,
-  },
+  pressable: { position: 'relative' },
 })
 
 export default NftImageView

@@ -65,7 +65,7 @@ import XPinkIcon from '../assets/icons/XPink.svg'
 import XIcon from '../assets/icons/X.svg'
 import PointingFinger from '../assets/icons/pointingFinger.svg'
 import BentArrow from '../assets/icons/bentArrow.svg'
-import TransakIcon from '../assets/icons/transak.svg'
+import TransakIcon from '../assets/icons/transak'
 import QRCode from '../assets/icons/qr-code.svg'
 import DropdownIcon from '../assets/icons/dropdownMenu.svg'
 import Clock from '../assets/icons/clock.svg'
@@ -73,6 +73,13 @@ import ArrowDown from '../assets/icons/arrow-down.svg'
 import Exchange from '../assets/icons/exchange.svg'
 import DownIcon from '../assets/icons/down.svg'
 import UpIcon from '../assets/icons/up.svg'
+import SeeAllNftsIcon from '../assets/icons/nfts/see-all-nfts.svg'
+import LongArrow from '../assets/icons/nfts/long-arrow.svg'
+import Star from '../assets/icons/nfts/star.svg'
+import Ellipse from '../assets/icons/nfts/ellipse.svg'
+
+
+
 
 export default {
   PendingSwap,
@@ -150,4 +157,9 @@ export default {
   ArrowDown,
   DownIcon,
   UpIcon,
+  SeeAllNftsIcon,
+  LongArrow,
+  Ellipse,
+  Star,
+
 }
