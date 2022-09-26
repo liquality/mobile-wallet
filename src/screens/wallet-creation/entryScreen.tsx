@@ -1,18 +1,25 @@
 import React, { FC } from 'react'
-import { Image, StatusBar } from 'react-native'
+import { Image, StatusBar, ViewStyle } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
-import { Box, Text, Pressable, ThemeLayout } from '../../theme'
-import GradientBackground from '../../components/gradient-background'
-import {
-  ONBOARDING_SCREEN_DEFAULT_PADDING,
-  SCREEN_WIDTH,
-  SCREEN_HEIGHT,
-} from '../../utils'
+import { Box, Text, Pressable, ThemeLayout, faceliftPalette } from '../../theme'
+import { ONBOARDING_SCREEN_DEFAULT_PADDING, SCREEN_WIDTH } from '../../utils'
 import { AppIcons, Images } from '../../assets'
 import { scale } from 'react-native-size-matters'
+import { LinearGradient } from 'expo-linear-gradient'
 
 const { LogoFull } = AppIcons
+const gradientColor = [
+  faceliftPalette.gradientEndColor,
+  faceliftPalette.gradientMiddeColor,
+  faceliftPalette.gradientMiddeColor,
+  faceliftPalette.gradientStartColor,
+]
+
+const gradientStyle: ViewStyle = {
+  flex: 1,
+  paddingHorizontal: ONBOARDING_SCREEN_DEFAULT_PADDING,
+}
 
 type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
@@ -27,42 +34,42 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
     })
 
   return (
-    <ThemeLayout
-      style={{ paddingHorizontal: ONBOARDING_SCREEN_DEFAULT_PADDING }}>
+    <ThemeLayout>
       <StatusBar barStyle="light-content" />
-      <GradientBackground
-        width={SCREEN_WIDTH}
-        height={SCREEN_HEIGHT}
-        isFullPage
-      />
-      <LogoFull width={scale(100)} />
-      <Box flex={0.9} marginTop="xl">
-        <Image
-          source={Images.oneWalletAllChains}
-          resizeMode="contain"
-          style={{
-            width: scale(
-              (SCREEN_WIDTH - ONBOARDING_SCREEN_DEFAULT_PADDING) * 0.5,
-            ),
-          }}
+      <LinearGradient colors={gradientColor} style={gradientStyle}>
+        <LogoFull width={scale(100)} />
+        <Box flex={0.9} marginTop="xl">
+          <Image
+            source={Images.oneWalletAllChains}
+            resizeMode="contain"
+            style={{
+              width: scale(
+                (SCREEN_WIDTH - ONBOARDING_SCREEN_DEFAULT_PADDING) * 0.5,
+              ),
+            }}
+          />
+        </Box>
+        <Pressable
+          label={{ tx: 'entryScreen.createNewWallet' }}
+          onPress={handleCreateWalletPress}
+          variant="outline"
         />
-      </Box>
-      <Pressable
-        label={{ tx: 'entryScreen.createNewWallet' }}
-        onPress={handleCreateWalletPress}
-        variant="outline"
-      />
-      <Box marginTop={'xl'} alignItems="center">
-        <Text opacity={0.8} variant={'whiteLabel'} tx="common.forgotPassword" />
-        <Text
-          opacity={0.8}
-          variant={'whiteLabel'}
-          textDecorationLine={'underline'}
-          tx="common.importWithSeedPhrase"
-          marginTop={'s'}
-          onPress={handleImportPress}
-        />
-      </Box>
+        <Box marginTop={'xl'} alignItems="center">
+          <Text
+            opacity={0.8}
+            variant={'whiteLabel'}
+            tx="common.forgotPassword"
+          />
+          <Text
+            opacity={0.8}
+            variant={'whiteLabel'}
+            textDecorationLine={'underline'}
+            tx="common.importWithSeedPhrase"
+            marginTop={'s'}
+            onPress={handleImportPress}
+          />
+        </Box>
+      </LinearGradient>
     </ThemeLayout>
   )
 }
