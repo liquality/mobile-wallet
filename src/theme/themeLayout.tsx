@@ -28,7 +28,7 @@ export const ThemeLayout = (props: Props) => {
 
   return (
     <Box {...rest} flex={1} style={[style, { backgroundColor }]}>
-      <StatusBar translucent barStyle={statusBar} />
+      <StatusBar barStyle={statusBar} />
       {children}
     </Box>
   )

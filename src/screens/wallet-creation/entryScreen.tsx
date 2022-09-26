@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Image } from 'react-native'
+import { Image, StatusBar } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import { Box, Text, Pressable, ThemeLayout } from '../../theme'
@@ -29,6 +29,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
   return (
     <ThemeLayout
       style={{ paddingHorizontal: ONBOARDING_SCREEN_DEFAULT_PADDING }}>
+      <StatusBar barStyle="light-content" />
       <GradientBackground
         width={SCREEN_WIDTH}
         height={SCREEN_HEIGHT}

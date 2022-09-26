@@ -76,6 +76,7 @@ export const WalletCreationNavigator = () => (
           headerShown: true,
           headerTitle: '',
           headerShadowVisible: false,
+          statusBarColor: faceliftPalette.gradientEndColor,
           headerStyle: { backgroundColor: faceliftPalette.gradientEndColor },
         }}
       />
