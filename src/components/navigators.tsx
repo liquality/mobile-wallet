@@ -80,7 +80,17 @@ export const WalletCreationNavigator = () => (
           headerStyle: { backgroundColor: faceliftPalette.gradientEndColor },
         }}
       />
-      <Stack.Screen name="TermsScreen" component={TermsScreen} />
+      <Stack.Screen
+        name="TermsScreen"
+        component={TermsScreen}
+        options={{
+          headerShown: true,
+          headerTitle: '',
+          headerShadowVisible: false,
+          headerBackVisible: false,
+          headerStyle: { backgroundColor: faceliftPalette.white },
+        }}
+      />
       <Stack.Screen
         name="PasswordCreationScreen"
         component={PasswordCreationScreen}

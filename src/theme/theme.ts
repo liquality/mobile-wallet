@@ -22,13 +22,12 @@ export const theme = createTheme({
     cardPrimaryBackground: palette.purplePrimary,
     buttonPrimaryBackground: palette.purplePrimary,
     mainBorderColor: palette.gray,
-    link: palette.blueVioletPrimary,
+    link: faceliftPalette.buttonDefault,
     transparentBlack: palette.transparentBlack,
     progressDotColor: palette.turquoise,
     addressColor: palette.black2,
     errorMsgBarColor: palette.yellowBar,
     transparent: 'transparent',
-    // new colours
     white: faceliftPalette.white,
     activeButton: faceliftPalette.buttonActive,
   },
@@ -170,9 +169,8 @@ export const theme = createTheme({
     },
     link: {
       fontFamily: Fonts.Regular,
-      fontWeight: '400',
-      fontSize: 12,
-      lineHeight: 16,
+      fontWeight: '500',
+      fontSize: scale(14),
       color: 'link',
     },
     boldLink: {

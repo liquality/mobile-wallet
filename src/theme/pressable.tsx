@@ -40,7 +40,7 @@ export const Pressable: FC<Props> = (props) => {
     content = label
   }
 
-  let backgroundColor = faceliftPalette.buttonActive
+  let backgroundColor = faceliftPalette.buttonDefault
 
   let borderColor = faceliftPalette.white
 
