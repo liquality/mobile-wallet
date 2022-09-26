@@ -1,14 +1,18 @@
 import React, { FC } from 'react'
-import { Dimensions, Image } from 'react-native'
+import { Image } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import { Box, Text, Pressable, ThemeLayout } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
-import { ONBOARDING_SCREEN_DEFAULT_PADDING, widthInPerFn } from '../../utils'
+import {
+  ONBOARDING_SCREEN_DEFAULT_PADDING,
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+} from '../../utils'
 import { AppIcons, Images } from '../../assets'
+import { scale } from 'react-native-size-matters'
 
 const { LogoFull } = AppIcons
-const imageWidth75per = widthInPerFn(75)
 
 type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
@@ -26,16 +30,20 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
     <ThemeLayout
       style={{ paddingHorizontal: ONBOARDING_SCREEN_DEFAULT_PADDING }}>
       <GradientBackground
-        width={Dimensions.get('screen').width}
-        height={Dimensions.get('screen').height}
+        width={SCREEN_WIDTH}
+        height={SCREEN_HEIGHT}
         isFullPage
       />
-      <LogoFull />
-      <Box flex={0.9} marginTop="xxl">
+      <LogoFull width={scale(100)} />
+      <Box flex={0.9} marginTop="xl">
         <Image
           source={Images.oneWalletAllChains}
           resizeMode="contain"
-          style={imageWidth75per}
+          style={{
+            width: scale(
+              (SCREEN_WIDTH - ONBOARDING_SCREEN_DEFAULT_PADDING) * 0.5,
+            ),
+          }}
         />
       </Box>
       <Pressable

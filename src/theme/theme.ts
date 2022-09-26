@@ -2,6 +2,7 @@ import { createTheme } from '@shopify/restyle'
 import { Fonts } from '../assets'
 import { faceliftPalette } from './faceliftPalette'
 import { palette } from './palette'
+import { scale } from 'react-native-size-matters'
 
 export const theme = createTheme({
   colors: {
@@ -32,13 +33,13 @@ export const theme = createTheme({
     activeButton: faceliftPalette.buttonActive,
   },
   spacing: {
-    vs: 2,
-    s: 5,
-    m: 10,
-    l: 15,
-    xl: 20,
-    xxl: 50,
-    xxxl: 70,
+    vs: scale(2),
+    s: scale(5),
+    m: scale(10),
+    l: scale(15),
+    xl: scale(20),
+    xxl: scale(50),
+    xxxl: scale(70),
   },
   breakpoints: {
     phone: 0,
@@ -244,27 +245,27 @@ export const theme = createTheme({
     pressableLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
-      fontSize: 17,
+      fontSize: scale(14),
       color: 'white',
     },
     whiteLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
-      fontSize: 15,
+      fontSize: scale(14),
       color: 'white',
     },
   },
   pressableVariants: {
     outline: {
-      height: 60,
+      height: scale(50),
       width: '100%',
-      borderWidth: 2,
+      borderWidth: scale(1),
       justifyContent: 'center',
       alignItems: 'center',
       borderColor: 'white',
     },
     solid: {
-      height: 60,
+      height: scale(50),
       width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
