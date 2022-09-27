@@ -71,7 +71,6 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
         accountId: nftAsset.accountId,
         nft: nftAsset,
       }
-      console.log(nftAsset.starred, 'starred or no?')
       await toggleNFTStarred(payload)
     },
     [activeNetwork, activeWalletId],
@@ -179,7 +178,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                   {nftImagesScrollable}
 
                   <Pressable
-                    onPress={() => handleGoToCollection('bä')}
+                    onPress={() => handleGoToCollection(nftItem)}
                     style={styles.pressable}>
                     <SeeAllNftsIcon width={105} height={105}></SeeAllNftsIcon>
                     <Text style={styles.seeAllText}>See {'\n'}All</Text>

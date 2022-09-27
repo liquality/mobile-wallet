@@ -2,10 +2,19 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useCallback } from 'react'
-import { View, Text, StyleSheet, Pressable, Image } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Image,
+  ScrollView,
+  Dimensions,
+} from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import { Button, palette } from '../../../theme'
+import NftHeader from '../../../components/NFT/nft-header'
+import { Box, Button, palette } from '../../../theme'
 
 import { RootStackParamList } from '../../../types'
 
@@ -23,27 +32,57 @@ const NftCollectionScreen = ({
 }: NftCollectionScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
 
-  console.log(route.params, 'paramoos')
   const { activeWalletId } = wallet.state
 
+  console.log(route.params, 'collection parmas')
   useEffect(() => {}, [])
 
   return (
-    <View style={[styles.container, styles.fragmentContainer]}>
-      <Text>COLLECTION SCREEN</Text>
-    </View>
+    <Box flex={1}>
+      <ScrollView>
+        <Box style={styles.overviewBlock}>
+          <NftHeader
+            screenType={'collection'}
+            width={Dimensions.get('screen').width}
+            height={225}></NftHeader>
+          <Text variant="loading" tx="overviewScreen.load" />
+        </Box>
+      </ScrollView>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: palette.white,
-    paddingVertical: 15,
+  container: {},
+
+  tabText: {
+    //fontFamily: 'Anek Kannada';
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 17,
+    lineHeight: 28,
+    letterSpacing: 0.75,
+    textTransform: 'capitalize',
+    color: '#646F85',
   },
-  fragmentContainer: {
-    paddingHorizontal: 20,
+
+  overviewBlock: {
+    justifyContent: 'center',
+    width: '100%',
+    height: 225,
+    paddingVertical: 10,
+  },
+
+  tabBarFocused: {
+    borderBottomWidth: 2,
+    lineHeight: '1em',
+
+    color: palette.purplePrimary,
+    borderBottomColor: palette.purplePrimary,
+  },
+
+  headerTextFocused: {
+    color: palette.black2,
   },
 })
 

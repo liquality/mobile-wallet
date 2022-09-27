@@ -50,7 +50,6 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
         accountIds: accIds,
       })
       let allNfts = await fetchAllNfts()
-      console.log(allNfts, 'ALL NFTS')
       setAllNftData(allNfts)
       let wholeNftArr = Object.values(allNfts).map((val) => {
         return val
@@ -95,6 +94,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
       <ScrollView>
         <Box style={styles.overviewBlock}>
           <NftHeader
+            screenType={'detail'}
             width={Dimensions.get('screen').width}
             height={225}></NftHeader>
           <Text variant="loading" tx="overviewScreen.load" />
