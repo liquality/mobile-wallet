@@ -191,7 +191,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Regular,
     color: palette.white,
     fontSize: 28,
-    lineHeight: 28,
   },
   description: {
     fontFamily: Fonts.SemiBold,
@@ -254,7 +253,7 @@ const styles = StyleSheet.create({
   missingWordText: {
     fontFamily: Fonts.Regular,
     fontSize: 16,
-    lineHeight: 20,
+    // lineHeight: 20,
     borderBottomWidth: 1,
     borderBottomColor: palette.turquoise,
     width: '100%',

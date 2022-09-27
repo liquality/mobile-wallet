@@ -26,7 +26,10 @@ type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 const Entry: FC<EntryProps> = (props): JSX.Element => {
   const { navigation } = props
 
-  const handleImportPress = () => navigation.navigate('WalletImportNavigator')
+  const handleImportPress = () =>
+    navigation.navigate('TermsScreen', {
+      nextScreen: 'UnlockWalletScreen',
+    })
 
   const handleCreateWalletPress = () =>
     navigation.navigate('TermsScreen', {

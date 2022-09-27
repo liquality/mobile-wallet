@@ -118,39 +118,66 @@ export const WalletCreationNavigator = () => {
           name="CongratulationsScreen"
           component={CongratulationsScreen}
         />
+        <Stack.Screen
+          name="UnlockWalletScreen"
+          component={UnlockWalletScreen}
+        />
       </Stack.Navigator>
     </OnboardingContext.Provider>
   )
 }
 
-export const WalletImportNavigator = () => (
-  <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
-    <Stack.Navigator
-      initialRouteName="TermsScreen"
-      /**
-       * TransitionPresets types exist only on @react-navigation/stack
-       * but we are using @react-navigation/native-stack that is the
-       * reason for red squiggly line
-       */
-      screenOptions={{
-        headerShown: false,
-        gestureEnabled: true,
-        ...TransitionPresets.SlideFromRightIOS,
-      }}>
-      <Stack.Screen name="TermsScreen" component={TermsScreen} />
-      <Stack.Screen name="UnlockWalletScreen" component={UnlockWalletScreen} />
-      <Stack.Screen
-        name="PasswordCreationScreen"
-        component={PasswordCreationScreen}
-      />
-      <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-      <Stack.Screen
-        name="CongratulationsScreen"
-        component={CongratulationsScreen}
-      />
-    </Stack.Navigator>
-  </OnboardingContext.Provider>
-)
+export const WalletImportNavigator = () => {
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
+
+  const backgroundColor =
+    currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
+  return (
+    <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
+      <Stack.Navigator
+        initialRouteName="TermsScreen"
+        /**
+         * TransitionPresets types exist only on @react-navigation/stack
+         * but we are using @react-navigation/native-stack that is the
+         * reason for red squiggly line
+         */
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: true,
+          ...TransitionPresets.SlideFromRightIOS,
+        }}>
+        <Stack.Screen
+          name="TermsScreen"
+          component={TermsScreen}
+          options={{
+            headerShown: true,
+            headerTitle: '',
+            headerShadowVisible: false,
+            headerBackVisible: false,
+            headerStyle: { backgroundColor },
+          }}
+        />
+        <Stack.Screen
+          name="UnlockWalletScreen"
+          component={UnlockWalletScreen}
+        />
+        <Stack.Screen
+          name="PasswordCreationScreen"
+          component={PasswordCreationScreen}
+        />
+        <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <Stack.Screen
+          name="CongratulationsScreen"
+          component={CongratulationsScreen}
+        />
+      </Stack.Navigator>
+    </OnboardingContext.Provider>
+  )
+}
 
 type NavigationProps = NativeStackScreenProps<
   RootStackParamList,
