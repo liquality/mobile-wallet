@@ -76,10 +76,9 @@ import UpIcon from '../assets/icons/up.svg'
 import SeeAllNftsIcon from '../assets/icons/nfts/see-all-nfts.svg'
 import LongArrow from '../assets/icons/nfts/long-arrow.svg'
 import Star from '../assets/icons/nfts/star.svg'
+import BlackStar from '../assets/icons/nfts/star-black.svg'
+
 import Ellipse from '../assets/icons/nfts/ellipse.svg'
-
-
-
 
 export default {
   PendingSwap,
@@ -161,5 +160,6 @@ export default {
   LongArrow,
   Ellipse,
   Star,
+  BlackStar,
 
 }

@@ -5,33 +5,54 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { AppIcons } from '../../assets'
 import { Box, palette } from '../../theme'
 import { Text } from '../text/text'
+import { useRecoilValue } from 'recoil'
+import { networkState } from '../../atoms'
+import { toggleNFTStarred } from '../../store/store'
 
-const { SeeAllNftsIcon, LongArrow, Star, Ellipse } = AppIcons
+const { SeeAllNftsIcon, LongArrow, Star, Ellipse, BlackStar } = AppIcons
 
 type NftImageViewProps = {
-  width: number
-  height: number
-  isFullPage?: boolean
+  iterableNftArray: Object
+  seeNftDetail: () => void
+  activeWalletId?: boolean
 }
 
 const NftImageView: React.FC<NftImageViewProps> = (props) => {
-  const { iterableNftArray, seeNftDetail } = props
+  const { iterableNftArray, seeNftDetail, activeWalletId } = props
+  const [starredNft, setStarredNft] = useState<boolean>(false)
+  const activeNetwork = useRecoilValue(networkState)
 
-  const renderStarFavorite = () => {
+  const renderStarFavorite = (nftAsset) => {
     return (
       <Pressable
         onPress={() => {
-          console.log('Go to favorites!')
+          toggleStarred(nftAsset)
         }}
         style={styles.ellipse}>
         <Ellipse style={styles.ellipse}></Ellipse>
-        <Star style={styles.star}></Star>
+        {nftAsset.starred ? (
+          <BlackStar style={styles.star}></BlackStar>
+        ) : (
+          <Star style={styles.star}></Star>
+        )}
       </Pressable>
     )
+  }
+
+  const toggleStarred = async (nftAsset: Object) => {
+    setStarredNft(!starredNft)
+    const payload = {
+      network: activeNetwork,
+      walletId: activeWalletId,
+      accountId: nftAsset.accountId,
+      nft: nftAsset,
+    }
+    console.log(nftAsset.starred, 'starred or no?')
+    await toggleNFTStarred(payload)
   }
 
   const renderNftArray = () => {
@@ -108,8 +129,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                       }}
                     />
                   </Pressable>
-
-                  {renderStarFavorite()}
+                  {renderStarFavorite(nftItemInsideCollection)}
                 </Box>
               )
             },

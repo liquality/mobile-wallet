@@ -50,6 +50,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
         accountIds: accIds,
       })
       let allNfts = await fetchAllNfts()
+      console.log(allNfts, 'ALL NFTS')
       setAllNftData(allNfts)
       let wholeNftArr = Object.values(allNfts).map((val) => {
         return val
@@ -104,6 +105,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
             <NftImageView
               iterableNftArray={iterableNftArray}
               seeNftDetail={seeNftDetail}
+              activeWalletId={activeWalletId}
             />
           ) : null}
         </Box>
