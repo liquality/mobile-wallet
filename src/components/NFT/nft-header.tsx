@@ -8,36 +8,21 @@ import Svg from 'react-native-svg'
 const { SignOut } = AppIcons
 
 type NftHeaderProps = {
-  screenType: string
+  blackText: string
+  greyText: string
   width: number
   height: number
   isFullPage?: boolean
 }
 
 const NftHeader: React.FC<NftHeaderProps> = (props) => {
-  const { width, height, isFullPage, screenType } = props
-
-  const whichTextToRender = () => {
-    let blackText
-    let greyText
-    if (screenType === 'collection') {
-      blackText = 'Collection name'
-      greyText = 'X NFTS'
-    } else {
-      blackText = 'X NFTS'
-      greyText = 'X ACCOUNTS'
-    }
-
-    return { blackText, greyText }
-  }
+  const { width, height, isFullPage, blackText, greyText } = props
 
   const renderAllNftsHeaderText = () => {
     return (
       <Box flex="1" flexDirection="column">
-        <Text style={styles.nftText}>{whichTextToRender().blackText}</Text>
-        <Text style={[styles.nftText, styles.accountText]}>
-          {whichTextToRender().greyText}
-        </Text>
+        <Text style={styles.nftText}>{blackText}</Text>
+        <Text style={[styles.nftText, styles.accountText]}>{greyText}</Text>
       </Box>
     )
   }

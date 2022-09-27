@@ -94,7 +94,8 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
       <ScrollView>
         <Box style={styles.overviewBlock}>
           <NftHeader
-            screenType={'detail'}
+            blackText={'X NFTS'}
+            greyText={'X ACCOUNTS'}
             width={Dimensions.get('screen').width}
             height={225}></NftHeader>
           <Text variant="loading" tx="overviewScreen.load" />
@@ -103,6 +104,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
           {renderTabBar()}
           {showNfts ? (
             <NftImageView
+              accountIdsToSendIn={accountIdsToSendIn}
               iterableNftArray={iterableNftArray}
               seeNftDetail={seeNftDetail}
               activeWalletId={activeWalletId}

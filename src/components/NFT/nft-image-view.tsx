@@ -13,6 +13,7 @@ import { useRecoilValue } from 'recoil'
 import { networkState } from '../../atoms'
 import { toggleNFTStarred } from '../../store/store'
 import { useNavigation } from '@react-navigation/core'
+import { AccountId } from '@liquality/wallet-core/dist/src/store/types'
 
 const { SeeAllNftsIcon, LongArrow, Star, Ellipse, BlackStar } = AppIcons
 
@@ -20,10 +21,12 @@ type NftImageViewProps = {
   iterableNftArray: Object
   seeNftDetail: () => void
   activeWalletId?: boolean
+  accountIdsToSendIn: string[]
 }
 
 const NftImageView: React.FC<NftImageViewProps> = (props) => {
-  const { iterableNftArray, seeNftDetail, activeWalletId } = props
+  const { iterableNftArray, seeNftDetail, activeWalletId, accountIdsToSendIn } =
+    props
   const [starredNft, setStarredNft] = useState<boolean>(false)
   const activeNetwork = useRecoilValue(networkState)
   const navigation = useNavigation()
@@ -80,6 +83,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
     (nftCollection) => {
       navigation.navigate('NftCollectionScreen', {
         nftCollection,
+        accountIdsToSendIn: accountIdsToSendIn,
       })
     },
     [navigation],
@@ -93,9 +97,12 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
         if (nftItem.length === 1) {
           return (
             <Box style={{ margin: 20 }}>
-              <Text>
-                {nftItem[0].collection.name} | {nftItem.length}
-              </Text>
+              <Pressable onPress={() => handleGoToCollection(nftItem[0])}>
+                <Text>
+                  {nftItem[0].collection.name} | {nftItem.length}
+                </Text>
+              </Pressable>
+
               <Pressable onPress={() => seeNftDetail(nftItem[0])}>
                 <Image
                   source={{
