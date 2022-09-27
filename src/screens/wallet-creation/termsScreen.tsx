@@ -67,12 +67,14 @@ const TermsScreen = ({ navigation }: TermsProps) => {
     <ThemeLayout
       style={{ paddingHorizontal: ONBOARDING_SCREEN_DEFAULT_PADDING }}>
       <ThemeIcon iconName="OnlyLqLogo" />
-      <Box marginTop={'xxl'}>
+      <Box marginTop={'xl'}>
         <ThemeText style={styles.termsTitle} tx="termsScreen.termPrivacy" />
       </Box>
-      <Box marginTop={'xl'} flex={1}>
+      <Box flex={1}>
         <Box flex={0.7}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView
+            contentContainerStyle={styles.contentContainerStyle}
+            showsVerticalScrollIndicator={false}>
             <ThemeText style={styles.termsCopy} tx="termsScreen.termCopy" />
           </ScrollView>
         </Box>
@@ -100,14 +102,13 @@ const TermsScreen = ({ navigation }: TermsProps) => {
 const styles = ScaledSheet.create({
   termsTitle: {
     fontFamily: Fonts.Regular,
-    fontSize: '41@s',
+    fontSize: '48@s',
     fontWeight: '500',
-    lineHeight: '58@s',
+    lineHeight: '64@s',
   },
   termsCopy: {
     fontFamily: Fonts.Regular,
-    textAlign: 'justify',
-    fontSize: '14@s',
+    fontSize: '15@s',
   },
   linearStyle: {
     left: 0,
@@ -115,6 +116,9 @@ const styles = ScaledSheet.create({
     right: 0,
     position: 'absolute',
     top: scale(-30),
+  },
+  contentContainerStyle: {
+    paddingBottom: '25@s',
   },
 })
 export default TermsScreen

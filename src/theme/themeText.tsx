@@ -36,7 +36,10 @@ export const ThemeText = (props: TextProps) => {
       : faceliftPalette.darkGrey
 
   return (
-    <RnText {...rest} style={[styleOverride, { color }]}>
+    <RnText
+      allowFontScaling={false}
+      {...rest}
+      style={[styleOverride, { color }]}>
       {content}
     </RnText>
   )
