@@ -71,6 +71,7 @@
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.3.2",
     "react-native-level-fs": "^3.0.1",
+    "react-native-linear-gradient": "^2.6.2",
     "react-native-mmkv": "2.4.3",
     "react-native-mmkv-flipper-plugin": "^1.0.0",
     "react-native-modal-filter-picker": "^2.1.0",
@@ -84,6 +85,7 @@
     "react-native-safe-area-context": "^4.2.2",
     "react-native-screens": "^3.13.1",
     "react-native-share": "^7.4.1",
+    "react-native-size-matters": "^0.4.0",
     "react-native-splash-screen": "^3.2.0",
     "react-native-svg": "^12.1.1",
     "react-native-tab-view": "3.1.1",
@@ -96,7 +98,8 @@
     "tty-browserify": "^0.0.0",
     "url": "^0.10.3",
     "uuid": "8.3.2",
-    "vision-camera-code-scanner": "^0.1.6"
+    "vision-camera-code-scanner": "^0.1.6",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

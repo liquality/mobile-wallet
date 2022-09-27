@@ -10,7 +10,7 @@ import { Fonts } from '../../assets'
 
 type CongratulationsProps = NativeStackScreenProps<
   RootStackParamList,
-  'SeedPhraseConfirmationScreen'
+  'CongratulationsScreen'
 >
 
 const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Regular,
     color: palette.white,
     fontSize: 28,
-    lineHeight: 27,
   },
   checkmark: {
     width: 102,

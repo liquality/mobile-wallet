@@ -22,7 +22,7 @@ export const Text = (props: TextProps) => {
   const content = i18nText || children
 
   return (
-    <RnText {...rest} style={styleOverride}>
+    <RnText allowFontScaling={false} {...rest} style={styleOverride}>
       {content}
     </RnText>
   )

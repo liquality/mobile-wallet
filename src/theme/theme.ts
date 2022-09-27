@@ -1,6 +1,8 @@
 import { createTheme } from '@shopify/restyle'
 import { Fonts } from '../assets'
+import { faceliftPalette } from './faceliftPalette'
 import { palette } from './palette'
+import { scale } from 'react-native-size-matters'
 
 export const theme = createTheme({
   colors: {
@@ -20,19 +22,27 @@ export const theme = createTheme({
     cardPrimaryBackground: palette.purplePrimary,
     buttonPrimaryBackground: palette.purplePrimary,
     mainBorderColor: palette.gray,
-    link: palette.blueVioletPrimary,
+    link: faceliftPalette.buttonDefault,
     transparentBlack: palette.transparentBlack,
     progressDotColor: palette.turquoise,
     addressColor: palette.black2,
     errorMsgBarColor: palette.yellowBar,
+    transparent: 'transparent',
+    white: faceliftPalette.white,
+    darkGrey: faceliftPalette.darkGrey,
+    activeButton: faceliftPalette.buttonActive,
+    semiTransparentWhite: faceliftPalette.semiTransparentWhite,
+    semiTransparentDark: faceliftPalette.semiTransparentDark,
   },
   spacing: {
-    vs: 2,
-    s: 5,
-    m: 10,
-    l: 15,
-    xl: 20,
-    xxl: 70,
+    vs: scale(2),
+    s: scale(5),
+    m: scale(10),
+    l: scale(15),
+    xl: scale(20),
+    xxl: scale(50),
+    xxxl: scale(70),
+    onboardingPadding: scale(40),
   },
   breakpoints: {
     phone: 0,
@@ -84,7 +94,7 @@ export const theme = createTheme({
       fontSize: 24,
     },
     slogan2: {
-      fontFamily: Fonts.AlternatesLight,
+      fontFamily: Fonts.Thin,
       color: 'mainForeground',
       fontSize: 55,
       marginVertical: 'l',
@@ -122,34 +132,30 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontWeight: '600',
       fontSize: 14,
-      lineHeight: 14,
+      // lineHeight: 14,
       color: 'buttonFontPrimary',
     },
     tertiaryButtonLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '400',
       fontSize: 12,
-      lineHeight: 12,
       color: 'buttonFontTertiary',
     },
     amount: {
       fontFamily: Fonts.Regular,
       fontWeight: '400',
       fontSize: 12,
-      lineHeight: 14,
       color: 'secondaryForeground',
     },
     amountLarge: {
       fontFamily: Fonts.Regular,
       fontWeight: '300',
       fontSize: 28,
-      lineHeight: 42,
     },
     amountLabel: {
       fontFamily: Fonts.Light,
       fontWeight: '400',
-      fontSize: 12,
-      lineHeight: 14,
+      fontSize: 14,
       color: 'tertiaryForeground',
     },
     warningBold: {
@@ -167,9 +173,8 @@ export const theme = createTheme({
     },
     link: {
       fontFamily: Fonts.Regular,
-      fontWeight: '400',
-      fontSize: 12,
-      lineHeight: 16,
+      fontWeight: '500',
+      fontSize: scale(14),
       color: 'link',
     },
     boldLink: {
@@ -216,7 +221,7 @@ export const theme = createTheme({
       color: 'mainForeground',
     },
     loginToSeePhraseTitle: {
-      fontFamily: Fonts.AlternatesLight,
+      fontFamily: Fonts.Thin,
       color: 'mainForeground',
       fontSize: 35,
       textAlign: 'center',
@@ -239,6 +244,39 @@ export const theme = createTheme({
       color: 'addressColor',
       marginRight: 's',
     },
+    pressableLabel: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: scale(14),
+      color: 'white',
+    },
+    whiteLabel: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: scale(14),
+      color: 'white',
+    },
+    themeNormalText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(15),
+    },
+  },
+  pressableVariants: {
+    outline: {
+      height: scale(50),
+      width: '100%',
+      borderWidth: scale(1),
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderColor: 'white',
+    },
+    solid: {
+      height: scale(50),
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'activeButton',
+    },
   },
   buttonVariants: {
     l: {
@@ -259,7 +297,6 @@ export const theme = createTheme({
       borderRadius: 50,
       borderColor: 'mainButtonBorderColor',
       paddingHorizontal: 'l',
-      paddingVertical: 'm',
       marginVertical: 'l',
       width: 150,
       height: 35,

@@ -70,7 +70,7 @@ const AssetManagement = ({
   }, [activeNetwork, enabledAssets])
 
   return (
-    <Box flex={1} backgroundColor={'mainBackground'} marginBottom={'xxl'}>
+    <Box flex={1} backgroundColor={'mainBackground'}>
       <SearchBox items={assets} updateData={setData} />
       <FlatList
         data={data}

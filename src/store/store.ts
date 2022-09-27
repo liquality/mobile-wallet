@@ -21,12 +21,14 @@ import {
   FiatRates,
   HistoryItem,
   Network,
-  NFTWithAccount,
   SendHistoryItem,
   SwapHistoryItem,
   Asset,
   WalletId,
   NFTSendTransactionParams,
+  SwapProviderType,
+  NFTCollections,
+  NFT,
 } from '@liquality/wallet-core/dist/src/store/types'
 import {
   getSwapTimeline,
@@ -49,12 +51,10 @@ export const storageManager = new StorageManager(excludedProps)
 let wallet: Awaited<ReturnType<typeof setupWallet>>
 
 //-------------------------2. REGISTER THE CALLBACKS / SUBSCRIBE TO MEANINGFULL EVENTS-----------------------------
-export const initWallet = async (initialState?: CustomRootState) => {
+export const initWallet = async (initialState?: RootState) => {
   const start = dayjs().unix()
   const walletOptions: WalletOptions = {
-    initialState: initialState || {
-      activeNetwork: Network.Testnet,
-    },
+    initialState,
     createNotification: (notification: Notification): any => {
       //When swap is completed show push notification with msg
       showNotification(notification.title, notification.message)
@@ -167,7 +167,7 @@ export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
 
   await wallet.dispatch
     .updateFiatRates({
-      assets: wallet.getters.allNetworkAssets,
+      assets: [...wallet.getters.allNetworkAssets],
     })
     .catch((e) => {
       Log(`Failed to update fiat rates: ${e}`, 'error')
@@ -210,7 +210,7 @@ export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {
   }
 }
 
-export const fetchSwapProvider = (providerId: string) => {
+export const fetchSwapProvider = (providerId: SwapProviderType) => {
   const { activeNetwork } = wallet.state
   if (!providerId) return
 
@@ -255,7 +255,7 @@ export const sendNFTTransaction = async (
 
 export const getNftsForAccount = async (
   accountId: string,
-): Promise<NFTWithAccount> => {
+): Promise<NFTCollections<NFT>> => {
   return wallet.getters.accountNftCollections(accountId)
 }
 
@@ -307,8 +307,10 @@ export const restoreWallet = async (
   password: string,
   activeNetwork = Network.Testnet,
 ): Promise<void> => {
-  const result = storageManager.read<CustomRootState>('wallet', {})
-  await initWallet({ ...result, activeNetwork })
+  const result = storageManager.read<CustomRootState | null>('wallet', null)
+  if (result) {
+    await initWallet({ ...result, activeNetwork })
+  }
   await wallet.dispatch.unlockWallet({
     key: password,
   })
@@ -408,10 +410,13 @@ export const sendTransaction = async (options: {
     asset,
     to,
     amount: value,
-    fee,
     data: memo,
+    fee,
+    // if feeAsset is empty transactionRequest Object will take asset field value
+    feeAsset: '',
     feeLabel,
     fiatRate: fiatRates[asset],
+    // passing gas value as undefined then we are able to send transactions, transactionRequest object has gas parameter as optional
     gas: undefined,
   })
 }
@@ -425,7 +430,7 @@ export const fetchConfirmationByHash = async (
     .client({
       network: activeNetwork,
       walletId: activeWalletId,
-      asset,
+      chainId: getAsset(activeNetwork, asset)?.chain,
     })
     .chain.getTransactionByHash(hash)
 
@@ -501,7 +506,7 @@ export const getTimeline = async (
       wallet.getters.client({
         network: options.network,
         walletId: options.walletId,
-        asset: options.asset,
+        chainId: getAsset(options.network, options.asset)?.chain,
       }),
   )
 }
@@ -587,10 +592,10 @@ export const transactionHistoryEffect: (
             (activity) => activity.id === transactionId,
           )
           if (historyItem) {
-            if (historyItem.type === 'SEND') {
+            if (historyItem.type === 'SEND' || historyItem.type === 'NFT') {
               fetchConfirmationByHash(
                 historyItem.from,
-                historyItem.hash || historyItem.tx?.hash,
+                historyItem.txHash,
               ).then((confirmations) => {
                 setSelf({
                   ...historyItem,
@@ -617,6 +622,25 @@ export const localStorageLangEffect: <T>(key: string) => AtomEffect<T> =
       const savedValue = storageManager.read(key, '')
 
       if (savedValue) {
+        setSelf(savedValue)
+      }
+    }
+    if (trigger === 'get') {
+      loadPersisted()
+    }
+
+    onSet((newValue, _, isReset) => {
+      isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
+    })
+  }
+
+export const localStorageAssetEffect: <T>(key: string) => AtomEffect<T> =
+  (key) =>
+  ({ setSelf, onSet, trigger }) => {
+    const loadPersisted = async () => {
+      const savedValue = storageManager.read(key, '')
+
+      if (savedValue !== '') {
         setSelf(savedValue)
       }
     }

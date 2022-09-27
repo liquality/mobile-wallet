@@ -15,7 +15,7 @@ import { Text, Box, palette } from '../../../theme'
 import { RootStackParamList } from '../../../types'
 type ShowAllNftsScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'NftDetailScreen'
+  'NftForSpecificChainScreen'
 >
 const wallet = setupWallet({
   ...defaultOptions,

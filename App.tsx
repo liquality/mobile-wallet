@@ -1,7 +1,10 @@
 import React, { FC, useEffect, useState } from 'react'
-import { StatusBar } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { NavigationContainer } from '@react-navigation/native'
+import {
+  SafeAreaProvider,
+  initialWindowMetrics,
+} from 'react-native-safe-area-context'
 
 import { createSwitchNavigator } from '@react-navigation/compat'
 import { ThemeProvider } from '@shopify/restyle'
@@ -56,16 +59,17 @@ const App: FC = () => {
 
   return (
     <RecoilRoot>
-      <ThemeProvider theme={theme}>
-        <Box style={backgroundStyle} testID={'app-test'}>
-          <StatusBar barStyle={'dark-content'} backgroundColor="white" />
+      <SafeAreaProvider
+        initialMetrics={initialWindowMetrics}
+        testID={'app-test'}>
+        <ThemeProvider theme={theme}>
           <GestureHandlerRootView style={backgroundStyle}>
             <NavigationContainer>
               <AppNavigator initialRouteName={initialRouteName} />
             </NavigationContainer>
           </GestureHandlerRootView>
-        </Box>
-      </ThemeProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
     </RecoilRoot>
   )
 }

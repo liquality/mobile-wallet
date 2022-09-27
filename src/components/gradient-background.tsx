@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { Defs, LinearGradient, Rect, Stop, Svg } from 'react-native-svg'
 import React, { FC, memo } from 'react'
-import { Box } from '../theme'
+import { Box, faceliftPalette } from '../theme'
 
 interface Props {
   width: number
@@ -31,9 +31,15 @@ const GradientBackground: FC<Props> = (props) => {
               x2={-93.1915}
               y2={-1.60436e-7}
               gradientUnits="userSpaceOnUse">
-              <Stop stopColor="#1CE4C3" />
-              <Stop offset="0.385417" stopColor="#4866D3" />
-              <Stop offset="0.833333" stopColor="#302E78" />
+              <Stop stopColor={faceliftPalette.gradientStartColor} />
+              <Stop
+                offset={0.55}
+                stopColor={faceliftPalette.gradientMiddeColor}
+              />
+              <Stop
+                offset={0.95}
+                stopColor={faceliftPalette.gradientEndColor}
+              />
             </LinearGradient>
           ) : (
             <LinearGradient
@@ -43,9 +49,15 @@ const GradientBackground: FC<Props> = (props) => {
               x2={-92.8745}
               y2={-1.15427e-5}
               gradientUnits="userSpaceOnUse">
-              <Stop stopColor="#1CE4C3" />
-              <Stop offset="0.385417" stopColor="#4866D3" />
-              <Stop offset="0.833333" stopColor="#302E78" />
+              <Stop stopColor={faceliftPalette.gradientStartColor} />
+              <Stop
+                offset="0.385417"
+                stopColor={faceliftPalette.gradientMiddeColor}
+              />
+              <Stop
+                offset="0.833333"
+                stopColor={faceliftPalette.gradientEndColor}
+              />
             </LinearGradient>
           )}
         </Defs>
