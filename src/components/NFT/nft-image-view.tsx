@@ -120,9 +120,11 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
         } else if (nftItem.length === 2) {
           return (
             <Box style={{ margin: 20 }}>
-              <Text>
-                {nftItem[0].collection.name} | {nftItem.length}
-              </Text>
+              <Pressable onPress={() => handleGoToCollection(nftItem)}>
+                <Text>
+                  {nftItem[0].collection.name} | {nftItem.length}
+                </Text>
+              </Pressable>
               <Pressable
                 style={styles.pressable}
                 onPress={() => seeNftDetail(nftItem[0])}>
@@ -173,9 +175,11 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
           )
           return (
             <Box style={{ margin: 20 }}>
-              <Text>
-                {nftItem[0].collection.name} | {nftItem.length}
-              </Text>
+              <Pressable onPress={() => handleGoToCollection(nftItem)}>
+                <Text>
+                  {nftItem[0].collection.name} | {nftItem.length}
+                </Text>
+              </Pressable>
               <ScrollView key={index} horizontal={true}>
                 <Box
                   flex={0.1}
