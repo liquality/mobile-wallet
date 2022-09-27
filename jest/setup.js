@@ -63,9 +63,6 @@ jest.mock('react-native-vision-camera', () => {
 jest.mock('expo-localization', () => {
   return {}
 })
-jest.mock('expo-linear-gradient', () => {
-  return {}
-})
 jest.mock('i18n-js', () => {
   return {
     t: (key) => `${key}.test`,

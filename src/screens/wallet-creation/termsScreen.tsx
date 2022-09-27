@@ -13,7 +13,7 @@ import {
 } from '../../theme'
 import { Fonts } from '../../assets'
 import { scale, ScaledSheet } from 'react-native-size-matters'
-import { LinearGradient } from 'expo-linear-gradient'
+import LinearGradient from 'react-native-linear-gradient'
 import { themeMode } from '../../atoms'
 import { useRecoilValue } from 'recoil'
 import AnalyticsModal from './optInAnalyticsModal'

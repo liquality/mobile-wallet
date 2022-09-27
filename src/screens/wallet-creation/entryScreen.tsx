@@ -6,7 +6,7 @@ import { Box, Text, Pressable, ThemeLayout, faceliftPalette } from '../../theme'
 import { ONBOARDING_SCREEN_DEFAULT_PADDING } from '../../utils'
 import { AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
-import { LinearGradient } from 'expo-linear-gradient'
+import LinearGradient from 'react-native-linear-gradient'
 
 const { LogoFull, OneWalletAllChains } = AppIcons
 const gradientColor = [
