@@ -1,14 +1,14 @@
 import React, { FC } from 'react'
-import { Image, StatusBar, ViewStyle } from 'react-native'
+import { StatusBar, ViewStyle } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import { Box, Text, Pressable, ThemeLayout, faceliftPalette } from '../../theme'
-import { ONBOARDING_SCREEN_DEFAULT_PADDING, SCREEN_WIDTH } from '../../utils'
-import { AppIcons, Images } from '../../assets'
+import { ONBOARDING_SCREEN_DEFAULT_PADDING } from '../../utils'
+import { AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
 import { LinearGradient } from 'expo-linear-gradient'
 
-const { LogoFull } = AppIcons
+const { LogoFull, OneWalletAllChains } = AppIcons
 const gradientColor = [
   faceliftPalette.gradientEndColor,
   faceliftPalette.gradientMiddeColor,
@@ -39,15 +39,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
       <LinearGradient colors={gradientColor} style={gradientStyle}>
         <LogoFull width={scale(100)} />
         <Box flex={0.9} marginTop="xl">
-          <Image
-            source={Images.oneWalletAllChains}
-            resizeMode="contain"
-            style={{
-              width: scale(
-                (SCREEN_WIDTH - ONBOARDING_SCREEN_DEFAULT_PADDING) * 0.5,
-              ),
-            }}
-          />
+          <OneWalletAllChains />
         </Box>
         <Pressable
           label={{ tx: 'entryScreen.createNewWallet' }}
