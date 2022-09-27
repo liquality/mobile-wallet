@@ -1,4 +1,9 @@
-import { Pressable as Press, PressableProps } from 'react-native'
+import {
+  Pressable as Press,
+  PressableProps,
+  StyleProp,
+  ViewStyle,
+} from 'react-native'
 import {
   ColorProps,
   createRestyleComponent,
@@ -25,10 +30,11 @@ type Props = React.ComponentProps<typeof BaseButton> &
     label: string | { tx: TxKeyPath }
     txOptions?: i18n.TranslateOptions
     variant?: 'solid' | 'outline'
+    style?: StyleProp<ViewStyle>
   }
 
 export const Pressable: FC<Props> = (props) => {
-  const { variant = 'solid', label, txOptions, ...rest } = props
+  const { variant = 'solid', label, txOptions, style: styles, ...rest } = props
   const langSelected = useRecoilValue(LS)
   i18n.locale = langSelected
 
@@ -54,7 +60,7 @@ export const Pressable: FC<Props> = (props) => {
     <BaseButton
       {...rest}
       variant={variant}
-      style={{ backgroundColor, borderColor }}>
+      style={[styles, { backgroundColor, borderColor }]}>
       <Text variant={'pressableLabel'}>{content}</Text>
     </BaseButton>
   )

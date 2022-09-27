@@ -4,14 +4,24 @@ import { useColorScheme } from 'react-native'
 import { themeMode } from '../atoms'
 import { useRecoilValue } from 'recoil'
 
-const { OnlyLqLogoDark, OnlyLqLogoLight } = AppIcons
+const {
+  OnlyLqLogoDark,
+  OnlyLqLogoLight,
+  InactiveRadioButtonDark,
+  InactiveRadioButtonLight,
+  ActiveRadioButton,
+} = AppIcons
 
 const icons: any = {
   OnlyLqLogolight: OnlyLqLogoDark,
   OnlyLqLogodark: OnlyLqLogoLight,
+  InactiveRadioButtondark: InactiveRadioButtonDark,
+  InactiveRadioButtonlight: InactiveRadioButtonLight,
+  ActiveRadioButtondark: ActiveRadioButton,
+  ActiveRadioButtonlight: ActiveRadioButton,
 }
 
-type IconName = 'OnlyLqLogo'
+type IconName = 'OnlyLqLogo' | 'InactiveRadioButton' | 'ActiveRadioButton'
 
 type IconProps = {
   iconName: IconName

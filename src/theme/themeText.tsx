@@ -38,6 +38,7 @@ export const ThemeText = (props: TextProps) => {
   return (
     <RnText
       allowFontScaling={false}
+      variant="themeNormalText"
       {...rest}
       style={[styleOverride, { color }]}>
       {content}

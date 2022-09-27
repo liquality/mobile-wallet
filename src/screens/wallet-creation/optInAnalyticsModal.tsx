@@ -1,16 +1,35 @@
-import { Modal, StyleSheet, View } from 'react-native'
+import {
+  Modal,
+  ViewStyle,
+  ImageBackground,
+  TouchableWithoutFeedback,
+} from 'react-native'
 import React, { useCallback, useState } from 'react'
-import { Button, palette } from '../../theme'
+import { Box, Pressable, ThemeIcon, ThemeText } from '../../theme'
 import { useNavigation } from '@react-navigation/core'
-import CheckBox from '../../components/checkbox'
 import { useRecoilState } from 'recoil'
 import { optInAnalyticsState } from '../../atoms'
-import { Text } from '../../components/text/text'
-import { Fonts } from '../../assets'
+import { Fonts, Images, AppIcons } from '../../assets'
+import { scale, ScaledSheet } from 'react-native-size-matters'
+import { ONBOARDING_SCREEN_DEFAULT_PADDING } from '../../utils'
+import { CommonActions } from '@react-navigation/native'
+
+const { ModalClose } = AppIcons
 
 type AnalyticsModalProps = {
   onAction: (params: boolean) => void
   nextScreen: string
+}
+
+enum SelectedOption {
+  Sure = 'sure',
+  Not = 'not',
+}
+
+type IconName = 'InactiveRadioButton' | 'ActiveRadioButton'
+
+const defaultPadding: ViewStyle = {
+  padding: ONBOARDING_SCREEN_DEFAULT_PADDING,
 }
 
 const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
@@ -18,31 +37,37 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
   nextScreen,
 }) => {
   const navigation = useNavigation()
-  const [userHasChecked, setUserHasChecked] = useState<boolean>(true)
   const [analytics, setAnalytics] = useRecoilState(optInAnalyticsState)
+  const [selectedOpt, setSelectedOpt] = useState(SelectedOption.Sure)
 
   const handleOkButtonPress = useCallback(() => {
     onAction(false)
     setAnalytics({
       ...(analytics || {}),
-      acceptedDate: userHasChecked ? Date.now() : undefined,
+      acceptedDate: selectedOpt === 'sure' ? Date.now() : undefined,
     })
-    navigation.navigate(nextScreen, {
-      termsAcceptedAt: Date.now(),
-      previousScreen: 'Entry',
-    })
-  }, [
-    onAction,
-    setAnalytics,
-    analytics,
-    userHasChecked,
-    navigation,
-    nextScreen,
-  ])
 
-  const handleCheckBox = useCallback(() => {
-    setUserHasChecked(!userHasChecked)
-  }, [userHasChecked])
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [
+          { name: 'Entry' },
+          {
+            name: nextScreen,
+            params: {
+              termsAcceptedAt: Date.now(),
+            },
+          },
+        ],
+      }),
+    )
+  }, [onAction, setAnalytics, analytics, navigation, nextScreen, selectedOpt])
+
+  const sureIcon: IconName =
+    selectedOpt === 'sure' ? 'ActiveRadioButton' : 'InactiveRadioButton'
+
+  const notIcon: IconName =
+    selectedOpt === 'not' ? 'ActiveRadioButton' : 'InactiveRadioButton'
 
   return (
     <Modal
@@ -50,88 +75,102 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
       transparent={true}
       visible={true}
       style={styles.modalView}>
-      <View style={styles.container}>
-        <View style={styles.contentWrapper}>
-          <Text
-            style={[styles.content, styles.header]}
-            tx="optInAnalyticsModal.helpUsToImprove"
-          />
-          <Text
-            style={styles.content}
-            tx="optInAnalyticsModal.shareWhereYouClick"
-          />
-          <CheckBox
-            selected={userHasChecked}
-            onPress={handleCheckBox}
-            textStyle={styles.checkBoxText}
-            style={styles.checkBoxStyle}
-            color={palette.black2}
-            text={{ tx: 'optInAnalyticsModal.shareMyClicks' }}
-          />
-          <Button
-            type="secondary"
-            variant="l"
-            label={{ tx: 'common.ok' }}
-            onPress={handleOkButtonPress}
-            isBorderless={false}
-            isActive={true}
-          />
-        </View>
-      </View>
+      <Box
+        flex={1}
+        justifyContent="center"
+        alignItems="center"
+        backgroundColor="semiTransparentWhite"
+        paddingHorizontal="onboardingPadding">
+        <Box width="100%" height={scale(450)}>
+          <ImageBackground
+            style={styles.lowerBgImg}
+            resizeMode="contain"
+            source={Images.rectangleDark}>
+            <ImageBackground
+              style={styles.upperBgImg}
+              resizeMode="contain"
+              source={Images.rectangleLight}>
+              <Box flex={1} style={defaultPadding}>
+                <ThemeText
+                  style={styles.helpUsTextStyle}
+                  tx="optInAnalyticsModal.helpUsToImprove"
+                />
+                <ThemeText
+                  marginTop={'m'}
+                  style={styles.weWantToBetterTextStyle}
+                  tx="optInAnalyticsModal.shareWhereYouClick"
+                />
+                <TouchableWithoutFeedback
+                  onPress={() => setSelectedOpt(SelectedOption.Sure)}>
+                  <Box marginTop={'m'} flexDirection="row">
+                    <ThemeIcon iconName={sureIcon} />
+                    <ThemeText
+                      marginLeft={'m'}
+                      tx="optInAnalyticsModal.shareMyClicks"
+                    />
+                  </Box>
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback
+                  onPress={() => setSelectedOpt(SelectedOption.Not)}>
+                  <Box marginTop={'m'} flexDirection="row">
+                    <ThemeIcon iconName={notIcon} />
+                    <ThemeText
+                      marginLeft={'m'}
+                      tx="optInAnalyticsModal.notToday"
+                    />
+                  </Box>
+                </TouchableWithoutFeedback>
+
+                <Box marginTop={'xl'}>
+                  <Pressable
+                    label={{ tx: 'Ok' }}
+                    onPress={handleOkButtonPress}
+                    variant="solid"
+                    style={styles.okButton}
+                  />
+                </Box>
+              </Box>
+            </ImageBackground>
+          </ImageBackground>
+          <TouchableWithoutFeedback onPress={() => onAction(false)}>
+            <Box position={'absolute'} right={scale(-5)} top={scale(-10)}>
+              <ModalClose />
+            </Box>
+          </TouchableWithoutFeedback>
+        </Box>
+      </Box>
     </Modal>
   )
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   modalView: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  lowerBgImg: {
+    height: '99%',
   },
-  contentWrapper: {
-    width: '90%',
-    alignItems: 'center',
-    backgroundColor: palette.white,
-    borderColor: palette.gray,
-    borderWidth: 1,
-    padding: 20,
-    shadowColor: palette.black2,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+  upperBgImg: {
+    height: '100%',
+    marginTop: scale(-10),
+    marginLeft: scale(-15),
   },
-  content: {
+  helpUsTextStyle: {
     fontFamily: Fonts.Regular,
     fontWeight: '500',
-    fontSize: 14,
-    color: palette.black2,
-    textAlign: 'justify',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    fontSize: scale(30),
+    lineHeight: scale(38),
+    textAlign: 'left',
   },
-  header: {
-    fontSize: 16,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginVertical: 5,
-  },
-  checkBoxText: {
+  weWantToBetterTextStyle: {
     fontFamily: Fonts.Regular,
-    fontWeight: '600',
-    fontSize: 14,
-    marginLeft: 10,
+    fontWeight: '400',
+    fontSize: scale(17),
+    lineHeight: scale(22),
   },
-  checkBoxStyle: {
-    marginTop: 10,
-    marginBottom: 20,
+  okButton: {
+    height: scale(40),
   },
 })
 

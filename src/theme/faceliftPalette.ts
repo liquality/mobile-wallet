@@ -18,4 +18,6 @@ export const faceliftPalette = {
   gradientMiddeColor: '#853DE0',
   gradientEndColor: '#F9AFFF',
   transparent: 'transparent',
+  semiTransparentWhite: 'rgba(255,255,255, 0.8)',
+  semiTransparentDark: 'rgba(0,0,0, 0.8)',
 }

@@ -65,9 +65,10 @@
     "invalidPassword": "Password is invalid"
   },
   "optInAnalyticsModal": {
-    "helpUsToImprove": "HELP US IMPROVE LIQUALITY TO BETTER SERVE YOU",
-    "shareWhereYouClick": "Share where you click. There is no identifying data. This permission can be revoked at any time.",
-    "shareMyClicks": "Share my clicks"
+    "helpUsToImprove": "Help Us Improve Liquality.",
+    "shareWhereYouClick": "We want to better serve you. Share where you click. There is no identifying data. This permission can be revoked any time.",
+    "shareMyClicks": "Sure, I’ll share my clicks",
+    "notToday": "Not today, ask me later"
   },
   "passwordCreationScreen": {
     "createPassword": "Create Password",
@@ -383,5 +384,6 @@
   "maybeIn30": "maybe in 30 sec",
   "likelyLess30": "likely in < 30 sec",
   "likelyLess15": "likely in < 15 sec",
-  "txId": "Transaction Id"
+  "txId": "Transaction Id",
+  "Ok": "Ok"
 }

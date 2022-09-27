@@ -76,6 +76,10 @@ import UpIcon from '../assets/icons/arrowUpThick.svg'
 import LogoFull from '../assets/icons/logoFull.svg'
 import OnlyLqLogoDark from '../assets/icons/onlyLqLogoDark.svg'
 import OnlyLqLogoLight from '../assets/icons/onlyLqLogoLight.svg'
+import ActiveRadioButton from '../assets/icons/activeRadioButton.svg'
+import InactiveRadioButtonDark from '../assets/icons/inactiveRadioButtonDark.svg'
+import InactiveRadioButtonLight from '../assets/icons/inactiveRadioButtonLight.svg'
+import ModalClose from '../assets/icons/modalClose.svg'
 
 export default {
   PendingSwap,
@@ -156,4 +160,8 @@ export default {
   LogoFull,
   OnlyLqLogoDark,
   OnlyLqLogoLight,
+  ActiveRadioButton,
+  InactiveRadioButtonDark,
+  InactiveRadioButtonLight,
+  ModalClose,
 }

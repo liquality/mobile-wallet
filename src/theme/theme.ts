@@ -29,7 +29,10 @@ export const theme = createTheme({
     errorMsgBarColor: palette.yellowBar,
     transparent: 'transparent',
     white: faceliftPalette.white,
+    darkGrey: faceliftPalette.darkGrey,
     activeButton: faceliftPalette.buttonActive,
+    semiTransparentWhite: faceliftPalette.semiTransparentWhite,
+    semiTransparentDark: faceliftPalette.semiTransparentDark,
   },
   spacing: {
     vs: scale(2),
@@ -39,6 +42,7 @@ export const theme = createTheme({
     xl: scale(20),
     xxl: scale(50),
     xxxl: scale(70),
+    onboardingPadding: scale(40),
   },
   breakpoints: {
     phone: 0,
@@ -251,6 +255,10 @@ export const theme = createTheme({
       fontWeight: '500',
       fontSize: scale(14),
       color: 'white',
+    },
+    themeNormalText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(15),
     },
   },
   pressableVariants: {

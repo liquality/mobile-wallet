@@ -1,5 +1,5 @@
-import React from 'react'
-import { ScrollView, useColorScheme } from 'react-native'
+import React, { useState } from 'react'
+import { ScrollView, useColorScheme, View } from 'react-native'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
@@ -13,11 +13,10 @@ import {
 } from '../../theme'
 import { Fonts } from '../../assets'
 import { scale, ScaledSheet } from 'react-native-size-matters'
-import { ONBOARDING_SCREEN_DEFAULT_PADDING } from '../../utils'
 import { LinearGradient } from 'expo-linear-gradient'
-import { CommonActions } from '@react-navigation/native'
 import { themeMode } from '../../atoms'
 import { useRecoilValue } from 'recoil'
+import AnalyticsModal from './optInAnalyticsModal'
 
 const lightGradient = [
   'rgba(255,255,255,0.6)',
@@ -37,8 +36,10 @@ const darkGradient = [
 
 type TermsProps = NativeStackScreenProps<RootStackParamList, 'TermsScreen'>
 
-const TermsScreen = ({ navigation }: TermsProps) => {
+const TermsScreen = ({ navigation, route }: TermsProps) => {
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
   const theme = useRecoilValue(themeMode)
+
   let currentTheme = useColorScheme() || 'light'
   if (theme) {
     currentTheme = theme
@@ -46,26 +47,8 @@ const TermsScreen = ({ navigation }: TermsProps) => {
 
   const gradientType = currentTheme === 'light' ? lightGradient : darkGradient
 
-  const navigateToSeedPhraseScreen = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 1,
-        routes: [
-          { name: 'Entry' },
-          {
-            name: 'SeedPhraseScreen',
-            params: {
-              termsAcceptedAt: Date.now(),
-            },
-          },
-        ],
-      }),
-    )
-  }
-
   return (
-    <ThemeLayout
-      style={{ paddingHorizontal: ONBOARDING_SCREEN_DEFAULT_PADDING }}>
+    <ThemeLayout paddingHorizontal={'onboardingPadding'}>
       <ThemeIcon iconName="OnlyLqLogo" />
       <Box marginTop={'xl'}>
         <ThemeText style={styles.termsTitle} tx="termsScreen.termPrivacy" />
@@ -75,7 +58,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
           <ScrollView
             contentContainerStyle={styles.contentContainerStyle}
             showsVerticalScrollIndicator={false}>
-            <ThemeText style={styles.termsCopy} tx="termsScreen.termCopy" />
+            <ThemeText tx="termsScreen.termCopy" />
           </ScrollView>
         </Box>
         <Box flex={0.3} backgroundColor="transparent">
@@ -83,7 +66,7 @@ const TermsScreen = ({ navigation }: TermsProps) => {
           <Box marginVertical={'xl'}>
             <Pressable
               label={{ tx: 'termsScreen.iAgree:' }}
-              onPress={navigateToSeedPhraseScreen}
+              onPress={() => setShowAnalyticsModal(true)}
               variant="solid"
             />
           </Box>
@@ -95,6 +78,19 @@ const TermsScreen = ({ navigation }: TermsProps) => {
           />
         </Box>
       </Box>
+      {showAnalyticsModal ? (
+        <React.Suspense
+          fallback={
+            <View>
+              <Text tx="common.loading" />
+            </View>
+          }>
+          <AnalyticsModal
+            nextScreen={route?.params?.nextScreen || 'UnlockWalletScreen'}
+            onAction={setShowAnalyticsModal}
+          />
+        </React.Suspense>
+      ) : null}
     </ThemeLayout>
   )
 }
@@ -105,10 +101,6 @@ const styles = ScaledSheet.create({
     fontSize: '48@s',
     fontWeight: '500',
     lineHeight: '64@s',
-  },
-  termsCopy: {
-    fontFamily: Fonts.Regular,
-    fontSize: '15@s',
   },
   linearStyle: {
     left: 0,
