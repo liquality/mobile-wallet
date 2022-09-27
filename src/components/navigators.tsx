@@ -128,14 +128,6 @@ export const WalletCreationNavigator = () => {
 }
 
 export const WalletImportNavigator = () => {
-  const theme = useRecoilValue(themeMode)
-  let currentTheme = useColorScheme() as string
-  if (theme) {
-    currentTheme = theme
-  }
-
-  const backgroundColor =
-    currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
   return (
     <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
       <Stack.Navigator
@@ -150,17 +142,7 @@ export const WalletImportNavigator = () => {
           gestureEnabled: true,
           ...TransitionPresets.SlideFromRightIOS,
         }}>
-        <Stack.Screen
-          name="TermsScreen"
-          component={TermsScreen}
-          options={{
-            headerShown: true,
-            headerTitle: '',
-            headerShadowVisible: false,
-            headerBackVisible: false,
-            headerStyle: { backgroundColor },
-          }}
-        />
+        <Stack.Screen name="TermsScreen" component={TermsScreen} />
         <Stack.Screen
           name="UnlockWalletScreen"
           component={UnlockWalletScreen}
