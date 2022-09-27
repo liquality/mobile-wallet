@@ -152,14 +152,15 @@ export type RootStackParamList = {
     currentAccount?: AccountType
   }
   NftSendScreen: {
-    nftItem?: NftObj
+    nftItem?: NFTAsset
     accountIdsToSendIn: Object
   }
   NftDetailScreen: {
     screenTitle?: string
-    nftItem?: NftObj
+    nftItem?: NFTAsset
     accountIdsToSendIn: string[]
   }
+  NftCollectionScreen: {}
 }
 
 export type RootTabParamList = {

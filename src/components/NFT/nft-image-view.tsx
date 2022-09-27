@@ -5,13 +5,14 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { AppIcons } from '../../assets'
 import { Box, palette } from '../../theme'
 import { Text } from '../text/text'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../atoms'
 import { toggleNFTStarred } from '../../store/store'
+import { useNavigation } from '@react-navigation/core'
 
 const { SeeAllNftsIcon, LongArrow, Star, Ellipse, BlackStar } = AppIcons
 
@@ -25,6 +26,24 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
   const { iterableNftArray, seeNftDetail, activeWalletId } = props
   const [starredNft, setStarredNft] = useState<boolean>(false)
   const activeNetwork = useRecoilValue(networkState)
+  const navigation = useNavigation()
+
+  /*  const renderStarFavorite = (nftAsset) => {
+    return (
+      <Pressable
+        onPress={() => {
+          toggleStarred(nftAsset)
+        }}
+        style={styles.ellipse}>
+        <Ellipse style={styles.ellipse}></Ellipse>
+        {nftAsset.starred ? (
+          <BlackStar style={styles.star}></BlackStar>
+        ) : (
+          <Star style={styles.star}></Star>
+        )}
+      </Pressable>
+    )
+  } */
 
   const renderStarFavorite = (nftAsset) => {
     return (
@@ -43,17 +62,29 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
     )
   }
 
-  const toggleStarred = async (nftAsset: Object) => {
-    setStarredNft(!starredNft)
-    const payload = {
-      network: activeNetwork,
-      walletId: activeWalletId,
-      accountId: nftAsset.accountId,
-      nft: nftAsset,
-    }
-    console.log(nftAsset.starred, 'starred or no?')
-    await toggleNFTStarred(payload)
-  }
+  const toggleStarred = useCallback(
+    async (nftAsset) => {
+      nftAsset.starred = !nftAsset.starred
+      const payload = {
+        network: activeNetwork,
+        walletId: activeWalletId,
+        accountId: nftAsset.accountId,
+        nft: nftAsset,
+      }
+      console.log(nftAsset.starred, 'starred or no?')
+      await toggleNFTStarred(payload)
+    },
+    [activeNetwork, activeWalletId],
+  )
+
+  const handleGoToCollection = useCallback(
+    (nftCollection) => {
+      navigation.navigate('NftCollectionScreen', {
+        nftCollection,
+      })
+    },
+    [navigation],
+  )
 
   const renderNftArray = () => {
     let rows = []
@@ -148,9 +179,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                   {nftImagesScrollable}
 
                   <Pressable
-                    onPress={() =>
-                      console.log('Go to full collection screen here!')
-                    }
+                    onPress={() => handleGoToCollection('bä')}
                     style={styles.pressable}>
                     <SeeAllNftsIcon width={105} height={105}></SeeAllNftsIcon>
                     <Text style={styles.seeAllText}>See {'\n'}All</Text>

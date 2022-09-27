@@ -9,7 +9,7 @@ import { Button, palette } from '../../../theme'
 
 import { RootStackParamList } from '../../../types'
 
-type ShowAllNftsScreenProps = NativeStackScreenProps<
+type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'NftDetailScreen'
 >
@@ -17,7 +17,7 @@ type ShowAllNftsScreenProps = NativeStackScreenProps<
 const wallet = setupWallet({
   ...defaultOptions,
 })
-const NftDetailScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
+const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
 

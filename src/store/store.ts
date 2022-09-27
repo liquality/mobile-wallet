@@ -4,7 +4,7 @@ import { FeeDetail } from '@chainify/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
-import { AccountType, CustomRootState, GasFees } from '../types'
+import { AccountType, CustomRootState, GasFees, NftAsset } from '../types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import {
   Notification,
@@ -262,10 +262,10 @@ export const getNftsForAccount = async (
 }
 
 export const toggleNFTStarred = async (payload: {
-  network: Network;
-  walletId: string;
-  accountId: string;
-  nft: NFTObj;
+  network: Network
+  walletId: string
+  accountId: string
+  nft: NftAsset
 }) => {
   await wallet.dispatch.toggleNFTStarred(payload)
 }

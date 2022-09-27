@@ -45,6 +45,8 @@ import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-scre
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
 import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
+import NftCollectionScreen from '../screens/wallet-features/NFT/nft-collection-screen'
+
 import { AppIcons, Fonts } from '../assets'
 const { UserCog, SwapCheck, InfinityIcon, TimesIcon } = AppIcons
 
@@ -340,6 +342,13 @@ export const AppStackNavigator = () => (
     <Stack.Screen
       name="NftSendScreen"
       component={NftSendScreen}
+      options={() => ({
+        headerRight: PlaceholderComp,
+      })}
+    />
+    <Stack.Screen
+      name="NftCollectionScreen"
+      component={NftCollectionScreen}
       options={() => ({
         headerRight: PlaceholderComp,
       })}
