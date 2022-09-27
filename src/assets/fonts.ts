@@ -4,4 +4,5 @@ export default {
   Regular: 'AnekKannada-Regular',
   SemiBold: 'AnekKannada-SemiBold',
   Thin: 'AnekKannada-Thin',
+  JetBrainsMono: 'JetBrainsMono-Regular',
 }

@@ -16,11 +16,9 @@
 		4713194228DC47ED00EC7E40 /* AnekKannada-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713193628DC47EC00EC7E40 /* AnekKannada-Thin.ttf */; };
 		4713194428DC47ED00EC7E40 /* AnekKannada-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713193828DC47EC00EC7E40 /* AnekKannada-Light.ttf */; };
 		4713194528DC47ED00EC7E40 /* AnekKannada-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713193928DC47EC00EC7E40 /* AnekKannada-ExtraLight.ttf */; };
-		4713194628DC47ED00EC7E40 /* JetBrainsMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713193A28DC47EC00EC7E40 /* JetBrainsMono-Medium.ttf */; };
 		4713194728DC47ED00EC7E40 /* JetBrainsMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713193B28DC47EC00EC7E40 /* JetBrainsMono-Regular.ttf */; };
 		4713194828DC47ED00EC7E40 /* AnekKannada-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713193C28DC47EC00EC7E40 /* AnekKannada-ExtraBold.ttf */; };
 		4713194928DC47ED00EC7E40 /* AnekKannada-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713193D28DC47EC00EC7E40 /* AnekKannada-SemiBold.ttf */; };
-		4713194A28DC47ED00EC7E40 /* JetBrainsMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713193E28DC47EC00EC7E40 /* JetBrainsMono-Bold.ttf */; };
 		4713194B28DC47ED00EC7E40 /* AnekKannada-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713193F28DC47EC00EC7E40 /* AnekKannada-Medium.ttf */; };
 		4713194C28DC47ED00EC7E40 /* AnekKannada-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713194028DC47EC00EC7E40 /* AnekKannada-Regular.ttf */; };
 		4713194D28DC47ED00EC7E40 /* AnekKannada-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713194128DC47EC00EC7E40 /* AnekKannada-Bold.ttf */; };
@@ -54,11 +52,9 @@
 		4713193628DC47EC00EC7E40 /* AnekKannada-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AnekKannada-Thin.ttf"; path = "../src/assets/fonts/AnekKannada-Thin.ttf"; sourceTree = "<group>"; };
 		4713193828DC47EC00EC7E40 /* AnekKannada-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AnekKannada-Light.ttf"; path = "../src/assets/fonts/AnekKannada-Light.ttf"; sourceTree = "<group>"; };
 		4713193928DC47EC00EC7E40 /* AnekKannada-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AnekKannada-ExtraLight.ttf"; path = "../src/assets/fonts/AnekKannada-ExtraLight.ttf"; sourceTree = "<group>"; };
-		4713193A28DC47EC00EC7E40 /* JetBrainsMono-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "JetBrainsMono-Medium.ttf"; path = "../src/assets/fonts/JetBrainsMono-Medium.ttf"; sourceTree = "<group>"; };
 		4713193B28DC47EC00EC7E40 /* JetBrainsMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "JetBrainsMono-Regular.ttf"; path = "../src/assets/fonts/JetBrainsMono-Regular.ttf"; sourceTree = "<group>"; };
 		4713193C28DC47EC00EC7E40 /* AnekKannada-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AnekKannada-ExtraBold.ttf"; path = "../src/assets/fonts/AnekKannada-ExtraBold.ttf"; sourceTree = "<group>"; };
 		4713193D28DC47EC00EC7E40 /* AnekKannada-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AnekKannada-SemiBold.ttf"; path = "../src/assets/fonts/AnekKannada-SemiBold.ttf"; sourceTree = "<group>"; };
-		4713193E28DC47EC00EC7E40 /* JetBrainsMono-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "JetBrainsMono-Bold.ttf"; path = "../src/assets/fonts/JetBrainsMono-Bold.ttf"; sourceTree = "<group>"; };
 		4713193F28DC47EC00EC7E40 /* AnekKannada-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AnekKannada-Medium.ttf"; path = "../src/assets/fonts/AnekKannada-Medium.ttf"; sourceTree = "<group>"; };
 		4713194028DC47EC00EC7E40 /* AnekKannada-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AnekKannada-Regular.ttf"; path = "../src/assets/fonts/AnekKannada-Regular.ttf"; sourceTree = "<group>"; };
 		4713194128DC47EC00EC7E40 /* AnekKannada-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AnekKannada-Bold.ttf"; path = "../src/assets/fonts/AnekKannada-Bold.ttf"; sourceTree = "<group>"; };
@@ -193,8 +189,6 @@
 				4713194028DC47EC00EC7E40 /* AnekKannada-Regular.ttf */,
 				4713193D28DC47EC00EC7E40 /* AnekKannada-SemiBold.ttf */,
 				4713193628DC47EC00EC7E40 /* AnekKannada-Thin.ttf */,
-				4713193E28DC47EC00EC7E40 /* JetBrainsMono-Bold.ttf */,
-				4713193A28DC47EC00EC7E40 /* JetBrainsMono-Medium.ttf */,
 				4713193B28DC47EC00EC7E40 /* JetBrainsMono-Regular.ttf */,
 			);
 			name = Resources;
@@ -300,11 +294,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4713194228DC47ED00EC7E40 /* AnekKannada-Thin.ttf in Resources */,
-				4713194628DC47ED00EC7E40 /* JetBrainsMono-Medium.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				4713194928DC47ED00EC7E40 /* AnekKannada-SemiBold.ttf in Resources */,
 				4713194828DC47ED00EC7E40 /* AnekKannada-ExtraBold.ttf in Resources */,
-				4713194A28DC47ED00EC7E40 /* JetBrainsMono-Bold.ttf in Resources */,
 				4713194528DC47ED00EC7E40 /* AnekKannada-ExtraLight.ttf in Resources */,
 				4713194D28DC47ED00EC7E40 /* AnekKannada-Bold.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,

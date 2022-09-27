@@ -3,12 +3,13 @@ import {
   ViewStyle,
   ImageBackground,
   TouchableWithoutFeedback,
+  useColorScheme,
 } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { Box, Pressable, ThemeIcon, ThemeText } from '../../theme'
 import { useNavigation } from '@react-navigation/core'
-import { useRecoilState } from 'recoil'
-import { optInAnalyticsState } from '../../atoms'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { optInAnalyticsState, themeMode } from '../../atoms'
 import { Fonts, Images, AppIcons } from '../../assets'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import { ONBOARDING_SCREEN_DEFAULT_PADDING } from '../../utils'
@@ -40,6 +41,12 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
   const [analytics, setAnalytics] = useRecoilState(optInAnalyticsState)
   const [selectedOpt, setSelectedOpt] = useState(SelectedOption.Sure)
 
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
+
   const handleOkButtonPress = useCallback(() => {
     onAction(false)
     setAnalytics({
@@ -69,6 +76,15 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
   const notIcon: IconName =
     selectedOpt === 'not' ? 'ActiveRadioButton' : 'InactiveRadioButton'
 
+  const backgroundColor =
+    currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
+
+  const lowerBgImg =
+    currentTheme === 'light' ? Images.rectangleDark : Images.rectangleLight
+
+  const uppperBgImg =
+    currentTheme === 'dark' ? Images.rectangleDark : Images.rectangleLight
+
   return (
     <Modal
       animationType="fade"
@@ -79,17 +95,17 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
         flex={1}
         justifyContent="center"
         alignItems="center"
-        backgroundColor="semiTransparentWhite"
+        backgroundColor={backgroundColor}
         paddingHorizontal="onboardingPadding">
         <Box width="100%" height={scale(450)}>
           <ImageBackground
             style={styles.lowerBgImg}
             resizeMode="contain"
-            source={Images.rectangleDark}>
+            source={lowerBgImg}>
             <ImageBackground
               style={styles.upperBgImg}
               resizeMode="contain"
-              source={Images.rectangleLight}>
+              source={uppperBgImg}>
               <Box flex={1} style={defaultPadding}>
                 <ThemeText
                   style={styles.helpUsTextStyle}
@@ -157,7 +173,7 @@ const styles = ScaledSheet.create({
     marginLeft: scale(-15),
   },
   helpUsTextStyle: {
-    fontFamily: Fonts.Regular,
+    fontFamily: Fonts.JetBrainsMono,
     fontWeight: '500',
     fontSize: scale(30),
     lineHeight: scale(38),
