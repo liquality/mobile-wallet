@@ -991,8 +991,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   chevronBtn: {
-    marginLeft: 15,
-    marginBottom: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
   icon: {
     alignSelf: 'flex-start',

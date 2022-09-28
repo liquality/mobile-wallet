@@ -5,6 +5,7 @@ import { BigNumber } from '@liquality/types'
 import {
   AccountId,
   FeeLabel,
+  FiatRates,
   Network,
   RootState,
   SendHistoryItem,
@@ -116,6 +117,9 @@ export type StackPayload = {
   selectedAssetCodes?: string[]
   onSelectAssetCodes?: (selectedAssetCodes: string[]) => void
   code?: string
+  amountInput?: string
+  fee?: GasFees | null
+  speedMode?: FeeLabel
 }
 
 export type RootStackParamList = {

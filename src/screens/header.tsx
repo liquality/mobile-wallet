@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   headerText: {
-    fontFamily: Fonts.AlternatesLight,
+    fontFamily: Fonts.Thin,
     color: palette.white,
     fontSize: 22,
     fontWeight: '300',

@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+
 import { RootStackParamList } from '../types'
 import { palette, Text } from '../theme'
 import { AppIcons } from '../assets'
@@ -10,7 +11,14 @@ const { LockIcon, ManageAssetsIcon } = AppIcons
 type FctType = (...args: any) => any
 type Props = NativeStackScreenProps<
   RootStackParamList,
-  'OverviewScreen' | 'AssetScreen' | 'AssetChooserScreen'
+  | 'OverviewScreen'
+  | 'AssetScreen'
+  | 'AssetChooserScreen'
+  | 'SwapScreen'
+  | 'SwapReviewScreen'
+  | 'SwapConfirmationScreen'
+  | 'AssetManagementScreen'
+  | 'LoginScreen'
 >
 const WithPopupMenu = <T extends FctType>(
   Component: (componentProps: Parameters<T>[0]) => ReturnType<T>,

@@ -218,7 +218,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
           selectedQuote={historyItem}
           selectQuote={() => ({})}
           clickable={false}
-          style={{ paddingHorizontal: 20 }}
+          style={styles.paddingHorizontal}
           doubleOrLongPress={onDoubleTapOrLongPress}
         />
       )}
@@ -549,6 +549,9 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     marginRight: 5,
+  },
+  paddingHorizontal: {
+    paddingHorizontal: 20,
   },
 })
 

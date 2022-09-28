@@ -40,7 +40,7 @@ const scrollViewStyle: ViewStyle = {
 
 type CustomFeeScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'SendScreen'
+  'CustomFeeScreen'
 >
 type SpeedMode = keyof FeeDetails
 
@@ -78,7 +78,9 @@ const CustomFeeScreen = ({ navigation, route }: CustomFeeScreenProps) => {
       )
       setTotalFees(totalFeesData)
     }
-    setSpeedMode(route.params.speedMode)
+    if (route.params.speedMode) {
+      setSpeedMode(route.params.speedMode)
+    }
 
     fetchData()
 

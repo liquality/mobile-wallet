@@ -1,5 +1,5 @@
 import React, { createContext } from 'react'
-import { View, StyleSheet, Pressable } from 'react-native'
+import { View, StyleSheet, Pressable, useColorScheme } from 'react-native'
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
@@ -24,7 +24,7 @@ import SendScreen from '../screens/wallet-features/send/send-screen'
 import SendReviewScreen from '../screens/wallet-features/send/send-review-screen'
 import CustomFeeScreen from '../screens/wallet-features/custom-fee/custom-fee-screen'
 import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
-import { RootStackParamList } from '../types'
+import { RootStackParamList, RootTabParamList } from '../types'
 import WithPopupMenu from './with-popup-menu'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
@@ -40,7 +40,7 @@ import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-scre
 import BackupLoginScreen from '../screens/wallet-features/backup/backup-login-screen'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/core'
 import CustomFeeEIP1559Screen from '../screens/wallet-features/custom-fee/custom-fee-eip-1559-screen'
-import { Box, palette, Text } from '../theme'
+import { Box, faceliftPalette, palette, Text } from '../theme'
 import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-screen'
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
@@ -48,77 +48,120 @@ import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-sp
 import NftCollectionScreen from '../screens/wallet-features/NFT/nft-collection-screen'
 
 import { AppIcons, Fonts } from '../assets'
+import { themeMode } from '../atoms'
+import { useRecoilValue } from 'recoil'
+
 const { UserCog, SwapCheck, InfinityIcon, TimesIcon } = AppIcons
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator<RootTabParamList>()
 
 export const OnboardingContext = createContext({})
 
 const PlaceholderComp = () => <Box />
 
-export const WalletCreationNavigator = () => (
-  <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
-    <Stack.Navigator
-      initialRouteName="Entry"
-      /**
-       * TransitionPresets types exist only on @react-navigation/stack
-       * but we are using @react-navigation/native-stack that is the
-       * reason for red squiggly line
-       */
-      screenOptions={{
-        headerShown: false,
-        gestureEnabled: true,
-        ...TransitionPresets.SlideFromRightIOS,
-      }}>
-      <Stack.Screen name="Entry" component={Entry} />
-      <Stack.Screen name="TermsScreen" component={TermsScreen} />
-      <Stack.Screen
-        name="PasswordCreationScreen"
-        component={PasswordCreationScreen}
-      />
-      <Stack.Screen name="SeedPhraseScreen" component={SeedPhraseScreen} />
-      <Stack.Screen
-        name="SeedPhraseConfirmationScreen"
-        component={SeedPhraseConfirmationScreen}
-      />
-      <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-      <Stack.Screen
-        name="CongratulationsScreen"
-        component={CongratulationsScreen}
-      />
-    </Stack.Navigator>
-  </OnboardingContext.Provider>
-)
+export const WalletCreationNavigator = () => {
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
 
-export const WalletImportNavigator = () => (
-  <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
-    <Stack.Navigator
-      initialRouteName="TermsScreen"
-      /**
-       * TransitionPresets types exist only on @react-navigation/stack
-       * but we are using @react-navigation/native-stack that is the
-       * reason for red squiggly line
-       */
-      screenOptions={{
-        headerShown: false,
-        gestureEnabled: true,
-        ...TransitionPresets.SlideFromRightIOS,
-      }}>
-      <Stack.Screen name="TermsScreen" component={TermsScreen} />
-      <Stack.Screen name="UnlockWalletScreen" component={UnlockWalletScreen} />
-      <Stack.Screen
-        name="PasswordCreationScreen"
-        component={PasswordCreationScreen}
-      />
-      <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-      <Stack.Screen
-        name="CongratulationsScreen"
-        component={CongratulationsScreen}
-      />
-    </Stack.Navigator>
-  </OnboardingContext.Provider>
-)
+  const backgroundColor =
+    currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
+
+  return (
+    <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
+      <Stack.Navigator
+        initialRouteName="Entry"
+        /**
+         * TransitionPresets types exist only on @react-navigation/stack
+         * but we are using @react-navigation/native-stack that is the
+         * reason for red squiggly line
+         */
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: true,
+          ...TransitionPresets.SlideFromRightIOS,
+        }}>
+        <Stack.Screen
+          name="Entry"
+          component={Entry}
+          options={{
+            headerShown: true,
+            headerTitle: '',
+            headerShadowVisible: false,
+            statusBarColor: faceliftPalette.gradientEndColor,
+            headerStyle: { backgroundColor: faceliftPalette.gradientEndColor },
+          }}
+        />
+        <Stack.Screen
+          name="TermsScreen"
+          component={TermsScreen}
+          options={{
+            headerShown: true,
+            headerTitle: '',
+            headerShadowVisible: false,
+            headerBackVisible: false,
+            headerStyle: { backgroundColor },
+          }}
+        />
+        <Stack.Screen
+          name="PasswordCreationScreen"
+          component={PasswordCreationScreen}
+        />
+        <Stack.Screen name="SeedPhraseScreen" component={SeedPhraseScreen} />
+        <Stack.Screen
+          name="SeedPhraseConfirmationScreen"
+          component={SeedPhraseConfirmationScreen}
+        />
+        <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <Stack.Screen
+          name="CongratulationsScreen"
+          component={CongratulationsScreen}
+        />
+        <Stack.Screen
+          name="UnlockWalletScreen"
+          component={UnlockWalletScreen}
+        />
+      </Stack.Navigator>
+    </OnboardingContext.Provider>
+  )
+}
+
+export const WalletImportNavigator = () => {
+  return (
+    <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
+      <Stack.Navigator
+        initialRouteName="TermsScreen"
+        /**
+         * TransitionPresets types exist only on @react-navigation/stack
+         * but we are using @react-navigation/native-stack that is the
+         * reason for red squiggly line
+         */
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: true,
+          ...TransitionPresets.SlideFromRightIOS,
+        }}>
+        <Stack.Screen name="TermsScreen" component={TermsScreen} />
+        <Stack.Screen
+          name="UnlockWalletScreen"
+          component={UnlockWalletScreen}
+        />
+        <Stack.Screen
+          name="PasswordCreationScreen"
+          component={PasswordCreationScreen}
+        />
+        <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <Stack.Screen
+          name="CongratulationsScreen"
+          component={CongratulationsScreen}
+        />
+      </Stack.Navigator>
+    </OnboardingContext.Provider>
+  )
+}
 
 type NavigationProps = NativeStackScreenProps<
   RootStackParamList,
@@ -403,7 +446,7 @@ export const MainNavigator = () => (
     <Tab.Screen name="AppStackNavigator" component={AppStackNavigator} />
     <Tab.Screen
       name="ShowAllNftsScreen"
-      component={WithPopupMenu(ShowAllNftsScreen)}
+      component={ShowAllNftsScreen}
       options={({}) => ({
         headerShown: true,
         headerTitle: '',
@@ -413,7 +456,7 @@ export const MainNavigator = () => (
     />
     <Tab.Screen
       name="SettingsScreen"
-      component={WithPopupMenu(SettingsScreen)}
+      component={SettingsScreen}
       options={({}) => ({
         headerShown: true,
         headerTitle: '',
@@ -431,13 +474,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     alignItems: 'center',
-    paddingTop: 10,
+    justifyContent: 'center',
     borderTopWidth: 1,
     borderTopColor: palette.gray,
-    backgroundColor: palette.white,
   },
   tabFocused: {
-    backgroundColor: palette.white,
     borderTopColor: palette.black2,
   },
   checkIcon: {

@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
   wordId: {
     fontFamily: Fonts.Bold,
     fontSize: 12,
-    color: 'red',
   },
   wordText: {
     fontFamily: Fonts.Regular,
@@ -151,7 +150,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Regular,
     color: palette.white,
     fontSize: 30,
-    lineHeight: 28,
   },
   description: {
     fontFamily: Fonts.SemiBold,
