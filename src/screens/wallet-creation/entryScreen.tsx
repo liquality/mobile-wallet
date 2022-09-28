@@ -1,25 +1,14 @@
 import React, { FC } from 'react'
-import { StatusBar, ViewStyle } from 'react-native'
+import { StatusBar } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
-import { Box, Text, Pressable, ThemeLayout, faceliftPalette } from '../../theme'
-import { ONBOARDING_SCREEN_DEFAULT_PADDING } from '../../utils'
+import { Box, Text, Pressable, ThemeLayout, GRADIENT_STYLE } from '../../theme'
+import { GRADIENT_COLORS } from '../../utils'
 import { AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
 import LinearGradient from 'react-native-linear-gradient'
 
 const { LogoFull, OneWalletAllChains } = AppIcons
-const gradientColor = [
-  faceliftPalette.gradientEndColor,
-  faceliftPalette.gradientMiddeColor,
-  faceliftPalette.gradientMiddeColor,
-  faceliftPalette.gradientStartColor,
-]
-
-const gradientStyle: ViewStyle = {
-  flex: 1,
-  paddingHorizontal: ONBOARDING_SCREEN_DEFAULT_PADDING,
-}
 
 type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
@@ -39,7 +28,7 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
   return (
     <ThemeLayout>
       <StatusBar barStyle="light-content" />
-      <LinearGradient colors={gradientColor} style={gradientStyle}>
+      <LinearGradient colors={GRADIENT_COLORS} style={GRADIENT_STYLE}>
         <LogoFull width={scale(100)} />
         <Box flex={0.9} marginTop="xl">
           <OneWalletAllChains />
