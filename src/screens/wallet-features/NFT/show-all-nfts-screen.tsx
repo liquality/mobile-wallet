@@ -73,7 +73,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
 
   const renderTabBar = () => {
     return (
-      <Box flex="1" flexDirection="row">
+      <Box flex="1" flexDirection="row" padding={'m'}>
         <Pressable
           style={[styles.tabText, showNfts && styles.tabBarFocused]}
           onPress={() => setShowNfts(!showNfts)}>
@@ -101,7 +101,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
             height={225}></NftHeader>
           <Text variant="loading" tx="overviewScreen.load" />
         </Box>
-        <Box styles={styles.container}>
+        <Box styles={styles.container} margin={'m'}>
           {renderTabBar()}
           {showNfts ? (
             <NftImageView
@@ -134,7 +134,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     height: 225,
-    paddingVertical: 10,
   },
 
   tabBarFocused: {

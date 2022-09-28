@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import { AppIcons } from '../../assets'
+import { AppIcons, Fonts } from '../../assets'
 import { Box, palette } from '../../theme'
 import { Text } from '../text/text'
 import { useRecoilValue } from 'recoil'
@@ -14,6 +14,7 @@ import { networkState } from '../../atoms'
 import { toggleNFTStarred } from '../../store/store'
 import { useNavigation } from '@react-navigation/core'
 import { AccountId } from '@liquality/wallet-core/dist/src/store/types'
+import { faceliftPalette } from '../../theme/faceliftPalette'
 
 const { SeeAllNftsIcon, LongArrow, Star, Ellipse, BlackStar } = AppIcons
 
@@ -49,6 +50,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
   } */
 
   const renderStarFavorite = (nftAsset) => {
+    console.log(nftAsset, 'NFT ASSET')
     return (
       <Pressable
         onPress={() => {
@@ -74,6 +76,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
         accountId: nftAsset.accountId,
         nft: nftAsset,
       }
+      console.log('TOGGLE STARRED, payload:', payload, 'PAYLOAD')
       await toggleNFTStarred(payload)
     },
     [activeNetwork, activeWalletId],
@@ -96,10 +99,19 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
         //If NFT collection array is 1, image should cover full width
         if (nftItem.length === 1) {
           return (
-            <Box style={{ margin: 20 }}>
-              <Pressable onPress={() => handleGoToCollection(nftItem[0])}>
-                <Text>
-                  {nftItem[0].collection.name} | {nftItem.length}
+            <Box>
+              <Pressable
+                style={styles.collectionTextContainer}
+                onPress={() => handleGoToCollection(nftItem[0])}>
+                <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
+                  <Text style={styles.collectionNameText}>
+                    {' '}
+                    {nftItem[0].collection.name}{' '}
+                  </Text>
+                  <Text style={[styles.collectionNameText, styles.pipe]}>
+                    |{' '}
+                  </Text>{' '}
+                  {nftItem.length}{' '}
                 </Text>
               </Pressable>
 
@@ -120,9 +132,18 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
         } else if (nftItem.length === 2) {
           return (
             <Box style={{ margin: 20 }}>
-              <Pressable onPress={() => handleGoToCollection(nftItem)}>
-                <Text>
-                  {nftItem[0].collection.name} | {nftItem.length}
+              <Pressable
+                style={styles.collectionTextContainer}
+                onPress={() => handleGoToCollection(nftItem)}>
+                <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
+                  <Text style={styles.collectionNameText}>
+                    {' '}
+                    {nftItem[0].collection.name}{' '}
+                  </Text>
+                  <Text style={[styles.collectionNameText, styles.pipe]}>
+                    |{' '}
+                  </Text>{' '}
+                  {nftItem.length}{' '}
                 </Text>
               </Pressable>
               <Pressable
@@ -174,18 +195,23 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
             },
           )
           return (
-            <Box style={{ margin: 20 }}>
-              <Pressable onPress={() => handleGoToCollection(nftItem)}>
-                <Text>
-                  {nftItem[0].collection.name} | {nftItem.length}
+            <Box>
+              <Pressable
+                style={styles.collectionTextContainer}
+                onPress={() => handleGoToCollection(nftItem)}>
+                <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
+                  <Text style={styles.collectionNameText}>
+                    {' '}
+                    {nftItem[0].collection.name}{' '}
+                  </Text>
+                  <Text style={[styles.collectionNameText, styles.pipe]}>
+                    |{' '}
+                  </Text>{' '}
+                  {nftItem.length}{' '}
                 </Text>
               </Pressable>
               <ScrollView key={index} horizontal={true}>
-                <Box
-                  flex={0.1}
-                  flexDirection="row"
-                  alignItems="center"
-                  paddingHorizontal="s">
+                <Box flex={0.1} flexDirection="row" alignItems="center">
                   {nftImagesScrollable}
 
                   <Pressable
@@ -220,8 +246,7 @@ const styles = StyleSheet.create({
     right: '56.19%',
     top: '16.19%',
     bottom: '15.24%',
-
-    //fontFamily: 'Anek Kannada',
+    fontFamily: Fonts.Regular,
     fontStyle: 'normal',
     fontWeight: '500',
     fontSize: 16,
@@ -256,12 +281,24 @@ const styles = StyleSheet.create({
     top: '8%',
     bottom: '8%',
   },
-
-  overviewBlock: {
-    justifyContent: 'center',
-    width: '100%',
-    height: 225,
+  collectionNameText: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: 16,
+    lineHeight: 27,
+    letterSpacing: 0.5,
+    color: faceliftPalette.darkGrey,
+  },
+  collectionTextContainer: {
     paddingVertical: 10,
+  },
+
+  pipe: {
+    color: faceliftPalette.grey,
+  },
+  numberOfNfts: {
+    fontWeight: '400',
   },
 
   tabBarFocused: {
