@@ -85,11 +85,10 @@ export const WalletCreationNavigator = () => {
           name="Entry"
           component={Entry}
           options={{
-            headerShown: true,
             headerTitle: '',
+            headerShown: true,
             headerShadowVisible: false,
-            statusBarColor: faceliftPalette.gradientEndColor,
-            headerStyle: { backgroundColor: faceliftPalette.gradientEndColor },
+            headerTransparent: true,
           }}
         />
         <Stack.Screen
@@ -127,6 +126,15 @@ export const WalletCreationNavigator = () => {
 }
 
 export const WalletImportNavigator = () => {
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
+
+  const backgroundColor =
+    currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
+
   return (
     <OnboardingContext.Provider value={{ password: '', confirmPassword: '' }}>
       <Stack.Navigator
@@ -141,7 +149,27 @@ export const WalletImportNavigator = () => {
           gestureEnabled: true,
           ...TransitionPresets.SlideFromRightIOS,
         }}>
-        <Stack.Screen name="TermsScreen" component={TermsScreen} />
+        <Stack.Screen
+          name="Entry"
+          component={Entry}
+          options={{
+            headerTitle: '',
+            headerShown: true,
+            headerShadowVisible: false,
+            headerTransparent: true,
+          }}
+        />
+        <Stack.Screen
+          name="TermsScreen"
+          component={TermsScreen}
+          options={{
+            headerShown: true,
+            headerTitle: '',
+            headerShadowVisible: false,
+            headerBackVisible: false,
+            headerStyle: { backgroundColor },
+          }}
+        />
         <Stack.Screen
           name="UnlockWalletScreen"
           component={UnlockWalletScreen}
@@ -151,6 +179,8 @@ export const WalletImportNavigator = () => {
           component={PasswordCreationScreen}
         />
         <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <Stack.Screen name="SeedPhraseScreen" component={SeedPhraseScreen} />
+
         <Stack.Screen
           name="CongratulationsScreen"
           component={CongratulationsScreen}
@@ -423,11 +453,10 @@ export const StackMainNavigator = () => {
         name="LoginScreen"
         component={LoginScreen}
         options={{
-          headerShown: true,
           headerTitle: '',
+          headerShown: true,
           headerShadowVisible: false,
-          statusBarColor: faceliftPalette.gradientEndColor,
-          headerStyle: { backgroundColor: faceliftPalette.gradientEndColor },
+          headerTransparent: true,
         }}
       />
       <Stack.Screen

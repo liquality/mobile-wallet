@@ -60,9 +60,10 @@
     "createNewWallet": "Create a New Wallet"
   },
   "loginScreen": {
-    "password": "PASSWORD",
+    "password": "ENTER PASSWORD",
     "unlock": "Unlock",
-    "invalidPassword": "Password is invalid"
+    "invalidPassword": "Password is invalid",
+    "passwordError": "Passwords do not match. Try again."
   },
   "optInAnalyticsModal": {
     "helpUsToImprove": "Help Us Improve Liquality.",

@@ -11,6 +11,7 @@ import {
 import { AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
 import LinearGradient from 'react-native-linear-gradient'
+import { useHeaderHeight } from '@react-navigation/elements'
 
 const { LogoFull, OneWalletAllChains } = AppIcons
 
@@ -18,6 +19,7 @@ type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 
 const Entry: FC<EntryProps> = (props): JSX.Element => {
   const { navigation } = props
+  const headerHeight = useHeaderHeight()
 
   const handleImportPress = () =>
     navigation.navigate('TermsScreen', {
@@ -30,10 +32,12 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
     })
 
   return (
-    <LinearGradient colors={GRADIENT_COLORS} style={GRADIENT_STYLE}>
+    <LinearGradient
+      colors={GRADIENT_COLORS}
+      style={[GRADIENT_STYLE, { paddingTop: headerHeight }]}>
       <LogoFull width={scale(100)} />
       <Box flex={0.9} marginTop="xl">
-        <OneWalletAllChains />
+        <OneWalletAllChains width={scale(175)} />
       </Box>
       <Pressable
         label={{ tx: 'entryScreen.createNewWallet' }}
