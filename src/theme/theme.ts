@@ -34,6 +34,7 @@ export const theme = createTheme({
     activeButton: faceliftPalette.buttonActive,
     semiTransparentWhite: faceliftPalette.semiTransparentWhite,
     semiTransparentDark: faceliftPalette.semiTransparentDark,
+    liqPink: faceliftPalette.buttonActive,
   },
   spacing: {
     vs: scale(2),

@@ -30,6 +30,7 @@ import {
 } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
 import { Network } from '@liquality/cryptoassets/dist/src/types'
+import { CommonActions } from '@react-navigation/native'
 
 type LoginScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -73,7 +74,13 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       try {
         setLoading(true)
         await restoreWallet(passwordInput.value, activeNetwork)
-        navigation.navigate('MainNavigator')
+        // navigation.navigate('MainNavigator')
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'MainNavigator' }],
+          }),
+        )
       } catch (_error) {
         passwordInput.onChangeText('')
         setError(labelTranslateFn('loginScreen.invalidPassword')!)

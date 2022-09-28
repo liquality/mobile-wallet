@@ -12,9 +12,8 @@ import { isNewInstallation } from './src/store/store'
 import {
   WalletCreationNavigator,
   WalletImportNavigator,
-  MainNavigator,
+  StackMainNavigator,
 } from './src/components/navigators'
-import LoginScreen from './src/screens/wallet-creation/loginScreen'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { RecoilRoot, useRecoilValue } from 'recoil'
 import { Box, theme, darkTheme } from './src/theme'
@@ -45,8 +44,7 @@ const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
     {
       WalletCreationNavigator,
       WalletImportNavigator,
-      MainNavigator,
-      LoginScreen,
+      StackMainNavigator,
     },
     {
       initialRouteName,
@@ -66,7 +64,7 @@ const App: FC = () => {
   const isNew = isNewInstallation()
   useEffect(() => {
     if (!isNew) {
-      setInitialRouteName('LoginScreen')
+      setInitialRouteName('StackMainNavigator')
     } else {
       setInitialRouteName('EntryScreen')
     }

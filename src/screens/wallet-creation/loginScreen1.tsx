@@ -1,5 +1,4 @@
 import React from 'react'
-import { StatusBar } from 'react-native'
 import { Box, GRADIENT_STYLE, Text, GRADIENT_COLORS } from '../../theme'
 import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
 import LinearGradient from 'react-native-linear-gradient'
@@ -10,8 +9,7 @@ const { LogoFull, OneWalletAllChains } = AppIcons
 
 const LoginScreen = () => {
   return (
-    <Box>
-      <StatusBar barStyle="light-content" />
+    <Box flex={1}>
       <KeyboardAvoidingView>
         <LinearGradient colors={GRADIENT_COLORS} style={GRADIENT_STYLE}>
           <LogoFull width={scale(100)} />

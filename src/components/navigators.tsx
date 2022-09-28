@@ -38,7 +38,6 @@ import LoginScreen from '../screens/wallet-creation/loginScreen'
 import BackupWarningScreen from '../screens/wallet-features/backup/backup-warning-screen'
 import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-screen'
 import BackupLoginScreen from '../screens/wallet-features/backup/backup-login-screen'
-import { getFocusedRouteNameFromRoute } from '@react-navigation/core'
 import CustomFeeEIP1559Screen from '../screens/wallet-features/custom-fee/custom-fee-eip-1559-screen'
 import { Box, faceliftPalette, palette, Text } from '../theme'
 import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-screen'
@@ -247,7 +246,6 @@ export const AppStackNavigator = () => (
       headerLeft: (props) => OverViewHeaderLeft(props, { navigation, route }),
       headerRight: () => OverViewHeaderRight({ navigation, route }),
     })}>
-    <Stack.Screen name="LoginScreen" component={LoginScreen} />
     <Stack.Screen name="OverviewScreen">
       {(props) => WithPopupMenu(OverviewScreen)(props)}
     </Stack.Screen>
@@ -310,30 +308,6 @@ export const AppStackNavigator = () => (
       component={AssetManagementScreen}
       options={() => ({
         headerRight: PlaceholderComp,
-      })}
-    />
-    <Stack.Screen
-      name="BackupWarningScreen"
-      component={BackupWarningScreen}
-      options={({ navigation, route }: NavigationProps) => ({
-        headerShown: true,
-        headerTitle: '',
-        headerLeft: BackupWarningHeaderLeft,
-        headerRight: () => BackupWarningHeaderRight({ navigation, route }),
-      })}
-    />
-    <Stack.Screen
-      name="BackupSeedScreen"
-      component={BackupSeedScreen}
-      options={({}) => ({
-        headerShown: false,
-      })}
-    />
-    <Stack.Screen
-      name="BackupLoginScreen"
-      component={BackupLoginScreen}
-      options={({}) => ({
-        headerShown: false,
       })}
     />
     <Stack.Screen
@@ -413,23 +387,6 @@ export const MainNavigator = () => (
   <Tab.Navigator
     initialRouteName="AppStackNavigator"
     screenOptions={({ route }) => ({
-      tabBarStyle: (() => {
-        const routeName = getFocusedRouteNameFromRoute(route) ?? ''
-        if (
-          routeName === 'BackupWarningScreen' ||
-          routeName === 'BackupLoginScreen' ||
-          routeName === 'BackupSeedScreen'
-        ) {
-          return {
-            display: 'none',
-          }
-        } else if (routeName === 'OverviewScreen')
-          //Maybe not ideal solution but there is bug in rn-navigation workaround here: https://github.com/react-navigation/react-navigation/issues/6779#issuecomment-583272325
-          return {
-            bottom: 0,
-            position: 'absolute',
-          }
-      })(),
       headerShown: false,
       title: '',
       tabBarIcon: ({ focused, size }) => tabBarIcon(focused, size, route.name),
@@ -458,6 +415,46 @@ export const MainNavigator = () => (
     />
   </Tab.Navigator>
 )
+
+export const StackMainNavigator = () => {
+  return (
+    <Stack.Navigator initialRouteName="LoginScreen">
+      <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen
+        name="MainNavigator"
+        component={MainNavigator}
+        options={() => ({
+          headerShown: false,
+          headerRight: PlaceholderComp,
+        })}
+      />
+      <Stack.Screen
+        name="BackupWarningScreen"
+        component={BackupWarningScreen}
+        options={({ navigation, route }: NavigationProps) => ({
+          headerShown: true,
+          headerTitle: '',
+          headerLeft: BackupWarningHeaderLeft,
+          headerRight: () => BackupWarningHeaderRight({ navigation, route }),
+        })}
+      />
+      <Stack.Screen
+        name="BackupLoginScreen"
+        component={BackupLoginScreen}
+        options={({}) => ({
+          headerShown: false,
+        })}
+      />
+      <Stack.Screen
+        name="BackupSeedScreen"
+        component={BackupSeedScreen}
+        options={({}) => ({
+          headerShown: false,
+        })}
+      />
+    </Stack.Navigator>
+  )
+}
 
 const styles = StyleSheet.create({
   iconWrapper: {
