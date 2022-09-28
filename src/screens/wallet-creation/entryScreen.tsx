@@ -1,12 +1,10 @@
 import React, { FC } from 'react'
-import { StatusBar } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import {
   Box,
   Text,
   Pressable,
-  ThemeLayout,
   GRADIENT_STYLE,
   GRADIENT_COLORS,
 } from '../../theme'
@@ -32,35 +30,28 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
     })
 
   return (
-    <ThemeLayout>
-      <StatusBar barStyle="light-content" />
-      <LinearGradient colors={GRADIENT_COLORS} style={GRADIENT_STYLE}>
-        <LogoFull width={scale(100)} />
-        <Box flex={0.9} marginTop="xl">
-          <OneWalletAllChains />
-        </Box>
-        <Pressable
-          label={{ tx: 'entryScreen.createNewWallet' }}
-          onPress={handleCreateWalletPress}
-          variant="outline"
+    <LinearGradient colors={GRADIENT_COLORS} style={GRADIENT_STYLE}>
+      <LogoFull width={scale(100)} />
+      <Box flex={0.9} marginTop="xl">
+        <OneWalletAllChains />
+      </Box>
+      <Pressable
+        label={{ tx: 'entryScreen.createNewWallet' }}
+        onPress={handleCreateWalletPress}
+        variant="outline"
+      />
+      <Box marginTop={'xl'} alignItems="center">
+        <Text opacity={0.8} variant={'whiteLabel'} tx="common.forgotPassword" />
+        <Text
+          opacity={0.8}
+          variant={'whiteLabel'}
+          textDecorationLine={'underline'}
+          tx="common.importWithSeedPhrase"
+          marginTop={'s'}
+          onPress={handleImportPress}
         />
-        <Box marginTop={'xl'} alignItems="center">
-          <Text
-            opacity={0.8}
-            variant={'whiteLabel'}
-            tx="common.forgotPassword"
-          />
-          <Text
-            opacity={0.8}
-            variant={'whiteLabel'}
-            textDecorationLine={'underline'}
-            tx="common.importWithSeedPhrase"
-            marginTop={'s'}
-            onPress={handleImportPress}
-          />
-        </Box>
-      </LinearGradient>
-    </ThemeLayout>
+      </Box>
+    </LinearGradient>
   )
 }
 

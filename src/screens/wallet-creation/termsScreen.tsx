@@ -2,15 +2,7 @@ import React, { useState } from 'react'
 import { ScrollView, useColorScheme, View } from 'react-native'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import {
-  Box,
-  faceliftPalette,
-  ThemeLayout,
-  ThemeText,
-  Text,
-  ThemeIcon,
-  Pressable,
-} from '../../theme'
+import { Box, faceliftPalette, Text, ThemeIcon, Pressable } from '../../theme'
 import { Fonts } from '../../assets'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import LinearGradient from 'react-native-linear-gradient'
@@ -48,17 +40,28 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
   const gradientType = currentTheme === 'light' ? lightGradient : darkGradient
 
   return (
-    <ThemeLayout paddingHorizontal={'onboardingPadding'}>
+    <Box
+      flex={1}
+      backgroundColor="mainBackground"
+      paddingHorizontal={'onboardingPadding'}>
       <ThemeIcon iconName="OnlyLqLogo" />
       <Box marginTop={'xl'}>
-        <ThemeText style={styles.termsTitle} tx="termsScreen.termPrivacy" />
+        <Text
+          color={'textColor'}
+          style={styles.termsTitle}
+          tx="termsScreen.termPrivacy"
+        />
       </Box>
       <Box flex={1}>
         <Box flex={0.7}>
           <ScrollView
             contentContainerStyle={styles.contentContainerStyle}
             showsVerticalScrollIndicator={false}>
-            <ThemeText tx="termsScreen.termCopy" />
+            <Text
+              variant={'faceliftBody'}
+              color={'textColor'}
+              tx="termsScreen.termCopy"
+            />
           </ScrollView>
         </Box>
         <Box flex={0.3} backgroundColor="transparent">
@@ -91,7 +94,7 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
           />
         </React.Suspense>
       ) : null}
-    </ThemeLayout>
+    </Box>
   )
 }
 

@@ -6,7 +6,7 @@ import {
   useColorScheme,
 } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import { Box, Pressable, ThemeIcon, ThemeText } from '../../theme'
+import { Box, Pressable, ThemeIcon, Text } from '../../theme'
 import { useNavigation } from '@react-navigation/core'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { optInAnalyticsState, themeMode } from '../../atoms'
@@ -107,11 +107,13 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
               resizeMode="contain"
               source={uppperBgImg}>
               <Box flex={1} style={defaultPadding}>
-                <ThemeText
+                <Text
+                  color={'textColor'}
                   style={styles.helpUsTextStyle}
                   tx="optInAnalyticsModal.helpUsToImprove"
                 />
-                <ThemeText
+                <Text
+                  color={'textColor'}
                   marginTop={'m'}
                   style={styles.weWantToBetterTextStyle}
                   tx="optInAnalyticsModal.shareWhereYouClick"
@@ -120,7 +122,8 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
                   onPress={() => setSelectedOpt(SelectedOption.Sure)}>
                   <Box marginTop={'m'} flexDirection="row">
                     <ThemeIcon iconName={sureIcon} />
-                    <ThemeText
+                    <Text
+                      color={'textColor'}
                       marginLeft={'m'}
                       tx="optInAnalyticsModal.shareMyClicks"
                     />
@@ -130,7 +133,8 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
                   onPress={() => setSelectedOpt(SelectedOption.Not)}>
                   <Box marginTop={'m'} flexDirection="row">
                     <ThemeIcon iconName={notIcon} />
-                    <ThemeText
+                    <Text
+                      color={'textColor'}
                       marginLeft={'m'}
                       tx="optInAnalyticsModal.notToday"
                     />

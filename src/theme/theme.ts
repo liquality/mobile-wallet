@@ -6,7 +6,8 @@ import { scale } from 'react-native-size-matters'
 
 export const theme = createTheme({
   colors: {
-    mainBackground: palette.white,
+    mainBackground: faceliftPalette.lightBackground,
+    textColor: faceliftPalette.lightText,
     mainForeground: palette.white,
     secondaryForeground: palette.black,
     tertiaryForeground: palette.darkGray,
@@ -256,7 +257,7 @@ export const theme = createTheme({
       fontSize: scale(14),
       color: 'white',
     },
-    themeNormalText: {
+    faceliftBody: {
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
     },
@@ -451,6 +452,15 @@ export const theme = createTheme({
 })
 
 export type ThemeType = typeof theme
+
+export const darkTheme: ThemeType = {
+  ...theme,
+  colors: {
+    ...theme.colors,
+    mainBackground: faceliftPalette.darkBackground,
+    textColor: faceliftPalette.darkText,
+  },
+}
 
 export const GRADIENT_COLORS = [
   faceliftPalette.gradientEndColor,
