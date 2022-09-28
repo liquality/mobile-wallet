@@ -419,7 +419,17 @@ export const MainNavigator = () => (
 export const StackMainNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="LoginScreen">
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen
+        name="LoginScreen"
+        component={LoginScreen}
+        options={{
+          headerShown: true,
+          headerTitle: '',
+          headerShadowVisible: false,
+          statusBarColor: faceliftPalette.gradientEndColor,
+          headerStyle: { backgroundColor: faceliftPalette.gradientEndColor },
+        }}
+      />
       <Stack.Screen
         name="MainNavigator"
         component={MainNavigator}
