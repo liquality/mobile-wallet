@@ -1,9 +1,10 @@
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
 import React from 'react'
-import { AppIcons } from '../../assets'
-import { Box, palette } from '../../theme'
+import { AppIcons, Fonts } from '../../assets'
+import { Box, faceliftPalette, palette } from '../../theme'
 import { Text } from '../text/text'
 import Svg from 'react-native-svg'
+import fonts from '../../assets/fonts'
 
 const { SignOut } = AppIcons
 
@@ -20,17 +21,17 @@ const NftHeader: React.FC<NftHeaderProps> = (props) => {
 
   const renderAllNftsHeaderText = () => {
     return (
-      <Box flex="1" flexDirection="column">
-        <Text style={styles.nftText}>{blackText}</Text>
-        <Text style={[styles.nftText, styles.accountText]}>{greyText}</Text>
+      <Box>
+        <Text style={styles.nftText}>
+          {blackText} {'\n'}
+          <Text style={[styles.nftText, styles.accountText]}>{greyText}</Text>
+        </Text>
       </Box>
     )
   }
   return (
-    <Box style={styles.containerBox}>
-      <Box width={width} height={height} style={styles.insideHeader}>
-        {renderAllNftsHeaderText()}
-      </Box>
+    <Box width={width} height={height} style={styles.insideHeader}>
+      {renderAllNftsHeaderText()}
     </Box>
   )
 }
@@ -45,23 +46,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 3,
     elevation: 5,
+    position: 'relative',
   },
   nftText: {
-    padding: 20,
-    paddingBottom: 0,
-    marginVertical: 105,
-    //TODO add this font fontFamily: 'Anek Kannada',
+    position: 'absolute',
+    left: 20,
+    top: 120,
+    fontFamily: Fonts.Regular,
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 40,
-    lineHeight: 35,
-    color: '#000000',
-    marginBottom: 0,
+    letterSpacing: 0.25,
   },
   accountText: {
     marginVertical: 0,
     paddingTop: 10,
-    color: '#A8AEB7', //TODO import from palette
+    color: faceliftPalette.grey, //TODO import from palette
+    lineHeight: 35,
   },
 })
 
