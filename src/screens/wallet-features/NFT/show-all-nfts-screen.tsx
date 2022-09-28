@@ -10,6 +10,7 @@ import {
   Dimensions,
 } from 'react-native'
 import { useRecoilValue } from 'recoil'
+import { Fonts } from '../../../assets'
 import { networkState } from '../../../atoms'
 import NftHeader from '../../../components/NFT/nft-header'
 import NftImageView from '../../../components/NFT/nft-image-view'
@@ -119,9 +120,9 @@ const styles = StyleSheet.create({
   container: {},
 
   tabText: {
-    //fontFamily: 'Anek Kannada';
+    fontFamily: Fonts.Regular,
     fontStyle: 'normal',
-    fontWeight: '500',
+    fontWeight: '400',
     fontSize: 17,
     lineHeight: 28,
     letterSpacing: 0.75,
