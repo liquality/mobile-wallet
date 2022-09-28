@@ -451,3 +451,10 @@ export const theme = createTheme({
 })
 
 export type ThemeType = typeof theme
+
+export const GRADIENT_COLORS = [
+  faceliftPalette.gradientEndColor,
+  faceliftPalette.gradientMiddeColor,
+  faceliftPalette.gradientMiddeColor,
+  faceliftPalette.gradientStartColor,
+]

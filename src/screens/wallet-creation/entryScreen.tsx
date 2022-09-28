@@ -2,8 +2,14 @@ import React, { FC } from 'react'
 import { StatusBar } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
-import { Box, Text, Pressable, ThemeLayout, GRADIENT_STYLE } from '../../theme'
-import { GRADIENT_COLORS } from '../../utils'
+import {
+  Box,
+  Text,
+  Pressable,
+  ThemeLayout,
+  GRADIENT_STYLE,
+  GRADIENT_COLORS,
+} from '../../theme'
 import { AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
 import LinearGradient from 'react-native-linear-gradient'

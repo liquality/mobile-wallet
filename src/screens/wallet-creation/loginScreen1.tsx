@@ -1,8 +1,13 @@
 import React from 'react'
 import { StatusBar } from 'react-native'
-import { Box, GRADIENT_STYLE, Text, ThemeLayout } from '../../theme'
+import {
+  Box,
+  GRADIENT_STYLE,
+  Text,
+  ThemeLayout,
+  GRADIENT_COLORS,
+} from '../../theme'
 import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
-import { GRADIENT_COLORS } from '../../utils'
 import LinearGradient from 'react-native-linear-gradient'
 import { AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
