@@ -61,8 +61,8 @@ const App: FC = () => {
     flex: 1,
   }
 
-  const isNew = isNewInstallation()
   useEffect(() => {
+    const isNew = isNewInstallation()
     if (!isNew) {
       setInitialRouteName('StackMainNavigator')
     } else {
