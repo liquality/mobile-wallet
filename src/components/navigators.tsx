@@ -3,6 +3,7 @@ import { View, StyleSheet, Pressable, useColorScheme } from 'react-native'
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
+  NativeStackNavigationOptions,
 } from '@react-navigation/native-stack'
 import Entry from '../screens/wallet-creation/entryScreen'
 import TermsScreen from '../screens/wallet-creation/termsScreen'
@@ -62,6 +63,13 @@ export const OnboardingContext = createContext({})
 
 const PlaceholderComp = () => <Box />
 
+const screenNavOptions: NativeStackNavigationOptions = {
+  headerShown: true,
+  headerTitle: '',
+  headerShadowVisible: false,
+  headerBackVisible: false,
+}
+
 export const WalletCreationNavigator = () => {
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
@@ -89,27 +97,20 @@ export const WalletCreationNavigator = () => {
         <WalletCreationStack.Screen
           name="Entry"
           component={Entry}
-          options={{
-            headerTitle: '',
-            headerShown: true,
-            headerShadowVisible: false,
-            headerTransparent: true,
-          }}
+          options={screenNavOptions}
         />
         <WalletCreationStack.Screen
           name="TermsScreen"
           component={TermsScreen}
           options={{
-            headerShown: true,
-            headerTitle: '',
-            headerShadowVisible: false,
-            headerBackVisible: false,
+            ...screenNavOptions,
             headerStyle: { backgroundColor },
           }}
         />
         <WalletCreationStack.Screen
           name="PasswordCreationScreen"
           component={PasswordCreationScreen}
+          options={screenNavOptions}
         />
         <WalletCreationStack.Screen
           name="SeedPhraseScreen"
@@ -393,17 +394,20 @@ export const MainNavigator = () => (
 )
 
 export const StackMainNavigator = () => {
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
+  const backgroundColor =
+    currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
+
   return (
     <MainStack.Navigator initialRouteName="LoginScreen">
       <MainStack.Screen
         name="LoginScreen"
         component={LoginScreen}
-        options={{
-          headerTitle: '',
-          headerShown: true,
-          headerShadowVisible: false,
-          headerTransparent: true,
-        }}
+        options={screenNavOptions}
       />
       <MainStack.Screen
         name="MainNavigator"
@@ -441,10 +445,8 @@ export const StackMainNavigator = () => {
         name="TermsScreen"
         component={TermsScreen}
         options={{
-          headerShown: true,
-          headerTitle: '',
-          headerShadowVisible: false,
-          headerBackVisible: false,
+          ...screenNavOptions,
+          headerStyle: { backgroundColor },
         }}
       />
       <MainStack.Screen
@@ -468,12 +470,7 @@ export const StackMainNavigator = () => {
       <MainStack.Screen
         name="Entry"
         component={Entry}
-        options={{
-          headerTitle: '',
-          headerShown: true,
-          headerShadowVisible: false,
-          headerTransparent: true,
-        }}
+        options={screenNavOptions}
       />
     </MainStack.Navigator>
   )
