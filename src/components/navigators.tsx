@@ -448,7 +448,7 @@ export const MainNavigator = () => (
       name="ShowAllNftsScreen"
       component={ShowAllNftsScreen}
       options={({}) => ({
-        headerShown: true,
+        headerShown: false,
         headerTitle: '',
         headerLeft: TabSettingsScreenHeaderLeft,
         headerShadowVisible: false,

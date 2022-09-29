@@ -13,7 +13,6 @@ import { useRecoilValue } from 'recoil'
 import { networkState } from '../../atoms'
 import { toggleNFTStarred } from '../../store/store'
 import { useNavigation } from '@react-navigation/core'
-import { AccountId } from '@liquality/wallet-core/dist/src/store/types'
 import { faceliftPalette } from '../../theme/faceliftPalette'
 
 const { SeeAllNftsIcon, LongArrow, Star, Ellipse, BlackStar } = AppIcons
@@ -28,12 +27,11 @@ type NftImageViewProps = {
 const NftImageView: React.FC<NftImageViewProps> = (props) => {
   const { iterableNftArray, seeNftDetail, activeWalletId, accountIdsToSendIn } =
     props
-  const [starredNft, setStarredNft] = useState<boolean>(false)
   const activeNetwork = useRecoilValue(networkState)
+  const [imgError, setImgError] = useState<boolean>(false)
   const navigation = useNavigation()
 
   const renderStarFavorite = (nftAsset) => {
-    console.log(nftAsset.name, 'NFT ASSET')
     return (
       <Pressable
         onPress={() => {
@@ -50,6 +48,12 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
     )
   }
 
+  const checkImgUrlExists = (imgUrl: string) => {
+    return !imgError
+      ? { uri: imgUrl }
+      : require('../../assets/icons/nft_thumbnail.png')
+  }
+
   const toggleStarred = useCallback(
     async (nftAsset) => {
       nftAsset.starred = !nftAsset.starred
@@ -59,7 +63,6 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
         accountId: nftAsset.accountId,
         nft: nftAsset,
       }
-      console.log('TOGGLE STARRED, payload:', payload, 'PAYLOAD')
       await toggleNFTStarred(payload)
     },
     [activeNetwork, activeWalletId],
@@ -104,15 +107,14 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                   style={styles.pressable}
                   onPress={() => seeNftDetail(nftItem[0])}>
                   <Image
-                    source={{
-                      uri: nftItem[0].image_thumbnail_url,
-                    }}
+                    source={checkImgUrlExists(nftItem[0].image_thumbnail_url)}
                     style={{
                       borderRadius: 4,
                       width: Dimensions.get('screen').width - 20,
                       resizeMode: 'contain',
                       aspectRatio: 1,
                     }}
+                    onError={() => setImgError(true)}
                   />
                 </Pressable>
                 {renderStarFavorite(nftItem[0])}
@@ -170,9 +172,9 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                     style={styles.pressable}
                     onPress={() => seeNftDetail(nftItemInsideCollection)}>
                     <Image
-                      source={{
-                        uri: nftItemInsideCollection.image_thumbnail_url,
-                      }}
+                      source={checkImgUrlExists(
+                        nftItemInsideCollection.image_thumbnail_url,
+                      )}
                       style={styles.scrollableImg}
                     />
                   </Pressable>

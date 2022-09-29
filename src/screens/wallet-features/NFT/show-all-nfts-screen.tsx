@@ -113,7 +113,6 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
     )
   }
 
-  console.log(numberOfAccountsWithNfts, 'NR OF ACCS')
   return (
     <Box flex={1}>
       <ScrollView>
