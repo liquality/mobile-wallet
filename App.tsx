@@ -7,31 +7,47 @@ import {
 } from 'react-native-safe-area-context'
 
 import { createSwitchNavigator } from '@react-navigation/compat'
-import { ThemeProvider } from '@shopify/restyle'
+import { ThemeProvider as TP } from '@shopify/restyle'
 import { isNewInstallation } from './src/store/store'
 import {
   WalletCreationNavigator,
-  WalletImportNavigator,
-  MainNavigator,
+  StackMainNavigator,
 } from './src/components/navigators'
-import LoginScreen from './src/screens/wallet-creation/loginScreen'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { RecoilRoot } from 'recoil'
-import { Box, theme } from './src/theme'
+import { RecoilRoot, useRecoilValue } from 'recoil'
+import { Box, theme, darkTheme } from './src/theme'
+import { StatusBar, useColorScheme } from 'react-native'
+import { themeMode } from './src/atoms'
+
+const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const selectedTheme = useRecoilValue(themeMode)
+  let colorScheme = useColorScheme() as string
+  if (selectedTheme) {
+    colorScheme = selectedTheme
+  }
+
+  const statusBar = colorScheme === 'dark' ? 'light-content' : 'dark-content'
+
+  const currentTheme = colorScheme === 'dark' ? darkTheme : theme
+
+  return (
+    <TP theme={currentTheme}>
+      <StatusBar barStyle={statusBar} />
+      {children}
+    </TP>
+  )
+}
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
     {
       WalletCreationNavigator,
-      WalletImportNavigator,
-      MainNavigator,
-      LoginScreen,
+      StackMainNavigator,
     },
     {
       initialRouteName,
     },
   )
-
   return <Navigator />
 }
 
@@ -46,11 +62,12 @@ const App: FC = () => {
   useEffect(() => {
     const isNew = isNewInstallation()
     if (!isNew) {
-      setInitialRouteName('LoginScreen')
+      setInitialRouteName('StackMainNavigator')
     } else {
       setInitialRouteName('EntryScreen')
     }
     SplashScreen.hide()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (!initialRouteName) {
@@ -62,7 +79,7 @@ const App: FC = () => {
       <SafeAreaProvider
         initialMetrics={initialWindowMetrics}
         testID={'app-test'}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider>
           <GestureHandlerRootView style={backgroundStyle}>
             <NavigationContainer>
               <AppNavigator initialRouteName={initialRouteName} />

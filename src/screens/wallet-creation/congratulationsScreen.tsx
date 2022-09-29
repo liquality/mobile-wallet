@@ -7,6 +7,7 @@ import Confetti from '../../components/confetti'
 import { Box, palette } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
 import { Fonts } from '../../assets'
+import { CommonActions } from '@react-navigation/native'
 
 type CongratulationsProps = NativeStackScreenProps<
   RootStackParamList,
@@ -17,10 +18,12 @@ const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
   useEffect(() => {
     setTimeout(
       () =>
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'LoginScreen' }],
-        }),
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'StackMainNavigator' }],
+          }),
+        ),
       3000,
     )
   })

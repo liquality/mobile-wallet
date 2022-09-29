@@ -119,7 +119,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
     : DarkModeEnum.Light === deviceTheme
 
   return (
-    <View style={styles.container}>
+    <Box flex={1} alignItems="center" backgroundColor={'mainBackground'}>
       <ScrollView>
         <View style={styles.row}>
           <View style={styles.action}>
@@ -351,7 +351,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
         </View>
       </ScrollView>
       {isWhatsNewVisible && <WhatsNew onAction={setIsWhatsNewVisible} />}
-    </View>
+    </Box>
   )
 }
 

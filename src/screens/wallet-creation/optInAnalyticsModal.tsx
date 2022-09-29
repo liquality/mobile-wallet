@@ -6,7 +6,7 @@ import {
   useColorScheme,
 } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import { Box, Pressable, ThemeIcon, ThemeText } from '../../theme'
+import { Box, Pressable, ThemeIcon, Text } from '../../theme'
 import { useNavigation } from '@react-navigation/core'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { optInAnalyticsState, themeMode } from '../../atoms'
@@ -20,6 +20,7 @@ const { ModalClose } = AppIcons
 type AnalyticsModalProps = {
   onAction: (params: boolean) => void
   nextScreen: string
+  previousScreen: string
 }
 
 enum SelectedOption {
@@ -36,6 +37,7 @@ const defaultPadding: ViewStyle = {
 const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
   onAction,
   nextScreen,
+  previousScreen,
 }) => {
   const navigation = useNavigation()
   const [analytics, setAnalytics] = useRecoilState(optInAnalyticsState)
@@ -58,7 +60,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
       CommonActions.reset({
         index: 1,
         routes: [
-          { name: 'Entry' },
+          { name: previousScreen },
           {
             name: nextScreen,
             params: {
@@ -68,7 +70,15 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
         ],
       }),
     )
-  }, [onAction, setAnalytics, analytics, navigation, nextScreen, selectedOpt])
+  }, [
+    onAction,
+    setAnalytics,
+    analytics,
+    navigation,
+    nextScreen,
+    previousScreen,
+    selectedOpt,
+  ])
 
   const sureIcon: IconName =
     selectedOpt === 'sure' ? 'ActiveRadioButton' : 'InactiveRadioButton'
@@ -107,11 +117,13 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
               resizeMode="contain"
               source={uppperBgImg}>
               <Box flex={1} style={defaultPadding}>
-                <ThemeText
+                <Text
+                  color={'textColor'}
                   style={styles.helpUsTextStyle}
                   tx="optInAnalyticsModal.helpUsToImprove"
                 />
-                <ThemeText
+                <Text
+                  color={'textColor'}
                   marginTop={'m'}
                   style={styles.weWantToBetterTextStyle}
                   tx="optInAnalyticsModal.shareWhereYouClick"
@@ -120,7 +132,8 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
                   onPress={() => setSelectedOpt(SelectedOption.Sure)}>
                   <Box marginTop={'m'} flexDirection="row">
                     <ThemeIcon iconName={sureIcon} />
-                    <ThemeText
+                    <Text
+                      color={'textColor'}
                       marginLeft={'m'}
                       tx="optInAnalyticsModal.shareMyClicks"
                     />
@@ -130,7 +143,8 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
                   onPress={() => setSelectedOpt(SelectedOption.Not)}>
                   <Box marginTop={'m'} flexDirection="row">
                     <ThemeIcon iconName={notIcon} />
-                    <ThemeText
+                    <Text
+                      color={'textColor'}
                       marginLeft={'m'}
                       tx="optInAnalyticsModal.notToday"
                     />

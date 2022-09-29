@@ -81,6 +81,7 @@ import InactiveRadioButtonDark from '../assets/icons/inactiveRadioButtonDark.svg
 import InactiveRadioButtonLight from '../assets/icons/inactiveRadioButtonLight.svg'
 import ModalClose from '../assets/icons/modalClose.svg'
 import OneWalletAllChains from '../assets/icons/oneWalletAllChains.svg'
+import ArrowLeft from '../assets/icons/arrowLeft.svg'
 
 export default {
   PendingSwap,
@@ -166,4 +167,5 @@ export default {
   InactiveRadioButtonLight,
   ModalClose,
   OneWalletAllChains,
+  ArrowLeft,
 }

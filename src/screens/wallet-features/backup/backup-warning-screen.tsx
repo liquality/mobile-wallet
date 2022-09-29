@@ -3,16 +3,16 @@ import { View, StyleSheet } from 'react-native'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
 import { Text, Button, palette } from '../../../theme'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../../types'
+import { MainStackParamList } from '../../../types'
 import { labelTranslateFn } from '../../../utils'
 import { AppIcons, Fonts } from '../../../assets'
 
 const { Eye } = AppIcons
 
 const BackupWarningScreen: React.FC<
-  NativeStackScreenProps<RootStackParamList, 'BackupWarningScreen'>
+  NativeStackScreenProps<MainStackParamList, 'BackupWarningScreen'>
 > = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>()
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
 
   const handleBackupSeedBtnPress = useCallback(() => {
     navigation.navigate('BackupLoginScreen', {
@@ -45,7 +45,7 @@ const BackupWarningScreen: React.FC<
           variant="m"
           label={{ tx: 'common.cancel' }}
           onPress={() => {
-            navigation.navigate('SettingsScreen')
+            navigation.navigate('SettingsScreen', {})
           }}
           isBorderless={false}
           isActive={true}

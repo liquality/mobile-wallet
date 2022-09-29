@@ -8,7 +8,7 @@ import {
   getAsset,
 } from '@liquality/cryptoassets'
 import { SendHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
-import { RootStackParamList } from '../../../types'
+import { MainStackParamList } from '../../../types'
 import SendTransactionDetails from '../../../components/send/send-transaction-details'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import { Box, palette, Text } from '../../../theme'
@@ -21,7 +21,7 @@ import { AppIcons } from '../../../assets'
 const { CompletedIcon: SuccessIcon } = AppIcons
 
 type SendConfirmationScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'SendConfirmationScreen'
 >
 

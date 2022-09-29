@@ -1,6 +1,6 @@
 export const faceliftPalette = {
   white: '#ffffff',
-  lightWhite: '#F9F9F9',
+  lightWhite: '#F6F6F6',
   mediumWhite: '#F4F4F4',
   whiteGrey: '#EEEEEE',
   lightGrey: '#E0E0E0',
@@ -20,4 +20,9 @@ export const faceliftPalette = {
   transparent: 'transparent',
   semiTransparentWhite: 'rgba(255,255,255, 0.8)',
   semiTransparentDark: 'rgba(0,0,0, 0.8)',
+  lightBackground: '#ffffff',
+  darkBackground: '#3D4767',
+  lightText: '#3D4767',
+  darkText: '#EEEEEE',
+  red: '#E40000',
 }

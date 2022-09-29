@@ -120,6 +120,18 @@ export type RootStackParamList = {
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   LoadingScreen: StackPayload
+}
+
+export type MainStackParamList = {
+  Entry: undefined
+  TermsScreen: StackPayload
+  PasswordCreationScreen: StackPayload
+  SeedPhraseScreen: StackPayload
+  SeedPhraseConfirmationScreen: StackPayload
+  CongratulationsScreen: undefined
+  UnlockWalletScreen: StackPayload
+  LoginScreen: undefined
+  LoadingScreen: StackPayload
   OverviewScreen: StackPayload
   AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
@@ -137,7 +149,6 @@ export type RootStackParamList = {
   CustomFeeEIP1559Screen: StackPayload
   SwapScreen: StackPayload
   SwapReviewScreen: StackPayload
-  WalletImportNavigator: undefined
   MainNavigator: undefined
   NftForSpecificChainScreen: {
     screenTitle?: string
@@ -152,6 +163,7 @@ export type RootStackParamList = {
     nftItem?: NftObj
     accountIdsToSendIn: string[]
   }
+  SettingsScreen: { shouldLogOut?: boolean }
 }
 
 export type RootTabParamList = {

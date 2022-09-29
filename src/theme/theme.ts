@@ -6,8 +6,9 @@ import { scale } from 'react-native-size-matters'
 
 export const theme = createTheme({
   colors: {
-    mainBackground: palette.white,
-    mainForeground: palette.white,
+    mainBackground: faceliftPalette.lightBackground,
+    textColor: faceliftPalette.lightText,
+    mainForeground: faceliftPalette.white,
     secondaryForeground: palette.black,
     tertiaryForeground: palette.darkGray,
     buttonFontPrimary: palette.white,
@@ -17,8 +18,8 @@ export const theme = createTheme({
     buttonBackgroundSecondary: palette.white,
     mainButtonBorderColor: palette.blueVioletPrimary,
     secondaryButtonBorderColor: palette.gray,
-    danger: palette.red,
-    spinner: palette.white,
+    danger: faceliftPalette.red,
+    spinner: faceliftPalette.white,
     cardPrimaryBackground: palette.purplePrimary,
     buttonPrimaryBackground: palette.purplePrimary,
     mainBorderColor: palette.gray,
@@ -33,6 +34,9 @@ export const theme = createTheme({
     activeButton: faceliftPalette.buttonActive,
     semiTransparentWhite: faceliftPalette.semiTransparentWhite,
     semiTransparentDark: faceliftPalette.semiTransparentDark,
+    liqPink: faceliftPalette.buttonActive,
+    onboardInputColor: faceliftPalette.lightWhite,
+    onboardInputBorder: faceliftPalette.white,
   },
   spacing: {
     vs: scale(2),
@@ -43,6 +47,7 @@ export const theme = createTheme({
     xxl: scale(50),
     xxxl: scale(70),
     onboardingPadding: scale(40),
+    onboardingHeaderPadding: scale(25),
   },
   breakpoints: {
     phone: 0,
@@ -108,9 +113,9 @@ export const theme = createTheme({
     },
     mainInputLabel: {
       fontFamily: Fonts.Regular,
-      fontWeight: 'bold',
-      fontSize: 12,
-      lineHeight: 18,
+      fontWeight: '500',
+      fontSize: scale(15),
+      lineHeight: scale(21),
       color: 'mainForeground',
     },
     secondaryInputLabel: {
@@ -132,7 +137,6 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontWeight: '600',
       fontSize: 14,
-      // lineHeight: 14,
       color: 'buttonFontPrimary',
     },
     tertiaryButtonLabel: {
@@ -256,9 +260,15 @@ export const theme = createTheme({
       fontSize: scale(14),
       color: 'white',
     },
-    themeNormalText: {
+    faceliftBody: {
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
+    },
+    h1: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(41),
+      fontWeight: '500',
+      lineHeight: scale(55),
     },
   },
   pressableVariants: {
@@ -407,7 +417,17 @@ export const theme = createTheme({
       borderBottomWidth: 1,
     },
   },
-  textInputVariants: {},
+  textInputVariants: {
+    passwordInputs: {
+      paddingTop: 'm',
+      paddingBottom: 's',
+      color: 'onboardInputColor',
+      borderBottomColor: 'onboardInputBorder',
+      borderBottomWidth: 1,
+      fontWeight: '500',
+      fontSize: scale(15),
+    },
+  },
   tabBarStyleVariants: {
     light: {
       backgroundColor: 'mainBackground',
@@ -451,3 +471,20 @@ export const theme = createTheme({
 })
 
 export type ThemeType = typeof theme
+
+export const darkTheme: ThemeType = {
+  ...theme,
+  colors: {
+    ...theme.colors,
+    mainBackground: faceliftPalette.darkBackground,
+    textColor: faceliftPalette.darkText,
+    spinner: faceliftPalette.darkGrey,
+  },
+}
+
+export const GRADIENT_COLORS = [
+  faceliftPalette.gradientEndColor,
+  faceliftPalette.gradientMiddeColor,
+  faceliftPalette.gradientMiddeColor,
+  faceliftPalette.gradientStartColor,
+]
