@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../../types'
+import { MainStackParamList } from '../../../types'
 import {
   dpUI,
   prettyFiatBalance,
@@ -30,7 +30,7 @@ const ERROR_STYLES: TextStyle = {
 }
 
 type SendReviewScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'SendReviewScreen'
 >
 

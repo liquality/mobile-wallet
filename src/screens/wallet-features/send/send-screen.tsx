@@ -4,8 +4,8 @@ import { ChainId, getAsset, getChain } from '@liquality/cryptoassets'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
   GasFees,
+  MainStackParamList,
   NetworkFeeType,
-  RootStackParamList,
   UseInputStateReturnType,
 } from '../../../types'
 import { BigNumber } from '@liquality/types'
@@ -57,7 +57,7 @@ const useInputState = (
   return { value, onChangeText: setValue }
 }
 
-type SendScreenProps = NativeStackScreenProps<RootStackParamList, 'SendScreen'>
+type SendScreenProps = NativeStackScreenProps<MainStackParamList, 'SendScreen'>
 
 enum ErrorMessages {
   NotEnoughToken,
