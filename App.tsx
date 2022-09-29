@@ -11,7 +11,6 @@ import { ThemeProvider as TP } from '@shopify/restyle'
 import { isNewInstallation } from './src/store/store'
 import {
   WalletCreationNavigator,
-  WalletImportNavigator,
   StackMainNavigator,
 } from './src/components/navigators'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -43,7 +42,6 @@ const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
     {
       WalletCreationNavigator,
-      WalletImportNavigator,
       StackMainNavigator,
     },
     {

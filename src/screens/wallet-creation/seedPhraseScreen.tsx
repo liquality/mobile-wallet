@@ -84,7 +84,7 @@ const SeedPhraseScreen = ({ route, navigation }: WalletBackupProps) => {
                 type="secondary"
                 variant="m"
                 label={{ tx: 'common.cancel' }}
-                onPress={() => navigation.navigate('Entry')}
+                onPress={navigation.popToTop}
                 isBorderless={false}
                 isActive={true}
               />

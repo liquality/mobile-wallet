@@ -90,6 +90,7 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
           }>
           <AnalyticsModal
             nextScreen={route?.params?.nextScreen || 'UnlockWalletScreen'}
+            previousScreen={route.params.previousScreen || 'Entry'}
             onAction={setShowAnalyticsModal}
           />
         </React.Suspense>

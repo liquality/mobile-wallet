@@ -123,7 +123,12 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             textDecorationLine={'underline'}
             tx="common.importWithSeedPhrase"
             marginTop={'s'}
-            onPress={() => navigation.navigate('WalletImportNavigator')}
+            onPress={() =>
+              navigation.navigate('TermsScreen', {
+                previousScreen: 'LoginScreen',
+                nextScreen: 'UnlockWalletScreen',
+              })
+            }
           />
         </Box>
       </LinearGradient>

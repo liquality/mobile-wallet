@@ -148,7 +148,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
                 type="secondary"
                 variant="m"
                 label={{ tx: 'common.cancel' }}
-                onPress={navigation.goBack}
+                onPress={navigation.popToTop}
                 isBorderless={false}
                 isActive={true}
               />

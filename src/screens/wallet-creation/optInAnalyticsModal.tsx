@@ -20,6 +20,7 @@ const { ModalClose } = AppIcons
 type AnalyticsModalProps = {
   onAction: (params: boolean) => void
   nextScreen: string
+  previousScreen: string
 }
 
 enum SelectedOption {
@@ -36,6 +37,7 @@ const defaultPadding: ViewStyle = {
 const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
   onAction,
   nextScreen,
+  previousScreen,
 }) => {
   const navigation = useNavigation()
   const [analytics, setAnalytics] = useRecoilState(optInAnalyticsState)
@@ -58,7 +60,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
       CommonActions.reset({
         index: 1,
         routes: [
-          { name: 'Entry' },
+          { name: previousScreen },
           {
             name: nextScreen,
             params: {
@@ -68,7 +70,15 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
         ],
       }),
     )
-  }, [onAction, setAnalytics, analytics, navigation, nextScreen, selectedOpt])
+  }, [
+    onAction,
+    setAnalytics,
+    analytics,
+    navigation,
+    nextScreen,
+    previousScreen,
+    selectedOpt,
+  ])
 
   const sureIcon: IconName =
     selectedOpt === 'sure' ? 'ActiveRadioButton' : 'InactiveRadioButton'

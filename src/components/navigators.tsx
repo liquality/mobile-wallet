@@ -491,6 +491,41 @@ export const StackMainNavigator = () => {
           headerShown: false,
         })}
       />
+      <Stack.Screen
+        name="TermsScreen"
+        component={TermsScreen}
+        options={{
+          headerShown: true,
+          headerTitle: '',
+          headerShadowVisible: false,
+          headerBackVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="PasswordCreationScreen"
+        component={PasswordCreationScreen}
+      />
+      <Stack.Screen name="SeedPhraseScreen" component={SeedPhraseScreen} />
+      <Stack.Screen
+        name="SeedPhraseConfirmationScreen"
+        component={SeedPhraseConfirmationScreen}
+      />
+      <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+      <Stack.Screen
+        name="CongratulationsScreen"
+        component={CongratulationsScreen}
+      />
+      <Stack.Screen name="UnlockWalletScreen" component={UnlockWalletScreen} />
+      <Stack.Screen
+        name="Entry"
+        component={Entry}
+        options={{
+          headerTitle: '',
+          headerShown: true,
+          headerShadowVisible: false,
+          headerTransparent: true,
+        }}
+      />
     </Stack.Navigator>
   )
 }

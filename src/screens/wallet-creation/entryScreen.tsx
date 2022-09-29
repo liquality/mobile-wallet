@@ -24,11 +24,13 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
   const handleImportPress = () =>
     navigation.navigate('TermsScreen', {
       nextScreen: 'UnlockWalletScreen',
+      previousScreen: 'Entry',
     })
 
   const handleCreateWalletPress = () =>
     navigation.navigate('TermsScreen', {
       nextScreen: 'SeedPhraseScreen',
+      previousScreen: 'Entry',
     })
 
   return (
