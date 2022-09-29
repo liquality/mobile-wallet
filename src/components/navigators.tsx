@@ -44,7 +44,7 @@ import BackupWarningScreen from '../screens/wallet-features/backup/backup-warnin
 import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-screen'
 import BackupLoginScreen from '../screens/wallet-features/backup/backup-login-screen'
 import CustomFeeEIP1559Screen from '../screens/wallet-features/custom-fee/custom-fee-eip-1559-screen'
-import { Box, faceliftPalette, palette, Text } from '../theme'
+import { Box, faceliftPalette, palette, Text, ThemeIcon } from '../theme'
 import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-screen'
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
@@ -68,6 +68,14 @@ const screenNavOptions: NativeStackNavigationOptions = {
   headerTitle: '',
   headerShadowVisible: false,
   headerBackVisible: false,
+}
+
+const LiqLogoHeaderLeft = () => {
+  return (
+    <Box marginLeft={'onboardingHeaderPadding'}>
+      <ThemeIcon iconName="OnlyLqLogo" />
+    </Box>
+  )
 }
 
 export const WalletCreationNavigator = () => {
@@ -97,7 +105,7 @@ export const WalletCreationNavigator = () => {
         <WalletCreationStack.Screen
           name="Entry"
           component={Entry}
-          options={screenNavOptions}
+          options={{ ...screenNavOptions, headerTransparent: true }}
         />
         <WalletCreationStack.Screen
           name="TermsScreen"
@@ -105,6 +113,7 @@ export const WalletCreationNavigator = () => {
           options={{
             ...screenNavOptions,
             headerStyle: { backgroundColor },
+            headerLeft: LiqLogoHeaderLeft,
           }}
         />
         <WalletCreationStack.Screen
@@ -407,7 +416,7 @@ export const StackMainNavigator = () => {
       <MainStack.Screen
         name="LoginScreen"
         component={LoginScreen}
-        options={screenNavOptions}
+        options={{ ...screenNavOptions, headerTransparent: true }}
       />
       <MainStack.Screen
         name="MainNavigator"
@@ -447,6 +456,7 @@ export const StackMainNavigator = () => {
         options={{
           ...screenNavOptions,
           headerStyle: { backgroundColor },
+          headerLeft: LiqLogoHeaderLeft,
         }}
       />
       <MainStack.Screen

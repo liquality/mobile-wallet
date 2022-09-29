@@ -47,6 +47,7 @@ export const theme = createTheme({
     xxl: scale(50),
     xxxl: scale(70),
     onboardingPadding: scale(40),
+    onboardingHeaderPadding: scale(25),
   },
   breakpoints: {
     phone: 0,

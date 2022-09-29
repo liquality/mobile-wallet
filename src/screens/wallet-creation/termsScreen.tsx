@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { ScrollView, useColorScheme, View } from 'react-native'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Box, faceliftPalette, Text, ThemeIcon, Pressable } from '../../theme'
+import { Box, faceliftPalette, Text, Pressable } from '../../theme'
 import { Fonts } from '../../assets'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import LinearGradient from 'react-native-linear-gradient'
@@ -44,7 +44,6 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
       flex={1}
       backgroundColor="mainBackground"
       paddingHorizontal={'onboardingPadding'}>
-      <ThemeIcon iconName="OnlyLqLogo" />
       <Box marginTop={'xl'}>
         <Text
           color={'textColor'}
