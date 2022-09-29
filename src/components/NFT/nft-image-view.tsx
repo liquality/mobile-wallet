@@ -1,6 +1,8 @@
 import {
   Dimensions,
   Image,
+  NativeSyntheticEvent,
+  NativeTouchEvent,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -19,7 +21,10 @@ const { SeeAllNftsIcon, LongArrow, Star, Ellipse, BlackStar } = AppIcons
 
 type NftImageViewProps = {
   iterableNftArray: Object
-  seeNftDetail: () => void
+  seeNftDetail: (
+    nftItem: Object,
+    e: NativeSyntheticEvent<NativeTouchEvent>,
+  ) => void
   activeWalletId?: boolean
   accountIdsToSendIn: string[]
 }
@@ -34,8 +39,8 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
   const renderStarFavorite = (nftAsset) => {
     return (
       <Pressable
-        onPress={() => {
-          toggleStarred(nftAsset)
+        onPress={(e) => {
+          toggleStarred(nftAsset, e)
         }}
         style={styles.ellipse}>
         <Ellipse style={styles.ellipse}></Ellipse>
@@ -49,13 +54,16 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
   }
 
   const checkImgUrlExists = (imgUrl: string) => {
-    return !imgError
+    console.log(imgError, 'IMG ERRO?', imgUrl)
+    return !imgError && imgUrl
       ? { uri: imgUrl }
       : require('../../assets/icons/nft_thumbnail.png')
   }
 
   const toggleStarred = useCallback(
-    async (nftAsset) => {
+    async (nftAsset, e) => {
+      console.log('TOGGLE STAR')
+      e.stopPropagation()
       nftAsset.starred = !nftAsset.starred
       const payload = {
         network: activeNetwork,
@@ -105,7 +113,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
               <Box>
                 <Pressable
                   style={styles.pressable}
-                  onPress={() => seeNftDetail(nftItem[0])}>
+                  onPress={(e) => seeNftDetail(nftItem[0], e)}>
                   <Image
                     source={checkImgUrlExists(nftItem[0].image_thumbnail_url)}
                     style={{
@@ -117,7 +125,14 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                     onError={() => setImgError(true)}
                   />
                 </Pressable>
-                {renderStarFavorite(nftItem[0])}
+                <Box
+                  style={styles.pressable}
+                  onStartShouldSetResponder={() => true}
+                  onTouchEnd={(e) => {
+                    e.stopPropagation()
+                  }}>
+                  {renderStarFavorite(nftItem[0])}
+                </Box>
               </Box>
             </Box>
           )
@@ -141,7 +156,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
               </Pressable>
               <Pressable
                 style={styles.pressable}
-                onPress={() => seeNftDetail(nftItem[0])}>
+                onPress={(e) => seeNftDetail(nftItem[0], e)}>
                 <Image
                   source={{
                     uri: nftItem[0].image_thumbnail_url,
@@ -150,6 +165,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                     width: Dimensions.get('screen').width / 2,
                     height: Dimensions.get('screen').width / 2,
                   }}
+                  onError={() => setImgError(true)}
                 />
                 <Image
                   source={{
@@ -159,6 +175,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                     width: Dimensions.get('screen').width / 2,
                     height: Dimensions.get('screen').width / 2,
                   }}
+                  onError={() => setImgError(true)}
                 />
               </Pressable>
             </Box>
@@ -176,6 +193,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                         nftItemInsideCollection.image_thumbnail_url,
                       )}
                       style={styles.scrollableImg}
+                      onError={() => setImgError(true)}
                     />
                   </Pressable>
                   {renderStarFavorite(nftItemInsideCollection)}

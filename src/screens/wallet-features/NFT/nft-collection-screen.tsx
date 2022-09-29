@@ -16,7 +16,7 @@ import {
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import NftHeader from '../../../components/NFT/nft-header'
-import { Box, Button, palette } from '../../../theme'
+import { Box, palette } from '../../../theme'
 
 import { RootStackParamList } from '../../../types'
 
@@ -38,7 +38,9 @@ const NftCollectionScreen = ({
   const { activeWalletId } = wallet.state
 
   const seeNftDetail = useCallback(
-    (nftItem) => {
+    (nftItem, e) => {
+      //e.preventDefault()
+      console.log('SEE NFT DETAIL!!')
       navigation.navigate('NftDetailScreen', {
         screenTitle: 'NFT Detail',
         nftItem: nftItem,
