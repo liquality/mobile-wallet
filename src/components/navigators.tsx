@@ -119,7 +119,7 @@ export const WalletCreationNavigator = () => {
         <WalletCreationStack.Screen
           name="PasswordCreationScreen"
           component={PasswordCreationScreen}
-          options={screenNavOptions}
+          options={{ ...screenNavOptions, headerTransparent: true }}
         />
         <WalletCreationStack.Screen
           name="SeedPhraseScreen"
@@ -462,6 +462,7 @@ export const StackMainNavigator = () => {
       <MainStack.Screen
         name="PasswordCreationScreen"
         component={PasswordCreationScreen}
+        options={{ ...screenNavOptions, headerTransparent: true }}
       />
       <MainStack.Screen name="SeedPhraseScreen" component={SeedPhraseScreen} />
       <MainStack.Screen

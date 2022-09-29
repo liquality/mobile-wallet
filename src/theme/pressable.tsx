@@ -75,7 +75,7 @@ export const Pressable: FC<Props> = (props) => {
 
   const theme = useTheme<Theme>()
 
-  const opacity = disabled ? 0.5 : 1
+  const opacity = disabled ? 0.4 : 1
 
   return (
     <BaseButton

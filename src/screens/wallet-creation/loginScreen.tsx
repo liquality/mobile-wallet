@@ -6,7 +6,6 @@ import {
   GRADIENT_COLORS,
   Pressable,
   TextInput,
-  faceliftPalette,
 } from '../../theme'
 import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
 import LinearGradient from 'react-native-linear-gradient'
@@ -50,8 +49,10 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       setError(labelTranslateFn('passwordCreationScreen.password8char')!)
     } else {
       try {
+        Keyboard.dismiss()
         setLoading(true)
         await restoreWallet(passwordInput.value, activeNetwork)
+        setLoading(false)
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
@@ -59,10 +60,10 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
           }),
         )
       } catch (_error) {
+        setLoading(false)
         passwordInput.onChangeText('')
         setError(labelTranslateFn('loginScreen.invalidPassword')!)
         Keyboard.dismiss()
-        setLoading(false)
       }
     }
   }
@@ -77,7 +78,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
           <Box marginTop="xl">
             <OneWalletAllChains width={scale(175)} />
           </Box>
-          <Box flex={0.5} justifyContent="flex-end">
+          <Box flex={0.5} justifyContent="center">
             <Text variant="mainInputLabel" tx="loginScreen.password" />
             <TextInput
               variant={'passwordInputs'}
@@ -90,7 +91,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               autoCorrect={false}
               returnKeyType="done"
               onSubmitEditing={onUnlock}
-              selectionColor={faceliftPalette.white}
             />
             {error.length ? (
               <Box

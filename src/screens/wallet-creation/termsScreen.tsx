@@ -3,7 +3,6 @@ import { ScrollView, useColorScheme, View } from 'react-native'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Box, faceliftPalette, Text, Pressable } from '../../theme'
-import { Fonts } from '../../assets'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import LinearGradient from 'react-native-linear-gradient'
 import { themeMode } from '../../atoms'
@@ -45,11 +44,7 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
       backgroundColor="mainBackground"
       paddingHorizontal={'onboardingPadding'}>
       <Box marginTop={'xl'}>
-        <Text
-          color={'textColor'}
-          style={styles.termsTitle}
-          tx="termsScreen.termPrivacy"
-        />
+        <Text color={'textColor'} variant="h1" tx="termsScreen.termPrivacy" />
       </Box>
       <Box flex={1}>
         <Box flex={0.7}>
@@ -99,12 +94,6 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
 }
 
 const styles = ScaledSheet.create({
-  termsTitle: {
-    fontFamily: Fonts.Regular,
-    fontSize: '48@s',
-    fontWeight: '500',
-    lineHeight: '64@s',
-  },
   linearStyle: {
     left: 0,
     bottom: 0,
@@ -116,4 +105,5 @@ const styles = ScaledSheet.create({
     paddingBottom: '25@s',
   },
 })
+
 export default TermsScreen

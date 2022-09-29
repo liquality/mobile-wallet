@@ -10,6 +10,7 @@ import i18n from 'i18n-js'
 import { TxKeyPath, translate } from '../i18n'
 import { langSelected as LS } from '../../src/atoms'
 import { useRecoilValue } from 'recoil'
+import { faceliftPalette } from './faceliftPalette'
 
 const BaseTextInput = createRestyleComponent<
   VariantProps<Theme, 'textInputVariants'> & TextInputProps,
@@ -28,7 +29,13 @@ export const TextInput: FC<Props> = (props) => {
 
   if (placeholderTx) {
     const i18nText = translate(placeholderTx, txOptions)
-    return <BaseTextInput {...rest} placeholder={i18nText!} />
+    return (
+      <BaseTextInput
+        {...rest}
+        selectionColor={faceliftPalette.white}
+        placeholder={i18nText!}
+      />
+    )
   } else {
     return <BaseTextInput {...rest} />
   }

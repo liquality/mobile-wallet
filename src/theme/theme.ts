@@ -137,7 +137,6 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontWeight: '600',
       fontSize: 14,
-      // lineHeight: 14,
       color: 'buttonFontPrimary',
     },
     tertiaryButtonLabel: {
@@ -264,6 +263,12 @@ export const theme = createTheme({
     faceliftBody: {
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
+    },
+    h1: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(41),
+      fontWeight: '500',
+      lineHeight: scale(55),
     },
   },
   pressableVariants: {
@@ -421,7 +426,6 @@ export const theme = createTheme({
       borderBottomWidth: 1,
       fontWeight: '500',
       fontSize: scale(15),
-      opacity: 0.7,
     },
   },
   tabBarStyleVariants: {

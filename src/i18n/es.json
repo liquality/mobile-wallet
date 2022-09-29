@@ -73,10 +73,10 @@
   },
   "passwordCreationScreen": {
     "createPassword": "Create Password",
-    "choosePassword": "CHOOSE PASSWORD (at least 8 characters)",
     "confirmPassword": "CONFIRM PASSWORD",
     "passwordDontMatch": "Passwords don't match",
-    "password8char": "Passwords must be at least 8 characters"
+    "password8char": "Passwords must be at least 8 characters.",
+    "orImportWallet": "Or import other wallet with seed phrase."
   },
   "seedPhraseConfirmationScreen": {
     "keyInfoMissing": "Key information missing",
