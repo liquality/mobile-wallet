@@ -108,6 +108,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                       uri: nftItem[0].image_thumbnail_url,
                     }}
                     style={{
+                      borderRadius: 4,
                       width: Dimensions.get('screen').width - 20,
                       resizeMode: 'contain',
                       aspectRatio: 1,
@@ -229,6 +230,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
     width: 105,
     height: 105,
+    borderRadius: 4,
   },
 
   seeAllText: {

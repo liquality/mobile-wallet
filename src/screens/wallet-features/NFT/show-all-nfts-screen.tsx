@@ -31,6 +31,9 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
   const [iterableNftArray, setIterableNftArray] = useState([])
   const [accountIdsToSendIn, setAccountIdsToSendIn] = useState<string[]>([])
   const [showNfts, setShowNfts] = useState<boolean>(true)
+  const [numberOfAccountsWithNfts, setNumberOfAccountsWithNfts] =
+    useState<number>(0)
+  const [numberOfNfts, setNumberOfNfts] = useState<number>(0)
 
   const { activeWalletId } = wallet.state
 
@@ -56,6 +59,17 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
         return val
       })
       setIterableNftArray(wholeNftArr)
+
+      //Set nr of accounts with nfts
+      let numberOfNftsInAccs = await calculateNrOfAccsWithNfts(
+        enabledAccountsToSendIn,
+      )
+      setNumberOfAccountsWithNfts(numberOfNftsInAccs)
+      let totalAmountOfNfts = Object.values(allNfts).reduce(
+        (acc, nft) => acc + nft.length,
+        0,
+      )
+      setNumberOfNfts(totalAmountOfNfts)
     }
     fetchData()
   }, [activeWalletId, activeNetwork])
@@ -71,16 +85,25 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
     [navigation, accountIdsToSendIn],
   )
 
+  const calculateNrOfAccsWithNfts = async (accountsData) => {
+    return accountsData.filter(
+      (account) => account.nfts && account.nfts.length > 0,
+    ).length
+  }
+
   const renderTabBar = () => {
     return (
       <Box flex="1" flexDirection="row" padding={'m'}>
-        <Pressable
-          style={[styles.tabText, showNfts && styles.tabBarFocused]}
-          onPress={() => setShowNfts(!showNfts)}>
-          <Text style={[styles.tabText, showNfts && styles.headerTextFocused]}>
-            Nfts
-          </Text>
-        </Pressable>
+        <Box marginRight={'l'}>
+          <Pressable
+            style={[styles.tabText, showNfts && styles.tabBarFocused]}
+            onPress={() => setShowNfts(!showNfts)}>
+            <Text
+              style={[styles.tabText, showNfts && styles.headerTextFocused]}>
+              Nfts
+            </Text>
+          </Pressable>
+        </Box>
         <Pressable
           style={[styles.tabText, !showNfts && styles.tabBarFocused]}
           onPress={() => setShowNfts(!showNfts)}>
@@ -90,13 +113,14 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
     )
   }
 
+  console.log(numberOfAccountsWithNfts, 'NR OF ACCS')
   return (
     <Box flex={1}>
       <ScrollView>
         <Box style={styles.overviewBlock}>
           <NftHeader
-            blackText={'X NFTS'}
-            greyText={'X ACCOUNTS'}
+            blackText={`${numberOfNfts} NFTS`}
+            greyText={`${numberOfAccountsWithNfts} ACCOUNTS`}
             width={Dimensions.get('screen').width}
             height={225}></NftHeader>
           <Text variant="loading" tx="overviewScreen.load" />
@@ -137,9 +161,9 @@ const styles = StyleSheet.create({
   },
 
   tabBarFocused: {
+    borderBottomStyle: 'inset',
     borderBottomWidth: 2,
     lineHeight: '1em',
-
     color: palette.purplePrimary,
     borderBottomColor: palette.purplePrimary,
   },
