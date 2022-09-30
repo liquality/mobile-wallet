@@ -16,6 +16,7 @@ import {
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import NftHeader from '../../../components/NFT/nft-header'
+import StarFavorite from '../../../components/NFT/star-favorite'
 import { Box, palette } from '../../../theme'
 
 import { RootStackParamList } from '../../../types'
@@ -148,6 +149,7 @@ const NftCollectionScreen = ({
             return (
               <View style={styles.inner}>
                 <Image source={item.uri} style={styles.image} />
+                <StarFavorite nftAsset={item} activeWalletId={activeWalletId} />
               </View>
             )
           }}
@@ -175,8 +177,6 @@ const NftCollectionScreen = ({
 }
 
 const styles = StyleSheet.create({
-  container: {},
-
   tabText: {
     //fontFamily: 'Anek Kannada';
     fontStyle: 'normal',

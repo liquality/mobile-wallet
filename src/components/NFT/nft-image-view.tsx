@@ -16,6 +16,7 @@ import { networkState } from '../../atoms'
 import { toggleNFTStarred } from '../../store/store'
 import { useNavigation } from '@react-navigation/core'
 import { faceliftPalette } from '../../theme/faceliftPalette'
+import StarFavorite from './star-favorite'
 
 const { SeeAllNftsIcon, LongArrow, Star, Ellipse, BlackStar } = AppIcons
 
@@ -36,52 +37,12 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
   const [imgError, setImgError] = useState<boolean>(false)
   const navigation = useNavigation()
 
-  const renderStarFavorite = (nftAsset) => {
-    return (
-      <Box
-        style={styles.starContainer}
-        onStartShouldSetResponder={() => true}
-        onTouchEnd={(e) => {
-          e.stopPropagation()
-        }}>
-        <Pressable
-          onPress={(e) => {
-            toggleStarred(nftAsset, e)
-          }}
-          style={styles.ellipse}>
-          <Ellipse style={styles.ellipse}></Ellipse>
-          {nftAsset.starred ? (
-            <BlackStar style={styles.star}></BlackStar>
-          ) : (
-            <Star style={styles.star}></Star>
-          )}
-        </Pressable>
-      </Box>
-    )
-  }
-
   const checkImgUrlExists = (imgUrl: string) => {
     console.log(imgError, 'IMG ERRO?', imgUrl)
     return !imgError && imgUrl
       ? { uri: imgUrl }
       : require('../../assets/icons/nft_thumbnail.png')
   }
-
-  const toggleStarred = useCallback(
-    async (nftAsset, e) => {
-      console.log('TOGGLE STAR')
-      e.stopPropagation()
-      nftAsset.starred = !nftAsset.starred
-      const payload = {
-        network: activeNetwork,
-        walletId: activeWalletId,
-        accountId: nftAsset.accountId,
-        nft: nftAsset,
-      }
-      await toggleNFTStarred(payload)
-    },
-    [activeNetwork, activeWalletId],
-  )
 
   const handleGoToCollection = useCallback(
     (nftCollection) => {
@@ -133,7 +94,10 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                   />
                 </Pressable>
 
-                {renderStarFavorite(nftItem[0])}
+                <StarFavorite
+                  nftAsset={nftItem[0]}
+                  activeWalletId={activeWalletId}
+                />
               </Box>
             </Box>
           )
@@ -197,7 +161,10 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                       onError={() => setImgError(true)}
                     />
                   </Pressable>
-                  {renderStarFavorite(nftItemInsideCollection)}
+                  <StarFavorite
+                    nftAsset={nftItemInsideCollection}
+                    activeWalletId={activeWalletId}
+                  />
                 </Box>
               )
             },
