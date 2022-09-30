@@ -49,6 +49,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const renderSeedWord = ({ item, index }: { item: any; index: number }) => {
+    const opacity = chosenSeedWords[index].length ? 1 : 0.4
     return (
       <Box width={'27%'}>
         <Text>{`${index + 1}`}</Text>
@@ -63,6 +64,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
           }}
           returnKeyType="done"
           cursorColor={faceliftPalette.buttonActive}
+          style={{ opacity }}
         />
       </Box>
     )
