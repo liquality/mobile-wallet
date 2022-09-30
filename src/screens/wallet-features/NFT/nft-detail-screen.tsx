@@ -21,6 +21,7 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
 
+  console.log(nftItem, 'NFT ITEM')
   const { activeWalletId } = wallet.state
 
   useEffect(() => {

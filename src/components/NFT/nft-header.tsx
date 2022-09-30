@@ -22,9 +22,9 @@ const NftHeader: React.FC<NftHeaderProps> = (props) => {
   const renderAllNftsHeaderText = () => {
     return (
       <Box>
-        <Text style={styles.nftText}>
+        <Text style={styles.blackText}>
           {blackText} {'\n'}
-          <Text style={[styles.nftText, styles.accountText]}>{greyText}</Text>
+          <Text style={[styles.blackText, styles.greyText]}>{greyText}</Text>
         </Text>
       </Box>
     )
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     position: 'relative',
   },
-  nftText: {
+  blackText: {
     position: 'absolute',
     left: 20,
     top: 120,
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     letterSpacing: 0.25,
   },
-  accountText: {
+  greyText: {
     marginVertical: 0,
     paddingTop: 10,
     color: faceliftPalette.grey, //TODO import from palette

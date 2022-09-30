@@ -114,9 +114,9 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
   }
 
   return (
-    <Box flex={1}>
+    <Box flex={1} style={styles.overviewBlock}>
       <ScrollView>
-        <Box style={styles.overviewBlock}>
+        <Box>
           <NftHeader
             blackText={`${numberOfNfts} NFTS`}
             greyText={`${numberOfAccountsWithNfts} ACCOUNTS`}
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     height: 225,
+    backgroundColor: palette.white,
   },
 
   tabBarFocused: {

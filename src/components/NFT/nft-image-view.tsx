@@ -38,18 +38,25 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
 
   const renderStarFavorite = (nftAsset) => {
     return (
-      <Pressable
-        onPress={(e) => {
-          toggleStarred(nftAsset, e)
-        }}
-        style={styles.ellipse}>
-        <Ellipse style={styles.ellipse}></Ellipse>
-        {nftAsset.starred ? (
-          <BlackStar style={styles.star}></BlackStar>
-        ) : (
-          <Star style={styles.star}></Star>
-        )}
-      </Pressable>
+      <Box
+        style={styles.starContainer}
+        onStartShouldSetResponder={() => true}
+        onTouchEnd={(e) => {
+          e.stopPropagation()
+        }}>
+        <Pressable
+          onPress={(e) => {
+            toggleStarred(nftAsset, e)
+          }}
+          style={styles.ellipse}>
+          <Ellipse style={styles.ellipse}></Ellipse>
+          {nftAsset.starred ? (
+            <BlackStar style={styles.star}></BlackStar>
+          ) : (
+            <Star style={styles.star}></Star>
+          )}
+        </Pressable>
+      </Box>
     )
   }
 
@@ -96,7 +103,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
             <Box paddingVertical={'xl'} key={index}>
               <Pressable
                 style={styles.collectionTextContainer}
-                onPress={() => handleGoToCollection(nftItem[0])}>
+                onPress={() => handleGoToCollection(nftItem)}>
                 <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
                   <Text style={styles.collectionNameText}>
                     {' '}
@@ -125,14 +132,8 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                     onError={() => setImgError(true)}
                   />
                 </Pressable>
-                <Box
-                  style={styles.pressable}
-                  onStartShouldSetResponder={() => true}
-                  onTouchEnd={(e) => {
-                    e.stopPropagation()
-                  }}>
-                  {renderStarFavorite(nftItem[0])}
-                </Box>
+
+                {renderStarFavorite(nftItem[0])}
               </Box>
             </Box>
           )
@@ -293,6 +294,7 @@ const styles = StyleSheet.create({
     left: 9,
     top: 9,
   },
+  starContainer: { position: 'absolute' },
 
   collectionNameText: {
     fontFamily: Fonts.Regular,

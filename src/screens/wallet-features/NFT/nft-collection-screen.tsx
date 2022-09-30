@@ -1,7 +1,7 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import {
   View,
   Text,
@@ -25,6 +25,89 @@ type NftCollectionScreenProps = NativeStackScreenProps<
   'NftCollectionScreen'
 >
 
+const dummyData = [
+  {
+    name: 'Shopee Supermarket',
+    uri: require('../../../assets/icons/nft_thumbnail.png'),
+  },
+  {
+    name: 'RM15 Free Shipping',
+    uri: require('../../../assets/icons/nft_thumbnail.png'),
+  },
+  {
+    name: '15% Cashback',
+    uri: require('../../../assets/icons/nft_thumbnail.png'),
+  },
+  { name: 'Live', uri: require('../../../assets/icons/nft_thumbnail.png') },
+  {
+    name: 'Shopee Food',
+    uri: require('../../../assets/icons/nft_thumbnail.png'),
+  },
+  {
+    name: 'Shopee Pay',
+    uri: require('../../../assets/icons/nft_thumbnail.png'),
+  },
+  {
+    name: 'Shop Malaysia',
+    uri: require('../../../assets/icons/nft_thumbnail.png'),
+  },
+  { name: 'COD', uri: require('../../../assets/icons/nft_thumbnail.png') },
+]
+
+let bu = {
+  accountId: 'f7dc7698-407d-463b-bd81-958e23a247d8',
+  asset_contract: {
+    address: '0xe42cad6fc883877a76a26a16ed92444ab177e306',
+    external_link: 'https://consensys.net/merge',
+    image_url:
+      'https://i.seadn.io/gcs/files/6ae69eaefbf70905a975423ad9e16607.jpg?w=500&auto=format',
+    name: 'TheMerge',
+    symbol: 'MERGE',
+  },
+  collection: { name: 'The Merge: Regenesis' },
+  description:
+    "Regenesis is a collection of art NFTs celebrating the Ethereum Merge, a historic technological milestone and testament to the power of decentralized software development. This edition of the NFT collection illustrates an elaborately detailed world embodying the most important benefit of the Merge: sustainability. The art explores the scale and significance of the Merge, an ambitious re-architecture of the world's largest open programmable blockchain, which makes the network 2000x more energy efficient and positions Ethereum to sustainably support the next generation of Web3 creators and developers.",
+  external_link: 'https://consensys.net/merge',
+  id: 642879097,
+  image_original_url:
+    'https://opensea-private.mypinata.cloud/ipfs/Qma3dgNvmqabeVchAfG95KyESXCDojo4b1Fc8U5xiZ89hf',
+  image_preview_url:
+    'https://lh3.googleusercontent.com/VTjV3wixgJKaj39Ue741dEa6BUkKO9KB7sX2z6oXiZAD-h-syGztoBavJmIYM-OMKrJzSM3ODCmKo6mm99LarjuaFrSHysokWNRojuc=s250',
+  image_thumbnail_url:
+    'https://lh3.googleusercontent.com/VTjV3wixgJKaj39Ue741dEa6BUkKO9KB7sX2z6oXiZAD-h-syGztoBavJmIYM-OMKrJzSM3ODCmKo6mm99LarjuaFrSHysokWNRojuc=s128',
+  name: 'TheMerge',
+  starred: false,
+  token_id: '33495',
+}
+
+let a = [
+  {
+    accountId: 'f7dc7698-407d-463b-bd81-958e23a247d8',
+    asset_contract: {
+      address: '0xe42cad6fc883877a76a26a16ed92444ab177e306',
+      external_link: 'https://consensys.net/merge',
+      image_url:
+        'https://i.seadn.io/gcs/files/6ae69eaefbf70905a975423ad9e16607.jpg?w=500&auto=format',
+      name: 'TheMerge',
+      symbol: 'MERGE',
+    },
+    collection: { name: 'The Merge: Regenesis' },
+    description:
+      "Regenesis is a collection of art NFTs celebrating the Ethereum Merge, a historic technological milestone and testament to the power of decentralized software development. This edition of the NFT collection illustrates an elaborately detailed world embodying the most important benefit of the Merge: sustainability. The art explores the scale and significance of the Merge, an ambitious re-architecture of the world's largest open programmable blockchain, which makes the network 2000x more energy efficient and positions Ethereum to sustainably support the next generation of Web3 creators and developers.",
+    external_link: 'https://consensys.net/merge',
+    id: 642879097,
+    image_original_url:
+      'https://opensea-private.mypinata.cloud/ipfs/Qma3dgNvmqabeVchAfG95KyESXCDojo4b1Fc8U5xiZ89hf',
+    image_preview_url:
+      'https://lh3.googleusercontent.com/VTjV3wixgJKaj39Ue741dEa6BUkKO9KB7sX2z6oXiZAD-h-syGztoBavJmIYM-OMKrJzSM3ODCmKo6mm99LarjuaFrSHysokWNRojuc=s250',
+    image_thumbnail_url:
+      'https://lh3.googleusercontent.com/VTjV3wixgJKaj39Ue741dEa6BUkKO9KB7sX2z6oXiZAD-h-syGztoBavJmIYM-OMKrJzSM3ODCmKo6mm99LarjuaFrSHysokWNRojuc=s128',
+    name: 'TheMerge',
+    starred: false,
+    token_id: '33495',
+  },
+]
+
 const wallet = setupWallet({
   ...defaultOptions,
 })
@@ -32,14 +115,16 @@ const NftCollectionScreen = ({
   navigation,
   route,
 }: NftCollectionScreenProps) => {
-  const activeNetwork = useRecoilValue(networkState)
-
   const { nftCollection, accountIdsToSendIn } = route.params
+  const activeNetwork = useRecoilValue(networkState)
+  const [data, setData] = useState(dummyData)
+
   const { activeWalletId } = wallet.state
 
+  console.log(nftCollection.length, 'NFTS????')
+
   const seeNftDetail = useCallback(
-    (nftItem, e) => {
-      //e.preventDefault()
+    (nftItem) => {
       console.log('SEE NFT DETAIL!!')
       navigation.navigate('NftDetailScreen', {
         screenTitle: 'NFT Detail',
@@ -50,65 +135,40 @@ const NftCollectionScreen = ({
     [navigation, accountIdsToSendIn],
   )
 
-  console.log(nftCollection, 'collection parmas')
   useEffect(() => {}, [])
 
   const renderCollectionGrid = () => {
-    let rows = []
-    if (nftCollection) {
-      rows = nftCollection.map((nftItem, index) => {
-        console.log(nftItem, 'nftitem')
-        return (
-          <Box key={index} style={{}}>
-            <Pressable
-              style={styles.pressable}
-              onPress={() => seeNftDetail(nftItem)}>
-              <Image
-                source={{
-                  uri: nftItem.image_thumbnail_url,
-                }}
-                style={{
-                  width: Dimensions.get('screen').width / 3,
-                  height: Dimensions.get('screen').width / 3,
-                }}
-              />
-            </Pressable>
-          </Box>
-        )
-      })
-    } else {
-      return <Text>No data available</Text>
-    }
-
-    return rows
-  }
-
-  const renderFlatList = () => {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.flatListContainer}>
         <FlatList
-          data={nftCollection}
-          renderItem={renderCollectionGrid}
+          data={data}
           numColumns={2}
-          /*  keyExtractor={(item) => item.id}
-          extraData={selectedId} */
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => {
+            return (
+              <View style={styles.inner}>
+                <Image source={item.uri} style={styles.image} />
+              </View>
+            )
+          }}
         />
       </SafeAreaView>
     )
   }
 
+  console.log(nftCollection, 'codlec')
   return (
-    <Box flex={1}>
+    <Box flex={1} style={styles.overviewBlock}>
       <ScrollView>
-        <Box style={styles.overviewBlock}>
+        <Box style={styles.headerContainer}>
           <NftHeader
-            blackText={'collection name'}
-            greyText={'x nfts in this collec'}
+            blackText={nftCollection[0].collection.name.toUpperCase()}
+            greyText={`${nftCollection.length} NFTS`}
             width={Dimensions.get('screen').width}
-            height={225}></NftHeader>
-          <Text variant="loading" tx="overviewScreen.load" />
+            height={225}
+          />
         </Box>
-        {renderFlatList()}
+        {renderCollectionGrid()}
       </ScrollView>
     </Box>
   )
@@ -132,21 +192,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     height: 225,
-    paddingVertical: 10,
+    backgroundColor: palette.white,
   },
 
-  tabBarFocused: {
-    borderBottomWidth: 2,
-    lineHeight: '1em',
-
-    color: palette.purplePrimary,
-    borderBottomColor: palette.purplePrimary,
+  headerContainer: {
+    marginBottom: 20,
   },
 
-  headerTextFocused: {
-    color: palette.black2,
+  flatListContainer: {
+    margin: 20,
   },
+
   pressable: { position: 'relative' },
+  column: {
+    margin: 20,
+  },
+  inner: {
+    flexDirection: 'row',
+    marginRight: 5,
+    marginBottom: 5,
+  },
+  image: {
+    width: Dimensions.get('screen').width / 2 - 20,
+    height: Dimensions.get('screen').width / 2 - 20,
+  },
 })
 
 export default NftCollectionScreen
