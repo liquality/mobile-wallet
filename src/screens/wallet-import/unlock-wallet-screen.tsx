@@ -23,7 +23,8 @@ const defaultArray = Array(12).fill('')
 
 const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
   const [seedPhraseLength, setPhraseLength] = useState(12)
-  const [chosenSeedWords, setChosenSeedWords] = useState(defaultArray)
+  const [chosenSeedWords, setChosenSeedWords] =
+    useState<Array<string>>(defaultArray)
 
   const onContinue = () => {
     navigation.navigate('PasswordCreationScreen', {
@@ -44,14 +45,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
   const isSeedPhrase12 = seedPhraseLength === 12
   const isSeedPhrase24 = seedPhraseLength === 24
 
-  let isDisabled = false
-  chosenSeedWords.every((value) => {
-    if (!value.trim()) {
-      isDisabled = true
-      return false
-    }
-    return true
-  })
+  let isDisabled = !chosenSeedWords.every((val) => !!val.trim())
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const renderSeedWord = ({ item, index }: { item: any; index: number }) => {
