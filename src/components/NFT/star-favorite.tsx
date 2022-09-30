@@ -1,11 +1,15 @@
 import { Pressable, StyleSheet } from 'react-native'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { AppIcons } from '../../assets'
 import { Box } from '../../theme'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../atoms'
-import { toggleNFTStarred } from '../../store/store'
-import { NFT } from '../../types'
+import {
+  getAllEnabledAccounts,
+  toggleNFTStarred,
+  updateNFTs,
+} from '../../store/store'
+import { NFTAsset, NFT } from '../../types'
 
 const { Ellipse, Star, BlackStar } = AppIcons
 
@@ -17,6 +21,7 @@ type StarFavoriteProps = {
 const StarFavorite: React.FC<StarFavoriteProps> = (props) => {
   const { activeWalletId, nftAsset } = props
   const activeNetwork = useRecoilValue(networkState)
+  const [, setShowStarred] = useState(false)
 
   const renderStarFavorite = () => {
     return (
@@ -43,8 +48,9 @@ const StarFavorite: React.FC<StarFavoriteProps> = (props) => {
   }
 
   const toggleStarred = useCallback(async () => {
-    console.log('TOGGLE STAR')
+    console.log('TOGGLE ST  AR')
     nftAsset.starred = !nftAsset.starred
+    setShowStarred(!nftAsset.starred)
     const payload = {
       network: activeNetwork,
       walletId: activeWalletId,

@@ -17,7 +17,7 @@ type NftHeaderProps = {
 }
 
 const NftHeader: React.FC<NftHeaderProps> = (props) => {
-  const { width, height, isFullPage, blackText, greyText } = props
+  const { width, height, blackText, greyText } = props
 
   const renderAllNftsHeaderText = () => {
     return (
@@ -37,8 +37,6 @@ const NftHeader: React.FC<NftHeaderProps> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  containerBox: { overflow: 'hidden', paddingBottom: 5 },
-
   insideHeader: {
     backgroundColor: '#fff',
     shadowColor: '#000',
@@ -49,13 +47,12 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   blackText: {
-    position: 'absolute',
     left: 20,
     top: 120,
     fontFamily: Fonts.Regular,
     fontStyle: 'normal',
     fontWeight: '600',
-    fontSize: 40,
+    fontSize: 35,
     letterSpacing: 0.25,
   },
   greyText: {

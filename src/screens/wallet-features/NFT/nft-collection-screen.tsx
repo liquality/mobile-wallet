@@ -142,13 +142,19 @@ const NftCollectionScreen = ({
     return (
       <SafeAreaView style={styles.flatListContainer}>
         <FlatList
-          data={data}
+          data={nftCollection}
           numColumns={2}
           keyExtractor={(item) => item.name}
           renderItem={({ item }) => {
+            console.log(item.image_original_url, 'wats iteem?')
             return (
               <View style={styles.inner}>
-                <Image source={item.uri} style={styles.image} />
+                <Image
+                  source={{
+                    uri: item.image_original_url,
+                  }}
+                  style={styles.image}
+                />
                 <StarFavorite nftAsset={item} activeWalletId={activeWalletId} />
               </View>
             )

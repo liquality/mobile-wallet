@@ -372,6 +372,8 @@ export const AppStackNavigator = () => (
       name="NftForSpecificChainScreen"
       component={NftForSpecificChainScreen}
       options={() => ({
+        headerShown: false,
+
         headerRight: PlaceholderComp,
       })}
     />
@@ -379,6 +381,8 @@ export const AppStackNavigator = () => (
       name="NftDetailScreen"
       component={NftDetailScreen}
       options={() => ({
+        headerShown: false,
+
         headerRight: PlaceholderComp,
       })}
     />
@@ -386,6 +390,8 @@ export const AppStackNavigator = () => (
       name="NftSendScreen"
       component={NftSendScreen}
       options={() => ({
+        headerShown: false,
+
         headerRight: PlaceholderComp,
       })}
     />
@@ -393,6 +399,8 @@ export const AppStackNavigator = () => (
       name="NftCollectionScreen"
       component={NftCollectionScreen}
       options={() => ({
+        headerShown: false,
+
         headerRight: PlaceholderComp,
       })}
     />

@@ -26,7 +26,7 @@ type NftImageViewProps = {
     nftItem: Object,
     e: NativeSyntheticEvent<NativeTouchEvent>,
   ) => void
-  activeWalletId?: boolean
+  activeWalletId: string
   accountIdsToSendIn: string[]
 }
 
@@ -83,13 +83,8 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                   style={styles.pressable}
                   onPress={(e) => seeNftDetail(nftItem[0], e)}>
                   <Image
-                    source={checkImgUrlExists(nftItem[0].image_thumbnail_url)}
-                    style={{
-                      borderRadius: 4,
-                      width: Dimensions.get('screen').width - 20,
-                      resizeMode: 'contain',
-                      aspectRatio: 1,
-                    }}
+                    source={checkImgUrlExists(nftItem[0].image_original_url)}
+                    style={styles.oneImageBig}
                     onError={() => setImgError(true)}
                   />
                 </Pressable>
@@ -124,7 +119,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                 onPress={(e) => seeNftDetail(nftItem[0], e)}>
                 <Image
                   source={{
-                    uri: nftItem[0].image_thumbnail_url,
+                    uri: nftItem[0].image_original_url,
                   }}
                   style={{
                     width: Dimensions.get('screen').width / 2,
@@ -134,7 +129,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                 />
                 <Image
                   source={{
-                    uri: nftItem[1].image_thumbnail_url,
+                    uri: nftItem[1].image_original_url,
                   }}
                   style={{
                     width: Dimensions.get('screen').width / 2,
@@ -155,7 +150,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                     onPress={() => seeNftDetail(nftItemInsideCollection)}>
                     <Image
                       source={checkImgUrlExists(
-                        nftItemInsideCollection.image_thumbnail_url,
+                        nftItemInsideCollection.image_original_url,
                       )}
                       style={styles.scrollableImg}
                       onError={() => setImgError(true)}
@@ -193,9 +188,9 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                   <Pressable
                     onPress={() => handleGoToCollection(nftItem)}
                     style={styles.pressable}>
-                    <SeeAllNftsIcon width={105} height={105}></SeeAllNftsIcon>
+                    <SeeAllNftsIcon width={105} height={105} />
                     <Text style={styles.seeAllText}>See {'\n'}All</Text>
-                    <LongArrow style={styles.longArrow}></LongArrow>
+                    <LongArrow style={styles.longArrow} />
                   </Pressable>
                 </Box>
               </ScrollView>
@@ -219,6 +214,13 @@ const styles = StyleSheet.create({
     width: 105,
     height: 105,
     borderRadius: 4,
+  },
+
+  oneImageBig: {
+    borderRadius: 4,
+    width: Dimensions.get('screen').width - 20,
+    resizeMode: 'contain',
+    aspectRatio: 1,
   },
 
   seeAllText: {
