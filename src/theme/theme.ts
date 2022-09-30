@@ -266,6 +266,12 @@ export const theme = createTheme({
       color: 'white',
       fontWeight: '400',
     },
+    numberLabel: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(14),
+      color: 'white',
+      fontWeight: '600',
+    },
     faceliftBody: {
       fontFamily: Fonts.Regular,
       fontSize: scale(17),
