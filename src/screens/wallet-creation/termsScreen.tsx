@@ -52,7 +52,7 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
             contentContainerStyle={styles.contentContainerStyle}
             showsVerticalScrollIndicator={false}>
             <Text
-              variant={'faceliftBody'}
+              variant={'termsBody'}
               color={'textColor'}
               tx="termsScreen.termCopy"
             />

@@ -149,7 +149,7 @@ const PasswordCreationScreen = ({
             <Text
               marginTop={'s'}
               opacity={0.6}
-              variant={'whiteLabel'}
+              variant={'hintLabel'}
               tx="passwordCreationScreen.password8char"
             />
           ) : null}
@@ -161,9 +161,13 @@ const PasswordCreationScreen = ({
           icon
           disabled={disabled}
         />
-        <Box marginTop={'xl'} alignItems="center">
+        <Box
+          marginTop={'s'}
+          alignItems="center"
+          paddingHorizontal={'onboardingPadding'}>
           <Text
             opacity={0.8}
+            textAlign={'center'}
             variant={'whiteLabel'}
             textDecorationLine={'underline'}
             tx="passwordCreationScreen.orImportWallet"

@@ -1,4 +1,4 @@
-import { TextInput as TxtInp, TextInputProps } from 'react-native'
+import { ColorValue, TextInput as TxtInp, TextInputProps } from 'react-native'
 import {
   createRestyleComponent,
   VariantProps,
@@ -20,10 +20,16 @@ const BaseTextInput = createRestyleComponent<
 type Props = React.ComponentProps<typeof BaseTextInput> & {
   placeholderTx?: TxKeyPath
   txOptions?: i18n.TranslateOptions
+  cursorColor?: ColorValue
 }
 
 export const TextInput: FC<Props> = (props) => {
-  const { placeholderTx, txOptions, ...rest } = props
+  const {
+    placeholderTx,
+    txOptions,
+    cursorColor = faceliftPalette.white,
+    ...rest
+  } = props
   const langSelected = useRecoilValue(LS)
   i18n.locale = langSelected
 
@@ -32,11 +38,11 @@ export const TextInput: FC<Props> = (props) => {
     return (
       <BaseTextInput
         {...rest}
-        selectionColor={faceliftPalette.white}
+        selectionColor={cursorColor}
         placeholder={i18nText!}
       />
     )
   } else {
-    return <BaseTextInput {...rest} />
+    return <BaseTextInput {...rest} selectionColor={cursorColor} />
   }
 }

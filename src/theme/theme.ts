@@ -257,18 +257,36 @@ export const theme = createTheme({
     whiteLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
+      fontSize: scale(15),
+      color: 'white',
+    },
+    hintLabel: {
+      fontFamily: Fonts.Regular,
       fontSize: scale(14),
       color: 'white',
+      fontWeight: '400',
     },
     faceliftBody: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(15),
+      fontSize: scale(17),
+      fontWeight: '400',
+      lineHeight: scale(22),
+    },
+    termsBody: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(17),
+      fontWeight: '400',
     },
     h1: {
       fontFamily: Fonts.Regular,
       fontSize: scale(41),
       fontWeight: '500',
       lineHeight: scale(55),
+    },
+    radioText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(16),
+      fontWeight: '400',
     },
   },
   pressableVariants: {
@@ -423,6 +441,15 @@ export const theme = createTheme({
       paddingBottom: 's',
       color: 'onboardInputColor',
       borderBottomColor: 'onboardInputBorder',
+      borderBottomWidth: 1,
+      fontWeight: '500',
+      fontSize: scale(15),
+    },
+    seedPhraseInputs: {
+      paddingTop: 's',
+      paddingBottom: 's',
+      color: 'textColor',
+      borderBottomColor: 'activeButton',
       borderBottomWidth: 1,
       fontWeight: '500',
       fontSize: scale(15),

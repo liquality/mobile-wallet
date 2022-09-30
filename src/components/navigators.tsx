@@ -140,6 +140,11 @@ export const WalletCreationNavigator = () => {
         <WalletCreationStack.Screen
           name="UnlockWalletScreen"
           component={UnlockWalletScreen}
+          options={{
+            ...screenNavOptions,
+            headerStyle: { backgroundColor },
+            headerLeft: LiqLogoHeaderLeft,
+          }}
         />
       </WalletCreationStack.Navigator>
     </OnboardingContext.Provider>
