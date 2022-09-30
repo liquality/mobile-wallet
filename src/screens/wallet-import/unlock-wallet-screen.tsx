@@ -2,15 +2,7 @@ import React, { useState } from 'react'
 import { FlatList, TouchableWithoutFeedback } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
-import {
-  Box,
-  Text,
-  palette,
-  TextInput,
-  Pressable,
-  faceliftPalette,
-} from '../../theme'
-import { Fonts } from '../../assets'
+import { Box, Text, TextInput, Pressable, faceliftPalette } from '../../theme'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
 
@@ -176,34 +168,8 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
 }
 
 const styles = ScaledSheet.create({
-  numberStyle: {
-    height: '30@s',
-    width: '81@s',
-    borderWidth: '1@s',
-    borderRadius: '20@s',
-    borderColor: faceliftPalette.buttonActive,
-  },
-  lineStyle: {
-    height: '30@s',
-    width: '1@s',
-    backgroundColor: faceliftPalette.buttonActive,
-  },
-  wordOrderText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: palette.sectionTitleColor,
-    marginBottom: 3,
-  },
-  missingWordText: {
-    fontFamily: Fonts.Regular,
-    fontSize: 16,
-    // lineHeight: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: palette.turquoise,
-    width: '100%',
-  },
   columnWrapperStyle: {
-    marginBottom: 20,
+    marginBottom: '20@s',
     justifyContent: 'space-between',
   },
 })
