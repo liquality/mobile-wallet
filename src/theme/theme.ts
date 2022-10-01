@@ -272,7 +272,7 @@ export const theme = createTheme({
       color: 'white',
       fontWeight: '600',
     },
-    faceliftBody: {
+    normalText: {
       fontFamily: Fonts.Regular,
       fontSize: scale(17),
       fontWeight: '400',

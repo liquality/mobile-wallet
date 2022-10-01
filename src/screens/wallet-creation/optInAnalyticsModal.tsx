@@ -125,7 +125,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
                 <Text
                   color={'textColor'}
                   marginTop={'l'}
-                  variant={'faceliftBody'}
+                  variant={'normalText'}
                   tx="optInAnalyticsModal.shareWhereYouClick"
                 />
                 <Box marginTop={'l'}>

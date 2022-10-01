@@ -77,7 +77,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
         </Box>
         <Box flex={0.7}>
           <Text
-            variant={'faceliftBody'}
+            variant={'normalText'}
             color={'textColor'}
             tx="unlockWalletScreen.enterSeedPhrase"
           />
