@@ -124,32 +124,50 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
                 />
                 <Text
                   color={'textColor'}
-                  marginTop={'m'}
-                  style={styles.weWantToBetterTextStyle}
+                  marginTop={'l'}
+                  variant={'normalText'}
                   tx="optInAnalyticsModal.shareWhereYouClick"
                 />
-                <TouchableWithoutFeedback
-                  onPress={() => setSelectedOpt(SelectedOption.Sure)}>
-                  <Box marginTop={'m'} flexDirection="row">
-                    <ThemeIcon iconName={sureIcon} />
-                    <Text
-                      color={'textColor'}
-                      marginLeft={'m'}
-                      tx="optInAnalyticsModal.shareMyClicks"
-                    />
-                  </Box>
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback
-                  onPress={() => setSelectedOpt(SelectedOption.Not)}>
-                  <Box marginTop={'m'} flexDirection="row">
-                    <ThemeIcon iconName={notIcon} />
-                    <Text
-                      color={'textColor'}
-                      marginLeft={'m'}
-                      tx="optInAnalyticsModal.notToday"
-                    />
-                  </Box>
-                </TouchableWithoutFeedback>
+                <Box marginTop={'l'}>
+                  <TouchableWithoutFeedback
+                    onPress={() => setSelectedOpt(SelectedOption.Sure)}>
+                    <Box
+                      marginTop={'m'}
+                      flexDirection="row"
+                      alignItems={'center'}>
+                      <ThemeIcon
+                        iconName={sureIcon}
+                        height={scale(20)}
+                        width={scale(20)}
+                      />
+                      <Text
+                        variant={'radioText'}
+                        color={'textColor'}
+                        marginLeft={'m'}
+                        tx="optInAnalyticsModal.shareMyClicks"
+                      />
+                    </Box>
+                  </TouchableWithoutFeedback>
+                  <TouchableWithoutFeedback
+                    onPress={() => setSelectedOpt(SelectedOption.Not)}>
+                    <Box
+                      marginTop={'m'}
+                      flexDirection="row"
+                      alignItems={'center'}>
+                      <ThemeIcon
+                        iconName={notIcon}
+                        height={scale(20)}
+                        width={scale(20)}
+                      />
+                      <Text
+                        color={'textColor'}
+                        variant={'radioText'}
+                        marginLeft={'m'}
+                        tx="optInAnalyticsModal.notToday"
+                      />
+                    </Box>
+                  </TouchableWithoutFeedback>
+                </Box>
 
                 <Box marginTop={'xl'}>
                   <Pressable
@@ -189,18 +207,18 @@ const styles = ScaledSheet.create({
   helpUsTextStyle: {
     fontFamily: Fonts.JetBrainsMono,
     fontWeight: '500',
-    fontSize: scale(30),
-    lineHeight: scale(38),
+    fontSize: scale(24),
+    lineHeight: scale(30),
     textAlign: 'left',
-  },
-  weWantToBetterTextStyle: {
-    fontFamily: Fonts.Regular,
-    fontWeight: '400',
-    fontSize: scale(17),
-    lineHeight: scale(22),
   },
   okButton: {
     height: scale(40),
+  },
+  radioText: {
+    fontFamily: Fonts.JetBrainsMono,
+    fontWeight: '500',
+    fontSize: scale(24),
+    lineHeight: scale(30),
   },
 })
 

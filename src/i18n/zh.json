@@ -300,10 +300,11 @@
   },
   "unlockWalletScreen": {
     "invalidSeedPhrase": "Your seed phrase is invalid', 'Please try again",
-    "unlockWallet": "Unlock Wallet",
-    "enterSeedPhrase": "Enter the seed phrase, in the same order saved when creating your wallet.",
-    "12words": "12 words",
-    "24words": "24 words"
+    "unlockWallet": "Unlock your Wallet",
+    "enterSeedPhrase": "Enter the seed phrase in the same order saved when creating your wallet.",
+    "12words": "12",
+    "24words": "24",
+    "wordCount": "WORD COUNT"
   },
   "header": {
     "wallet": "Wallet"

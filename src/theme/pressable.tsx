@@ -81,6 +81,7 @@ export const Pressable: FC<Props> = (props) => {
     <BaseButton
       {...rest}
       variant={variant}
+      disabled={disabled}
       style={[styles, { backgroundColor, borderColor, opacity }]}>
       {isLoading ? (
         <ActivityIndicator color={theme.colors.spinner} />
@@ -90,7 +91,7 @@ export const Pressable: FC<Props> = (props) => {
           flexDirection={'row'}
           width="100%"
           height={'100%'}
-          paddingHorizontal="m"
+          paddingHorizontal="xl"
           justifyContent="space-between">
           <Text variant={'pressableLabel'}>{content}</Text>
           <ArrowLeft />
