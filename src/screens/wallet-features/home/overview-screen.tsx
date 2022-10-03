@@ -7,7 +7,7 @@ import {
   useWindowDimensions,
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../../types'
+import { MainStackParamList } from '../../../types'
 import ErrorBoundary from 'react-native-error-boundary'
 import ErrorFallback from '../../../components/error-fallback'
 import { Box, Text } from '../../../theme'
@@ -22,7 +22,7 @@ import { useHeaderHeight } from '@react-navigation/elements'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
 
 export type OverviewProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'OverviewScreen'
 >
 
