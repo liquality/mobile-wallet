@@ -398,6 +398,7 @@
     "tabBarNfts": "Nfts",
     "tabBarActivity": "Activity",
     "tabBarOverview": "Overview",
-    "tabBarDetails": "Details"
+    "tabBarDetails": "Details",
+    "description": "DESCRIPTION"
   }
 }

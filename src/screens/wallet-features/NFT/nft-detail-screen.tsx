@@ -3,7 +3,6 @@ import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaul
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useCallback, useState } from 'react'
 import {
-  Text,
   StyleSheet,
   Image,
   Dimensions,
@@ -12,7 +11,7 @@ import {
 } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import { Box, Button, faceliftPalette, palette } from '../../../theme'
+import { Box, Button, faceliftPalette, palette, Text } from '../../../theme'
 import BottomDrawer from 'react-native-bottom-drawer-view'
 import { RootStackParamList } from '../../../types'
 import { Fonts } from '../../../assets'
@@ -64,6 +63,7 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
     )
   }
 
+  //TODO: add this render function into its own component, part of MOB-182
   const renderDrawerExpanded = () => {
     return (
       <Box style={styles.drawerContainer}>
@@ -76,7 +76,7 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
           showLeftTab={showOverview}
         />
 
-        <Text style={styles.descriptionTitle}>DESCRIPTION</Text>
+        <Text style={styles.descriptionTitle} tx="nft.description" />
         <Text style={styles.descriptionText}>{nftItem.description}</Text>
       </Box>
     )
