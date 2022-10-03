@@ -32,6 +32,7 @@ import TimesIcon from '../assets/icons/swapCancelStateDefault.svg'
 import Loader from '../assets/icons/progresssIndicatorLg.svg'
 import LockIcon from '../assets/icons/lock.svg'
 import ManageAssetsIcon from '../assets/icons/chart.svg'
+import ManageAssetsDarkIcon from '../assets/icons/chartDark.svg'
 import SendIcon from '../assets/icons/sendStateDefault.svg'
 import SwapIcon from '../assets/icons/exchange-red.svg'
 import ReceiveIcon from '../assets/icons/recieveStateDefault.svg'
@@ -82,6 +83,10 @@ import InactiveRadioButtonLight from '../assets/icons/inactiveRadioButtonLight.s
 import ModalClose from '../assets/icons/modalClose.svg'
 import OneWalletAllChains from '../assets/icons/oneWalletAllChains.svg'
 import ArrowLeft from '../assets/icons/arrowLeft.svg'
+import NetworkActiveDot from '../assets/icons/dot.svg'
+import Ellipses from '../assets/icons/ellipses.svg'
+import Settings from '../assets/icons/settings.svg'
+import SettingsActive from '../assets/icons/settingsActive.svg'
 
 export default {
   PendingSwap,
@@ -168,4 +173,9 @@ export default {
   ModalClose,
   OneWalletAllChains,
   ArrowLeft,
+  NetworkActiveDot,
+  Ellipses,
+  Settings,
+  SettingsActive,
+  ManageAssetsDarkIcon,
 }

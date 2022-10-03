@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { Dimensions, StyleSheet, View, ScrollView, Alert } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList, SwapInfoType } from '../../../types'
+import { MainStackParamList, SwapInfoType } from '../../../types'
 import Warning from '../../../components/ui/warning'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
 import { Button, palette } from '../../../theme'
@@ -22,7 +22,7 @@ import { AppIcons } from '../../../assets'
 const { Clock, Exchange } = AppIcons
 
 type SwapReviewScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'SwapReviewScreen'
 >
 

@@ -30,6 +30,7 @@ export const theme = createTheme({
     errorMsgBarColor: palette.yellowBar,
     transparent: 'transparent',
     white: faceliftPalette.white,
+    mediumWhite: faceliftPalette.mediumWhite,
     darkGrey: faceliftPalette.darkGrey,
     activeButton: faceliftPalette.buttonActive,
     semiTransparentWhite: faceliftPalette.semiTransparentWhite,
@@ -37,6 +38,7 @@ export const theme = createTheme({
     liqPink: faceliftPalette.buttonActive,
     onboardInputColor: faceliftPalette.lightWhite,
     onboardInputBorder: faceliftPalette.white,
+    popMenuColor: faceliftPalette.semiTransparentWhite,
   },
   spacing: {
     vs: scale(2),
@@ -294,6 +296,11 @@ export const theme = createTheme({
       fontSize: scale(16),
       fontWeight: '400',
     },
+    networkStatus: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(12),
+      fontWeight: '400',
+    },
   },
   pressableVariants: {
     outline: {
@@ -512,6 +519,7 @@ export const darkTheme: ThemeType = {
     mainBackground: faceliftPalette.darkBackground,
     textColor: faceliftPalette.darkText,
     spinner: faceliftPalette.darkGrey,
+    popMenuColor: faceliftPalette.semiTransparentDark,
   },
 }
 

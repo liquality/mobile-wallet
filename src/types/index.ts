@@ -164,6 +164,7 @@ export type MainStackParamList = {
     accountIdsToSendIn: string[]
   }
   SettingsScreen: { shouldLogOut?: boolean }
+  WithPopupMenu: undefined
 }
 
 export type RootTabParamList = {
