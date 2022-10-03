@@ -47,7 +47,6 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
 
   const renderNftArray = () => {
     let rows = []
-    //if (iterableNftArray.length !== 0) {
     rows = iterableNftArray.map((nftItem, index) => {
       //If NFT collection array is 1, image should cover full width
       if (nftItem.length === 1) {
@@ -87,6 +86,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
             </Box>
           </Box>
         )
+        //If NFT collection array is 2, images should be on 1 row next to eachother
       } else if (nftItem.length === 2) {
         return (
           <Box>
@@ -131,6 +131,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
             </Pressable>
           </Box>
         )
+        //If NFT collection array is more than 2, images should appear in scrollable list
       } else {
         let nftImagesScrollable = nftItem.map(
           (nftItemInsideCollection: NFTAsset, indexKey: number) => {
