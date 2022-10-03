@@ -87,6 +87,7 @@ import NetworkActiveDot from '../assets/icons/dot.svg'
 import Ellipses from '../assets/icons/ellipses.svg'
 import Settings from '../assets/icons/settings.svg'
 import SettingsActive from '../assets/icons/settingsActive.svg'
+import DollarSign from '../assets/icons/dollarSign.svg'
 
 export default {
   PendingSwap,
@@ -178,4 +179,5 @@ export default {
   Settings,
   SettingsActive,
   ManageAssetsDarkIcon,
+  DollarSign,
 }

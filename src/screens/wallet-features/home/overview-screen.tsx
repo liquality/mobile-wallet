@@ -38,7 +38,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   const tabBarBottomHeight = useBottomTabBarHeight()
   const headerHeight = useHeaderHeight()
   return (
-    <Box flex={1}>
+    <Box flex={1} backgroundColor="mainBackground">
       {refreshing && (
         <RefreshIndicator
           position={'absolute'}

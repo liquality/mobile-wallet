@@ -64,7 +64,7 @@ const App: FC = () => {
     if (!isNew) {
       setInitialRouteName('StackMainNavigator')
     } else {
-      setInitialRouteName('EntryScreen')
+      setInitialRouteName('WalletCreationNavigator')
     }
     SplashScreen.hide()
     // eslint-disable-next-line react-hooks/exhaustive-deps

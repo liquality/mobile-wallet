@@ -39,6 +39,7 @@ export const theme = createTheme({
     onboardInputColor: faceliftPalette.lightWhite,
     onboardInputBorder: faceliftPalette.white,
     popMenuColor: faceliftPalette.semiTransparentWhite,
+    nestedColor: palette.nestedColor,
   },
   spacing: {
     vs: scale(2),
@@ -301,6 +302,16 @@ export const theme = createTheme({
       fontSize: scale(12),
       fontWeight: '400',
     },
+    totalBalance: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(39),
+      fontWeight: '600',
+    },
+    totalAsset: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(38),
+      fontWeight: '600',
+    },
   },
   pressableVariants: {
     outline: {
@@ -438,6 +449,16 @@ export const theme = createTheme({
       },
       shadowOpacity: 0.2,
       shadowRadius: 2,
+      elevation: 3,
+    },
+    summaryCard: {
+      backgroundColor: 'mainBackground',
+      shadowOffset: {
+        width: -5,
+        height: -5,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 15,
       elevation: 3,
     },
   },

@@ -207,12 +207,14 @@ const AppStackHeaderLeft = (
     <Box flexDirection={'row'} alignItems="center">
       {canGoBack ? (
         <TouchableWithoutFeedback onPress={navigation.goBack}>
-          <Box paddingRight={'m'}>
+          <Box paddingHorizontal={'s'} paddingVertical="m">
             <ChevronLeft width={scale(15)} height={scale(15)} />
           </Box>
         </TouchableWithoutFeedback>
       ) : null}
-      <ThemeIcon iconName="OnlyLqLogo" />
+      <Box paddingLeft={'s'}>
+        <ThemeIcon iconName="OnlyLqLogo" />
+      </Box>
     </Box>
   )
 }
@@ -221,7 +223,7 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
   const activeNetwork = useRecoilValue(networkState)
 
   return (
-    <Box flexDirection={'row'} alignItems={'center'}>
+    <Box flexDirection={'row'} alignItems={'center'} padding="s">
       <Box
         backgroundColor={'mediumWhite'}
         flexDirection={'row'}

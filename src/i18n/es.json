@@ -324,11 +324,12 @@
     "selectAssetSend": "Select asset for Send",
     "selectAssetReceive": "Select asset for receive",
     "selectAssetSwap": "Select asset for swap",
-    "asset": " Asset",
-    "assets": " Assets",
+    "asset": " ASSET",
+    "assets": " ASSETS",
     "send": "Send",
     "swap": "Swap",
-    "receive": "Receive"
+    "receive": "Receive",
+    "buy": "Buy"
   },
   "sendTranDetailComp": {
     "transId": "TRANSACTION ID",
