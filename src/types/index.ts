@@ -63,7 +63,6 @@ export interface NFTAsset {
   standard?: string
 }
 
-
 export interface NFTWithAccount extends NFT {
   accountId: AccountId
 }
@@ -180,8 +179,8 @@ export type RootTabParamList = {
 export interface UseInputStateReturnType<T> {
   value: T
   onChangeText:
-  | Dispatch<SetStateAction<T>>
-  | Dispatch<SetStateAction<T | undefined>>
+    | Dispatch<SetStateAction<T>>
+    | Dispatch<SetStateAction<T | undefined>>
 }
 
 export interface SeedWordType {

@@ -86,7 +86,7 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
         />
         <ScrollView horizontal={true}>
           <TouchableOpacity>
-            <Box style={styles.drawerContainer}></Box>
+            <Box style={styles.drawerContainer} />
           </TouchableOpacity>
         </ScrollView>
       </BottomDrawer>
