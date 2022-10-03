@@ -1,14 +1,9 @@
 import { setupWallet } from '@liquality/wallet-core'
+import { Account } from '@liquality/wallet-core/dist/src/store/types'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import React, { useEffect, useCallback, useState } from 'react'
-import {
-  Text,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  Dimensions,
-} from 'react-native'
+import { StyleSheet, ScrollView, Pressable, Dimensions } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { Fonts } from '../../../assets'
 import { networkState } from '../../../atoms'
@@ -16,7 +11,7 @@ import NftHeader from '../../../components/NFT/nft-header'
 import NftImageView from '../../../components/NFT/nft-image-view'
 import NoNfts from '../../../components/NFT/NoNfts'
 import { getAllEnabledAccounts, updateNFTs } from '../../../store/store'
-import { Box, palette } from '../../../theme'
+import { Box, palette, Text } from '../../../theme'
 import { RootTabParamList } from '../../../types'
 import { labelTranslateFn } from '../../../utils'
 type ShowAllNftsScreenProps = BottomTabScreenProps<
@@ -87,29 +82,29 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
     [navigation, accountIdsToSendIn],
   )
 
-  const calculateNrOfAccsWithNfts = async (accountsData) => {
+  const calculateNrOfAccsWithNfts = async (accountsData: Account[]) => {
     return accountsData.filter(
-      (account) => account.nfts && account.nfts.length > 0,
+      (account: Account) => account.nfts && account.nfts.length > 0,
     ).length
   }
 
   const renderTabBar = () => {
     return (
-      <Box flex="1" flexDirection="row" padding={'m'}>
+      <Box flexDirection="row" padding={'m'}>
         <Box marginRight={'l'}>
           <Pressable
             style={[styles.tabText, showNfts && styles.tabBarFocused]}
             onPress={() => setShowNfts(!showNfts)}>
             <Text
-              style={[styles.tabText, showNfts && styles.headerTextFocused]}>
-              Nfts
-            </Text>
+              style={[styles.tabText, showNfts && styles.headerTextFocused]}
+              tx="nft.tabBarNfts"
+            />
           </Pressable>
         </Box>
         <Pressable
           style={[styles.tabText, !showNfts && styles.tabBarFocused]}
           onPress={() => setShowNfts(!showNfts)}>
-          <Text style={[styles.tabText]}>Activity</Text>
+          <Text style={styles.tabText} tx="nft.tabBarActivity" />
         </Pressable>
       </Box>
     )
@@ -128,10 +123,10 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
             height={225}
           />
         </Box>
-        {iterableNftArray.length > 0 ? (
+        {iterableNftArray.length === 0 ? (
           <NoNfts />
         ) : (
-          <Box styles={styles.container} margin={'m'}>
+          <Box margin={'m'}>
             {renderTabBar()}
             {showNfts ? (
               <NftImageView

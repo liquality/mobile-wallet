@@ -63,6 +63,7 @@ export interface NFTAsset {
   standard?: string
 }
 
+
 export interface NFTWithAccount extends NFT {
   accountId: AccountId
 }
@@ -164,7 +165,10 @@ export type RootStackParamList = {
     nftItem?: NFTAsset
     accountIdsToSendIn: string[]
   }
-  NftCollectionScreen: {}
+  NftCollectionScreen: {
+    nftCollection: NFTAsset[]
+    accountIdsToSendIn: string[]
+  }
 }
 
 export type RootTabParamList = {

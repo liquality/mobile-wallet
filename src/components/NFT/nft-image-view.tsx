@@ -1,8 +1,6 @@
 import {
   Dimensions,
   Image,
-  NativeSyntheticEvent,
-  NativeTouchEvent,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -11,21 +9,16 @@ import React, { useCallback, useState } from 'react'
 import { AppIcons, Fonts } from '../../assets'
 import { Box, palette } from '../../theme'
 import { Text } from '../text/text'
-import { useRecoilValue } from 'recoil'
-import { networkState } from '../../atoms'
-import { toggleNFTStarred } from '../../store/store'
 import { useNavigation } from '@react-navigation/core'
 import { faceliftPalette } from '../../theme/faceliftPalette'
 import StarFavorite from './star-favorite'
+import { NFTAsset } from '../../types'
 
-const { SeeAllNftsIcon, LongArrow, Star, Ellipse, BlackStar } = AppIcons
+const { SeeAllNftsIcon, LongArrow } = AppIcons
 
 type NftImageViewProps = {
-  iterableNftArray: Object
-  seeNftDetail: (
-    nftItem: Object,
-    e: NativeSyntheticEvent<NativeTouchEvent>,
-  ) => void
+  iterableNftArray: NFTAsset[]
+  seeNftDetail: (nftItem: NFTAsset[]) => void
   activeWalletId: string
   accountIdsToSendIn: string[]
 }
@@ -33,12 +26,10 @@ type NftImageViewProps = {
 const NftImageView: React.FC<NftImageViewProps> = (props) => {
   const { iterableNftArray, seeNftDetail, activeWalletId, accountIdsToSendIn } =
     props
-  const activeNetwork = useRecoilValue(networkState)
   const [imgError, setImgError] = useState<boolean>(false)
   const navigation = useNavigation()
 
   const checkImgUrlExists = (imgUrl: string) => {
-    console.log(imgError, 'IMG ERRO?', imgUrl)
     return !imgError && imgUrl
       ? { uri: imgUrl }
       : require('../../assets/icons/nft_thumbnail.png')
@@ -51,7 +42,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
         accountIdsToSendIn: accountIdsToSendIn,
       })
     },
-    [navigation],
+    [navigation, accountIdsToSendIn],
   )
 
   const renderNftArray = () => {
@@ -81,7 +72,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
             <Box>
               <Pressable
                 style={styles.pressable}
-                onPress={(e) => seeNftDetail(nftItem[0], e)}>
+                onPress={() => seeNftDetail(nftItem[0])}>
                 <Image
                   source={checkImgUrlExists(nftItem[0].image_original_url)}
                   style={styles.oneImageBig}
@@ -142,9 +133,9 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
         )
       } else {
         let nftImagesScrollable = nftItem.map(
-          (nftItemInsideCollection, index) => {
+          (nftItemInsideCollection: NFTAsset, indexKey: number) => {
             return (
-              <Box key={index}>
+              <Box key={indexKey}>
                 <Pressable
                   style={styles.pressable}
                   onPress={() => seeNftDetail(nftItemInsideCollection)}>
@@ -241,26 +232,6 @@ const styles = StyleSheet.create({
     top: '60%',
     bottom: '50%',
   },
-  ellipse: {
-    position: 'absolute',
-    left: '0%',
-    right: '0%',
-    top: '0%',
-    bottom: '0%',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  star: {
-    position: 'absolute',
-    left: 9,
-    top: 9,
-  },
-  starContainer: { position: 'absolute' },
 
   collectionNameText: {
     fontFamily: Fonts.Regular,

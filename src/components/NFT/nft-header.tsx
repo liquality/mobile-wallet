@@ -1,19 +1,14 @@
-import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React from 'react'
-import { AppIcons, Fonts } from '../../assets'
-import { Box, faceliftPalette, palette } from '../../theme'
+import { Fonts } from '../../assets'
+import { Box, faceliftPalette } from '../../theme'
 import { Text } from '../text/text'
-import Svg from 'react-native-svg'
-import fonts from '../../assets/fonts'
-
-const { SignOut } = AppIcons
 
 type NftHeaderProps = {
   blackText: string
   greyText: string
   width: number
   height: number
-  isFullPage?: boolean
 }
 
 const NftHeader: React.FC<NftHeaderProps> = (props) => {
@@ -58,7 +53,7 @@ const styles = StyleSheet.create({
   greyText: {
     marginVertical: 0,
     paddingTop: 10,
-    color: faceliftPalette.grey, //TODO import from palette
+    color: faceliftPalette.grey,
     lineHeight: 35,
   },
 })

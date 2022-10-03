@@ -3,10 +3,8 @@ import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaul
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useCallback, useState } from 'react'
 import {
-  View,
   Text,
   StyleSheet,
-  Pressable,
   Image,
   Dimensions,
   ScrollView,
@@ -16,7 +14,6 @@ import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { Box, Button, palette } from '../../../theme'
 import BottomDrawer from 'react-native-bottom-drawer-view'
-
 import { RootStackParamList } from '../../../types'
 
 type NftDetailScreenProps = NativeStackScreenProps<
@@ -34,13 +31,11 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
   const [imgError, setImgError] = useState<boolean>(false)
 
   const checkImgUrlExists = (imgUrl: string) => {
-    console.log(imgError, 'IMG ERRO?', imgUrl)
     return !imgError && imgUrl
       ? { uri: imgUrl }
       : require('../../../assets/icons/nft_thumbnail.png')
   }
 
-  console.log(nftItem, 'NFT ITEM')
   const { activeWalletId } = wallet.state
 
   useEffect(() => {
@@ -65,8 +60,6 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
     )
   }
 
-  console.log(nftItem, 'Bruuuuh')
-
   return (
     <Box flex={1} style={styles.overviewBlock}>
       <Box style={styles.headerContainer}>
@@ -76,26 +69,24 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
           onError={() => setImgError(true)}
         />
       </Box>
-      {/*      <Button
-        type="primary"
-        variant="l"
-        label={'Send NFT'}
-        isBorderless={false}
-        isActive={true}
-        onPress={navigateToSendNftScreen}
-      /> */}
       <BottomDrawer
-        containerHeight={100}
-        offset={100}
+        containerHeight={300}
+        offset={120}
         startUp={false}
         roundedEdges={false}
         backgroundColor={'rgba(255, 255, 255, 0.77)'}>
         {renderContent()}
+        <Button
+          type="primary"
+          variant="l"
+          label={'Send NFT'}
+          isBorderless={false}
+          isActive={true}
+          onPress={navigateToSendNftScreen}
+        />
         <ScrollView horizontal={true}>
           <TouchableOpacity>
-            <Box style={styles.drawerContainer}>
-              <Text>Hello</Text>
-            </Box>
+            <Box style={styles.drawerContainer}></Box>
           </TouchableOpacity>
         </ScrollView>
       </BottomDrawer>
@@ -104,17 +95,6 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
 }
 
 const styles = StyleSheet.create({
-  tabText: {
-    //fontFamily: 'Anek Kannada';
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 17,
-    lineHeight: 28,
-    letterSpacing: 0.75,
-    textTransform: 'capitalize',
-    color: '#646F85',
-  },
-
   drawerContainer: { padding: 35 },
 
   overviewBlock: {
@@ -128,19 +108,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  flatListContainer: {
-    margin: 20,
-  },
-
-  pressable: { position: 'relative' },
-  column: {
-    margin: 20,
-  },
-  inner: {
-    flexDirection: 'row',
-    marginRight: 5,
-    marginBottom: 5,
-  },
   image: {
     width: Dimensions.get('screen').width,
     resizeMode: 'contain',

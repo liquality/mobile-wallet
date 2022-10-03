@@ -1,10 +1,8 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import {
-  View,
-  Text,
   StyleSheet,
   Pressable,
   Image,
@@ -13,8 +11,6 @@ import {
   FlatList,
   SafeAreaView,
 } from 'react-native'
-import { useRecoilValue } from 'recoil'
-import { networkState } from '../../../atoms'
 import NftHeader from '../../../components/NFT/nft-header'
 import StarFavorite from '../../../components/NFT/star-favorite'
 import { Box, palette } from '../../../theme'
@@ -35,13 +31,10 @@ const NftCollectionScreen = ({
   route,
 }: NftCollectionScreenProps) => {
   const { nftCollection, accountIdsToSendIn } = route.params
-  const activeNetwork = useRecoilValue(networkState)
-
   const { activeWalletId } = wallet.state
 
   const seeNftDetail = useCallback(
     (nftItem) => {
-      console.log('SEE NFT DETAIL!!')
       navigation.navigate('NftDetailScreen', {
         screenTitle: 'NFT Detail',
         nftItem: nftItem,
@@ -50,8 +43,6 @@ const NftCollectionScreen = ({
     },
     [navigation, accountIdsToSendIn],
   )
-
-  useEffect(() => {}, [])
 
   const renderCollectionGrid = () => {
     return (
@@ -62,7 +53,7 @@ const NftCollectionScreen = ({
           keyExtractor={(item) => item.name}
           renderItem={({ item }) => {
             return (
-              <View style={styles.inner}>
+              <Box style={styles.inner}>
                 <Pressable onPress={() => seeNftDetail(item)}>
                   <Image
                     source={{
@@ -72,7 +63,7 @@ const NftCollectionScreen = ({
                   />
                 </Pressable>
                 <StarFavorite nftAsset={item} activeWalletId={activeWalletId} />
-              </View>
+              </Box>
             )
           }}
         />
@@ -98,17 +89,6 @@ const NftCollectionScreen = ({
 }
 
 const styles = StyleSheet.create({
-  tabText: {
-    //fontFamily: 'Anek Kannada';
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 17,
-    lineHeight: 28,
-    letterSpacing: 0.75,
-    textTransform: 'capitalize',
-    color: '#646F85',
-  },
-
   overviewBlock: {
     justifyContent: 'center',
     width: '100%',
@@ -124,10 +104,6 @@ const styles = StyleSheet.create({
     margin: 20,
   },
 
-  pressable: { position: 'relative' },
-  column: {
-    margin: 20,
-  },
   inner: {
     flexDirection: 'row',
     marginRight: 5,

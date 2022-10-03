@@ -452,16 +452,7 @@ export const MainNavigator = () => (
       tabBarIcon: ({ focused, size }) => tabBarIcon(focused, size, route.name),
     })}>
     <Tab.Screen name="AppStackNavigator" component={AppStackNavigator} />
-    <Tab.Screen
-      name="ShowAllNftsScreen"
-      component={ShowAllNftsScreen}
-      options={({}) => ({
-        headerShown: false,
-        headerTitle: '',
-        headerLeft: TabSettingsScreenHeaderLeft,
-        headerShadowVisible: false,
-      })}
-    />
+    <Tab.Screen name="ShowAllNftsScreen" component={ShowAllNftsScreen} />
     <Tab.Screen
       name="SettingsScreen"
       component={SettingsScreen}

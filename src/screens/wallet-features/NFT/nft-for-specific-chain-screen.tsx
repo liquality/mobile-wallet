@@ -20,6 +20,7 @@ type ShowAllNftsScreenProps = NativeStackScreenProps<
 const wallet = setupWallet({
   ...defaultOptions,
 })
+//TODO: This screen is not fully implemented
 const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
@@ -61,13 +62,6 @@ const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
             <Text>{nftItem[0].description}</Text>
 
             <Image
-              /*         source={{
-            uri: nftItem[0].image_thumbnail_url,
-          }} 
-                //Hardcoded icon for now since i'm waiting for this PR 
-                (https://github.com/liquality/wallet-core/pull/166) to be merged so I dont have to handle
-                different URLs and manipulating strings to https in frontend code
-          */
               source={require('../../../assets/icons/nft_thumbnail.png')}
               style={{ width: 150, height: 100 }}
             />
