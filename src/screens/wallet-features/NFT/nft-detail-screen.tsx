@@ -16,6 +16,7 @@ import { Box, Button, faceliftPalette, palette } from '../../../theme'
 import BottomDrawer from 'react-native-bottom-drawer-view'
 import { RootStackParamList } from '../../../types'
 import { Fonts } from '../../../assets'
+import NftTabBar from '../../../components/NFT/nft-tab-bar'
 
 type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -31,6 +32,7 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
 
   const [imgError, setImgError] = useState<boolean>(false)
   const [showExpanded, setShowExpanded] = useState<boolean>(false)
+  const [showOverview, setShowOverview] = useState<boolean>(true)
 
   const checkImgUrlExists = (imgUrl: string) => {
     return !imgError && imgUrl
@@ -67,13 +69,19 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
       <Box style={styles.drawerContainer}>
         <Text style={styles.collectionName}>{nftItem.collection.name}</Text>
         <Text style={styles.expandedTitle}>{nftItem.name}</Text>
+        <NftTabBar
+          leftTabText={'nft.tabBarOverview'}
+          rightTabText={'nft.tabBarDetails'}
+          setShowLeftTab={setShowOverview}
+          showLeftTab={showOverview}
+        />
+
+        <Text style={styles.descriptionTitle}>DESCRIPTION</Text>
+        <Text style={styles.descriptionText}>{nftItem.description}</Text>
       </Box>
     )
   }
 
-  console.log(nftItem, 'NFTITEM')
-
-  console.log(showExpanded, 'SHOW EXPANDED?')
   return (
     <Box flex={1} style={styles.overviewBlock}>
       <Box style={styles.headerContainer}>
@@ -156,12 +164,28 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 36,
     lineHeight: 49,
-
     letterSpacing: 0.5,
-
-    /* Greys/Text Dark Grey */
-
     color: faceliftPalette.darkGrey,
+  },
+
+  descriptionTitle: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 15,
+    lineHeight: 21,
+    letterSpacing: 0.5,
+    color: faceliftPalette.darkGrey,
+  },
+  descriptionText: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 15,
+    lineHeight: 21,
+    letterSpacing: 0.5,
+    color: faceliftPalette.darkGrey,
+    textTransform: 'capitalize',
   },
 })
 

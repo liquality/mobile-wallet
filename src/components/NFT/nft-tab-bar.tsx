@@ -3,14 +3,14 @@ import React from 'react'
 import { Fonts } from '../../assets'
 import { Box, faceliftPalette, palette, Text } from '../../theme'
 
-type TabBarProps = {
+type NftTabBarProps = {
   leftTabText: string
   rightTabText: string
   setShowLeftTab: (show: boolean) => void
   showLeftTab: boolean
 }
 
-const TabBar: React.FC<TabBarProps> = (props) => {
+const NftTabBar: React.FC<NftTabBarProps> = (props) => {
   const { leftTabText, rightTabText, setShowLeftTab, showLeftTab } = props
 
   const renderTabBar = () => {
@@ -63,4 +63,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default TabBar
+export default NftTabBar
