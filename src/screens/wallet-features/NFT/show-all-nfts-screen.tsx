@@ -9,7 +9,8 @@ import { Fonts } from '../../../assets'
 import { networkState } from '../../../atoms'
 import NftHeader from '../../../components/NFT/nft-header'
 import NftImageView from '../../../components/NFT/nft-image-view'
-import NoNfts from '../../../components/NFT/NoNfts'
+import NoNfts from '../../../components/NFT/no-nfts'
+import TabBar from '../../../components/NFT/tab-bar'
 import { getAllEnabledAccounts, updateNFTs } from '../../../store/store'
 import { Box, palette, Text } from '../../../theme'
 import { RootTabParamList } from '../../../types'
@@ -127,7 +128,12 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
           <NoNfts />
         ) : (
           <Box margin={'m'}>
-            {renderTabBar()}
+            <TabBar
+              leftTabText={'nft.tabBarNfts'}
+              rightTabText={'nft.tabBarActivity'}
+              setShowLeftTab={setShowNfts}
+              showLeftTab={showNfts}
+            />
             {showNfts ? (
               <NftImageView
                 accountIdsToSendIn={accountIdsToSendIn}

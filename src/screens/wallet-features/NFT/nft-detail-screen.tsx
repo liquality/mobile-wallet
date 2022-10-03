@@ -12,9 +12,10 @@ import {
 } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import { Box, Button, palette } from '../../../theme'
+import { Box, Button, faceliftPalette, palette } from '../../../theme'
 import BottomDrawer from 'react-native-bottom-drawer-view'
 import { RootStackParamList } from '../../../types'
+import { Fonts } from '../../../assets'
 
 type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -29,6 +30,7 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
 
   const [imgError, setImgError] = useState<boolean>(false)
+  const [showExpanded, setShowExpanded] = useState<boolean>(false)
 
   const checkImgUrlExists = (imgUrl: string) => {
     return !imgError && imgUrl
@@ -50,7 +52,7 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
     })
   }, [accountIdsToSendIn, navigation, nftItem])
 
-  const renderContent = () => {
+  const renderDrawerCollapsed = () => {
     return (
       <Box style={styles.drawerContainer}>
         <Text style={styles.drawerClosedText}>
@@ -60,6 +62,18 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
     )
   }
 
+  const renderDrawerExpanded = () => {
+    return (
+      <Box style={styles.drawerContainer}>
+        <Text style={styles.collectionName}>{nftItem.collection.name}</Text>
+        <Text style={styles.expandedTitle}>{nftItem.name}</Text>
+      </Box>
+    )
+  }
+
+  console.log(nftItem, 'NFTITEM')
+
+  console.log(showExpanded, 'SHOW EXPANDED?')
   return (
     <Box flex={1} style={styles.overviewBlock}>
       <Box style={styles.headerContainer}>
@@ -70,12 +84,14 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
         />
       </Box>
       <BottomDrawer
-        containerHeight={300}
+        containerHeight={472}
         offset={120}
         startUp={false}
         roundedEdges={false}
-        backgroundColor={'rgba(255, 255, 255, 0.77)'}>
-        {renderContent()}
+        backgroundColor={'rgba(255, 255, 255, 0.77)'}
+        onExpanded={() => setShowExpanded(true)}
+        onCollapse={() => setShowExpanded(false)}>
+        {showExpanded ? renderDrawerExpanded() : renderDrawerCollapsed()}
         <Button
           type="primary"
           variant="l"
@@ -123,6 +139,29 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
 
     color: '#000000',
+  },
+
+  collectionName: {
+    fontFamily: Fonts.JetBrainsMono,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 14,
+    lineHeight: 18,
+    color: '#646F85',
+  },
+
+  expandedTitle: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 36,
+    lineHeight: 49,
+
+    letterSpacing: 0.5,
+
+    /* Greys/Text Dark Grey */
+
+    color: faceliftPalette.darkGrey,
   },
 })
 
