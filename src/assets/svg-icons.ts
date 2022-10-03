@@ -65,7 +65,6 @@ import XPinkIcon from '../assets/icons/XPink.svg'
 import XIcon from '../assets/icons/close.svg'
 import PointingFinger from '../assets/icons/pointingFinger.svg'
 import BentArrow from '../assets/icons/bentArrow.svg'
-import TransakIcon from '../assets/icons/transak.svg'
 import QRCode from '../assets/icons/qr-code.svg'
 import DropdownIcon from '../assets/icons/dropdownMenu.svg'
 import Clock from '../assets/icons/clock.svg'
@@ -81,6 +80,12 @@ import InactiveRadioButtonDark from '../assets/icons/inactiveRadioButtonDark.svg
 import InactiveRadioButtonLight from '../assets/icons/inactiveRadioButtonLight.svg'
 import ModalClose from '../assets/icons/modalClose.svg'
 import OneWalletAllChains from '../assets/icons/oneWalletAllChains.svg'
+import SeeAllNftsIcon from '../assets/icons/nfts/see-all-nfts.svg'
+import LongArrow from '../assets/icons/nfts/long-arrow.svg'
+import Ellipse from '../assets/icons/nfts/ellipse.svg'
+import Star from '../assets/icons/nfts/star.svg'
+import BlackStar from '../assets/icons/nfts/star-black.svg'
+import Line from '../assets/icons/nfts/line.svg'
 import ArrowLeft from '../assets/icons/arrowLeft.svg'
 
 export default {
@@ -151,7 +156,6 @@ export default {
   PointingFinger,
   BentArrow,
   XIcon,
-  TransakIcon,
   QRCode,
   DropdownIcon,
   Clock,
@@ -159,6 +163,13 @@ export default {
   ArrowDown,
   DownIcon,
   UpIcon,
+  SeeAllNftsIcon,
+  LongArrow,
+  Ellipse,
+  Star,
+  BlackStar,
+  Line,
+
   LogoFull,
   OnlyLqLogoDark,
   OnlyLqLogoLight,

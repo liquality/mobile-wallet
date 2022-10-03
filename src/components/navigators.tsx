@@ -49,6 +49,8 @@ import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-scre
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
 import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
+import NftCollectionScreen from '../screens/wallet-features/NFT/nft-collection-screen'
+
 import { AppIcons, Fonts } from '../assets'
 import { themeMode } from '../atoms'
 import { useRecoilValue } from 'recoil'
@@ -335,6 +337,8 @@ export const AppStackNavigator = () => (
       name="NftForSpecificChainScreen"
       component={NftForSpecificChainScreen}
       options={() => ({
+        headerShown: false,
+
         headerRight: PlaceholderComp,
       })}
     />
@@ -342,6 +346,8 @@ export const AppStackNavigator = () => (
       name="NftDetailScreen"
       component={NftDetailScreen}
       options={() => ({
+        headerShown: false,
+
         headerRight: PlaceholderComp,
       })}
     />
@@ -349,6 +355,17 @@ export const AppStackNavigator = () => (
       name="NftSendScreen"
       component={NftSendScreen}
       options={() => ({
+        headerShown: false,
+
+        headerRight: PlaceholderComp,
+      })}
+    />
+    <MainStack.Screen
+      name="NftCollectionScreen"
+      component={NftCollectionScreen}
+      options={() => ({
+        headerShown: false,
+
         headerRight: PlaceholderComp,
       })}
     />
@@ -383,15 +400,7 @@ export const MainNavigator = () => (
       tabBarIcon: ({ focused, size }) => tabBarIcon(focused, size, route.name),
     })}>
     <Tab.Screen name="AppStackNavigator" component={AppStackNavigator} />
-    <Tab.Screen
-      name="ShowAllNftsScreen"
-      component={ShowAllNftsScreen}
-      options={({}) => ({
-        headerShown: true,
-        headerTitle: '',
-        headerLeft: TabSettingsScreenHeaderLeft,
-      })}
-    />
+    <Tab.Screen name="ShowAllNftsScreen" component={ShowAllNftsScreen} />
     <Tab.Screen
       name="SettingsScreen"
       component={SettingsScreen}

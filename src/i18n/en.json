@@ -388,5 +388,14 @@
   "likelyLess30": "likely in < 30 sec",
   "likelyLess15": "likely in < 15 sec",
   "txId": "Transaction Id",
-  "Ok": "Ok"
+  "Ok": "Ok",
+
+  "nft": {
+    "noNftsTitle": "No NFTs Just Yet",
+    "noNftsHeaderText": "Once you start owning NFTs you will see them here. In the mean time, catch up on the latest in our NFT hub.",
+    "accounts": "ACCOUNTS",
+    "nfts": "NFTS",
+    "tabBarNfts": "Nfts",
+    "tabBarActivity": "Activity"
+  }
 }
