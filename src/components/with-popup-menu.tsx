@@ -29,6 +29,7 @@ const WithPopupMenu = (props: Props) => {
   }
 
   const handleManageAssetsBtnPress = () => {
+    navigation.goBack()
     navigation.navigate('AssetManagementScreen', {
       screenTitle: 'Manage Assets',
       includeBackBtn: true,
