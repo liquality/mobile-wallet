@@ -8,6 +8,8 @@ export const ICON_SIZE = scale(25)
 export const ONBOARDING_SCREEN_DEFAULT_PADDING = scale(40)
 export const SCREEN_WIDTH = Dimensions.get('screen').width
 export const SCREEN_HEIGHT = Dimensions.get('screen').height
+export const INPUT_OPACITY_INACTIVE = 0.6
+export const INPUT_OPACITY_ACTIVE = 1
 export const KEYS = {
   ACTIVE_NETWORK_KEY: 'activeNetworkKey',
   ACTIVE_THEME: 'activeTheme',

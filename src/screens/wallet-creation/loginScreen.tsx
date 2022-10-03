@@ -14,7 +14,11 @@ import { scale } from 'react-native-size-matters'
 import { RootStackParamList, UseInputStateReturnType } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useHeaderHeight } from '@react-navigation/elements'
-import { labelTranslateFn } from '../../utils'
+import {
+  INPUT_OPACITY_ACTIVE,
+  INPUT_OPACITY_INACTIVE,
+  labelTranslateFn,
+} from '../../utils'
 import { restoreWallet } from '../../store/store'
 import { CommonActions } from '@react-navigation/native'
 import { useRecoilValue } from 'recoil'
@@ -69,7 +73,9 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   }
 
   const passwordInputOpacity =
-    error || passwordInput.value.length === 0 ? 0.6 : 1
+    error || passwordInput.value.length === 0
+      ? INPUT_OPACITY_INACTIVE
+      : INPUT_OPACITY_ACTIVE
 
   return (
     <KeyboardAvoidingView>
