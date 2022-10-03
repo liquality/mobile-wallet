@@ -68,6 +68,9 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     }
   }
 
+  const passwordInputOpacity =
+    error || passwordInput.value.length === 0 ? 0.6 : 1
+
   return (
     <KeyboardAvoidingView>
       <LinearGradient
@@ -91,6 +94,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               autoCorrect={false}
               returnKeyType="done"
               onSubmitEditing={onUnlock}
+              style={{ opacity: passwordInputOpacity }}
             />
             {error.length ? (
               <Box
