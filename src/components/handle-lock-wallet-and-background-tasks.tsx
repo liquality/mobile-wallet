@@ -36,8 +36,9 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
     })
   }, [navigation])
 
+  //TODO we need to agree on this value with the business team
   //Update balances, rates and market data every 2 minutes
-  const interval = 120000
+  const interval = 10000
   useInterval(
     () => {
       try {

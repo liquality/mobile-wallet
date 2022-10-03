@@ -1,4 +1,4 @@
-import { DarkModeEnum, LanguageEnum } from './types/index'
+import { DarkModeEnum, LanguageEnum } from './types'
 import { atom, atomFamily, selector, selectorFamily } from 'recoil'
 import { AccountType, SwapAssetPairType, CustomRootState } from './types'
 import { BigNumber } from '@liquality/types'
@@ -11,7 +11,6 @@ import {
   balanceEffect,
   enabledAssetsEffect,
   fiatRateEffect,
-  localStorageAssetEffect,
   localStorageEffect,
   localStorageLangEffect,
   transactionHistoryEffect,
@@ -187,7 +186,7 @@ export const historyStateFamily = atomFamily<Partial<HistoryItem>, string>({
 export const enabledAssetsStateFamily = atomFamily<boolean, string>({
   key: 'EnabledAssetsState',
   default: true,
-  effects: (asset) => [localStorageAssetEffect(`enabled-asset-${asset}`)],
+  effects: (asset) => [localStorageEffect(`enabled-asset-${asset}`)],
 })
 
 //--------------ATOM SELECTORS--------------

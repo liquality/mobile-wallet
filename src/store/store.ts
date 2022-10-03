@@ -155,11 +155,14 @@ export const populateWallet = async (): Promise<void> => {
 
 export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet?.state
+  const allAccounts = wallet.getters.accountsData
+  const account = allAccounts[Math.floor(Math.random() * allAccounts.length)]
 
   await wallet.dispatch
     .updateBalances({
       network: activeNetwork,
       walletId: activeWalletId,
+      accountIds: [account.id],
     })
     .catch((e) => {
       Log(`Failed update balances: ${e}`, 'error')
@@ -167,7 +170,7 @@ export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
 
   await wallet.dispatch
     .updateFiatRates({
-      assets: wallet.getters.allNetworkAssets,
+      assets: account.assets,
     })
     .catch((e) => {
       Log(`Failed to update fiat rates: ${e}`, 'error')
