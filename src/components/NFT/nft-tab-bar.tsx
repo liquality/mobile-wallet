@@ -15,7 +15,7 @@ const NftTabBar: React.FC<NftTabBarProps> = (props) => {
 
   const renderTabBar = () => {
     return (
-      <Box flexDirection="row" padding={'m'}>
+      <Box flexDirection="row" paddingVertical={'m'}>
         <Box marginRight={'l'}>
           <Pressable
             style={[styles.tabText, showLeftTab && styles.tabBarFocused]}

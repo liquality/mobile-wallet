@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     letterSpacing: 0.5,
     color: faceliftPalette.darkGrey,
+    marginTop: 10,
   },
   descriptionText: {
     fontFamily: Fonts.Regular,
