@@ -20,94 +20,12 @@ import StarFavorite from '../../../components/NFT/star-favorite'
 import { Box, palette } from '../../../theme'
 
 import { RootStackParamList } from '../../../types'
+import { labelTranslateFn } from '../../../utils'
 
 type NftCollectionScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'NftCollectionScreen'
 >
-
-const dummyData = [
-  {
-    name: 'Shopee Supermarket',
-    uri: require('../../../assets/icons/nft_thumbnail.png'),
-  },
-  {
-    name: 'RM15 Free Shipping',
-    uri: require('../../../assets/icons/nft_thumbnail.png'),
-  },
-  {
-    name: '15% Cashback',
-    uri: require('../../../assets/icons/nft_thumbnail.png'),
-  },
-  { name: 'Live', uri: require('../../../assets/icons/nft_thumbnail.png') },
-  {
-    name: 'Shopee Food',
-    uri: require('../../../assets/icons/nft_thumbnail.png'),
-  },
-  {
-    name: 'Shopee Pay',
-    uri: require('../../../assets/icons/nft_thumbnail.png'),
-  },
-  {
-    name: 'Shop Malaysia',
-    uri: require('../../../assets/icons/nft_thumbnail.png'),
-  },
-  { name: 'COD', uri: require('../../../assets/icons/nft_thumbnail.png') },
-]
-
-let bu = {
-  accountId: 'f7dc7698-407d-463b-bd81-958e23a247d8',
-  asset_contract: {
-    address: '0xe42cad6fc883877a76a26a16ed92444ab177e306',
-    external_link: 'https://consensys.net/merge',
-    image_url:
-      'https://i.seadn.io/gcs/files/6ae69eaefbf70905a975423ad9e16607.jpg?w=500&auto=format',
-    name: 'TheMerge',
-    symbol: 'MERGE',
-  },
-  collection: { name: 'The Merge: Regenesis' },
-  description:
-    "Regenesis is a collection of art NFTs celebrating the Ethereum Merge, a historic technological milestone and testament to the power of decentralized software development. This edition of the NFT collection illustrates an elaborately detailed world embodying the most important benefit of the Merge: sustainability. The art explores the scale and significance of the Merge, an ambitious re-architecture of the world's largest open programmable blockchain, which makes the network 2000x more energy efficient and positions Ethereum to sustainably support the next generation of Web3 creators and developers.",
-  external_link: 'https://consensys.net/merge',
-  id: 642879097,
-  image_original_url:
-    'https://opensea-private.mypinata.cloud/ipfs/Qma3dgNvmqabeVchAfG95KyESXCDojo4b1Fc8U5xiZ89hf',
-  image_preview_url:
-    'https://lh3.googleusercontent.com/VTjV3wixgJKaj39Ue741dEa6BUkKO9KB7sX2z6oXiZAD-h-syGztoBavJmIYM-OMKrJzSM3ODCmKo6mm99LarjuaFrSHysokWNRojuc=s250',
-  image_thumbnail_url:
-    'https://lh3.googleusercontent.com/VTjV3wixgJKaj39Ue741dEa6BUkKO9KB7sX2z6oXiZAD-h-syGztoBavJmIYM-OMKrJzSM3ODCmKo6mm99LarjuaFrSHysokWNRojuc=s128',
-  name: 'TheMerge',
-  starred: false,
-  token_id: '33495',
-}
-
-let a = [
-  {
-    accountId: 'f7dc7698-407d-463b-bd81-958e23a247d8',
-    asset_contract: {
-      address: '0xe42cad6fc883877a76a26a16ed92444ab177e306',
-      external_link: 'https://consensys.net/merge',
-      image_url:
-        'https://i.seadn.io/gcs/files/6ae69eaefbf70905a975423ad9e16607.jpg?w=500&auto=format',
-      name: 'TheMerge',
-      symbol: 'MERGE',
-    },
-    collection: { name: 'The Merge: Regenesis' },
-    description:
-      "Regenesis is a collection of art NFTs celebrating the Ethereum Merge, a historic technological milestone and testament to the power of decentralized software development. This edition of the NFT collection illustrates an elaborately detailed world embodying the most important benefit of the Merge: sustainability. The art explores the scale and significance of the Merge, an ambitious re-architecture of the world's largest open programmable blockchain, which makes the network 2000x more energy efficient and positions Ethereum to sustainably support the next generation of Web3 creators and developers.",
-    external_link: 'https://consensys.net/merge',
-    id: 642879097,
-    image_original_url:
-      'https://opensea-private.mypinata.cloud/ipfs/Qma3dgNvmqabeVchAfG95KyESXCDojo4b1Fc8U5xiZ89hf',
-    image_preview_url:
-      'https://lh3.googleusercontent.com/VTjV3wixgJKaj39Ue741dEa6BUkKO9KB7sX2z6oXiZAD-h-syGztoBavJmIYM-OMKrJzSM3ODCmKo6mm99LarjuaFrSHysokWNRojuc=s250',
-    image_thumbnail_url:
-      'https://lh3.googleusercontent.com/VTjV3wixgJKaj39Ue741dEa6BUkKO9KB7sX2z6oXiZAD-h-syGztoBavJmIYM-OMKrJzSM3ODCmKo6mm99LarjuaFrSHysokWNRojuc=s128',
-    name: 'TheMerge',
-    starred: false,
-    token_id: '33495',
-  },
-]
 
 const wallet = setupWallet({
   ...defaultOptions,
@@ -118,11 +36,8 @@ const NftCollectionScreen = ({
 }: NftCollectionScreenProps) => {
   const { nftCollection, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
-  const [data, setData] = useState(dummyData)
 
   const { activeWalletId } = wallet.state
-
-  console.log(nftCollection.length, 'NFTS????')
 
   const seeNftDetail = useCallback(
     (nftItem) => {
@@ -146,15 +61,16 @@ const NftCollectionScreen = ({
           numColumns={2}
           keyExtractor={(item) => item.name}
           renderItem={({ item }) => {
-            console.log(item.image_original_url, 'wats iteem?')
             return (
               <View style={styles.inner}>
-                <Image
-                  source={{
-                    uri: item.image_original_url,
-                  }}
-                  style={styles.image}
-                />
+                <Pressable onPress={() => seeNftDetail(item)}>
+                  <Image
+                    source={{
+                      uri: item.image_original_url,
+                    }}
+                    style={styles.image}
+                  />
+                </Pressable>
                 <StarFavorite nftAsset={item} activeWalletId={activeWalletId} />
               </View>
             )
@@ -164,14 +80,13 @@ const NftCollectionScreen = ({
     )
   }
 
-  console.log(nftCollection, 'codlec')
   return (
     <Box flex={1} style={styles.overviewBlock}>
       <ScrollView>
         <Box style={styles.headerContainer}>
           <NftHeader
             blackText={nftCollection[0].collection.name.toUpperCase()}
-            greyText={`${nftCollection.length} NFTS`}
+            greyText={`${nftCollection.length} ${labelTranslateFn('nft.nfts')}`}
             width={Dimensions.get('screen').width}
             height={225}
           />

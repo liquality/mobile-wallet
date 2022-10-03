@@ -14,9 +14,11 @@ import { Fonts } from '../../../assets'
 import { networkState } from '../../../atoms'
 import NftHeader from '../../../components/NFT/nft-header'
 import NftImageView from '../../../components/NFT/nft-image-view'
+import NoNfts from '../../../components/NFT/NoNfts'
 import { getAllEnabledAccounts, updateNFTs } from '../../../store/store'
 import { Box, palette } from '../../../theme'
 import { RootTabParamList } from '../../../types'
+import { labelTranslateFn } from '../../../utils'
 type ShowAllNftsScreenProps = BottomTabScreenProps<
   RootTabParamList,
   'ShowAllNftsScreen'
@@ -118,30 +120,34 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
       <ScrollView>
         <Box>
           <NftHeader
-            blackText={`${numberOfNfts} NFTS`}
-            greyText={`${numberOfAccountsWithNfts} ACCOUNTS`}
+            blackText={`${numberOfNfts} ${labelTranslateFn('nft.nfts')}`}
+            greyText={`${numberOfAccountsWithNfts}  ${labelTranslateFn(
+              'nft.accounts',
+            )}`}
             width={Dimensions.get('screen').width}
-            height={225}></NftHeader>
-          <Text variant="loading" tx="overviewScreen.load" />
+            height={225}
+          />
         </Box>
-        <Box styles={styles.container} margin={'m'}>
-          {renderTabBar()}
-          {showNfts ? (
-            <NftImageView
-              accountIdsToSendIn={accountIdsToSendIn}
-              iterableNftArray={iterableNftArray}
-              seeNftDetail={seeNftDetail}
-              activeWalletId={activeWalletId}
-            />
-          ) : null}
-        </Box>
+        {iterableNftArray.length > 0 ? (
+          <NoNfts />
+        ) : (
+          <Box styles={styles.container} margin={'m'}>
+            {renderTabBar()}
+            {showNfts ? (
+              <NftImageView
+                accountIdsToSendIn={accountIdsToSendIn}
+                iterableNftArray={iterableNftArray}
+                seeNftDetail={seeNftDetail}
+                activeWalletId={activeWalletId}
+              />
+            ) : null}
+          </Box>
+        )}
       </ScrollView>
     </Box>
   )
 }
 const styles = StyleSheet.create({
-  container: {},
-
   tabText: {
     fontFamily: Fonts.Regular,
     fontStyle: 'normal',

@@ -4,12 +4,8 @@ import { AppIcons } from '../../assets'
 import { Box } from '../../theme'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../atoms'
-import {
-  getAllEnabledAccounts,
-  toggleNFTStarred,
-  updateNFTs,
-} from '../../store/store'
-import { NFTAsset, NFT } from '../../types'
+import { toggleNFTStarred } from '../../store/store'
+import { NFT } from '../../types'
 
 const { Ellipse, Star, BlackStar } = AppIcons
 
@@ -48,7 +44,6 @@ const StarFavorite: React.FC<StarFavoriteProps> = (props) => {
   }
 
   const toggleStarred = useCallback(async () => {
-    console.log('TOGGLE ST  AR')
     nftAsset.starred = !nftAsset.starred
     setShowStarred(!nftAsset.starred)
     const payload = {

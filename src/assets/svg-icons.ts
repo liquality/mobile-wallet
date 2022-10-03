@@ -86,6 +86,7 @@ import LongArrow from '../assets/icons/nfts/long-arrow.svg'
 import Ellipse from '../assets/icons/nfts/ellipse.svg'
 import Star from '../assets/icons/nfts/star.svg'
 import BlackStar from '../assets/icons/nfts/star-black.svg'
+import Line from '../assets/icons/nfts/line.svg'
 
 
 export default {
@@ -169,6 +170,7 @@ export default {
   Ellipse,
   Star,
   BlackStar,
+  Line,
 
   LogoFull,
   OnlyLqLogoDark,

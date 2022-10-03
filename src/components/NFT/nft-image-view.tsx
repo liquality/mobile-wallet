@@ -56,151 +56,148 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
 
   const renderNftArray = () => {
     let rows = []
-    if (iterableNftArray.length !== 0) {
-      rows = iterableNftArray.map((nftItem, index) => {
-        //If NFT collection array is 1, image should cover full width
-        if (nftItem.length === 1) {
-          return (
-            <Box paddingVertical={'xl'} key={index}>
-              <Pressable
-                style={styles.collectionTextContainer}
-                onPress={() => handleGoToCollection(nftItem)}>
-                <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
-                  <Text style={styles.collectionNameText}>
-                    {' '}
-                    {nftItem[0].collection.name}{' '}
-                  </Text>
-                  <Text style={[styles.collectionNameText, styles.pipe]}>
-                    {' '}
-                    |{' '}
-                  </Text>{' '}
-                  {nftItem.length}{' '}
+    //if (iterableNftArray.length !== 0) {
+    rows = iterableNftArray.map((nftItem, index) => {
+      //If NFT collection array is 1, image should cover full width
+      if (nftItem.length === 1) {
+        return (
+          <Box paddingVertical={'xl'} key={index}>
+            <Pressable
+              style={styles.collectionTextContainer}
+              onPress={() => handleGoToCollection(nftItem)}>
+              <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
+                <Text style={styles.collectionNameText}>
+                  {' '}
+                  {nftItem[0].collection.name}{' '}
                 </Text>
-              </Pressable>
+                <Text style={[styles.collectionNameText, styles.pipe]}>
+                  {' '}
+                  |{' '}
+                </Text>{' '}
+                {nftItem.length}{' '}
+              </Text>
+            </Pressable>
 
-              <Box>
-                <Pressable
-                  style={styles.pressable}
-                  onPress={(e) => seeNftDetail(nftItem[0], e)}>
-                  <Image
-                    source={checkImgUrlExists(nftItem[0].image_original_url)}
-                    style={styles.oneImageBig}
-                    onError={() => setImgError(true)}
-                  />
-                </Pressable>
-
-                <StarFavorite
-                  nftAsset={nftItem[0]}
-                  activeWalletId={activeWalletId}
-                />
-              </Box>
-            </Box>
-          )
-        } else if (nftItem.length === 2) {
-          return (
             <Box>
-              <Pressable
-                style={styles.collectionTextContainer}
-                onPress={() => handleGoToCollection(nftItem)}>
-                <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
-                  <Text style={styles.collectionNameText}>
-                    {' '}
-                    {nftItem[0].collection.name}{' '}
-                  </Text>
-                  <Text style={[styles.collectionNameText, styles.pipe]}>
-                    {' '}
-                    |{' '}
-                  </Text>{' '}
-                  {nftItem.length}{' '}
-                </Text>
-              </Pressable>
               <Pressable
                 style={styles.pressable}
                 onPress={(e) => seeNftDetail(nftItem[0], e)}>
                 <Image
-                  source={{
-                    uri: nftItem[0].image_original_url,
-                  }}
-                  style={{
-                    width: Dimensions.get('screen').width / 2,
-                    height: Dimensions.get('screen').width / 2,
-                  }}
-                  onError={() => setImgError(true)}
-                />
-                <Image
-                  source={{
-                    uri: nftItem[1].image_original_url,
-                  }}
-                  style={{
-                    width: Dimensions.get('screen').width / 2,
-                    height: Dimensions.get('screen').width / 2,
-                  }}
+                  source={checkImgUrlExists(nftItem[0].image_original_url)}
+                  style={styles.oneImageBig}
                   onError={() => setImgError(true)}
                 />
               </Pressable>
-            </Box>
-          )
-        } else {
-          let nftImagesScrollable = nftItem.map(
-            (nftItemInsideCollection, index) => {
-              return (
-                <Box key={index}>
-                  <Pressable
-                    style={styles.pressable}
-                    onPress={() => seeNftDetail(nftItemInsideCollection)}>
-                    <Image
-                      source={checkImgUrlExists(
-                        nftItemInsideCollection.image_original_url,
-                      )}
-                      style={styles.scrollableImg}
-                      onError={() => setImgError(true)}
-                    />
-                  </Pressable>
-                  <StarFavorite
-                    nftAsset={nftItemInsideCollection}
-                    activeWalletId={activeWalletId}
-                  />
-                </Box>
-              )
-            },
-          )
-          return (
-            <Box>
-              <Pressable
-                style={styles.collectionTextContainer}
-                onPress={() => handleGoToCollection(nftItem)}>
-                <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
-                  <Text style={styles.collectionNameText}>
-                    {' '}
-                    {nftItem[0].collection.name}{' '}
-                  </Text>
-                  <Text style={[styles.collectionNameText, styles.pipe]}>
-                    {' '}
-                    |{' '}
-                  </Text>{' '}
-                  {nftItem.length}{' '}
-                </Text>
-              </Pressable>
-              <ScrollView key={index} horizontal={true}>
-                <Box flex={0.1} flexDirection="row" alignItems="center">
-                  {nftImagesScrollable}
 
-                  <Pressable
-                    onPress={() => handleGoToCollection(nftItem)}
-                    style={styles.pressable}>
-                    <SeeAllNftsIcon width={105} height={105} />
-                    <Text style={styles.seeAllText}>See {'\n'}All</Text>
-                    <LongArrow style={styles.longArrow} />
-                  </Pressable>
-                </Box>
-              </ScrollView>
+              <StarFavorite
+                nftAsset={nftItem[0]}
+                activeWalletId={activeWalletId}
+              />
             </Box>
-          )
-        }
-      })
-    } else {
-      return <Text>No NFTs to show</Text>
-    }
+          </Box>
+        )
+      } else if (nftItem.length === 2) {
+        return (
+          <Box>
+            <Pressable
+              style={styles.collectionTextContainer}
+              onPress={() => handleGoToCollection(nftItem)}>
+              <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
+                <Text style={styles.collectionNameText}>
+                  {' '}
+                  {nftItem[0].collection.name}{' '}
+                </Text>
+                <Text style={[styles.collectionNameText, styles.pipe]}>
+                  {' '}
+                  |{' '}
+                </Text>{' '}
+                {nftItem.length}{' '}
+              </Text>
+            </Pressable>
+            <Pressable
+              style={styles.pressable}
+              onPress={(e) => seeNftDetail(nftItem[0], e)}>
+              <Image
+                source={{
+                  uri: nftItem[0].image_original_url,
+                }}
+                style={{
+                  width: Dimensions.get('screen').width / 2,
+                  height: Dimensions.get('screen').width / 2,
+                }}
+                onError={() => setImgError(true)}
+              />
+              <Image
+                source={{
+                  uri: nftItem[1].image_original_url,
+                }}
+                style={{
+                  width: Dimensions.get('screen').width / 2,
+                  height: Dimensions.get('screen').width / 2,
+                }}
+                onError={() => setImgError(true)}
+              />
+            </Pressable>
+          </Box>
+        )
+      } else {
+        let nftImagesScrollable = nftItem.map(
+          (nftItemInsideCollection, index) => {
+            return (
+              <Box key={index}>
+                <Pressable
+                  style={styles.pressable}
+                  onPress={() => seeNftDetail(nftItemInsideCollection)}>
+                  <Image
+                    source={checkImgUrlExists(
+                      nftItemInsideCollection.image_original_url,
+                    )}
+                    style={styles.scrollableImg}
+                    onError={() => setImgError(true)}
+                  />
+                </Pressable>
+                <StarFavorite
+                  nftAsset={nftItemInsideCollection}
+                  activeWalletId={activeWalletId}
+                />
+              </Box>
+            )
+          },
+        )
+        return (
+          <Box>
+            <Pressable
+              style={styles.collectionTextContainer}
+              onPress={() => handleGoToCollection(nftItem)}>
+              <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
+                <Text style={styles.collectionNameText}>
+                  {' '}
+                  {nftItem[0].collection.name}{' '}
+                </Text>
+                <Text style={[styles.collectionNameText, styles.pipe]}>
+                  {' '}
+                  |{' '}
+                </Text>{' '}
+                {nftItem.length}{' '}
+              </Text>
+            </Pressable>
+            <ScrollView key={index} horizontal={true}>
+              <Box flex={0.1} flexDirection="row" alignItems="center">
+                {nftImagesScrollable}
+
+                <Pressable
+                  onPress={() => handleGoToCollection(nftItem)}
+                  style={styles.pressable}>
+                  <SeeAllNftsIcon width={105} height={105} />
+                  <Text style={styles.seeAllText}>See {'\n'}All</Text>
+                  <LongArrow style={styles.longArrow} />
+                </Pressable>
+              </Box>
+            </ScrollView>
+          </Box>
+        )
+      }
+    })
 
     return rows
   }

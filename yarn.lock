@@ -1303,16 +1303,7 @@
     lodash "^4.17.21"
     luxon "^2.3.1"
 
-"@chainify/types@1.2.33":
-  version "1.2.33"
-  resolved "https://registry.yarnpkg.com/@chainify/types/-/types-1.2.33.tgz#080375e9c779ef122d5567b9a9bbd6384109132b"
-  integrity sha512-3Pba49OA2M/1TImXnQnZ4EY0M1OggHL5UZ9DVy4dYLtB92Pp9VqZgtWFu1aDL65oIsl1wYTcZZOTchP9u5Gw0w==
-  dependencies:
-    "@ethersproject/bignumber" "5.7.0"
-    "@liquality/cryptoassets" "^1.13.3"
-    bignumber.js "^9.0.2"
-
-"@chainify/types@^1.2.13":
+"@chainify/types@1.2.33", "@chainify/types@^1.2.13":
   version "1.2.33"
   resolved "https://registry.yarnpkg.com/@chainify/types/-/types-1.2.33.tgz#080375e9c779ef122d5567b9a9bbd6384109132b"
   integrity sha512-3Pba49OA2M/1TImXnQnZ4EY0M1OggHL5UZ9DVy4dYLtB92Pp9VqZgtWFu1aDL65oIsl1wYTcZZOTchP9u5Gw0w==
@@ -3044,7 +3035,7 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-6.10.0.tgz#c012c1ecc1a0e53d50e6af381618dca5268461c1"
   integrity sha512-lLseUPEhSFUXYTKj6q7s2O3s2vW2ebgA11vMAlKodXGf5AFw4zUoEbTz9CoFOC9jS6xY4Qr8BmRnxP/odT4Uuw==
 
-"@liquality/cryptoassets@1.14.18":
+"@liquality/cryptoassets@1.14.18", "@liquality/cryptoassets@^1.13.3":
   version "1.14.18"
   resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.14.18.tgz#81ab05b9d3681d3ea4d352ecbfa5167bc35085c3"
   integrity sha512-LXSF1E75ZHEFtxxN26CAJaY1+3egm1mX8sJA3bh8NVTr0MVmcUq12zB/777TfnpNV++I/wlqlEfV/nXUyPnolg==
@@ -3061,19 +3052,6 @@
   version "1.14.7"
   resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.14.7.tgz#39eaaa8efedc68cc21c60e7dc0b0690d06ad0353"
   integrity sha512-D9AL0d0zE2p7adKzRR0VbkEGce3tqYD4WugG5umJ6SGY1NhRQdX1fF648Tiwty/y2Po/6iGJqFze5S68r1GsxA==
-  dependencies:
-    "@ethersproject/address" "5.7.0"
-    "@types/bs58" "4.0.1"
-    bignumber.js "^9.0.2"
-    bitcoin-address-validation "2.2.1"
-    bs58 "4.0.1"
-    ethereumjs-util "7.1.5"
-    lodash "4.17.21"
-
-"@liquality/cryptoassets@^1.13.3":
-  version "1.14.18"
-  resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.14.18.tgz#81ab05b9d3681d3ea4d352ecbfa5167bc35085c3"
-  integrity sha512-LXSF1E75ZHEFtxxN26CAJaY1+3egm1mX8sJA3bh8NVTr0MVmcUq12zB/777TfnpNV++I/wlqlEfV/nXUyPnolg==
   dependencies:
     "@ethersproject/address" "5.7.0"
     "@types/bs58" "4.0.1"
@@ -13181,7 +13159,7 @@ prompts@^2.0.1, prompts@^2.3.2, prompts@^2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@*, prop-types@^15.5.10, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@*, prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -13493,6 +13471,13 @@ react-native-background-actions@^2.6.7:
   integrity sha512-qjHeks9EbLIXeb2xn3AR0eLVlUh/sAboKt0tI3ZN8leEEL1xmZUvpbk0fN6RKRpxpv7ATVHgWjGMK1FNoYh+Ug==
   dependencies:
     eventemitter3 "^4.0.7"
+
+react-native-bottom-drawer-view@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-bottom-drawer-view/-/react-native-bottom-drawer-view-1.0.3.tgz#bc4af7691364fd1b1104eef18a019c9138b1a4ca"
+  integrity sha512-yPC0I6N02zSHB3wAUWAgs+wH53fwGCa7etho9se3ICBNNBnl9Y+53DKnNMdFKdUuLlF/N4shsmrVmPiNCLEscg==
+  dependencies:
+    prop-types "^15.6.2"
 
 react-native-calendars@^1.1280.0:
   version "1.1289.0"
