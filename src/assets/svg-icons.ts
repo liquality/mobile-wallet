@@ -86,6 +86,7 @@ import Ellipse from '../assets/icons/nfts/ellipse.svg'
 import Star from '../assets/icons/nfts/star.svg'
 import BlackStar from '../assets/icons/nfts/star-black.svg'
 import Line from '../assets/icons/nfts/line.svg'
+import ArrowLeft from '../assets/icons/arrowLeft.svg'
 
 export default {
   PendingSwap,
@@ -177,4 +178,5 @@ export default {
   InactiveRadioButtonLight,
   ModalClose,
   OneWalletAllChains,
+  ArrowLeft,
 }

@@ -60,9 +60,10 @@
     "createNewWallet": "Create a New Wallet"
   },
   "loginScreen": {
-    "password": "PASSWORD",
+    "password": "ENTER PASSWORD",
     "unlock": "Unlock",
-    "invalidPassword": "Password is invalid"
+    "invalidPassword": "Password is invalid",
+    "passwordError": "Passwords do not match. Try again."
   },
   "optInAnalyticsModal": {
     "helpUsToImprove": "Help Us Improve Liquality.",
@@ -72,10 +73,10 @@
   },
   "passwordCreationScreen": {
     "createPassword": "Create Password",
-    "choosePassword": "CHOOSE PASSWORD (at least 8 characters)",
     "confirmPassword": "CONFIRM PASSWORD",
     "passwordDontMatch": "Passwords don't match",
-    "password8char": "Passwords must be at least 8 characters"
+    "password8char": "Passwords must be at least 8 characters.",
+    "orImportWallet": "Or import other wallet with seed phrase."
   },
   "seedPhraseConfirmationScreen": {
     "keyInfoMissing": "Key information missing",
@@ -299,10 +300,11 @@
   },
   "unlockWalletScreen": {
     "invalidSeedPhrase": "Your seed phrase is invalid', 'Please try again",
-    "unlockWallet": "Unlock Wallet",
-    "enterSeedPhrase": "Enter the seed phrase, in the same order saved when creating your wallet.",
-    "12words": "12 words",
-    "24words": "24 words"
+    "unlockWallet": "Unlock your Wallet",
+    "enterSeedPhrase": "Enter the seed phrase in the same order saved when creating your wallet.",
+    "12words": "12",
+    "24words": "24",
+    "wordCount": "WORD COUNT"
   },
   "header": {
     "wallet": "Wallet"

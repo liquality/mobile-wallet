@@ -1,267 +1,176 @@
 import React, { useState } from 'react'
-import {
-  View,
-  StyleSheet,
-  Alert,
-  TextInput,
-  KeyboardAvoidingView,
-  FlatList,
-  Platform,
-  Dimensions,
-  Pressable,
-} from 'react-native'
+import { FlatList, TouchableWithoutFeedback } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
-import ButtonFooter from '../../components/button-footer'
-import Header from '../header'
-import { Box, Text, Button, palette } from '../../theme'
-import GradientBackground from '../../components/gradient-background'
-import { labelTranslateFn } from '../../utils'
-import { Fonts } from '../../assets'
+import { Box, Text, TextInput, Pressable, faceliftPalette } from '../../theme'
+import { scale, ScaledSheet } from 'react-native-size-matters'
+import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
 
 type UnlockWalletScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'UnlockWalletScreen'
 >
 
+const defaultArray = Array(12).fill('')
+
 const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
   const [seedPhraseLength, setPhraseLength] = useState(12)
-  const [chosenSeedWords, setChosenSeedWords] = useState<Array<string>>(
-    Array(12),
-  )
+  const [chosenSeedWords, setChosenSeedWords] =
+    useState<Array<string>>(defaultArray)
 
-  const SeedWord = ({
-    id,
-    addSeedWord,
-  }: {
-    id: string
-    addSeedWord: (text: string) => void
-  }) => {
+  const onContinue = () => {
+    navigation.navigate('PasswordCreationScreen', {
+      mnemonic: chosenSeedWords.join(' ').trim(),
+      imported: true,
+    })
+  }
+
+  const onToggleNumber = (num: number) => {
+    let tempArray = Array(num).fill('')
+    for (let item in tempArray) {
+      tempArray[item] = chosenSeedWords[item] || ''
+    }
+    setChosenSeedWords([...tempArray])
+    setPhraseLength(num)
+  }
+
+  const isSeedPhrase12 = seedPhraseLength === 12
+  const isSeedPhrase24 = seedPhraseLength === 24
+
+  let isDisabled = !chosenSeedWords.every((val) => !!val.trim())
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const renderSeedWord = ({ item, index }: { item: any; index: number }) => {
+    const opacity = chosenSeedWords[index].length ? 1 : 0.4
     return (
-      <View style={styles.missingWordView}>
-        <Text style={styles.wordOrderText}>{id}</Text>
+      <Box width={'27%'}>
+        <Text variant={'numberLabel'} color="textColor">{`${index + 1}`}</Text>
         <TextInput
-          style={styles.missingWordText}
+          variant={'seedPhraseInputs'}
           autoCorrect={false}
           keyboardType="ascii-capable"
           autoCapitalize={'none'}
-          onChangeText={(text) => addSeedWord(text)}
+          onChangeText={(value) => {
+            chosenSeedWords[index] = value
+            setChosenSeedWords([...chosenSeedWords])
+          }}
           returnKeyType="done"
+          cursorColor={faceliftPalette.buttonActive}
+          style={{ opacity }}
         />
-      </View>
+      </Box>
     )
-  }
-
-  const addSeedWord = (text: string, index: string) => {
-    chosenSeedWords[parseInt(index, 10)] = text
-    setChosenSeedWords(chosenSeedWords)
-  }
-
-  const renderSeedWord = ({ item }: { item: { id: string } }) => {
-    return (
-      <SeedWord
-        id={`${item.id}`}
-        addSeedWord={(txt) => addSeedWord(txt, item.id)}
-      />
-    )
-  }
-
-  const validateSeedPhrase = () => {
-    return true
-  }
-
-  const onContinue = () => {
-    if (!validateSeedPhrase()) {
-      Alert.alert(labelTranslateFn('unlockWalletScreen.invalidSeedPhrase')!)
-      return
-    } else {
-      navigation.navigate('PasswordCreationScreen', {
-        previousScreen: 'UnlockWalletScreen',
-        mnemonic: chosenSeedWords.join(' ').trim(),
-        imported: true,
-      })
-    }
   }
 
   return (
-    <Box style={styles.container}>
-      <GradientBackground
-        width={Dimensions.get('screen').width}
-        height={Dimensions.get('screen').height}
-        isFullPage
-      />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-        style={[styles.keyboard, StyleSheet.absoluteFillObject]}>
-        <Header showText={true} />
-        <View style={styles.prompt}>
+    <KeyboardAvoidingView>
+      <Box
+        flex={1}
+        backgroundColor="mainBackground"
+        paddingHorizontal={'onboardingPadding'}>
+        <Box marginTop={'xl'}>
           <Text
-            style={styles.promptText}
+            color={'textColor'}
+            variant="h1"
             tx="unlockWalletScreen.unlockWallet"
           />
+        </Box>
+        <Box flex={0.7}>
           <Text
-            style={styles.description}
+            variant={'normalText'}
+            color={'textColor'}
             tx="unlockWalletScreen.enterSeedPhrase"
           />
-        </View>
-        <View style={styles.main}>
-          <View style={styles.seedPhrase}>
-            <View style={styles.seedWordLengthOptions}>
-              <Pressable
-                onPress={() => setPhraseLength(12)}
-                style={[
-                  styles.seedWordOptionAction,
-                  styles.btnLeftSide,
-                  seedPhraseLength === 12 && styles.optionActive,
-                ]}>
-                <Text
-                  style={styles.seedWordOptionText}
-                  tx="unlockWalletScreen.12words"
-                />
-              </Pressable>
-              <Pressable
-                onPress={() => setPhraseLength(24)}
-                style={[
-                  styles.seedWordOptionAction,
-                  styles.btnRightSide,
-                  seedPhraseLength === 24 && styles.optionActive,
-                ]}>
-                <Text
-                  style={styles.seedWordOptionText}
-                  tx="unlockWalletScreen.24words"
-                />
-              </Pressable>
-            </View>
-            <FlatList
-              style={styles.flatList}
-              numColumns={3}
-              showsVerticalScrollIndicator={true}
-              data={[...Array(seedPhraseLength).keys()].map((key) => ({
-                id: `${key + 1}`,
-              }))}
-              renderItem={renderSeedWord}
-              keyExtractor={(item) => `${item.id}`}
-              columnWrapperStyle={styles.columnWrapperStyle}
+          <Box flexDirection={'row'} marginTop="l" alignItems={'center'}>
+            <Box
+              flexDirection={'row'}
+              alignItems="center"
+              height={scale(30)}
+              borderWidth={scale(1)}
+              borderRadius={scale(15)}
+              borderColor={'activeButton'}
+              width={scale(81)}>
+              <TouchableWithoutFeedback onPress={() => onToggleNumber(12)}>
+                <Box
+                  justifyContent={'center'}
+                  alignItems="center"
+                  height={'100%'}
+                  borderTopLeftRadius={scale(15)}
+                  borderBottomLeftRadius={scale(15)}
+                  backgroundColor={
+                    isSeedPhrase12 ? 'activeButton' : 'transparent'
+                  }
+                  width={'50%'}>
+                  <Text
+                    color={isSeedPhrase12 ? 'white' : 'activeButton'}
+                    tx={'unlockWalletScreen.12words'}
+                  />
+                </Box>
+              </TouchableWithoutFeedback>
+              <Box
+                height={'100%'}
+                width={'1%'}
+                backgroundColor={'activeButton'}
+              />
+              <TouchableWithoutFeedback onPress={() => onToggleNumber(24)}>
+                <Box
+                  justifyContent={'center'}
+                  alignItems="center"
+                  height={'100%'}
+                  borderTopRightRadius={scale(15)}
+                  borderBottomRightRadius={scale(15)}
+                  backgroundColor={
+                    isSeedPhrase24 ? 'activeButton' : 'transparent'
+                  }
+                  width={'50%'}>
+                  <Text
+                    color={isSeedPhrase24 ? 'white' : 'activeButton'}
+                    tx={'unlockWalletScreen.24words'}
+                  />
+                </Box>
+              </TouchableWithoutFeedback>
+            </Box>
+            <Text
+              marginLeft={'m'}
+              color={'textColor'}
+              tx={'unlockWalletScreen.wordCount'}
             />
-            <ButtonFooter unpositioned>
-              <Button
-                type="secondary"
-                variant="m"
-                label={{ tx: 'common.cancel' }}
-                onPress={navigation.goBack}
-                isBorderless={false}
-                isActive={true}
-              />
-              <Button
-                type="primary"
-                variant="m"
-                label={{ tx: 'common.continue' }}
-                onPress={onContinue}
-                isBorderless={false}
-                isActive={chosenSeedWords.every((val) => !!val)}
-              />
-            </ButtonFooter>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-    </Box>
+          </Box>
+          <Box marginTop={'xl'} flex={1}>
+            <FlatList
+              data={chosenSeedWords}
+              columnWrapperStyle={styles.columnWrapperStyle}
+              renderItem={renderSeedWord}
+              numColumns={3}
+            />
+          </Box>
+        </Box>
+        <Box flex={0.3}>
+          <Box marginVertical={'xl'}>
+            <Pressable
+              label={{ tx: 'common.next' }}
+              onPress={onContinue}
+              variant="solid"
+              icon
+              disabled={isDisabled}
+            />
+          </Box>
+          <Text
+            onPress={navigation.goBack}
+            textAlign={'center'}
+            variant="link"
+            tx="termsScreen.cancel"
+          />
+        </Box>
+      </Box>
+    </KeyboardAvoidingView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    paddingVertical: 20,
-  },
-  main: {
-    flex: 0.7,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    width: Dimensions.get('window').width,
-  },
-  prompt: {
-    flex: 0.3,
-    marginTop: 62,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingHorizontal: 30,
-  },
-  promptText: {
-    fontFamily: Fonts.Regular,
-    color: palette.white,
-    fontSize: 28,
-  },
-  description: {
-    fontFamily: Fonts.SemiBold,
-    marginTop: 20,
-    marginBottom: 18,
-    alignSelf: 'center',
-    textAlign: 'center',
-    color: palette.white,
-    fontSize: 14,
-    fontWeight: '600',
-    lineHeight: 24,
-  },
-  seedPhrase: {
-    backgroundColor: palette.white,
-    width: Dimensions.get('window').width,
-  },
-  flatList: {
-    marginTop: 20,
-    marginHorizontal: 20,
-  },
+const styles = ScaledSheet.create({
   columnWrapperStyle: {
-    marginBottom: 20,
+    marginBottom: '20@s',
     justifyContent: 'space-between',
-  },
-  seedWordLengthOptions: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    margin: 20,
-  },
-  seedWordOptionAction: {
-    borderColor: palette.gray,
-    borderWidth: 1,
-  },
-  btnLeftSide: {
-    borderBottomLeftRadius: 50,
-    borderTopLeftRadius: 50,
-    borderRightWidth: 0,
-  },
-  btnRightSide: {
-    borderBottomRightRadius: 50,
-    borderTopRightRadius: 50,
-  },
-  optionActive: {
-    backgroundColor: palette.selectedColor,
-  },
-  seedWordOptionText: {
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-  },
-  missingWordView: {
-    flex: 1,
-    marginRight: 20,
-  },
-  wordOrderText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: palette.sectionTitleColor,
-    marginBottom: 3,
-  },
-  missingWordText: {
-    fontFamily: Fonts.Regular,
-    fontSize: 16,
-    // lineHeight: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: palette.turquoise,
-    width: '100%',
-  },
-  keyboard: {
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
 })
 

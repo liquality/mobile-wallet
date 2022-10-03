@@ -6,7 +6,7 @@ import {
   useColorScheme,
 } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import { Box, Pressable, ThemeIcon, ThemeText } from '../../theme'
+import { Box, Pressable, ThemeIcon, Text } from '../../theme'
 import { useNavigation } from '@react-navigation/core'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { optInAnalyticsState, themeMode } from '../../atoms'
@@ -20,6 +20,7 @@ const { ModalClose } = AppIcons
 type AnalyticsModalProps = {
   onAction: (params: boolean) => void
   nextScreen: string
+  previousScreen: string
 }
 
 enum SelectedOption {
@@ -36,6 +37,7 @@ const defaultPadding: ViewStyle = {
 const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
   onAction,
   nextScreen,
+  previousScreen,
 }) => {
   const navigation = useNavigation()
   const [analytics, setAnalytics] = useRecoilState(optInAnalyticsState)
@@ -58,7 +60,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
       CommonActions.reset({
         index: 1,
         routes: [
-          { name: 'Entry' },
+          { name: previousScreen },
           {
             name: nextScreen,
             params: {
@@ -68,7 +70,15 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
         ],
       }),
     )
-  }, [onAction, setAnalytics, analytics, navigation, nextScreen, selectedOpt])
+  }, [
+    onAction,
+    setAnalytics,
+    analytics,
+    navigation,
+    nextScreen,
+    previousScreen,
+    selectedOpt,
+  ])
 
   const sureIcon: IconName =
     selectedOpt === 'sure' ? 'ActiveRadioButton' : 'InactiveRadioButton'
@@ -107,35 +117,57 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
               resizeMode="contain"
               source={uppperBgImg}>
               <Box flex={1} style={defaultPadding}>
-                <ThemeText
+                <Text
+                  color={'textColor'}
                   style={styles.helpUsTextStyle}
                   tx="optInAnalyticsModal.helpUsToImprove"
                 />
-                <ThemeText
-                  marginTop={'m'}
-                  style={styles.weWantToBetterTextStyle}
+                <Text
+                  color={'textColor'}
+                  marginTop={'l'}
+                  variant={'normalText'}
                   tx="optInAnalyticsModal.shareWhereYouClick"
                 />
-                <TouchableWithoutFeedback
-                  onPress={() => setSelectedOpt(SelectedOption.Sure)}>
-                  <Box marginTop={'m'} flexDirection="row">
-                    <ThemeIcon iconName={sureIcon} />
-                    <ThemeText
-                      marginLeft={'m'}
-                      tx="optInAnalyticsModal.shareMyClicks"
-                    />
-                  </Box>
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback
-                  onPress={() => setSelectedOpt(SelectedOption.Not)}>
-                  <Box marginTop={'m'} flexDirection="row">
-                    <ThemeIcon iconName={notIcon} />
-                    <ThemeText
-                      marginLeft={'m'}
-                      tx="optInAnalyticsModal.notToday"
-                    />
-                  </Box>
-                </TouchableWithoutFeedback>
+                <Box marginTop={'l'}>
+                  <TouchableWithoutFeedback
+                    onPress={() => setSelectedOpt(SelectedOption.Sure)}>
+                    <Box
+                      marginTop={'m'}
+                      flexDirection="row"
+                      alignItems={'center'}>
+                      <ThemeIcon
+                        iconName={sureIcon}
+                        height={scale(20)}
+                        width={scale(20)}
+                      />
+                      <Text
+                        variant={'radioText'}
+                        color={'textColor'}
+                        marginLeft={'m'}
+                        tx="optInAnalyticsModal.shareMyClicks"
+                      />
+                    </Box>
+                  </TouchableWithoutFeedback>
+                  <TouchableWithoutFeedback
+                    onPress={() => setSelectedOpt(SelectedOption.Not)}>
+                    <Box
+                      marginTop={'m'}
+                      flexDirection="row"
+                      alignItems={'center'}>
+                      <ThemeIcon
+                        iconName={notIcon}
+                        height={scale(20)}
+                        width={scale(20)}
+                      />
+                      <Text
+                        color={'textColor'}
+                        variant={'radioText'}
+                        marginLeft={'m'}
+                        tx="optInAnalyticsModal.notToday"
+                      />
+                    </Box>
+                  </TouchableWithoutFeedback>
+                </Box>
 
                 <Box marginTop={'xl'}>
                   <Pressable
@@ -175,18 +207,18 @@ const styles = ScaledSheet.create({
   helpUsTextStyle: {
     fontFamily: Fonts.JetBrainsMono,
     fontWeight: '500',
-    fontSize: scale(30),
-    lineHeight: scale(38),
+    fontSize: scale(24),
+    lineHeight: scale(30),
     textAlign: 'left',
-  },
-  weWantToBetterTextStyle: {
-    fontFamily: Fonts.Regular,
-    fontWeight: '400',
-    fontSize: scale(17),
-    lineHeight: scale(22),
   },
   okButton: {
     height: scale(40),
+  },
+  radioText: {
+    fontFamily: Fonts.JetBrainsMono,
+    fontWeight: '500',
+    fontSize: scale(24),
+    lineHeight: scale(30),
   },
 })
 

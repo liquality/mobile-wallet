@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-
+import { CommonActions } from '@react-navigation/native'
 import { RootStackParamList } from '../types'
 import { palette, Text } from '../theme'
 import { AppIcons } from '../assets'
@@ -27,7 +27,12 @@ const WithPopupMenu = <T extends FctType>(
     const { navigation, route } = props
 
     const handleLockPress = () => {
-      navigation.navigate('LoginScreen')
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'LoginScreen' }],
+        }),
+      )
     }
 
     const handleManageAssetsBtnPress = () => {

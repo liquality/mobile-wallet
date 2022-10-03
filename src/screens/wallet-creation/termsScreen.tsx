@@ -2,16 +2,7 @@ import React, { useState } from 'react'
 import { ScrollView, useColorScheme, View } from 'react-native'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import {
-  Box,
-  faceliftPalette,
-  ThemeLayout,
-  ThemeText,
-  Text,
-  ThemeIcon,
-  Pressable,
-} from '../../theme'
-import { Fonts } from '../../assets'
+import { Box, faceliftPalette, Text, Pressable } from '../../theme'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import LinearGradient from 'react-native-linear-gradient'
 import { themeMode } from '../../atoms'
@@ -48,17 +39,23 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
   const gradientType = currentTheme === 'light' ? lightGradient : darkGradient
 
   return (
-    <ThemeLayout paddingHorizontal={'onboardingPadding'}>
-      <ThemeIcon iconName="OnlyLqLogo" />
+    <Box
+      flex={1}
+      backgroundColor="mainBackground"
+      paddingHorizontal={'onboardingPadding'}>
       <Box marginTop={'xl'}>
-        <ThemeText style={styles.termsTitle} tx="termsScreen.termPrivacy" />
+        <Text color={'textColor'} variant="h1" tx="termsScreen.termPrivacy" />
       </Box>
       <Box flex={1}>
         <Box flex={0.7}>
           <ScrollView
             contentContainerStyle={styles.contentContainerStyle}
             showsVerticalScrollIndicator={false}>
-            <ThemeText tx="termsScreen.termCopy" />
+            <Text
+              variant={'termsBody'}
+              color={'textColor'}
+              tx="termsScreen.termCopy"
+            />
           </ScrollView>
         </Box>
         <Box flex={0.3} backgroundColor="transparent">
@@ -87,21 +84,16 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
           }>
           <AnalyticsModal
             nextScreen={route?.params?.nextScreen || 'UnlockWalletScreen'}
+            previousScreen={route.params.previousScreen || 'Entry'}
             onAction={setShowAnalyticsModal}
           />
         </React.Suspense>
       ) : null}
-    </ThemeLayout>
+    </Box>
   )
 }
 
 const styles = ScaledSheet.create({
-  termsTitle: {
-    fontFamily: Fonts.Regular,
-    fontSize: '48@s',
-    fontWeight: '500',
-    lineHeight: '64@s',
-  },
   linearStyle: {
     left: 0,
     bottom: 0,
@@ -113,4 +105,5 @@ const styles = ScaledSheet.create({
     paddingBottom: '25@s',
   },
 })
+
 export default TermsScreen
