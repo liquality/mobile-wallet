@@ -70,8 +70,8 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
   const renderDetailsToggle = () => {
     return (
       <Box>
-        <Box flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle]}>ACCOUNT</Text>
+        <Box marginVertical={'s'} flexDirection={'row'}>
+          <Text style={[styles.descriptionTitle, styles.flex]}>ACCOUNT</Text>
           <Text style={(styles.descriptionText, styles.leftLink)}>
             {String(nftItem.asset_contract?.address).substr(0, 5) +
               '...' +
@@ -81,8 +81,10 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
         </Box>
 
         <Line style={styles.line} />
-        <Box flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle]}>CONTRACT ADDRESS</Text>
+        <Box marginVertical={'s'} flexDirection={'row'}>
+          <Text style={[styles.descriptionTitle, styles.flex]}>
+            CONTRACT ADDRESS
+          </Text>
           <Text style={(styles.descriptionText, styles.leftLink)}>
             {String(nftItem.asset_contract?.address).substr(0, 5) +
               '...' +
@@ -90,22 +92,47 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
             <SmallPurpleArrow />
           </Text>
         </Box>
-        <Box flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle]}>TOKEN ID</Text>
-          <Text style={(styles.descriptionTitle, styles.leftLink)}>
-            {String(nftItem.asset_contract?.address).substr(0, 5) +
-              '...' +
-              String(nftItem.asset_contract?.address).substr(38, 4)}{' '}
-            <SmallPurpleArrow />
+        <Box marginVertical={'s'} flexDirection={'row'}>
+          <Text style={[styles.descriptionTitle, styles.flex]}>TOKEN ID</Text>
+          <Text style={(styles.descriptionText, styles.leftLink)}>
+            {nftItem.token_id}
           </Text>
         </Box>
-        <Box flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle]}>TOKEN STANDARD</Text>
-          <Text style={(styles.descriptionTitle, styles.leftLink)}>
-            {String(nftItem.asset_contract?.address).substr(0, 5) +
-              '...' +
-              String(nftItem.asset_contract?.address).substr(38, 4)}{' '}
-            <SmallPurpleArrow />
+        <Box marginVertical={'s'} flexDirection={'row'}>
+          <Text style={[styles.descriptionTitle, styles.flex]}>
+            TOKEN STANDARD
+          </Text>
+          <Text style={(styles.descriptionText, styles.leftLink, styles.flex)}>
+            ERC-721
+          </Text>
+        </Box>
+        <Line style={styles.line} />
+        <Box marginVertical={'s'} flexDirection={'row'}>
+          <Text style={[styles.descriptionTitle, styles.flex]}>BLOCKCHAIN</Text>
+          <Text style={(styles.descriptionText, styles.leftLink)}>
+            Ethereum
+          </Text>
+        </Box>
+        <Box marginVertical={'s'} flexDirection={'row'}>
+          <Text style={[styles.descriptionTitle, styles.flex]}>METADATA</Text>
+          <Text style={(styles.descriptionText, styles.leftLink, styles.flex)}>
+            Decentralized
+          </Text>
+        </Box>
+        <Box marginVertical={'s'} flexDirection={'row'}>
+          <Text style={[styles.descriptionTitle, styles.flex]}>
+            CREATOR FEE
+          </Text>
+          <Text style={(styles.descriptionText, styles.leftLink, styles.flex)}>
+            10%
+          </Text>
+        </Box>
+        <Box marginVertical={'s'} flexDirection={'row'}>
+          <Text style={[styles.descriptionTitle, styles.flex]}>
+            ITEM ACTIVITY
+          </Text>
+          <Text style={(styles.descriptionText, styles.leftLink)}>
+            Explorer <SmallPurpleArrow />
           </Text>
         </Box>
       </Box>
@@ -184,8 +211,7 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     letterSpacing: 0.5,
     color: faceliftPalette.darkGrey,
-    marginTop: 10,
-    flex: 1,
+    marginTop: 0,
   },
   descriptionText: {
     fontFamily: Fonts.Regular,
@@ -196,9 +222,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     color: faceliftPalette.darkGrey,
     textTransform: 'capitalize',
-    flex: 1,
   },
-  leftLink: { color: palette.purplePrimary },
+  flex: { flex: 1 },
+  leftLink: { color: palette.purplePrimary, flex: 1 },
   link: { marginTop: 3 },
 })
 
