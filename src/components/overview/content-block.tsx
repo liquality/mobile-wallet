@@ -94,8 +94,6 @@ const ContentBlock = () => {
             return <AssetFlatList accounts={accountsIds} />
           case 'activity':
             return <ActivityFlatList />
-          default:
-            return null
         }
       }}
       onIndexChange={setIndex}
