@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useRecoilValue, useRecoilState } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   accountsIdsState,
   accountsIdsForMainnetState,
@@ -39,7 +39,8 @@ const ContentBlock = () => {
   const accountsIds = useRecoilValue(
     network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
   )
-  const [done, setIsDoneFetchingData] = useRecoilState(isDoneFetchingData)
+  const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
+  const [delayTabView, setDelayTabView] = React.useState(false)
   const langSelected = useRecoilValue(LS)
   i18n.locale = langSelected
   useEffect(() => {
@@ -53,6 +54,12 @@ const ContentBlock = () => {
         Log(`Failed to populateWallet: ${e}`, 'error')
       })
   }, [setIsDoneFetchingData, accountsIds, network])
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDelayTabView(true)
+    }, 200)
+  }, [])
 
   const layout = useWindowDimensions()
   const [index, setIndex] = React.useState(0)
@@ -68,8 +75,8 @@ const ContentBlock = () => {
     ])
   }, [langSelected])
 
-  // temporary workaround to avoid tab view stuck issue
-  if (!done) {
+  // workaround to avoid tab view stuck issue
+  if (!delayTabView) {
     return (
       <Box flex={1} justifyContent="center">
         <ActivityIndicator />
