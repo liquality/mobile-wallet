@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
 import {
   cryptoToFiat,
   formatFiat,
@@ -22,10 +22,8 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { getNftsForAccount, updateNFTs } from '../../store/store'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import { AppIcons, Fonts } from '../../assets'
-import { palette } from '../../theme'
-
-const { ChevronRightIcon: ChevronRight } = AppIcons
+import { Box, Text } from '../../theme'
+import { scale } from 'react-native-size-matters'
 
 type SubRowProps = {
   parentItem: Partial<AccountType>
@@ -125,17 +123,25 @@ const SubRow: FC<SubRowProps> = (props) => {
               styles.subElement,
               { borderLeftColor: parentItem.color },
             ]}>
-            <View style={styles.col1}>
-              <AssetIcon size={25} asset={item.code} />
-              <Text style={styles.name}>{item.name}</Text>
-            </View>
-            <View style={styles.col2}>
-              <Text style={styles.balance}>{prettyNativeBalance}</Text>
-              <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
-            </View>
-            <View style={styles.col3}>
-              <ChevronRight width={12} height={12} />
-            </View>
+            <Box
+              height={scale(50)}
+              width={scale(3)}
+              style={{ backgroundColor: parentItem.color }}
+            />
+            <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
+              <AssetIcon asset={item.code} />
+              <Text paddingLeft={'s'} variant={'listText'} color="darkGrey">
+                {item.name}
+              </Text>
+            </Box>
+            <Box flex={0.4} alignItems={'flex-end'} paddingLeft={'m'}>
+              <Text variant={'listText'} color="darkGrey">
+                {prettyNativeBalance}
+              </Text>
+              <Text variant={'subListText'} color="greyMeta">
+                {prettyFiatBalance}
+              </Text>
+            </Box>
           </Pressable>
         </AssetListSwipeableRow>
       )}
@@ -146,48 +152,11 @@ const SubRow: FC<SubRowProps> = (props) => {
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderBottomWidth: 1,
-    borderBottomColor: palette.gray,
-    borderLeftWidth: 3,
     paddingVertical: 10,
-    height: 60,
-  },
-  col1: {
-    flex: 0.35,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  col2: {
-    flex: 0.55,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-  },
-  col3: {
-    flex: 0.1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: scale(60),
   },
   subElement: {
-    paddingLeft: 50,
-  },
-  name: {
-    fontFamily: Fonts.Regular,
-
-    color: palette.black2,
-    fontWeight: '500',
-    fontSize: 12,
-  },
-  balance: {
-    fontFamily: Fonts.Regular,
-    color: palette.black2,
-    fontSize: 13,
-  },
-  balanceInUSD: {
-    fontFamily: Fonts.Regular,
-    color: palette.darkGray,
-    fontSize: 12,
+    paddingLeft: scale(15),
   },
 })
 

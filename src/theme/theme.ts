@@ -40,6 +40,9 @@ export const theme = createTheme({
     onboardInputBorder: faceliftPalette.white,
     popMenuColor: faceliftPalette.semiTransparentWhite,
     nestedColor: palette.nestedColor,
+    tablabelActiveColor: palette.buttonActive,
+    tablabelInactiveColor: palette.darkGray,
+    greyMeta: faceliftPalette.greyMeta,
   },
   spacing: {
     vs: scale(2),
@@ -297,6 +300,16 @@ export const theme = createTheme({
       fontSize: scale(16),
       fontWeight: '400',
     },
+    listText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(16),
+      fontWeight: '500',
+    },
+    subListText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(15),
+      fontWeight: '400',
+    },
     networkStatus: {
       fontFamily: Fonts.JetBrainsMono,
       fontSize: scale(12),
@@ -311,6 +324,11 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(38),
       fontWeight: '600',
+    },
+    tabLabel: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(17),
+      fontWeight: '500',
     },
   },
   pressableVariants: {
@@ -478,6 +496,7 @@ export const theme = createTheme({
       borderBottomWidth: 1,
       fontWeight: '500',
       fontSize: scale(15),
+      fontFamily: Fonts.Regular,
     },
     seedPhraseInputs: {
       paddingTop: 's',
@@ -487,6 +506,7 @@ export const theme = createTheme({
       borderBottomWidth: 1,
       fontWeight: '500',
       fontSize: scale(15),
+      fontFamily: Fonts.Regular,
     },
   },
   tabBarStyleVariants: {
@@ -499,26 +519,27 @@ export const theme = createTheme({
   },
   indicatorStyle: {
     light: {
-      backgroundColor: palette.black,
-      height: 1,
+      backgroundColor: palette.buttonActive,
+      height: scale(2),
+      width: scale(20),
     },
     dark: {
       backgroundColor: palette.white,
-      height: 1,
+      height: scale(2),
+      width: scale(50),
     },
   },
   labelStyle: {
     light: {
-      color: palette.black2,
       fontFamily: Fonts.Regular,
-      fontSize: 13,
-      lineHeight: 18,
+      fontSize: scale(17),
+      fontWeight: '500',
     },
     dark: {
       color: palette.white,
       fontFamily: Fonts.Regular,
-      fontSize: 13,
-      lineHeight: 18,
+      fontSize: scale(17),
+      fontWeight: '500',
     },
   },
   refreshIndicatorVariants: {

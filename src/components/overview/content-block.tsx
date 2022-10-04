@@ -20,8 +20,14 @@ import {
   Route,
 } from 'react-native-tab-view'
 import i18n from 'i18n-js'
-import { TabBar } from '../../theme'
+import {
+  OVERVIEW_TAB_BAR_STYLE,
+  OVERVIEW_TAB_STYLE,
+  TabBar,
+  Text,
+} from '../../theme'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
+import { scale } from 'react-native-size-matters'
 
 type RenderTabBar = SceneRendererProps & {
   navigationState: NavigationState<Route>
@@ -63,7 +69,19 @@ const ContentBlock = () => {
 
   const renderTabBar = (props: RenderTabBar) => (
     // Redline because of theme issue with TabBar props
-    <TabBar {...props} variant="light" />
+    <TabBar
+      {...props}
+      renderLabel={({ route, focused }) => (
+        <Text
+          variant={'tabLabel'}
+          color={focused ? 'tablabelActiveColor' : 'tablabelInactiveColor'}>
+          {route.title}
+        </Text>
+      )}
+      tabStyle={OVERVIEW_TAB_BAR_STYLE}
+      variant="light"
+      style={OVERVIEW_TAB_STYLE}
+    />
   )
 
   return (
@@ -82,6 +100,9 @@ const ContentBlock = () => {
       }}
       onIndexChange={setIndex}
       initialLayout={{ width: layout.width }}
+      sceneContainerStyle={{
+        marginTop: scale(15),
+      }}
     />
   )
 }

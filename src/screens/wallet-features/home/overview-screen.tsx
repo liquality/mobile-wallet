@@ -69,6 +69,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           <Box
             zIndex={-1}
             marginTop={'l'}
+            paddingHorizontal={'l'}
             height={
               height -
               tabBarBottomHeight -
