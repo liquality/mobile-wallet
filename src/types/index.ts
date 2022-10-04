@@ -3,6 +3,7 @@ import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { BigNumber } from '@liquality/types'
 import {
+  AccountId,
   FeeLabel,
   FiatRates,
   Network,
@@ -39,24 +40,35 @@ export interface AccountType {
   fees?: FeeDetails
   activeNetwork?: Network
 }
+export interface NFTAsset {
+  token_id?: string
+  asset_contract?: {
+    address?: string
+    name?: string
+    symbol?: string
+    image_url?: string
+    external_link?: string
+  }
+  collection?: {
+    name: string
+  }
+  id?: number
+  description?: string
+  external_link?: string
+  image_original_url?: string
+  image_preview_url?: string
+  image_thumbnail_url?: string
+  name?: string
+  amount?: string
+  standard?: string
+}
 
-export interface NftObj {
-  String: [
-    {
-      amount: Number
-      asset_contract: Object
-      collection: [Object]
-      description: String
-      external_link: undefined
-      image_original_url: String
-      image_preview_url: String
-      image_thumbnail_url: String
-      name: String
-      standard: String
-      starred: boolean
-      token_id: Number
-    },
-  ]
+export interface NFTWithAccount extends NFT {
+  accountId: AccountId
+}
+
+export interface NFT extends NFTAsset {
+  starred: boolean
 }
 
 export type SwapAssetPairType = {
@@ -155,12 +167,16 @@ export type MainStackParamList = {
     currentAccount?: AccountType
   }
   NftSendScreen: {
-    nftItem?: NftObj
+    nftItem?: NFTAsset
     accountIdsToSendIn: Object
   }
   NftDetailScreen: {
     screenTitle?: string
-    nftItem?: NftObj
+    nftItem?: NFTAsset
+    accountIdsToSendIn: string[]
+  }
+  NftCollectionScreen: {
+    nftCollection: NFTAsset[]
     accountIdsToSendIn: string[]
   }
   SettingsScreen: { shouldLogOut?: boolean }

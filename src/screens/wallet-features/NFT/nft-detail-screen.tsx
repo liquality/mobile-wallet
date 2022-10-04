@@ -1,15 +1,22 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useCallback } from 'react'
-import { View, Text, StyleSheet, Pressable, Image } from 'react-native'
+import React, { useEffect, useCallback, useState } from 'react'
+import {
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import { Button, palette } from '../../../theme'
-
+import { Box, Button, palette } from '../../../theme'
+import BottomDrawer from 'react-native-bottom-drawer-view'
 import { RootStackParamList } from '../../../types'
 
-type ShowAllNftsScreenProps = NativeStackScreenProps<
+type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'NftDetailScreen'
 >
@@ -17,9 +24,17 @@ type ShowAllNftsScreenProps = NativeStackScreenProps<
 const wallet = setupWallet({
   ...defaultOptions,
 })
-const NftDetailScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
+const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
+
+  const [imgError, setImgError] = useState<boolean>(false)
+
+  const checkImgUrlExists = (imgUrl: string) => {
+    return !imgError && imgUrl
+      ? { uri: imgUrl }
+      : require('../../../assets/icons/nft_thumbnail.png')
+  }
 
   const { activeWalletId } = wallet.state
 
@@ -35,45 +50,79 @@ const NftDetailScreen = ({ navigation, route }: ShowAllNftsScreenProps) => {
     })
   }, [accountIdsToSendIn, navigation, nftItem])
 
-  return (
-    <View style={[styles.container, styles.fragmentContainer]}>
-      <Text>NFT DETAIL SCREEN</Text>
-      <Button
-        type="primary"
-        variant="l"
-        label={'Send NFT'}
-        isBorderless={false}
-        isActive={true}
-        onPress={navigateToSendNftScreen}
-      />
+  const renderContent = () => {
+    return (
+      <Box style={styles.drawerContainer}>
+        <Text style={styles.drawerClosedText}>
+          {nftItem.name} #{nftItem?.token_id}
+        </Text>
+      </Box>
+    )
+  }
 
-      <Pressable onPress={navigateToSendNftScreen}>
+  return (
+    <Box flex={1} style={styles.overviewBlock}>
+      <Box style={styles.headerContainer}>
         <Image
-          /*   
-          source={{
-            uri: nftItem.image_thumbnail_url,
-          }} 
-                //Hardcoded icon for now since i'm waiting for this PR 
-                (https://github.com/liquality/wallet-core/pull/166) to be merged so I dont have to handle
-                different URLs and manipulating strings to https in frontend code
-          */
-          source={require('../../../assets/icons/nft_thumbnail.png')}
-          style={{ width: 150, height: 100 }}
+          source={checkImgUrlExists(nftItem.image_original_url)}
+          style={styles.image}
+          onError={() => setImgError(true)}
         />
-      </Pressable>
-    </View>
+      </Box>
+      <BottomDrawer
+        containerHeight={300}
+        offset={120}
+        startUp={false}
+        roundedEdges={false}
+        backgroundColor={'rgba(255, 255, 255, 0.77)'}>
+        {renderContent()}
+        <Button
+          type="primary"
+          variant="l"
+          label={'Send NFT'}
+          isBorderless={false}
+          isActive={true}
+          onPress={navigateToSendNftScreen}
+        />
+        <ScrollView horizontal={true}>
+          <TouchableOpacity>
+            <Box style={styles.drawerContainer} />
+          </TouchableOpacity>
+        </ScrollView>
+      </BottomDrawer>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
+  drawerContainer: { padding: 35 },
+
+  overviewBlock: {
+    justifyContent: 'center',
+    width: '100%',
+    height: 225,
     backgroundColor: palette.white,
-    paddingVertical: 15,
   },
-  fragmentContainer: {
-    paddingHorizontal: 20,
+
+  headerContainer: {
+    marginBottom: 20,
+  },
+
+  image: {
+    width: Dimensions.get('screen').width,
+    resizeMode: 'contain',
+    aspectRatio: 1,
+  },
+
+  drawerClosedText: {
+    fontFamily: 'Anek Kannada',
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 16,
+
+    letterSpacing: 0.5,
+
+    color: '#000000',
   },
 })
 

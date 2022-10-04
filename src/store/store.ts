@@ -4,7 +4,7 @@ import { FeeDetail } from '@chainify/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
-import { AccountType, CustomRootState, GasFees } from '../types'
+import { AccountType, CustomRootState, GasFees, NftAsset } from '../types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import {
   Notification,
@@ -21,14 +21,12 @@ import {
   FiatRates,
   HistoryItem,
   Network,
+  NFTWithAccount,
   SendHistoryItem,
   SwapHistoryItem,
   Asset,
   WalletId,
   NFTSendTransactionParams,
-  SwapProviderType,
-  NFTCollections,
-  NFT,
 } from '@liquality/wallet-core/dist/src/store/types'
 import {
   getSwapTimeline,
@@ -51,10 +49,12 @@ export const storageManager = new StorageManager(excludedProps)
 let wallet: Awaited<ReturnType<typeof setupWallet>>
 
 //-------------------------2. REGISTER THE CALLBACKS / SUBSCRIBE TO MEANINGFULL EVENTS-----------------------------
-export const initWallet = async (initialState?: RootState) => {
+export const initWallet = async (initialState?: CustomRootState) => {
   const start = dayjs().unix()
   const walletOptions: WalletOptions = {
-    initialState,
+    initialState: initialState || {
+      activeNetwork: Network.Testnet,
+    },
     createNotification: (notification: Notification): any => {
       //When swap is completed show push notification with msg
       showNotification(notification.title, notification.message)
@@ -155,11 +155,14 @@ export const populateWallet = async (): Promise<void> => {
 
 export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet?.state
+  const allAccounts = wallet.getters.accountsData
+  const account = allAccounts[Math.floor(Math.random() * allAccounts.length)]
 
   await wallet.dispatch
     .updateBalances({
       network: activeNetwork,
       walletId: activeWalletId,
+      accountIds: [account.id],
     })
     .catch((e) => {
       Log(`Failed update balances: ${e}`, 'error')
@@ -167,7 +170,7 @@ export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
 
   await wallet.dispatch
     .updateFiatRates({
-      assets: [...wallet.getters.allNetworkAssets],
+      assets: account.assets,
     })
     .catch((e) => {
       Log(`Failed to update fiat rates: ${e}`, 'error')
@@ -210,7 +213,7 @@ export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {
   }
 }
 
-export const fetchSwapProvider = (providerId: SwapProviderType) => {
+export const fetchSwapProvider = (providerId: string) => {
   const { activeNetwork } = wallet.state
   if (!providerId) return
 
@@ -255,8 +258,17 @@ export const sendNFTTransaction = async (
 
 export const getNftsForAccount = async (
   accountId: string,
-): Promise<NFTCollections<NFT>> => {
+): Promise<NFTWithAccount> => {
   return wallet.getters.accountNftCollections(accountId)
+}
+
+export const toggleNFTStarred = async (payload: {
+  network: Network
+  walletId: string
+  accountId: string
+  nft: NftAsset
+}) => {
+  await wallet.dispatch.toggleNFTStarred(payload)
 }
 
 export const getAllEnabledAccounts = async () => {
@@ -307,10 +319,8 @@ export const restoreWallet = async (
   password: string,
   activeNetwork = Network.Testnet,
 ): Promise<void> => {
-  const result = storageManager.read<CustomRootState | null>('wallet', null)
-  if (result) {
-    await initWallet({ ...result, activeNetwork })
-  }
+  const result = storageManager.read<CustomRootState>('wallet', {})
+  await initWallet({ ...result, activeNetwork })
   await wallet.dispatch.unlockWallet({
     key: password,
   })
@@ -410,13 +420,10 @@ export const sendTransaction = async (options: {
     asset,
     to,
     amount: value,
-    data: memo,
     fee,
-    // if feeAsset is empty transactionRequest Object will take asset field value
-    feeAsset: '',
+    data: memo,
     feeLabel,
     fiatRate: fiatRates[asset],
-    // passing gas value as undefined then we are able to send transactions, transactionRequest object has gas parameter as optional
     gas: undefined,
   })
 }
@@ -430,7 +437,7 @@ export const fetchConfirmationByHash = async (
     .client({
       network: activeNetwork,
       walletId: activeWalletId,
-      chainId: getAsset(activeNetwork, asset)?.chain,
+      asset,
     })
     .chain.getTransactionByHash(hash)
 
@@ -506,7 +513,7 @@ export const getTimeline = async (
       wallet.getters.client({
         network: options.network,
         walletId: options.walletId,
-        chainId: getAsset(options.network, options.asset)?.chain,
+        asset: options.asset,
       }),
   )
 }
@@ -634,25 +641,6 @@ export const localStorageLangEffect: <T>(key: string) => AtomEffect<T> =
     })
   }
 
-export const localStorageAssetEffect: <T>(key: string) => AtomEffect<T> =
-  (key) =>
-  ({ setSelf, onSet, trigger }) => {
-    const loadPersisted = async () => {
-      const savedValue = storageManager.read(key, '')
-
-      if (savedValue !== '') {
-        setSelf(savedValue)
-      }
-    }
-    if (trigger === 'get') {
-      loadPersisted()
-    }
-
-    onSet((newValue, _, isReset) => {
-      isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
-    })
-  }
-
 export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
   (key) =>
   ({ setSelf, onSet, trigger }) => {
@@ -671,6 +659,25 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
           typeof newValue !== 'undefined' &&
           newValue !== -1
       storageManager.write(key, newValue)
+    })
+  }
+
+export const localStorageAssetEffect: (key: string) => AtomEffect<boolean> =
+  (key) =>
+  ({ setSelf, onSet, trigger }) => {
+    const loadPersisted = async () => {
+      const savedValue = storageManager.read(key, '')
+
+      if (savedValue !== '') {
+        setSelf(savedValue)
+      }
+    }
+    if (trigger === 'get') {
+      loadPersisted()
+    }
+
+    onSet((newValue, _, isReset) => {
+      isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
     })
   }
 

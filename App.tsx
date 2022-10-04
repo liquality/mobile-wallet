@@ -65,7 +65,6 @@ const App: FC = () => {
       setInitialRouteName('WalletCreationNavigator')
     }
     SplashScreen.hide()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (!initialRouteName) {

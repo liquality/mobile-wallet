@@ -76,7 +76,7 @@ export const theme = createTheme({
     },
     pinkText: {
       fontFamily: Fonts.Regular,
-      color: 'liqPink',
+      color: palette.darkPink,
       fontWeight: '600',
       fontSize: 20,
     },

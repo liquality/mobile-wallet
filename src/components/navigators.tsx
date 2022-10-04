@@ -47,6 +47,8 @@ import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-scre
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
 import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
+import NftCollectionScreen from '../screens/wallet-features/NFT/nft-collection-screen'
+
 import { AppIcons, Fonts } from '../assets'
 import { networkState, themeMode } from '../atoms'
 import { useRecoilValue } from 'recoil'
@@ -395,6 +397,42 @@ export const AppStackNavigator = () => (
         name="NftSendScreen"
         component={NftSendScreen}
         options={() => ({
+          headerRight: PlaceholderComp,
+        })}
+      />
+      <MainStack.Screen
+        name="NftForSpecificChainScreen"
+        component={NftForSpecificChainScreen}
+        options={() => ({
+          headerShown: false,
+
+          headerRight: PlaceholderComp,
+        })}
+      />
+      <MainStack.Screen
+        name="NftDetailScreen"
+        component={NftDetailScreen}
+        options={() => ({
+          headerShown: false,
+
+          headerRight: PlaceholderComp,
+        })}
+      />
+      <MainStack.Screen
+        name="NftSendScreen"
+        component={NftSendScreen}
+        options={() => ({
+          headerShown: false,
+
+          headerRight: PlaceholderComp,
+        })}
+      />
+      <MainStack.Screen
+        name="NftCollectionScreen"
+        component={NftCollectionScreen}
+        options={() => ({
+          headerShown: false,
+
           headerRight: PlaceholderComp,
         })}
       />
