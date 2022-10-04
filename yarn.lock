@@ -3035,10 +3035,10 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-6.10.0.tgz#c012c1ecc1a0e53d50e6af381618dca5268461c1"
   integrity sha512-lLseUPEhSFUXYTKj6q7s2O3s2vW2ebgA11vMAlKodXGf5AFw4zUoEbTz9CoFOC9jS6xY4Qr8BmRnxP/odT4Uuw==
 
-"@liquality/cryptoassets@1.14.18", "@liquality/cryptoassets@^1.13.3":
-  version "1.14.18"
-  resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.14.18.tgz#81ab05b9d3681d3ea4d352ecbfa5167bc35085c3"
-  integrity sha512-LXSF1E75ZHEFtxxN26CAJaY1+3egm1mX8sJA3bh8NVTr0MVmcUq12zB/777TfnpNV++I/wlqlEfV/nXUyPnolg==
+"@liquality/cryptoassets@1.14.20":
+  version "1.14.20"
+  resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.14.20.tgz#625ccbf12698c7319ff088b9f9beb26997ee8377"
+  integrity sha512-S4BKQfSPjxiO8QqqqZJrFL55wh8eGwvV48fV/MPzbkzGkwdN3EhzAdpmeuC34vLTO+ivphxvkBP3eU33ybziPA==
   dependencies:
     "@ethersproject/address" "5.7.0"
     "@types/bs58" "4.0.1"
@@ -3052,6 +3052,19 @@
   version "1.14.7"
   resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.14.7.tgz#39eaaa8efedc68cc21c60e7dc0b0690d06ad0353"
   integrity sha512-D9AL0d0zE2p7adKzRR0VbkEGce3tqYD4WugG5umJ6SGY1NhRQdX1fF648Tiwty/y2Po/6iGJqFze5S68r1GsxA==
+  dependencies:
+    "@ethersproject/address" "5.7.0"
+    "@types/bs58" "4.0.1"
+    bignumber.js "^9.0.2"
+    bitcoin-address-validation "2.2.1"
+    bs58 "4.0.1"
+    ethereumjs-util "7.1.5"
+    lodash "4.17.21"
+
+"@liquality/cryptoassets@^1.13.3":
+  version "1.14.18"
+  resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.14.18.tgz#81ab05b9d3681d3ea4d352ecbfa5167bc35085c3"
+  integrity sha512-LXSF1E75ZHEFtxxN26CAJaY1+3egm1mX8sJA3bh8NVTr0MVmcUq12zB/777TfnpNV++I/wlqlEfV/nXUyPnolg==
   dependencies:
     "@ethersproject/address" "5.7.0"
     "@types/bs58" "4.0.1"
@@ -3078,10 +3091,10 @@
   dependencies:
     bignumber.js "^9.0.1"
 
-"@liquality/wallet-core@1.29.23":
-  version "1.29.23"
-  resolved "https://registry.yarnpkg.com/@liquality/wallet-core/-/wallet-core-1.29.23.tgz#e56112e5baba82a1359b498779e04c8f9a0d9bd4"
-  integrity sha512-GmCeyP9EMpFK/BEh13z/O7h+5es+Tkj2VdqaR6ODc0jaakoPY84ffXAqztG6EcFLvgZg5uBorHNb+EkUnDhq5w==
+"@liquality/wallet-core@1.29.25":
+  version "1.29.25"
+  resolved "https://registry.yarnpkg.com/@liquality/wallet-core/-/wallet-core-1.29.25.tgz#b9631dac573a9d7c38e032c57e5f718d9e62d2b6"
+  integrity sha512-tERWAbjk2RnD7gdSmb1sYUpgeKXOr/eDQmY+u2dRDTD+WtcK+raFq/WhpogdibMAhBP+1jXL4vjts/DNuj+aRg==
   dependencies:
     "@blobfishkate/sovryncontracts" "1.3.27"
     "@chainify/bitcoin" "1.2.33"
@@ -3103,7 +3116,7 @@
     "@ethersproject/providers" "5.7.0"
     "@ethersproject/transactions" "5.7.0"
     "@hop-protocol/sdk" "0.0.1-beta.314"
-    "@liquality/cryptoassets" "1.14.18"
+    "@liquality/cryptoassets" "1.14.20"
     "@metamask/eth-sig-util" "^4.0.1"
     "@terra-money/terra.js" "3.1.3"
     "@thorchain/asgardex-util" "^0.10.0"
