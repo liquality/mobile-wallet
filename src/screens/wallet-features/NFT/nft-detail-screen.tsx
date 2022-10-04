@@ -16,6 +16,7 @@ import BottomDrawer from 'react-native-bottom-drawer-view'
 import { RootStackParamList } from '../../../types'
 import { Fonts } from '../../../assets'
 import NftTabBar from '../../../components/NFT/nft-tab-bar'
+import DetailsDrawerExpanded from '../../../components/NFT/details-drawer-expanded'
 
 type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -63,25 +64,6 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
     )
   }
 
-  //TODO: add this render function into its own component, part of MOB-182
-  const renderDrawerExpanded = () => {
-    return (
-      <Box style={styles.drawerContainer}>
-        <Text style={styles.collectionName}>{nftItem.collection.name}</Text>
-        <Text style={styles.expandedTitle}>{nftItem.name}</Text>
-        <NftTabBar
-          leftTabText={'nft.tabBarOverview'}
-          rightTabText={'nft.tabBarDetails'}
-          setShowLeftTab={setShowOverview}
-          showLeftTab={showOverview}
-        />
-
-        <Text style={styles.descriptionTitle} tx="nft.description" />
-        <Text style={styles.descriptionText}>{nftItem.description}</Text>
-      </Box>
-    )
-  }
-
   return (
     <Box flex={1} style={styles.overviewBlock}>
       <Box style={styles.headerContainer}>
@@ -99,7 +81,15 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
         backgroundColor={'rgba(255, 255, 255, 0.77)'}
         onExpanded={() => setShowExpanded(true)}
         onCollapse={() => setShowExpanded(false)}>
-        {showExpanded ? renderDrawerExpanded() : renderDrawerCollapsed()}
+        {showExpanded ? (
+          <DetailsDrawerExpanded
+            nftItem={nftItem}
+            showOverview={showOverview}
+            setShowOverview={setShowOverview}
+          />
+        ) : (
+          renderDrawerCollapsed()
+        )}
         <Button
           type="primary"
           variant="l"

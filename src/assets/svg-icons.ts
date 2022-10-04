@@ -87,6 +87,8 @@ import Star from '../assets/icons/nfts/star.svg'
 import BlackStar from '../assets/icons/nfts/star-black.svg'
 import Line from '../assets/icons/nfts/line.svg'
 import ArrowLeft from '../assets/icons/arrowLeft.svg'
+import SmallPurpleArrow from '../assets/icons/nfts/small-purple-arrow.svg'
+import Lock from '../assets/icons/nfts/lock.svg'
 
 export default {
   PendingSwap,
@@ -169,6 +171,8 @@ export default {
   Star,
   BlackStar,
   Line,
+  SmallPurpleArrow,
+  Lock,
 
   LogoFull,
   OnlyLqLogoDark,
