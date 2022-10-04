@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {
-  Dimensions,
   StyleSheet,
   ScrollView,
   RefreshControl,
@@ -11,7 +10,6 @@ import { MainStackParamList } from '../../../types'
 import ErrorBoundary from 'react-native-error-boundary'
 import ErrorFallback from '../../../components/error-fallback'
 import { Box, Text } from '../../../theme'
-import GradientBackground from '../../../components/gradient-background'
 import SummaryBlock from '../../../components/overview/summary-block'
 import ContentBlock from '../../../components/overview/content-block'
 import HandleLockWalletAndBackgroundTasks from '../../../components/handle-lock-wallet-and-background-tasks'
@@ -20,6 +18,7 @@ import RefreshIndicator from '../../../components/refresh-indicator'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
+import { scale } from 'react-native-size-matters'
 
 export type OverviewProps = NativeStackScreenProps<
   MainStackParamList,
@@ -62,21 +61,20 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
           <React.Suspense
             fallback={
               <Box style={styles.overviewBlock}>
-                <GradientBackground
-                  width={Dimensions.get('screen').width}
-                  height={GRADIENT_BACKGROUND_HEIGHT}
-                />
                 <Text variant="loading" tx="overviewScreen.load" />
               </Box>
             }>
             <SummaryBlock navigation={navigation} />
           </React.Suspense>
           <Box
+            zIndex={-1}
+            marginTop={'l'}
             height={
               height -
               tabBarBottomHeight -
               headerHeight -
-              GRADIENT_BACKGROUND_HEIGHT
+              GRADIENT_BACKGROUND_HEIGHT -
+              scale(15) // marginTop usage minus
             }>
             <ContentBlock />
           </Box>
