@@ -71,9 +71,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
     return (
       <Box>
         <Box flexDirection={'row'}>
-          <Text style={[styles.descriptionText, styles.spaceBetween]}>
-            ACCOUNT
-          </Text>
+          <Text style={[styles.descriptionTitle]}>ACCOUNT</Text>
           <Text style={(styles.descriptionText, styles.leftLink)}>
             {String(nftItem.asset_contract?.address).substr(0, 5) +
               '...' +
@@ -84,9 +82,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
 
         <Line style={styles.line} />
         <Box flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle, styles.spaceBetween]}>
-            CONTRACT ADDRESS
-          </Text>
+          <Text style={[styles.descriptionTitle]}>CONTRACT ADDRESS</Text>
           <Text style={(styles.descriptionText, styles.leftLink)}>
             {String(nftItem.asset_contract?.address).substr(0, 5) +
               '...' +
@@ -95,9 +91,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
           </Text>
         </Box>
         <Box flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle, styles.spaceBetween]}>
-            TOKEN ID
-          </Text>
+          <Text style={[styles.descriptionTitle]}>TOKEN ID</Text>
           <Text style={(styles.descriptionTitle, styles.leftLink)}>
             {String(nftItem.asset_contract?.address).substr(0, 5) +
               '...' +
@@ -106,9 +100,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
           </Text>
         </Box>
         <Box flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle, styles.spaceBetween]}>
-            TOKEN STANDARD
-          </Text>
+          <Text style={[styles.descriptionTitle]}>TOKEN STANDARD</Text>
           <Text style={(styles.descriptionTitle, styles.leftLink)}>
             {String(nftItem.asset_contract?.address).substr(0, 5) +
               '...' +
@@ -137,6 +129,21 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
 const styles = StyleSheet.create({
   drawerContainer: { padding: 35 },
 
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  subContainer: {
+    width: 300,
+    height: 500,
+  },
+  textStyle: {
+    fontSize: 25,
+    color: 'white',
+    flex: 1,
+  },
   collectionName: {
     fontFamily: Fonts.JetBrainsMono,
     fontStyle: 'normal',
@@ -154,10 +161,6 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     textTransform: 'capitalize',
     color: '#000000',
-  },
-
-  spaceBetween: {
-    marginRight: '50%',
   },
 
   expandedTitle: {
@@ -182,6 +185,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     color: faceliftPalette.darkGrey,
     marginTop: 10,
+    flex: 1,
   },
   descriptionText: {
     fontFamily: Fonts.Regular,
@@ -192,6 +196,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     color: faceliftPalette.darkGrey,
     textTransform: 'capitalize',
+    flex: 1,
   },
   leftLink: { color: palette.purplePrimary },
   link: { marginTop: 3 },
