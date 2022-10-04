@@ -69,10 +69,54 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
 
   const renderDetailsToggle = () => {
     return (
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={{ marginRight: '50%' }}>Brooo</Text>
-        <Text>Brooo</Text>
-      </View>
+      <Box>
+        <Box flexDirection={'row'}>
+          <Text style={[styles.descriptionText, styles.spaceBetween]}>
+            ACCOUNT
+          </Text>
+          <Text style={(styles.descriptionText, styles.leftLink)}>
+            {String(nftItem.asset_contract?.address).substr(0, 5) +
+              '...' +
+              String(nftItem.asset_contract?.address).substr(38, 4)}{' '}
+            <SmallPurpleArrow />
+          </Text>
+        </Box>
+
+        <Line style={styles.line} />
+        <Box flexDirection={'row'}>
+          <Text style={[styles.descriptionTitle, styles.spaceBetween]}>
+            CONTRACT ADDRESS
+          </Text>
+          <Text style={(styles.descriptionText, styles.leftLink)}>
+            {String(nftItem.asset_contract?.address).substr(0, 5) +
+              '...' +
+              String(nftItem.asset_contract?.address).substr(38, 4)}{' '}
+            <SmallPurpleArrow />
+          </Text>
+        </Box>
+        <Box flexDirection={'row'}>
+          <Text style={[styles.descriptionTitle, styles.spaceBetween]}>
+            TOKEN ID
+          </Text>
+          <Text style={(styles.descriptionTitle, styles.leftLink)}>
+            {String(nftItem.asset_contract?.address).substr(0, 5) +
+              '...' +
+              String(nftItem.asset_contract?.address).substr(38, 4)}{' '}
+            <SmallPurpleArrow />
+          </Text>
+        </Box>
+        <Box flexDirection={'row'}>
+          <Text style={[styles.descriptionTitle, styles.spaceBetween]}>
+            TOKEN STANDARD
+          </Text>
+          <Text style={(styles.descriptionTitle, styles.leftLink)}>
+            {String(nftItem.asset_contract?.address).substr(0, 5) +
+              '...' +
+              String(nftItem.asset_contract?.address).substr(38, 4)}{' '}
+            <SmallPurpleArrow />
+          </Text>
+        </Box>
+      </Box>
     )
   }
   return (
@@ -112,10 +156,8 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
 
-  spaceBetweenContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+  spaceBetween: {
+    marginRight: '50%',
   },
 
   expandedTitle: {
