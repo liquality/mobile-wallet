@@ -454,8 +454,8 @@ export const theme = createTheme({
     summaryCard: {
       backgroundColor: 'mainBackground',
       shadowOffset: {
-        width: -5,
-        height: -5,
+        width: 0,
+        height: 0,
       },
       shadowOpacity: 0.2,
       shadowRadius: 15,
