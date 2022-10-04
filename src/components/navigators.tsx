@@ -537,11 +537,6 @@ export const StackMainNavigator = () => {
         name="UnlockWalletScreen"
         component={UnlockWalletScreen}
       />
-      <MainStack.Screen
-        name="Entry"
-        component={Entry}
-        options={screenNavOptions}
-      />
     </MainStack.Navigator>
   )
 }

@@ -6,7 +6,6 @@ import {
   initialWindowMetrics,
 } from 'react-native-safe-area-context'
 
-import { createSwitchNavigator } from '@react-navigation/compat'
 import { ThemeProvider as TP } from '@shopify/restyle'
 import { isNewInstallation } from './src/store/store'
 import {
@@ -39,22 +38,15 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
-  const Navigator = createSwitchNavigator(
-    {
-      WalletCreationNavigator,
-      StackMainNavigator,
-    },
-    {
-      initialRouteName,
-    },
-  )
+  const Navigator =
+    initialRouteName === 'StackMainNavigator'
+      ? StackMainNavigator
+      : WalletCreationNavigator
   return <Navigator />
 }
 
 const App: FC = () => {
-  const [initialRouteName, setInitialRouteName] = useState(
-    'WalletCreationNavigator',
-  )
+  const [initialRouteName, setInitialRouteName] = useState('')
   const backgroundStyle = {
     flex: 1,
   }

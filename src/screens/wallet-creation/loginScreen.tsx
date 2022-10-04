@@ -11,7 +11,7 @@ import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
 import LinearGradient from 'react-native-linear-gradient'
 import { AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
-import { RootStackParamList, UseInputStateReturnType } from '../../types'
+import { MainStackParamList, UseInputStateReturnType } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useHeaderHeight } from '@react-navigation/elements'
 import {
@@ -28,7 +28,7 @@ import { Keyboard } from 'react-native'
 const { LogoFull, OneWalletAllChains } = AppIcons
 
 type LoginScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'LoginScreen'
 >
 
