@@ -401,33 +401,6 @@ export const AppStackNavigator = () => (
         })}
       />
       <MainStack.Screen
-        name="NftForSpecificChainScreen"
-        component={NftForSpecificChainScreen}
-        options={() => ({
-          headerShown: false,
-
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="NftDetailScreen"
-        component={NftDetailScreen}
-        options={() => ({
-          headerShown: false,
-
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="NftSendScreen"
-        component={NftSendScreen}
-        options={() => ({
-          headerShown: false,
-
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
         name="NftCollectionScreen"
         component={NftCollectionScreen}
         options={() => ({
@@ -454,13 +427,13 @@ export const AppStackNavigator = () => (
 
 const tabIcons = {
   [`${labelTranslateFn('wallet')!}`]: TabWallet,
-  [`${labelTranslateFn('nft')!}`]: TabNFT,
+  [`${labelTranslateFn('tabNFT')!}`]: TabNFT,
   [`${labelTranslateFn('settings')!}`]: TabSetting,
 }
 
 const tabInactiveIcons = {
   [`${labelTranslateFn('wallet')!}`]: TabWalletInactive,
-  [`${labelTranslateFn('nft')!}`]: TabNFTInactive,
+  [`${labelTranslateFn('tabNFT')!}`]: TabNFTInactive,
   [`${labelTranslateFn('settings')!}`]: TabSettingInactive,
 }
 
@@ -496,12 +469,12 @@ export const MainNavigator = () => (
     <Tab.Screen
       name="AppStackNavigator"
       component={AppStackNavigator}
-      options={TabBarOption(labelTranslateFn('wallet')!)}
+      options={{ ...TabBarOption(labelTranslateFn('wallet')!) }}
     />
     <Tab.Screen
       name="ShowAllNftsScreen"
       component={ShowAllNftsScreen}
-      options={TabBarOption(labelTranslateFn('nft')!)}
+      options={{ ...TabBarOption(labelTranslateFn('tabNFT')!) }}
     />
     <Tab.Screen
       name="SettingsScreen"
