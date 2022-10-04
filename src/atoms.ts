@@ -11,6 +11,7 @@ import {
   balanceEffect,
   enabledAssetsEffect,
   fiatRateEffect,
+  localStorageAssetEffect,
   localStorageEffect,
   localStorageLangEffect,
   transactionHistoryEffect,
@@ -186,7 +187,7 @@ export const historyStateFamily = atomFamily<Partial<HistoryItem>, string>({
 export const enabledAssetsStateFamily = atomFamily<boolean, string>({
   key: 'EnabledAssetsState',
   default: true,
-  effects: (asset) => [localStorageEffect(`enabled-asset-${asset}`)],
+  effects: (asset) => [localStorageAssetEffect(`enabled-asset-${asset}`)],
 })
 
 //--------------ATOM SELECTORS--------------
