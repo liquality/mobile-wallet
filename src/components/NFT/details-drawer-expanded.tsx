@@ -1,4 +1,10 @@
-import { StyleSheet } from 'react-native'
+import {
+  Linking,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import React from 'react'
 import { Fonts, AppIcons } from '../../assets'
 import { Box, faceliftPalette, palette } from '../../theme'
@@ -6,7 +12,7 @@ import { Text } from '../text/text'
 import NftTabBar from './nft-tab-bar'
 import { NFTAsset } from '../../types'
 
-const { Line, BentArrow, LongArrow, SmallPurpleArrow, Lock } = AppIcons
+const { Line, SmallPurpleArrow, LockIcon } = AppIcons
 
 type DetailsDrawerExpandedProps = {
   showOverview: boolean
@@ -19,7 +25,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
 
   console.log(nftItem, 'nftITEM')
 
-  const renderDrawerExpandedOverview = () => {
+  const renderOverviewToggle = () => {
     return (
       <Box>
         <Text style={styles.descriptionTitle} tx="nft.description" />
@@ -35,7 +41,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
         </Text>
         <Line style={styles.line} />
         <Text style={styles.createdBy}>
-          <Lock /> Unlockable Content:{' '}
+          <LockIcon /> Unlockable Content:{' '}
           <Text style={[styles.createdBy, styles.leftLink]}>
             Go See <SmallPurpleArrow />
           </Text>
@@ -50,12 +56,23 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
         <Line style={styles.line} />
         <Text style={styles.createdBy}>
           More Of:
-          <Text style={[styles.createdBy, styles.leftLink]}>
-            {' '}
-            {nftItem.collection.name} <SmallPurpleArrow />
-          </Text>
+          <Pressable onPress={() => Linking.openURL(nftItem.external_link)}>
+            <Text style={[styles.createdBy, styles.leftLink, styles.link]}>
+              {' '}
+              {nftItem.collection.name} <SmallPurpleArrow />
+            </Text>
+          </Pressable>
         </Text>
       </Box>
+    )
+  }
+
+  const renderDetailsToggle = () => {
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={{ marginRight: '50%' }}>Brooo</Text>
+        <Text>Brooo</Text>
+      </View>
     )
   }
   return (
@@ -68,7 +85,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
         setShowLeftTab={setShowOverview}
         showLeftTab={showOverview}
       />
-      {showOverview ? renderDrawerExpandedOverview() : null}
+      {showOverview ? renderOverviewToggle() : renderDetailsToggle()}
     </Box>
   )
 }
@@ -93,6 +110,12 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     textTransform: 'capitalize',
     color: '#000000',
+  },
+
+  spaceBetweenContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
 
   expandedTitle: {
@@ -129,6 +152,7 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   leftLink: { color: palette.purplePrimary },
+  link: { marginTop: 3 },
 })
 
 export default DetailsDrawerExpanded
