@@ -118,11 +118,7 @@ const SubRow: FC<SubRowProps> = (props) => {
           assetSymbol={item.code}>
           <Pressable
             onPress={handlePressOnRow}
-            style={[
-              styles.row,
-              styles.subElement,
-              { borderLeftColor: parentItem.color },
-            ]}>
+            style={[styles.row, styles.subElement]}>
             <Box
               height={scale(50)}
               width={scale(3)}
