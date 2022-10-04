@@ -17,6 +17,7 @@ import { RecoilRoot, useRecoilValue } from 'recoil'
 import { Box, theme, darkTheme } from './src/theme'
 import { StatusBar, useColorScheme } from 'react-native'
 import { themeMode } from './src/atoms'
+import { createSwitchNavigator } from '@react-navigation/compat'
 
 const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const selectedTheme = useRecoilValue(themeMode)
@@ -38,10 +39,15 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
-  const Navigator =
-    initialRouteName === 'StackMainNavigator'
-      ? StackMainNavigator
-      : WalletCreationNavigator
+  const Navigator = createSwitchNavigator(
+    {
+      StackMainNavigator,
+      WalletCreationNavigator,
+    },
+    {
+      initialRouteName,
+    },
+  )
   return <Navigator />
 }
 
