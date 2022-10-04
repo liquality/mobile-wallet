@@ -88,6 +88,12 @@ import Ellipses from '../assets/icons/ellipses.svg'
 import Settings from '../assets/icons/settings.svg'
 import SettingsActive from '../assets/icons/settingsActive.svg'
 import DollarSign from '../assets/icons/dollarSign.svg'
+import TabNFT from '../assets/icons/tabNFT.svg'
+import TabSetting from '../assets/icons/tabSetting.svg'
+import TabWallet from '../assets/icons/tabWallet.svg'
+import TabNFTInactive from '../assets/icons/tabNFTInactive.svg'
+import TabSettingInactive from '../assets/icons/tabSettingInactive.svg'
+import TabWalletInactive from '../assets/icons/tabWalletInactive.svg'
 
 export default {
   PendingSwap,
@@ -180,4 +186,10 @@ export default {
   SettingsActive,
   ManageAssetsDarkIcon,
   DollarSign,
+  TabNFT,
+  TabSetting,
+  TabWallet,
+  TabNFTInactive,
+  TabSettingInactive,
+  TabWalletInactive,
 }

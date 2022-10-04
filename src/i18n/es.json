@@ -389,5 +389,7 @@
   "likelyLess30": "likely in < 30 sec",
   "likelyLess15": "likely in < 15 sec",
   "txId": "Transaction Id",
-  "Ok": "Ok"
+  "Ok": "Ok",
+  "wallet": "WALLET",
+  "nft": "NFTs"
 }

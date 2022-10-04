@@ -1,5 +1,5 @@
 import React, { createContext } from 'react'
-import { View, StyleSheet, Pressable, useColorScheme } from 'react-native'
+import { StyleSheet, Pressable, useColorScheme } from 'react-native'
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
@@ -52,15 +52,20 @@ import { networkState, themeMode } from '../atoms'
 import { useRecoilValue } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
+import { labelTranslateFn } from '../utils'
 
 const {
-  UserCog,
   SwapCheck,
-  InfinityIcon,
   TimesIcon,
   NetworkActiveDot,
   Ellipses,
   ChevronLeft,
+  TabNFT,
+  TabSetting,
+  TabWallet,
+  TabNFTInactive,
+  TabSettingInactive,
+  TabWalletInactive,
 } = AppIcons
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
@@ -409,19 +414,27 @@ export const AppStackNavigator = () => (
   </MainStack.Navigator>
 )
 
-const tabBarIcon = (focused: boolean, size: number, routeName: string) => {
-  let whichIconToReturn
-  if (routeName === 'SettingsScreen') {
-    whichIconToReturn = <UserCog width={size} height={size} />
-  } else if (routeName === 'ShowAllNftsScreen') {
-    whichIconToReturn = <Text>NFT</Text>
-  } else whichIconToReturn = <InfinityIcon height={size} />
+const tabIcons = {
+  [`${labelTranslateFn('wallet')!}`]: TabWallet,
+  [`${labelTranslateFn('nft')!}`]: TabNFT,
+  [`${labelTranslateFn('settings')!}`]: TabSetting,
+}
 
-  return (
-    <View style={[styles.iconWrapper, focused && styles.tabFocused]}>
-      {whichIconToReturn}
-    </View>
-  )
+const tabInactiveIcons = {
+  [`${labelTranslateFn('wallet')!}`]: TabWalletInactive,
+  [`${labelTranslateFn('nft')!}`]: TabNFTInactive,
+  [`${labelTranslateFn('settings')!}`]: TabSettingInactive,
+}
+
+const TabBarOption = (title: string) => {
+  return {
+    tabBarLabel: title,
+    tabBarIcon: ({ focused, size }: { focused: boolean; size: number }) => {
+      const Icon = focused ? tabIcons[title] : tabInactiveIcons[title]
+      return <Icon width={size} height={size} />
+    },
+    headerLeft: TabSettingsScreenHeaderLeft,
+  }
 }
 
 const TabSettingsScreenHeaderLeft = () => (
@@ -431,32 +444,35 @@ const TabSettingsScreenHeaderLeft = () => (
 export const MainNavigator = () => (
   <Tab.Navigator
     initialRouteName="AppStackNavigator"
-    screenOptions={({ route }) => ({
+    screenOptions={{
       headerShown: false,
-      title: '',
-      tabBarIcon: ({ focused, size }) => tabBarIcon(focused, size, route.name),
-    })}>
-    <Tab.Screen name="AppStackNavigator" component={AppStackNavigator} />
+      headerTitle: '',
+      tabBarLabelStyle: {
+        fontFamily: Fonts.JetBrainsMono,
+        fontWeight: '500',
+        fontSize: scale(11),
+      },
+      tabBarActiveTintColor: palette.buttonDefault,
+      tabBarInactiveTintColor: palette.nestedColor,
+    }}>
+    <Tab.Screen
+      name="AppStackNavigator"
+      component={AppStackNavigator}
+      options={TabBarOption(labelTranslateFn('wallet')!)}
+    />
     <Tab.Screen
       name="ShowAllNftsScreen"
       component={ShowAllNftsScreen}
-      options={({}) => ({
-        headerShown: true,
-        headerTitle: '',
-        headerLeft: TabSettingsScreenHeaderLeft,
-      })}
+      options={TabBarOption(labelTranslateFn('nft')!)}
     />
     <Tab.Screen
       name="SettingsScreen"
       component={SettingsScreen}
-      options={({}) => ({
+      options={{
+        ...TabBarOption(labelTranslateFn('settings')!),
         headerShown: true,
         headerTitle: '',
-        headerLeft: TabSettingsScreenHeaderLeft,
-        /*    headerRight: () => (
-          <SettingsHeaderRight navigate={navigation.navigate} />
-        ), */
-      })}
+      }}
     />
   </Tab.Navigator>
 )
@@ -542,17 +558,6 @@ export const StackMainNavigator = () => {
 }
 
 const styles = StyleSheet.create({
-  iconWrapper: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderTopWidth: 1,
-    borderTopColor: palette.gray,
-  },
-  tabFocused: {
-    borderTopColor: palette.black2,
-  },
   checkIcon: {
     marginRight: 20,
   },
