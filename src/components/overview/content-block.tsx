@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilValue, useRecoilState } from 'recoil'
 import {
   accountsIdsState,
   accountsIdsForMainnetState,
@@ -12,7 +12,7 @@ import ActivityFlatList from '../activity-flat-list'
 import AssetFlatList from './asset-flat-list'
 import * as React from 'react'
 import { labelTranslateFn, Log } from '../../utils'
-import { useWindowDimensions } from 'react-native'
+import { ActivityIndicator, useWindowDimensions } from 'react-native'
 import {
   TabView,
   SceneRendererProps,
@@ -21,6 +21,7 @@ import {
 } from 'react-native-tab-view'
 import i18n from 'i18n-js'
 import {
+  Box,
   OVERVIEW_TAB_BAR_STYLE,
   OVERVIEW_TAB_STYLE,
   TabBar,
@@ -38,7 +39,7 @@ const ContentBlock = () => {
   const accountsIds = useRecoilValue(
     network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
   )
-  const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
+  const [done, setIsDoneFetchingData] = useRecoilState(isDoneFetchingData)
   const langSelected = useRecoilValue(LS)
   i18n.locale = langSelected
   useEffect(() => {
@@ -66,6 +67,15 @@ const ContentBlock = () => {
       { key: 'activity', title: labelTranslateFn('activity')! },
     ])
   }, [langSelected])
+
+  // temporary workaround to avoid tab view stuck issue
+  if (!done) {
+    return (
+      <Box flex={1} justifyContent="center">
+        <ActivityIndicator />
+      </Box>
+    )
+  }
 
   const renderTabBar = (props: RenderTabBar) => (
     // Redline because of theme issue with TabBar props
