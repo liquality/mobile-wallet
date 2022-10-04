@@ -529,19 +529,6 @@ export const theme = createTheme({
       width: scale(50),
     },
   },
-  labelStyle: {
-    light: {
-      fontFamily: Fonts.Regular,
-      fontSize: scale(17),
-      fontWeight: '500',
-    },
-    dark: {
-      color: palette.white,
-      fontFamily: Fonts.Regular,
-      fontSize: scale(17),
-      fontWeight: '500',
-    },
-  },
   refreshIndicatorVariants: {
     refreshContainer: {
       alignItems: 'center',
