@@ -126,9 +126,15 @@ const SubRow: FC<SubRowProps> = (props) => {
             />
             <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
               <AssetIcon asset={item.code} />
-              <Text paddingLeft={'s'} variant={'listText'} color="darkGrey">
-                {item.name}
-              </Text>
+              <Box width={'80%'}>
+                <Text
+                  numberOfLines={1}
+                  paddingLeft={'s'}
+                  variant={'listText'}
+                  color="darkGrey">
+                  {item.name}
+                </Text>
+              </Box>
             </Box>
             <Box flex={0.4} alignItems={'flex-end'} paddingLeft={'m'}>
               <Text variant={'listText'} color="darkGrey">
