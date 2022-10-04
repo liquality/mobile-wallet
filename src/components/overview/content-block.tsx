@@ -58,7 +58,7 @@ const ContentBlock = () => {
   useEffect(() => {
     setTimeout(() => {
       setDelayTabView(true)
-    }, 200)
+    }, 0)
   }, [])
 
   const layout = useWindowDimensions()
