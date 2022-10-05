@@ -3,7 +3,6 @@ import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaul
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useCallback, useState } from 'react'
 import {
-  Text,
   StyleSheet,
   Image,
   Dimensions,
@@ -12,9 +11,11 @@ import {
 } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import { Box, Button, palette } from '../../../theme'
+import { Box, Button, faceliftPalette, palette, Text } from '../../../theme'
 import BottomDrawer from 'react-native-bottom-drawer-view'
 import { RootStackParamList } from '../../../types'
+import { Fonts } from '../../../assets'
+import NftTabBar from '../../../components/NFT/nft-tab-bar'
 
 type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -29,6 +30,8 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
 
   const [imgError, setImgError] = useState<boolean>(false)
+  const [showExpanded, setShowExpanded] = useState<boolean>(false)
+  const [showOverview, setShowOverview] = useState<boolean>(true)
 
   const checkImgUrlExists = (imgUrl: string) => {
     return !imgError && imgUrl
@@ -50,12 +53,31 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
     })
   }, [accountIdsToSendIn, navigation, nftItem])
 
-  const renderContent = () => {
+  const renderDrawerCollapsed = () => {
     return (
       <Box style={styles.drawerContainer}>
         <Text style={styles.drawerClosedText}>
           {nftItem.name} #{nftItem?.token_id}
         </Text>
+      </Box>
+    )
+  }
+
+  //TODO: add this render function into its own component, part of MOB-182
+  const renderDrawerExpanded = () => {
+    return (
+      <Box style={styles.drawerContainer}>
+        <Text style={styles.collectionName}>{nftItem.collection.name}</Text>
+        <Text style={styles.expandedTitle}>{nftItem.name}</Text>
+        <NftTabBar
+          leftTabText={'nft.tabBarOverview'}
+          rightTabText={'nft.tabBarDetails'}
+          setShowLeftTab={setShowOverview}
+          showLeftTab={showOverview}
+        />
+
+        <Text style={styles.descriptionTitle} tx="nft.description" />
+        <Text style={styles.descriptionText}>{nftItem.description}</Text>
       </Box>
     )
   }
@@ -70,12 +92,14 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
         />
       </Box>
       <BottomDrawer
-        containerHeight={300}
+        containerHeight={472}
         offset={120}
         startUp={false}
         roundedEdges={false}
-        backgroundColor={'rgba(255, 255, 255, 0.77)'}>
-        {renderContent()}
+        backgroundColor={'rgba(255, 255, 255, 0.77)'}
+        onExpanded={() => setShowExpanded(true)}
+        onCollapse={() => setShowExpanded(false)}>
+        {showExpanded ? renderDrawerExpanded() : renderDrawerCollapsed()}
         <Button
           type="primary"
           variant="l"
@@ -123,6 +147,46 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
 
     color: '#000000',
+  },
+
+  collectionName: {
+    fontFamily: Fonts.JetBrainsMono,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 14,
+    lineHeight: 18,
+    color: '#646F85',
+  },
+
+  expandedTitle: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 36,
+    lineHeight: 49,
+    letterSpacing: 0.5,
+    color: faceliftPalette.darkGrey,
+  },
+
+  descriptionTitle: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 15,
+    lineHeight: 21,
+    letterSpacing: 0.5,
+    color: faceliftPalette.darkGrey,
+    marginTop: 10,
+  },
+  descriptionText: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 15,
+    lineHeight: 21,
+    letterSpacing: 0.5,
+    color: faceliftPalette.darkGrey,
+    textTransform: 'capitalize',
   },
 })
 

@@ -396,6 +396,9 @@
     "accounts": "ACCOUNTS",
     "nfts": "NFTS",
     "tabBarNfts": "Nfts",
-    "tabBarActivity": "Activity"
+    "tabBarActivity": "Activity",
+    "tabBarOverview": "Overview",
+    "tabBarDetails": "Details",
+    "description": "DESCRIPTION"
   }
 }
