@@ -1,4 +1,4 @@
-import { DarkModeEnum, LanguageEnum } from './types/index'
+import { DarkModeEnum, LanguageEnum } from './types'
 import { atom, atomFamily, selector, selectorFamily } from 'recoil'
 import { AccountType, SwapAssetPairType, CustomRootState } from './types'
 import { BigNumber } from '@liquality/types'
