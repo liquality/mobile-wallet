@@ -12,7 +12,11 @@ import ActivityFlatList from '../activity-flat-list'
 import AssetFlatList from './asset-flat-list'
 import * as React from 'react'
 import { labelTranslateFn, Log } from '../../utils'
-import { ActivityIndicator, useWindowDimensions } from 'react-native'
+import {
+  ActivityIndicator,
+  useWindowDimensions,
+  TouchableWithoutFeedback,
+} from 'react-native'
 import {
   TabView,
   SceneRendererProps,
@@ -29,6 +33,9 @@ import {
 } from '../../theme'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { scale } from 'react-native-size-matters'
+import { AppIcons } from '../../assets'
+
+const { Filter, ExportIcon } = AppIcons
 
 type RenderTabBar = SceneRendererProps & {
   navigationState: NavigationState<Route>
@@ -86,19 +93,35 @@ const ContentBlock = () => {
 
   const renderTabBar = (props: RenderTabBar) => (
     // Redline because of theme issue with TabBar props
-    <TabBar
-      {...props}
-      renderLabel={({ route, focused }) => (
-        <Text
-          variant={'tabLabel'}
-          color={focused ? 'tablabelActiveColor' : 'tablabelInactiveColor'}>
-          {route.title}
-        </Text>
-      )}
-      tabStyle={OVERVIEW_TAB_BAR_STYLE}
-      variant="light"
-      style={OVERVIEW_TAB_STYLE}
-    />
+    <Box>
+      <TabBar
+        {...props}
+        renderLabel={({ route, focused }) => (
+          <Text
+            variant={'tabLabel'}
+            color={focused ? 'tablabelActiveColor' : 'tablabelInactiveColor'}>
+            {route.title}
+          </Text>
+        )}
+        tabStyle={OVERVIEW_TAB_BAR_STYLE}
+        variant="light"
+        style={OVERVIEW_TAB_STYLE}
+      />
+      <Box width={'20%'} position={'absolute'} zIndex={100} top={0} right={0}>
+        <Box
+          flexDirection={'row'}
+          height={scale(40)}
+          justifyContent="space-between"
+          alignItems="center">
+          <TouchableWithoutFeedback onPress={() => {}}>
+            <Filter />
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={() => {}}>
+            <ExportIcon />
+          </TouchableWithoutFeedback>
+        </Box>
+      </Box>
+    </Box>
   )
 
   return (
