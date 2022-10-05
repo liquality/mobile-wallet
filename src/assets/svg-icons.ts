@@ -94,7 +94,6 @@ import Send from '../assets/icons/nfts/send.svg'
 import Sell from '../assets/icons/nfts/sell.svg'
 import ShortLine from '../assets/icons/nfts/short-line.svg'
 
-
 export default {
   PendingSwap,
   CompletedSwap,

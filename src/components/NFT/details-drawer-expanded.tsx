@@ -1,10 +1,4 @@
-import {
-  Linking,
-  Pressable,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Linking, Pressable, StyleSheet } from 'react-native'
 import React from 'react'
 import { Fonts, AppIcons } from '../../assets'
 import { Box, faceliftPalette, palette } from '../../theme'

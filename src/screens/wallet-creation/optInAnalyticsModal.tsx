@@ -95,7 +95,6 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
   const uppperBgImg =
     currentTheme === 'dark' ? Images.rectangleDark : Images.rectangleLight
 
-  console.log('TERMSSS')
   return (
     <Modal
       animationType="fade"
