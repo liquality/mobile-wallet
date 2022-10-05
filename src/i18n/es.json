@@ -392,6 +392,7 @@
   "Ok": "Ok",
   "wallet": "WALLET",
   "tabNFT": "NFTs",
+
   "nft": {
     "noNftsTitle": "No NFTs Just Yet",
     "noNftsHeaderText": "Once you start owning NFTs you will see them here. In the mean time, catch up on the latest in our NFT hub.",
@@ -402,5 +403,9 @@
   },
   "letGetYouStarted": "Let’s Get You Started",
   "buyCrypto": "Buy Crypto",
-  "unlockWalletUpperCase": "UNLOCK YOUR WALLET"
+  "unlockWalletUpperCase": "UNLOCK YOUR WALLET",
+  "tabBarActivity": "Activity",
+  "tabBarOverview": "Overview",
+  "tabBarDetails": "Details",
+  "description": "DESCRIPTION"
 }

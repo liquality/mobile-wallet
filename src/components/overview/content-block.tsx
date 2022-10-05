@@ -67,6 +67,8 @@ const ContentBlock = () => {
   }, [setIsDoneFetchingData, accountsIds, network])
 
   useEffect(() => {
+    // Issue is if UI is not loaded completely and user tap on tabBar then the tabView get stuck
+    // workaround to avoid tab view stuck issue,
     setTimeout(() => {
       setDelayTabView(true)
     }, 0)

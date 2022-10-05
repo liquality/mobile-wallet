@@ -402,5 +402,9 @@
   },
   "letGetYouStarted": "Let’s Get You Started",
   "buyCrypto": "Buy Crypto",
-  "unlockWalletUpperCase": "UNLOCK YOUR WALLET"
+  "unlockWalletUpperCase": "UNLOCK YOUR WALLET",
+  "tabBarActivity": "Activity",
+  "tabBarOverview": "Overview",
+  "tabBarDetails": "Details",
+  "description": "DESCRIPTION"
 }

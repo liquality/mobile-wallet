@@ -26,7 +26,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 const { Exchange: DoubleArrowThick, DownIcon, UpIcon, DollarSign } = AppIcons
 
 //Line height issue with Anek Kannada font
-const adjustLineHeight = -30
+const adjustLineHeight = -scale(30)
 
 const ImageBackgroundStyle: ViewStyle = {
   height: 30,
