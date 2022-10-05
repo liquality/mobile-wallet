@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, TouchableWithoutFeedback } from 'react-native'
 import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import {
@@ -140,9 +140,9 @@ const ActivityFlatList = ({ selectedAsset }: { selectedAsset?: string }) => {
             )}
           </Box>
           <Box flex={0.1} justifyContent="center" alignItems="center">
-            <Pressable onPress={() => handleChevronPress(item)}>
+            <TouchableWithoutFeedback onPress={() => handleChevronPress(item)}>
               <ChevronRight width={12} height={12} />
-            </Pressable>
+            </TouchableWithoutFeedback>
           </Box>
         </React.Suspense>
       </Box>
