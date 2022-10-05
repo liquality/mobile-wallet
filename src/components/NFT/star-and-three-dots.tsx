@@ -1,5 +1,6 @@
 import {
   ImageBackground,
+  Linking,
   Modal,
   Pressable,
   StyleSheet,
@@ -14,28 +15,22 @@ import { toggleNFTStarred } from '../../store/store'
 import { NFT } from '../../types'
 import { Box, faceliftPalette, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
+import { useNavigation } from '@react-navigation/core'
 
-const {
-  Star,
-  BlackStar,
-  ThreeDots,
-  ModalClose,
-
-  Send,
-  Sell,
-  Share,
-} = AppIcons
+const { Star, BlackStar, ThreeDots, ModalClose, Send, Sell, Share } = AppIcons
 
 type StarAndThreeDots = {
   activeWalletId: string
   nftItem: NFT
+  accountIdsToSendIn: string[]
 }
 
 const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
-  const { activeWalletId, nftItem } = props
+  const { accountIdsToSendIn, activeWalletId, nftItem } = props
   const activeNetwork = useRecoilValue(networkState)
   const [, setShowStarred] = useState(false)
   const [showPopUp, setShowPopUp] = useState(false)
+  const navigation = useNavigation()
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
   if (theme) {
@@ -50,30 +45,15 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
 
   const uppperBgImg =
     currentTheme === 'dark' ? Images.rectangleDark : Images.rectangleLight
-  const renderStarAndThreeDots = () => {
-    return (
-      <>
-        <Pressable
-          onPress={() => {
-            toggleStarred()
-          }}>
-          {nftItem.starred ? (
-            <BlackStar width={22} height={22} />
-          ) : (
-            <Star width={22} height={22} />
-          )}
-        </Pressable>
 
-        <Pressable
-          onPress={() => {
-            setShowPopUp(true)
-          }}
-          style={styles.threeDots}>
-          <ThreeDots />
-        </Pressable>
-      </>
-    )
-  }
+  const navigateToSendNftScreen = useCallback(() => {
+    setShowPopUp(false)
+    navigation.navigate('NftSendScreen', {
+      nftItem,
+      accountIdsToSendIn,
+    })
+  }, [accountIdsToSendIn, navigation, nftItem])
+
   const renderPopUp = () => {
     console.log('DO I COME HERE?')
     return (
@@ -102,11 +82,19 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
                     justifyContent="center"
                     alignItems="center"
                     marginTop={'l'}>
-                    <Pressable style={styles.row}>
+                    <Pressable
+                      onPress={navigateToSendNftScreen}
+                      style={styles.row}>
                       <Send style={styles.icon} />
                       <Text style={styles.modalRowText}>Send</Text>
                     </Pressable>
-                    <Pressable style={styles.row}>
+                    <Pressable
+                      onPress={() =>
+                        Linking.openURL(
+                          `https://opensea.io/assets/ethereum/${nftItem.asset_contract?.address}/${nftItem.token_id}`,
+                        )
+                      }
+                      style={styles.row}>
                       <Sell style={styles.sellIcon} />
                       <Text style={styles.modalRowText}>Sell</Text>
                     </Pressable>
@@ -188,13 +176,12 @@ const styles = StyleSheet.create({
 
   popup: {
     position: 'absolute',
-    bottom: 150,
-    right: 20,
+    top: 60,
+    right: 10,
   },
 
   modalView: {
     position: 'absolute',
-
     alignItems: 'center',
     justifyContent: 'center',
   },

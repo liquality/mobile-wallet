@@ -52,13 +52,6 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
     fetchData()
   }, [activeNetwork, activeWalletId])
 
-  const navigateToSendNftScreen = useCallback(() => {
-    navigation.navigate('NftSendScreen', {
-      nftItem: nftItem,
-      accountIdsToSendIn: accountIdsToSendIn,
-    })
-  }, [accountIdsToSendIn, navigation, nftItem])
-
   const renderDrawerCollapsed = () => {
     return (
       <Text style={styles.drawerClosedText}>
