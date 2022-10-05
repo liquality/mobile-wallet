@@ -99,6 +99,7 @@ import TabWallet from '../assets/icons/tabWallet.svg'
 import TabNFTInactive from '../assets/icons/tabNFTInactive.svg'
 import TabSettingInactive from '../assets/icons/tabSettingInactive.svg'
 import TabWalletInactive from '../assets/icons/tabWalletInactive.svg'
+import TransakIcon from '../assets/icons/transak.svg'
 
 export default {
   PendingSwap,
@@ -181,7 +182,6 @@ export default {
   Star,
   BlackStar,
   Line,
-
   LogoFull,
   OnlyLqLogoDark,
   OnlyLqLogoLight,
@@ -203,4 +203,5 @@ export default {
   TabNFTInactive,
   TabSettingInactive,
   TabWalletInactive,
+  TransakIcon,
 }
