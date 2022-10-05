@@ -1,24 +1,21 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   StyleSheet,
   Image,
   Dimensions,
   ScrollView,
   TouchableOpacity,
-  Pressable,
 } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import { Box, Button, faceliftPalette, palette, Text } from '../../../theme'
+import { Box, faceliftPalette, palette, Text } from '../../../theme'
 import BottomDrawer from 'react-native-bottom-drawer-view'
 import { RootStackParamList } from '../../../types'
 import { Fonts, AppIcons } from '../../../assets'
-import NftTabBar from '../../../components/NFT/nft-tab-bar'
 import DetailsDrawerExpanded from '../../../components/NFT/details-drawer-expanded'
-import { toggleNFTStarred } from '../../../store/store'
 import StarAndThreeDots from '../../../components/NFT/star-and-three-dots'
 
 type NftDetailScreenProps = NativeStackScreenProps<
@@ -26,12 +23,12 @@ type NftDetailScreenProps = NativeStackScreenProps<
   'NftDetailScreen'
 >
 
-const { Star, BlackStar, Line, ThreeDots } = AppIcons
+const { ShortLine } = AppIcons
 
 const wallet = setupWallet({
   ...defaultOptions,
 })
-const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
+const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
 
@@ -71,15 +68,20 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
       </Box>
       <BottomDrawer
         containerHeight={731}
-        downDisplay={560}
+        downDisplay={620}
+        offset={50}
         startUp={false}
         roundedEdges={false}
         backgroundColor={'rgba(255, 255, 255, 0.77)'}
         onExpanded={() => setShowExpanded(true)}
         onCollapsed={() => setShowExpanded(false)}>
-        <Box style={styles.drawerContainer}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <TouchableOpacity>
+        <Box justifyContent={'center'} alignItems={'center'}>
+          <ShortLine style={styles.shortLine} />
+          <ShortLine />
+        </Box>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <TouchableOpacity>
+            <Box style={styles.drawerContainer}>
               <Box marginVertical={'s'} flexDirection={'row'}>
                 <Text style={[styles.descriptionTitle, styles.flex]}>
                   {!showExpanded ? renderDrawerCollapsed() : null}
@@ -97,21 +99,16 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
                   setShowOverview={setShowOverview}
                 />
               ) : null}
-            </TouchableOpacity>
-          </ScrollView>
-        </Box>
+            </Box>
+          </TouchableOpacity>
+        </ScrollView>
       </BottomDrawer>
     </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  drawerContainer: { padding: 35 },
-
-  threeDots: {
-    marginLeft: 20,
-    marginTop: 10,
-  },
+  drawerContainer: { paddingHorizontal: 35, paddingVertical: 20 },
 
   overviewBlock: {
     justifyContent: 'center',
@@ -120,6 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: palette.white,
   },
 
+  shortLine: { padding: 3 },
   headerContainer: {
     marginBottom: 20,
   },
@@ -151,59 +149,8 @@ const styles = StyleSheet.create({
     color: faceliftPalette.darkGrey,
     marginTop: 0,
   },
-  descriptionText: {
-    fontFamily: Fonts.Regular,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    fontSize: 15,
-    lineHeight: 21,
-    letterSpacing: 0.5,
-    color: faceliftPalette.darkGrey,
-    textTransform: 'capitalize',
-  },
+
   flex: { flex: 1 },
-  leftLink: { color: palette.purplePrimary, flex: 1 },
-  link: { marginTop: 3 },
-
-  collectionName: {
-    fontFamily: Fonts.JetBrainsMono,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 18,
-    color: '#646F85',
-  },
-
-  expandedTitle: {
-    fontFamily: Fonts.Regular,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 36,
-    lineHeight: 49,
-    letterSpacing: 0.5,
-    color: faceliftPalette.darkGrey,
-  },
-
-  descriptionTitle: {
-    fontFamily: Fonts.Regular,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 15,
-    lineHeight: 21,
-    letterSpacing: 0.5,
-    color: faceliftPalette.darkGrey,
-    marginTop: 10,
-  },
-  descriptionText: {
-    fontFamily: Fonts.Regular,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    fontSize: 15,
-    lineHeight: 21,
-    letterSpacing: 0.5,
-    color: faceliftPalette.darkGrey,
-    textTransform: 'capitalize',
-  },
 })
 
 export default NftDetailScreen

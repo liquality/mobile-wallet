@@ -10,7 +10,7 @@ import {
 import React, { useCallback, useState } from 'react'
 import { AppIcons, Fonts, Images } from '../../assets'
 import { useRecoilValue } from 'recoil'
-import { networkState, themeMode } from '../../atoms'
+import { accountInfoStateFamily, networkState, themeMode } from '../../atoms'
 import { toggleNFTStarred } from '../../store/store'
 import { NFT } from '../../types'
 import { Box, faceliftPalette, Text } from '../../theme'
@@ -30,6 +30,8 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
   const activeNetwork = useRecoilValue(networkState)
   const [, setShowStarred] = useState(false)
   const [showPopUp, setShowPopUp] = useState(false)
+  const accountInfo = useRecoilValue(accountInfoStateFamily(nftItem.accountId))
+
   const navigation = useNavigation()
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
@@ -55,7 +57,6 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
   }, [accountIdsToSendIn, navigation, nftItem])
 
   const renderPopUp = () => {
-    console.log('DO I COME HERE?')
     return (
       <Modal
         animationType="fade"
@@ -91,7 +92,7 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
                     <Pressable
                       onPress={() =>
                         Linking.openURL(
-                          `https://opensea.io/assets/ethereum/${nftItem.asset_contract?.address}/${nftItem.token_id}`,
+                          `https://opensea.io/assets/${accountInfo.chain}/${nftItem.asset_contract?.address}/${nftItem.token_id}`,
                         )
                       }
                       style={styles.row}>
