@@ -100,6 +100,7 @@ import TabNFTInactive from '../assets/icons/tabNFTInactive.svg'
 import TabSettingInactive from '../assets/icons/tabSettingInactive.svg'
 import TabWalletInactive from '../assets/icons/tabWalletInactive.svg'
 import TransakIcon from '../assets/icons/transak.svg'
+import Filter from '../assets/icons/filter.svg'
 
 export default {
   PendingSwap,
@@ -204,4 +205,5 @@ export default {
   TabSettingInactive,
   TabWalletInactive,
   TransakIcon,
+  Filter,
 }

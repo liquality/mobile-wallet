@@ -11,12 +11,12 @@ import ProgressCircle from './animations/progress-circle'
 import ActivityFilter from './activity-filter'
 import { useFilteredHistory } from '../custom-hooks'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
-import { downloadAssetAcitivity, formatDate } from '../utils'
+import { formatDate } from '../utils'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { useNavigation } from '@react-navigation/core'
 import { OverviewProps } from '../screens/wallet-features/home/overview-screen'
 import { useRecoilValue } from 'recoil'
-import { networkState } from '../atoms'
+import { networkState, showFilterState } from '../atoms'
 import { Text, Box, Pressable } from '../theme'
 import { AppIcons } from '../assets'
 
@@ -29,10 +29,17 @@ const {
   SendIcon: Send,
 } = AppIcons
 
-const ActivityFlatList = ({ selectedAsset }: { selectedAsset?: string }) => {
+const ActivityFlatList = ({
+  selectedAsset,
+  historyCount = 0,
+}: {
+  selectedAsset?: string
+  historyCount?: number
+}) => {
   const navigation = useNavigation<OverviewProps['navigation']>()
   const historyItems = useFilteredHistory()
   const activeNetwork = useRecoilValue(networkState)
+  const showFilter = useRecoilValue(showFilterState)
 
   const history = selectedAsset
     ? historyItems.filter((item) => item.from === selectedAsset)
@@ -149,22 +156,11 @@ const ActivityFlatList = ({ selectedAsset }: { selectedAsset?: string }) => {
     )
   }
 
-  const handleExport = React.useCallback(() => {
-    downloadAssetAcitivity(history as HistoryItem[])
-
-    // This is for better performance
-    // i.e, history.length is the only thing that matters
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history.length])
-
   return (
     <>
-      {history.length ? (
+      {showFilter ? <ActivityFilter numOfResults={history.length} /> : null}
+      {historyCount ? (
         <>
-          <ActivityFilter
-            numOfResults={history.length}
-            onExport={handleExport}
-          />
           {history.map((item) => {
             return renderActivity({ item })
           })}
