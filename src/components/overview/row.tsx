@@ -142,7 +142,7 @@ const Row = (props: RowProps) => {
           <Box flex={0.1} paddingLeft={'s'}>
             <AssetIcon chain={item.chain} />
           </Box>
-          <Box flex={0.6} paddingLeft={'m'}>
+          <Box flex={0.5} paddingLeft={'m'}>
             <Text variant={'listText'} color="darkGrey">
               {name}
             </Text>
@@ -151,13 +151,13 @@ const Row = (props: RowProps) => {
             </Text>
           </Box>
           {isNested ? (
-            <Box flex={0.3} alignItems="flex-end">
+            <Box flex={0.4} alignItems="flex-end">
               <Text variant={'listText'} color="darkGrey">
                 {prettyFiatBalance}
               </Text>
             </Box>
           ) : (
-            <Box flex={0.3} paddingRight={'s'} alignItems="flex-end">
+            <Box flex={0.4} paddingRight={'s'} alignItems="flex-end">
               <Text variant={'listText'} color="darkGrey">
                 {prettyNativeBalance}
               </Text>
