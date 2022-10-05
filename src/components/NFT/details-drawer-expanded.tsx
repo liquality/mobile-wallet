@@ -11,6 +11,9 @@ import { Box, faceliftPalette, palette } from '../../theme'
 import { Text } from '../text/text'
 import NftTabBar from './nft-tab-bar'
 import { NFTAsset } from '../../types'
+import { useRecoilValue } from 'recoil'
+import { accountInfoStateFamily, addressStateFamily } from '../../atoms'
+import { labelTranslateFn } from '../../utils'
 
 const { Line, SmallPurpleArrow, LockIcon } = AppIcons
 
@@ -22,8 +25,11 @@ type DetailsDrawerExpandedProps = {
 
 const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
   const { nftItem, showOverview, setShowOverview } = props
+  const accountInfo = useRecoilValue(accountInfoStateFamily(nftItem.accountId))
 
-  console.log(nftItem, 'nftITEM')
+  const addressForAccount = useRecoilValue(
+    addressStateFamily(nftItem.accountId),
+  )
 
   const renderOverviewToggle = () => {
     return (
@@ -34,28 +40,29 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
         </Text>
         <Line style={styles.line} />
         <Text style={styles.createdBy}>
-          Created By:{' '}
+          {labelTranslateFn('nft.createdBy')}{' '}
           <Text style={[styles.createdBy, styles.leftLink]}>
-            CREATOR <SmallPurpleArrow />
+            {labelTranslateFn('nft.creator')} <SmallPurpleArrow />
           </Text>
         </Text>
         <Line style={styles.line} />
         <Text style={styles.createdBy}>
-          <LockIcon /> Unlockable Content:{' '}
+          <LockIcon /> {labelTranslateFn('nft.unlockableContent')}{' '}
           <Text style={[styles.createdBy, styles.leftLink]}>
-            Go See <SmallPurpleArrow />
+            {labelTranslateFn('nft.goSee')} <SmallPurpleArrow />
           </Text>
         </Text>
         <Line style={styles.line} />
         <Text style={styles.descriptionTitle}>
-          ABOUT {nftItem.collection.name.toUpperCase()}
+          {labelTranslateFn('nft.about')}{' '}
+          {nftItem.collection.name.toUpperCase()}
         </Text>
         <Text style={styles.descriptionText}>
           {nftItem.description.substring(0, 100)}
         </Text>
         <Line style={styles.line} />
         <Text style={styles.createdBy}>
-          More Of:
+          {labelTranslateFn('nft.moreOf')}{' '}
           <Pressable onPress={() => Linking.openURL(nftItem.external_link)}>
             <Text style={[styles.createdBy, styles.leftLink, styles.link]}>
               {' '}
@@ -67,15 +74,20 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
     )
   }
 
+  //TODO: Make these values dynamic reads from nftItem
+  //but right now we dont have this NFT info from wallet-core and the providers
   const renderDetailsToggle = () => {
     return (
       <Box>
         <Box marginVertical={'s'} flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle, styles.flex]}>ACCOUNT</Text>
+          <Text
+            style={[styles.descriptionTitle, styles.flex]}
+            tx={'nft.account'}
+          />
           <Text style={(styles.descriptionText, styles.leftLink)}>
-            {String(nftItem.asset_contract?.address).substr(0, 5) +
+            {String(addressForAccount).substr(0, 5) +
               '...' +
-              String(nftItem.asset_contract?.address).substr(38, 4)}{' '}
+              String(addressForAccount).substr(38, 4)}{' '}
             <SmallPurpleArrow />
           </Text>
         </Box>
@@ -83,7 +95,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
         <Line style={styles.line} />
         <Box marginVertical={'s'} flexDirection={'row'}>
           <Text style={[styles.descriptionTitle, styles.flex]}>
-            CONTRACT ADDRESS
+            {labelTranslateFn('nft.contractAddress')}
           </Text>
           <Text style={(styles.descriptionText, styles.leftLink)}>
             {String(nftItem.asset_contract?.address).substr(0, 5) +
@@ -93,46 +105,63 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
           </Text>
         </Box>
         <Box marginVertical={'s'} flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle, styles.flex]}>TOKEN ID</Text>
+          <Text
+            style={[styles.descriptionTitle, styles.flex]}
+            tx={'nft.tokenId'}
+          />
+
           <Text style={(styles.descriptionText, styles.leftLink)}>
             {nftItem.token_id}
           </Text>
         </Box>
         <Box marginVertical={'s'} flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle, styles.flex]}>
-            TOKEN STANDARD
-          </Text>
+          <Text
+            style={[styles.descriptionTitle, styles.flex]}
+            tx={'nft.tokenStandard'}
+          />
+
           <Text style={(styles.descriptionText, styles.leftLink, styles.flex)}>
             ERC-721
           </Text>
         </Box>
         <Line style={styles.line} />
         <Box marginVertical={'s'} flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle, styles.flex]}>BLOCKCHAIN</Text>
+          <Text
+            style={[styles.descriptionTitle, styles.flex]}
+            tx={'nft.blockchain'}
+          />
           <Text style={(styles.descriptionText, styles.leftLink)}>
-            Ethereum
+            {accountInfo.chain}
           </Text>
         </Box>
         <Box marginVertical={'s'} flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle, styles.flex]}>METADATA</Text>
-          <Text style={(styles.descriptionText, styles.leftLink, styles.flex)}>
-            Decentralized
-          </Text>
+          <Text
+            style={[styles.descriptionTitle, styles.flex]}
+            tx={'nft.metadata'}
+          />
+          <Text
+            style={(styles.descriptionText, styles.leftLink, styles.flex)}
+            tx={'nft.decentralized'}
+          />
         </Box>
         <Box marginVertical={'s'} flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle, styles.flex]}>
-            CREATOR FEE
-          </Text>
+          <Text
+            style={[styles.descriptionTitle, styles.flex]}
+            tx={'nft.creatorFee'}
+          />
+
           <Text style={(styles.descriptionText, styles.leftLink, styles.flex)}>
             10%
           </Text>
         </Box>
         <Box marginVertical={'s'} flexDirection={'row'}>
-          <Text style={[styles.descriptionTitle, styles.flex]}>
-            ITEM ACTIVITY
-          </Text>
+          <Text
+            style={[styles.descriptionTitle, styles.flex]}
+            tx={'nft.itemActivity'}
+          />
+
           <Text style={(styles.descriptionText, styles.leftLink)}>
-            Explorer <SmallPurpleArrow />
+            {labelTranslateFn('nft.explorer')} <SmallPurpleArrow />
           </Text>
         </Box>
       </Box>
