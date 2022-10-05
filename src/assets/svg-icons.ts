@@ -32,6 +32,7 @@ import TimesIcon from '../assets/icons/swapCancelStateDefault.svg'
 import Loader from '../assets/icons/progresssIndicatorLg.svg'
 import LockIcon from '../assets/icons/lock.svg'
 import ManageAssetsIcon from '../assets/icons/chart.svg'
+import ManageAssetsDarkIcon from '../assets/icons/chartDark.svg'
 import SendIcon from '../assets/icons/sendStateDefault.svg'
 import SwapIcon from '../assets/icons/exchange-red.svg'
 import ReceiveIcon from '../assets/icons/recieveStateDefault.svg'
@@ -87,6 +88,18 @@ import Star from '../assets/icons/nfts/star.svg'
 import BlackStar from '../assets/icons/nfts/star-black.svg'
 import Line from '../assets/icons/nfts/line.svg'
 import ArrowLeft from '../assets/icons/arrowLeft.svg'
+import NetworkActiveDot from '../assets/icons/dot.svg'
+import Ellipses from '../assets/icons/ellipses.svg'
+import Settings from '../assets/icons/settings.svg'
+import SettingsActive from '../assets/icons/settingsActive.svg'
+import DollarSign from '../assets/icons/dollarSign.svg'
+import TabNFT from '../assets/icons/tabNFT.svg'
+import TabSetting from '../assets/icons/tabSetting.svg'
+import TabWallet from '../assets/icons/tabWallet.svg'
+import TabNFTInactive from '../assets/icons/tabNFTInactive.svg'
+import TabSettingInactive from '../assets/icons/tabSettingInactive.svg'
+import TabWalletInactive from '../assets/icons/tabWalletInactive.svg'
+import TransakIcon from '../assets/icons/transak.svg'
 
 export default {
   PendingSwap,
@@ -169,7 +182,6 @@ export default {
   Star,
   BlackStar,
   Line,
-
   LogoFull,
   OnlyLqLogoDark,
   OnlyLqLogoLight,
@@ -179,4 +191,17 @@ export default {
   ModalClose,
   OneWalletAllChains,
   ArrowLeft,
+  NetworkActiveDot,
+  Ellipses,
+  Settings,
+  SettingsActive,
+  ManageAssetsDarkIcon,
+  DollarSign,
+  TabNFT,
+  TabSetting,
+  TabWallet,
+  TabNFTInactive,
+  TabSettingInactive,
+  TabWalletInactive,
+  TransakIcon,
 }

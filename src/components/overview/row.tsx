@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import { StyleSheet, View, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import { AccountType } from '../../types'
 import AssetIcon from '../asset-icon'
 import {
@@ -26,9 +26,10 @@ import { Text, Box, Card, palette } from '../../theme'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { fetchFeesForAsset } from '../../store/store'
 import { FADE_IN_OUT_DURATION } from '../../utils'
-import { AppIcons, Fonts } from '../../assets'
+import { AppIcons } from '../../assets'
+import { scale } from 'react-native-size-matters'
 
-const { ChevronRightIcon: ChevronRight, MinusSign, PlusSign } = AppIcons
+const { MinusSign, PlusSign } = AppIcons
 
 type RowProps = {
   item: AccountType
@@ -108,51 +109,63 @@ const Row = (props: RowProps) => {
         <Box
           flexDirection={'row'}
           justifyContent="space-around"
-          borderBottomWidth={1}
-          borderBottomColor={'secondaryButtonBorderColor'}
-          borderLeftWidth={3}
           paddingVertical={'m'}
-          height={70}
-          style={{ borderLeftColor: item.color }}>
-          <View style={styles.col1}>
-            <>
-              {isExpanded ? (
-                <MinusSign
-                  width={15}
-                  height={15}
-                  fill={isNested ? palette.nestedColor : palette.white}
-                  style={styles.plusSign}
-                />
-              ) : (
-                <PlusSign
-                  width={15}
-                  height={15}
-                  fill={isNested ? palette.nestedColor : palette.white}
-                  style={styles.plusSign}
-                />
-              )}
-            </>
-            <AssetIcon chain={item.chain} />
-          </View>
-          <View style={styles.col2}>
-            <Text style={styles.code}>{name}</Text>
-            <Text style={styles.address}>{shortAddress}</Text>
-          </View>
+          height={70}>
+          <Box
+            height={scale(50)}
+            width={scale(3)}
+            style={{ backgroundColor: item.color }}
+          />
           {isNested ? (
-            <View style={styles.col3}>
-              <Text style={styles.TotalBalanceInUSD}>
-                {I18n.t('common.totalPrettyFiatBal', { prettyFiatBalance })}
-              </Text>
-            </View>
+            <Box paddingLeft={'m'}>
+              <>
+                {isExpanded ? (
+                  <MinusSign
+                    width={10}
+                    height={10}
+                    fill={isNested ? palette.nestedColor : palette.white}
+                  />
+                ) : (
+                  <PlusSign
+                    width={10}
+                    height={10}
+                    fill={isNested ? palette.nestedColor : palette.white}
+                  />
+                )}
+              </>
+            </Box>
           ) : (
-            <View style={styles.col3}>
-              <Text style={styles.balance}>{prettyNativeBalance}</Text>
-              <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
-            </View>
+            <Box paddingLeft={'m'}>
+              <Box width={10} height={10} />
+            </Box>
           )}
-          <View style={styles.col4}>
-            {!isNested ? <ChevronRight width={12} height={12} /> : null}
-          </View>
+          <Box flex={0.1} paddingLeft={'s'}>
+            <AssetIcon chain={item.chain} />
+          </Box>
+          <Box flex={0.5} paddingLeft={'m'}>
+            <Text variant={'listText'} color="darkGrey">
+              {name}
+            </Text>
+            <Text variant={'subListText'} color="greyMeta">
+              {shortAddress}
+            </Text>
+          </Box>
+          {isNested ? (
+            <Box flex={0.4} alignItems="flex-end">
+              <Text variant={'listText'} color="darkGrey">
+                {prettyFiatBalance}
+              </Text>
+            </Box>
+          ) : (
+            <Box flex={0.4} paddingRight={'s'} alignItems="flex-end">
+              <Text variant={'listText'} color="darkGrey">
+                {prettyNativeBalance}
+              </Text>
+              <Text variant={'subListText'} color="greyMeta">
+                {prettyFiatBalance}
+              </Text>
+            </Box>
+          )}
           {showPopup ? (
             <Box position={'absolute'} left={0} right={0} top={0} bottom={0}>
               <Box flex={1} alignItems="center" justifyContent={'center'}>
@@ -207,64 +220,5 @@ const Row = (props: RowProps) => {
     </AssetListSwipeableRow>
   )
 }
-
-const styles = StyleSheet.create({
-  col1: {
-    flex: 0.15,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  col2: {
-    flex: 0.25,
-    justifyContent: 'center',
-  },
-  col3: {
-    flex: 0.5,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-  },
-  col4: {
-    flex: 0.1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  plusSign: {
-    marginRight: 5,
-    marginLeft: 10,
-  },
-  code: {
-    fontFamily: Fonts.Regular,
-
-    color: palette.black2,
-    fontWeight: '500',
-    fontSize: 12,
-    marginBottom: 5,
-  },
-  address: {
-    fontFamily: Fonts.Regular,
-
-    color: palette.darkGray,
-    fontSize: 12,
-  },
-  balance: {
-    fontFamily: Fonts.Regular,
-
-    color: palette.black2,
-    fontSize: 13,
-  },
-  balanceInUSD: {
-    fontFamily: Fonts.Regular,
-
-    color: palette.darkGray,
-    fontSize: 12,
-  },
-  TotalBalanceInUSD: {
-    fontFamily: Fonts.Regular,
-
-    fontSize: 12,
-    marginBottom: 5,
-  },
-})
 
 export default memo(Row)

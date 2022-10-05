@@ -324,11 +324,12 @@
     "selectAssetSend": "Select asset for Send",
     "selectAssetReceive": "Select asset for receive",
     "selectAssetSwap": "Select asset for swap",
-    "asset": " Asset",
-    "assets": " Assets",
+    "asset": " ASSET",
+    "assets": " ASSETS",
     "send": "Send",
     "swap": "Swap",
-    "receive": "Receive"
+    "receive": "Receive",
+    "buy": "Buy"
   },
   "sendTranDetailComp": {
     "transId": "TRANSACTION ID",
@@ -377,6 +378,7 @@
   "invalidQRCode": "Invalid QR Code",
   "manageAssets": "Manage Assets",
   "accountDetails": "Account Details",
+  "manageAccs": "Manage Accounts",
   "lock": "Lock",
   "settings": "SETTINGS",
   "warning": "WARNING",
@@ -388,6 +390,8 @@
   "likelyLess15": "likely in < 15 sec",
   "txId": "Transaction Id",
   "Ok": "Ok",
+  "wallet": "WALLET",
+  "tabNFT": "NFTs",
 
   "nft": {
     "noNftsTitle": "No NFTs Just Yet",
@@ -395,9 +399,13 @@
     "accounts": "ACCOUNTS",
     "nfts": "NFTS",
     "tabBarNfts": "Nfts",
-    "tabBarActivity": "Activity",
-    "tabBarOverview": "Overview",
-    "tabBarDetails": "Details",
-    "description": "DESCRIPTION"
-  }
+    "tabBarActivity": "Activity"
+  },
+  "letGetYouStarted": "Let’s Get You Started",
+  "buyCrypto": "Buy Crypto",
+  "unlockWalletUpperCase": "UNLOCK YOUR WALLET",
+  "tabBarActivity": "Activity",
+  "tabBarOverview": "Overview",
+  "tabBarDetails": "Details",
+  "description": "DESCRIPTION"
 }

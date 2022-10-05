@@ -6,7 +6,6 @@ import {
   initialWindowMetrics,
 } from 'react-native-safe-area-context'
 
-import { createSwitchNavigator } from '@react-navigation/compat'
 import { ThemeProvider as TP } from '@shopify/restyle'
 import { isNewInstallation } from './src/store/store'
 import {
@@ -18,6 +17,7 @@ import { RecoilRoot, useRecoilValue } from 'recoil'
 import { Box, theme, darkTheme } from './src/theme'
 import { StatusBar, useColorScheme } from 'react-native'
 import { themeMode } from './src/atoms'
+import { createSwitchNavigator } from '@react-navigation/compat'
 
 const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const selectedTheme = useRecoilValue(themeMode)
@@ -41,8 +41,8 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
     {
-      WalletCreationNavigator,
       StackMainNavigator,
+      WalletCreationNavigator,
     },
     {
       initialRouteName,
@@ -52,9 +52,7 @@ const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
 }
 
 const App: FC = () => {
-  const [initialRouteName, setInitialRouteName] = useState(
-    'WalletCreationNavigator',
-  )
+  const [initialRouteName, setInitialRouteName] = useState('')
   const backgroundStyle = {
     flex: 1,
   }
@@ -64,7 +62,7 @@ const App: FC = () => {
     if (!isNew) {
       setInitialRouteName('StackMainNavigator')
     } else {
-      setInitialRouteName('EntryScreen')
+      setInitialRouteName('WalletCreationNavigator')
     }
     SplashScreen.hide()
   }, [])

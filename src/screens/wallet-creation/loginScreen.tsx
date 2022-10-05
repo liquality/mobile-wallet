@@ -11,10 +11,14 @@ import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
 import LinearGradient from 'react-native-linear-gradient'
 import { AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
-import { RootStackParamList, UseInputStateReturnType } from '../../types'
+import { MainStackParamList, UseInputStateReturnType } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useHeaderHeight } from '@react-navigation/elements'
-import { labelTranslateFn } from '../../utils'
+import {
+  INPUT_OPACITY_ACTIVE,
+  INPUT_OPACITY_INACTIVE,
+  labelTranslateFn,
+} from '../../utils'
 import { restoreWallet } from '../../store/store'
 import { CommonActions } from '@react-navigation/native'
 import { useRecoilValue } from 'recoil'
@@ -24,7 +28,7 @@ import { Keyboard } from 'react-native'
 const { LogoFull, OneWalletAllChains } = AppIcons
 
 type LoginScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'LoginScreen'
 >
 
@@ -68,6 +72,11 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     }
   }
 
+  const passwordInputOpacity =
+    error || passwordInput.value.length === 0
+      ? INPUT_OPACITY_INACTIVE
+      : INPUT_OPACITY_ACTIVE
+
   return (
     <KeyboardAvoidingView>
       <LinearGradient
@@ -91,6 +100,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               autoCorrect={false}
               returnKeyType="done"
               onSubmitEditing={onUnlock}
+              style={{ opacity: passwordInputOpacity }}
             />
             {error.length ? (
               <Box

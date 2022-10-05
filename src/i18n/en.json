@@ -48,7 +48,7 @@
     "filterOptions": "filter options",
     "sort": "SORT",
     "onceYouStart": "Once you start using your wallet you will see the activity here.",
-    "totalPrettyFiatBal": "Total {{prettyFiatBalance}}",
+    "totalPrettyFiatBal": "{{prettyFiatBalance}}",
     "started": "Started",
     "completed": "Completed",
     "custom": "Custom"
@@ -325,11 +325,12 @@
     "selectAssetSend": "Select asset for Send",
     "selectAssetReceive": "Select asset for receive",
     "selectAssetSwap": "Select asset for swap",
-    "asset": " Asset",
-    "assets": " Assets",
+    "asset": " ASSET",
+    "assets": " ASSETS",
     "send": "Send",
     "swap": "Swap",
-    "receive": "Receive"
+    "receive": "Receive",
+    "buy": "Buy"
   },
   "sendTranDetailComp": {
     "transId": "TRANSACTION ID",
@@ -378,27 +379,33 @@
   "invalidQRCode": "Invalid QR Code",
   "manageAssets": "Manage Assets",
   "accountDetails": "Account Details",
+  "manageAccs": "Manage Accounts",
   "lock": "Lock",
   "settings": "SETTINGS",
   "warning": "WARNING",
-  "asset": "ASSET",
-  "activity": "ACTIVITY",
+  "asset": "Assets",
+  "activity": "Activity",
   "sec": "{{sec}} sec",
   "maybeIn30": "maybe in 30 sec",
   "likelyLess30": "likely in < 30 sec",
   "likelyLess15": "likely in < 15 sec",
   "txId": "Transaction Id",
   "Ok": "Ok",
-
+  "wallet": "WALLET",
+  "tabNFT": "NFTs",
   "nft": {
     "noNftsTitle": "No NFTs Just Yet",
     "noNftsHeaderText": "Once you start owning NFTs you will see them here. In the mean time, catch up on the latest in our NFT hub.",
     "accounts": "ACCOUNTS",
     "nfts": "NFTS",
     "tabBarNfts": "Nfts",
-    "tabBarActivity": "Activity",
-    "tabBarOverview": "Overview",
-    "tabBarDetails": "Details",
-    "description": "DESCRIPTION"
-  }
+    "tabBarActivity": "Activity"
+  },
+  "letGetYouStarted": "Let’s Get You Started",
+  "buyCrypto": "Buy Crypto",
+  "unlockWalletUpperCase": "UNLOCK YOUR WALLET",
+  "tabBarActivity": "Activity",
+  "tabBarOverview": "Overview",
+  "tabBarDetails": "Details",
+  "description": "DESCRIPTION"
 }

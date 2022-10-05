@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
-import { AccountType, RootStackParamList } from '../../../types'
+import { AccountType, MainStackParamList } from '../../../types'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import { useInputState } from '../../../hooks'
 import { useRecoilValue } from 'recoil'
@@ -12,14 +12,14 @@ import {
   networkState,
   accountsIdsForMainnetState,
 } from '../../../atoms'
-import { palette, TextInput } from '../../../theme'
+import { Box, palette, TextInput } from '../../../theme'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { AppIcons, Fonts } from '../../../assets'
 
 const { SearchIcon } = AppIcons
 
 type AssetChooserProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'AssetChooserScreen'
 >
 
@@ -61,7 +61,7 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
   }, [accountList, searchInput.value])
 
   return (
-    <View style={styles.container}>
+    <Box flex={1} backgroundColor="mainBackground" paddingHorizontal={'xl'}>
       <View style={styles.searchBox}>
         <SearchIcon />
         <TextInput
@@ -77,22 +77,17 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
         />
       </View>
       <AssetFlatList accounts={data} />
-    </View>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: palette.white,
-  },
   sendInput: {
     fontFamily: Fonts.Regular,
-    fontWeight: '300',
-    fontSize: 13,
+    fontWeight: '500',
+    fontSize: 17,
     textAlign: 'left',
-    lineHeight: 14,
-    height: 14,
+    height: 40,
     width: '90%',
     color: palette.seedInputColor,
   },
@@ -100,8 +95,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 20,
-    marginVertical: 15,
     paddingVertical: 10,
     borderBottomColor: palette.mediumGreen,
     borderBottomWidth: 1,

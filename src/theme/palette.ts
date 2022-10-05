@@ -31,4 +31,6 @@ export const palette = {
   darkYellow: '#EAB300',
   seedInputColor: '#747E8DB2',
   green: '#088513',
+  buttonActive: '#7700D5',
+  buttonDefault: '#9742FB',
 }
