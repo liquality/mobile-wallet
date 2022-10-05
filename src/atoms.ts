@@ -145,6 +145,11 @@ export const swapScreenDoubleLongEvent = atom<SwapScreenPopUpTypes>({
   default: SwapScreenPopUpTypes.Null,
 })
 
+export const showFilterState = atom<boolean>({
+  key: 'showFilter',
+  default: false,
+})
+
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',

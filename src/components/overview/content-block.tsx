@@ -6,12 +6,14 @@ import {
   isDoneFetchingData,
   langSelected as LS,
   networkState,
+  historyItemsState,
+  showFilterState,
 } from '../../atoms'
 import { populateWallet } from '../../store/store'
 import ActivityFlatList from '../activity-flat-list'
 import AssetFlatList from './asset-flat-list'
 import * as React from 'react'
-import { labelTranslateFn, Log } from '../../utils'
+import { downloadAssetAcitivity, labelTranslateFn, Log } from '../../utils'
 import {
   ActivityIndicator,
   useWindowDimensions,
@@ -49,6 +51,8 @@ const ContentBlock = () => {
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
   const [delayTabView, setDelayTabView] = React.useState(false)
   const langSelected = useRecoilValue(LS)
+  const setShowFilter = useSetRecoilState(showFilterState)
+
   i18n.locale = langSelected
   useEffect(() => {
     setIsDoneFetchingData(false)
@@ -67,6 +71,8 @@ const ContentBlock = () => {
       setDelayTabView(true)
     }, 0)
   }, [])
+
+  const historyItem = useRecoilValue(historyItemsState)
 
   const layout = useWindowDimensions()
   const [index, setIndex] = React.useState(0)
@@ -91,6 +97,12 @@ const ContentBlock = () => {
     )
   }
 
+  const onExportIconPress = async () => {
+    try {
+      await downloadAssetAcitivity(historyItem)
+    } catch (error) {}
+  }
+
   const renderTabBar = (props: RenderTabBar) => (
     // Redline because of theme issue with TabBar props
     <Box>
@@ -107,20 +119,23 @@ const ContentBlock = () => {
         variant="light"
         style={OVERVIEW_TAB_STYLE}
       />
-      <Box width={'20%'} position={'absolute'} zIndex={100} top={0} right={0}>
-        <Box
-          flexDirection={'row'}
-          height={scale(40)}
-          justifyContent="space-between"
-          alignItems="center">
-          <TouchableWithoutFeedback onPress={() => {}}>
-            <Filter />
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={() => {}}>
-            <ExportIcon />
-          </TouchableWithoutFeedback>
+      {props.navigationState.index && historyItem.length ? (
+        <Box width={'20%'} position={'absolute'} zIndex={100} top={0} right={0}>
+          <Box
+            flexDirection={'row'}
+            height={scale(40)}
+            justifyContent="space-between"
+            alignItems="center">
+            <TouchableWithoutFeedback
+              onPress={() => setShowFilter((old) => !old)}>
+              <Filter />
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => onExportIconPress()}>
+              <ExportIcon />
+            </TouchableWithoutFeedback>
+          </Box>
         </Box>
-      </Box>
+      ) : null}
     </Box>
   )
 
@@ -133,7 +148,7 @@ const ContentBlock = () => {
           case 'asset':
             return <AssetFlatList accounts={accountsIds} />
           case 'activity':
-            return <ActivityFlatList />
+            return <ActivityFlatList historyCount={historyItem.length} />
         }
       }}
       onIndexChange={setIndex}
