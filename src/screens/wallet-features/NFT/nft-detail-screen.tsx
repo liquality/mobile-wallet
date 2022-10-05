@@ -8,20 +8,25 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
+  Pressable,
 } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { Box, Button, faceliftPalette, palette, Text } from '../../../theme'
 import BottomDrawer from 'react-native-bottom-drawer-view'
 import { RootStackParamList } from '../../../types'
-import { Fonts } from '../../../assets'
+import { Fonts, AppIcons } from '../../../assets'
 import NftTabBar from '../../../components/NFT/nft-tab-bar'
 import DetailsDrawerExpanded from '../../../components/NFT/details-drawer-expanded'
+import { toggleNFTStarred } from '../../../store/store'
+import StarAndThreeDots from '../../../components/NFT/star-and-three-dots'
 
 type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'NftDetailScreen'
 >
+
+const { Star, BlackStar, Line, ThreeDots } = AppIcons
 
 const wallet = setupWallet({
   ...defaultOptions,
@@ -56,11 +61,9 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
 
   const renderDrawerCollapsed = () => {
     return (
-      <Box style={styles.drawerContainer}>
-        <Text style={styles.drawerClosedText}>
-          {nftItem.name} #{nftItem?.token_id}
-        </Text>
-      </Box>
+      <Text style={styles.drawerClosedText}>
+        {nftItem.name} #{nftItem?.token_id}
+      </Text>
     )
   }
 
@@ -76,33 +79,43 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
       <BottomDrawer
         containerHeight={472}
         offset={120}
+        downDisplay={420}
         startUp={false}
         roundedEdges={false}
         backgroundColor={'rgba(255, 255, 255, 0.77)'}
         onExpanded={() => setShowExpanded(true)}
         onCollapse={() => setShowExpanded(false)}>
-        {showExpanded ? (
-          <DetailsDrawerExpanded
-            nftItem={nftItem}
-            showOverview={showOverview}
-            setShowOverview={setShowOverview}
-          />
-        ) : (
-          renderDrawerCollapsed()
-        )}
-        <Button
+        <Box style={styles.drawerContainer}>
+          <Box marginVertical={'s'} flexDirection={'row'}>
+            <Text style={[styles.descriptionTitle, styles.flex]}>
+              {!showExpanded ? renderDrawerCollapsed() : null}
+            </Text>
+            <StarAndThreeDots
+              activeWalletId={activeWalletId}
+              nftItem={nftItem}
+            />
+          </Box>
+          {showExpanded ? (
+            <DetailsDrawerExpanded
+              nftItem={nftItem}
+              showOverview={showOverview}
+              setShowOverview={setShowOverview}
+            />
+          ) : null}
+          {/*   <Button
           type="primary"
           variant="l"
           label={'Send NFT'}
           isBorderless={false}
           isActive={true}
           onPress={navigateToSendNftScreen}
-        />
-        <ScrollView horizontal={true}>
-          <TouchableOpacity>
-            <Box style={styles.drawerContainer} />
-          </TouchableOpacity>
-        </ScrollView>
+        /> */}
+          {/*     <ScrollView horizontal={true}>
+            <TouchableOpacity>
+              <Box style={styles.drawerContainer} />
+            </TouchableOpacity>
+          </ScrollView> */}
+        </Box>
       </BottomDrawer>
     </Box>
   )
@@ -110,6 +123,11 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
 
 const styles = StyleSheet.create({
   drawerContainer: { padding: 35 },
+
+  threeDots: {
+    marginLeft: 20,
+    marginTop: 10,
+  },
 
   overviewBlock: {
     justifyContent: 'center',
@@ -138,6 +156,30 @@ const styles = StyleSheet.create({
 
     color: '#000000',
   },
+
+  descriptionTitle: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 15,
+    lineHeight: 21,
+    letterSpacing: 0.5,
+    color: faceliftPalette.darkGrey,
+    marginTop: 0,
+  },
+  descriptionText: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 15,
+    lineHeight: 21,
+    letterSpacing: 0.5,
+    color: faceliftPalette.darkGrey,
+    textTransform: 'capitalize',
+  },
+  flex: { flex: 1 },
+  leftLink: { color: palette.purplePrimary, flex: 1 },
+  link: { marginTop: 3 },
 
   collectionName: {
     fontFamily: Fonts.JetBrainsMono,

@@ -139,7 +139,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
     )
   }
   return (
-    <Box style={styles.drawerContainer}>
+    <Box>
       <Text style={styles.collectionName}>{nftItem.collection.name}</Text>
       <Text style={styles.expandedTitle}>{nftItem.name}</Text>
       <NftTabBar
@@ -154,8 +154,6 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  drawerContainer: { padding: 35 },
-
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',

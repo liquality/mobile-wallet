@@ -88,6 +88,13 @@ import BlackStar from '../assets/icons/nfts/star-black.svg'
 import Line from '../assets/icons/nfts/line.svg'
 import ArrowLeft from '../assets/icons/arrowLeft.svg'
 import SmallPurpleArrow from '../assets/icons/nfts/small-purple-arrow.svg'
+import ThreeDots from '../assets/icons/nfts/three-dots.svg'
+import Share from '../assets/icons/nfts/share.svg'
+import Send from '../assets/icons/nfts/send.svg'
+import Sell from '../assets/icons/nfts/sell.svg'
+
+
+
 
 export default {
   PendingSwap,
@@ -171,6 +178,10 @@ export default {
   BlackStar,
   Line,
   SmallPurpleArrow,
+  ThreeDots,
+  Share,
+  Send,
+  Sell,
 
   LogoFull,
   OnlyLqLogoDark,
