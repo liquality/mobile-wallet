@@ -4,7 +4,7 @@ import { FeeDetail } from '@chainify/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
-import { AccountType, CustomRootState, GasFees, NftAsset } from '../types'
+import { AccountType, CustomRootState, GasFees, NFT } from '../types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import {
   Notification,
@@ -203,7 +203,7 @@ export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {
       Log(`Failed to update fees: ${e}`, 'error')
     })
 
-  if (!fees) throw new Error('Failed to fetch gas fees')
+  if (!fees) throw new Error('Failed to fetch gas fees: ' + asset)
 
   return {
     slow: new BigNumber(extractFee(fees.slow)),
@@ -266,7 +266,7 @@ export const toggleNFTStarred = async (payload: {
   network: Network
   walletId: string
   accountId: string
-  nft: NftAsset
+  nft: NFT
 }) => {
   await wallet.dispatch.toggleNFTStarred(payload)
 }
