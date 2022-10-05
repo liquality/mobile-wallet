@@ -96,7 +96,9 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
                       }
                       style={styles.row}>
                       <Sell style={styles.sellIcon} />
-                      <Text style={styles.modalRowText}>Sell</Text>
+                      <Text style={(styles.modalRowText, styles.textPurple)}>
+                        Sell
+                      </Text>
                     </Pressable>
                     <Pressable style={styles.row}>
                       <Share style={styles.icon} />
@@ -158,6 +160,8 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 10,
   },
+
+  textPurple: {},
 
   row: { flexDirection: 'row', justifyContent: 'space-between', padding: 5 },
 

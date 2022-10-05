@@ -70,44 +70,35 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
         />
       </Box>
       <BottomDrawer
-        containerHeight={472}
-        offset={120}
-        downDisplay={420}
+        containerHeight={731}
+        downDisplay={560}
         startUp={false}
         roundedEdges={false}
         backgroundColor={'rgba(255, 255, 255, 0.77)'}
         onExpanded={() => setShowExpanded(true)}
-        onCollapse={() => setShowExpanded(false)}>
+        onCollapsed={() => setShowExpanded(false)}>
         <Box style={styles.drawerContainer}>
-          <Box marginVertical={'s'} flexDirection={'row'}>
-            <Text style={[styles.descriptionTitle, styles.flex]}>
-              {!showExpanded ? renderDrawerCollapsed() : null}
-            </Text>
-            <StarAndThreeDots
-              activeWalletId={activeWalletId}
-              nftItem={nftItem}
-            />
-          </Box>
-          {showExpanded ? (
-            <DetailsDrawerExpanded
-              nftItem={nftItem}
-              showOverview={showOverview}
-              setShowOverview={setShowOverview}
-            />
-          ) : null}
-          {/*   <Button
-          type="primary"
-          variant="l"
-          label={'Send NFT'}
-          isBorderless={false}
-          isActive={true}
-          onPress={navigateToSendNftScreen}
-        /> */}
-          {/*     <ScrollView horizontal={true}>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <TouchableOpacity>
-              <Box style={styles.drawerContainer} />
+              <Box marginVertical={'s'} flexDirection={'row'}>
+                <Text style={[styles.descriptionTitle, styles.flex]}>
+                  {!showExpanded ? renderDrawerCollapsed() : null}
+                </Text>
+                <StarAndThreeDots
+                  accountIdsToSendIn={accountIdsToSendIn}
+                  activeWalletId={activeWalletId}
+                  nftItem={nftItem}
+                />
+              </Box>
+              {showExpanded ? (
+                <DetailsDrawerExpanded
+                  nftItem={nftItem}
+                  showOverview={showOverview}
+                  setShowOverview={setShowOverview}
+                />
+              ) : null}
             </TouchableOpacity>
-          </ScrollView> */}
+          </ScrollView>
         </Box>
       </BottomDrawer>
     </Box>

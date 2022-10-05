@@ -36,7 +36,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
         <Text style={styles.createdBy}>
           Created By:{' '}
           <Text style={[styles.createdBy, styles.leftLink]}>
-            OWNER <SmallPurpleArrow />
+            CREATOR <SmallPurpleArrow />
           </Text>
         </Text>
         <Line style={styles.line} />
@@ -154,21 +154,6 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  subContainer: {
-    width: 300,
-    height: 500,
-  },
-  textStyle: {
-    fontSize: 25,
-    color: 'white',
-    flex: 1,
-  },
   collectionName: {
     fontFamily: Fonts.JetBrainsMono,
     fontStyle: 'normal',
