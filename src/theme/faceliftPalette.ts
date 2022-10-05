@@ -1,4 +1,5 @@
 export const faceliftPalette = {
+  black: '#000000',
   white: '#ffffff',
   lightWhite: '#F6F6F6',
   mediumWhite: '#F4F4F4',

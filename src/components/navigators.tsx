@@ -42,7 +42,14 @@ import BackupWarningScreen from '../screens/wallet-features/backup/backup-warnin
 import BackupSeedScreen from '../screens/wallet-features/backup/backup-seed-screen'
 import BackupLoginScreen from '../screens/wallet-features/backup/backup-login-screen'
 import CustomFeeEIP1559Screen from '../screens/wallet-features/custom-fee/custom-fee-eip-1559-screen'
-import { Box, faceliftPalette, palette, Text, ThemeIcon } from '../theme'
+import {
+  Box,
+  faceliftPalette,
+  HEADER_TITLE_STYLE,
+  palette,
+  Text,
+  ThemeIcon,
+} from '../theme'
 import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-screen'
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
@@ -157,6 +164,7 @@ export const WalletCreationNavigator = () => {
           component={UnlockWalletScreen}
           options={{
             ...screenNavOptions,
+            headerTitleStyle: HEADER_TITLE_STYLE,
             headerStyle: { backgroundColor },
             headerLeft: LiqLogoHeaderLeft,
           }}
@@ -566,6 +574,7 @@ export const StackMainNavigator = () => {
         component={UnlockWalletScreen}
         options={{
           ...screenNavOptions,
+          headerTitleStyle: HEADER_TITLE_STYLE,
           headerStyle: { backgroundColor },
           headerLeft: LiqLogoHeaderLeft,
         }}

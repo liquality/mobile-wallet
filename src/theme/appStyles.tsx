@@ -1,7 +1,8 @@
-import { ViewStyle, TextStyle } from 'react-native'
+import { ViewStyle, StyleProp, TextStyle } from 'react-native'
 import { scale } from 'react-native-size-matters'
 import { Fonts } from '../assets'
 import { ONBOARDING_SCREEN_DEFAULT_PADDING } from '../utils'
+import { faceliftPalette } from './faceliftPalette'
 
 export const FLEX_1: ViewStyle = {
   flex: 1,
@@ -50,4 +51,15 @@ export const APP_BUTTON_TEXT_STYLE: TextStyle = {
 export const APP_HALF_BUTTON_TEXT_STYLE: TextStyle = {
   ...APP_BUTTON_TEXT_STYLE,
   fontSize: scale(13),
+}
+
+export const HEADER_TITLE_STYLE: StyleProp<
+  Pick<TextStyle, 'fontFamily' | 'fontWeight' | 'fontSize'> & {
+    color?: string | undefined
+  }
+> = {
+  fontFamily: Fonts.Regular,
+  fontWeight: '500',
+  fontSize: scale(14),
+  color: faceliftPalette.black,
 }

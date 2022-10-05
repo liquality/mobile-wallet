@@ -187,7 +187,7 @@ export const theme = createTheme({
     link: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
-      fontSize: scale(14),
+      fontSize: scale(13),
       color: 'link',
     },
     boldLink: {
