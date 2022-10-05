@@ -150,6 +150,11 @@ export const WalletCreationNavigator = () => {
         <WalletCreationStack.Screen
           name="SeedPhraseConfirmationScreen"
           component={SeedPhraseConfirmationScreen}
+          options={{
+            ...screenNavOptions,
+            headerStyle: { backgroundColor },
+            headerLeft: LiqLogoHeaderLeft,
+          }}
         />
         <WalletCreationStack.Screen
           name="LoadingScreen"
