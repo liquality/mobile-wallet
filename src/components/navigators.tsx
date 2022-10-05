@@ -225,6 +225,7 @@ const AppStackHeaderLeft = (
     </Box>
   )
 }
+
 const AppStackHeaderRight = (navProps: NavigationProps) => {
   const { navigation } = navProps
   const activeNetwork = useRecoilValue(networkState)
@@ -563,6 +564,11 @@ export const StackMainNavigator = () => {
       <MainStack.Screen
         name="UnlockWalletScreen"
         component={UnlockWalletScreen}
+        options={{
+          ...screenNavOptions,
+          headerStyle: { backgroundColor },
+          headerLeft: LiqLogoHeaderLeft,
+        }}
       />
     </MainStack.Navigator>
   )
