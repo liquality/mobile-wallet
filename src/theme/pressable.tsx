@@ -24,6 +24,7 @@ import {
   APP_BUTTON_TEXT_STYLE,
   APP_HALF_BUTTON_TEXT_STYLE,
   Box,
+  faceliftPalette,
 } from '.'
 import { ThemeType as Theme } from './theme'
 
@@ -39,7 +40,7 @@ type Props = React.ComponentProps<typeof BaseButton> &
   ColorProps<Theme> & {
     label: string | { tx: TxKeyPath }
     txOptions?: i18n.TranslateOptions
-    variant?: 'solid' | 'outline' | 'defaultOutline'
+    variant?: 'solid' | 'outline' | 'defaultOutline' | 'solidDisabled'
     style?: StyleProp<ViewStyle>
     icon?: boolean
     isLoading?: boolean
@@ -73,6 +74,9 @@ export const Pressable: FC<Props> = (props) => {
 
   const opacity = disabled ? 0.4 : 1
 
+  const currentVariant =
+    disabled && variant === 'solid' ? 'solidDisabled' : variant
+
   const buttonStyle =
     buttonSize === 'full' ? APP_BUTTON_STYLE : APP_HALF_BUTTON_STYLE
 
@@ -82,7 +86,7 @@ export const Pressable: FC<Props> = (props) => {
   return (
     <BaseButton
       {...rest}
-      variant={variant}
+      variant={currentVariant}
       disabled={disabled}
       style={[buttonStyle, styles, { opacity }]}>
       {isLoading ? (
@@ -95,13 +99,13 @@ export const Pressable: FC<Props> = (props) => {
           height={'100%'}
           paddingHorizontal="xl"
           justifyContent="space-between">
-          <Text variant={variant} style={textStyle}>
+          <Text variant={currentVariant} style={textStyle}>
             {content}
           </Text>
-          <ArrowLeft />
+          <ArrowLeft stroke={disabled ? faceliftPalette.grey : ''} />
         </Box>
       ) : (
-        <Text variant={variant} style={textStyle}>
+        <Text variant={currentVariant} style={textStyle}>
           {content}
         </Text>
       )}

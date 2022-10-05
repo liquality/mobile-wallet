@@ -44,10 +44,10 @@ export const APP_HALF_BUTTON_STYLE: ViewStyle = {
 export const APP_BUTTON_TEXT_STYLE: TextStyle = {
   fontFamily: Fonts.Regular,
   fontWeight: '500',
-  fontSize: scale(17),
+  fontSize: scale(15),
 }
 
 export const APP_HALF_BUTTON_TEXT_STYLE: TextStyle = {
   ...APP_BUTTON_TEXT_STYLE,
-  fontSize: scale(15),
+  fontSize: scale(13),
 }

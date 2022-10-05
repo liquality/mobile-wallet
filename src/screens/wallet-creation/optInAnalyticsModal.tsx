@@ -207,8 +207,8 @@ const styles = ScaledSheet.create({
   helpUsTextStyle: {
     fontFamily: Fonts.JetBrainsMono,
     fontWeight: '500',
-    fontSize: scale(24),
-    lineHeight: scale(30),
+    fontSize: scale(22),
+    lineHeight: scale(28),
     textAlign: 'left',
   },
   okButton: {
@@ -217,8 +217,8 @@ const styles = ScaledSheet.create({
   radioText: {
     fontFamily: Fonts.JetBrainsMono,
     fontWeight: '500',
-    fontSize: scale(24),
-    lineHeight: scale(30),
+    fontSize: scale(22),
+    lineHeight: scale(38),
   },
 })
 

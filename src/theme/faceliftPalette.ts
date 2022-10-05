@@ -12,6 +12,7 @@ export const faceliftPalette = {
   mainBackground: '#282E3F',
   greyBlack: '#000D35',
   buttonActive: '#7700D5',
+  buttonInactive: '#EEEEEE',
   buttonDefault: '#9742FB',
   buttonDisabled: '#BA62FE',
   gradientStartColor: '#1EAB94',
