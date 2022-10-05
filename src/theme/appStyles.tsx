@@ -1,5 +1,6 @@
-import { ViewStyle } from 'react-native'
+import { ViewStyle, TextStyle } from 'react-native'
 import { scale } from 'react-native-size-matters'
+import { Fonts } from '../assets'
 import { ONBOARDING_SCREEN_DEFAULT_PADDING } from '../utils'
 
 export const FLEX_1: ViewStyle = {
@@ -25,4 +26,28 @@ export const OVERVIEW_TAB_STYLE: ViewStyle = {
     width: 0,
   },
   elevation: 0,
+}
+
+export const APP_BUTTON_STYLE: ViewStyle = {
+  height: scale(50),
+  width: '100%',
+  justifyContent: 'center',
+  alignItems: 'center',
+}
+
+export const APP_HALF_BUTTON_STYLE: ViewStyle = {
+  ...APP_BUTTON_STYLE,
+  height: scale(40),
+  width: '50%',
+}
+
+export const APP_BUTTON_TEXT_STYLE: TextStyle = {
+  fontFamily: Fonts.Regular,
+  fontWeight: '500',
+  fontSize: scale(17),
+}
+
+export const APP_HALF_BUTTON_TEXT_STYLE: TextStyle = {
+  ...APP_BUTTON_TEXT_STYLE,
+  fontSize: scale(15),
 }

@@ -12,15 +12,19 @@ import {
   VariantProps,
   createVariant,
 } from '@shopify/restyle'
-
 import { Text } from './text'
 import React, { FC } from 'react'
 import i18n from 'i18n-js'
 import { TxKeyPath, translate } from '../i18n'
 import { langSelected as LS } from '../../src/atoms'
-import { faceliftPalette } from './faceliftPalette'
 import { useRecoilValue } from 'recoil'
-import { Box } from '.'
+import {
+  APP_BUTTON_STYLE,
+  APP_HALF_BUTTON_STYLE,
+  APP_BUTTON_TEXT_STYLE,
+  APP_HALF_BUTTON_TEXT_STYLE,
+  Box,
+} from '.'
 import { ThemeType as Theme } from './theme'
 
 import { AppIcons } from '../assets'
@@ -35,15 +39,17 @@ type Props = React.ComponentProps<typeof BaseButton> &
   ColorProps<Theme> & {
     label: string | { tx: TxKeyPath }
     txOptions?: i18n.TranslateOptions
-    variant?: 'solid' | 'outline'
+    variant?: 'solid' | 'outline' | 'defaultOutline'
     style?: StyleProp<ViewStyle>
     icon?: boolean
     isLoading?: boolean
+    buttonSize?: 'full' | 'half'
   }
 
 export const Pressable: FC<Props> = (props) => {
   const {
     variant = 'solid',
+    buttonSize = 'full',
     icon = false,
     label,
     disabled,
@@ -63,26 +69,22 @@ export const Pressable: FC<Props> = (props) => {
     content = label
   }
 
-  let backgroundColor = faceliftPalette.buttonDefault
-
-  let borderColor = faceliftPalette.white
-
-  if (variant === 'solid') {
-    borderColor = faceliftPalette.transparent
-  } else {
-    backgroundColor = faceliftPalette.transparent
-  }
-
   const theme = useTheme<Theme>()
 
   const opacity = disabled ? 0.4 : 1
+
+  const buttonStyle =
+    buttonSize === 'full' ? APP_BUTTON_STYLE : APP_HALF_BUTTON_STYLE
+
+  const textStyle =
+    buttonSize === 'full' ? APP_BUTTON_TEXT_STYLE : APP_HALF_BUTTON_TEXT_STYLE
 
   return (
     <BaseButton
       {...rest}
       variant={variant}
       disabled={disabled}
-      style={[styles, { backgroundColor, borderColor, opacity }]}>
+      style={[buttonStyle, styles, { opacity }]}>
       {isLoading ? (
         <ActivityIndicator color={theme.colors.spinner} />
       ) : icon ? (
@@ -93,11 +95,15 @@ export const Pressable: FC<Props> = (props) => {
           height={'100%'}
           paddingHorizontal="xl"
           justifyContent="space-between">
-          <Text variant={'pressableLabel'}>{content}</Text>
+          <Text variant={variant} style={textStyle}>
+            {content}
+          </Text>
           <ArrowLeft />
         </Box>
       ) : (
-        <Text variant={'pressableLabel'}>{content}</Text>
+        <Text variant={variant} style={textStyle}>
+          {content}
+        </Text>
       )}
     </BaseButton>
   )

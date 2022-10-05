@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Pressable, View } from 'react-native'
+import { View } from 'react-native'
 import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import {
@@ -17,7 +17,7 @@ import { useNavigation } from '@react-navigation/core'
 import { OverviewProps } from '../screens/wallet-features/home/overview-screen'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../atoms'
-import { Text, Box } from '../theme'
+import { Text, Box, Pressable } from '../theme'
 import { AppIcons } from '../assets'
 
 const {
@@ -159,10 +159,35 @@ const ActivityFlatList = ({ selectedAsset }: { selectedAsset?: string }) => {
 
   return (
     <>
-      <ActivityFilter numOfResults={history.length} onExport={handleExport} />
-      {history.map((item) => {
-        return renderActivity({ item })
-      })}
+      {history.length ? (
+        <>
+          <ActivityFilter
+            numOfResults={history.length}
+            onExport={handleExport}
+          />
+          {history.map((item) => {
+            return renderActivity({ item })
+          })}
+        </>
+      ) : (
+        <Box flex={1} justifyContent="center" alignItems={'center'}>
+          <Text tx="letGetYouStarted" variant={'h3'} color="textColor" />
+          <Text
+            marginVertical={'l'}
+            variant={'activityText'}
+            textAlign="center"
+            color="textColor">
+            Lorem ipsum dolor sit amet, consectetur incididunt ut labore et
+            dolore magna aliqua.
+          </Text>
+          <Pressable
+            label={{ tx: 'buyCrypto' }}
+            onPress={() => {}}
+            variant="defaultOutline"
+            buttonSize={'half'}
+          />
+        </Box>
+      )}
     </>
   )
 }

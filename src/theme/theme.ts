@@ -33,6 +33,7 @@ export const theme = createTheme({
     mediumWhite: faceliftPalette.mediumWhite,
     darkGrey: faceliftPalette.darkGrey,
     activeButton: faceliftPalette.buttonActive,
+    defaultButton: faceliftPalette.buttonDefault,
     semiTransparentWhite: faceliftPalette.semiTransparentWhite,
     semiTransparentDark: faceliftPalette.semiTransparentDark,
     liqPink: faceliftPalette.buttonActive,
@@ -284,6 +285,12 @@ export const theme = createTheme({
       fontWeight: '400',
       lineHeight: scale(22),
     },
+    activityText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(16),
+      fontWeight: '400',
+      lineHeight: scale(20),
+    },
     termsBody: {
       fontFamily: Fonts.Regular,
       fontSize: scale(17),
@@ -294,6 +301,11 @@ export const theme = createTheme({
       fontSize: scale(41),
       fontWeight: '500',
       lineHeight: scale(55),
+    },
+    h3: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(24),
+      fontWeight: '500',
     },
     radioText: {
       fontFamily: Fonts.Regular,
@@ -330,22 +342,27 @@ export const theme = createTheme({
       fontSize: scale(17),
       fontWeight: '500',
     },
+    outline: {
+      color: 'white',
+    },
+    solid: {
+      color: 'white',
+    },
+    defaultOutline: {
+      color: 'defaultButton',
+    },
   },
   pressableVariants: {
     outline: {
-      height: scale(50),
-      width: '100%',
-      borderWidth: scale(1),
-      justifyContent: 'center',
-      alignItems: 'center',
       borderColor: 'white',
+      borderWidth: scale(2),
     },
     solid: {
-      height: scale(50),
-      width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'activeButton',
+      backgroundColor: 'defaultButton',
+    },
+    defaultOutline: {
+      borderColor: 'defaultButton',
+      borderWidth: scale(2),
     },
   },
   buttonVariants: {
