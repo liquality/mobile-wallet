@@ -14,21 +14,11 @@ import { labelTranslateFn } from '../../utils'
 import { palette, Text } from '../../theme'
 import { AppIcons, Fonts } from '../../assets'
 
-const {
-  ChevronRightIcon,
-  AngleRightIcon,
-  AngleDownIcon,
-  PlusSign,
-  MinusSign,
-  TimesIcon: TimeIcon,
-  ExportIcon,
-} = AppIcons
+const { ChevronRightIcon, PlusSign, MinusSign, TimesIcon: TimeIcon } = AppIcons
 
 const ActivityFilter: FC<{
   numOfResults: number
-  onExport: () => void
-}> = ({ numOfResults = 1, onExport }) => {
-  const [expanded, setExpanded] = useState(false)
+}> = ({ numOfResults = 1 }) => {
   const [moreExpanded, setMoreExpanded] = useState(false)
   const [isSortPickerOpen, setIsSortPickerOpen] = useState(false)
   const [assetFilter, setAssetFilter] = useRecoilState(activityFilterState)
@@ -105,100 +95,79 @@ const ActivityFilter: FC<{
   return (
     <View style={styles.container}>
       <View style={styles.activityActionBar}>
-        <Pressable
-          style={styles.iconBtn}
-          onPress={() => setExpanded(!expanded)}>
-          {expanded ? <AngleDownIcon /> : <AngleRightIcon />}
-          <Text style={styles.filterLabel}>
-            {labelTranslateFn('common.filter')} ({numOfResults}
-            {numOfResults === 1
-              ? ` ${labelTranslateFn('common.result')}`
-              : ` ${labelTranslateFn('common.results')}`}
-            )
-          </Text>
-        </Pressable>
         <Pressable style={styles.resetBtn} onPress={handleClearFilter}>
           <TimeIcon />
           <Text style={styles.resetLabel} tx="common.reset" />
         </Pressable>
         <View style={styles.spacer} />
-        <Pressable style={styles.iconBtn} onPress={onExport}>
-          <ExportIcon width={16} fill={palette.darkGray} />
-          <Text style={styles.exportLabel} tx="common.export" />
-        </Pressable>
       </View>
-      {expanded && (
+      <TimeLimitOptions
+        value={assetFilter?.timeLimit as TimeLimitEnum | undefined}
+        onChange={handleChangeTimeLimit}
+      />
+      <ActionTypeToggles
+        value={(assetFilter?.actionTypes || []) as ActionEnum[]}
+        onChange={handleChangeActionTypes}
+      />
+      <Pressable
+        style={styles.moreExpandButton}
+        onPress={() => setMoreExpanded(!moreExpanded)}>
+        {moreExpanded ? (
+          <MinusSign fill="#1D1E21" width={10} />
+        ) : (
+          <PlusSign fill="#1D1E21" width={10} />
+        )}
+        <Text style={styles.filterLabel}>
+          {moreExpanded
+            ? `${labelTranslateFn('common.less')}`
+            : `${labelTranslateFn('common.more')}`}
+          `${labelTranslateFn('common.filterOptions')}`
+        </Text>
+      </Pressable>
+      {moreExpanded && (
         <>
-          <TimeLimitOptions
-            value={assetFilter?.timeLimit as TimeLimitEnum | undefined}
-            onChange={handleChangeTimeLimit}
+          <DateRange
+            start={assetFilter?.dateRange?.start}
+            end={assetFilter?.dateRange?.end}
+            onChange={handleChangeDateRange}
           />
-          <ActionTypeToggles
-            value={(assetFilter?.actionTypes || []) as ActionEnum[]}
-            onChange={handleChangeActionTypes}
+          <ActivityStatusToggles
+            value={
+              (assetFilter?.activityStatuses || []) as ActivityStatusEnum[]
+            }
+            onChange={handleChangeActivityStatuses}
           />
-          <Pressable
-            style={styles.moreExpandButton}
-            onPress={() => setMoreExpanded(!moreExpanded)}>
-            {moreExpanded ? (
-              <MinusSign fill="#1D1E21" width={10} />
-            ) : (
-              <PlusSign fill="#1D1E21" width={10} />
-            )}
-            <Text style={styles.filterLabel}>
-              {moreExpanded
-                ? `${labelTranslateFn('common.less')}`
-                : `${labelTranslateFn('common.more')}`}
-              `${labelTranslateFn('common.filterOptions')}`
-            </Text>
-          </Pressable>
-          {moreExpanded && (
-            <>
-              <DateRange
-                start={assetFilter?.dateRange?.start}
-                end={assetFilter?.dateRange?.end}
-                onChange={handleChangeDateRange}
-              />
-              <ActivityStatusToggles
-                value={
-                  (assetFilter?.activityStatuses || []) as ActivityStatusEnum[]
-                }
-                onChange={handleChangeActivityStatuses}
-              />
-              <AssetToggles
-                value={assetFilter?.assetToggles || []}
-                onChange={handleChangeAssetToggles}
-              />
-            </>
-          )}
-          <View style={styles.sortBar}>
-            <Text style={styles.filterLabel}>
-              {numOfResults}
-              {numOfResults === 1
-                ? ` ${labelTranslateFn('common.result')}`
-                : ` ${labelTranslateFn('common.results')}`}
-            </Text>
-            <View style={styles.spacer} />
-            <SectionTitle title={{ tx: 'common.sort' }} />
-            <Pressable style={styles.iconBtn} onPress={handleShowPicker}>
-              <Text style={styles.sorterLabel}>
-                {
-                  SORT_OPTIONS.find(
-                    (option) => option.key === assetFilter?.sorter,
-                  )?.label
-                }
-              </Text>
-              <ChevronRightIcon width={16} height={16} />
-            </Pressable>
-            <SorterPicker
-              isOpen={isSortPickerOpen}
-              onSelect={handlePickSorter as unknown as (key: string) => void}
-              onCancel={handleCancelSorter}
-              value={assetFilter?.sorter}
-            />
-          </View>
+          <AssetToggles
+            value={assetFilter?.assetToggles || []}
+            onChange={handleChangeAssetToggles}
+          />
         </>
       )}
+      <View style={styles.sortBar}>
+        <Text style={styles.filterLabel}>
+          {numOfResults}
+          {numOfResults === 1
+            ? ` ${labelTranslateFn('common.result')}`
+            : ` ${labelTranslateFn('common.results')}`}
+        </Text>
+        <View style={styles.spacer} />
+        <SectionTitle title={{ tx: 'common.sort' }} />
+        <Pressable style={styles.iconBtn} onPress={handleShowPicker}>
+          <Text style={styles.sorterLabel}>
+            {
+              SORT_OPTIONS.find((option) => option.key === assetFilter?.sorter)
+                ?.label
+            }
+          </Text>
+          <ChevronRightIcon width={16} height={16} />
+        </Pressable>
+        <SorterPicker
+          isOpen={isSortPickerOpen}
+          onSelect={handlePickSorter as unknown as (key: string) => void}
+          onCancel={handleCancelSorter}
+          value={assetFilter?.sorter}
+        />
+      </View>
     </View>
   )
 }
@@ -237,19 +206,11 @@ const styles = StyleSheet.create({
   resetLabel: {
     marginLeft: 5,
     fontFamily: Fonts.Regular,
-
     color: palette.black,
     fontWeight: '300',
     fontSize: 14,
   },
-  exportLabel: {
-    marginLeft: 5,
-    color: palette.darkGray,
-    fontFamily: Fonts.Regular,
 
-    fontWeight: '300',
-    fontSize: 14,
-  },
   moreExpandButton: {
     flexDirection: 'row',
     alignItems: 'center',

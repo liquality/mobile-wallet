@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { View, StyleSheet, Pressable, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../../types'
+import { MainStackParamList } from '../../../types'
 import SwapTransactionDetails from '../../../components/swap/swap-transaction-details'
 import { unitToCurrency, getAsset, getChain } from '@liquality/cryptoassets'
 import Label from '../../../components/ui/label'
@@ -40,7 +40,7 @@ const {
 } = AppIcons
 
 type SwapConfirmationScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'SwapConfirmationScreen'
 >
 

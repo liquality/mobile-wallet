@@ -76,4 +76,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default SorterPicker
+export default React.memo(SorterPicker)

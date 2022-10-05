@@ -155,11 +155,14 @@ export const populateWallet = async (): Promise<void> => {
 
 export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet?.state
+  const allAccounts = wallet.getters.accountsData
+  const account = allAccounts[Math.floor(Math.random() * allAccounts.length)]
 
   await wallet.dispatch
     .updateBalances({
       network: activeNetwork,
       walletId: activeWalletId,
+      accountIds: [account.id],
     })
     .catch((e) => {
       Log(`Failed update balances: ${e}`, 'error')
@@ -167,7 +170,7 @@ export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
 
   await wallet.dispatch
     .updateFiatRates({
-      assets: wallet.getters.allNetworkAssets,
+      assets: account.assets,
     })
     .catch((e) => {
       Log(`Failed to update fiat rates: ${e}`, 'error')
@@ -656,6 +659,25 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
           typeof newValue !== 'undefined' &&
           newValue !== -1
       storageManager.write(key, newValue)
+    })
+  }
+
+export const localStorageAssetEffect: (key: string) => AtomEffect<boolean> =
+  (key) =>
+  ({ setSelf, onSet, trigger }) => {
+    const loadPersisted = async () => {
+      const savedValue = storageManager.read(key, '')
+
+      if (savedValue !== '') {
+        setSelf(savedValue)
+      }
+    }
+    if (trigger === 'get') {
+      loadPersisted()
+    }
+
+    onSet((newValue, _, isReset) => {
+      isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
     })
   }
 

@@ -30,13 +30,22 @@ export const theme = createTheme({
     errorMsgBarColor: palette.yellowBar,
     transparent: 'transparent',
     white: faceliftPalette.white,
+    mediumWhite: faceliftPalette.mediumWhite,
     darkGrey: faceliftPalette.darkGrey,
     activeButton: faceliftPalette.buttonActive,
+    inactiveButton: faceliftPalette.buttonInactive,
+    defaultButton: faceliftPalette.buttonDefault,
+    inactiveText: faceliftPalette.grey,
     semiTransparentWhite: faceliftPalette.semiTransparentWhite,
     semiTransparentDark: faceliftPalette.semiTransparentDark,
     liqPink: faceliftPalette.buttonActive,
     onboardInputColor: faceliftPalette.lightWhite,
     onboardInputBorder: faceliftPalette.white,
+    popMenuColor: faceliftPalette.semiTransparentWhite,
+    nestedColor: palette.nestedColor,
+    tablabelActiveColor: palette.buttonActive,
+    tablabelInactiveColor: palette.darkGray,
+    greyMeta: faceliftPalette.greyMeta,
   },
   spacing: {
     vs: scale(2),
@@ -178,7 +187,7 @@ export const theme = createTheme({
     link: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
-      fontSize: scale(14),
+      fontSize: scale(13),
       color: 'link',
     },
     boldLink: {
@@ -257,26 +266,32 @@ export const theme = createTheme({
     whiteLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
-      fontSize: scale(15),
+      fontSize: scale(13),
       color: 'white',
     },
     hintLabel: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(14),
+      fontSize: scale(12),
       color: 'white',
       fontWeight: '400',
     },
     numberLabel: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(14),
+      fontSize: scale(12),
       color: 'white',
       fontWeight: '600',
     },
     normalText: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(17),
+      fontSize: scale(15),
       fontWeight: '400',
-      lineHeight: scale(22),
+      lineHeight: scale(20),
+    },
+    activityText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(14),
+      fontWeight: '400',
+      lineHeight: scale(18),
     },
     termsBody: {
       fontFamily: Fonts.Regular,
@@ -285,31 +300,77 @@ export const theme = createTheme({
     },
     h1: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(41),
+      fontSize: scale(39),
       fontWeight: '500',
-      lineHeight: scale(55),
+      lineHeight: scale(53),
+    },
+    h3: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(22),
+      fontWeight: '500',
     },
     radioText: {
       fontFamily: Fonts.Regular,
       fontSize: scale(16),
       fontWeight: '400',
     },
+    listText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(14),
+      fontWeight: '500',
+    },
+    subListText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(13),
+      fontWeight: '400',
+    },
+    networkStatus: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(11),
+      fontWeight: '400',
+    },
+    totalBalance: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(37),
+      fontWeight: '600',
+    },
+    totalAsset: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(36),
+      fontWeight: '600',
+    },
+    tabLabel: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(15),
+      fontWeight: '500',
+    },
+    outline: {
+      color: 'white',
+    },
+    solid: {
+      color: 'white',
+    },
+    defaultOutline: {
+      color: 'defaultButton',
+    },
+    solidDisabled: {
+      color: 'inactiveText',
+    },
   },
   pressableVariants: {
     outline: {
-      height: scale(50),
-      width: '100%',
-      borderWidth: scale(1),
-      justifyContent: 'center',
-      alignItems: 'center',
       borderColor: 'white',
+      borderWidth: scale(1),
     },
     solid: {
-      height: scale(50),
-      width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'activeButton',
+      backgroundColor: 'defaultButton',
+    },
+    defaultOutline: {
+      borderColor: 'defaultButton',
+      borderWidth: scale(1),
+    },
+    solidDisabled: {
+      backgroundColor: 'inactiveButton',
     },
   },
   buttonVariants: {
@@ -433,6 +494,16 @@ export const theme = createTheme({
       shadowRadius: 2,
       elevation: 3,
     },
+    summaryCard: {
+      backgroundColor: 'mainBackground',
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 15,
+      elevation: 3,
+    },
   },
   dropDownVariants: {
     language: {
@@ -450,15 +521,16 @@ export const theme = createTheme({
       borderBottomWidth: 1,
       fontWeight: '500',
       fontSize: scale(15),
+      fontFamily: Fonts.Regular,
     },
     seedPhraseInputs: {
       paddingTop: 's',
-      paddingBottom: 's',
       color: 'textColor',
       borderBottomColor: 'activeButton',
       borderBottomWidth: 1,
-      fontWeight: '500',
-      fontSize: scale(15),
+      fontWeight: '400',
+      fontSize: scale(16),
+      fontFamily: Fonts.Regular,
     },
   },
   tabBarStyleVariants: {
@@ -471,26 +543,14 @@ export const theme = createTheme({
   },
   indicatorStyle: {
     light: {
-      backgroundColor: palette.black,
-      height: 1,
+      backgroundColor: palette.buttonActive,
+      height: scale(2),
+      width: scale(20),
     },
     dark: {
       backgroundColor: palette.white,
-      height: 1,
-    },
-  },
-  labelStyle: {
-    light: {
-      color: palette.black2,
-      fontFamily: Fonts.Regular,
-      fontSize: 13,
-      lineHeight: 18,
-    },
-    dark: {
-      color: palette.white,
-      fontFamily: Fonts.Regular,
-      fontSize: 13,
-      lineHeight: 18,
+      height: scale(2),
+      width: scale(50),
     },
   },
   refreshIndicatorVariants: {
@@ -512,6 +572,7 @@ export const darkTheme: ThemeType = {
     mainBackground: faceliftPalette.darkBackground,
     textColor: faceliftPalette.darkText,
     spinner: faceliftPalette.darkGrey,
+    popMenuColor: faceliftPalette.semiTransparentDark,
   },
 }
 

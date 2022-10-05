@@ -5,6 +5,7 @@ import { RootStackParamList } from '../../types'
 import { Box, Text, TextInput, Pressable, faceliftPalette } from '../../theme'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
+import { labelTranslateFn } from '../../utils'
 
 type UnlockWalletScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -25,7 +26,10 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
     })
   }
 
-  const onToggleNumber = (num: number) => {
+  const onToggleNumber = (num: 12 | 24) => {
+    navigation.setOptions({
+      headerTitle: num === 24 ? labelTranslateFn('unlockWalletUpperCase')! : '',
+    })
     let tempArray = Array(num).fill('')
     for (let item in tempArray) {
       tempArray[item] = chosenSeedWords[item] || ''
@@ -68,19 +72,23 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
         flex={1}
         backgroundColor="mainBackground"
         paddingHorizontal={'onboardingPadding'}>
-        <Box marginTop={'xl'}>
-          <Text
-            color={'textColor'}
-            variant="h1"
-            tx="unlockWalletScreen.unlockWallet"
-          />
-        </Box>
-        <Box flex={0.7}>
-          <Text
-            variant={'normalText'}
-            color={'textColor'}
-            tx="unlockWalletScreen.enterSeedPhrase"
-          />
+        <Box flex={0.75}>
+          {isSeedPhrase12 ? (
+            <Box marginTop={'xl'}>
+              <Text
+                color={'textColor'}
+                variant="h1"
+                tx="unlockWalletScreen.unlockWallet"
+              />
+            </Box>
+          ) : null}
+          {isSeedPhrase12 ? (
+            <Text
+              variant={'normalText'}
+              color={'textColor'}
+              tx="unlockWalletScreen.enterSeedPhrase"
+            />
+          ) : null}
           <Box flexDirection={'row'} marginTop="l" alignItems={'center'}>
             <Box
               flexDirection={'row'}
@@ -145,7 +153,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
             />
           </Box>
         </Box>
-        <Box flex={0.3}>
+        <Box flex={0.25}>
           <Box marginVertical={'xl'}>
             <Pressable
               label={{ tx: 'common.next' }}

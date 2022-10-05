@@ -16,6 +16,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { AppIcons } from '../../assets'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { scale } from 'react-native-size-matters'
+import { INPUT_OPACITY_ACTIVE, INPUT_OPACITY_INACTIVE } from '../../utils'
 
 const { LogoFull } = AppIcons
 
@@ -84,10 +85,15 @@ const PasswordCreationScreen = ({
   const { value: passValue } = passwordInput
   const { value: passConfirmValue } = passwordConfirmationInput
 
-  const passwordInputOpacity = error || passValue.length === 0 ? 0.6 : 1
+  const passwordInputOpacity =
+    error || passValue.length === 0
+      ? INPUT_OPACITY_INACTIVE
+      : INPUT_OPACITY_ACTIVE
 
   const passwordConfirmationInputOpacity =
-    error || passConfirmValue.length === 0 ? 0.6 : 1
+    error || passConfirmValue.length === 0
+      ? INPUT_OPACITY_INACTIVE
+      : INPUT_OPACITY_ACTIVE
 
   if (passValue.trim().length >= 8 && passConfirmValue.trim().length >= 8) {
     disabled = false

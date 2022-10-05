@@ -23,7 +23,7 @@ const AssetFlatList = (props: AssetFlatListPropsType) => {
   )
 
   return (
-    <ScrollView nestedScrollEnabled={true}>
+    <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
       {accounts.map((item) => {
         return renderAsset({ item })
       })}
