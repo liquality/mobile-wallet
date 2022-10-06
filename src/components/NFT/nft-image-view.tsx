@@ -51,7 +51,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
       //If NFT collection array is 1, image should cover full width
       if (nftItem.length === 1) {
         return (
-          <Box paddingVertical={'xl'} key={index}>
+          <Box key={index}>
             <Pressable
               style={styles.collectionTextContainer}
               onPress={() => handleGoToCollection(nftItem)}>

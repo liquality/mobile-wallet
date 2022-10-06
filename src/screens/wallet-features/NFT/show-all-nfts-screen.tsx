@@ -3,15 +3,16 @@ import { Account } from '@liquality/wallet-core/dist/src/store/types'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import React, { useEffect, useCallback, useState } from 'react'
-import { StyleSheet, ScrollView, Pressable, Dimensions } from 'react-native'
+import { StyleSheet, ScrollView, Dimensions } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { Fonts } from '../../../assets'
 import { networkState } from '../../../atoms'
 import NftHeader from '../../../components/NFT/nft-header'
 import NftImageView from '../../../components/NFT/nft-image-view'
-import NoNfts from '../../../components/NFT/NoNfts'
+import NoNfts from '../../../components/NFT/no-nfts'
+import NftTabBar from '../../../components/NFT/nft-tab-bar'
 import { getAllEnabledAccounts, updateNFTs } from '../../../store/store'
-import { Box, palette, Text } from '../../../theme'
+import { Box, palette } from '../../../theme'
 import { RootTabParamList } from '../../../types'
 import { labelTranslateFn } from '../../../utils'
 type ShowAllNftsScreenProps = BottomTabScreenProps<
@@ -88,28 +89,6 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
     ).length
   }
 
-  const renderTabBar = () => {
-    return (
-      <Box flexDirection="row" padding={'m'}>
-        <Box marginRight={'l'}>
-          <Pressable
-            style={[styles.tabText, showNfts && styles.tabBarFocused]}
-            onPress={() => setShowNfts(!showNfts)}>
-            <Text
-              style={[styles.tabText, showNfts && styles.headerTextFocused]}
-              tx="nft.tabBarNfts"
-            />
-          </Pressable>
-        </Box>
-        <Pressable
-          style={[styles.tabText, !showNfts && styles.tabBarFocused]}
-          onPress={() => setShowNfts(!showNfts)}>
-          <Text style={styles.tabText} tx="nft.tabBarActivity" />
-        </Pressable>
-      </Box>
-    )
-  }
-
   return (
     <Box flex={1} style={styles.overviewBlock}>
       <ScrollView>
@@ -127,7 +106,12 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
           <NoNfts />
         ) : (
           <Box margin={'m'}>
-            {renderTabBar()}
+            <NftTabBar
+              leftTabText={'nft.tabBarNfts'}
+              rightTabText={'nft.tabBarActivity'}
+              setShowLeftTab={setShowNfts}
+              showLeftTab={showNfts}
+            />
             {showNfts ? (
               <NftImageView
                 accountIdsToSendIn={accountIdsToSendIn}
