@@ -1,7 +1,7 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   StyleSheet,
   Image,
@@ -11,21 +11,24 @@ import {
 } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import { Box, Button, faceliftPalette, palette, Text } from '../../../theme'
+import { Box, faceliftPalette, palette, Text } from '../../../theme'
 import BottomDrawer from 'react-native-bottom-drawer-view'
 import { RootStackParamList } from '../../../types'
-import { Fonts } from '../../../assets'
-import NftTabBar from '../../../components/NFT/nft-tab-bar'
+import { Fonts, AppIcons } from '../../../assets'
+import DetailsDrawerExpanded from '../../../components/NFT/details-drawer-expanded'
+import StarAndThreeDots from '../../../components/NFT/star-and-three-dots'
 
 type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'NftDetailScreen'
 >
 
+const { ShortLine } = AppIcons
+
 const wallet = setupWallet({
   ...defaultOptions,
 })
-const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
+const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
 
@@ -46,39 +49,11 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
     fetchData()
   }, [activeNetwork, activeWalletId])
 
-  const navigateToSendNftScreen = useCallback(() => {
-    navigation.navigate('NftSendScreen', {
-      nftItem: nftItem,
-      accountIdsToSendIn: accountIdsToSendIn,
-    })
-  }, [accountIdsToSendIn, navigation, nftItem])
-
   const renderDrawerCollapsed = () => {
     return (
-      <Box style={styles.drawerContainer}>
-        <Text style={styles.drawerClosedText}>
-          {nftItem.name} #{nftItem?.token_id}
-        </Text>
-      </Box>
-    )
-  }
-
-  //TODO: add this render function into its own component, part of MOB-182
-  const renderDrawerExpanded = () => {
-    return (
-      <Box style={styles.drawerContainer}>
-        <Text style={styles.collectionName}>{nftItem.collection.name}</Text>
-        <Text style={styles.expandedTitle}>{nftItem.name}</Text>
-        <NftTabBar
-          leftTabText={'nft.tabBarOverview'}
-          rightTabText={'nft.tabBarDetails'}
-          setShowLeftTab={setShowOverview}
-          showLeftTab={showOverview}
-        />
-
-        <Text style={styles.descriptionTitle} tx="nft.description" />
-        <Text style={styles.descriptionText}>{nftItem.description}</Text>
-      </Box>
+      <Text style={styles.drawerClosedText}>
+        {nftItem.name} #{nftItem?.token_id}
+      </Text>
     )
   }
 
@@ -92,25 +67,39 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
         />
       </Box>
       <BottomDrawer
-        containerHeight={472}
-        offset={120}
+        containerHeight={671}
+        downDisplay={580}
+        offset={150}
         startUp={false}
         roundedEdges={false}
         backgroundColor={'rgba(255, 255, 255, 0.77)'}
         onExpanded={() => setShowExpanded(true)}
-        onCollapse={() => setShowExpanded(false)}>
-        {showExpanded ? renderDrawerExpanded() : renderDrawerCollapsed()}
-        <Button
-          type="primary"
-          variant="l"
-          label={'Send NFT'}
-          isBorderless={false}
-          isActive={true}
-          onPress={navigateToSendNftScreen}
-        />
-        <ScrollView horizontal={true}>
+        onCollapsed={() => setShowExpanded(false)}>
+        <Box justifyContent={'center'} alignItems={'center'}>
+          <ShortLine style={styles.shortLine} />
+          <ShortLine />
+        </Box>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity>
-            <Box style={styles.drawerContainer} />
+            <Box style={styles.drawerContainer}>
+              <Box marginVertical={'s'} flexDirection={'row'}>
+                <Text style={[styles.descriptionTitle, styles.flex]}>
+                  {!showExpanded ? renderDrawerCollapsed() : null}
+                </Text>
+                <StarAndThreeDots
+                  accountIdsToSendIn={accountIdsToSendIn}
+                  activeWalletId={activeWalletId}
+                  nftItem={nftItem}
+                />
+              </Box>
+              {showExpanded ? (
+                <DetailsDrawerExpanded
+                  nftItem={nftItem}
+                  showOverview={showOverview}
+                  setShowOverview={setShowOverview}
+                />
+              ) : null}
+            </Box>
           </TouchableOpacity>
         </ScrollView>
       </BottomDrawer>
@@ -119,7 +108,7 @@ const NftDetailScreen = ({ navigation, route }: NftDetailScreenProps) => {
 }
 
 const styles = StyleSheet.create({
-  drawerContainer: { padding: 35 },
+  drawerContainer: { paddingHorizontal: 35, paddingVertical: 20 },
 
   overviewBlock: {
     justifyContent: 'center',
@@ -128,6 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: palette.white,
   },
 
+  shortLine: { padding: 3 },
   headerContainer: {
     marginBottom: 20,
   },
@@ -149,25 +139,6 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
 
-  collectionName: {
-    fontFamily: Fonts.JetBrainsMono,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 18,
-    color: '#646F85',
-  },
-
-  expandedTitle: {
-    fontFamily: Fonts.Regular,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 36,
-    lineHeight: 49,
-    letterSpacing: 0.5,
-    color: faceliftPalette.darkGrey,
-  },
-
   descriptionTitle: {
     fontFamily: Fonts.Regular,
     fontStyle: 'normal',
@@ -176,18 +147,10 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     letterSpacing: 0.5,
     color: faceliftPalette.darkGrey,
-    marginTop: 10,
+    marginTop: 0,
   },
-  descriptionText: {
-    fontFamily: Fonts.Regular,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    fontSize: 15,
-    lineHeight: 21,
-    letterSpacing: 0.5,
-    color: faceliftPalette.darkGrey,
-    textTransform: 'capitalize',
-  },
+
+  flex: { flex: 1 },
 })
 
 export default NftDetailScreen
