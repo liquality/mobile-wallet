@@ -226,19 +226,19 @@ const styles = ScaledSheet.create({
     borderRadius: '15@s',
     borderColor: faceliftPalette.buttonDefault,
     borderWidth: '1@s',
-    margin: '3@s',
+    margin: '3@ms0.1',
   },
   textStyle: {
-    padding: '15@s',
+    padding: '12@ms0.1',
     color: faceliftPalette.buttonDefault,
   },
   inactiveButtonStyle: {
     backgroundColor: faceliftPalette.whiteGrey,
-    margin: '3@s',
+    margin: '3@ms0.1',
     borderRadius: '15@s',
   },
   inactiveTextStyle: {
-    padding: '15@s',
+    padding: '12@ms0.1',
     color: faceliftPalette.grey,
   },
 })
