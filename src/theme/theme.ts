@@ -356,6 +356,11 @@ export const theme = createTheme({
     solidDisabled: {
       color: 'inactiveText',
     },
+    errorText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(13),
+      fontWeight: '400',
+    },
   },
   pressableVariants: {
     outline: {
