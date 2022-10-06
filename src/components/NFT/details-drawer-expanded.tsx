@@ -8,6 +8,7 @@ import { NFTAsset } from '../../types'
 import { useRecoilValue } from 'recoil'
 import { accountInfoStateFamily, addressStateFamily } from '../../atoms'
 import { labelTranslateFn } from '../../utils'
+import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 
 const { Line, SmallPurpleArrow, LockIcon } = AppIcons
 
@@ -23,7 +24,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
 
   const addressForAccount = useRecoilValue(
     addressStateFamily(nftItem.accountId),
-  )
+  ) as string
 
   const renderOverviewToggle = () => {
     return (
@@ -79,9 +80,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
             tx={'nft.account'}
           />
           <Text style={(styles.descriptionText, styles.leftLink)}>
-            {String(addressForAccount).substr(0, 5) +
-              '...' +
-              String(addressForAccount).substr(38, 4)}{' '}
+            {shortenAddress(addressForAccount)}
             <SmallPurpleArrow />
           </Text>
         </Box>
@@ -92,9 +91,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
             {labelTranslateFn('nft.contractAddress')}
           </Text>
           <Text style={(styles.descriptionText, styles.leftLink)}>
-            {String(nftItem.asset_contract?.address).substr(0, 5) +
-              '...' +
-              String(nftItem.asset_contract?.address).substr(38, 4)}{' '}
+            {shortenAddress(nftItem.asset_contract?.address as string)}
             <SmallPurpleArrow />
           </Text>
         </Box>

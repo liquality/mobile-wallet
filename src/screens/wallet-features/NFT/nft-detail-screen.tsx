@@ -67,9 +67,9 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
         />
       </Box>
       <BottomDrawer
-        containerHeight={731}
-        downDisplay={620}
-        offset={50}
+        containerHeight={671}
+        downDisplay={580}
+        offset={150}
         startUp={false}
         roundedEdges={false}
         backgroundColor={'rgba(255, 255, 255, 0.77)'}

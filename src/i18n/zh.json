@@ -417,7 +417,10 @@
     "decentralized": "Decentralized",
     "creatorFee": "CREATOR FEE",
     "itemActivity": "ITEM ACTIVITY",
-    "explorer": "Explorer"
+    "explorer": "Explorer",
+    "send": "Send",
+    "share": "Share",
+    "sell": "Sell"
   },
   "letGetYouStarted": "Let’s Get You Started",
   "buyCrypto": "Buy Crypto",

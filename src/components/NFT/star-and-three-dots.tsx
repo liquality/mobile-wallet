@@ -87,23 +87,25 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
                       onPress={navigateToSendNftScreen}
                       style={styles.row}>
                       <Send style={styles.icon} />
-                      <Text style={styles.modalRowText}>Send</Text>
+                      <Text style={styles.modalRowText} tx={'nft.send'} />
                     </Pressable>
                     <Pressable
                       onPress={() =>
+                        //TODO: Maybe make this more dynamic since more marketplaces may exist?
                         Linking.openURL(
                           `https://opensea.io/assets/${accountInfo.chain}/${nftItem.asset_contract?.address}/${nftItem.token_id}`,
                         )
                       }
                       style={styles.row}>
                       <Sell style={styles.sellIcon} />
-                      <Text style={(styles.modalRowText, styles.textPurple)}>
-                        Sell
-                      </Text>
+                      <Text
+                        style={(styles.modalRowText, styles.textPurple)}
+                        tx={'nft.sell'}
+                      />
                     </Pressable>
                     <Pressable style={styles.row}>
                       <Share style={styles.icon} />
-                      <Text style={styles.modalRowText}>Share</Text>
+                      <Text style={styles.modalRowText} tx={'nft.share'} />
                     </Pressable>
                   </Box>
                 </Box>
