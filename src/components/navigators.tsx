@@ -62,6 +62,9 @@ import { useRecoilValue } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
 import { labelTranslateFn } from '../utils'
+import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
+import { useNavigation } from '@react-navigation/core'
+import { CommonActions } from '@react-navigation/native'
 
 const {
   SwapCheck,
@@ -96,6 +99,28 @@ const LiqLogoHeaderLeft = () => {
   return (
     <Box marginLeft={'onboardingHeaderPadding'}>
       <ThemeIcon iconName="OnlyLqLogo" />
+    </Box>
+  )
+}
+
+const DoneButton = () => {
+  const navigation = useNavigation()
+  const onDonePress = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'MainNavigator' }],
+      }),
+    )
+  }
+  return (
+    <Box paddingHorizontal={'s'}>
+      <Text
+        variant={'listText'}
+        color="defaultButton"
+        tx="receiveScreen.done"
+        onPress={onDonePress}
+      />
     </Box>
   )
 }
@@ -524,10 +549,10 @@ export const StackMainNavigator = () => {
       <MainStack.Screen
         name="MainNavigator"
         component={MainNavigator}
-        options={() => ({
+        options={{
           headerShown: false,
           headerRight: PlaceholderComp,
-        })}
+        }}
       />
       <MainStack.Screen
         name="BackupWarningScreen"
@@ -535,18 +560,23 @@ export const StackMainNavigator = () => {
         options={screenNavOptions}
       />
       <MainStack.Screen
+        name="BackupPrivateKeyScreen"
+        component={BackupPrivateKeyScreen}
+        options={{ ...screenNavOptions, headerRight: DoneButton }}
+      />
+      <MainStack.Screen
         name="BackupLoginScreen"
         component={BackupLoginScreen}
-        options={({}) => ({
+        options={{
           headerShown: false,
-        })}
+        }}
       />
       <MainStack.Screen
         name="BackupSeedScreen"
         component={BackupSeedScreen}
-        options={({}) => ({
+        options={{
           headerShown: false,
-        })}
+        }}
       />
       <MainStack.Screen
         name="TermsScreen"

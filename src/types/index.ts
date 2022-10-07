@@ -156,6 +156,7 @@ export type MainStackParamList = {
   AssetManagementScreen: StackPayload
   BackupWarningScreen: StackPayload
   BackupSeedScreen: { screenTitle?: string }
+  BackupPrivateKeyScreen: StackPayload
   BackupLoginScreen: { backupSeed?: boolean; screenTitle?: string }
   AssetToggleScreen: StackPayload
   ReceiveScreen: StackPayload

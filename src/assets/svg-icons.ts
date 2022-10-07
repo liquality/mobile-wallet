@@ -114,6 +114,7 @@ import DarkMoon from '../assets/icons/darkMoon.svg'
 import DarkSun from '../assets/icons/darkSun.svg'
 import PrivateKeyWarn from '../assets/icons/pkWarn.svg'
 import SeedPhraseWarn from '../assets/icons/spWarn.svg'
+import PrivateKeyIcon from '../assets/icons/privateKeyIcon.svg'
 
 export default {
   PendingSwap,
@@ -232,4 +233,5 @@ export default {
   DarkSun,
   PrivateKeyWarn,
   SeedPhraseWarn,
+  PrivateKeyIcon,
 }

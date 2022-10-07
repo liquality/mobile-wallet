@@ -126,9 +126,9 @@
     "iSaveSeed": "I saved the seed"
   },
   "backupWarningScreen": {
-    "showSeedPhrase": "Show Seed Phrase?",
-    "anyoneWhoSeed": "Anyone who has this seed phrase can steal your funds.",
-    "showPrivateKey": "Show Private Key?",
+    "show": "Show",
+    "seedPhrase": "Seed Phrase?",
+    "anyoneWhoSeed": "Anyone who has this seed phrase can steal your funds. View it in private space.",
     "anyOneWhoPrivate": "Anyone who has your private key can steal your funds. View it in private space.",
     "viewItPrivate": "View it in private without any cameras around.",
     "iHavePrivacy": "I Have Privacy",
@@ -440,5 +440,9 @@
   "tabBarActivity": "Activity",
   "tabBarOverview": "Overview",
   "tabBarDetails": "Details",
-  "description": "DESCRIPTION"
+  "description": "DESCRIPTION",
+  "your": "Your",
+  "privateKey": "Private Key",
+  "neverDiscloseInfo": "Never disclose your private key. Anyone with that key has access to your funds. Ensure it is stored securely.",
+  "copyPrivateKey": "Copy Private Key"
 }
