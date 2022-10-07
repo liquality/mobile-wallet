@@ -52,6 +52,7 @@ export const theme = createTheme({
     mediumGrey: faceliftPalette.mediumGrey,
     greyBlack: faceliftPalette.greyBlack,
     yellow: faceliftPalette.yellow,
+    darkPink: palette.darkPink,
   },
   spacing: {
     vs: scale(2),
@@ -86,7 +87,7 @@ export const theme = createTheme({
     },
     pinkText: {
       fontFamily: Fonts.Regular,
-      color: palette.darkPink,
+      color: 'darkPink',
       fontWeight: '600',
       fontSize: 20,
     },

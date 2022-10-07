@@ -15,6 +15,7 @@ import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaul
 import GradientBackground from '../../../components/gradient-background'
 import { Text, Box, Button, palette } from '../../../theme'
 import { AppIcons, Fonts } from '../../../assets'
+import OverlayTutorial from './overlay-tutorial'
 
 const { Eye } = AppIcons
 
@@ -23,7 +24,7 @@ type BackupSeedScreenProps = NativeStackScreenProps<
   'BackupSeedScreen'
 >
 
-const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
+const BackupSeedScreen = ({ route, navigation }: BackupSeedScreenProps) => {
   const [revealedWord, setRevealedWord] = useState(0)
 
   const wallet = setupWallet({
@@ -88,7 +89,7 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
   const seedList = wallet.state.wallets[0].mnemonic.split(' ')
   return (
     <Box style={styles.container}>
-      {/* {route.params.quitOverlay ? null : <OverlayTutorial />} */}
+      {route.params.quitOverlay ? null : <OverlayTutorial />}
 
       <GradientBackground
         width={Dimensions.get('screen').width}
