@@ -28,4 +28,5 @@ export const faceliftPalette = {
   darkText: '#EEEEEE',
   red: '#E40000',
   switchColor: '#9D4DFA',
+  yellow: '#FBFF4A',
 }

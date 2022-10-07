@@ -31,6 +31,7 @@ export const theme = createTheme({
     errorMsgBarColor: palette.yellowBar,
     transparent: 'transparent',
     white: faceliftPalette.white,
+    black: faceliftPalette.black,
     mediumWhite: faceliftPalette.mediumWhite,
     darkGrey: faceliftPalette.darkGrey,
     activeButton: faceliftPalette.buttonActive,
@@ -50,6 +51,7 @@ export const theme = createTheme({
     headerColor: faceliftPalette.black,
     mediumGrey: faceliftPalette.mediumGrey,
     greyBlack: faceliftPalette.greyBlack,
+    yellow: faceliftPalette.yellow,
   },
   spacing: {
     vs: scale(2),
@@ -355,6 +357,9 @@ export const theme = createTheme({
     solid: {
       color: 'white',
     },
+    warn: {
+      color: 'black',
+    },
     defaultOutline: {
       color: 'defaultButton',
     },
@@ -369,6 +374,23 @@ export const theme = createTheme({
     errorText: {
       fontFamily: Fonts.Regular,
       fontSize: scale(13),
+      fontWeight: '400',
+    },
+    warnHighlight: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(14),
+      fontWeight: '600',
+    },
+    warnText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(20),
+      fontWeight: '400',
+      lineHeight: scale(25),
+    },
+    warnHeader: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(45),
+      lineHeight: scale(60),
       fontWeight: '400',
     },
   },
@@ -386,6 +408,9 @@ export const theme = createTheme({
     },
     solidDisabled: {
       backgroundColor: 'inactiveButton',
+    },
+    warn: {
+      backgroundColor: 'yellow',
     },
   },
   buttonVariants: {

@@ -85,10 +85,11 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
   }, [navigation])
 
   const handleBackupSeedPress = useCallback(() => {
-    navigation.navigate('BackupWarningScreen', {
-      screenTitle: 'Warning',
-      includeBackBtn: false,
-    })
+    navigation.navigate('BackupWarningScreen', { isPrivateKey: false })
+  }, [navigation])
+
+  const handleBackupPrivateKeyPress = useCallback(() => {
+    navigation.navigate('BackupWarningScreen', { isPrivateKey: true })
   }, [navigation])
 
   const handNetworkPress = useCallback(
@@ -198,6 +199,12 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
           sublabel={labelTranslateFn('settingsScreen.alwayKeepSeedSafe')!}
           icon={<ChevronRightIcon height={scale(15)} width={scale(15)} />}
           onPress={handleBackupSeedPress}
+        />
+        <SettingListComponent
+          mainLabel={labelTranslateFn('settingsScreen.backUpPrivateKey')!}
+          sublabel={labelTranslateFn('settingsScreen.alwayKeepPrivateKeySafe')!}
+          icon={<ChevronRightIcon height={scale(15)} width={scale(15)} />}
+          onPress={handleBackupPrivateKeyPress}
         />
         <SettingListComponent
           mainLabel={labelTranslateFn('settingsScreen.walletLogs')!}

@@ -17,7 +17,6 @@ import OverviewScreen from '../screens/wallet-features/home/overview-screen'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import SettingsScreen from '../screens/wallet-features/settings/settings-screen'
 import AssetScreen from '../screens/wallet-features/asset/asset-screen'
-import { HeaderBackButtonProps } from '@react-navigation/elements'
 import ReceiveScreen from '../screens/wallet-features/receive/receive-screen'
 import SendScreen from '../screens/wallet-features/send/send-screen'
 import SendReviewScreen from '../screens/wallet-features/send/send-review-screen'
@@ -66,7 +65,6 @@ import { labelTranslateFn } from '../utils'
 
 const {
   SwapCheck,
-  TimesIcon,
   NetworkActiveDot,
   Ellipses,
   ChevronLeft,
@@ -198,29 +196,7 @@ const SwapCheckHeaderRight = (navProps: NavigationProps) => {
   )
 }
 
-const BackupWarningHeaderLeft = () => (
-  <Text style={styles.settingsTitle} tx="warning" />
-)
-
-const BackupWarningHeaderRight = (navProps: NavigationProps) => {
-  const { navigation } = navProps
-
-  return (
-    <Pressable onPress={navigation.goBack}>
-      <TimesIcon
-        width={30}
-        height={30}
-        color={palette.timesIconColor}
-        style={styles.checkIcon}
-      />
-    </Pressable>
-  )
-}
-
-const AppStackHeaderLeft = (
-  headerProps: HeaderBackButtonProps,
-  navProps: NavigationProps,
-) => {
+const AppStackHeaderLeft = (navProps: NavigationProps) => {
   const { navigation } = navProps
 
   const canGoBack = navigation.canGoBack()
@@ -293,7 +269,7 @@ export const AppStackNavigator = () => (
       ...TransitionPresets.SlideFromRightIOS,
       headerShown: true,
       title: '',
-      headerLeft: (props) => AppStackHeaderLeft(props, { navigation, route }),
+      headerLeft: () => AppStackHeaderLeft({ navigation, route }),
       headerRight: () => AppStackHeaderRight({ navigation, route }),
     })}>
     <MainStack.Group>
@@ -556,12 +532,7 @@ export const StackMainNavigator = () => {
       <MainStack.Screen
         name="BackupWarningScreen"
         component={BackupWarningScreen}
-        options={({ navigation, route }: NavigationProps) => ({
-          headerShown: true,
-          headerTitle: '',
-          headerLeft: BackupWarningHeaderLeft,
-          headerRight: () => BackupWarningHeaderRight({ navigation, route }),
-        })}
+        options={screenNavOptions}
       />
       <MainStack.Screen
         name="BackupLoginScreen"
@@ -618,11 +589,5 @@ export const StackMainNavigator = () => {
 const styles = StyleSheet.create({
   checkIcon: {
     marginRight: 20,
-  },
-  settingsTitle: {
-    fontFamily: Fonts.Regular,
-    fontSize: 14,
-    fontWeight: '600',
-    marginLeft: 20,
   },
 })
