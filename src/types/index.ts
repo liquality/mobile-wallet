@@ -120,6 +120,11 @@ export type StackPayload = {
   amountInput?: string
   fee?: GasFees | null
   speedMode?: FeeLabel
+  isPrivateKey?: boolean
+}
+
+export type SettingStackParamList = {
+  Settings: { shouldLogOut?: boolean }
 }
 
 export type RootStackParamList = {
@@ -132,6 +137,7 @@ export type RootStackParamList = {
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   LoadingScreen: StackPayload
+  BackupWarningScreen: StackPayload
 }
 
 export type MainStackParamList = {
