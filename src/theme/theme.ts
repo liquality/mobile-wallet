@@ -53,7 +53,7 @@ export const theme = createTheme({
   },
   spacing: {
     vs: scale(2),
-    s: scale(5),
+    s: scale(3),
     m: scale(10),
     l: scale(15),
     xl: scale(20),
@@ -299,14 +299,14 @@ export const theme = createTheme({
     },
     termsBody: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(17),
+      fontSize: scale(15),
       fontWeight: '400',
     },
     h1: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(39),
+      fontSize: scale(37),
       fontWeight: '500',
-      lineHeight: scale(53),
+      lineHeight: scale(49),
     },
     h3: {
       fontFamily: Fonts.Regular,
@@ -365,6 +365,11 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontWeight: '600',
       fontSize: scale(36),
+    },
+    errorText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(13),
+      fontWeight: '400',
     },
   },
   pressableVariants: {

@@ -82,9 +82,9 @@
     "keyInfoMissing": "Key information missing",
     "confirmSeed": "Confirm Seed Phrase",
     "tap3wordMatching": "Tap the 3 words matching their position in the seed phrase. Once confirmed, store the phrase securely.",
-    "1stWord": "1ST WORD",
-    "5thWord": "5th WORD",
-    "12thWord": "12TH WORD"
+    "1stWord": "1st word",
+    "5thWord": "5th word",
+    "12thWord": "12th word"
   },
   "seedPhraseScreen": {
     "backupYourWallet": "Backup your Wallet",
@@ -432,6 +432,7 @@
   "letGetYouStarted": "Let’s Get You Started",
   "buyCrypto": "Buy Crypto",
   "unlockWalletUpperCase": "UNLOCK YOUR WALLET",
+  "wordsNotMatch": "Words don’t match. Try again.",
   "tabBarActivity": "Activity",
   "tabBarOverview": "Overview",
   "tabBarDetails": "Details",
