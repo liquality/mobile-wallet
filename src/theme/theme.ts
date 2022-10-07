@@ -317,7 +317,7 @@ export const theme = createTheme({
     },
     radioText: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(16),
+      fontSize: scale(14),
       fontWeight: '400',
     },
     listText: {
