@@ -1,5 +1,5 @@
 import { Image, Pressable, ScrollView, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { AppIcons, Fonts } from '../../assets'
 import { Box, faceliftPalette, palette } from '../../theme'
 import { Text } from '../text/text'
@@ -31,28 +31,30 @@ const HorizontallyScrollableImage: React.FC<
     handleGoToCollection,
   } = props
 
-  let nftImagesScrollable = nftItem.map(
-    (nftItemInsideCollection: NFTAsset, indexKey: number) => {
-      return (
-        <Box key={indexKey}>
-          <Pressable
-            style={styles.pressable}
-            onPress={() => seeNftDetail(nftItemInsideCollection)}>
-            <Image
-              source={checkImgUrlExists(
-                nftItemInsideCollection.image_original_url,
-              )}
-              style={styles.scrollableImg}
-              onError={() => setImgError(true)}
+  const nftImagesScrollable = useMemo(
+    () =>
+      nftItem.map((nftItemInsideCollection: NFTAsset, indexKey: number) => {
+        return (
+          <Box key={indexKey}>
+            <Pressable
+              style={styles.pressable}
+              onPress={() => seeNftDetail(nftItemInsideCollection)}>
+              <Image
+                source={checkImgUrlExists(
+                  nftItemInsideCollection.image_original_url,
+                )}
+                style={styles.scrollableImg}
+                onError={() => setImgError(true)}
+              />
+            </Pressable>
+            <StarFavorite
+              nftAsset={nftItemInsideCollection}
+              activeWalletId={activeWalletId}
             />
-          </Pressable>
-          <StarFavorite
-            nftAsset={nftItemInsideCollection}
-            activeWalletId={activeWalletId}
-          />
-        </Box>
-      )
-    },
+          </Box>
+        )
+      }),
+    [activeWalletId, checkImgUrlExists, nftItem, seeNftDetail, setImgError],
   )
   return (
     <Box>
