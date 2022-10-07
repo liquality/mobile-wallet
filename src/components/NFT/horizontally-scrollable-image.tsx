@@ -1,10 +1,4 @@
-import {
-  Dimensions,
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-} from 'react-native'
+import { Image, Pressable, ScrollView, StyleSheet } from 'react-native'
 import React from 'react'
 import { AppIcons, Fonts } from '../../assets'
 import { Box, faceliftPalette, palette } from '../../theme'

@@ -9,8 +9,8 @@ import NftHeader from '../../../components/NFT/nft-header'
 import NftImageView from '../../../components/NFT/nft-image-view'
 import NftTabBar from '../../../components/NFT/nft-tab-bar'
 import {
-  allNfts,
   getAllEnabledAccounts,
+  getNftsForAccount,
   updateNFTs,
 } from '../../../store/store'
 import { Box, palette } from '../../../theme'
@@ -50,15 +50,15 @@ const NftForSpecificChainScreen = ({
       network: activeNetwork,
       accountIds: accIds,
     })
-    //ÄNDRA HÄR OXÅ
-    //let nfts = await getNftsForAccount(currentAccount.id)
-    setChainSpecificNfts(allNfts)
+    //Use dummydata here if no assets load
+    let nfts = await getNftsForAccount(currentAccount.id)
+    setChainSpecificNfts(nfts)
     //Manipulate NFT object to be iterable
-    let wholeNftArr = Object.values(allNfts).map((val) => {
+    let wholeNftArr = Object.values(nfts).map((val) => {
       return val
     })
     setIterableNftArray(wholeNftArr)
-    let totalAmountOfNfts = Object.values(allNfts).reduce(
+    let totalAmountOfNfts = Object.values(nfts).reduce(
       (acc, nft) => acc + nft.length,
       0,
     )
@@ -81,7 +81,7 @@ const NftForSpecificChainScreen = ({
   )
 
   const handleRefreshNftsPress = async () => {
-    //TODO: Finish this logic, need loading spinner
+    //TODO: Finish this logic, need a loading spinner
     fetchData()
   }
 

@@ -96,7 +96,6 @@ import Sell from '../assets/icons/nfts/sell.svg'
 import Refresh from '../assets/icons/nfts/refresh.svg'
 import NftChain from '../assets/icons/nfts/nft-chain.svg'
 
-
 import ShortLine from '../assets/icons/nfts/short-line.svg'
 import NetworkActiveDot from '../assets/icons/dot.svg'
 import Ellipses from '../assets/icons/ellipses.svg'

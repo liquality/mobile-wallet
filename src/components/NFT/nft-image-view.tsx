@@ -4,12 +4,11 @@ import {
   Image,
   Pressable,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
 } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import { AppIcons, Fonts } from '../../assets'
-import { Box, palette } from '../../theme'
+import { Fonts } from '../../assets'
+import { Box } from '../../theme'
 import { Text } from '../text/text'
 import { useNavigation } from '@react-navigation/core'
 import { faceliftPalette } from '../../theme/faceliftPalette'
@@ -17,8 +16,6 @@ import StarFavorite from './star-favorite'
 import { NFTAsset } from '../../types'
 import FullWidthImage from './full-width-image'
 import HorizontallyScrollableImage from './horizontally-scrollable-image'
-
-const { SeeAllNftsIcon, LongArrow } = AppIcons
 
 type NftImageViewProps = {
   iterableNftArray: NFTAsset[]
