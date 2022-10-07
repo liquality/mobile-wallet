@@ -4,6 +4,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
 import { labelTranslateFn } from '../../../utils'
 import { AppIcons } from '../../../assets'
+import { Alert } from 'react-native'
 
 const { PrivateKeyWarn, SeedPhraseWarn } = AppIcons
 
@@ -16,6 +17,7 @@ const BackupWarningScreen: React.FC<
 
   const handleBackupBtnPress = useCallback(() => {
     if (isPrivateKey) {
+      Alert.alert('Work in progress')
       return
     }
     navigation.navigate('BackupLoginScreen', {
