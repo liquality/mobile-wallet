@@ -1,60 +1,122 @@
-import { StyleSheet } from 'react-native'
+import { Pressable, StyleSheet } from 'react-native'
 import React from 'react'
-import { Fonts } from '../../assets'
-import { Box, faceliftPalette } from '../../theme'
-import { Text } from '../text/text'
+import { Fonts, AppIcons } from '../../assets'
+import { Box, Card, faceliftPalette, Text } from '../../theme'
+import { GRADIENT_BACKGROUND_HEIGHT } from '../../utils'
+import { scale } from 'react-native-size-matters'
+import AssetIcon from '../asset-icon'
+import { AccountType } from '../../types'
+const adjustLineHeight = -scale(30)
+
+const { Eye, Refresh, NftChain } = AppIcons
 
 type NftHeaderProps = {
   blackText: string
   greyText: string
-  width: number
-  height: number
+  handleRefreshNftsPress: () => Promise<void>
+  accountInfo: AccountType
+  isSpecificChain?: boolean
 }
 
 const NftHeader: React.FC<NftHeaderProps> = (props) => {
-  const { width, height, blackText, greyText } = props
+  const {
+    isSpecificChain,
+    accountInfo,
+    handleRefreshNftsPress,
+    blackText,
+    greyText,
+  } = props
 
   const renderAllNftsHeaderText = () => {
     return (
-      <Box>
-        <Text style={styles.blackText}>
-          {blackText} {'\n'}
-          <Text style={[styles.blackText, styles.greyText]}>{greyText}</Text>
-        </Text>
-      </Box>
+      <Card
+        variant={'summaryCard'}
+        height={GRADIENT_BACKGROUND_HEIGHT}
+        paddingHorizontal="xl">
+        <Box
+          style={styles.eyebrowContainer}
+          flex={0.65}
+          justifyContent="center">
+          {isSpecificChain ? (
+            <Box flexDirection={'row'}>
+              {/* TODO: Uncomment this when assets are loading again, for now hardcoded
+                <AssetIcon chain={accountInfo.chain} />
+             */}
+              <AssetIcon chain={'ethereum'} />
+              <NftChain style={styles.nftChainOverlap} />
+
+              <Text style={styles.addressText}>
+                {/*   TODO: Uncomment this when assets are loading again, for now hardcoded
+                  {accountInfo.address}
+               */}{' '}
+                0xb81B9...E020
+              </Text>
+              <Eye style={styles.eye} />
+            </Box>
+          ) : null}
+
+          <Text color={'darkGrey'} variant="totalBalance">
+            {blackText}
+          </Text>
+
+          <Box style={styles.textContainer}>
+            <Text
+              style={{ marginTop: adjustLineHeight }}
+              variant="totalAsset"
+              color={'nestedColor'}>
+              {greyText}
+            </Text>
+            {isSpecificChain ? (
+              <Pressable
+                onPress={handleRefreshNftsPress}
+                style={styles.refreshBtn}>
+                <Refresh />
+              </Pressable>
+            ) : null}
+          </Box>
+        </Box>
+      </Card>
     )
   }
-  return (
-    <Box width={width} height={height} style={styles.insideHeader}>
-      {renderAllNftsHeaderText()}
-    </Box>
-  )
+  return renderAllNftsHeaderText()
 }
 
 const styles = StyleSheet.create({
-  insideHeader: {
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.4,
-    shadowRadius: 3,
-    elevation: 5,
+  refreshBtn: {
+    width: 37,
+    height: 37,
+    backgroundColor: faceliftPalette.mediumWhite,
+    marginBottom: 10,
     position: 'relative',
+    bottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  blackText: {
-    left: 20,
-    top: 120,
-    fontFamily: Fonts.Regular,
+  eye: { marginTop: 10 },
+  nftChainOverlap: { zIndex: 100, right: 10 },
+  addressText: {
+    fontFamily: Fonts.JetBrainsMono,
     fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: 35,
-    letterSpacing: 0.25,
+    fontWeight: '500',
+    fontSize: 14,
+    lineHeight: 20,
+    letterSpacing: 0.5,
+    marginTop: 7,
+
+    color: faceliftPalette.greyMeta,
   },
-  greyText: {
-    marginVertical: 0,
-    paddingTop: 10,
-    color: faceliftPalette.grey,
-    lineHeight: 35,
+
+  textContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 10,
+  },
+
+  eyebrowContainer: {
+    marginTop: scale(110),
+    display: 'flex',
+    justifyContent: 'space-between',
   },
 })
 

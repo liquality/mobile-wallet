@@ -22,6 +22,7 @@ const SectionTitle: FC<SectionTitleProps> = (props: SectionTitleProps) => {
   } else {
     content = title
   }
+  console.log(content, 'CONTEN?')
   return <Text style={styles.title}>{content}</Text>
 }
 

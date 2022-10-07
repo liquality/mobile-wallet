@@ -589,6 +589,7 @@ export const createWallet = async (
  */
 export const populateWallet = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet.state
+  console.log(wallet.getters.accountsData, 'ACCOUNTSDATAAA')
   await wallet.dispatch
     .initializeAddresses({
       network: activeNetwork,

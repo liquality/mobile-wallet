@@ -41,32 +41,32 @@ const NftForSpecificChainScreen = ({
 
   console.log(accountInfo, 'acc infooo')
 
+  async function fetchData() {
+    const enabledAccountsToSendIn = await getAllEnabledAccounts()
+    const accIds = enabledAccountsToSendIn.map((account) => {
+      return account.id
+    })
+    setAccountIdsToSendIn(accIds)
+    await updateNFTs({
+      walletId: activeWalletId,
+      network: activeNetwork,
+      accountIds: accIds,
+    })
+    //ÄNDRA HÄR OXÅ
+    //let nfts = await getNftsForAccount(currentAccount.id)
+    setChainSpecificNfts(allNfts)
+    //Manipulate NFT object to be iterable
+    let wholeNftArr = Object.values(allNfts).map((val) => {
+      return val
+    })
+    setIterableNftArray(wholeNftArr)
+    let totalAmountOfNfts = Object.values(allNfts).reduce(
+      (acc, nft) => acc + nft.length,
+      0,
+    )
+    setNumberOfNfts(totalAmountOfNfts as number)
+  }
   useEffect(() => {
-    async function fetchData() {
-      const enabledAccountsToSendIn = await getAllEnabledAccounts()
-      const accIds = enabledAccountsToSendIn.map((account) => {
-        return account.id
-      })
-      setAccountIdsToSendIn(accIds)
-      await updateNFTs({
-        walletId: activeWalletId,
-        network: activeNetwork,
-        accountIds: accIds,
-      })
-      //ÄNDRA HÄR OXÅ
-      //let nfts = await getNftsForAccount(currentAccount.id)
-      setChainSpecificNfts(allNfts)
-      //Manipulate NFT object to be iterable
-      let wholeNftArr = Object.values(allNfts).map((val) => {
-        return val
-      })
-      setIterableNftArray(wholeNftArr)
-      let totalAmountOfNfts = Object.values(allNfts).reduce(
-        (acc, nft) => acc + nft.length,
-        0,
-      )
-      setNumberOfNfts(totalAmountOfNfts as number)
-    }
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeNetwork, activeWalletId])
@@ -82,19 +82,25 @@ const NftForSpecificChainScreen = ({
     [navigation, accountIdsToSendIn],
   )
 
+  const handleRefreshNftsPress = async () => {
+    //TODO: Finish this logic, need loading spinner
+    fetchData()
+  }
+
   return (
     <Box flex={1} style={styles.overviewBlock}>
       <ScrollView>
         <Box>
           <NftHeader
+            isSpecificChain={true}
+            accountInfo={accountInfo}
             blackText={`${
               accountInfo.chain?.toUpperCase()
                 ? accountInfo.chain?.toUpperCase()
                 : 'ETHEREUM'
             }  `}
             greyText={`${numberOfNfts} ${labelTranslateFn('nft.nfts')}`}
-            width={Dimensions.get('screen').width}
-            height={225}
+            handleRefreshNftsPress={handleRefreshNftsPress}
           />
         </Box>
 
