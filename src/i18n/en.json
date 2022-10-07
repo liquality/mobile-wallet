@@ -205,6 +205,8 @@
     "testnet": "TESTNET",
     "backUpSeedPhrase": "Back-up Seed Phrase",
     "alwayKeepSeedSafe": "Always keep your seed phrase safe.",
+    "backUpPrivateKey": "Back-up Private Key",
+    "alwayKeepPrivateKeySafe": "Always keep your private key safe.",
     "walletLogs": "Wallet Logs",
     "downloadLogs": "Download Logs",
     "syncDevices": "Sync Devices",
