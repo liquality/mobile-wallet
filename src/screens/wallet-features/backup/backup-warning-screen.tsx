@@ -1,110 +1,83 @@
 import React, { useCallback } from 'react'
-import { View, StyleSheet } from 'react-native'
-import { useNavigation, NavigationProp } from '@react-navigation/core'
-import { Text, Button, palette } from '../../../theme'
+import { Text, Box, Pressable } from '../../../theme'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
 import { labelTranslateFn } from '../../../utils'
-import { AppIcons, Fonts } from '../../../assets'
+import { AppIcons } from '../../../assets'
+import { Alert } from 'react-native'
 
-const { Eye } = AppIcons
+const { PrivateKeyWarn, SeedPhraseWarn } = AppIcons
 
 const BackupWarningScreen: React.FC<
   NativeStackScreenProps<MainStackParamList, 'BackupWarningScreen'>
-> = () => {
-  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+> = (props) => {
+  const { navigation, route } = props
 
-  const handleBackupSeedBtnPress = useCallback(() => {
+  const { isPrivateKey = false } = route.params
+
+  const handleBackupBtnPress = useCallback(() => {
+    if (isPrivateKey) {
+      Alert.alert('Work in progress')
+      return
+    }
     navigation.navigate('BackupLoginScreen', {
       backupSeed: true,
       screenTitle: labelTranslateFn('backupWarningScreen.signIn')!,
     })
-  }, [navigation])
+  }, [navigation, isPrivateKey])
 
   return (
-    <View style={styles.container}>
-      <Text
-        style={styles.warningBackupSeedTitle}
-        tx="backupWarningScreen.showSeedPhrase"
-      />
-      <Text
-        style={styles.warningBackupSeedSubtitle}
-        tx="backupWarningScreen.anyoneWhoSeed"
-      />
-      <View style={styles.eyeIcon}>
-        <Eye />
+    <Box
+      flex={1}
+      backgroundColor="mainBackground"
+      paddingHorizontal={'screenPadding'}>
+      <Box flex={0.75}>
+        {isPrivateKey ? <PrivateKeyWarn /> : <SeedPhraseWarn />}
+        <Box
+          marginTop={'xxl'}
+          backgroundColor={'yellow'}
+          padding="s"
+          alignSelf="flex-start">
+          <Text tx="warning" variant={'warnHighlight'} color={'black'} />
+        </Box>
         <Text
-          style={styles.warningBackupSeedNoCamera}
-          tx="backupWarningScreen.viewItPrivate"
+          marginTop={'l'}
+          tx={
+            isPrivateKey
+              ? 'backupWarningScreen.showPrivateKey'
+              : 'backupWarningScreen.showSeedPhrase'
+          }
+          variant={'warnHeader'}
+          color={'black'}
         />
-      </View>
-      <View style={styles.actionBlock}>
-        <Button
-          style={styles.btn}
-          type="secondary"
-          variant="m"
-          label={{ tx: 'common.cancel' }}
+        <Text
+          tx={
+            isPrivateKey
+              ? 'backupWarningScreen.anyOneWhoPrivate'
+              : 'backupWarningScreen.anyoneWhoSeed'
+          }
+          variant={'warnText'}
+          color={'black'}
+        />
+      </Box>
+      <Box flex={0.25}>
+        <Box marginVertical={'xl'}>
+          <Pressable
+            label={{ tx: 'backupWarningScreen.iHavePrivacy' }}
+            onPress={handleBackupBtnPress}
+            variant="warn"
+          />
+        </Box>
+        <Text
           onPress={navigation.goBack}
-          isBorderless={false}
-          isActive={true}
+          textAlign={'center'}
+          variant="link"
+          color={'black'}
+          tx="termsScreen.cancel"
         />
-        <Button
-          type="primary"
-          variant="m"
-          label={{ tx: 'backupWarningScreen.iHavePrivacy' }}
-          onPress={handleBackupSeedBtnPress}
-          isBorderless={false}
-        />
-      </View>
-    </View>
+      </Box>
+    </Box>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: palette.white,
-    padding: 15,
-  },
-  eyeIcon: {
-    alignItems: 'center',
-  },
-  btn: {
-    marginRight: 30,
-    marginLeft: 30,
-  },
-  actionBlock: {
-    flex: 1.1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    padding: 15,
-  },
-  warningBackupSeedTitle: {
-    fontFamily: Fonts.Regular,
-    color: 'black',
-    fontWeight: '600',
-    fontSize: 35,
-    textAlign: 'center',
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  warningBackupSeedSubtitle: {
-    fontFamily: Fonts.Regular,
-    fontWeight: '500',
-    color: 'black',
-    fontSize: 20,
-    textAlign: 'center',
-    marginBottom: 70,
-  },
-  warningBackupSeedNoCamera: {
-    fontFamily: Fonts.Regular,
-    color: 'black',
-    fontSize: 18,
-    textAlign: 'center',
-    marginTop: 70,
-    width: '70%',
-  },
-})
 
 export default BackupWarningScreen

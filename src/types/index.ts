@@ -120,6 +120,7 @@ export type StackPayload = {
   amountInput?: string
   fee?: GasFees | null
   speedMode?: FeeLabel
+  isPrivateKey?: boolean
 }
 
 export type SettingStackParamList = {
@@ -136,7 +137,7 @@ export type RootStackParamList = {
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   LoadingScreen: StackPayload
-  BackupWarningScreen: { screenTitle?: string; includeBackBtn?: boolean }
+  BackupWarningScreen: StackPayload
 }
 
 export type MainStackParamList = {
@@ -153,7 +154,7 @@ export type MainStackParamList = {
   AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
   AssetManagementScreen: StackPayload
-  BackupWarningScreen: { screenTitle?: string; includeBackBtn?: boolean }
+  BackupWarningScreen: StackPayload
   BackupSeedScreen: { screenTitle?: string }
   BackupLoginScreen: { backupSeed?: boolean; screenTitle?: string }
   AssetToggleScreen: StackPayload

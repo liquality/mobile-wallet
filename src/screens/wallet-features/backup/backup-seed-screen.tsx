@@ -14,8 +14,8 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import GradientBackground from '../../../components/gradient-background'
 import { Text, Box, Button, palette } from '../../../theme'
-import OverlayTutorial from './overlay-tutorial'
 import { AppIcons, Fonts } from '../../../assets'
+import OverlayTutorial from './overlay-tutorial'
 
 const { Eye } = AppIcons
 
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Regular,
     color: palette.white,
     fontSize: 30,
-    lineHeight: 28,
+    // lineHeight: 28,
   },
   description: {
     fontFamily: Fonts.SemiBold,
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
   missingWordText: {
     fontFamily: Fonts.Regular,
     fontSize: 16,
-    lineHeight: 17,
+    lineHeight: 21,
     borderBottomWidth: 1,
     borderBottomColor: palette.turquoise,
     width: '100%',

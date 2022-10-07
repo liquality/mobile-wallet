@@ -132,8 +132,10 @@
   "backupWarningScreen": {
     "showSeedPhrase": "Show Seed Phrase?",
     "anyoneWhoSeed": "Anyone who has this seed phrase can steal your funds.",
+    "showPrivateKey": "Show Private Key?",
+    "anyOneWhoPrivate": "Anyone who has your private key can steal your funds. View it in private space.",
     "viewItPrivate": "View it in private without any cameras around.",
-    "iHavePrivacy": "I have privacy",
+    "iHavePrivacy": "I Have Privacy",
     "signIn": "Sign In"
   },
   "overviewScreen": {
@@ -204,6 +206,8 @@
     "testnet": "TESTNET",
     "backUpSeedPhrase": "Back-up Seed Phrase",
     "alwayKeepSeedSafe": "Always keep your seed phrase safe.",
+    "backUpPrivateKey": "Back-up Private Key",
+    "alwayKeepPrivateKeySafe": "Always keep your private key safe.",
     "walletLogs": "Wallet Logs",
     "downloadLogs": "Download Logs",
     "syncDevices": "Sync Devices",
@@ -386,7 +390,7 @@
   "manageAccs": "Manage Accounts",
   "lock": "Lock",
   "settings": "SETTINGS",
-  "warning": "WARNING",
+  "warning": "WARNING!",
   "asset": "ASSET 🇪🇸",
   "activity": "ACTIVITY 🇪🇸",
   "sec": "{{sec}} sec",

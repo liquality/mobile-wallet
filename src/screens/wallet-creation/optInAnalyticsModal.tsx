@@ -107,11 +107,8 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
         alignItems="center"
         backgroundColor={backgroundColor}
         paddingHorizontal="onboardingPadding">
-        <Box width="100%" height={scale(450)}>
-          <ImageBackground
-            style={styles.lowerBgImg}
-            resizeMode="contain"
-            source={lowerBgImg}>
+        <Box width="100%" height={scale(400)}>
+          <Box position={'absolute'} top={10} zIndex={100}>
             <ImageBackground
               style={styles.upperBgImg}
               resizeMode="contain"
@@ -119,6 +116,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
               <Box flex={1} style={defaultPadding}>
                 <Text
                   color={'textColor'}
+                  paddingTop="m"
                   style={styles.helpUsTextStyle}
                   tx="optInAnalyticsModal.helpUsToImprove"
                 />
@@ -128,7 +126,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
                   variant={'normalText'}
                   tx="optInAnalyticsModal.shareWhereYouClick"
                 />
-                <Box marginTop={'l'}>
+                <Box marginTop={'s'}>
                   <TouchableWithoutFeedback
                     onPress={() => setSelectedOpt(SelectedOption.Sure)}>
                     <Box
@@ -169,7 +167,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
                   </TouchableWithoutFeedback>
                 </Box>
 
-                <Box marginTop={'xl'}>
+                <Box marginTop={'l'}>
                   <Pressable
                     label={{ tx: 'Ok' }}
                     onPress={handleOkButtonPress}
@@ -179,9 +177,14 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
                 </Box>
               </Box>
             </ImageBackground>
-          </ImageBackground>
+          </Box>
+          <ImageBackground
+            style={styles.lowerBgImg}
+            resizeMode="contain"
+            source={lowerBgImg}
+          />
           <TouchableWithoutFeedback onPress={() => onAction(false)}>
-            <Box position={'absolute'} right={scale(-5)} top={scale(-10)}>
+            <Box position={'absolute'} right={scale(-5)}>
               <ModalClose />
             </Box>
           </TouchableWithoutFeedback>
@@ -197,28 +200,24 @@ const styles = ScaledSheet.create({
     justifyContent: 'center',
   },
   lowerBgImg: {
-    height: '99%',
+    height: '98%',
+    marginLeft: scale(10),
   },
   upperBgImg: {
     height: '100%',
-    marginTop: scale(-10),
-    marginLeft: scale(-15),
+    marginTop: scale(-8),
+    marginLeft: scale(-8),
   },
   helpUsTextStyle: {
-    fontFamily: Fonts.JetBrainsMono,
+    fontFamily: Fonts.Regular,
     fontWeight: '500',
-    fontSize: scale(22),
-    lineHeight: scale(28),
+    fontSize: scale(24),
+    lineHeight: scale(30),
     textAlign: 'left',
   },
   okButton: {
-    height: scale(40),
-  },
-  radioText: {
-    fontFamily: Fonts.JetBrainsMono,
-    fontWeight: '500',
-    fontSize: scale(22),
-    lineHeight: scale(38),
+    height: scale(36),
+    width: scale(54),
   },
 })
 

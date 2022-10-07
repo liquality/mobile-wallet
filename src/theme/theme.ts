@@ -31,6 +31,7 @@ export const theme = createTheme({
     errorMsgBarColor: palette.yellowBar,
     transparent: 'transparent',
     white: faceliftPalette.white,
+    black: faceliftPalette.black,
     mediumWhite: faceliftPalette.mediumWhite,
     darkGrey: faceliftPalette.darkGrey,
     activeButton: faceliftPalette.buttonActive,
@@ -50,6 +51,8 @@ export const theme = createTheme({
     headerColor: faceliftPalette.black,
     mediumGrey: faceliftPalette.mediumGrey,
     greyBlack: faceliftPalette.greyBlack,
+    yellow: faceliftPalette.yellow,
+    darkPink: palette.darkPink,
   },
   spacing: {
     vs: scale(2),
@@ -84,7 +87,7 @@ export const theme = createTheme({
     },
     pinkText: {
       fontFamily: Fonts.Regular,
-      color: palette.darkPink,
+      color: 'darkPink',
       fontWeight: '600',
       fontSize: 20,
     },
@@ -304,9 +307,9 @@ export const theme = createTheme({
     },
     h1: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(37),
+      fontSize: scale(41),
       fontWeight: '500',
-      lineHeight: scale(49),
+      lineHeight: scale(55),
     },
     h3: {
       fontFamily: Fonts.Regular,
@@ -315,7 +318,7 @@ export const theme = createTheme({
     },
     radioText: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(16),
+      fontSize: scale(14),
       fontWeight: '400',
     },
     listText: {
@@ -355,6 +358,9 @@ export const theme = createTheme({
     solid: {
       color: 'white',
     },
+    warn: {
+      color: 'black',
+    },
     defaultOutline: {
       color: 'defaultButton',
     },
@@ -369,6 +375,23 @@ export const theme = createTheme({
     errorText: {
       fontFamily: Fonts.Regular,
       fontSize: scale(13),
+      fontWeight: '400',
+    },
+    warnHighlight: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(14),
+      fontWeight: '600',
+    },
+    warnText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(20),
+      fontWeight: '400',
+      lineHeight: scale(25),
+    },
+    warnHeader: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(45),
+      lineHeight: scale(60),
       fontWeight: '400',
     },
   },
@@ -386,6 +409,9 @@ export const theme = createTheme({
     },
     solidDisabled: {
       backgroundColor: 'inactiveButton',
+    },
+    warn: {
+      backgroundColor: 'yellow',
     },
   },
   buttonVariants: {
