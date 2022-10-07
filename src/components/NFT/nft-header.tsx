@@ -30,7 +30,7 @@ const NftHeader: React.FC<NftHeaderProps> = (props) => {
   const renderAllNftsHeaderText = () => {
     return (
       <Card
-        variant={'summaryCard'}
+        variant={'headerCard'}
         height={GRADIENT_BACKGROUND_HEIGHT}
         paddingHorizontal="xl">
         <Box
