@@ -1,7 +1,9 @@
 import {
   Dimensions,
+  FlatList,
   Image,
   Pressable,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
 } from 'react-native'
@@ -13,6 +15,8 @@ import { useNavigation } from '@react-navigation/core'
 import { faceliftPalette } from '../../theme/faceliftPalette'
 import StarFavorite from './star-favorite'
 import { NFTAsset } from '../../types'
+import FullWidthImage from './full-width-image'
+import HorizontallyScrollableImage from './horizontally-scrollable-image'
 
 const { SeeAllNftsIcon, LongArrow } = AppIcons
 
@@ -21,11 +25,17 @@ type NftImageViewProps = {
   seeNftDetail: (nftItem: NFTAsset[]) => void
   activeWalletId: string
   accountIdsToSendIn: string[]
+  showAllNftsScreen?: boolean
 }
 
 const NftImageView: React.FC<NftImageViewProps> = (props) => {
-  const { iterableNftArray, seeNftDetail, activeWalletId, accountIdsToSendIn } =
-    props
+  const {
+    showAllNftsScreen,
+    iterableNftArray,
+    seeNftDetail,
+    activeWalletId,
+    accountIdsToSendIn,
+  } = props
   const [imgError, setImgError] = useState<boolean>(false)
   const navigation = useNavigation()
 
@@ -51,40 +61,15 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
       //If NFT collection array is 1, image should cover full width
       if (nftItem.length === 1) {
         return (
-          <Box key={index}>
-            <Pressable
-              style={styles.collectionTextContainer}
-              onPress={() => handleGoToCollection(nftItem)}>
-              <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
-                <Text style={styles.collectionNameText}>
-                  {' '}
-                  {nftItem[0].collection.name}{' '}
-                </Text>
-                <Text style={[styles.collectionNameText, styles.pipe]}>
-                  {' '}
-                  |{' '}
-                </Text>{' '}
-                {nftItem.length}{' '}
-              </Text>
-            </Pressable>
-
-            <Box>
-              <Pressable
-                style={styles.pressable}
-                onPress={() => seeNftDetail(nftItem[0])}>
-                <Image
-                  source={checkImgUrlExists(nftItem[0].image_original_url)}
-                  style={styles.oneImageBig}
-                  onError={() => setImgError(true)}
-                />
-              </Pressable>
-
-              <StarFavorite
-                nftAsset={nftItem[0]}
-                activeWalletId={activeWalletId}
-              />
-            </Box>
-          </Box>
+          <FullWidthImage
+            index={index}
+            nftItem={nftItem}
+            seeNftDetail={seeNftDetail}
+            setImgError={setImgError}
+            checkImgUrlExists={checkImgUrlExists}
+            activeWalletId={activeWalletId}
+            handleGoToCollection={handleGoToCollection}
+          />
         )
         //If NFT collection array is 2, images should be on 1 row next to eachother
       } else if (nftItem.length === 2) {
@@ -105,57 +90,35 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                 {nftItem.length}{' '}
               </Text>
             </Pressable>
-            <Pressable
-              style={styles.pressable}
-              onPress={(e) => seeNftDetail(nftItem[0], e)}>
-              <Image
-                source={{
-                  uri: nftItem[0].image_original_url,
+
+            <SafeAreaView>
+              <FlatList
+                data={nftItem}
+                numColumns={2}
+                keyExtractor={(item) => item.name}
+                renderItem={({ item }) => {
+                  return (
+                    <Box style={styles.inner}>
+                      <Pressable onPress={() => seeNftDetail(item)}>
+                        <Image
+                          source={{
+                            uri: item.image_original_url,
+                          }}
+                          style={styles.twoImagesOnRow}
+                        />
+                      </Pressable>
+                      <StarFavorite
+                        nftAsset={item}
+                        activeWalletId={activeWalletId}
+                      />
+                    </Box>
+                  )
                 }}
-                style={{
-                  width: Dimensions.get('screen').width / 2,
-                  height: Dimensions.get('screen').width / 2,
-                }}
-                onError={() => setImgError(true)}
               />
-              <Image
-                source={{
-                  uri: nftItem[1].image_original_url,
-                }}
-                style={{
-                  width: Dimensions.get('screen').width / 2,
-                  height: Dimensions.get('screen').width / 2,
-                }}
-                onError={() => setImgError(true)}
-              />
-            </Pressable>
+            </SafeAreaView>
           </Box>
         )
-        //If NFT collection array is more than 2, images should appear in scrollable list
-      } else {
-        let nftImagesScrollable = nftItem.map(
-          (nftItemInsideCollection: NFTAsset, indexKey: number) => {
-            return (
-              <Box key={indexKey}>
-                <Pressable
-                  style={styles.pressable}
-                  onPress={() => seeNftDetail(nftItemInsideCollection)}>
-                  <Image
-                    source={checkImgUrlExists(
-                      nftItemInsideCollection.image_original_url,
-                    )}
-                    style={styles.scrollableImg}
-                    onError={() => setImgError(true)}
-                  />
-                </Pressable>
-                <StarFavorite
-                  nftAsset={nftItemInsideCollection}
-                  activeWalletId={activeWalletId}
-                />
-              </Box>
-            )
-          },
-        )
+      } else if (nftItem === 3 || (nftItem.length > 4 && !showAllNftsScreen)) {
         return (
           <Box>
             <Pressable
@@ -173,20 +136,46 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                 {nftItem.length}{' '}
               </Text>
             </Pressable>
-            <ScrollView key={index} horizontal={true}>
-              <Box flex={0.1} flexDirection="row" alignItems="center">
-                {nftImagesScrollable}
 
-                <Pressable
-                  onPress={() => handleGoToCollection(nftItem)}
-                  style={styles.pressable}>
-                  <SeeAllNftsIcon width={105} height={105} />
-                  <Text style={styles.seeAllText}>See {'\n'}All</Text>
-                  <LongArrow style={styles.longArrow} />
-                </Pressable>
-              </Box>
-            </ScrollView>
+            <SafeAreaView>
+              <FlatList
+                data={nftItem}
+                numColumns={3}
+                keyExtractor={(item) => item.name}
+                renderItem={({ item }) => {
+                  return (
+                    <Box style={styles.inner}>
+                      <Pressable onPress={() => seeNftDetail(item)}>
+                        <Image
+                          source={{
+                            uri: item.image_original_url,
+                          }}
+                          style={styles.threeImagesOnRow}
+                        />
+                      </Pressable>
+                      <StarFavorite
+                        nftAsset={item}
+                        activeWalletId={activeWalletId}
+                      />
+                    </Box>
+                  )
+                }}
+              />
+            </SafeAreaView>
           </Box>
+        )
+      }
+      //If NFT collection array is more than 4 and ShowAllNftsScreen is images should appear in scrollable list
+      else if (nftItem.length > 4 && showAllNftsScreen) {
+        return (
+          <HorizontallyScrollableImage
+            nftItem={nftItem}
+            seeNftDetail={seeNftDetail}
+            setImgError={setImgError}
+            checkImgUrlExists={checkImgUrlExists}
+            activeWalletId={activeWalletId}
+            handleGoToCollection={handleGoToCollection}
+          />
         )
       }
     })
@@ -198,42 +187,6 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  scrollableImg: {
-    marginRight: 5,
-    width: 105,
-    height: 105,
-    borderRadius: 4,
-  },
-
-  oneImageBig: {
-    borderRadius: 4,
-    width: Dimensions.get('screen').width - 20,
-    resizeMode: 'contain',
-    aspectRatio: 1,
-  },
-
-  seeAllText: {
-    position: 'absolute',
-    left: '17.14%',
-    right: '56.19%',
-    top: '19.19%',
-    bottom: '15.24%',
-    fontFamily: Fonts.Regular,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 16,
-    lineHeight: 25,
-    color: palette.white,
-    letterSpacing: 0.5,
-  },
-  longArrow: {
-    position: 'absolute',
-    left: '60%',
-    right: '50%',
-    top: '60%',
-    bottom: '50%',
-  },
-
   collectionNameText: {
     fontFamily: Fonts.Regular,
     fontStyle: 'normal',
@@ -254,7 +207,19 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
 
-  pressable: { position: 'relative' },
+  inner: {
+    flexDirection: 'row',
+    marginRight: 5,
+    marginBottom: 5,
+  },
+  twoImagesOnRow: {
+    width: Dimensions.get('screen').width / 2.2,
+    height: Dimensions.get('screen').width / 2.2,
+  },
+  threeImagesOnRow: {
+    width: Dimensions.get('screen').width / 3.3,
+    height: Dimensions.get('screen').width / 3.3,
+  },
 })
 
 export default NftImageView

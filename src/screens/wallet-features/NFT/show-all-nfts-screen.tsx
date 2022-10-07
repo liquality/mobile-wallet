@@ -119,6 +119,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
             />
             {showNfts ? (
               <NftImageView
+                showAllNftsScreen={true}
                 accountIdsToSendIn={accountIdsToSendIn}
                 iterableNftArray={iterableNftArray}
                 seeNftDetail={seeNftDetail}

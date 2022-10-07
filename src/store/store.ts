@@ -115,6 +115,80 @@ export const allNfts = {
       image_thumbnail_url:
         'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
       starred: false,
+    },
+    {
+      asset_contract: {
+        address: '0x2953399124f0cbb46d2cbacd8a89cf0599974963',
+        name: 'OpenSea Collections',
+        symbol: 'OPENSTORE',
+      },
+      collection: {
+        name: 'OpenSea Collections',
+      },
+      token_id:
+        '69409568717421957810771230577962440870804356018059572674892187908130255939344',
+      amount: '1',
+      standard: 'ERC1155',
+      name: '(Pre Sale) Metaverse Bored Ape( FREE DROP - With buying 3 NFT you get 1 Free NFT )',
+      description:
+        '[GIVEAWAY : With buying 3 NFT you get 1 Free NFT](https://opensea.io/collection/ulimitedmeta/)\n\nCheck Out This [COLLECTION ✅](https://opensea.io/collection/ulimitedmeta/)\n\n(Not This One)',
+      image_original_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      image_preview_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      image_thumbnail_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
+    {
+      asset_contract: {
+        address: '0x2953399124f0cbb46d2cbacd8a89cf0599974963',
+        name: 'OpenSea Collections',
+        symbol: 'OPENSTORE',
+      },
+      collection: {
+        name: 'OpenSea Collections',
+      },
+      token_id:
+        '69409568717421957810771230577962440870804356018059572674892187908130255939344',
+      amount: '1',
+      standard: 'ERC1155',
+      name: '(Pre Sale) Metaverse Bored Ape( FREE DROP - With buying 3 NFT you get 1 Free NFT )',
+      description:
+        '[GIVEAWAY : With buying 3 NFT you get 1 Free NFT](https://opensea.io/collection/ulimitedmeta/)\n\nCheck Out This [COLLECTION ✅](https://opensea.io/collection/ulimitedmeta/)\n\n(Not This One)',
+      image_original_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      image_preview_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      image_thumbnail_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
+    {
+      asset_contract: {
+        address: '0x2953399124f0cbb46d2cbacd8a89cf0599974963',
+        name: 'OpenSea Collections',
+        symbol: 'OPENSTORE',
+      },
+      collection: {
+        name: 'OpenSea Collections',
+      },
+      token_id:
+        '74099691892997789040072932098170896380307251443958573627201600418187315274152',
+      amount: '1',
+      standard: 'ERC1155',
+      name: 'Dark Soul Ape X ( FREE DROP - With buying 3 NFT you get 1 Free NFT )',
+      description:
+        '[GIVEAWAY : With buying 3 NFT you get 1 Free NFT]()\n\nCheck Out This [COLLECTION ✅]()\n\n(Not This One)',
+      image_original_url:
+        'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
+      image_preview_url:
+        'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
+      image_thumbnail_url:
+        'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
+      starred: false,
       accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
     },
     {
@@ -172,6 +246,31 @@ export const allNfts = {
     },
   ],
   'Sunflower Land': [
+    {
+      asset_contract: {
+        address: '0x2b4a66557a79263275826ad31a4cddc2789334bd',
+        name: 'Sunflower Land',
+        symbol: 'SL',
+      },
+      collection: {
+        name: 'Sunflower Land',
+      },
+      token_id: '95834',
+      amount: '1',
+      standard: 'ERC721',
+      name: 'Sunflower Land #95834',
+      description:
+        'A new farm at Sunflower Land. It is still being verified and not recommended to buy as it may be blacklisted.',
+      image_original_url:
+        'https://sunflower-land.com/testnet/farms/verifying.png',
+      image_preview_url:
+        'https://sunflower-land.com/testnet/farms/verifying.png',
+      image_thumbnail_url:
+        'https://sunflower-land.com/testnet/farms/verifying.png',
+      external_link: 'https://sunflower-land.com/play/?farmId=95834',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
     {
       asset_contract: {
         address: '0x2b4a66557a79263275826ad31a4cddc2789334bd',
@@ -277,6 +376,30 @@ export const specificChainNfts = {
         name: 'OpenSea Collections',
       },
       token_id:
+        '74099691892997789040072932098170896380307251443958573627201600418187315274152',
+      amount: '1',
+      standard: 'ERC1155',
+      name: 'Dark Soul Ape X ( FREE DROP - With buying 3 NFT you get 1 Free NFT )',
+      description:
+        '[GIVEAWAY : With buying 3 NFT you get 1 Free NFT]()\n\nCheck Out This [COLLECTION ✅]()\n\n(Not This One)',
+      image_original_url:
+        'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
+      image_preview_url:
+        'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
+      image_thumbnail_url:
+        'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
+      starred: false,
+    },
+    {
+      asset_contract: {
+        address: '0x2953399124f0cbb46d2cbacd8a89cf0599974963',
+        name: 'OpenSea Collections',
+        symbol: 'OPENSTORE',
+      },
+      collection: {
+        name: 'OpenSea Collections',
+      },
+      token_id:
         '69409568717421957810771230577962440870804356018059572674892187908130255939344',
       amount: '1',
       standard: 'ERC1155',
@@ -343,6 +466,31 @@ export const specificChainNfts = {
         'https://sunflower-land.com/testnet/farms/verifying.png',
       external_link: 'https://sunflower-land.com/play/?farmId=95834',
       starred: false,
+    },
+    {
+      asset_contract: {
+        address: '0x2b4a66557a79263275826ad31a4cddc2789334bd',
+        name: 'Sunflower Land',
+        symbol: 'SL',
+      },
+      collection: {
+        name: 'Sunflower Land',
+      },
+      token_id: '95834',
+      amount: '1',
+      standard: 'ERC721',
+      name: 'Sunflower Land #95834',
+      description:
+        'A new farm at Sunflower Land. It is still being verified and not recommended to buy as it may be blacklisted.',
+      image_original_url:
+        'https://sunflower-land.com/testnet/farms/verifying.png',
+      image_preview_url:
+        'https://sunflower-land.com/testnet/farms/verifying.png',
+      image_thumbnail_url:
+        'https://sunflower-land.com/testnet/farms/verifying.png',
+      external_link: 'https://sunflower-land.com/play/?farmId=95834',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
     },
   ],
   'Galaxy OAT': [

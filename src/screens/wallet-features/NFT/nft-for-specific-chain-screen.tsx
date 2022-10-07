@@ -2,20 +2,18 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, StyleSheet, Image, ScrollView, Dimensions } from 'react-native'
+import { StyleSheet, ScrollView, Dimensions } from 'react-native'
 import { useRecoilValue } from 'recoil'
-import { Fonts } from '../../../assets'
 import { accountInfoStateFamily, networkState } from '../../../atoms'
 import NftHeader from '../../../components/NFT/nft-header'
 import NftImageView from '../../../components/NFT/nft-image-view'
 import NftTabBar from '../../../components/NFT/nft-tab-bar'
 import {
+  allNfts,
   getAllEnabledAccounts,
-  getNftsForAccount,
-  specificChainNfts,
   updateNFTs,
 } from '../../../store/store'
-import { Text, Box, palette } from '../../../theme'
+import { Box, palette } from '../../../theme'
 import { RootStackParamList } from '../../../types'
 import { labelTranslateFn } from '../../../utils'
 type ShowAllNftsScreenProps = NativeStackScreenProps<
@@ -57,13 +55,13 @@ const NftForSpecificChainScreen = ({
       })
       //ÄNDRA HÄR OXÅ
       //let nfts = await getNftsForAccount(currentAccount.id)
-      setChainSpecificNfts(specificChainNfts)
+      setChainSpecificNfts(allNfts)
       //Manipulate NFT object to be iterable
-      let wholeNftArr = Object.values(specificChainNfts).map((val) => {
+      let wholeNftArr = Object.values(allNfts).map((val) => {
         return val
       })
       setIterableNftArray(wholeNftArr)
-      let totalAmountOfNfts = Object.values(specificChainNfts).reduce(
+      let totalAmountOfNfts = Object.values(allNfts).reduce(
         (acc, nft) => acc + nft.length,
         0,
       )
@@ -109,6 +107,7 @@ const NftForSpecificChainScreen = ({
           />
           {showNfts ? (
             <NftImageView
+              showAllNftsScreen={false}
               accountIdsToSendIn={accountIdsToSendIn}
               iterableNftArray={iterableNftArray}
               seeNftDetail={seeNftDetail}
