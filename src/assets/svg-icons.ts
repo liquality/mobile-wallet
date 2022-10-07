@@ -93,6 +93,8 @@ import ThreeDots from '../assets/icons/nfts/three-dots.svg'
 import Share from '../assets/icons/nfts/share.svg'
 import Send from '../assets/icons/nfts/send.svg'
 import Sell from '../assets/icons/nfts/sell.svg'
+import NftChain from '../assets/icons/nfts/nft-chain.svg'
+
 import ShortLine from '../assets/icons/nfts/short-line.svg'
 import NetworkActiveDot from '../assets/icons/dot.svg'
 import Ellipses from '../assets/icons/ellipses.svg'
@@ -203,6 +205,8 @@ export default {
   Sell,
   ShortLine,
   Refresh,
+  NftChain,
+
   LogoFull,
   OnlyLqLogoDark,
   OnlyLqLogoLight,
