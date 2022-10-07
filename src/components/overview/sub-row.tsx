@@ -19,7 +19,11 @@ import {
 } from '../../atoms'
 import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
-import { getNftsForAccount, updateNFTs } from '../../store/store'
+import {
+  getNftsForAccount,
+  specificChainNfts,
+  updateNFTs,
+} from '../../store/store'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { Box, Text } from '../../theme'
@@ -67,8 +71,9 @@ const SubRow: FC<SubRowProps> = (props) => {
         network: activeNetwork,
         accountIds: accountIdsToSendIn,
       })
+      //ÄNDRA HÄÄÄR sedan
       let nfts = await getNftsForAccount(parentItem.id)
-      setChainSpecificNfts(nfts)
+      setChainSpecificNfts(specificChainNfts)
     }
     fetchData()
     const fiatBalance = fiatRates[item.code]

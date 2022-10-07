@@ -1,18 +1,23 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, Image } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
+import { View, StyleSheet, Image, ScrollView, Dimensions } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { Fonts } from '../../../assets'
-import { networkState } from '../../../atoms'
+import { accountInfoStateFamily, networkState } from '../../../atoms'
+import NftHeader from '../../../components/NFT/nft-header'
+import NftImageView from '../../../components/NFT/nft-image-view'
+import NftTabBar from '../../../components/NFT/nft-tab-bar'
 import {
   getAllEnabledAccounts,
   getNftsForAccount,
+  specificChainNfts,
   updateNFTs,
 } from '../../../store/store'
 import { Text, Box, palette } from '../../../theme'
 import { RootStackParamList } from '../../../types'
+import { labelTranslateFn } from '../../../utils'
 type ShowAllNftsScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'NftForSpecificChainScreen'
@@ -21,89 +26,107 @@ const wallet = setupWallet({
   ...defaultOptions,
 })
 //TODO: This screen is not fully implemented
-const NftForSpecificChainScreen = ({ route }: ShowAllNftsScreenProps) => {
+const NftForSpecificChainScreen = ({
+  navigation,
+  route,
+}: ShowAllNftsScreenProps) => {
+  const { currentAccount } = route.params
+
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
   const [, setChainSpecificNfts] = useState({})
   const [iterableNftArray, setIterableNftArray] = useState([])
-  const { currentAccount } = route.params
+  const [accountIdsToSendIn, setAccountIdsToSendIn] = useState<string[]>([])
+  const [showNfts, setShowNfts] = useState(true)
+  const accountInfo = useRecoilValue(accountInfoStateFamily(currentAccount))
+  const [numberOfNfts, setNumberOfNfts] = useState<number>(0)
+
+  console.log(accountInfo, 'acc infooo')
 
   useEffect(() => {
     async function fetchData() {
       const enabledAccountsToSendIn = await getAllEnabledAccounts()
-      const accountIdsToSendIn = enabledAccountsToSendIn.map((account) => {
+      const accIds = enabledAccountsToSendIn.map((account) => {
         return account.id
       })
+      setAccountIdsToSendIn(accIds)
       await updateNFTs({
         walletId: activeWalletId,
         network: activeNetwork,
-        accountIds: accountIdsToSendIn,
+        accountIds: accIds,
       })
-      let nfts = await getNftsForAccount(currentAccount.id)
-      setChainSpecificNfts(nfts)
+      //ÄNDRA HÄR OXÅ
+      //let nfts = await getNftsForAccount(currentAccount.id)
+      setChainSpecificNfts(specificChainNfts)
       //Manipulate NFT object to be iterable
-      let wholeNftArr = Object.values(nfts).map((val) => {
+      let wholeNftArr = Object.values(specificChainNfts).map((val) => {
         return val
       })
       setIterableNftArray(wholeNftArr)
+      let totalAmountOfNfts = Object.values(specificChainNfts).reduce(
+        (acc, nft) => acc + nft.length,
+        0,
+      )
+      setNumberOfNfts(totalAmountOfNfts as number)
     }
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeNetwork, activeWalletId])
 
-  const renderNftArray = () => {
-    let rows = []
-    if (iterableNftArray) {
-      rows = iterableNftArray.map((nftItem, index) => {
-        return (
-          <Box key={index} style={[styles.container, styles.fragmentContainer]}>
-            <Text style={[styles.label, styles.headerLabel]}>NFT SCreen</Text>
-            <Text>{nftItem[0].collection.name}</Text>
-            <Text>{nftItem[0].description}</Text>
-
-            <Image
-              source={require('../../../assets/icons/nft_thumbnail.png')}
-              style={{ width: 150, height: 100 }}
-            />
-          </Box>
-        )
+  const seeNftDetail = useCallback(
+    (nftItem) => {
+      navigation.navigate('NftDetailScreen', {
+        screenTitle: 'NFT Detail',
+        nftItem,
+        accountIdsToSendIn,
       })
-    } else {
-      return <Text>No data available</Text>
-    }
-
-    return rows
-  }
+    },
+    [navigation, accountIdsToSendIn],
+  )
 
   return (
-    <View style={[styles.container, styles.fragmentContainer]}>
-      <Text style={[styles.label, styles.headerLabel]}>
-        Specific CHAIN NFT SCreen
-      </Text>
-      {renderNftArray()}
-    </View>
+    <Box flex={1} style={styles.overviewBlock}>
+      <ScrollView>
+        <Box>
+          <NftHeader
+            blackText={`${
+              accountInfo.chain?.toUpperCase()
+                ? accountInfo.chain?.toUpperCase()
+                : 'ETHEREUM'
+            }  `}
+            greyText={`${numberOfNfts} ${labelTranslateFn('nft.nfts')}`}
+            width={Dimensions.get('screen').width}
+            height={225}
+          />
+        </Box>
+
+        <Box margin={'m'}>
+          <NftTabBar
+            leftTabText={'nft.tabBarNfts'}
+            rightTabText={'nft.tabBarActivity'}
+            setShowLeftTab={setShowNfts}
+            showLeftTab={showNfts}
+          />
+          {showNfts ? (
+            <NftImageView
+              accountIdsToSendIn={accountIdsToSendIn}
+              iterableNftArray={iterableNftArray}
+              seeNftDetail={seeNftDetail}
+              activeWalletId={activeWalletId}
+            />
+          ) : null}
+        </Box>
+      </ScrollView>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
+  overviewBlock: {
+    justifyContent: 'center',
+    width: '100%',
+    height: 225,
     backgroundColor: palette.white,
-    paddingVertical: 15,
-  },
-  fragmentContainer: {
-    paddingHorizontal: 20,
-  },
-
-  label: {
-    fontFamily: Fonts.Regular,
-    fontWeight: '700',
-    fontSize: 12,
-  },
-
-  headerLabel: {
-    marginVertical: 10,
   },
 })
 
