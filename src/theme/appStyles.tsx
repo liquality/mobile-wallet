@@ -1,7 +1,7 @@
 import { ViewStyle, StyleProp, TextStyle } from 'react-native'
 import { scale } from 'react-native-size-matters'
 import { Fonts } from '../assets'
-import { ONBOARDING_SCREEN_DEFAULT_PADDING } from '../utils'
+import { ONBOARDING_PADDING } from '../utils'
 import { faceliftPalette } from './faceliftPalette'
 
 export const FLEX_1: ViewStyle = {
@@ -10,7 +10,7 @@ export const FLEX_1: ViewStyle = {
 
 export const GRADIENT_STYLE: ViewStyle = {
   flex: 1,
-  paddingHorizontal: ONBOARDING_SCREEN_DEFAULT_PADDING,
+  paddingHorizontal: scale(ONBOARDING_PADDING),
 }
 
 export const OVERVIEW_TAB_BAR_STYLE: ViewStyle = {

@@ -44,9 +44,7 @@ const BackupWarningScreen: React.FC<
           type="secondary"
           variant="m"
           label={{ tx: 'common.cancel' }}
-          onPress={() => {
-            navigation.navigate('SettingsScreen', {})
-          }}
+          onPress={navigation.goBack}
           isBorderless={false}
           isActive={true}
         />

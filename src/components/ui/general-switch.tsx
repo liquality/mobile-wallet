@@ -1,13 +1,13 @@
 import { StyleSheet, Switch, SwitchProps } from 'react-native'
 import * as React from 'react'
-import { palette } from '../../theme'
+import { faceliftPalette, palette } from '../../theme'
 
 interface GeneralSwitchProps extends SwitchProps {
   isEnabled: boolean
 }
 
-const SwitchEnabledColor = palette.blueVioletPrimary
-const SwitchDisabledColor = palette.gray
+const SwitchEnabledColor = faceliftPalette.switchColor
+const SwitchDisabledColor = faceliftPalette.grey
 
 const trackColor = {
   false: palette.white,
@@ -28,7 +28,7 @@ const GeneralSwitch = (props: GeneralSwitchProps) => {
       trackColor={trackColor}
       style={[styles.switch, borderColorStyle, additionStyles]}
       thumbColor={isEnabled ? SwitchEnabledColor : SwitchDisabledColor}
-      ios_backgroundColor="#FFF"
+      ios_backgroundColor={faceliftPalette.white}
       value={isEnabled}
     />
   )

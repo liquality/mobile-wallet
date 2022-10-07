@@ -3,6 +3,7 @@ import { Fonts } from '../assets'
 import { faceliftPalette } from './faceliftPalette'
 import { palette } from './palette'
 import { scale } from 'react-native-size-matters'
+import { ONBOARDING_PADDING, SCREEN_PADDING } from './../utils/constants'
 
 export const theme = createTheme({
   colors: {
@@ -46,6 +47,9 @@ export const theme = createTheme({
     tablabelActiveColor: palette.buttonActive,
     tablabelInactiveColor: palette.darkGray,
     greyMeta: faceliftPalette.greyMeta,
+    headerColor: faceliftPalette.black,
+    mediumGrey: faceliftPalette.mediumGrey,
+    greyBlack: faceliftPalette.greyBlack,
   },
   spacing: {
     vs: scale(2),
@@ -55,8 +59,9 @@ export const theme = createTheme({
     xl: scale(20),
     xxl: scale(50),
     xxxl: scale(70),
-    onboardingPadding: scale(36),
-    onboardingHeaderPadding: scale(21),
+    onboardingPadding: scale(ONBOARDING_PADDING),
+    onboardingHeaderPadding: scale(25),
+    screenPadding: scale(SCREEN_PADDING),
   },
   breakpoints: {
     phone: 0,
@@ -253,9 +258,8 @@ export const theme = createTheme({
     settingLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
-      fontSize: 16,
-      color: 'addressColor',
-      marginRight: 's',
+      fontSize: scale(14),
+      lineHeight: scale(18),
     },
     pressableLabel: {
       fontFamily: Fonts.Regular,
@@ -323,6 +327,7 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(13),
       fontWeight: '400',
+      lineHeight: scale(17),
     },
     networkStatus: {
       fontFamily: Fonts.JetBrainsMono,
@@ -355,6 +360,11 @@ export const theme = createTheme({
     },
     solidDisabled: {
       color: 'inactiveText',
+    },
+    largerHeaderTitle: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '600',
+      fontSize: scale(36),
     },
     errorText: {
       fontFamily: Fonts.Regular,
@@ -499,7 +509,7 @@ export const theme = createTheme({
       shadowRadius: 2,
       elevation: 3,
     },
-    summaryCard: {
+    headerCard: {
       backgroundColor: 'mainBackground',
       shadowOffset: {
         width: 0,
@@ -512,9 +522,7 @@ export const theme = createTheme({
   },
   dropDownVariants: {
     language: {
-      width: '50%',
-      borderBottomColor: 'progressDotColor',
-      borderBottomWidth: 1,
+      width: '100%',
     },
   },
   textInputVariants: {
@@ -578,6 +586,7 @@ export const darkTheme: ThemeType = {
     textColor: faceliftPalette.darkText,
     spinner: faceliftPalette.darkGrey,
     popMenuColor: faceliftPalette.semiTransparentDark,
+    headerColor: faceliftPalette.white,
   },
 }
 
