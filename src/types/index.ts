@@ -122,6 +122,10 @@ export type StackPayload = {
   speedMode?: FeeLabel
 }
 
+export type SettingStackParamList = {
+  Settings: { shouldLogOut?: boolean }
+}
+
 export type RootStackParamList = {
   Entry: undefined
   TermsScreen: StackPayload
@@ -132,6 +136,7 @@ export type RootStackParamList = {
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   LoadingScreen: StackPayload
+  BackupWarningScreen: { screenTitle?: string; includeBackBtn?: boolean }
 }
 
 export type MainStackParamList = {
@@ -148,7 +153,7 @@ export type MainStackParamList = {
   AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
   AssetManagementScreen: StackPayload
-  BackupWarningScreen: StackPayload
+  BackupWarningScreen: { screenTitle?: string; includeBackBtn?: boolean }
   BackupSeedScreen: { screenTitle?: string }
   BackupLoginScreen: { backupSeed?: boolean; screenTitle?: string }
   AssetToggleScreen: StackPayload

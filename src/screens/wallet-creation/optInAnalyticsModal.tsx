@@ -12,7 +12,7 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { optInAnalyticsState, themeMode } from '../../atoms'
 import { Fonts, Images, AppIcons } from '../../assets'
 import { scale, ScaledSheet } from 'react-native-size-matters'
-import { ONBOARDING_SCREEN_DEFAULT_PADDING } from '../../utils'
+import { ONBOARDING_PADDING } from '../../utils'
 import { CommonActions } from '@react-navigation/native'
 
 const { ModalClose } = AppIcons
@@ -31,7 +31,7 @@ enum SelectedOption {
 type IconName = 'InactiveRadioButton' | 'ActiveRadioButton'
 
 const defaultPadding: ViewStyle = {
-  padding: ONBOARDING_SCREEN_DEFAULT_PADDING,
+  padding: scale(ONBOARDING_PADDING),
 }
 
 const AnalyticsModal: React.FC<AnalyticsModalProps> = ({

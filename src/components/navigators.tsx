@@ -27,6 +27,7 @@ import {
   MainStackParamList,
   RootStackParamList,
   RootTabParamList,
+  SettingStackParamList,
 } from '../types'
 import WithPopupMenu from './with-popup-menu'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
@@ -79,6 +80,7 @@ const {
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
 const MainStack = createNativeStackNavigator<MainStackParamList>()
+const SettingStack = createNativeStackNavigator<SettingStackParamList>()
 const Tab = createBottomTabNavigator<RootTabParamList>()
 
 export const OnboardingContext = createContext({})
@@ -199,7 +201,7 @@ const BackupWarningHeaderRight = (navProps: NavigationProps) => {
   const { navigation } = navProps
 
   return (
-    <Pressable onPress={() => navigation.navigate('OverviewScreen', {})}>
+    <Pressable onPress={navigation.goBack}>
       <TimesIcon
         width={30}
         height={30}
@@ -446,6 +448,12 @@ const tabInactiveIcons = {
   [`${labelTranslateFn('settings')!}`]: TabSettingInactive,
 }
 
+const TabSettingsScreenHeaderLeft = () => (
+  <Box paddingHorizontal={'s'}>
+    <ThemeIcon iconName="OnlyLqLogo" />
+  </Box>
+)
+
 const TabBarOption = (title: string) => {
   return {
     tabBarLabel: title,
@@ -453,13 +461,32 @@ const TabBarOption = (title: string) => {
       const Icon = focused ? tabIcons[title] : tabInactiveIcons[title]
       return <Icon width={size} height={size} />
     },
-    headerLeft: TabSettingsScreenHeaderLeft,
   }
 }
 
-const TabSettingsScreenHeaderLeft = () => (
-  <Text style={styles.settingsTitle} tx="settings" />
-)
+const SettingStackNavigator = () => {
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
+  const backgroundColor =
+    currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
+
+  return (
+    <SettingStack.Navigator>
+      <SettingStack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          ...screenNavOptions,
+          headerStyle: { backgroundColor },
+          headerLeft: TabSettingsScreenHeaderLeft,
+        }}
+      />
+    </SettingStack.Navigator>
+  )
+}
 
 export const MainNavigator = () => (
   <Tab.Navigator
@@ -487,11 +514,11 @@ export const MainNavigator = () => (
     />
     <Tab.Screen
       name="SettingsScreen"
-      component={SettingsScreen}
+      component={SettingStackNavigator}
       options={{
         ...TabBarOption(labelTranslateFn('settings')!),
-        headerShown: true,
-        headerTitle: '',
+        headerShown: false,
+        headerLeft: undefined,
       }}
     />
   </Tab.Navigator>

@@ -8,7 +8,7 @@ import {
   Animated,
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../../types'
+import { MainStackParamList } from '../../../types'
 import ButtonFooter from '../../../components/button-footer'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
@@ -20,7 +20,7 @@ import { AppIcons, Fonts } from '../../../assets'
 const { Eye } = AppIcons
 
 type BackupSeedScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'BackupSeedScreen'
 >
 
