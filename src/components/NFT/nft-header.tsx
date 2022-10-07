@@ -38,18 +38,16 @@ const NftHeader: React.FC<NftHeaderProps> = (props) => {
           flex={0.65}
           justifyContent="center">
           {isSpecificChain ? (
-            <Box flexDirection={'row'}>
-              {/* TODO: Uncomment this when assets are loading again, for now hardcoded
-                <AssetIcon chain={accountInfo.chain} />
-             */}
-              <AssetIcon chain={'ethereum'} />
+            <Box marginBottom={'xl'} flexDirection={'row'}>
+              {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
+              <AssetIcon
+                chain={accountInfo.chain ? accountInfo.chain : 'ethereum'}
+              />
               <NftChain style={styles.nftChainOverlap} />
 
               <Text style={styles.addressText}>
-                {/*   TODO: Uncomment this when assets are loading again, for now hardcoded
-                  {accountInfo.address}
-               */}{' '}
-                0xb81B9...E020
+                {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
+                {accountInfo.address ? accountInfo.address : '0xb81B9...E020'}{' '}
               </Text>
               <Eye style={styles.eye} />
             </Box>
@@ -114,7 +112,7 @@ const styles = StyleSheet.create({
   },
 
   eyebrowContainer: {
-    marginTop: scale(110),
+    marginTop: scale(80),
     display: 'flex',
     justifyContent: 'space-between',
   },

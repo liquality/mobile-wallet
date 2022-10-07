@@ -2,7 +2,7 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useState } from 'react'
-import { StyleSheet, ScrollView, Dimensions } from 'react-native'
+import { StyleSheet, ScrollView } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { accountInfoStateFamily, networkState } from '../../../atoms'
 import NftHeader from '../../../components/NFT/nft-header'
@@ -38,8 +38,6 @@ const NftForSpecificChainScreen = ({
   const [showNfts, setShowNfts] = useState(true)
   const accountInfo = useRecoilValue(accountInfoStateFamily(currentAccount))
   const [numberOfNfts, setNumberOfNfts] = useState<number>(0)
-
-  console.log(accountInfo, 'acc infooo')
 
   async function fetchData() {
     const enabledAccountsToSendIn = await getAllEnabledAccounts()
