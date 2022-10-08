@@ -6,8 +6,9 @@ import { StyleSheet, TextInput } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
-import { Text, Button, Box, palette } from '../../../theme'
+import { Text, Button, Box, palette, Card } from '../../../theme'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
+import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
 
 const useInputState = (
   initialValue: string,
@@ -70,7 +71,7 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
   }
 
   return (
-    <Box style={[styles.container, styles.fragmentContainer]}>
+    /*  <Box style={[styles.container, styles.fragmentContainer]}>
       <Text>NFT SEND SCREEEN</Text>
 
       <Button
@@ -95,12 +96,48 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
           autoCorrect={false}
           returnKeyType="done"
         />
-        {/*  Todo: implement send NFT with QR code (waiting for design)
+        Todo: implement send NFT with QR code (waiting for design)
         <Pressable onPress={handleQRCodeBtnPress}>
           <QRCode />
-        </Pressable> */}
+        </Pressable> 
       </Box>
-    </Box>
+    </Box>  */
+
+    <Card
+      variant={'summaryCard'}
+      height={GRADIENT_BACKGROUND_HEIGHT}
+      paddingHorizontal="xl">
+      <Box flex={0.65} justifyContent="center"></Box>
+      <Box flex={0.35}>
+        <Box flexDirection={'row'} justifyContent="space-evenly">
+          <Button
+            type="primary"
+            variant="l"
+            label={'Send NFT'}
+            isBorderless={false}
+            isActive={true}
+            onPress={() => sendNft()}
+          />
+          {/*   {appFeatures.map((item, index) => (
+            <Box key={index} alignItems={'center'}>
+              <TouchableWithoutFeedback onPress={item.navigateTo}>
+                <ImageBackground
+                  style={ImageBackgroundStyle}
+                  resizeMode="cover"
+                  source={Images.hexoNav}>
+                  <Box flex={1} justifyContent="center" alignItems={'center'}>
+                    <item.Icon height={scale(14)} />
+                  </Box>
+                </ImageBackground>
+              </TouchableWithoutFeedback>
+              <Text marginTop={'m'} style={styles.appFeaturesTextStyle}>
+                {item.name}
+              </Text>
+            </Box>
+          ))} */}
+        </Box>
+      </Box>
+    </Card>
   )
 }
 
