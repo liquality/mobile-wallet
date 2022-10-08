@@ -189,6 +189,13 @@ export const theme = createTheme({
       fontSize: 14,
       color: 'tertiaryForeground',
     },
+    miniNftHeader: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: 15,
+      lineHeight: 21,
+      letterSpacing: 0.5,
+    },
     warningBold: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',

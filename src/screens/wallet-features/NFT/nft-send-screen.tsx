@@ -2,7 +2,7 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
-import { StyleSheet, TextInput } from 'react-native'
+import { Image, StyleSheet, TextInput } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
@@ -102,49 +102,53 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
         </Pressable> 
       </Box>
     </Box>  */
+    <Box>
+      <Card
+        variant={'summaryCard'}
+        height={GRADIENT_BACKGROUND_HEIGHT}
+        paddingHorizontal="xl">
+        <Box flex={0.4} justifyContent="center"></Box>
+        <Box flex={1}>
+          <Box alignItems="center" justifyContent="center">
+            <Image
+              style={styles.image}
+              source={{
+                uri: nftItem.image_original_url,
+              }}
+            />
+            <Text variant={'sendNftCollectionNameHeader'}>
+              {nftItem.collection.name}
+            </Text>
 
-    <Card
-      variant={'summaryCard'}
-      height={GRADIENT_BACKGROUND_HEIGHT}
-      paddingHorizontal="xl">
-      <Box flex={0.65} justifyContent="center"></Box>
-      <Box flex={0.35}>
-        <Box alignItems="center" justifyContent="center">
-          <Text variant={'sendNftCollectionNameHeader'}>
-            {nftItem.collection.name}
-          </Text>
-
-          <Text variant={'sendNftNameHeader'}>
-            {nftItem.name} #{nftItem.token_id}
-          </Text>
+            <Text variant={'sendNftNameHeader'}>
+              {nftItem.name} #{nftItem.token_id}
+            </Text>
+          </Box>
+        </Box>
+      </Card>
+      <Text variant={'miniNftHeader'}></Text>
+      <Box padding={'xl'}>
+        <Box style={styles.btnBox}>
           <Button
             type="primary"
             variant="l"
-            label={'Send NFT'}
+            label={'Review'}
             isBorderless={false}
             isActive={true}
             onPress={() => sendNft()}
           />
-          {/*   {appFeatures.map((item, index) => (
-            <Box key={index} alignItems={'center'}>
-              <TouchableWithoutFeedback onPress={item.navigateTo}>
-                <ImageBackground
-                  style={ImageBackgroundStyle}
-                  resizeMode="cover"
-                  source={Images.hexoNav}>
-                  <Box flex={1} justifyContent="center" alignItems={'center'}>
-                    <item.Icon height={scale(14)} />
-                  </Box>
-                </ImageBackground>
-              </TouchableWithoutFeedback>
-              <Text marginTop={'m'} style={styles.appFeaturesTextStyle}>
-                {item.name}
-              </Text>
-            </Box>
-          ))} */}
+          <Button
+            type="secondary"
+            variant="l"
+            /*           label={{ tx: 'receiveScreen.buyCrypto' }}*/
+            label="Cancel"
+            onPress={() => sendNft()}
+            isBorderless={false}
+            isActive={true}
+          />
         </Box>
       </Box>
-    </Card>
+    </Box>
   )
 }
 
@@ -155,9 +159,12 @@ const styles = StyleSheet.create({
     backgroundColor: palette.white,
     paddingVertical: 15,
   },
-  fragmentContainer: {
-    paddingHorizontal: 20,
+  image: {
+    width: 95,
+    height: 95,
+    marginBottom: 20,
   },
+  btnBox: { alignItems: 'center' },
   sendToInput: {
     marginTop: 5,
     borderBottomColor: palette.mediumGreen,
