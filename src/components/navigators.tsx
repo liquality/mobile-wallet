@@ -62,6 +62,7 @@ import { useRecoilValue } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
 import { labelTranslateFn } from '../utils'
+import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-screen'
 
 const {
   SwapCheck,
@@ -388,6 +389,13 @@ export const AppStackNavigator = () => (
       <MainStack.Screen
         name="NftSendScreen"
         component={NftSendScreen}
+        options={() => ({
+          headerRight: PlaceholderComp,
+        })}
+      />
+      <MainStack.Screen
+        name="NftOverviewScreen"
+        component={NftOverviewScreen}
         options={() => ({
           headerRight: PlaceholderComp,
         })}

@@ -27,16 +27,16 @@ const useInputState = (
   return { value, onChangeText: setValue }
 }
 
-type NftSendScreenProps = NativeStackScreenProps<
+type NftOverviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'NftSendScreen'
+  'NftOverviewScreen'
 >
 
 const wallet = setupWallet({
   ...defaultOptions,
 })
 
-const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
+const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
@@ -44,13 +44,6 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
 
   //Hardcoded my own metamask mumbai testnet for testing purposes
   const addressInput = useInputState('')
-
-  const navigateToReview = () => {
-    navigation.navigate('NftOverviewScreen', {
-      nftItem,
-      accountIdsToSendIn,
-    })
-  }
 
   const sendNft = async () => {
     try {
@@ -111,59 +104,34 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
         </Box>
       </Card>
       <Box padding={'xl'}>
-        <Text variant={'miniNftHeader'}>SENT FROM</Text>
+        <Text variant={'miniNftHeader'}>REVIEWWW SCREEN is here</Text>
         <Box paddingTop={'m'} flexDirection={'row'}>
           <AssetIcon chain={'ethereum'} />
           <Text variant={'miniNftHeader'}>ETH</Text>
         </Box>
-        <Box paddingBottom={'m'} flexDirection={'row'}>
-          {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
-
-          <Text style={styles.addressText}>
-            {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
-            {'0xb81B9...E020'}{' '}
-          </Text>
-          <PurpleCopy />
-          <Text> | 3.5 ETH Avail.</Text>
-        </Box>
-        <Box backgroundColor={'mediumWhite'} padding={'l'} paddingTop={'xl'}>
-          <Text variant={'miniNftHeader'}>SEND TO</Text>
-          <Box flexDirection={'row'}>
-            <TextInput
-              underlineColorAndroid="transparent"
-              placeholder="Enter Address"
-              style={styles.sendToInput}
-              onChangeText={addressInput.onChangeText}
-              value={addressInput.value}
-              autoCorrect={false}
-              returnKeyType="done"
-            />
-            <QRCode />
-          </Box>
-        </Box>
-        <Box flexDirection={'row'} paddingVertical="l">
-          <Text variant={'miniNftHeader'}>Transfer Within Accounts | </Text>
-          <Text variant={'miniNftHeader'}>Network Speed</Text>
-        </Box>
-        <Box style={styles.btnBox}>
-          <Button
-            type="primary"
-            variant="l"
-            label={'Review'}
-            isBorderless={false}
-            isActive={true}
-            onPress={navigateToReview}
-          />
-          <Button
-            type="secondary"
-            variant="l"
-            /*           label={{ tx: 'receiveScreen.buyCrypto' }}*/
-            label="Cancel"
-            onPress={() => navigation.goBack()}
-            isBorderless={false}
-            isActive={true}
-          />
-        </Box>
+      </Box>
+      <Box flexDirection={'row'} paddingVertical="l">
+        <Text variant={'miniNftHeader'}>Transfer Within Accounts | </Text>
+        <Text variant={'miniNftHeader'}>Network Speed</Text>
+      </Box>
+      <Box style={styles.btnBox}>
+        <Button
+          type="primary"
+          variant="l"
+          label={'Review'}
+          isBorderless={false}
+          isActive={true}
+          onPress={() => sendNft()}
+        />
+        <Button
+          type="secondary"
+          variant="l"
+          /*           label={{ tx: 'receiveScreen.buyCrypto' }}*/
+          label="Cancel"
+          onPress={() => sendNft()}
+          isBorderless={false}
+          isActive={true}
+        />
       </Box>
     </Box>
   )
@@ -198,4 +166,4 @@ const styles = StyleSheet.create({
   copyIcon: { color: 'purple' },
 })
 
-export default NftSendScreen
+export default NftOverviewScreen
