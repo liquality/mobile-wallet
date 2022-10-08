@@ -9,6 +9,7 @@ import NftHeader from '../../../components/NFT/nft-header'
 import NftImageView from '../../../components/NFT/nft-image-view'
 import NftTabBar from '../../../components/NFT/nft-tab-bar'
 import {
+  allNfts,
   getAllEnabledAccounts,
   getNftsForAccount,
   updateNFTs,
@@ -51,14 +52,14 @@ const NftForSpecificChainScreen = ({
       accountIds: accIds,
     })
     //Use dummydata here if no assets load
-    let nfts = await getNftsForAccount(currentAccount.id)
-    setChainSpecificNfts(nfts)
+    //let nfts = await getNftsForAccount(currentAccount.id)
+    setChainSpecificNfts(allNfts)
     //Manipulate NFT object to be iterable
-    let wholeNftArr = Object.values(nfts).map((val) => {
+    let wholeNftArr = Object.values(allNfts).map((val) => {
       return val
     })
     setIterableNftArray(wholeNftArr)
-    let totalAmountOfNfts = Object.values(nfts).reduce(
+    let totalAmountOfNfts = Object.values(allNfts).reduce(
       (acc, nft) => acc + nft.length,
       0,
     )

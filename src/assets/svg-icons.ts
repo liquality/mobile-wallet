@@ -94,6 +94,8 @@ import Share from '../assets/icons/nfts/share.svg'
 import Send from '../assets/icons/nfts/send.svg'
 import Sell from '../assets/icons/nfts/sell.svg'
 import NftChain from '../assets/icons/nfts/nft-chain.svg'
+import PurpleCopy from '../assets/icons/nfts/purpleCopy.svg'
+
 
 import ShortLine from '../assets/icons/nfts/short-line.svg'
 import NetworkActiveDot from '../assets/icons/dot.svg'
@@ -206,6 +208,7 @@ export default {
   ShortLine,
   Refresh,
   NftChain,
+  PurpleCopy,
 
   LogoFull,
   OnlyLqLogoDark,

@@ -4,12 +4,15 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import { Image, StyleSheet, TextInput } from 'react-native'
 import { useRecoilValue } from 'recoil'
+import { AppIcons } from '../../../assets'
 import { networkState } from '../../../atoms'
+import AssetIcon from '../../../components/asset-icon'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import { Text, Button, Box, palette, Card } from '../../../theme'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
 
+const { CopyIcon, PurpleCopy } = AppIcons
 const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {
@@ -102,9 +105,9 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
         </Pressable> 
       </Box>
     </Box>  */
-    <Box>
+    <Box backgroundColor={'white'}>
       <Card
-        variant={'summaryCard'}
+        variant={'headerCard'}
         height={GRADIENT_BACKGROUND_HEIGHT}
         paddingHorizontal="xl">
         <Box flex={0.4} justifyContent="center"></Box>
@@ -126,8 +129,26 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
           </Box>
         </Box>
       </Card>
-      <Text variant={'miniNftHeader'}></Text>
       <Box padding={'xl'}>
+        <Text variant={'miniNftHeader'}>SENT FROM</Text>
+        <Box paddingTop={'m'} flexDirection={'row'}>
+          <AssetIcon chain={'ethereum'} />
+          <Text variant={'miniNftHeader'}>ETH</Text>
+        </Box>
+        <Box paddingBottom={'m'} flexDirection={'row'}>
+          {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
+
+          <Text style={styles.addressText}>
+            {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
+            {'0xb81B9...E020'}{' '}
+          </Text>
+          <PurpleCopy style={styles.copyIcon} />
+          <Text> | 3.5 ETH Avail.</Text>
+        </Box>
+        <Box
+          backgroundColor={'mediumWhite'}
+          paddingBottom={'m'}
+          flexDirection={'row'}></Box>
         <Box style={styles.btnBox}>
           <Button
             type="primary"
@@ -171,6 +192,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     width: '90%',
   },
+  copyIcon: { color: 'purple' },
 })
 
 export default NftSendScreen
