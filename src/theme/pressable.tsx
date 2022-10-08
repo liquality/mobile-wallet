@@ -40,7 +40,6 @@ type Props = React.ComponentProps<typeof BaseButton> &
   ColorProps<Theme> & {
     label: string | { tx: TxKeyPath }
     txOptions?: i18n.TranslateOptions
-    variant?: 'solid' | 'outline' | 'defaultOutline' | 'solidDisabled'
     style?: StyleProp<ViewStyle>
     icon?: boolean
     isLoading?: boolean

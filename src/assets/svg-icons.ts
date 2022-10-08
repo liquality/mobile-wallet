@@ -93,9 +93,7 @@ import ThreeDots from '../assets/icons/nfts/three-dots.svg'
 import Share from '../assets/icons/nfts/share.svg'
 import Send from '../assets/icons/nfts/send.svg'
 import Sell from '../assets/icons/nfts/sell.svg'
-import Refresh from '../assets/icons/nfts/refresh.svg'
 import NftChain from '../assets/icons/nfts/nft-chain.svg'
-
 
 import ShortLine from '../assets/icons/nfts/short-line.svg'
 import NetworkActiveDot from '../assets/icons/dot.svg'
@@ -111,6 +109,13 @@ import TabSettingInactive from '../assets/icons/tabSettingInactive.svg'
 import TabWalletInactive from '../assets/icons/tabWalletInactive.svg'
 import TransakIcon from '../assets/icons/transak.svg'
 import Filter from '../assets/icons/filter.svg'
+import Refresh from '../assets/icons/refresh.svg'
+import LightMoon from '../assets/icons/lightMoon.svg'
+import LightSun from '../assets/icons/lightSun.svg'
+import DarkMoon from '../assets/icons/darkMoon.svg'
+import DarkSun from '../assets/icons/darkSun.svg'
+import PrivateKeyWarn from '../assets/icons/pkWarn.svg'
+import SeedPhraseWarn from '../assets/icons/spWarn.svg'
 
 export default {
   PendingSwap,
@@ -225,4 +230,10 @@ export default {
   TabWalletInactive,
   TransakIcon,
   Filter,
+  LightMoon,
+  LightSun,
+  DarkMoon,
+  DarkSun,
+  PrivateKeyWarn,
+  SeedPhraseWarn,
 }

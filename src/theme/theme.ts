@@ -3,6 +3,7 @@ import { Fonts } from '../assets'
 import { faceliftPalette } from './faceliftPalette'
 import { palette } from './palette'
 import { scale } from 'react-native-size-matters'
+import { ONBOARDING_PADDING, SCREEN_PADDING } from './../utils/constants'
 
 export const theme = createTheme({
   colors: {
@@ -30,6 +31,7 @@ export const theme = createTheme({
     errorMsgBarColor: palette.yellowBar,
     transparent: 'transparent',
     white: faceliftPalette.white,
+    black: faceliftPalette.black,
     mediumWhite: faceliftPalette.mediumWhite,
     darkGrey: faceliftPalette.darkGrey,
     activeButton: faceliftPalette.buttonActive,
@@ -46,6 +48,11 @@ export const theme = createTheme({
     tablabelActiveColor: palette.buttonActive,
     tablabelInactiveColor: palette.darkGray,
     greyMeta: faceliftPalette.greyMeta,
+    headerColor: faceliftPalette.black,
+    mediumGrey: faceliftPalette.mediumGrey,
+    greyBlack: faceliftPalette.greyBlack,
+    yellow: faceliftPalette.yellow,
+    darkPink: palette.darkPink,
   },
   spacing: {
     vs: scale(2),
@@ -55,8 +62,9 @@ export const theme = createTheme({
     xl: scale(20),
     xxl: scale(50),
     xxxl: scale(70),
-    onboardingPadding: scale(36),
-    onboardingHeaderPadding: scale(21),
+    onboardingPadding: scale(ONBOARDING_PADDING),
+    onboardingHeaderPadding: scale(25),
+    screenPadding: scale(SCREEN_PADDING),
   },
   breakpoints: {
     phone: 0,
@@ -79,7 +87,7 @@ export const theme = createTheme({
     },
     pinkText: {
       fontFamily: Fonts.Regular,
-      color: palette.darkPink,
+      color: 'darkPink',
       fontWeight: '600',
       fontSize: 20,
     },
@@ -278,9 +286,8 @@ export const theme = createTheme({
     settingLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
-      fontSize: 16,
-      color: 'addressColor',
-      marginRight: 's',
+      fontSize: scale(14),
+      lineHeight: scale(18),
     },
     pressableLabel: {
       fontFamily: Fonts.Regular,
@@ -325,9 +332,9 @@ export const theme = createTheme({
     },
     h1: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(37),
+      fontSize: scale(41),
       fontWeight: '500',
-      lineHeight: scale(49),
+      lineHeight: scale(55),
     },
     h3: {
       fontFamily: Fonts.Regular,
@@ -336,7 +343,7 @@ export const theme = createTheme({
     },
     radioText: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(16),
+      fontSize: scale(14),
       fontWeight: '400',
     },
     listText: {
@@ -348,6 +355,7 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(13),
       fontWeight: '400',
+      lineHeight: scale(17),
     },
     networkStatus: {
       fontFamily: Fonts.JetBrainsMono,
@@ -375,15 +383,40 @@ export const theme = createTheme({
     solid: {
       color: 'white',
     },
+    warn: {
+      color: 'black',
+    },
     defaultOutline: {
       color: 'defaultButton',
     },
     solidDisabled: {
       color: 'inactiveText',
     },
+    largerHeaderTitle: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '600',
+      fontSize: scale(36),
+    },
     errorText: {
       fontFamily: Fonts.Regular,
       fontSize: scale(13),
+      fontWeight: '400',
+    },
+    warnHighlight: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(14),
+      fontWeight: '600',
+    },
+    warnText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(20),
+      fontWeight: '400',
+      lineHeight: scale(25),
+    },
+    warnHeader: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(45),
+      lineHeight: scale(60),
       fontWeight: '400',
     },
   },
@@ -401,6 +434,9 @@ export const theme = createTheme({
     },
     solidDisabled: {
       backgroundColor: 'inactiveButton',
+    },
+    warn: {
+      backgroundColor: 'yellow',
     },
   },
   buttonVariants: {
@@ -524,7 +560,7 @@ export const theme = createTheme({
       shadowRadius: 2,
       elevation: 3,
     },
-    summaryCard: {
+    headerCard: {
       backgroundColor: 'mainBackground',
       shadowOffset: {
         width: 0,
@@ -537,9 +573,7 @@ export const theme = createTheme({
   },
   dropDownVariants: {
     language: {
-      width: '50%',
-      borderBottomColor: 'progressDotColor',
-      borderBottomWidth: 1,
+      width: '100%',
     },
   },
   textInputVariants: {
@@ -603,6 +637,7 @@ export const darkTheme: ThemeType = {
     textColor: faceliftPalette.darkText,
     spinner: faceliftPalette.darkGrey,
     popMenuColor: faceliftPalette.semiTransparentDark,
+    headerColor: faceliftPalette.white,
   },
 }
 
