@@ -165,6 +165,24 @@ export const theme = createTheme({
       fontWeight: '300',
       fontSize: 28,
     },
+
+    sendNftNameHeader: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '400',
+      fontSize: 28,
+      letterSpacing: 0.5,
+      color: 'darkGrey',
+    },
+
+    sendNftCollectionNameHeader: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontStyle: 'normal',
+      fontWeight: '500',
+      fontSize: 14,
+      lineHeight: 18,
+      color: 'greyMeta',
+    },
+
     amountLabel: {
       fontFamily: Fonts.Light,
       fontWeight: '400',

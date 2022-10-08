@@ -109,7 +109,14 @@ const NftSendScreen = ({ route }: NftSendScreenProps) => {
       paddingHorizontal="xl">
       <Box flex={0.65} justifyContent="center"></Box>
       <Box flex={0.35}>
-        <Box flexDirection={'row'} justifyContent="space-evenly">
+        <Box alignItems="center" justifyContent="center">
+          <Text variant={'sendNftCollectionNameHeader'}>
+            {nftItem.collection.name}
+          </Text>
+
+          <Text variant={'sendNftNameHeader'}>
+            {nftItem.name} #{nftItem.token_id}
+          </Text>
           <Button
             type="primary"
             variant="l"
