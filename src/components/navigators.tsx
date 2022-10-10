@@ -1,5 +1,10 @@
 import React, { createContext } from 'react'
-import { StyleSheet, Pressable, useColorScheme } from 'react-native'
+import {
+  StyleSheet,
+  Pressable,
+  useColorScheme,
+  TouchableOpacity,
+} from 'react-native'
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
@@ -55,10 +60,9 @@ import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
 import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
 import NftCollectionScreen from '../screens/wallet-features/NFT/nft-collection-screen'
-
 import { AppIcons, Fonts } from '../assets'
-import { networkState, themeMode } from '../atoms'
-import { useRecoilValue } from 'recoil'
+import { networkState, showSearchBarInputState, themeMode } from '../atoms'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
 import { labelTranslateFn } from '../utils'
@@ -74,6 +78,7 @@ const {
   TabNFTInactive,
   TabSettingInactive,
   TabWalletInactive,
+  SearchIcon,
 } = AppIcons
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
@@ -185,6 +190,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'SendConfirmationScreen'
   | 'BackupWarningScreen'
   | 'SwapConfirmationScreen'
+  | 'AssetManagementScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -213,6 +219,58 @@ const AppStackHeaderLeft = (navProps: NavigationProps) => {
       <Box paddingLeft={'s'}>
         <ThemeIcon iconName="OnlyLqLogo" />
       </Box>
+    </Box>
+  )
+}
+
+const AssetManageScreenHeaderLeft = (navProps: NavigationProps) => {
+  const { navigation } = navProps
+
+  return (
+    <TouchableWithoutFeedback onPress={navigation.goBack}>
+      <Box paddingHorizontal={'s'} paddingVertical="m">
+        <ChevronLeft width={scale(15)} height={scale(15)} />
+      </Box>
+    </TouchableWithoutFeedback>
+  )
+}
+
+type DynamicLeftHeaderProps = {
+  onPress: () => void
+}
+
+const DynamicLeftHeader = ({ onPress }: DynamicLeftHeaderProps) => {
+  return (
+    <Box paddingHorizontal={'s'} paddingVertical="m">
+      <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
+        <ChevronLeft width={scale(15)} height={scale(15)} />
+      </TouchableOpacity>
+    </Box>
+  )
+}
+
+const AssetManageScreenHeaderRight = (navProps: NavigationProps) => {
+  const { navigation } = navProps
+
+  const setShowSearchBar = useSetRecoilState(showSearchBarInputState)
+
+  const setNavigationOpt = () => {
+    setShowSearchBar((prev) => {
+      navigation.setOptions({
+        headerBackVisible: false,
+        headerLeft: !prev
+          ? () => DynamicLeftHeader({ onPress: navigation.goBack })
+          : undefined,
+      })
+      return !prev
+    })
+  }
+
+  return (
+    <Box paddingHorizontal={'s'} paddingVertical="m">
+      <TouchableOpacity activeOpacity={0.7} onPress={setNavigationOpt}>
+        <SearchIcon width={scale(15)} height={scale(15)} />
+      </TouchableOpacity>
     </Box>
   )
 }
@@ -337,8 +395,10 @@ export const AppStackNavigator = () => (
       <MainStack.Screen
         name="AssetManagementScreen"
         component={AssetManagementScreen}
-        options={() => ({
-          headerRight: PlaceholderComp,
+        options={({ navigation, route }: NavigationProps) => ({
+          headerRight: () =>
+            AssetManageScreenHeaderRight({ navigation, route }),
+          headerLeft: () => AssetManageScreenHeaderLeft({ navigation, route }),
         })}
       />
       <MainStack.Screen
