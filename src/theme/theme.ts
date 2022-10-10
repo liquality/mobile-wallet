@@ -571,6 +571,13 @@ export const theme = createTheme({
       fontSize: scale(16),
       fontFamily: Fonts.Regular,
     },
+    searchBoxInput: {
+      paddingTop: 's',
+      color: 'greyMeta',
+      fontWeight: '400',
+      fontSize: scale(16),
+      fontFamily: Fonts.Regular,
+    },
   },
   tabBarStyleVariants: {
     light: {

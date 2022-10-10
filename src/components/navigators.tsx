@@ -259,9 +259,10 @@ const AssetManageScreenHeaderRight = (navProps: NavigationProps) => {
     setShowSearchBar((prev) => {
       navigation.setOptions({
         headerBackVisible: false,
-        headerLeft: !prev
-          ? () => DynamicLeftHeader({ onPress: navigation.goBack })
-          : undefined,
+        headerLeft:
+          prev === true
+            ? () => DynamicLeftHeader({ onPress: navigation.goBack })
+            : undefined,
       })
       return !prev
     })
@@ -336,7 +337,6 @@ export const AppStackNavigator = () => {
         gestureEnabled: true,
         ...TransitionPresets.SlideFromRightIOS,
         headerShadowVisible: false,
-        headerShown: true,
         title: '',
         headerLeft: () => AppStackHeaderLeft({ navigation, route }),
         headerRight: () => AppStackHeaderRight({ navigation, route }),

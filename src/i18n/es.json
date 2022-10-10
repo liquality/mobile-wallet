@@ -440,5 +440,6 @@
   "tabBarOverview": "Overview",
   "tabBarDetails": "Details",
   "description": "DESCRIPTION",
-  "manageAssetsCaps": "MANAGE ASSETS"
+  "manageAssetsCaps": "MANAGE ASSETS",
+  "searchAsset": "Search Asset"
 }

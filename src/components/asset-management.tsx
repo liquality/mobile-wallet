@@ -6,8 +6,8 @@ import AssetIcon from './asset-icon'
 import Switch from './ui/switch'
 import SearchBox from './ui/search-box'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
-import { useRecoilValue } from 'recoil'
-import { networkState } from '../atoms'
+import { useRecoilValue, useRecoilState } from 'recoil'
+import { networkState, showSearchBarInputState } from '../atoms'
 import { Box, palette } from '../theme'
 import { Fonts } from '../assets'
 
@@ -20,6 +20,9 @@ const AssetManagement = ({
   const [data, setData] = useState<Asset[]>([])
   const [assets, setAssets] = useState<Asset[]>([])
   const activeNetwork = useRecoilValue(networkState)
+  const [showSearchBox, setShowSearchBox] = useRecoilState(
+    showSearchBarInputState,
+  )
 
   const renderAsset = useCallback(({ item }: { item: Asset }) => {
     const { name, code, chain, color = DEFAULT_COLOR } = item
@@ -38,6 +41,14 @@ const AssetManagement = ({
         </View>
       </Fragment>
     )
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      // unmount and reset search input box
+      setShowSearchBox(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -70,8 +81,11 @@ const AssetManagement = ({
   }, [activeNetwork, enabledAssets])
 
   return (
-    <Box flex={1} backgroundColor={'mainBackground'}>
-      <SearchBox items={assets} updateData={setData} />
+    <Box
+      flex={1}
+      backgroundColor={'mainBackground'}
+      paddingHorizontal="screenPadding">
+      {showSearchBox ? <SearchBox items={assets} updateData={setData} /> : null}
       <FlatList
         data={data}
         renderItem={renderAsset}
