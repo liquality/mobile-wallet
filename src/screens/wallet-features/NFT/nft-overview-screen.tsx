@@ -2,10 +2,19 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
-import { Image, StyleSheet, TextInput } from 'react-native'
+import {
+  Image,
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  useColorScheme,
+} from 'react-native'
+import { scale } from 'react-native-size-matters'
 import { useRecoilValue } from 'recoil'
-import { AppIcons, Fonts } from '../../../assets'
-import { networkState } from '../../../atoms'
+import { AppIcons, Fonts, Images } from '../../../assets'
+import { networkState, themeMode } from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import {
@@ -41,6 +50,18 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
   const [statusMsg, setStatusMsg] = useState('')
+  const theme = useRecoilValue(themeMode)
+
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
+
+  const lowerBgImg =
+    currentTheme === 'light' ? Images.nftCardDark : Images.nftCardWhite
+
+  const uppperBgImg =
+    currentTheme === 'dark' ? Images.nftCardDark : Images.nftCardWhite
 
   //Hardcoded my own metamask mumbai testnet for testing purposes
   const addressInput = useInputState('')
@@ -79,58 +100,47 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
   }
 
   return (
-    <Box backgroundColor={'white'}>
-      <Card
-        variant={'headerCard'}
-        height={GRADIENT_BACKGROUND_HEIGHT}
-        paddingHorizontal="xl">
-        <Box flex={0.4} justifyContent="center"></Box>
-        <Box flex={1}>
-          <Box alignItems="center" justifyContent="center">
-            <Image
-              style={styles.image}
-              source={{
-                uri: nftItem.image_original_url,
-              }}
-            />
-            <Text variant={'sendNftCollectionNameHeader'}>
-              {nftItem.collection.name}
-            </Text>
+    <Box
+      flex={1}
+      justifyContent="center"
+      alignItems="center"
+      backgroundColor={backgroundColor}
+      paddingHorizontal="onboardingPadding">
+      <Box width="100%" height={scale(400)}>
+        <Box position={'absolute'} top={10} zIndex={100}>
+          <ImageBackground
+            style={styles.upperBgImg}
+            resizeMode="contain"
+            source={uppperBgImg}>
+            <Box flex={1} padding={'xl'}>
+              <Text
+                color={'textColor'}
+                paddingTop="m"
+                style={styles.helpUsTextStyle}
+                tx="optInAnalyticsModal.helpUsToImprove"
+              />
+              <Text
+                color={'textColor'}
+                marginTop={'l'}
+                variant={'normalText'}
+                tx="optInAnalyticsModal.shareWhereYouClick"
+              />
+              <Box marginTop={'s'}></Box>
 
-            <Text variant={'sendNftNameHeader'}>
-              {nftItem.name} #{nftItem.token_id}
-            </Text>
-          </Box>
+              <Box marginTop={'l'}>
+                <Pressable
+                  label={{ tx: 'Ok' }}
+                  variant="solid"
+                  style={styles.okButton}
+                />
+              </Box>
+            </Box>
+          </ImageBackground>
         </Box>
-      </Card>
-      <Box padding={'xl'}>
-        <Text variant={'miniNftHeader'}>REVIEWWW SCREEN is here</Text>
-        <Box paddingTop={'m'} flexDirection={'row'}>
-          <AssetIcon chain={'ethereum'} />
-          <Text variant={'miniNftHeader'}>ETH</Text>
-        </Box>
-      </Box>
-      <Box flexDirection={'row'} paddingVertical="l">
-        <Text variant={'miniNftHeader'}>Transfer Within Accounts | </Text>
-        <Text variant={'miniNftHeader'}>Network Speed</Text>
-      </Box>
-      <Box style={styles.btnBox}>
-        <Button
-          type="primary"
-          variant="l"
-          label={'Review'}
-          isBorderless={false}
-          isActive={true}
-          onPress={() => sendNft()}
-        />
-        <Button
-          type="secondary"
-          variant="l"
-          /*           label={{ tx: 'receiveScreen.buyCrypto' }}*/
-          label="Cancel"
-          onPress={() => sendNft()}
-          isBorderless={false}
-          isActive={true}
+        <ImageBackground
+          style={styles.lowerBgImg}
+          resizeMode="contain"
+          source={lowerBgImg}
         />
       </Box>
     </Box>
@@ -138,32 +148,29 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: palette.white,
-    paddingVertical: 15,
+  modalView: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  image: {
-    width: 95,
-    height: 95,
-    marginBottom: 20,
+  lowerBgImg: {
+    height: '98%',
   },
-  btnBox: { alignItems: 'center' },
-  sendToInput: {
-    marginTop: 5,
-    fontSize: 19,
-
+  upperBgImg: {
+    height: '100%',
+    marginTop: scale(-8),
+    marginLeft: scale(-8),
+  },
+  helpUsTextStyle: {
     fontFamily: Fonts.Regular,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 30,
-    letterSpacing: 0.5,
-    color: faceliftPalette.greyMeta,
-    width: '90%',
-    marginRight: 10,
+    fontWeight: '500',
+    fontSize: scale(24),
+    lineHeight: scale(30),
+    textAlign: 'left',
   },
-  copyIcon: { color: 'purple' },
+  okButton: {
+    height: scale(36),
+    width: scale(54),
+  },
 })
 
 export default NftOverviewScreen

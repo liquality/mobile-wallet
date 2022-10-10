@@ -2,10 +2,16 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
-import { Image, StyleSheet, TextInput } from 'react-native'
+import {
+  Clipboard,
+  Image,
+  Pressable,
+  StyleSheet,
+  TextInput,
+} from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { AppIcons, Fonts } from '../../../assets'
-import { networkState } from '../../../atoms'
+import { addressStateFamily, networkState } from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import {
@@ -41,6 +47,10 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
   const [statusMsg, setStatusMsg] = useState('')
+
+  const addressForAccount = useRecoilValue(
+    addressStateFamily(nftItem.accountId),
+  ) as string
 
   //Hardcoded my own metamask mumbai testnet for testing purposes
   const addressInput = useInputState('')
@@ -85,6 +95,13 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
     }
   }
 
+  const handleCopyAddressPress = async () => {
+    if (addressForAccount) {
+      Clipboard.setString(addressForAccount)
+    }
+    // setButtonPressed(true)
+  }
+
   return (
     <Box backgroundColor={'white'}>
       <Card
@@ -114,17 +131,35 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
         <Text variant={'miniNftHeader'}>SENT FROM</Text>
         <Box paddingTop={'m'} flexDirection={'row'}>
           <AssetIcon chain={'ethereum'} />
-          <Text variant={'miniNftHeader'}>ETH</Text>
+          <Text fontSize={16} style={styles.textRegular}>
+            ETH
+          </Text>
         </Box>
         <Box paddingBottom={'m'} flexDirection={'row'}>
           {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
 
-          <Text style={styles.addressText}>
+          <Text fontSize={18} style={styles.textRegular}>
             {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
-            {'0xb81B9...E020'}{' '}
+            {'0xb81B...E020'}{' '}
           </Text>
-          <PurpleCopy />
-          <Text> | 3.5 ETH Avail.</Text>
+          <Pressable onPress={handleCopyAddressPress}>
+            <PurpleCopy />
+          </Pressable>
+          <Text
+            marginLeft={'m'}
+            fontSize={18}
+            color={'mediumGrey'}
+            style={styles.textRegular}>
+            {' '}
+            |
+          </Text>
+          <Text
+            marginLeft={'m'}
+            fontSize={18}
+            color={'mediumGrey'}
+            style={styles.textRegular}>
+            3.5 ETH Avail.
+          </Text>
         </Box>
         <Box backgroundColor={'mediumWhite'} padding={'l'} paddingTop={'xl'}>
           <Text variant={'miniNftHeader'}>SEND TO</Text>
@@ -175,6 +210,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: palette.white,
     paddingVertical: 15,
+  },
+  tickerText: {
+    fontSize: 16,
+  },
+  textMargin: {},
+  textRegular: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 25,
+    letterSpacing: 0.5,
+
+    color: faceliftPalette.darkGrey,
   },
   image: {
     width: 95,

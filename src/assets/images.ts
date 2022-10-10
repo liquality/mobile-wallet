@@ -4,4 +4,6 @@ export default {
   popUpDark: require('./images/popUpDark.png'),
   popUpWhite: require('./images/popUpWhite.png'),
   hexoNav: require('./images/hexoNav.png'),
+  nftCardDark: require('./images/nft-card-dark.png'),
+  nftCardWhite: require('./images/nft-card-white.png'),
 }
