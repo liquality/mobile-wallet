@@ -115,6 +115,7 @@ import DarkSun from '../assets/icons/darkSun.svg'
 import PrivateKeyWarn from '../assets/icons/pkWarn.svg'
 import SeedPhraseWarn from '../assets/icons/spWarn.svg'
 import PrivateKeyIcon from '../assets/icons/privateKeyIcon.svg'
+import CopySuccessTick from '../assets/icons/copySuccessTick.svg'
 
 export default {
   PendingSwap,
@@ -234,4 +235,5 @@ export default {
   PrivateKeyWarn,
   SeedPhraseWarn,
   PrivateKeyIcon,
+  CopySuccessTick,
 }

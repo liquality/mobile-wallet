@@ -1,10 +1,11 @@
 import React from 'react'
 import { TouchableOpacity } from 'react-native'
-import { Text, Box, faceliftPalette } from '../../../theme'
+import { Text, Box, faceliftPalette, showCopyToast } from '../../../theme'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
 import { AppIcons } from '../../../assets'
 import { scale, ScaledSheet } from 'react-native-size-matters'
+import { labelTranslateFn } from '../../../utils'
 
 const { PrivateKeyIcon, CopyIcon } = AppIcons
 
@@ -14,6 +15,10 @@ const BackupPrivateKeyScreen: React.FC<
   NativeStackScreenProps<MainStackParamList, 'BackupPrivateKeyScreen'>
 > = (props) => {
   const { navigation } = props
+
+  const showToast = () => {
+    showCopyToast('copyToast', labelTranslateFn('privateKeyCopied')!)
+  }
 
   return (
     <Box
@@ -49,7 +54,10 @@ const BackupPrivateKeyScreen: React.FC<
           ALeKk017v9RPuC5sQhNnxBNJIfQ1vIWEUA%3A1629768043179&eiALeKk017v9RPuC5sQhNnxBNJIfQ1vIWEUA%3A1629768043179&ei
         </Text>
         <Box width={'100%'} alignItems="center">
-          <TouchableOpacity style={styles.copyBtnStyle} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={styles.copyBtnStyle}
+            activeOpacity={0.7}
+            onPress={showToast}>
             <CopyIcon />
             <Text
               marginLeft={'m'}
