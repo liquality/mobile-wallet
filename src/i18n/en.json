@@ -440,5 +440,6 @@
   "tabBarActivity": "Activity",
   "tabBarOverview": "Overview",
   "tabBarDetails": "Details",
-  "description": "DESCRIPTION"
+  "description": "DESCRIPTION",
+  "manageAssetsCaps": "MANAGE ASSETS"
 }
