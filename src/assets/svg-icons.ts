@@ -95,6 +95,8 @@ import Send from '../assets/icons/nfts/send.svg'
 import Sell from '../assets/icons/nfts/sell.svg'
 import NftChain from '../assets/icons/nfts/nft-chain.svg'
 import PurpleCopy from '../assets/icons/nfts/purpleCopy.svg'
+import NftCard from '../assets/icons/nfts/nft-card-new.svg'
+
 
 
 import ShortLine from '../assets/icons/nfts/short-line.svg'
@@ -209,6 +211,7 @@ export default {
   Refresh,
   NftChain,
   PurpleCopy,
+  NftCard,
 
   LogoFull,
   OnlyLqLogoDark,

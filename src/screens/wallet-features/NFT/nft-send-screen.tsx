@@ -1,18 +1,21 @@
 import { setupWallet } from '@liquality/wallet-core'
+import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   Clipboard,
   Image,
   Pressable,
   StyleSheet,
   TextInput,
+  useColorScheme,
 } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { AppIcons, Fonts } from '../../../assets'
-import { addressStateFamily, networkState } from '../../../atoms'
+import { addressStateFamily, networkState, themeMode } from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
+import QrCodeScanner from '../../../components/qr-code-scanner'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import {
   Text,
@@ -47,6 +50,13 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
   const [statusMsg, setStatusMsg] = useState('')
+  const [isCameraVisible, setIsCameraVisible] = useState(false)
+  const theme = useRecoilValue(themeMode)
+
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
 
   const addressForAccount = useRecoilValue(
     addressStateFamily(nftItem.accountId),
@@ -54,6 +64,9 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
 
   //Hardcoded my own metamask mumbai testnet for testing purposes
   const addressInput = useInputState('')
+
+  const backgroundColor =
+    currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
 
   const navigateToReview = () => {
     navigation.navigate('NftOverviewScreen', {
@@ -102,8 +115,25 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
     // setButtonPressed(true)
   }
 
+  const handleQRCodeBtnPress = () => {
+    setIsCameraVisible(!isCameraVisible)
+  }
+
+  const handleCameraModalClose = useCallback(
+    (addressFromQrCode: string) => {
+      setIsCameraVisible(!isCameraVisible)
+      if (addressFromQrCode) {
+        addressInput.onChangeText(addressFromQrCode.replace('ethereum:', ''))
+      }
+    },
+    [addressInput, isCameraVisible],
+  )
+
   return (
-    <Box backgroundColor={'white'}>
+    <Box flex={1} backgroundColor={backgroundColor}>
+      {isCameraVisible ? (
+        <QrCodeScanner chain={'ethereum'} onClose={handleCameraModalClose} />
+      ) : null}
       <Card
         variant={'headerCard'}
         height={GRADIENT_BACKGROUND_HEIGHT}
@@ -139,8 +169,8 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
           {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
 
           <Text fontSize={18} style={styles.textRegular}>
-            {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
-            {'0xb81B...E020'}{' '}
+            {/*   TODO: change to just use addressForAccount  when assets are loading again, for now hardcoded*/}
+            {shortenAddress(nftItem.accountId)}{' '}
           </Text>
           <Pressable onPress={handleCopyAddressPress}>
             <PurpleCopy />
@@ -173,12 +203,28 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
               autoCorrect={false}
               returnKeyType="done"
             />
-            <QRCode />
+            <Pressable onPress={handleQRCodeBtnPress}>
+              <QRCode />
+            </Pressable>
           </Box>
         </Box>
         <Box flexDirection={'row'} paddingVertical="l">
-          <Text variant={'miniNftHeader'}>Transfer Within Accounts | </Text>
-          <Text variant={'miniNftHeader'}>Network Speed</Text>
+          <Text
+            color={'buttonFontSecondary'}
+            fontSize={16}
+            style={styles.textRegular}>
+            Transfer Within Accounts
+          </Text>
+          <Text fontSize={16} style={styles.textRegular}>
+            {' '}
+            |{' '}
+          </Text>
+          <Text
+            color={'buttonFontSecondary'}
+            fontSize={16}
+            style={styles.textRegular}>
+            Network Speed
+          </Text>
         </Box>
         <Box style={styles.btnBox}>
           <Button

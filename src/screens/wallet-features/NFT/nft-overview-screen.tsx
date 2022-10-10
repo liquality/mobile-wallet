@@ -16,6 +16,7 @@ import { useRecoilValue } from 'recoil'
 import { AppIcons, Fonts, Images } from '../../../assets'
 import { networkState, themeMode } from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
+import QrCodeScanner from '../../../components/qr-code-scanner'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import {
   Text,
@@ -28,7 +29,7 @@ import {
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
 
-const { CopyIcon, PurpleCopy, QRCode } = AppIcons
+const { CopyIcon, PurpleCopy, QRCode, NftCard, SeeAllNftsIcon } = AppIcons
 const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {
@@ -63,7 +64,9 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
   const uppperBgImg =
     currentTheme === 'dark' ? Images.nftCardDark : Images.nftCardWhite
 
-  //Hardcoded my own metamask mumbai testnet for testing purposes
+  const backgroundColor =
+    currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
+
   const addressInput = useInputState('')
 
   const sendNft = async () => {
@@ -98,79 +101,70 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
       setStatusMsg('Failed to send the NFT')
     }
   }
-
+  console.log(nftItem.token_id, 'TOKEN ID')
   return (
-    <Box
-      flex={1}
-      justifyContent="center"
-      alignItems="center"
-      backgroundColor={backgroundColor}
-      paddingHorizontal="onboardingPadding">
-      <Box width="100%" height={scale(400)}>
-        <Box position={'absolute'} top={10} zIndex={100}>
-          <ImageBackground
-            style={styles.upperBgImg}
-            resizeMode="contain"
-            source={uppperBgImg}>
-            <Box flex={1} padding={'xl'}>
-              <Text
-                color={'textColor'}
-                paddingTop="m"
-                style={styles.helpUsTextStyle}
-                tx="optInAnalyticsModal.helpUsToImprove"
-              />
-              <Text
-                color={'textColor'}
-                marginTop={'l'}
-                variant={'normalText'}
-                tx="optInAnalyticsModal.shareWhereYouClick"
-              />
-              <Box marginTop={'s'}></Box>
+    <Box flex={1} paddingHorizontal={'xl'} backgroundColor={'white'}>
+      <Box flexDirection={'row'} alignItems="center" justifyContent={'center'}>
+        <Pressable style={styles.pressable}>
+          <NftCard width={355} height={154} />
+          <Text style={styles.collectionName}>{nftItem.collection.name}</Text>
+          <Text style={styles.nftName}>
+            {nftItem.name} {'\n'} #{nftItem.token_id}
+          </Text>
 
-              <Box marginTop={'l'}>
-                <Pressable
-                  label={{ tx: 'Ok' }}
-                  variant="solid"
-                  style={styles.okButton}
-                />
-              </Box>
-            </Box>
-          </ImageBackground>
-        </Box>
-        <ImageBackground
-          style={styles.lowerBgImg}
-          resizeMode="contain"
-          source={lowerBgImg}
-        />
+          <Image
+            style={styles.nftImage}
+            source={{
+              uri: nftItem.image_original_url,
+            }}
+          />
+          {/* <SeeAllNftsIcon width={105} height={105} />
+          <Text style={styles.seeAllText}>See {'\n'}All</Text> */}
+        </Pressable>
       </Box>
     </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  modalView: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  lowerBgImg: {
-    height: '98%',
-  },
-  upperBgImg: {
-    height: '100%',
-    marginTop: scale(-8),
-    marginLeft: scale(-8),
-  },
-  helpUsTextStyle: {
-    fontFamily: Fonts.Regular,
+  collectionName: {
+    fontFamily: Fonts.JetBrainsMono,
+    fontStyle: 'normal',
     fontWeight: '500',
-    fontSize: scale(24),
-    lineHeight: scale(30),
-    textAlign: 'left',
+    fontSize: 13,
+    lineHeight: 15,
+    color: faceliftPalette.mediumGrey,
+    position: 'absolute',
+    left: '35.19%',
+    top: '19.19%',
+    bottom: '15.24%',
   },
-  okButton: {
-    height: scale(36),
-    width: scale(54),
+
+  nftName: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 21,
+    lineHeight: 27,
+
+    color: faceliftPalette.mediumGrey,
+    position: 'absolute',
+    left: '35.19%',
+    top: '45.19%',
+    bottom: '15.24%',
   },
+
+  nftImage: {
+    position: 'absolute',
+    left: '5.14%',
+    right: '5.19%',
+    top: '19.19%',
+    bottom: '15.24%',
+    width: 95,
+    height: 95,
+  },
+
+  pressable: { position: 'relative' },
 })
 
 export default NftOverviewScreen
