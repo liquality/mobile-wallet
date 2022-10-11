@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native'
 import * as React from 'react'
 import { faceliftPalette } from '../../theme'
 import { Switch, SwitchProps } from 'react-native-switch'
@@ -7,6 +6,8 @@ import { scale } from 'react-native-size-matters'
 interface GeneralSwitchProps extends SwitchProps {
   isEnabled: boolean
 }
+
+const borderWidth = 1
 
 const GeneralSwitch = (props: GeneralSwitchProps) => {
   const { isEnabled, ...rest } = props
@@ -18,6 +19,7 @@ const GeneralSwitch = (props: GeneralSwitchProps) => {
     }),
     [isEnabled],
   )
+
   return (
     <Switch
       {...rest}
@@ -33,15 +35,9 @@ const GeneralSwitch = (props: GeneralSwitchProps) => {
       circleBorderActiveColor={faceliftPalette.switchActiveColor}
       circleBorderInactiveColor={faceliftPalette.switchInactiveBorderColor}
       switchWidthMultiplier={2}
-      containerStyle={[borderColorStyle, styles.switch]}
+      containerStyle={{ ...borderColorStyle, borderWidth }}
     />
   )
 }
-
-const styles = StyleSheet.create({
-  switch: {
-    borderWidth: 1,
-  },
-})
 
 export default GeneralSwitch

@@ -1,10 +1,11 @@
-import { StyleSheet } from 'react-native'
 import React from 'react'
 import { useRecoilState } from 'recoil'
 import { enabledAssetsStateFamily } from '../../atoms'
 import { faceliftPalette } from '../../theme'
 import { Switch } from 'react-native-switch'
 import { scale } from 'react-native-size-matters'
+
+const borderWidth = 1
 
 const SettingsSwitch = ({ asset }: { asset: string }) => {
   const [isFeatureEnabled, toggleFeature] = useRecoilState(
@@ -30,15 +31,9 @@ const SettingsSwitch = ({ asset }: { asset: string }) => {
       circleBorderActiveColor={faceliftPalette.switchActiveColor}
       circleBorderInactiveColor={faceliftPalette.switchInactiveBorderColor}
       switchWidthMultiplier={2}
-      containerStyle={[{ borderColor }, styles.switch]}
+      containerStyle={{ borderColor, borderWidth }}
     />
   )
 }
-
-const styles = StyleSheet.create({
-  switch: {
-    borderWidth: 1,
-  },
-})
 
 export default SettingsSwitch
