@@ -98,6 +98,8 @@ import Sell from '../assets/icons/nfts/sell.svg'
 import NftChain from '../assets/icons/nfts/nft-chain.svg'
 import PurpleCopy from '../assets/icons/nfts/purpleCopy.svg'
 import NftCard from '../assets/icons/nfts/nft-card-new.svg'
+import GreenCheckMark from '../assets/icons/nfts/green-check-mark.svg'
+
 
 
 
@@ -215,6 +217,7 @@ export default {
   NftChain,
   PurpleCopy,
   NftCard,
+  GreenCheckMark,
 
   LogoFull,
   OnlyLqLogoDark,

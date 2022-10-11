@@ -3,12 +3,10 @@ import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaul
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import {
+  Clipboard,
   Image,
-  ImageBackground,
   Pressable,
   StyleSheet,
-  TextInput,
-  TouchableWithoutFeedback,
   useColorScheme,
 } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -16,21 +14,13 @@ import { scale } from 'react-native-size-matters'
 import { useRecoilValue } from 'recoil'
 import { AppIcons, Fonts, Images } from '../../../assets'
 import { networkState, themeMode } from '../../../atoms'
-import AssetIcon from '../../../components/asset-icon'
-import QrCodeScanner from '../../../components/qr-code-scanner'
-import { sendNFTTransaction, updateNFTs } from '../../../store/store'
-import {
-  Text,
-  Button,
-  Box,
-  palette,
-  Card,
-  faceliftPalette,
-} from '../../../theme'
-import { RootStackParamList, UseInputStateReturnType } from '../../../types'
-import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
+import CopyPopup from '../../../components/copy-popup'
 
-const { NftCard, AngleDownIcon, AngleUpIcon } = AppIcons
+import { sendNFTTransaction, updateNFTs } from '../../../store/store'
+import { Text, Box, palette, faceliftPalette } from '../../../theme'
+import { RootStackParamList, UseInputStateReturnType } from '../../../types'
+
+const { NftCard, AngleDownIcon, AngleUpIcon, Line, PurpleCopy } = AppIcons
 const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {
@@ -54,6 +44,7 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
   const [statusMsg, setStatusMsg] = useState('')
   const theme = useRecoilValue(themeMode)
   const [showAccordion, setShowAccordion] = useState(false)
+  const [showCopyPopup, setShowCopyPopup] = useState(false)
 
   let currentTheme = useColorScheme() as string
   if (theme) {
@@ -103,19 +94,90 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
       setStatusMsg('Failed to send the NFT')
     }
   }
-  console.log(nftItem.token_id, 'TOKEN ID')
+
+  const handleCopyAddressPress = async (stringToCopy: string) => {
+    Clipboard.setString(stringToCopy)
+
+    setShowCopyPopup(true)
+  }
 
   const renderAccordion = () => {
     return (
+      <Box>
+        <Box paddingVertical={'l'} paddingTop={'xl'}>
+          <Text style={styles.upperRowText}>Transaction ID</Text>
+          <Box flexDirection={'row'} justifyContent={'space-between'}>
+            <Text style={styles.lowerRowText}>00x000</Text>
+            <Pressable onPress={() => handleCopyAddressPress('string-to-copy')}>
+              <PurpleCopy />
+            </Pressable>
+          </Box>
+        </Box>
+
+        <Box paddingVertical={'l'} paddingTop={'xl'}>
+          <Text style={styles.upperRowText}>Last Price</Text>
+          <Box flexDirection={'row'} justifyContent={'space-between'}>
+            <Text style={styles.lowerRowText}>0.009 ETH</Text>
+            <Pressable onPress={() => handleCopyAddressPress('string-to-copy')}>
+              <PurpleCopy />
+            </Pressable>
+          </Box>
+        </Box>
+
+        <Box paddingVertical={'l'} paddingTop={'xl'}>
+          <Text style={styles.upperRowText}>Your NFT from Address</Text>
+          <Box flexDirection={'row'} justifyContent={'space-between'}>
+            <Text style={styles.lowerRowText}>0.009 ETH</Text>
+            <Pressable onPress={() => handleCopyAddressPress('string-to-copy')}>
+              <PurpleCopy />
+            </Pressable>
+          </Box>
+        </Box>
+
+        <Box paddingVertical={'l'} paddingTop={'xl'}>
+          <Text style={styles.upperRowText}>Your NFT to Address</Text>
+          <Text style={styles.lowerRowText}>sample.blockchain</Text>
+
+          <Box flexDirection={'row'} justifyContent={'space-between'}>
+            <Text style={styles.lowerRowText}>00x00</Text>
+            <Pressable onPress={() => handleCopyAddressPress('string-to-copy')}>
+              <PurpleCopy />
+            </Pressable>
+          </Box>
+        </Box>
+
+        <Box paddingVertical={'l'} paddingTop={'xl'}>
+          <Text style={styles.upperRowText}>Token Standard</Text>
+
+          <Box flexDirection={'row'} justifyContent={'space-between'}>
+            <Text style={styles.lowerRowText}>ERC-721</Text>
+            <Pressable onPress={() => handleCopyAddressPress('string-to-copy')}>
+              <PurpleCopy />
+            </Pressable>
+          </Box>
+        </Box>
+      </Box>
+    )
+  }
+
+  const renderTransactionSteps = () => {
+    return (
       <Box
         marginTop={'xl'}
-        width={scale(300)}
-        height={3000}
-        backgroundColor={'greyBackground'}></Box>
+        width={scale(334)}
+        height={scale(464)}
+        backgroundColor={'greyBackground'}
+        padding={'xl'}>
+        <Text style={(styles.lowerRowText, styles.bold)}>TRANSACTION</Text>
+      </Box>
     )
   }
   return (
     <Box flex={1} paddingHorizontal={'xl'} backgroundColor={'white'}>
+      {showCopyPopup ? (
+        <CopyPopup showPopup={showCopyPopup} setShowPopup={setShowCopyPopup} />
+      ) : null}
+
       <Box flexDirection={'row'} alignItems="center" justifyContent={'center'}>
         <Pressable style={styles.pressable}>
           <NftCard width={355} height={154} />
@@ -132,7 +194,7 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
           />
         </Pressable>
       </Box>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Box paddingVertical={'l'} paddingTop={'xl'}>
           <Text style={styles.upperRowText}>Status</Text>
           <Box flexDirection={'row'} justifyContent={'space-between'}>
@@ -154,13 +216,16 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
             ETH Avg. 0.004325 ETH | 13.54 USD
           </Text>
         </Box>
+
+        {renderTransactionSteps()}
         <Box paddingVertical={'l'} paddingTop={'xl'}>
           <Box flexDirection={'row'} justifyContent={'space-between'}>
-            <Text style={styles.lowerRowText}>ADVANCED</Text>
+            <Text style={(styles.lowerRowText, styles.bold)}>ADVANCED</Text>
             <Pressable onPress={() => setShowAccordion(!showAccordion)}>
-              {showAccordion ? <AngleUpIcon /> : <AngleDownIcon />}
+              {showAccordion ? <AngleDownIcon /> : <AngleUpIcon />}
             </Pressable>
           </Box>
+          <Box marginTop={'xl'}>{showAccordion ? <Line /> : null}</Box>
         </Box>
         {showAccordion ? renderAccordion() : null}
       </ScrollView>
@@ -214,7 +279,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '500',
     fontSize: 15,
-    lineHeight: 27,
+    lineHeight: 20,
     letterSpacing: 0.5,
     color: faceliftPalette.greyMeta,
   },
@@ -224,10 +289,12 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '400',
     fontSize: 16,
-    lineHeight: 27,
+    lineHeight: 23,
     letterSpacing: 0.5,
     color: faceliftPalette.greyBlack,
   },
+
+  bold: { fontWeight: '500' },
 
   pressable: { position: 'relative' },
 })
