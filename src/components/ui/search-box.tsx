@@ -39,21 +39,27 @@ const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
   }, [items, searchInput.value, updateData])
 
   return (
-    <Box flexDirection={'row'} alignItems="center" height={scale(46)}>
+    <Box
+      flexDirection={'row'}
+      alignItems="center"
+      height={scale(46)}
+      width={'100%'}>
       <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
         <ChevronLeft width={scale(15)} height={scale(15)} />
       </TouchableOpacity>
-      <Box marginLeft={'m'}>
+      <Box marginLeft={'m'} width={'95%'}>
         <TextInput
           variant={'searchBoxInput'}
           placeholderTx="searchAsset"
           onChangeText={searchInput.onChangeText}
           onEndEditing={filterItems}
+          autoFocus={true}
           value={searchInput.value}
           autoCorrect={false}
           returnKeyType="done"
           cursorColor={faceliftPalette.greyMeta}
           maxLength={30}
+          clearButtonMode="while-editing"
         />
       </Box>
     </Box>
