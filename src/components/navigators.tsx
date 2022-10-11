@@ -236,36 +236,11 @@ const AssetManageScreenHeaderLeft = (navProps: NavigationProps) => {
   )
 }
 
-type DynamicLeftHeaderProps = {
-  onPress: () => void
-}
-
-const DynamicLeftHeader = ({ onPress }: DynamicLeftHeaderProps) => {
-  return (
-    <Box paddingHorizontal={'s'} paddingVertical="m">
-      <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
-        <ChevronLeft width={scale(15)} height={scale(15)} />
-      </TouchableOpacity>
-    </Box>
-  )
-}
-
-const AssetManageScreenHeaderRight = (navProps: NavigationProps) => {
-  const { navigation } = navProps
-
+const AssetManageScreenHeaderRight = () => {
   const setShowSearchBar = useSetRecoilState(showSearchBarInputState)
 
   const setNavigationOpt = () => {
-    setShowSearchBar((prev) => {
-      navigation.setOptions({
-        headerBackVisible: false,
-        headerLeft:
-          prev === true
-            ? () => DynamicLeftHeader({ onPress: navigation.goBack })
-            : undefined,
-      })
-      return !prev
-    })
+    setShowSearchBar((prev) => !prev)
   }
 
   return (
@@ -324,6 +299,7 @@ export const AppStackNavigator = () => {
   }
   const backgroundColor =
     currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
+  const showSearchBar = useRecoilValue(showSearchBarInputState)
 
   return (
     <MainStack.Navigator
@@ -407,13 +383,14 @@ export const AppStackNavigator = () => {
           name="AssetManagementScreen"
           component={AssetManagementScreen}
           options={({ navigation, route }: NavigationProps) => ({
-            title: labelTranslateFn('manageAssetsCaps')!,
+            headerBackVisible: false,
+            title: showSearchBar ? '' : labelTranslateFn('manageAssetsCaps')!,
             headerTitleStyle: MANAGE_ASSET_HEADER,
             headerStyle: { backgroundColor },
-            headerRight: () =>
-              AssetManageScreenHeaderRight({ navigation, route }),
-            headerLeft: () =>
-              AssetManageScreenHeaderLeft({ navigation, route }),
+            headerRight: () => AssetManageScreenHeaderRight(),
+            headerLeft: showSearchBar
+              ? undefined
+              : () => AssetManageScreenHeaderLeft({ navigation, route }),
           })}
         />
         <MainStack.Screen
