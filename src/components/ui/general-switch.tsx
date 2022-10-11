@@ -1,35 +1,39 @@
-import { StyleSheet, Switch, SwitchProps } from 'react-native'
+import { StyleSheet } from 'react-native'
 import * as React from 'react'
-import { faceliftPalette, palette } from '../../theme'
+import { faceliftPalette } from '../../theme'
+import { Switch, SwitchProps } from 'react-native-switch'
+import { scale } from 'react-native-size-matters'
 
 interface GeneralSwitchProps extends SwitchProps {
   isEnabled: boolean
 }
 
-const SwitchEnabledColor = faceliftPalette.switchColor
-const SwitchDisabledColor = faceliftPalette.grey
-
-const trackColor = {
-  false: palette.white,
-  true: palette.white,
-}
-
 const GeneralSwitch = (props: GeneralSwitchProps) => {
-  const { isEnabled, style: additionStyles, ...rest } = props
+  const { isEnabled, ...rest } = props
   const borderColorStyle = React.useMemo(
     () => ({
-      borderColor: isEnabled ? SwitchEnabledColor : SwitchDisabledColor,
+      borderColor: isEnabled
+        ? faceliftPalette.switchActiveColor
+        : faceliftPalette.switchInactiveBorderColor,
     }),
     [isEnabled],
   )
   return (
     <Switch
       {...rest}
-      trackColor={trackColor}
-      style={[styles.switch, borderColorStyle, additionStyles]}
-      thumbColor={isEnabled ? SwitchEnabledColor : SwitchDisabledColor}
-      ios_backgroundColor={faceliftPalette.white}
       value={isEnabled}
+      circleSize={scale(20)}
+      activeText={''}
+      inActiveText={''}
+      circleBorderWidth={1}
+      backgroundActive={faceliftPalette.white}
+      backgroundInactive={faceliftPalette.white}
+      circleActiveColor={faceliftPalette.switchActiveColor}
+      circleInActiveColor={faceliftPalette.switchInactiveColor}
+      circleBorderActiveColor={faceliftPalette.switchActiveColor}
+      circleBorderInactiveColor={faceliftPalette.switchInactiveBorderColor}
+      switchWidthMultiplier={2}
+      containerStyle={[borderColorStyle, styles.switch]}
     />
   )
 }
