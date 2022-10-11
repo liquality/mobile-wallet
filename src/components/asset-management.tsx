@@ -1,6 +1,5 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import { Alert, FlatList, StyleSheet, Text, View } from 'react-native'
-import { Asset } from '@liquality/cryptoassets/dist/src/types'
 import { getAllAssets, getAsset } from '@liquality/cryptoassets'
 import AssetIcon from './asset-icon'
 import Switch from './ui/switch'
@@ -10,6 +9,7 @@ import { useRecoilValue } from 'recoil'
 import { networkState } from '../atoms'
 import { Box, palette } from '../theme'
 import { Fonts } from '../assets'
+import { Asset } from '@chainify/types'
 
 const DEFAULT_COLOR = palette.defaultColor
 const AssetManagement = ({
@@ -49,9 +49,9 @@ const AssetManagement = ({
     //TODO we still need to handle custom tokens
     let myAssets: Asset[] = []
 
-    if (activeNetwork === Network.Testnet) {
+    if (activeNetwork === Network.Testnet && enabledAssets) {
       myAssets =
-        enabledAssets?.reduce((assetList: Asset[], asset) => {
+        enabledAssets.reduce((assetList: Asset[], asset) => {
           if (getAllAssets().testnet.hasOwnProperty(asset)) {
             assetList.push({
               ...getAsset(activeNetwork, asset),

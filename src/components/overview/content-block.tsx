@@ -9,7 +9,7 @@ import {
   historyItemsState,
   showFilterState,
 } from '../../atoms'
-import { populateWallet } from '../../store/store'
+import { getAllEnabledAccounts, populateWallet } from '../../store/store'
 import ActivityFlatList from '../activity-flat-list'
 import AssetFlatList from './asset-flat-list'
 import * as React from 'react'
@@ -56,7 +56,11 @@ const ContentBlock = () => {
   i18n.locale = langSelected
   useEffect(() => {
     setIsDoneFetchingData(false)
-    populateWallet()
+    const enabledAccountsToSendIn = getAllEnabledAccounts()
+    const accIds = enabledAccountsToSendIn.map((account) => {
+      return account.id
+    })
+    populateWallet(accIds)
       .then(() => {
         setIsDoneFetchingData(true)
       })

@@ -112,7 +112,7 @@ export const createWallet = async (
 /**
  * Populates an already instantiated wallet with account information
  */
-export const populateWallet = async (): Promise<void> => {
+export const populateWallet = async (accountIds?: string[]): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet.state
   await wallet.dispatch
     .initializeAddresses({
@@ -127,6 +127,7 @@ export const populateWallet = async (): Promise<void> => {
     .updateBalances({
       network: activeNetwork,
       walletId: activeWalletId,
+      accountIds,
     })
     .catch((e) => {
       Log(`Failed update balances: ${e}`, 'error')
@@ -271,7 +272,7 @@ export const toggleNFTStarred = async (payload: {
   await wallet.dispatch.toggleNFTStarred(payload)
 }
 
-export const getAllEnabledAccounts = async () => {
+export const getAllEnabledAccounts = () => {
   return wallet.getters.accountsData
 }
 /**
@@ -561,7 +562,7 @@ export const fiatRateEffect: () => AtomEffect<FiatRates> =
       const { type, payload } = mutation
 
       if (type === 'UPDATE_FIAT_RATES') {
-        setSelf(payload.fiatRates)
+        setSelf(Object.assign(wallet.state.fiatRates, payload.fiatRates))
       }
     })
   }
