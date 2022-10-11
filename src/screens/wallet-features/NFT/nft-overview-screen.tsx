@@ -20,7 +20,14 @@ import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import { Text, Box, palette, faceliftPalette } from '../../../theme'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 
-const { NftCard, AngleDownIcon, AngleUpIcon, Line, PurpleCopy } = AppIcons
+const {
+  NftCard,
+  AngleDownIcon,
+  AngleUpIcon,
+  Line,
+  PurpleCopy,
+  ConfirmationTrackerLine,
+} = AppIcons
 const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {
@@ -97,7 +104,6 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
 
   const handleCopyAddressPress = async (stringToCopy: string) => {
     Clipboard.setString(stringToCopy)
-
     setShowCopyPopup(true)
   }
 
@@ -107,7 +113,7 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
         <Box paddingVertical={'l'} paddingTop={'xl'}>
           <Text style={styles.upperRowText}>Transaction ID</Text>
           <Box flexDirection={'row'} justifyContent={'space-between'}>
-            <Text style={styles.lowerRowText}>00x000</Text>
+            <Text style={(styles.lowerRowText, styles.purpleLink)}>00x000</Text>
             <Pressable onPress={() => handleCopyAddressPress('string-to-copy')}>
               <PurpleCopy />
             </Pressable>
@@ -127,7 +133,9 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
         <Box paddingVertical={'l'} paddingTop={'xl'}>
           <Text style={styles.upperRowText}>Your NFT from Address</Text>
           <Box flexDirection={'row'} justifyContent={'space-between'}>
-            <Text style={styles.lowerRowText}>0.009 ETH</Text>
+            <Text style={(styles.lowerRowText, styles.purpleLink)}>
+              000x000
+            </Text>
             <Pressable onPress={() => handleCopyAddressPress('string-to-copy')}>
               <PurpleCopy />
             </Pressable>
@@ -136,10 +144,24 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
 
         <Box paddingVertical={'l'} paddingTop={'xl'}>
           <Text style={styles.upperRowText}>Your NFT to Address</Text>
-          <Text style={styles.lowerRowText}>sample.blockchain</Text>
+          <Text style={(styles.lowerRowText, styles.purpleLink)}>
+            sample.blockchain
+          </Text>
+          <Box flexDirection={'row'} justifyContent={'space-between'}>
+            <Text style={(styles.lowerRowText, styles.purpleLink)}>00x00</Text>
+            <Pressable onPress={() => handleCopyAddressPress('string-to-copy')}>
+              <PurpleCopy />
+            </Pressable>
+          </Box>
+        </Box>
+
+        <Box paddingVertical={'l'} paddingTop={'xl'}>
+          <Text style={styles.upperRowText}>Token ID</Text>
 
           <Box flexDirection={'row'} justifyContent={'space-between'}>
-            <Text style={styles.lowerRowText}>00x00</Text>
+            <Text style={(styles.lowerRowText, styles.purpleLink)}>
+              {nftItem.token_id}
+            </Text>
             <Pressable onPress={() => handleCopyAddressPress('string-to-copy')}>
               <PurpleCopy />
             </Pressable>
@@ -168,33 +190,55 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
         height={scale(464)}
         backgroundColor={'greyBackground'}
         padding={'xl'}>
+        <ConfirmationTrackerLine />
         <Text style={(styles.lowerRowText, styles.bold)}>TRANSACTION</Text>
       </Box>
+
+      /*  <Box
+        marginTop={'xl'}
+        width={scale(334)}
+        height={scale(464)}
+        backgroundColor={'greyBackground'}>
+        <Pressable style={styles.pressable}>
+          <ConfirmationTrackerLine />
+
+          <Text style={{ position: 'absolute', top: 0, left: 0 }}>
+            TRANSACTION
+          </Text>
+        </Pressable>
+      </Box> */
     )
   }
   return (
     <Box flex={1} paddingHorizontal={'xl'} backgroundColor={'white'}>
-      {showCopyPopup ? (
-        <CopyPopup showPopup={showCopyPopup} setShowPopup={setShowCopyPopup} />
-      ) : null}
-
-      <Box flexDirection={'row'} alignItems="center" justifyContent={'center'}>
-        <Pressable style={styles.pressable}>
-          <NftCard width={355} height={154} />
-          <Text style={styles.collectionName}>{nftItem.collection.name}</Text>
-          <Text style={styles.nftName}>
-            {nftItem.name} {'\n'} #{nftItem.token_id}
-          </Text>
-
-          <Image
-            style={styles.nftImage}
-            source={{
-              uri: nftItem.image_original_url,
-            }}
-          />
-        </Pressable>
-      </Box>
       <ScrollView showsVerticalScrollIndicator={false}>
+        {showCopyPopup ? (
+          <CopyPopup
+            showPopup={showCopyPopup}
+            setShowPopup={setShowCopyPopup}
+          />
+        ) : null}
+
+        <Box
+          flexDirection={'row'}
+          alignItems="center"
+          justifyContent={'center'}>
+          <Pressable style={styles.pressable}>
+            <NftCard width={355} height={154} />
+
+            <Text style={styles.collectionName}>{nftItem.collection.name}</Text>
+            <Text style={styles.nftName}>
+              {nftItem.name} {'\n'} #{nftItem.token_id}
+            </Text>
+
+            <Image
+              style={styles.nftImage}
+              source={{
+                uri: nftItem.image_original_url,
+              }}
+            />
+          </Pressable>
+        </Box>
         <Box paddingVertical={'l'} paddingTop={'xl'}>
           <Text style={styles.upperRowText}>Status</Text>
           <Box flexDirection={'row'} justifyContent={'space-between'}>
@@ -273,6 +317,8 @@ const styles = StyleSheet.create({
     width: scale(83),
     height: scale(83),
   },
+
+  purpleLink: { color: faceliftPalette.buttonDefault },
 
   upperRowText: {
     fontFamily: Fonts.Regular,
