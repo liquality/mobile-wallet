@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   useColorScheme,
 } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
 import { useRecoilValue } from 'recoil'
 import { AppIcons, Fonts, Images } from '../../../assets'
@@ -29,7 +30,7 @@ import {
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
 
-const { CopyIcon, PurpleCopy, QRCode, NftCard, SeeAllNftsIcon } = AppIcons
+const { NftCard, AngleDownIcon, AngleUpIcon } = AppIcons
 const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {
@@ -52,6 +53,7 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
   const { activeWalletId } = wallet.state
   const [statusMsg, setStatusMsg] = useState('')
   const theme = useRecoilValue(themeMode)
+  const [showAccordion, setShowAccordion] = useState(false)
 
   let currentTheme = useColorScheme() as string
   if (theme) {
@@ -102,6 +104,16 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
     }
   }
   console.log(nftItem.token_id, 'TOKEN ID')
+
+  const renderAccordion = () => {
+    return (
+      <Box
+        marginTop={'xl'}
+        width={scale(300)}
+        height={3000}
+        backgroundColor={'greyBackground'}></Box>
+    )
+  }
   return (
     <Box flex={1} paddingHorizontal={'xl'} backgroundColor={'white'}>
       <Box flexDirection={'row'} alignItems="center" justifyContent={'center'}>
@@ -118,10 +130,40 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
               uri: nftItem.image_original_url,
             }}
           />
-          {/* <SeeAllNftsIcon width={105} height={105} />
-          <Text style={styles.seeAllText}>See {'\n'}All</Text> */}
         </Pressable>
       </Box>
+      <ScrollView>
+        <Box paddingVertical={'l'} paddingTop={'xl'}>
+          <Text style={styles.upperRowText}>Status</Text>
+          <Box flexDirection={'row'} justifyContent={'space-between'}>
+            <Text style={styles.lowerRowText}>Completed/00 Confirmations</Text>
+            <Text style={styles.lowerRowText}>ICON</Text>
+          </Box>
+        </Box>
+        <Box paddingVertical={'l'}>
+          <Text style={styles.upperRowText}>Initiated</Text>
+          <Text style={styles.lowerRowText}>4/27/2022, 6:51pm</Text>
+        </Box>
+        <Box paddingVertical={'l'}>
+          <Text style={styles.upperRowText}>Completed</Text>
+          <Text style={styles.lowerRowText}>4/27/2022, 7:51pm</Text>
+        </Box>
+        <Box paddingVertical={'l'}>
+          <Text style={styles.upperRowText}>Network Speed/Fee</Text>
+          <Text style={styles.lowerRowText}>
+            ETH Avg. 0.004325 ETH | 13.54 USD
+          </Text>
+        </Box>
+        <Box paddingVertical={'l'} paddingTop={'xl'}>
+          <Box flexDirection={'row'} justifyContent={'space-between'}>
+            <Text style={styles.lowerRowText}>ADVANCED</Text>
+            <Pressable onPress={() => setShowAccordion(!showAccordion)}>
+              {showAccordion ? <AngleUpIcon /> : <AngleDownIcon />}
+            </Pressable>
+          </Box>
+        </Box>
+        {showAccordion ? renderAccordion() : null}
+      </ScrollView>
     </Box>
   )
 }
@@ -133,9 +175,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 13,
     lineHeight: 15,
+    letterSpacing: 0.5,
+
     color: faceliftPalette.mediumGrey,
     position: 'absolute',
-    left: '35.19%',
+    left: '42.19%',
     top: '19.19%',
     bottom: '15.24%',
   },
@@ -143,25 +187,46 @@ const styles = StyleSheet.create({
   nftName: {
     fontFamily: Fonts.Regular,
     fontStyle: 'normal',
-    fontWeight: '500',
+    fontWeight: '400',
     fontSize: 21,
     lineHeight: 27,
+    letterSpacing: 0.5,
 
-    color: faceliftPalette.mediumGrey,
+    color: faceliftPalette.darkGrey,
     position: 'absolute',
-    left: '35.19%',
-    top: '45.19%',
+    left: '42.19%',
+    top: '42.19%',
     bottom: '15.24%',
   },
 
   nftImage: {
     position: 'absolute',
-    left: '5.14%',
+    left: '10.14%',
     right: '5.19%',
     top: '19.19%',
     bottom: '15.24%',
-    width: 95,
-    height: 95,
+    width: scale(83),
+    height: scale(83),
+  },
+
+  upperRowText: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 15,
+    lineHeight: 27,
+    letterSpacing: 0.5,
+    color: faceliftPalette.greyMeta,
+  },
+
+  lowerRowText: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 16,
+    lineHeight: 27,
+    letterSpacing: 0.5,
+    color: faceliftPalette.greyBlack,
   },
 
   pressable: { position: 'relative' },

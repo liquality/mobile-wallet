@@ -53,6 +53,7 @@ export const theme = createTheme({
     greyBlack: faceliftPalette.greyBlack,
     yellow: faceliftPalette.yellow,
     darkPink: palette.darkPink,
+    greyBackground: faceliftPalette.greyBackground,
   },
   spacing: {
     vs: scale(2),

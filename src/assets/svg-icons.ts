@@ -44,6 +44,8 @@ import CalendarIcon from '../assets/icons/calendar.svg'
 import ChevronRightIcon from '../assets/icons/chevronRight.svg'
 import AngleRightIcon from '../assets/icons/chevronRight.svg'
 import AngleDownIcon from '../assets/icons/chevronDown.svg'
+import AngleUpIcon from '../assets/icons/chevronUp.svg'
+
 import PlusSign from '../assets/icons/plus.svg'
 import MinusSign from '../assets/icons/minus.svg'
 import ExportIcon from '../assets/icons/download.svg'
@@ -167,6 +169,7 @@ export default {
   ChevronRightIcon,
   AngleRightIcon,
   AngleDownIcon,
+  AngleUpIcon,
   PlusSign,
   MinusSign,
   ExportIcon,

@@ -29,4 +29,5 @@ export const faceliftPalette = {
   red: '#E40000',
   switchColor: '#9D4DFA',
   yellow: '#FBFF4A',
+  greyBackground: '#F9F9F9',
 }
