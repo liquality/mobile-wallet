@@ -12,7 +12,6 @@ import { BigNumber } from '@liquality/types'
 import { calculateAvailableAmnt } from '../../../core/utils/fee-calculator'
 import {
   cryptoToFiat,
-  dpUI,
   fiatToCrypto,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import AssetIcon from '../../../components/asset-icon'
@@ -23,7 +22,6 @@ import {
   getSendFee,
   isEIP1559Fees,
 } from '@liquality/wallet-core/dist/src/utils/fees'
-import SendFeeSelector from '../../../components/ui/send-fee-selector'
 import { fetchFeesForAsset } from '../../../store/store'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import ButtonFooter from '../../../components/button-footer'
@@ -36,19 +34,10 @@ import {
 } from '../../../atoms'
 import i18n from 'i18n-js'
 import ErrMsgBanner, { ErrorBtn } from '../../../components/ui/err-msg-banner'
-import Animated, {
-  interpolateColor,
-  FadeIn,
-  FadeOut,
-} from 'react-native-reanimated'
 import { palette } from '../../../theme'
-import { AppIcons, Fonts } from '../../../assets'
+import { AppIcons, Fonts, SecondaryFont } from '../../../assets'
 
-const {
-  AngleDownIcon: AngleDown,
-  AngleRightIcon: AngleRight,
-  QRCode,
-} = AppIcons
+const { QRCode } = AppIcons
 
 const useInputState = (
   initialValue: string,
@@ -87,7 +76,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const balance = useRecoilValue(
     balanceStateFamily({ asset: code, assetId: id }),
   )
-  const [showFeeOptions, setShowFeeOptions] = useState(true)
   const [fee, setFee] = useState<GasFees | null>(null)
   const [availableAmount, setAvailableAmount] = useState<string>('')
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
@@ -104,7 +92,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const addressInput = useInputState('')
   const networkFee = useRef<NetworkFeeType>()
   const activeNetwork = useRecoilValue(networkState)
-  const [showText, setShowText] = useState(true)
 
   const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
@@ -172,24 +159,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       }
     }
   }, [amountInput.value, code, customFee, setErrorMessage, availableAmount])
-
-  useEffect(() => {
-    let interval: NodeJS.Timer
-    const { NotEnoughCoverFees, NotEnoughGas } = ErrorMessages
-    if (
-      NotEnoughCoverFees === errorMessage.type ||
-      NotEnoughGas === errorMessage.type
-    ) {
-      interval = setInterval(() => {
-        setShowText((preState) => !preState)
-      }, 1000)
-    }
-    return () => {
-      if (interval) {
-        clearInterval(interval)
-      }
-    }
-  }, [errorMessage.type])
 
   useEffect(() => {
     fetchFeesForAsset(code).then((gasFee) => {
@@ -294,10 +263,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     },
     [amountInput, code, fiatRates, showAmountsInFiat, availableAmount],
   )
-
-  const handleFeeOptionsPress = () => {
-    setShowFeeOptions(!showFeeOptions)
-  }
 
   const handleCustomPress = () => {
     navigation.navigate(
@@ -454,19 +419,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     availableAmount,
   ])
 
-  let currentTextColorValue = 0
-  if (errorMessage.type === ErrorMessages.NotEnoughGas) {
-    currentTextColorValue = 1
-  } else if (errorMessage.type === ErrorMessages.NotEnoughCoverFees) {
-    currentTextColorValue = 2
-  }
-
-  const showtextColor = interpolateColor(
-    currentTextColorValue,
-    [0, 1, 2],
-    [palette.black2, palette.red, palette.turquoise],
-  )
-
   return (
     <Box flex={1} backgroundColor="mainBackground">
       {getCompatibleErrorMsg()}
@@ -480,13 +432,21 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             justifyContent="space-between"
             alignItems="flex-end"
             marginBottom="m">
-            <Box flex={1}>
+            <Box
+              flex={1}
+              backgroundColor="blockBackgroundColor"
+              paddingVertical="xl"
+              paddingHorizontal="l">
               <Box
                 flexDirection="row"
                 justifyContent="space-between"
                 alignItems="flex-end"
                 marginBottom="m">
-                <Text variant="secondaryInputLabel" tx="sendScreen.snd" />
+                <Text
+                  variant="secondaryInputLabel"
+                  tx="sendScreen.snd"
+                  fontFamily="Anek Kannada"
+                />
                 <Button
                   label={
                     showAmountsInFiat
@@ -544,7 +504,11 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               }}
             />
           </Box>
-          <Box marginTop={'xl'}>
+          <Box
+            marginTop={'xl'}
+            paddingVertical="xl"
+            paddingHorizontal="l"
+            backgroundColor="blockBackgroundColor">
             <Text variant="secondaryInputLabel" tx="sendScreen.sndTo" />
             <Box
               flexDirection="row"
@@ -552,7 +516,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               alignItems="flex-end"
               marginBottom="m">
               <TextInput
-                style={styles.sendToInput}
                 onChangeText={addressInput.onChangeText}
                 onFocus={() => setError('')}
                 value={addressInput.value}
@@ -566,62 +529,33 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             </Box>
           </Box>
         </Box>
-        <Box flex={0.3}>
-          <Box
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="flex-end"
-            marginBottom="m">
-            <Pressable
-              onPress={handleFeeOptionsPress}
-              style={styles.feeOptionsButton}>
-              {showFeeOptions ? (
-                <AngleDown style={styles.dropdown} />
-              ) : (
-                <AngleRight style={styles.dropdown} />
-              )}
-
-              <Text
-                variant="secondaryInputLabel"
-                tx="sendScreen.networkSpeed"
-              />
-            </Pressable>
-            {showText ? (
-              <Animated.Text
-                entering={FadeIn.duration(200)}
-                exiting={FadeOut.duration(200)}
-                style={[styles.speedValue, { color: showtextColor }]}>
-                {customFee
-                  ? `(Custom / ${dpUI(getSendFee(code, customFee), 9)} ${code})`
-                  : `(${networkSpeed} / ${dpUI(
-                      getSendFee(
-                        code,
-                        networkFee.current?.value || Number(fee),
-                      ),
-                      9,
-                    )} ${code})`}
-              </Animated.Text>
-            ) : null}
-          </Box>
-          {showFeeOptions && (
-            <SendFeeSelector
-              asset={code}
-              handleCustomPress={handleCustomPress}
-              networkFee={networkFee}
-              changeNetworkSpeed={setNetworkSpeed}
-            />
-          )}
+        <Box
+          flexDirection={'row'}
+          paddingVertical="l"
+          paddingHorizontal="l"
+          justifyContent="space-between">
+          <Pressable>
+            <Text
+              color={'textButtonFontColor'}
+              fontSize={16}
+              style={styles.textRegular}>
+              Transfer Within Accounts
+            </Text>
+          </Pressable>
+          <Text color="darkGrey" fontSize={16} style={styles.textRegular}>
+            {' | '}
+          </Text>
+          <Pressable onPress={handleCustomPress}>
+            <Text
+              color={'textButtonFontColor'}
+              fontSize={16}
+              style={styles.textRegular}>
+              Network Speed
+            </Text>
+          </Pressable>
           {!!error && <Text variant="error">{error}</Text>}
         </Box>
         <ButtonFooter>
-          <Button
-            type="secondary"
-            variant="m"
-            label={{ tx: 'common.cancel' }}
-            onPress={navigation.goBack}
-            isBorderless={false}
-            isActive={true}
-          />
           <Button
             type="primary"
             variant="l"
@@ -631,8 +565,16 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 : 'common.review',
             }}
             onPress={handleReviewPress}
-            isBorderless={false}
+            isBorderless={true}
             isActive={!errorMessage.msg}
+          />
+          <Button
+            type="secondary"
+            variant="l"
+            label={{ tx: 'common.cancel' }}
+            onPress={navigation.goBack}
+            isBorderless={true}
+            isActive={true}
           />
         </ButtonFooter>
       </Box>
@@ -650,8 +592,6 @@ const styles = StyleSheet.create({
     height: 40,
     width: '100%',
     color: palette.darkYellow,
-    borderBottomColor: palette.mediumGreen,
-    borderBottomWidth: 1,
   },
   sendInputCurrency: {
     fontFamily: Fonts.Regular,
@@ -669,26 +609,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     lineHeight: 30,
   },
-  sendToInput: {
-    marginTop: 5,
-    borderBottomColor: palette.mediumGreen,
-    borderBottomWidth: 1,
-    width: '90%',
-  },
-  speedValue: {
-    alignSelf: 'flex-start',
-    fontFamily: Fonts.Regular,
+  textRegular: {
+    fontFamily: SecondaryFont.Regular,
+    fontStyle: 'normal',
     fontWeight: '400',
-    fontSize: 12,
-  },
-  feeOptionsButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dropdown: {
-    marginRight: 5,
-    marginBottom: 5,
+    fontSize: 16,
+    lineHeight: 25,
+    letterSpacing: 0.5,
   },
 })
 

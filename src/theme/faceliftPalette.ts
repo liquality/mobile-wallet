@@ -6,6 +6,7 @@ export const faceliftPalette = {
   whiteGrey: '#EEEEEE',
   lightGrey: '#E0E0E0',
   mediumGrey: '#BFC3C7',
+  orangeGrey: '#F9F9F9',
   grey: '#A8AEB7',
   greyMeta: '#646F85',
   darkGrey: '#3D4767',

@@ -186,7 +186,7 @@
     "available": "Available",
     "max": "Max",
     "sndTo": "SEND TO",
-    "address": "Address",
+    "address": "Enter Address",
     "memoOpt": "MEMO (OPTIONAL)",
     "getTkn": "Get {{token}}",
     "notEnoughTkn": "Not enough {{token}} to make this transfer.",
