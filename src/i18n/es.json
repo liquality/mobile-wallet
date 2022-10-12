@@ -453,5 +453,6 @@
   "gasInfo": "A gas token can’t be switched off, as you do need to pay for transactions with it.",
   "gotIt": "Got It",
   "hmm": "Hmm.",
-  "cantFndTkn": "Can’t find this token"
+  "cantFndTkn": "Can’t find this token",
+  "notFound": "Not found"
 }

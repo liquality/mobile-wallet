@@ -83,7 +83,7 @@ const BackupPrivateKeyScreen: React.FC<
         paddingHorizontal={'screenPadding'}
         flex={0.9}>
         <Text textAlign={'center'} color="textColor" variant={'networkStatus'}>
-          {privateKey || 'Not found'}
+          {privateKey || labelTranslateFn('notFound')}
         </Text>
         <Box width={'100%'} alignItems="center">
           <TouchableOpacity
