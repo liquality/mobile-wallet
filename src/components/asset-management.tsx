@@ -107,6 +107,7 @@ const AssetRow = ({
 const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
   const [data, setData] = useState<IconAsset[]>([])
   const [assets, setAssets] = useState<CustomAsset[]>([])
+  const [mainAssets, setMaiAssets] = useState<CustomAsset[]>([])
   const activeNetwork = useRecoilValue(networkState)
   const [showSearchBox, setShowSearchBox] = useRecoilState(
     showSearchBarInputState,
@@ -196,6 +197,7 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
     }
 
     setAssets(tempAssets)
+    setMaiAssets(tempAssets)
 
     let tempAssetsIcon: IconAsset[] = myAssets.map((item) => ({
       code: item.code,
@@ -217,7 +219,11 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
       backgroundColor={'mainBackground'}
       paddingHorizontal="screenPadding">
       {showSearchBox ? (
-        <SearchBox items={assets} updateData={setAssets} />
+        <SearchBox
+          mainItems={mainAssets}
+          items={assets}
+          updateData={setAssets}
+        />
       ) : null}
 
       <Box
