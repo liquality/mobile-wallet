@@ -441,5 +441,8 @@
   "tabBarDetails": "Details",
   "description": "DESCRIPTION",
   "manageAssetsCaps": "MANAGE ASSETS",
-  "searchAsset": "Search Asset"
+  "searchAsset": "Search Asset",
+  "gas": "Gas",
+  "gasInfo": "A gas token can’t be switched off, as you do need to pay for transactions with it.",
+  "gotIt": "Got It"
 }

@@ -117,6 +117,8 @@ import DarkSun from '../assets/icons/darkSun.svg'
 import PrivateKeyWarn from '../assets/icons/pkWarn.svg'
 import SeedPhraseWarn from '../assets/icons/spWarn.svg'
 import AllChainIndicator from '../assets/icons/allChainIndicator.svg'
+import GasDarkRect from '../assets/icons/gasDarkRectangle.svg'
+import GasLightRect from '../assets/icons/gasLightRectangle.svg'
 
 export default {
   PendingSwap,
@@ -238,4 +240,6 @@ export default {
   PrivateKeyWarn,
   SeedPhraseWarn,
   AllChainIndicator,
+  GasDarkRect,
+  GasLightRect,
 }

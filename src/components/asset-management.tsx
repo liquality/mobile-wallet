@@ -20,6 +20,7 @@ import {
   formatFiat,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
+import GasModal from '../screens/wallet-features/asset/gas-modal'
 
 const scrollElementHeightPercent = 10
 const scrollElementHeightPercentStr = `${scrollElementHeightPercent}%`
@@ -41,7 +42,13 @@ interface CustomAsset extends Asset {
   showGasLink: boolean
 }
 
-const AssetRow = ({ assetItems }: { assetItems: CustomAsset }) => {
+const AssetRow = ({
+  assetItems,
+  showModal,
+}: {
+  assetItems: CustomAsset
+  showModal: () => void
+}) => {
   const { name, code, chain, id } = assetItems
   const [prettyFiatBalance, setPrettyFiatBalance] = useState('0')
   const activeNetwork = useRecoilValue(networkState)
@@ -84,7 +91,7 @@ const AssetRow = ({ assetItems }: { assetItems: CustomAsset }) => {
           marginTop={'s'}
           paddingRight={'s'}
           justifyContent="flex-end">
-          <Text variant={'subListText'} color="link">
+          <Text onPress={showModal} variant={'subListText'} color="link">
             Gas
           </Text>
         </Box>
@@ -107,9 +114,14 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
   const [contentOffset, setContentOffset] = useState({ x: 0, y: 0 })
   const [contentSize, setContentSize] = useState(0)
   const [scrollViewWidth, setScrollViewWidth] = useState(0)
+  const [modalVisible, setModalVisible] = useState(false)
+
+  const showModal = () => {
+    setModalVisible(true)
+  }
 
   const renderAsset = useCallback(({ item }: { item: CustomAsset }) => {
-    return <AssetRow assetItems={item} />
+    return <AssetRow assetItems={item} showModal={showModal} />
   }, [])
 
   const renderAssetIcon = useCallback(({ item }: { item: IconAsset }) => {
@@ -244,6 +256,10 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
         renderItem={renderAsset}
         keyExtractor={(item, index) => `${item.code}+${index}`}
         showsVerticalScrollIndicator={false}
+      />
+      <GasModal
+        isVisible={modalVisible}
+        closeModal={() => setModalVisible(false)}
       />
     </Box>
   )
