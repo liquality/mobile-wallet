@@ -1,5 +1,10 @@
 import React, { createContext } from 'react'
-import { StyleSheet, Pressable, useColorScheme } from 'react-native'
+import {
+  StyleSheet,
+  Pressable,
+  useColorScheme,
+  TouchableOpacity,
+} from 'react-native'
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
@@ -46,6 +51,7 @@ import {
   Box,
   faceliftPalette,
   HEADER_TITLE_STYLE,
+  MANAGE_ASSET_HEADER,
   palette,
   Text,
   ThemeIcon,
@@ -55,10 +61,9 @@ import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
 import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
 import NftCollectionScreen from '../screens/wallet-features/NFT/nft-collection-screen'
-
 import { AppIcons, Fonts } from '../assets'
-import { networkState, themeMode } from '../atoms'
-import { useRecoilValue } from 'recoil'
+import { networkState, showSearchBarInputState, themeMode } from '../atoms'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
 import { labelTranslateFn } from '../utils'
@@ -74,6 +79,7 @@ const {
   TabNFTInactive,
   TabSettingInactive,
   TabWalletInactive,
+  SearchIcon,
 } = AppIcons
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
@@ -185,6 +191,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'SendConfirmationScreen'
   | 'BackupWarningScreen'
   | 'SwapConfirmationScreen'
+  | 'AssetManagementScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -213,6 +220,34 @@ const AppStackHeaderLeft = (navProps: NavigationProps) => {
       <Box paddingLeft={'s'}>
         <ThemeIcon iconName="OnlyLqLogo" />
       </Box>
+    </Box>
+  )
+}
+
+const AssetManageScreenHeaderLeft = (navProps: NavigationProps) => {
+  const { navigation } = navProps
+
+  return (
+    <TouchableWithoutFeedback onPress={navigation.goBack}>
+      <Box paddingHorizontal={'s'} paddingVertical="m">
+        <ChevronLeft width={scale(15)} height={scale(15)} />
+      </Box>
+    </TouchableWithoutFeedback>
+  )
+}
+
+const AssetManageScreenHeaderRight = () => {
+  const setShowSearchBar = useSetRecoilState(showSearchBarInputState)
+
+  const setNavigationOpt = () => {
+    setShowSearchBar((prev) => !prev)
+  }
+
+  return (
+    <Box paddingHorizontal={'s'} paddingVertical="m">
+      <TouchableOpacity activeOpacity={0.7} onPress={setNavigationOpt}>
+        <SearchIcon width={scale(15)} height={scale(15)} />
+      </TouchableOpacity>
     </Box>
   )
 }
@@ -256,166 +291,183 @@ const appStackScreenNavOptions = (
   headerBackVisible: false,
 })
 
-export const AppStackNavigator = () => (
-  <MainStack.Navigator
-    initialRouteName="OverviewScreen"
-    /**
-     * TransitionPresets types exist only on @react-navigation/stack
-     * but we are using @react-navigation/native-stack that is the
-     * reason for red squiggly line
-     */
-    screenOptions={({ navigation, route }: NavigationProps) => ({
-      gestureEnabled: true,
-      ...TransitionPresets.SlideFromRightIOS,
-      headerShown: true,
-      title: '',
-      headerLeft: () => AppStackHeaderLeft({ navigation, route }),
-      headerRight: () => AppStackHeaderRight({ navigation, route }),
-    })}>
-    <MainStack.Group>
-      <MainStack.Screen
-        name="OverviewScreen"
-        options={{
-          ...appStackScreenNavOptions(),
-        }}>
-        {(props) => OverviewScreen(props)}
-      </MainStack.Screen>
-      <MainStack.Screen
-        name="AssetChooserScreen"
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}>
-        {(props) => AssetChooserScreen(props)}
-      </MainStack.Screen>
-      <MainStack.Screen name="AssetScreen">
-        {(props) => AssetScreen(props)}
-      </MainStack.Screen>
-      <MainStack.Screen
-        name="ReceiveScreen"
-        component={ReceiveScreen}
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="SendScreen"
-        component={SendScreen}
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="SendReviewScreen"
-        component={SendReviewScreen}
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="CustomFeeScreen"
-        component={CustomFeeScreen}
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="CustomFeeEIP1559Screen"
-        component={CustomFeeEIP1559Screen}
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="SendConfirmationScreen"
-        component={SendConfirmationScreen}
-        options={({ navigation, route }: NavigationProps) => ({
-          headerRight: () => SwapCheckHeaderRight({ navigation, route }),
-          title: route?.params?.screenTitle || 'Overview',
-          headerLeft: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="AssetManagementScreen"
-        component={AssetManagementScreen}
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="AssetToggleScreen"
-        component={AssetToggleScreen}
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="SwapScreen"
-        component={SwapScreen}
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="SwapReviewScreen"
-        component={SwapReviewScreen}
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="SwapConfirmationScreen"
-        component={SwapConfirmationScreen}
-        options={({ navigation, route }: NavigationProps) => ({
-          headerRight: () => SwapCheckHeaderRight({ navigation, route }),
-          title: route?.params?.screenTitle || 'Overview',
-          headerLeft: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="NftForSpecificChainScreen"
-        component={NftForSpecificChainScreen}
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="NftDetailScreen"
-        component={NftDetailScreen}
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="NftSendScreen"
-        component={NftSendScreen}
-        options={() => ({
-          headerRight: PlaceholderComp,
-        })}
-      />
-      <MainStack.Screen
-        name="NftCollectionScreen"
-        component={NftCollectionScreen}
-        options={() => ({
-          headerShown: false,
+export const AppStackNavigator = () => {
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
+  const backgroundColor =
+    currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
+  const showSearchBar = useRecoilValue(showSearchBarInputState)
 
-          headerRight: PlaceholderComp,
-        })}
-      />
-    </MainStack.Group>
-    <MainStack.Group
-      screenOptions={{
-        presentation: 'transparentModal',
-        headerLeft: undefined,
-        headerRight: undefined,
-      }}>
-      <MainStack.Screen
-        name="WithPopupMenu"
-        component={WithPopupMenu}
-        options={{ headerShown: true, headerTransparent: true }}
-      />
-    </MainStack.Group>
-  </MainStack.Navigator>
-)
+  return (
+    <MainStack.Navigator
+      initialRouteName="OverviewScreen"
+      /**
+       * TransitionPresets types exist only on @react-navigation/stack
+       * but we are using @react-navigation/native-stack that is the
+       * reason for red squiggly line
+       */
+      screenOptions={({ navigation, route }: NavigationProps) => ({
+        gestureEnabled: true,
+        ...TransitionPresets.SlideFromRightIOS,
+        headerShadowVisible: false,
+        title: '',
+        headerLeft: () => AppStackHeaderLeft({ navigation, route }),
+        headerRight: () => AppStackHeaderRight({ navigation, route }),
+      })}>
+      <MainStack.Group>
+        <MainStack.Screen
+          name="OverviewScreen"
+          options={{
+            ...appStackScreenNavOptions(),
+          }}>
+          {(props) => OverviewScreen(props)}
+        </MainStack.Screen>
+        <MainStack.Screen
+          name="AssetChooserScreen"
+          options={() => ({
+            headerRight: PlaceholderComp,
+          })}>
+          {(props) => AssetChooserScreen(props)}
+        </MainStack.Screen>
+        <MainStack.Screen name="AssetScreen">
+          {(props) => AssetScreen(props)}
+        </MainStack.Screen>
+        <MainStack.Screen
+          name="ReceiveScreen"
+          component={ReceiveScreen}
+          options={() => ({
+            headerRight: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="SendScreen"
+          component={SendScreen}
+          options={() => ({
+            headerRight: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="SendReviewScreen"
+          component={SendReviewScreen}
+          options={() => ({
+            headerRight: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="CustomFeeScreen"
+          component={CustomFeeScreen}
+          options={() => ({
+            headerRight: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="CustomFeeEIP1559Screen"
+          component={CustomFeeEIP1559Screen}
+          options={() => ({
+            headerRight: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="SendConfirmationScreen"
+          component={SendConfirmationScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerRight: () => SwapCheckHeaderRight({ navigation, route }),
+            title: route?.params?.screenTitle || 'Overview',
+            headerLeft: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="AssetManagementScreen"
+          component={AssetManagementScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerBackVisible: false,
+            title: showSearchBar ? '' : labelTranslateFn('manageAssetsCaps')!,
+            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerStyle: { backgroundColor },
+            headerRight: () => AssetManageScreenHeaderRight(),
+            headerLeft: showSearchBar
+              ? undefined
+              : () => AssetManageScreenHeaderLeft({ navigation, route }),
+          })}
+        />
+        <MainStack.Screen
+          name="AssetToggleScreen"
+          component={AssetToggleScreen}
+          options={() => ({
+            headerRight: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="SwapScreen"
+          component={SwapScreen}
+          options={() => ({
+            headerRight: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="SwapReviewScreen"
+          component={SwapReviewScreen}
+          options={() => ({
+            headerRight: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="SwapConfirmationScreen"
+          component={SwapConfirmationScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerRight: () => SwapCheckHeaderRight({ navigation, route }),
+            title: route?.params?.screenTitle || 'Overview',
+            headerLeft: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="NftForSpecificChainScreen"
+          component={NftForSpecificChainScreen}
+          options={() => ({
+            headerRight: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="NftDetailScreen"
+          component={NftDetailScreen}
+          options={() => ({
+            headerRight: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="NftSendScreen"
+          component={NftSendScreen}
+          options={() => ({
+            headerRight: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="NftCollectionScreen"
+          component={NftCollectionScreen}
+          options={() => ({
+            headerShown: false,
+            headerRight: PlaceholderComp,
+          })}
+        />
+      </MainStack.Group>
+      <MainStack.Group
+        screenOptions={{
+          presentation: 'transparentModal',
+          headerLeft: undefined,
+          headerRight: undefined,
+        }}>
+        <MainStack.Screen
+          name="WithPopupMenu"
+          component={WithPopupMenu}
+          options={{ headerShown: true, headerTransparent: true }}
+        />
+      </MainStack.Group>
+    </MainStack.Navigator>
+  )
+}
 
 const tabIcons = {
   [`${labelTranslateFn('wallet')!}`]: TabWallet,
