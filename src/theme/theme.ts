@@ -24,7 +24,7 @@ export const theme = createTheme({
     cardPrimaryBackground: palette.purplePrimary,
     buttonPrimaryBackground: palette.purplePrimary,
     mainBorderColor: palette.gray,
-    link: faceliftPalette.buttonDefault,
+    link: faceliftPalette.linkTextColor,
     transparentBlack: palette.transparentBlack,
     progressDotColor: palette.turquoise,
     addressColor: palette.black2,

@@ -1,9 +1,15 @@
 import React, { FC } from 'react'
 import AssetManagement from '../../../components/asset-management'
 import { useRecoilValue } from 'recoil'
-import { enabledAssetsState } from '../../../atoms'
+import {
+  accountsIdsForMainnetState,
+  accountsIdsState,
+  enabledAssetsState,
+  networkState,
+} from '../../../atoms'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
+import { Network } from '@liquality/wallet-core/dist/src/store/types'
 
 export type OverviewProps = NativeStackScreenProps<
   MainStackParamList,
@@ -12,8 +18,13 @@ export type OverviewProps = NativeStackScreenProps<
 
 const AssetManagementScreen: FC<OverviewProps> = () => {
   const enabledAssets = useRecoilValue(enabledAssetsState)
-
-  return <AssetManagement enabledAssets={enabledAssets} />
+  const network = useRecoilValue(networkState)
+  const accountsIds = useRecoilValue(
+    network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
+  )
+  return (
+    <AssetManagement enabledAssets={enabledAssets} accounts={accountsIds} />
+  )
 }
 
 export default AssetManagementScreen

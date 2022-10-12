@@ -1,70 +1,118 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Alert, FlatList, StyleSheet } from 'react-native'
-import { getAllAssets, getAsset } from '@liquality/cryptoassets'
+import { getAllAssets, getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import AssetIcon from './asset-icon'
 import Switch from './ui/switch'
 import SearchBox from './ui/search-box'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilValue, useRecoilState } from 'recoil'
-import { networkState, showSearchBarInputState } from '../atoms'
+import {
+  balanceStateFamily,
+  fiatRatesState,
+  networkState,
+  showSearchBarInputState,
+} from '../atoms'
 import { Box, faceliftPalette, Text } from '../theme'
 import { scale } from 'react-native-size-matters'
-import { Asset, ChainId } from '@chainify/types'
+import { Asset, BigNumber, ChainId } from '@chainify/types'
+import {
+  cryptoToFiat,
+  formatFiat,
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 
 const scrollElementHeightPercent = 10
 const scrollElementHeightPercentStr = `${scrollElementHeightPercent}%`
 const horizontalContentHeight = 60
 const horizontalScrollPosition = horizontalContentHeight
 
-type CustomAsset = {
+type IconAsset = {
   code: string
   chain: ChainId
 }
 
-const AssetManagement = ({
-  enabledAssets,
-}: {
+type AssetManagementProps = {
   enabledAssets: string[] | undefined
-}) => {
-  const [data, setData] = useState<CustomAsset[]>([])
-  const [assets, setAssets] = useState<Asset[]>([])
+  accounts: { id: string; name: string }[]
+}
+
+interface CustomAsset extends Asset {
+  id: string
+  showGasLink: boolean
+}
+
+const AssetRow = ({ assetItems }: { assetItems: CustomAsset }) => {
+  const { name, code, chain, id } = assetItems
+  const [prettyFiatBalance, setPrettyFiatBalance] = useState('0')
+  const activeNetwork = useRecoilValue(networkState)
+  const fiatRates = useRecoilValue(fiatRatesState)
+  const balance = useRecoilValue(
+    balanceStateFamily({
+      asset: code,
+      assetId: id,
+    }),
+  )
+
+  useEffect(() => {
+    const fiatBalance = fiatRates[code]
+      ? cryptoToFiat(
+          unitToCurrency(
+            getAsset(activeNetwork, getNativeAsset(code)),
+            balance,
+          ).toNumber(),
+          fiatRates[code],
+        )
+      : 0
+    setPrettyFiatBalance(`$${formatFiat(new BigNumber(fiatBalance))}`)
+  }, [activeNetwork, balance, code, fiatRates])
+
+  return (
+    <Box flexDirection={'row'} alignItems="center" marginTop={'xl'}>
+      <AssetIcon chain={chain} asset={code} />
+      <Box flex={1} marginLeft="m">
+        <Text variant={'listText'} color="darkGrey">
+          {name} ({code})
+        </Text>
+        <Text variant={'subListText'} color="greyMeta">
+          {prettyFiatBalance}
+        </Text>
+      </Box>
+      {assetItems.showGasLink ? (
+        <Box
+          width={30}
+          alignSelf="flex-start"
+          marginTop={'s'}
+          paddingRight={'s'}
+          justifyContent="flex-end">
+          <Text variant={'subListText'} color="link">
+            Gas
+          </Text>
+        </Box>
+      ) : (
+        <Box paddingRight={'s'}>
+          <Switch asset={code} />
+        </Box>
+      )}
+    </Box>
+  )
+}
+
+const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
+  const [data, setData] = useState<IconAsset[]>([])
+  const [assets, setAssets] = useState<CustomAsset[]>([])
   const activeNetwork = useRecoilValue(networkState)
   const [showSearchBox, setShowSearchBox] = useRecoilState(
     showSearchBarInputState,
   )
-
   const [contentOffset, setContentOffset] = useState({ x: 0, y: 0 })
   const [contentSize, setContentSize] = useState(0)
   const [scrollViewWidth, setScrollViewWidth] = useState(0)
 
-  const renderAsset = useCallback(({ item }: { item: Asset }) => {
-    const { name, code, chain } = item
-    return (
-      <Box flexDirection={'row'} alignItems="center" marginTop={'xl'}>
-        <AssetIcon chain={chain} asset={code} />
-        <Box flex={1} marginLeft="m">
-          <Text variant={'listText'} color="darkGrey">
-            {name} ({code})
-          </Text>
-          <Text variant={'subListText'} color="greyMeta">
-            $1527
-          </Text>
-        </Box>
-        {/* <Box
-          width={30}
-          alignSelf="flex-start"
-          marginTop={'s'}
-          justifyContent="flex-end">
-          <Text>Gas</Text>
-        </Box> */}
-        <Box paddingRight={'m'}>
-          <Switch asset={code} />
-        </Box>
-      </Box>
-    )
+  const renderAsset = useCallback(({ item }: { item: CustomAsset }) => {
+    return <AssetRow assetItems={item} />
   }, [])
 
-  const renderAssetIcon = useCallback(({ item }: { item: CustomAsset }) => {
+  const renderAssetIcon = useCallback(({ item }: { item: IconAsset }) => {
     const { code, chain } = item
     return (
       <Box alignItems={'center'} width={scale(50)}>
@@ -113,17 +161,39 @@ const AssetManagement = ({
         getAsset(activeNetwork, key),
       )
     }
-    setAssets(myAssets)
 
-    let tempAssets: CustomAsset[] = myAssets.map((item) => ({
+    let tempAssets: Array<CustomAsset> = []
+    for (let assetItem of myAssets) {
+      let added = false
+      accounts.forEach((accItem) => {
+        if (assetItem.code === accItem.name) {
+          added = true
+          tempAssets.push({ ...assetItem, id: accItem.id, showGasLink: true })
+        }
+        if (!added) {
+          const chain = getAsset(activeNetwork, accItem.name).chain
+          if (chain === assetItem.chain) {
+            tempAssets.push({
+              ...assetItem,
+              id: accItem.id,
+              showGasLink: false,
+            })
+          }
+        }
+      })
+    }
+
+    setAssets(tempAssets)
+
+    let tempAssetsIcon: IconAsset[] = myAssets.map((item) => ({
       code: item.code,
       chain: item.chain,
     }))
 
-    tempAssets.unshift({ code: 'ALL', chain: 'ALL' as ChainId })
+    tempAssetsIcon.unshift({ code: 'ALL', chain: 'ALL' as ChainId })
 
-    setData(tempAssets)
-  }, [activeNetwork, enabledAssets])
+    setData(tempAssetsIcon)
+  }, [accounts, activeNetwork, enabledAssets])
 
   const scrollPerc =
     (contentOffset.x / (contentSize - scrollViewWidth)) *
@@ -172,7 +242,7 @@ const AssetManagement = ({
         style={styles.flatListStyle}
         contentContainerStyle={styles.contentContainerVerStyle}
         renderItem={renderAsset}
-        keyExtractor={(item) => item.code}
+        keyExtractor={(item, index) => `${item.code}+${index}`}
         showsVerticalScrollIndicator={false}
       />
     </Box>

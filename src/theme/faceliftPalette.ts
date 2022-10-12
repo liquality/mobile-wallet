@@ -31,4 +31,5 @@ export const faceliftPalette = {
   switchInactiveColor: '#E7E7E7',
   switchInactiveBorderColor: '#94939B',
   yellow: '#FBFF4A',
+  linkTextColor: '#8835E7',
 }
