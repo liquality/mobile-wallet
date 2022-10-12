@@ -5,7 +5,6 @@ import { Box, faceliftPalette, Text } from '../theme'
 import { AppIcons, Fonts } from '../assets'
 import { scale } from 'react-native-size-matters'
 const { GreenCheckMark } = AppIcons
-
 const CopyPopup = ({
   setShowPopup,
 }: {

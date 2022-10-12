@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 
-import { Box, Button, faceliftPalette, Text } from '../theme'
+import { Box, Button, faceliftPalette, Pressable, Text } from '../theme'
 import { AppIcons, Fonts } from '../assets'
 import { scale } from 'react-native-size-matters'
 import BottomDrawer from 'react-native-bottom-drawer-view'
@@ -14,12 +14,13 @@ import { NFTAsset } from '../types'
 import { useNavigation } from '@react-navigation/core'
 type ReviewDrawerProps = {
   height: number
+  title: string
   nftItem?: NFTAsset[]
   accountIdsToSendIn?: string[]
 }
 
 const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
-  const { accountIdsToSendIn, nftItem, height } = props
+  const { accountIdsToSendIn, nftItem, height, title } = props
 
   const navigation = useNavigation()
 
@@ -32,7 +33,7 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
   const renderNftSendContent = () => {
     return (
       <Box style={styles.drawerContainer}>
-        <Text style={(styles.text, styles.drawerTitle)}>Review Send NFT</Text>
+        <Text style={(styles.text, styles.drawerTitle)}>{title}</Text>
         <Text style={(styles.text, styles.subheadingText)}>
           Network/Speed Fee
         </Text>
@@ -48,15 +49,23 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
         <Text style={(styles.text, styles.subheadingInfo)}>000x0000</Text>
 
         <Box alignItems={'center'} paddingTop={'xl'}>
-          <Button
-            type="primary"
-            variant="l"
+          <Pressable
+            variant="solid"
             label={'Send'}
-            isBorderless={false}
-            isActive={true}
             onPress={navigateToReview}
           />
         </Box>
+      </Box>
+    )
+  }
+
+  const renderSwapReviewContent = () => {
+    return (
+      <Box style={styles.drawerContainer}>
+        <Text style={(styles.text, styles.drawerTitle)}>{title}</Text>
+        <Text style={(styles.text, styles.subheadingText)}>
+          TODO: Add Swap review content here
+        </Text>
       </Box>
     )
   }
@@ -69,11 +78,11 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
         offset={50}
         startUp={true}
         roundedEdges={false}
-        backgroundColor={faceliftPalette.white}
-        onExpanded={() => setShowExpanded(true)}
-        onCollapsed={() => setShowExpanded(false)}>
+        backgroundColor={faceliftPalette.white}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <TouchableOpacity>{renderNftSendContent()}</TouchableOpacity>
+          <TouchableOpacity>
+            {nftItem ? renderNftSendContent() : renderSwapReviewContent()}
+          </TouchableOpacity>
         </ScrollView>
       </BottomDrawer>
     </Box>

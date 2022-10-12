@@ -7,7 +7,6 @@ import {
   Clipboard,
   Dimensions,
   Image,
-  Pressable,
   StyleSheet,
   TextInput,
   useColorScheme,
@@ -26,6 +25,7 @@ import {
   palette,
   Card,
   faceliftPalette,
+  Pressable,
 } from '../../../theme'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
@@ -131,6 +131,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
     <Box flex={1} backgroundColor={backgroundColor}>
       {showReviewDrawer ? (
         <ReviewDrawer
+          title={'Review Send NFT'}
           height={481}
           nftItem={nftItem}
           accountIdsToSendIn={accountIdsToSendIn}
@@ -246,6 +247,14 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
             isBorderless={false}
             isActive={true}
           />
+
+          {/*    <Box alignItems={'center'} paddingTop={'xl'}>
+            <Pressable
+              variant="solid"
+              label={'Send'}
+              onPress={() => setShowReviewDrawer(true)}
+            />
+          </Box> */}
         </Box>
       </Box>
     </Box>
