@@ -21,11 +21,9 @@ import {
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import GasModal from '../screens/wallet-features/asset/gas-modal'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
-const scrollElementHeightPercent = 10
-const scrollElementHeightPercentStr = `${scrollElementHeightPercent}%`
 const horizontalContentHeight = 60
-const horizontalScrollPosition = horizontalContentHeight
 
 type IconAsset = {
   code: string
@@ -108,13 +106,11 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
   const [data, setData] = useState<IconAsset[]>([])
   const [assets, setAssets] = useState<CustomAsset[]>([])
   const [mainAssets, setMaiAssets] = useState<CustomAsset[]>([])
+  const [chainCode, setChainCode] = useState('ALL')
   const activeNetwork = useRecoilValue(networkState)
   const [showSearchBox, setShowSearchBox] = useRecoilState(
     showSearchBarInputState,
   )
-  const [contentOffset, setContentOffset] = useState({ x: 0, y: 0 })
-  const [contentSize, setContentSize] = useState(0)
-  const [scrollViewWidth, setScrollViewWidth] = useState(0)
   const [modalVisible, setModalVisible] = useState(false)
 
   const showModal = () => {
@@ -125,21 +121,38 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
     return <AssetRow assetItems={item} showModal={showModal} />
   }, [])
 
-  const renderAssetIcon = useCallback(({ item }: { item: IconAsset }) => {
-    const { code, chain } = item
-    return (
-      <Box alignItems={'center'} width={scale(50)}>
-        <AssetIcon chain={chain} asset={code} />
-        <Text
-          numberOfLines={1}
-          variant={'hintLabel'}
-          color="textColor"
-          marginTop={'m'}>
-          {code}
-        </Text>
-      </Box>
-    )
-  }, [])
+  const renderAssetIcon = useCallback(
+    ({ item }: { item: IconAsset }) => {
+      const { code, chain } = item
+      const onItemPress = () => {
+        setChainCode(code)
+      }
+      return (
+        <Box
+          alignItems={'center'}
+          borderBottomColor={
+            code === chainCode ? 'activeButton' : 'transparent'
+          }
+          borderBottomWidth={code === chainCode ? scale(1) : 0}
+          width={scale(50)}>
+          <TouchableOpacity
+            onPress={onItemPress}
+            activeOpacity={0.7}
+            style={styles.chainCodeStyle}>
+            <AssetIcon chain={chain} asset={code} />
+            <Text
+              numberOfLines={1}
+              variant={'hintLabel'}
+              color="textColor"
+              marginTop={'m'}>
+              {code}
+            </Text>
+          </TouchableOpacity>
+        </Box>
+      )
+    },
+    [chainCode],
+  )
 
   useEffect(() => {
     return () => {
@@ -212,10 +225,6 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
     setData(tempAssetsIcon)
   }, [accounts, activeNetwork, enabledAssets])
 
-  const scrollPerc =
-    (contentOffset.x / (contentSize - scrollViewWidth)) *
-    (100 - scrollElementHeightPercent)
-
   return (
     <Box
       flex={1}
@@ -228,18 +237,11 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
           updateData={setAssets}
         />
       ) : null}
-
       <Box
         width={'100%'}
         marginTop={'l'}
         height={scale(horizontalContentHeight)}
         alignItems="center">
-        <Box style={styles.scrollBackgroundStyle}>
-          <Box
-            left={`${Number(scrollPerc || 0).toFixed(0)}%`}
-            style={styles.scrollIndicatorstyle}
-          />
-        </Box>
         <FlatList
           data={data}
           renderItem={renderAssetIcon}
@@ -247,15 +249,6 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
           contentContainerStyle={styles.contentContainerHorStyle}
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.code}
-          onScroll={(e) => {
-            setContentOffset(e.nativeEvent.contentOffset)
-          }}
-          onContentSizeChange={(width, _) => {
-            setContentSize(width)
-          }}
-          onLayout={(e) => {
-            setScrollViewWidth(e.nativeEvent.layout.width)
-          }}
         />
       </Box>
       <FlatList
@@ -275,29 +268,19 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
 }
 
 const styles = StyleSheet.create({
-  scrollBackgroundStyle: {
-    position: 'absolute',
-    top: scale(horizontalScrollPosition),
-    width: '95%',
-    height: scale(1),
-    backgroundColor: faceliftPalette.lightGrey,
-    zIndex: 1,
-    overflow: 'hidden',
-  },
-  scrollIndicatorstyle: {
-    position: 'absolute',
-    height: scale(2),
-    width: scrollElementHeightPercentStr,
-    backgroundColor: faceliftPalette.buttonActive,
-  },
   contentContainerHorStyle: {
     marginLeft: scale(-5),
+    borderBottomColor: faceliftPalette.lightGrey,
+    borderBottomWidth: scale(1),
   },
   flatListStyle: {
     marginTop: scale(20),
   },
   contentContainerVerStyle: {
     paddingBottom: scale(10),
+  },
+  chainCodeStyle: {
+    alignItems: 'center',
   },
 })
 
