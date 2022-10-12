@@ -89,7 +89,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
   }, [navigation])
 
   const handleBackupPrivateKeyPress = useCallback(() => {
-    navigation.navigate('BackupWarningScreen', { isPrivateKey: true })
+    navigation.navigate('SelectChainScreen')
   }, [navigation])
 
   const handNetworkPress = useCallback(

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Text, Box, faceliftPalette, showCopyToast } from '../../../theme'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -6,6 +6,8 @@ import { MainStackParamList } from '../../../types'
 import { AppIcons } from '../../../assets'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import { labelTranslateFn } from '../../../utils'
+import { showPrivateKeyAsPerChain } from '../../../store/store'
+import Clipboard from '@react-native-clipboard/clipboard'
 
 const { PrivateKeyIcon, CopyIcon } = AppIcons
 
@@ -14,11 +16,41 @@ const lineHeightAdjustment = scale(-20)
 const BackupPrivateKeyScreen: React.FC<
   NativeStackScreenProps<MainStackParamList, 'BackupPrivateKeyScreen'>
 > = (props) => {
-  const { navigation } = props
+  const { navigation, route } = props
+  const [privateKey, setPrivateKey] = useState('')
+  useEffect(() => {
+    const fetchPrivateKey = async () => {
+      try {
+        const { network, walletId, accountId, chain } = route.params
+        if (network && walletId && accountId && chain) {
+          const pk = await showPrivateKeyAsPerChain({
+            network,
+            walletId,
+            accountId,
+            chainId: chain,
+          })
+          if (pk) {
+            setPrivateKey(pk)
+          }
+        }
+      } catch (error) {
+        // setPrivateKey(notFound)
+      }
+    }
+    fetchPrivateKey()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const showToast = () => {
     showCopyToast('copyToast', labelTranslateFn('privateKeyCopied')!)
+    Clipboard.setString(privateKey)
   }
+
+  const buttonStatus = !privateKey.length
+
+  const backgroundColor = !privateKey.length
+    ? faceliftPalette.buttonDisabled
+    : faceliftPalette.buttonActive
 
   return (
     <Box
@@ -40,9 +72,9 @@ const BackupPrivateKeyScreen: React.FC<
       />
       <Text tx={'neverDiscloseInfo'} variant={'warnText'} color={'black2'} />
       <Text marginTop={'l'} variant="subListText" color={'greyMeta'}>
-        [Account Name. Can be long]
+        {route.params.accountName}
       </Text>
-      <Text>0x2345...4322</Text>
+      <Text>{route.params.shortenAddress}</Text>
       <Box
         marginTop={'xxl'}
         justifyContent="space-evenly"
@@ -51,12 +83,13 @@ const BackupPrivateKeyScreen: React.FC<
         paddingHorizontal={'screenPadding'}
         flex={0.9}>
         <Text textAlign={'center'} color="textColor" variant={'networkStatus'}>
-          ALeKk017v9RPuC5sQhNnxBNJIfQ1vIWEUA%3A1629768043179&eiALeKk017v9RPuC5sQhNnxBNJIfQ1vIWEUA%3A1629768043179&ei
+          {privateKey || 'Not found'}
         </Text>
         <Box width={'100%'} alignItems="center">
           <TouchableOpacity
-            style={styles.copyBtnStyle}
+            style={[styles.copyBtnStyle, { backgroundColor }]}
             activeOpacity={0.7}
+            disabled={buttonStatus}
             onPress={showToast}>
             <CopyIcon />
             <Text
@@ -88,7 +121,6 @@ const styles = ScaledSheet.create({
     justifyContent: 'center',
     height: '36@s',
     width: '70%',
-    backgroundColor: faceliftPalette.buttonDefault,
   },
 })
 

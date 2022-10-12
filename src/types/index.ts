@@ -121,6 +121,12 @@ export type StackPayload = {
   fee?: GasFees | null
   speedMode?: FeeLabel
   isPrivateKey?: boolean
+  walletId?: string
+  accountId?: string
+  chain?: ChainId
+  network?: Network
+  accountName?: string
+  shortenAddress?: string
 }
 
 export type SettingStackParamList = {
@@ -138,6 +144,7 @@ export type RootStackParamList = {
   LoginScreen: undefined
   LoadingScreen: StackPayload
   BackupWarningScreen: StackPayload
+  SelectChainScreen: undefined
 }
 
 export type MainStackParamList = {
@@ -188,6 +195,7 @@ export type MainStackParamList = {
   }
   SettingsScreen: { shouldLogOut?: boolean }
   WithPopupMenu: undefined
+  SelectChainScreen: undefined
 }
 
 export type RootTabParamList = {

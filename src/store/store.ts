@@ -1,6 +1,6 @@
 import StorageManager from '../core/storage-manager'
 import { BigNumber } from '@liquality/types'
-import { FeeDetail } from '@chainify/types'
+import { ChainId, FeeDetail } from '@chainify/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
@@ -260,6 +260,25 @@ export const getNftsForAccount = async (
   accountId: string,
 ): Promise<NFTWithAccount> => {
   return wallet.getters.accountNftCollections(accountId)
+}
+
+export const showPrivateKeyAsPerChain = async ({
+  network,
+  accountId,
+  walletId,
+  chainId,
+}: {
+  network: Network
+  accountId: string
+  walletId: string
+  chainId: ChainId
+}): Promise<string | void> => {
+  return await wallet.dispatch.exportPrivateKey({
+    network,
+    walletId,
+    accountId,
+    chainId,
+  })
 }
 
 export const toggleNFTStarred = async (payload: {

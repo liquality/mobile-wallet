@@ -55,6 +55,7 @@ import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
 import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
 import NftCollectionScreen from '../screens/wallet-features/NFT/nft-collection-screen'
+import SelectChainScreen from '../screens/wallet-features/settings/select-chain-screen'
 
 import { AppIcons, Fonts } from '../assets'
 import { networkState, themeMode } from '../atoms'
@@ -530,6 +531,18 @@ export const MainNavigator = () => (
   </Tab.Navigator>
 )
 
+const SelectChainScreenHeaderLeft = () => {
+  const navigation = useNavigation()
+
+  return (
+    <TouchableWithoutFeedback onPress={navigation.goBack}>
+      <Box paddingHorizontal={'s'} paddingVertical="m">
+        <ChevronLeft width={scale(15)} height={scale(15)} />
+      </Box>
+    </TouchableWithoutFeedback>
+  )
+}
+
 export const StackMainNavigator = () => {
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
@@ -563,6 +576,17 @@ export const StackMainNavigator = () => {
         name="BackupPrivateKeyScreen"
         component={BackupPrivateKeyScreen}
         options={{ ...screenNavOptions, headerRight: DoneButton }}
+      />
+      <MainStack.Screen
+        name="SelectChainScreen"
+        component={SelectChainScreen}
+        options={{
+          ...screenNavOptions,
+          headerTitle: labelTranslateFn('selectChain')!,
+          headerTitleStyle: HEADER_TITLE_STYLE,
+          headerLeft: SelectChainScreenHeaderLeft,
+          headerStyle: { backgroundColor },
+        }}
       />
       <MainStack.Screen
         name="BackupLoginScreen"
