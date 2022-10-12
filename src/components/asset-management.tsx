@@ -117,43 +117,6 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
     setModalVisible(true)
   }
 
-  const renderAsset = useCallback(({ item }: { item: CustomAsset }) => {
-    return <AssetRow assetItems={item} showModal={showModal} />
-  }, [])
-
-  const renderAssetIcon = useCallback(
-    ({ item }: { item: IconAsset }) => {
-      const { code, chain } = item
-      const onItemPress = () => {
-        setChainCode(code)
-      }
-      return (
-        <Box
-          alignItems={'center'}
-          borderBottomColor={
-            code === chainCode ? 'activeButton' : 'transparent'
-          }
-          borderBottomWidth={code === chainCode ? scale(1) : 0}
-          width={scale(50)}>
-          <TouchableOpacity
-            onPress={onItemPress}
-            activeOpacity={0.7}
-            style={styles.chainCodeStyle}>
-            <AssetIcon chain={chain} asset={code} />
-            <Text
-              numberOfLines={1}
-              variant={'hintLabel'}
-              color="textColor"
-              marginTop={'m'}>
-              {code}
-            </Text>
-          </TouchableOpacity>
-        </Box>
-      )
-    },
-    [chainCode],
-  )
-
   useEffect(() => {
     return () => {
       // unmount and reset search input box
@@ -224,6 +187,43 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
 
     setData(tempAssetsIcon)
   }, [accounts, activeNetwork, enabledAssets])
+
+  const renderAsset = useCallback(({ item }: { item: CustomAsset }) => {
+    return <AssetRow assetItems={item} showModal={showModal} />
+  }, [])
+
+  const renderAssetIcon = useCallback(
+    ({ item }: { item: IconAsset }) => {
+      const { code, chain } = item
+      const onItemPress = () => {
+        setChainCode(code)
+      }
+      return (
+        <Box
+          alignItems={'center'}
+          borderBottomColor={
+            code === chainCode ? 'activeButton' : 'transparent'
+          }
+          borderBottomWidth={code === chainCode ? scale(1) : 0}
+          width={scale(50)}>
+          <TouchableOpacity
+            onPress={onItemPress}
+            activeOpacity={0.7}
+            style={styles.chainCodeStyle}>
+            <AssetIcon chain={chain} asset={code} />
+            <Text
+              numberOfLines={1}
+              variant={'hintLabel'}
+              color="textColor"
+              marginTop={'m'}>
+              {code}
+            </Text>
+          </TouchableOpacity>
+        </Box>
+      )
+    },
+    [chainCode],
+  )
 
   return (
     <Box
