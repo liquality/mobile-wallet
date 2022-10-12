@@ -10,17 +10,24 @@ import { Box, Button, faceliftPalette, Text } from '../theme'
 import { AppIcons, Fonts } from '../assets'
 import { scale } from 'react-native-size-matters'
 import BottomDrawer from 'react-native-bottom-drawer-view'
+import { NFTAsset } from '../types'
+import { useNavigation } from '@react-navigation/core'
+type ReviewDrawerProps = {
+  nftItem?: NFTAsset[]
+  accountIdsToSendIn?: string[]
+}
 
-const { GreenCheckMark } = AppIcons
-const ReviewDrawer = ({
-  setShowPopup,
-}: {
-  showPopup: boolean
-  setShowPopup: (show: boolean) => void
-}) => {
-  const [showExpanded, setShowExpanded] = useState<boolean>(false)
-  const [showOverview, setShowOverview] = useState<boolean>(true)
+const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
+  const { accountIdsToSendIn, nftItem } = props
 
+  const navigation = useNavigation()
+
+  const navigateToReview = () => {
+    navigation.navigate('NftOverviewScreen', {
+      nftItem,
+      accountIdsToSendIn,
+    })
+  }
   const renderNftSendContent = () => {
     return (
       <Box style={styles.drawerContainer}>
@@ -39,14 +46,14 @@ const ReviewDrawer = ({
         </Text>
         <Text style={(styles.text, styles.subheadingInfo)}>000x0000</Text>
 
-        <Box alignItems={'center'} paddingVertical={'m'}>
+        <Box alignItems={'center'} paddingTop={'xl'}>
           <Button
             type="primary"
             variant="l"
             label={'Send'}
             isBorderless={false}
             isActive={true}
-            onPress={() => console.log('Navigate to overviewe')}
+            onPress={navigateToReview}
           />
         </Box>
       </Box>

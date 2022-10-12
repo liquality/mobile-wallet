@@ -72,13 +72,6 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   const backgroundColor =
     currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
 
-  const navigateToReview = () => {
-    navigation.navigate('NftOverviewScreen', {
-      nftItem,
-      accountIdsToSendIn,
-    })
-  }
-
   const sendNft = async () => {
     try {
       /* 
@@ -136,7 +129,12 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   console.log('REVIEW DRAWR?', showReviewDrawer)
   return (
     <Box flex={1} backgroundColor={backgroundColor}>
-      {showReviewDrawer ? <ReviewDrawer /> : null}
+      {showReviewDrawer ? (
+        <ReviewDrawer
+          nftItem={nftItem}
+          accountIdsToSendIn={accountIdsToSendIn}
+        />
+      ) : null}
       {isCameraVisible ? (
         <QrCodeScanner chain={'ethereum'} onClose={handleCameraModalClose} />
       ) : null}
