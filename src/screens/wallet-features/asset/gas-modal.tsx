@@ -9,7 +9,7 @@ import { Box, Pressable, Text } from '../../../theme'
 import { useRecoilValue } from 'recoil'
 import { themeMode } from '../../../atoms'
 import { Fonts, AppIcons } from '../../../assets'
-import { scale, ScaledSheet } from 'react-native-size-matters'
+import { moderateScale, scale, ScaledSheet } from 'react-native-size-matters'
 import { SCREEN_PADDING } from '../../../utils'
 
 const { ModalClose, GasDarkRect, GasLightRect } = AppIcons
@@ -73,7 +73,7 @@ const GasModal: React.FC<GasModalProps> = ({ closeModal, isVisible }) => {
             </Box>
           </Box>
           <TouchableWithoutFeedback onPress={closeModal}>
-            <Box position={'absolute'} right={scale(-5)}>
+            <Box position={'absolute'} right={moderateScale(-10, 0.2)}>
               <ModalClose />
             </Box>
           </TouchableWithoutFeedback>
