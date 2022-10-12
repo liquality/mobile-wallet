@@ -12,6 +12,9 @@ import { Asset, ChainId } from '@chainify/types'
 import GasModal from '../screens/wallet-features/asset/gas-modal'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import AssetRow from './asset-row'
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
+import { useHeaderHeight } from '@react-navigation/elements'
+import { SCREEN_HEIGHT } from '../utils'
 
 const horizontalContentHeight = 60
 
@@ -28,6 +31,26 @@ type AssetManagementProps = {
 interface CustomAsset extends Asset {
   id: string
   showGasLink: boolean
+}
+
+const EmptyComponent = () => {
+  const tabBarBottomHeight = useBottomTabBarHeight()
+  const headerHeight = useHeaderHeight()
+  return (
+    <Box
+      height={
+        SCREEN_HEIGHT -
+        tabBarBottomHeight -
+        headerHeight -
+        2 * horizontalContentHeight // textinput height
+      }
+      justifyContent="center"
+      alignItems={'center'}
+      width={'95%'}>
+      <Text color={'textColor'} variant="h3" tx="hmm" />
+      <Text color={'textColor'} variant="h3" tx="cantFndTkn" />
+    </Box>
+  )
 }
 
 const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
@@ -200,6 +223,7 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
         renderItem={renderAsset}
         keyExtractor={(item, index) => `${item.code}+${index}`}
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={EmptyComponent}
       />
       <GasModal
         isVisible={modalVisible}
