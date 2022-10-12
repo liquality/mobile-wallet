@@ -13,12 +13,13 @@ import BottomDrawer from 'react-native-bottom-drawer-view'
 import { NFTAsset } from '../types'
 import { useNavigation } from '@react-navigation/core'
 type ReviewDrawerProps = {
+  height: number
   nftItem?: NFTAsset[]
   accountIdsToSendIn?: string[]
 }
 
 const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
-  const { accountIdsToSendIn, nftItem } = props
+  const { accountIdsToSendIn, nftItem, height } = props
 
   const navigation = useNavigation()
 
@@ -63,7 +64,7 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
   return (
     <Box flex={1} style={styles.overviewBlock}>
       <BottomDrawer
-        containerHeight={481}
+        containerHeight={height}
         downDisplay={580}
         offset={50}
         startUp={true}
@@ -81,41 +82,13 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
 
 const styles = StyleSheet.create({
   drawerContainer: { paddingHorizontal: 35, paddingVertical: 20 },
-  container: {
-    backgroundColor: 'black',
-    position: 'absolute',
-    height: Dimensions.get('screen').height,
-    width: Dimensions.get('screen').width,
-    zIndex: 10,
-  },
+
   overviewBlock: {
     justifyContent: 'center',
     width: '100%',
     height: 225,
     backgroundColor: faceliftPalette.white,
     zIndex: 100,
-  },
-
-  shortLine: { padding: 3 },
-  headerContainer: {
-    marginBottom: 20,
-  },
-
-  image: {
-    width: Dimensions.get('screen').width,
-    resizeMode: 'contain',
-    aspectRatio: 1,
-  },
-
-  drawerClosedText: {
-    fontFamily: 'Anek Kannada',
-    fontStyle: 'normal',
-    fontWeight: '400',
-    fontSize: 16,
-
-    letterSpacing: 0.5,
-
-    color: '#000000',
   },
 
   text: {
@@ -143,8 +116,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginTop: 5,
   },
-
-  flex: { flex: 1 },
 })
 
 export default ReviewDrawer

@@ -131,6 +131,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
     <Box flex={1} backgroundColor={backgroundColor}>
       {showReviewDrawer ? (
         <ReviewDrawer
+          height={481}
           nftItem={nftItem}
           accountIdsToSendIn={accountIdsToSendIn}
         />
@@ -252,16 +253,6 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: palette.white,
-    paddingVertical: 15,
-  },
-  tickerText: {
-    fontSize: 16,
-  },
-  textMargin: {},
   textRegular: {
     fontFamily: Fonts.Regular,
     fontStyle: 'normal',
@@ -292,8 +283,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   purpleLink: { color: faceliftPalette.buttonDefault },
-
-  copyIcon: { color: 'purple' },
 })
 
 export default NftSendScreen
