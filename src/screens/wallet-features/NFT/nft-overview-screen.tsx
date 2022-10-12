@@ -190,7 +190,6 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
         height={scale(464)}
         backgroundColor={'greyBackground'}
         padding={'xl'}>
-        <ConfirmationTrackerLine />
         <Text style={(styles.lowerRowText, styles.bold)}>TRANSACTION</Text>
       </Box>
 

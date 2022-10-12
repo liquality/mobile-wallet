@@ -1,25 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { StyleSheet } from 'react-native'
-import { Asset } from '@liquality/cryptoassets/dist/src/types'
-import AssetIcon from './asset-icon'
-import { useRecoilValue } from 'recoil'
-import { networkState } from '../atoms'
-import { Box, faceliftPalette, palette, Text } from '../theme'
+
+import { Box, faceliftPalette, Text } from '../theme'
 import { AppIcons, Fonts } from '../assets'
 import { scale } from 'react-native-size-matters'
 const { GreenCheckMark } = AppIcons
 
 const CopyPopup = ({
-  showPopup,
   setShowPopup,
 }: {
   showPopup: boolean
   setShowPopup: (show: boolean) => void
 }) => {
-  const [data, setData] = useState<Asset[]>([])
-  const [assets, setAssets] = useState<Asset[]>([])
-  const activeNetwork = useRecoilValue(networkState)
-
   setTimeout(() => {
     setShowPopup(false)
   }, 3000)

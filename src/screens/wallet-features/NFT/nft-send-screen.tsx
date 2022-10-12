@@ -16,6 +16,7 @@ import { AppIcons, Fonts } from '../../../assets'
 import { addressStateFamily, networkState, themeMode } from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
+import ReviewDrawer from '../../../components/review-drawer'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import {
   Text,
@@ -51,6 +52,8 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   const { activeWalletId } = wallet.state
   const [statusMsg, setStatusMsg] = useState('')
   const [isCameraVisible, setIsCameraVisible] = useState(false)
+  const [showReviewDrawer, setShowReviewDrawer] = useState(false)
+
   const theme = useRecoilValue(themeMode)
 
   let currentTheme = useColorScheme() as string
@@ -129,8 +132,11 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
     [addressInput, isCameraVisible],
   )
 
+  console.log('REVIEW DRAWR?', showReviewDrawer)
   return (
     <Box flex={1} backgroundColor={backgroundColor}>
+      {showReviewDrawer ? <ReviewDrawer /> : null}
+
       {isCameraVisible ? (
         <QrCodeScanner chain={'ethereum'} onClose={handleCameraModalClose} />
       ) : null}
@@ -209,10 +215,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
           </Box>
         </Box>
         <Box flexDirection={'row'} paddingVertical="l">
-          <Text
-            color={'buttonFontSecondary'}
-            fontSize={16}
-            style={styles.textRegular}>
+          <Text fontSize={16} style={(styles.textRegular, styles.purpleLink)}>
             Transfer Within Accounts
           </Text>
           <Text fontSize={16} style={styles.textRegular}>
@@ -222,7 +225,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
           <Text
             color={'buttonFontSecondary'}
             fontSize={16}
-            style={styles.textRegular}>
+            style={(styles.textRegular, styles.purpleLink)}>
             Network Speed
           </Text>
         </Box>
@@ -233,7 +236,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
             label={'Review'}
             isBorderless={false}
             isActive={true}
-            onPress={navigateToReview}
+            onPress={() => setShowReviewDrawer(true)}
           />
           <Button
             type="secondary"
@@ -289,6 +292,8 @@ const styles = StyleSheet.create({
     width: '90%',
     marginRight: 10,
   },
+  purpleLink: { color: faceliftPalette.buttonDefault },
+
   copyIcon: { color: 'purple' },
 })
 
