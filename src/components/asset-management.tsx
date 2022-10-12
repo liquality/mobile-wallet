@@ -34,6 +34,7 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
   const [data, setData] = useState<IconAsset[]>([])
   const [assets, setAssets] = useState<CustomAsset[]>([])
   const [mainAssets, setMainAssets] = useState<CustomAsset[]>([])
+  const [chainAssets, setChainAssets] = useState<CustomAsset[]>([])
   const [chainCode, setChainCode] = useState('ALL')
   const activeNetwork = useRecoilValue(networkState)
   const [showSearchBox, setShowSearchBox] = useRecoilState(
@@ -46,9 +47,16 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
   }
 
   useEffect(() => {
-    if (mainAssets.length) {
+    if (chainCode !== 'ALL') {
+      const chain = getAsset(activeNetwork, chainCode).chain
+      const result = mainAssets.filter((item) => item.chain === chain)
+      setChainAssets(result)
+      setAssets(result)
+    } else {
+      setChainAssets(mainAssets)
+      setAssets(mainAssets)
     }
-  }, [chainCode, mainAssets])
+  }, [activeNetwork, chainCode, mainAssets])
 
   useEffect(() => {
     return () => {
@@ -107,6 +115,7 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
 
     setAssets(tempAssets)
     setMainAssets(tempAssets)
+    setChainAssets(tempAssets)
 
     let tempAssetsIcon: IconAsset[] = accounts.map((accItem) => {
       const item = getAsset(activeNetwork, accItem.name)
@@ -165,7 +174,7 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
       paddingHorizontal="screenPadding">
       {showSearchBox ? (
         <SearchBox
-          mainItems={mainAssets}
+          mainItems={chainAssets}
           items={assets}
           updateData={setAssets}
         />
