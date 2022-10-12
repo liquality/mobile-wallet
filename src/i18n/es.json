@@ -446,5 +446,12 @@
   "neverDiscloseInfo": "Never disclose your private key. Anyone with that key has access to your funds. Ensure it is stored securely.",
   "copyPrivateKey": "Copy Private Key",
   "privateKeyCopied": "Private Key copied.",
-  "selectChain": "Select Chain"
+  "selectChain": "Select Chain",
+  "manageAssetsCaps": "MANAGE ASSETS",
+  "searchAsset": "Search Asset",
+  "gas": "Gas",
+  "gasInfo": "A gas token can’t be switched off, as you do need to pay for transactions with it.",
+  "gotIt": "Got It",
+  "hmm": "Hmm.",
+  "cantFndTkn": "Can’t find this token"
 }

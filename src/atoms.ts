@@ -94,6 +94,11 @@ export const isDoneFetchingData = atom<boolean>({
   default: false,
 })
 
+export const showSearchBarInputState = atom<boolean>({
+  key: 'ShowSearchBarInput',
+  default: false,
+})
+
 export const themeMode = atom<DarkModeEnum>({
   key: 'ThemeMode',
   default: DarkModeEnum.Null,

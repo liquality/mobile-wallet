@@ -3035,10 +3035,10 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-6.10.1.tgz#5bd16082261d7364eabb511c788f00937dac588d"
   integrity sha512-z+ILK8Q3y+nfUl43ctCPuR4Y2bIxk/ooCQFwZxhtci1EhAtMDzMAx2W25qx8G1PPL9UUOdnUax19+F0OjXoj4w==
 
-"@liquality/cryptoassets@1.14.7":
-  version "1.14.7"
-  resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.14.7.tgz#39eaaa8efedc68cc21c60e7dc0b0690d06ad0353"
-  integrity sha512-D9AL0d0zE2p7adKzRR0VbkEGce3tqYD4WugG5umJ6SGY1NhRQdX1fF648Tiwty/y2Po/6iGJqFze5S68r1GsxA==
+"@liquality/cryptoassets@1.15.0", "@liquality/cryptoassets@^1.13.3":
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.15.0.tgz#bc96773b459268304669d8b3b9b7dd2d5dbb4492"
+  integrity sha512-9tjkjxMS+uzX2wrZfEWKB9erhBGqux3wMZN00KASf+0AfhRUXSYXT1NsqVvkaZFz4wBh/I+PlmiFgFaFYR9Tng==
   dependencies:
     "@ethersproject/address" "5.7.0"
     "@types/bs58" "4.0.1"
@@ -3048,10 +3048,10 @@
     ethereumjs-util "7.1.5"
     lodash "4.17.21"
 
-"@liquality/cryptoassets@1.15.0", "@liquality/cryptoassets@^1.13.3":
-  version "1.15.0"
-  resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.15.0.tgz#bc96773b459268304669d8b3b9b7dd2d5dbb4492"
-  integrity sha512-9tjkjxMS+uzX2wrZfEWKB9erhBGqux3wMZN00KASf+0AfhRUXSYXT1NsqVvkaZFz4wBh/I+PlmiFgFaFYR9Tng==
+"@liquality/cryptoassets@1.15.1":
+  version "1.15.1"
+  resolved "https://registry.yarnpkg.com/@liquality/cryptoassets/-/cryptoassets-1.15.1.tgz#9b0f972be8bc6fcf5dd59a72a70ee93e2921efaf"
+  integrity sha512-eIz67b0SYmdX/ccnaSWBK5NDTSooLP2J3rsJgTmd1E3dy8peCEc8G8LkY9rQ6L7AI7FJKXZfl5BqNVCYJ+u75g==
   dependencies:
     "@ethersproject/address" "5.7.0"
     "@types/bs58" "4.0.1"
@@ -13165,7 +13165,7 @@ prompts@^2.0.1, prompts@^2.3.2, prompts@^2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@*, prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@*, prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -13730,6 +13730,13 @@ react-native-swipe-gestures@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.5.tgz#a172cb0f3e7478ccd681fd36b8bfbcdd098bde7c"
   integrity sha512-Ns7Bn9H/Tyw278+5SQx9oAblDZ7JixyzeOczcBK8dipQk2pD7Djkcfnf1nB/8RErAmMLL9iXgW0QHqiII8AhKw==
+
+react-native-switch@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/react-native-switch/-/react-native-switch-1.5.1.tgz#da032f66547053aa004c7a159422dbca8fadd944"
+  integrity sha512-nfuPrrPKzeZL1mQH0u1rlEGv9W1+okU/xOcNNaDNz/LhSdzWOZ04ogJ4iEj7Sth3hkBxv4XwFQZTgCc07we+cg==
+  dependencies:
+    prop-types "^15.6.0"
 
 react-native-tab-view@3.1.1:
   version "3.1.1"

@@ -67,6 +67,7 @@ const SubRow: FC<SubRowProps> = (props) => {
         network: activeNetwork,
         accountIds: accountIdsToSendIn,
       })
+      //Use dummydata here if no assets load
       let nfts = await getNftsForAccount(parentItem.id)
       setChainSpecificNfts(nfts)
     }

@@ -51,6 +51,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
         network: activeNetwork,
         accountIds: accIds,
       })
+      //Use dummydata here if no assets load
       let allNfts = await fetchAllNfts()
       setAllNftData(allNfts)
       let wholeNftArr = Object.values(allNfts).map((val) => {
@@ -114,6 +115,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
             />
             {showNfts ? (
               <NftImageView
+                showAllNftsScreen={true}
                 accountIdsToSendIn={accountIdsToSendIn}
                 iterableNftArray={iterableNftArray}
                 seeNftDetail={seeNftDetail}
