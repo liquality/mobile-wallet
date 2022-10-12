@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 
-import { Box, faceliftPalette, Text } from '../theme'
+import { Box, Button, faceliftPalette, Text } from '../theme'
 import { AppIcons, Fonts } from '../assets'
 import { scale } from 'react-native-size-matters'
 import BottomDrawer from 'react-native-bottom-drawer-view'
@@ -21,37 +21,51 @@ const ReviewDrawer = ({
   const [showExpanded, setShowExpanded] = useState<boolean>(false)
   const [showOverview, setShowOverview] = useState<boolean>(true)
 
+  const renderNftSendContent = () => {
+    return (
+      <Box style={styles.drawerContainer}>
+        <Text style={(styles.text, styles.drawerTitle)}>Review Send NFT</Text>
+        <Text style={(styles.text, styles.subheadingText)}>
+          Network/Speed Fee
+        </Text>
+        <Box flexDirection={'row'}>
+          <Text style={(styles.text, styles.subheadingInfo)}>
+            ~0.004325 ETH | $13.54
+          </Text>
+        </Box>
+        <Text style={(styles.text, styles.subheadingText)}>Send To</Text>
+        <Text style={(styles.text, styles.subheadingInfo)}>
+          sample.blockchain
+        </Text>
+        <Text style={(styles.text, styles.subheadingInfo)}>000x0000</Text>
+
+        <Box alignItems={'center'} paddingVertical={'m'}>
+          <Button
+            type="primary"
+            variant="l"
+            label={'Send'}
+            isBorderless={false}
+            isActive={true}
+            onPress={() => console.log('Navigate to overviewe')}
+          />
+        </Box>
+      </Box>
+    )
+  }
+
   return (
     <Box flex={1} style={styles.overviewBlock}>
-      <Box style={styles.headerContainer}></Box>
       <BottomDrawer
-        containerHeight={671}
+        containerHeight={481}
         downDisplay={580}
-        offset={150}
-        startUp={false}
+        offset={50}
+        startUp={true}
         roundedEdges={false}
-        backgroundColor={'rgba(255, 255, 255, 0.77)'}
+        backgroundColor={faceliftPalette.white}
         onExpanded={() => setShowExpanded(true)}
         onCollapsed={() => setShowExpanded(false)}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <TouchableOpacity>
-            <Box style={styles.drawerContainer}>
-              <Text style={[styles.descriptionTitle, styles.flex]}>Halloo</Text>
-              {/*  <Box marginVertical={'s'} flexDirection={'row'}>
-                <Text style={[styles.descriptionTitle, styles.flex]}>
-                  {!showExpanded ? renderDrawerCollapsed() : null}
-                </Text>
-              
-              </Box> */}
-              {/*   {showExpanded ? (
-                <DetailsDrawerExpanded
-                  nftItem={nftItem}
-                  showOverview={showOverview}
-                  setShowOverview={setShowOverview}
-                />
-              ) : null} */}
-            </Box>
-          </TouchableOpacity>
+          <TouchableOpacity>{renderNftSendContent()}</TouchableOpacity>
         </ScrollView>
       </BottomDrawer>
     </Box>
@@ -60,7 +74,13 @@ const ReviewDrawer = ({
 
 const styles = StyleSheet.create({
   drawerContainer: { paddingHorizontal: 35, paddingVertical: 20 },
-
+  container: {
+    backgroundColor: 'black',
+    position: 'absolute',
+    height: Dimensions.get('screen').height,
+    width: Dimensions.get('screen').width,
+    zIndex: 10,
+  },
   overviewBlock: {
     justifyContent: 'center',
     width: '100%',
@@ -91,15 +111,30 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
 
-  descriptionTitle: {
+  text: {
     fontFamily: Fonts.Regular,
     fontStyle: 'normal',
     fontWeight: '500',
-    fontSize: 15,
-    lineHeight: 21,
     letterSpacing: 0.5,
+  },
+
+  drawerTitle: {
+    fontSize: 30,
+    lineHeight: 40,
     color: faceliftPalette.darkGrey,
-    marginTop: 0,
+    marginTop: 20,
+  },
+
+  subheadingText: {
+    color: faceliftPalette.greyMeta,
+    fontSize: 15,
+    marginTop: 30,
+  },
+
+  subheadingInfo: {
+    color: faceliftPalette.greyBlack,
+    fontSize: 15,
+    marginTop: 5,
   },
 
   flex: { flex: 1 },

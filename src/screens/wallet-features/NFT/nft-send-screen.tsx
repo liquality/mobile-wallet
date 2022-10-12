@@ -5,6 +5,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import {
   Clipboard,
+  Dimensions,
   Image,
   Pressable,
   StyleSheet,
@@ -136,7 +137,6 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   return (
     <Box flex={1} backgroundColor={backgroundColor}>
       {showReviewDrawer ? <ReviewDrawer /> : null}
-
       {isCameraVisible ? (
         <QrCodeScanner chain={'ethereum'} onClose={handleCameraModalClose} />
       ) : null}
@@ -273,6 +273,7 @@ const styles = StyleSheet.create({
 
     color: faceliftPalette.darkGrey,
   },
+
   image: {
     width: 95,
     height: 95,
