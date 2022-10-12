@@ -1,27 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Alert, FlatList, StyleSheet } from 'react-native'
-import { getAllAssets, getAsset, unitToCurrency } from '@liquality/cryptoassets'
+import { getAllAssets, getAsset } from '@liquality/cryptoassets'
 import AssetIcon from './asset-icon'
-import Switch from './ui/switch'
 import SearchBox from './ui/search-box'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilValue, useRecoilState } from 'recoil'
-import {
-  balanceStateFamily,
-  fiatRatesState,
-  networkState,
-  showSearchBarInputState,
-} from '../atoms'
+import { networkState, showSearchBarInputState } from '../atoms'
 import { Box, faceliftPalette, Text } from '../theme'
 import { scale } from 'react-native-size-matters'
-import { Asset, BigNumber, ChainId } from '@chainify/types'
-import {
-  cryptoToFiat,
-  formatFiat,
-} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
-import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
+import { Asset, ChainId } from '@chainify/types'
 import GasModal from '../screens/wallet-features/asset/gas-modal'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import AssetRow from './asset-row'
 
 const horizontalContentHeight = 60
 
@@ -40,72 +30,10 @@ interface CustomAsset extends Asset {
   showGasLink: boolean
 }
 
-const AssetRow = ({
-  assetItems,
-  showModal,
-}: {
-  assetItems: CustomAsset
-  showModal: () => void
-}) => {
-  const { name, code, chain, id } = assetItems
-  const [prettyFiatBalance, setPrettyFiatBalance] = useState('0')
-  const activeNetwork = useRecoilValue(networkState)
-  const fiatRates = useRecoilValue(fiatRatesState)
-  const balance = useRecoilValue(
-    balanceStateFamily({
-      asset: code,
-      assetId: id,
-    }),
-  )
-
-  useEffect(() => {
-    const fiatBalance = fiatRates[code]
-      ? cryptoToFiat(
-          unitToCurrency(
-            getAsset(activeNetwork, getNativeAsset(code)),
-            balance,
-          ).toNumber(),
-          fiatRates[code],
-        )
-      : 0
-    setPrettyFiatBalance(`$${formatFiat(new BigNumber(fiatBalance))}`)
-  }, [activeNetwork, balance, code, fiatRates])
-
-  return (
-    <Box flexDirection={'row'} alignItems="center" marginTop={'xl'}>
-      <AssetIcon chain={chain} asset={code} />
-      <Box flex={1} marginLeft="m">
-        <Text variant={'listText'} color="darkGrey">
-          {name} ({code})
-        </Text>
-        <Text variant={'subListText'} color="greyMeta">
-          {prettyFiatBalance}
-        </Text>
-      </Box>
-      {assetItems.showGasLink ? (
-        <Box
-          width={30}
-          alignSelf="flex-start"
-          marginTop={'s'}
-          paddingRight={'s'}
-          justifyContent="flex-end">
-          <Text onPress={showModal} variant={'subListText'} color="link">
-            Gas
-          </Text>
-        </Box>
-      ) : (
-        <Box paddingRight={'s'}>
-          <Switch asset={code} />
-        </Box>
-      )}
-    </Box>
-  )
-}
-
 const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
   const [data, setData] = useState<IconAsset[]>([])
   const [assets, setAssets] = useState<CustomAsset[]>([])
-  const [mainAssets, setMaiAssets] = useState<CustomAsset[]>([])
+  const [mainAssets, setMainAssets] = useState<CustomAsset[]>([])
   const [chainCode, setChainCode] = useState('ALL')
   const activeNetwork = useRecoilValue(networkState)
   const [showSearchBox, setShowSearchBox] = useRecoilState(
@@ -116,6 +44,11 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
   const showModal = () => {
     setModalVisible(true)
   }
+
+  useEffect(() => {
+    if (mainAssets.length) {
+    }
+  }, [chainCode, mainAssets])
 
   useEffect(() => {
     return () => {
@@ -173,7 +106,7 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
     }
 
     setAssets(tempAssets)
-    setMaiAssets(tempAssets)
+    setMainAssets(tempAssets)
 
     let tempAssetsIcon: IconAsset[] = accounts.map((accItem) => {
       const item = getAsset(activeNetwork, accItem.name)
@@ -248,7 +181,7 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
           horizontal
           contentContainerStyle={styles.contentContainerHorStyle}
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.code}
+          keyExtractor={(item, index) => `${item.code}+${index}`}
         />
       </Box>
       <FlatList
