@@ -199,10 +199,13 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
     setAssets(tempAssets)
     setMaiAssets(tempAssets)
 
-    let tempAssetsIcon: IconAsset[] = myAssets.map((item) => ({
-      code: item.code,
-      chain: item.chain,
-    }))
+    let tempAssetsIcon: IconAsset[] = accounts.map((accItem) => {
+      const item = getAsset(activeNetwork, accItem.name)
+      return {
+        code: item.code,
+        chain: item.chain,
+      }
+    })
 
     tempAssetsIcon.unshift({ code: 'ALL', chain: 'ALL' as ChainId })
 
