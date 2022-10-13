@@ -14,11 +14,12 @@ import { scale } from 'react-native-size-matters'
 import { useRecoilValue } from 'recoil'
 import { AppIcons, Fonts, Images } from '../../../assets'
 import { networkState, themeMode } from '../../../atoms'
-import CopyPopup from '../../../components/copy-popup'
 
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import { Text, Box, palette, faceliftPalette } from '../../../theme'
+import { showCopyToast } from '../../../theme/toastConfig'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
+import { labelTranslateFn } from '../../../utils'
 
 const {
   NftCard,
@@ -27,6 +28,7 @@ const {
   Line,
   PurpleCopy,
   ConfirmationTrackerLine,
+  CheckmarkCircle,
 } = AppIcons
 const useInputState = (
   initialValue: string,
@@ -48,63 +50,20 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
-  const [statusMsg, setStatusMsg] = useState('')
+  const [loadingSend, setLoadingSend] = useState(false)
   const theme = useRecoilValue(themeMode)
   const [showAccordion, setShowAccordion] = useState(false)
-  const [showCopyPopup, setShowCopyPopup] = useState(false)
 
   let currentTheme = useColorScheme() as string
   if (theme) {
     currentTheme = theme
   }
 
-  const lowerBgImg =
-    currentTheme === 'light' ? Images.nftCardDark : Images.nftCardWhite
-
-  const uppperBgImg =
-    currentTheme === 'dark' ? Images.nftCardDark : Images.nftCardWhite
-
-  const backgroundColor =
-    currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
-
   const addressInput = useInputState('')
 
-  const sendNft = async () => {
-    try {
-      /* 
-      TODO add NFT fees, currently the fees sent in in extension 
-      has wrong calculation (diff fees for NFTs and tokens and 
-      a problem with NFT providers not giving fee estimations)
-       const fee = this.feesAvailable
-        ? this.assetFees[this.selectedFee].fee
-        : undefined */
-      const data = {
-        network: activeNetwork,
-        accountId: nftItem?.accountId,
-        walletId: activeWalletId,
-        receiver: addressInput.value,
-        contract: nftItem?.asset_contract.address,
-        tokenIDs: [nftItem?.token_id],
-        values: [1],
-        fee: undefined,
-        feeLabel: 'average',
-        nft: nftItem,
-      }
-      await sendNFTTransaction(data)
-      await updateNFTs({
-        walletId: activeWalletId,
-        network: activeNetwork,
-        accountIds: accountIdsToSendIn,
-      })
-      setStatusMsg('Success! You sent the NFT')
-    } catch (error) {
-      setStatusMsg('Failed to send the NFT')
-    }
-  }
-
   const handleCopyAddressPress = async (stringToCopy: string) => {
+    showCopyToast('copyToast', labelTranslateFn('nft.addressCopied')!)
     Clipboard.setString(stringToCopy)
-    setShowCopyPopup(true)
   }
 
   const renderAccordion = () => {
@@ -193,7 +152,8 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
         <Text style={(styles.lowerRowText, styles.bold)}>TRANSACTION</Text>
       </Box>
 
-      /*  <Box
+      /* TODO: Add additional styling to this and fetch transaction steps data
+       <Box
         marginTop={'xl'}
         width={scale(334)}
         height={scale(464)}
@@ -209,15 +169,12 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
     )
   }
   return (
-    <Box flex={1} paddingHorizontal={'xl'} backgroundColor={'white'}>
+    <Box
+      flex={1}
+      paddingVertical={'xxl'}
+      paddingHorizontal={'xl'}
+      backgroundColor={'white'}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {showCopyPopup ? (
-          <CopyPopup
-            showPopup={showCopyPopup}
-            setShowPopup={setShowCopyPopup}
-          />
-        ) : null}
-
         <Box
           flexDirection={'row'}
           alignItems="center"

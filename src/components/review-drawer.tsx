@@ -1,18 +1,12 @@
-import React, { useState } from 'react'
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native'
-
-import { Box, Button, faceliftPalette, Pressable, Text } from '../theme'
-import { AppIcons, Fonts } from '../assets'
-import { scale } from 'react-native-size-matters'
+import React from 'react'
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { Box, faceliftPalette, Pressable, Text } from '../theme'
+import { Fonts } from '../assets'
 import BottomDrawer from 'react-native-bottom-drawer-view'
 import { NFTAsset } from '../types'
 import { useNavigation } from '@react-navigation/core'
 type ReviewDrawerProps = {
+  handlePressSend: (nftItem: NFTAsset[]) => void
   height: number
   title: string
   nftItem?: NFTAsset[]

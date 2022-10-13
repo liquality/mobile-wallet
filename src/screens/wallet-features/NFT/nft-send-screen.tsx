@@ -5,7 +5,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import {
   Clipboard,
-  Dimensions,
   Image,
   Pressable,
   StyleSheet,
@@ -19,18 +18,11 @@ import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import ReviewDrawer from '../../../components/review-drawer'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
-import {
-  Text,
-  Button,
-  Box,
-  palette,
-  Card,
-  faceliftPalette,
-} from '../../../theme'
+import { Text, Button, Box, Card, faceliftPalette } from '../../../theme'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
 
-const { CopyIcon, PurpleCopy, QRCode } = AppIcons
+const { PurpleCopy, QRCode } = AppIcons
 const useInputState = (
   initialValue: string,
 ): UseInputStateReturnType<string> => {
@@ -72,6 +64,27 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   const backgroundColor =
     currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
 
+  const handleCopyAddressPress = async () => {
+    if (addressForAccount) {
+      Clipboard.setString(addressForAccount)
+    }
+    // setButtonPressed(true)
+  }
+
+  const handleQRCodeBtnPress = () => {
+    setIsCameraVisible(!isCameraVisible)
+  }
+
+  const handleCameraModalClose = useCallback(
+    (addressFromQrCode: string) => {
+      setIsCameraVisible(!isCameraVisible)
+      if (addressFromQrCode) {
+        addressInput.onChangeText(addressFromQrCode.replace('ethereum:', ''))
+      }
+    },
+    [addressInput, isCameraVisible],
+  )
+
   const sendNft = async () => {
     try {
       /* 
@@ -105,32 +118,12 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
     }
   }
 
-  const handleCopyAddressPress = async () => {
-    if (addressForAccount) {
-      Clipboard.setString(addressForAccount)
-    }
-    // setButtonPressed(true)
-  }
-
-  const handleQRCodeBtnPress = () => {
-    setIsCameraVisible(!isCameraVisible)
-  }
-
-  const handleCameraModalClose = useCallback(
-    (addressFromQrCode: string) => {
-      setIsCameraVisible(!isCameraVisible)
-      if (addressFromQrCode) {
-        addressInput.onChangeText(addressFromQrCode.replace('ethereum:', ''))
-      }
-    },
-    [addressInput, isCameraVisible],
-  )
-
   console.log('REVIEW DRAWR?', showReviewDrawer)
   return (
     <Box flex={1} backgroundColor={backgroundColor}>
       {showReviewDrawer ? (
         <ReviewDrawer
+          handlePressSend={sendNft}
           title={'Review Send NFT'}
           height={481}
           nftItem={nftItem}
