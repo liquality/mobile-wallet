@@ -357,7 +357,7 @@ export const AppStackNavigator = () => {
           component={AssetChooserScreen}
           options={({ navigation, route }: NavigationProps) => ({
             headerBackVisible: false,
-            title: route.params.screenTitle,
+            title: route.params.screenTitle || '',
             headerTitleStyle: MANAGE_ASSET_HEADER,
             headerStyle: { backgroundColor },
             headerRight: undefined,
