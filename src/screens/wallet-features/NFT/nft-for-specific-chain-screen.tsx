@@ -52,14 +52,14 @@ const NftForSpecificChainScreen = ({
       accountIds: accIds,
     })
     //Use dummydata here if no assets load
-    //let nfts = await getNftsForAccount(currentAccount.id)
-    setChainSpecificNfts(allNfts)
+    let nfts = await getNftsForAccount(currentAccount.id)
+    setChainSpecificNfts(nfts)
     //Manipulate NFT object to be iterable
-    let wholeNftArr = Object.values(allNfts).map((val) => {
+    let wholeNftArr = Object.values(nfts).map((val) => {
       return val
     })
     setIterableNftArray(wholeNftArr)
-    let totalAmountOfNfts = Object.values(allNfts).reduce(
+    let totalAmountOfNfts = Object.values(nfts).reduce(
       (acc, nft) => acc + nft.length,
       0,
     )

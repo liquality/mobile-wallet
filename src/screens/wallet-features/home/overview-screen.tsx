@@ -65,6 +65,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
         network: activeNetwork,
         accountIds: accIds,
       })
+      console.log('In await updateNFTS')
     }
     fetchData()
   }, [activeWalletId, activeNetwork])

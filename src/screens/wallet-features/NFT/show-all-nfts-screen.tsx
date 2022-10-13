@@ -11,11 +11,7 @@ import NftHeader from '../../../components/NFT/nft-header'
 import NftImageView from '../../../components/NFT/nft-image-view'
 import NoNfts from '../../../components/NFT/no-nfts'
 import NftTabBar from '../../../components/NFT/nft-tab-bar'
-import {
-  allNfts,
-  getAllEnabledAccounts,
-  updateNFTs,
-} from '../../../store/store'
+import { getAllEnabledAccounts, updateNFTs } from '../../../store/store'
 import { Box, palette } from '../../../theme'
 import { RootTabParamList } from '../../../types'
 import { labelTranslateFn } from '../../../utils'
@@ -56,7 +52,8 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
         accountIds: accIds,
       })
       //Use dummydata here if no assets load
-      //let allNfts = await fetchAllNfts()
+      let allNfts = await fetchAllNfts()
+      console.log(allNfts, 'ALL YYYANnnFTS')
       setAllNftData(allNfts)
       let wholeNftArr = Object.values(allNfts).map((val) => {
         return val

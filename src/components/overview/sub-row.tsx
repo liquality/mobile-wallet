@@ -68,8 +68,8 @@ const SubRow: FC<SubRowProps> = (props) => {
         accountIds: accountIdsToSendIn,
       })
       //Use dummydata here if no assets load
-      // let nfts = await getNftsForAccount(parentItem.id)
-      setChainSpecificNfts(allNfts)
+      let nfts = await getNftsForAccount(parentItem.id)
+      setChainSpecificNfts(nfts)
     }
     fetchData()
     const fiatBalance = fiatRates[item.code]
