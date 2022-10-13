@@ -122,6 +122,8 @@ import DarkMoon from '../assets/icons/darkMoon.svg'
 import DarkSun from '../assets/icons/darkSun.svg'
 import PrivateKeyWarn from '../assets/icons/pkWarn.svg'
 import SeedPhraseWarn from '../assets/icons/spWarn.svg'
+import PrivateKeyIcon from '../assets/icons/privateKeyIcon.svg'
+import CopySuccessTick from '../assets/icons/copySuccessTick.svg'
 import AllChainIndicator from '../assets/icons/allChainIndicator.svg'
 import GasDarkRect from '../assets/icons/gasDarkRectangle.svg'
 import GasLightRect from '../assets/icons/gasLightRectangle.svg'
@@ -250,6 +252,8 @@ export default {
   DarkSun,
   PrivateKeyWarn,
   SeedPhraseWarn,
+  PrivateKeyIcon,
+  CopySuccessTick,
   AllChainIndicator,
   GasDarkRect,
   GasLightRect,

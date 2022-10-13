@@ -1,8 +1,8 @@
 {
   "common": {
-    "one": "one 🇨🇳",
-    "wallet": "wallet 🇨🇳",
-    "all_chains": "all chains 🇨🇳",
+    "one": "one",
+    "wallet": "wallet",
+    "all_chains": "all chains",
     "forgotPassword": "Forgot password? ",
     "importWithSeedPhrase": "Import with seed phrase.",
     "openSesame": "Open Sesame",
@@ -48,7 +48,7 @@
     "filterOptions": "filter options",
     "sort": "SORT",
     "onceYouStart": "Once you start using your wallet you will see the activity here.",
-    "totalPrettyFiatBal": "Total {{prettyFiatBalance}}",
+    "totalPrettyFiatBal": "{{prettyFiatBalance}}",
     "started": "Started",
     "completed": "Completed",
     "custom": "Custom"
@@ -88,18 +88,14 @@
   },
   "seedPhraseScreen": {
     "backupYourWallet": "Backup your Wallet",
-    "restoreYourWallet": "The seed phrase is the only way to restore your wallet. Write itdown. Next you will confirm it."
+    "restoreYourWallet": "The seed phrase is the only way to restore your wallet. Write it down. Next you will confirm it."
   },
+
   "termsScreen": {
     "termPrivacy": "Terms & Privacy",
     "termCopy": "THIS IS THE BETA VERSION OF THE LIQUALITY PLATFORM WHICH IS STILL BEING ACTIVELY DEVELOPED. YOU ACKNOWLEDGE THE INFORMATION AVAILABLE IS NOT INTENDED TO BE RELIED ON OR USED IN A PRODUCTION ENVIRONMENT. YOU ACKNOWLEDGE AND ACCEPT THAT THE SITE OR SERVICES \n (A) MAY CONTAIN BUGS, ERRORS, AND DEFECTS, \n (B) MAY FUNCTION IMPROPERLY OR BE SUBJECT TO PERIODS OF DOWNTIME AN UNAVAILABILITY, \n (C) MAY RESULT IN TOTAL OR PARTIAL LOSS OR CORRUPTION OF DATA USED IN THE SITE, AND \n (D) MAY BE MODIFIED AT ANY TIME, INCLUDING THROUGH THE RELEASE OF SUBSEQUENT VERSIONS, \n\nALL WITH OR WITHOUT NOTICE. THE ALPHA PLATFORM IS AVAILABLE ON AN “AS IS” AND “AS AVAILABLE” BASIS FOR THE SOLE PURPOSE OF COLLECTING FEEDBACK ON QUALITY, USABILITY, PERFORMANCE AND ANY DEFECTS. THANK YOU FOR YOUR SUPPORT WHILE WE CONTINUE TO WORK ON DELIVERING A PERFECT PRODUCT.",
     "iAgree:": "I Agree",
     "cancel": "Cancel"
-  },
-  "overlayTutorial": {
-    "hiddenForSecurityTapAndHold": "Hidden for security. Tap and hold to reveal phrase.",
-    "tryIt": "Try it.",
-    "gotIt": "GOT IT"
   },
   "assetChooserScreen": {
     "searchCurrency": "Search for a Currency"
@@ -130,13 +126,18 @@
     "iSaveSeed": "I saved the seed"
   },
   "backupWarningScreen": {
-    "showSeedPhrase": "Show Seed Phrase?",
-    "anyoneWhoSeed": "Anyone who has this seed phrase can steal your funds.",
-    "showPrivateKey": "Show Private Key?",
+    "show": "Show",
+    "seedPhrase": "Seed Phrase?",
+    "anyoneWhoSeed": "Anyone who has this seed phrase can steal your funds. View it in private space.",
     "anyOneWhoPrivate": "Anyone who has your private key can steal your funds. View it in private space.",
     "viewItPrivate": "View it in private without any cameras around.",
     "iHavePrivacy": "I Have Privacy",
     "signIn": "Sign In"
+  },
+  "overlayTutorial": {
+    "hiddenForSecurityTapAndHold": "Hidden for security. Tap and hold to reveal phrase.",
+    "tryIt": "Try it.",
+    "gotIt": "GOT IT"
   },
   "overviewScreen": {
     "load": "Loading...",
@@ -229,9 +230,9 @@
     "version": "Version: {{version}}",
     "whatNew": "What's new",
     "language": "Language",
-    "english": "English 🇨🇳",
-    "spanish": "Spanish 🇨🇳",
-    "mandarin": "Mandarin 🇨🇳"
+    "english": "English",
+    "spanish": "Spanish",
+    "mandarin": "Mandarin"
   },
   "swapConfirmationScreen": {
     "networkSpeed": "NETWORK SPEED/FEE",
@@ -391,8 +392,8 @@
   "lock": "Lock",
   "settings": "SETTINGS",
   "warning": "WARNING!",
-  "asset": "ASSET 🇨🇳",
-  "activity": "ACTIVITY 🇨🇳",
+  "asset": "Assets",
+  "activity": "Activity",
   "sec": "{{sec}} sec",
   "maybeIn30": "maybe in 30 sec",
   "likelyLess30": "likely in < 30 sec",
@@ -411,6 +412,7 @@
     "tabBarOverview": "Overview",
     "tabBarDetails": "Details",
     "description": "DESCRIPTION",
+
     "createdBy": "Created By:",
     "creator": "CREATOR",
     "unlockableContent": "Unlockable Content:",
@@ -439,11 +441,18 @@
   "tabBarOverview": "Overview",
   "tabBarDetails": "Details",
   "description": "DESCRIPTION",
+  "your": "Your",
+  "privateKey": "Private Key",
+  "neverDiscloseInfo": "Never disclose your private key. Anyone with that key has access to your funds. Ensure it is stored securely.",
+  "copyPrivateKey": "Copy Private Key",
+  "privateKeyCopied": "Private Key copied.",
+  "selectChain": "Select Chain",
   "manageAssetsCaps": "MANAGE ASSETS",
   "searchAsset": "Search Asset",
   "gas": "Gas",
   "gasInfo": "A gas token can’t be switched off, as you do need to pay for transactions with it.",
   "gotIt": "Got It",
   "hmm": "Hmm.",
-  "cantFndTkn": "Can’t find this token"
+  "cantFndTkn": "Can’t find this token",
+  "notFound": "Not found"
 }

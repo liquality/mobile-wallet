@@ -14,6 +14,7 @@ import { Fonts, Images, AppIcons } from '../../assets'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import { ONBOARDING_PADDING } from '../../utils'
 import { CommonActions } from '@react-navigation/native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const { ModalClose } = AppIcons
 
@@ -183,11 +184,13 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
             resizeMode="contain"
             source={lowerBgImg}
           />
-          <TouchableWithoutFeedback onPress={() => onAction(false)}>
-            <Box position={'absolute'} right={scale(-5)}>
+          <Box position={'absolute'} zIndex={100} right={scale(-5)}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => onAction(false)}>
               <ModalClose />
-            </Box>
-          </TouchableWithoutFeedback>
+            </TouchableOpacity>
+          </Box>
         </Box>
       </Box>
     </Modal>
