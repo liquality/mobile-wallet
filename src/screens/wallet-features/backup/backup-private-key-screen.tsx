@@ -33,9 +33,7 @@ const BackupPrivateKeyScreen: React.FC<
             setPrivateKey(pk)
           }
         }
-      } catch (error) {
-        // setPrivateKey(notFound)
-      }
+      } catch (error) {}
     }
     fetchPrivateKey()
     // eslint-disable-next-line react-hooks/exhaustive-deps
