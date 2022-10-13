@@ -32,6 +32,7 @@ const {
   ArbitrumIcon,
   SolanaIcon,
   BlankIcon,
+  AllChainIndicator,
 } = AppIcons
 
 type AssetIconType = {
@@ -140,6 +141,10 @@ const extractSpecificIcon = {
   sol: {
     assetName: SolanaIcon,
     viewBoxValue: '0 0 32 32',
+  },
+  all: {
+    assetName: AllChainIndicator,
+    viewBoxValue: '',
   },
 }
 

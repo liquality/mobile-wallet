@@ -63,3 +63,12 @@ export const HEADER_TITLE_STYLE: StyleProp<
   fontSize: scale(14),
   color: faceliftPalette.black,
 }
+
+export const MANAGE_ASSET_HEADER: StyleProp<
+  Pick<TextStyle, 'fontFamily' | 'fontWeight' | 'fontSize'> & {
+    color?: string | undefined
+  }
+> = {
+  ...HEADER_TITLE_STYLE,
+  color: faceliftPalette.darkGrey,
+}

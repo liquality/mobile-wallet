@@ -439,5 +439,12 @@
   "tabBarActivity": "Activity",
   "tabBarOverview": "Overview",
   "tabBarDetails": "Details",
-  "description": "DESCRIPTION"
+  "description": "DESCRIPTION",
+  "manageAssetsCaps": "MANAGE ASSETS",
+  "searchAsset": "Search Asset",
+  "gas": "Gas",
+  "gasInfo": "A gas token can’t be switched off, as you do need to pay for transactions with it.",
+  "gotIt": "Got It",
+  "hmm": "Hmm.",
+  "cantFndTkn": "Can’t find this token"
 }
