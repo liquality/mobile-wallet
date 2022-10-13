@@ -218,6 +218,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'BackupWarningScreen'
   | 'SwapConfirmationScreen'
   | 'AssetManagementScreen'
+  | 'AssetChooserScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -353,11 +354,17 @@ export const AppStackNavigator = () => {
         </MainStack.Screen>
         <MainStack.Screen
           name="AssetChooserScreen"
-          options={() => ({
-            headerRight: PlaceholderComp,
-          })}>
-          {(props) => AssetChooserScreen(props)}
-        </MainStack.Screen>
+          component={AssetChooserScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerBackVisible: false,
+            title: route.params.screenTitle,
+            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerStyle: { backgroundColor },
+            headerRight: undefined,
+            headerLeft: () =>
+              AssetManageScreenHeaderLeft({ navigation, route }),
+          })}
+        />
         <MainStack.Screen name="AssetScreen">
           {(props) => AssetScreen(props)}
         </MainStack.Screen>

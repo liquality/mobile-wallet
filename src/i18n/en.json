@@ -332,8 +332,8 @@
   },
   "summaryBlockComp": {
     "selectAssetSend": "Select asset for Send",
-    "selectAssetReceive": "Select asset for receive",
-    "selectAssetSwap": "Select asset for swap",
+    "selectAssetReceive": "Select asset for Receive",
+    "selectAssetSwap": "Select asset for Swap",
     "asset": " ASSET",
     "assets": " ASSETS",
     "send": "Send",
