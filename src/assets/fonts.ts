@@ -1,3 +1,7 @@
+export const secondaryFont = {
+  Regular: 'AnekBangla-Regular',
+}
+
 export default {
   Bold: 'AnekKannada-Bold',
   Light: 'AnekKannada-Light',

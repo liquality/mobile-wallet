@@ -38,11 +38,12 @@ const wallet = setupWallet({
 })
 const OverviewScreen = ({ navigation }: OverviewProps) => {
   const [refreshing, setRefreshing] = React.useState(false)
+  const [accountIds, setAccountIds] = React.useState<string[]>([])
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
-    populateWallet().then(() => setRefreshing(false))
-  }, [])
+    populateWallet(accountIds).then(() => setRefreshing(false))
+  }, [accountIds])
 
   const activeNetwork = useRecoilValue(networkState)
 
@@ -54,10 +55,11 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
 
   React.useEffect(() => {
     async function fetchData() {
-      const enabledAccountsToSendIn = await getAllEnabledAccounts()
+      const enabledAccountsToSendIn = getAllEnabledAccounts()
       const accIds = enabledAccountsToSendIn.map((account) => {
         return account.id
       })
+      setAccountIds(accIds)
       await updateNFTs({
         walletId: activeWalletId,
         network: activeNetwork,
