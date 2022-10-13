@@ -7,6 +7,7 @@ import {
   Clipboard,
   Dimensions,
   Image,
+  Pressable,
   StyleSheet,
   TextInput,
   useColorScheme,
@@ -25,7 +26,6 @@ import {
   palette,
   Card,
   faceliftPalette,
-  Pressable,
 } from '../../../theme'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
