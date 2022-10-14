@@ -57,7 +57,6 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
             index={index}
             nftItem={nftItem}
             seeNftDetail={seeNftDetail}
-            setImgError={setImgError}
             imgError={imgError}
             activeWalletId={activeWalletId}
             handleGoToCollection={handleGoToCollection}

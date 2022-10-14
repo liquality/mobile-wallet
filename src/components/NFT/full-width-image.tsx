@@ -12,7 +12,6 @@ type FullWidthImageProps = {
   index: number
   nftItem: NFT[]
   seeNftDetail: (nftItem: NFTAsset[]) => void
-  setImgError: (err: boolean) => void
   imgError: string[]
   activeWalletId: string
   handleGoToCollection: (nftItem: NFTAsset[]) => void
@@ -23,12 +22,10 @@ const FullWidthImage: React.FC<FullWidthImageProps> = (props) => {
     index,
     nftItem,
     seeNftDetail,
-    setImgError,
     imgError,
     activeWalletId,
     handleGoToCollection,
   } = props
-  console.log('he')
   const renderFullWidthImage = () => {
     return (
       <Box key={index}>

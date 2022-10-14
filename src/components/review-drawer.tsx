@@ -4,7 +4,6 @@ import { Box, faceliftPalette, Pressable, Text } from '../theme'
 import { Fonts } from '../assets'
 import BottomDrawer from 'react-native-bottom-drawer-view'
 import { NFTAsset } from '../types'
-import { useNavigation } from '@react-navigation/core'
 type ReviewDrawerProps = {
   handlePressSend: () => void
   height: number

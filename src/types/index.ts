@@ -41,6 +41,7 @@ export interface AccountType {
   activeNetwork?: Network
 }
 export interface NFTAsset {
+  length: number
   token_id?: string
   asset_contract?: {
     address?: string
@@ -207,8 +208,8 @@ export type RootTabParamList = {
 export interface UseInputStateReturnType<T> {
   value: T
   onChangeText:
-    | Dispatch<SetStateAction<T>>
-    | Dispatch<SetStateAction<T | undefined>>
+  | Dispatch<SetStateAction<T>>
+  | Dispatch<SetStateAction<T | undefined>>
 }
 
 export interface SeedWordType {

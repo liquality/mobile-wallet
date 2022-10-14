@@ -16,7 +16,13 @@ import {
 } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { AppIcons, Fonts } from '../../../assets'
-import { addressStateFamily, networkState, themeMode } from '../../../atoms'
+import {
+  accountInfoStateFamily,
+  addressStateFamily,
+  balanceStateFamily,
+  networkState,
+  themeMode,
+} from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import ReviewDrawer from '../../../components/review-drawer'
@@ -52,6 +58,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   const [errorMsg, setErrorMsg] = useState('')
   const [isCameraVisible, setIsCameraVisible] = useState(false)
   const [showReviewDrawer, setShowReviewDrawer] = useState(false)
+  const addressInput = useInputState('')
 
   const theme = useRecoilValue(themeMode)
 
@@ -63,9 +70,9 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   const addressForAccount = useRecoilValue(
     addressStateFamily(nftItem.accountId),
   ) as string
+  const accountInfo = useRecoilValue(accountInfoStateFamily(nftItem.accountId))
 
-  //Hardcoded my own metamask mumbai testnet for testing purposes
-  const addressInput = useInputState('')
+  console.log(accountInfo, 'acc info ')
 
   const backgroundColor =
     currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
@@ -74,7 +81,6 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
     if (addressForAccount) {
       Clipboard.setString(addressForAccount)
     }
-    // setButtonPressed(true)
   }
 
   const handleQRCodeBtnPress = () => {
@@ -112,6 +118,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
         feeLabel: 'average',
         nft: nftItem,
       }
+
       await sendNFTTransaction(data)
       await updateNFTs({
         walletId: activeWalletId,
@@ -176,17 +183,15 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
       <Box padding={'xl'}>
         <Text variant={'miniNftHeader'}>SENT FROM</Text>
         <Box paddingTop={'m'} flexDirection={'row'}>
-          <AssetIcon chain={'ethereum'} />
+          <AssetIcon chain={accountInfo.chain} />
           <Text fontSize={16} style={styles.textRegular}>
-            ETH
+            {accountInfo.code}
           </Text>
         </Box>
         <Box paddingBottom={'m'} flexDirection={'row'}>
-          {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
-
           <Text fontSize={18} style={styles.textRegular}>
             {/*   TODO: change to just use addressForAccount  when assets are loading again, for now hardcoded*/}
-            {shortenAddress(nftItem.accountId)}{' '}
+            {shortenAddress(addressForAccount)}{' '}
           </Text>
           <Pressable onPress={handleCopyAddressPress}>
             <PurpleCopy />
@@ -204,7 +209,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
             fontSize={18}
             color={'mediumGrey'}
             style={styles.textRegular}>
-            3.5 ETH Avail.
+            {accountInfo.balance} {accountInfo.code} Avail.
           </Text>
         </Box>
         <Box backgroundColor={'mediumWhite'} padding={'l'} paddingTop={'xl'}>
@@ -256,20 +261,11 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
           <Button
             type="secondary"
             variant="l"
-            /*           label={{ tx: 'receiveScreen.buyCrypto' }}*/
             label="Cancel"
             onPress={() => navigation.goBack()}
             isBorderless={false}
             isActive={true}
           />
-
-          {/*    <Box alignItems={'center'} paddingTop={'xl'}>
-            <Pressable
-              variant="solid"
-              label={'Send'}
-              onPress={() => setShowReviewDrawer(true)}
-            />
-          </Box> */}
         </Box>
       </Box>
     </Box>
