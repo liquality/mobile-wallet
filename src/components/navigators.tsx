@@ -178,6 +178,12 @@ export const WalletCreationNavigator = () => {
         <WalletCreationStack.Screen
           name="SeedPhraseScreen"
           component={SeedPhraseScreen}
+          options={{
+            ...screenNavOptions,
+            headerTitleStyle: HEADER_TITLE_STYLE,
+            headerStyle: { backgroundColor },
+            headerLeft: LiqLogoHeaderLeft,
+          }}
         />
         <WalletCreationStack.Screen
           name="SeedPhraseConfirmationScreen"
@@ -675,7 +681,16 @@ export const StackMainNavigator = () => {
         component={PasswordCreationScreen}
         options={{ ...screenNavOptions, headerTransparent: true }}
       />
-      <MainStack.Screen name="SeedPhraseScreen" component={SeedPhraseScreen} />
+      <MainStack.Screen
+        name="SeedPhraseScreen"
+        component={SeedPhraseScreen}
+        options={{
+          ...screenNavOptions,
+          headerTitleStyle: HEADER_TITLE_STYLE,
+          headerStyle: { backgroundColor },
+          headerLeft: LiqLogoHeaderLeft,
+        }}
+      />
       <MainStack.Screen
         name="SeedPhraseConfirmationScreen"
         component={SeedPhraseConfirmationScreen}

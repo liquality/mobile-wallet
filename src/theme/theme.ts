@@ -394,6 +394,11 @@ export const theme = createTheme({
       lineHeight: scale(60),
       fontWeight: '400',
     },
+    seedPhraseLabel: {
+      fontWeight: '400',
+      fontSize: scale(16),
+      fontFamily: Fonts.Regular,
+    },
   },
   pressableVariants: {
     outline: {
