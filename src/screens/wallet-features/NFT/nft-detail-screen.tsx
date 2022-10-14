@@ -33,7 +33,7 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
 
-  const [imgError, setImgError] = useState<boolean>(false)
+  const [imgError, setImgError] = useState<string[]>([])
   const [showExpanded, setShowExpanded] = useState<boolean>(false)
   const [showOverview, setShowOverview] = useState<boolean>(true)
 
@@ -67,7 +67,7 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
         <Image
           source={checkImgUrlExists(nftItem.image_original_url)}
           style={styles.image}
-          onError={() => setImgError(true)}
+          onError={() => imgError.push(nftItem.image_original_url)}
         />
       </Box>
       <BottomDrawer

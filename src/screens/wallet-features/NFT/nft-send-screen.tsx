@@ -121,7 +121,6 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
     }
   }
 
-  console.log('REVIEW DRAWR?', showReviewDrawer)
   return (
     <Box flex={1} backgroundColor={backgroundColor}>
       {showReviewDrawer ? (

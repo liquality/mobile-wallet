@@ -1,7 +1,7 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   StyleSheet,
   Pressable,
@@ -16,7 +16,11 @@ import StarFavorite from '../../../components/NFT/star-favorite'
 import { Box, palette } from '../../../theme'
 
 import { RootStackParamList } from '../../../types'
-import { labelTranslateFn } from '../../../utils'
+import {
+  checkIfCollectionNameExists,
+  checkImgUrlExists,
+  labelTranslateFn,
+} from '../../../utils'
 
 type NftCollectionScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -32,11 +36,11 @@ const NftCollectionScreen = ({
 }: NftCollectionScreenProps) => {
   const { nftCollection, accountIdsToSendIn } = route.params
   const { activeWalletId } = wallet.state
+  const [imgError, setImgError] = useState<string[]>([])
 
   const seeNftDetail = useCallback(
     (nftItem) => {
       navigation.navigate('NftDetailScreen', {
-        screenTitle: 'NFT Detail',
         nftItem: nftItem,
         accountIdsToSendIn: accountIdsToSendIn,
       })
@@ -56,10 +60,12 @@ const NftCollectionScreen = ({
               <Box style={styles.inner}>
                 <Pressable onPress={() => seeNftDetail(item)}>
                   <Image
-                    source={{
-                      uri: item.image_original_url,
-                    }}
+                    source={checkImgUrlExists(
+                      item.image_original_url,
+                      imgError,
+                    )}
                     style={styles.image}
+                    onError={() => imgError.push(item.image_original_url)}
                   />
                 </Pressable>
                 <StarFavorite nftAsset={item} activeWalletId={activeWalletId} />
@@ -77,7 +83,7 @@ const NftCollectionScreen = ({
         <Box style={styles.headerContainer}>
           <NftHeader
             blackText={checkIfCollectionNameExists(
-              nftCollection.collection.name,
+              nftCollection[0].collection.name,
             ).toUpperCase()}
             greyText={`${nftCollection.length} ${labelTranslateFn('nft.nfts')}`}
             width={Dimensions.get('screen').width}

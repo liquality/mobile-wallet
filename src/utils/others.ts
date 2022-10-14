@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { getAsset } from '@liquality/cryptoassets'
 import { AES } from 'crypto-js'
 import { fetchFeesForAsset, fetchSwapProvider } from '../store/store'
@@ -216,7 +217,7 @@ export const checkIfDescriptionExists = (str: string) => {
   return str
 }
 
-export const checkImgUrlExists = (imgUrl: string, imgError: boolean) => {
+export const checkImgUrlExists = (imgUrl: string, imgError: string[]) => {
   console.log(imgUrl, 'imgurl?', imgError, 'IMGURL AND ERROR')
-  return !imgError && imgUrl ? { uri: imgUrl } : Images.nftThumbnail
+  if (!imgError.includes(imgUrl) && imgUrl) { return { uri: imgUrl } } else return Images.nftThumbnail
 }

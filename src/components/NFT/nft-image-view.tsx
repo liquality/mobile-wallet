@@ -34,7 +34,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
     activeWalletId,
     accountIdsToSendIn,
   } = props
-  const [imgError, setImgError] = useState<boolean>(false)
+  const [imgError, setImgError] = useState<string[]>([])
   const navigation = useNavigation()
 
   const handleGoToCollection = useCallback(
@@ -47,7 +47,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
     [navigation, accountIdsToSendIn],
   )
 
-  const renderNftArray = () => {
+  const renderNftArray = useCallback(() => {
     let rows = []
     rows = iterableNftArray.map((nftItem, index) => {
       //If NFT collection array is 1, image should cover full width
@@ -65,7 +65,6 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
         )
         //If NFT collection array is 2, images should be on 1 row next to eachother
       } else if (nftItem.length === 2) {
-        console.log(nftItem, 'IN TWO')
         return (
           <Box>
             <Pressable
@@ -98,7 +97,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                             item.image_original_url,
                             imgError,
                           )}
-                          onError={() => setImgError(true)}
+                          onError={() => imgError.push(item.image_original_url)}
                           style={styles.twoImagesOnRow}
                         />
                       </Pressable>
@@ -165,7 +164,6 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
       }
       //If NFT collection array is more than 4 and ShowAllNftsScreen is images should appear in scrollable list
       else if (nftItem.length > 4 && showAllNftsScreen) {
-        console.log('GOT IN IFF')
         return (
           <HorizontallyScrollableImage
             nftItem={nftItem}
@@ -180,7 +178,14 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
     })
 
     return rows
-  }
+  }, [
+    activeWalletId,
+    handleGoToCollection,
+    imgError,
+    iterableNftArray,
+    seeNftDetail,
+    showAllNftsScreen,
+  ])
 
   return renderNftArray()
 }

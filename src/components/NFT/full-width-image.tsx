@@ -13,7 +13,7 @@ type FullWidthImageProps = {
   nftItem: NFT[]
   seeNftDetail: (nftItem: NFTAsset[]) => void
   setImgError: (err: boolean) => void
-  imgError: boolean
+  imgError: string[]
   activeWalletId: string
   handleGoToCollection: (nftItem: NFTAsset[]) => void
 }
@@ -28,7 +28,7 @@ const FullWidthImage: React.FC<FullWidthImageProps> = (props) => {
     activeWalletId,
     handleGoToCollection,
   } = props
-
+  console.log('he')
   const renderFullWidthImage = () => {
     return (
       <Box key={index}>
@@ -55,7 +55,7 @@ const FullWidthImage: React.FC<FullWidthImageProps> = (props) => {
                   imgError,
                 )}
                 style={styles.oneImageBig}
-                onError={() => setImgError(true)}
+                onError={() => imgError.push(nftItem[0].image_original_url)}
               />
             </Pressable>
           </Box>
