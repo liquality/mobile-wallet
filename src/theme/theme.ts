@@ -48,6 +48,10 @@ export const theme = createTheme({
     tablabelInactiveColor: palette.darkGray,
     greyMeta: faceliftPalette.greyMeta,
     blockBackgroundColor: faceliftPalette.orangeGrey,
+    slowColor: faceliftPalette.fast,
+    averageColor: faceliftPalette.average,
+    fastColor: faceliftPalette.fast,
+    selectedBackgroundColor: faceliftPalette.selectedBackground,
   },
   spacing: {
     vs: scale(2),
@@ -344,7 +348,7 @@ export const theme = createTheme({
     tabLabel: {
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
-      fontWeight: '500',
+      fontWeight: '400',
     },
     outline: {
       color: 'white',
@@ -357,6 +361,11 @@ export const theme = createTheme({
     },
     solidDisabled: {
       color: 'inactiveText',
+    },
+    gasIndicatorLabel: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(17),
+      fontWeight: '400',
     },
     errorText: {
       fontFamily: Fonts.Regular,
@@ -551,11 +560,13 @@ export const theme = createTheme({
   indicatorStyle: {
     light: {
       backgroundColor: palette.buttonActive,
+      padding: 0,
       height: scale(2),
       width: scale(20),
     },
     dark: {
       backgroundColor: palette.white,
+      padding: 0,
       height: scale(2),
       width: scale(50),
     },

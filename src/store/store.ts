@@ -1,6 +1,6 @@
 import StorageManager from '../core/storage-manager'
 import { BigNumber } from '@liquality/types'
-import { FeeDetail } from '@chainify/types'
+import { FeeDetail, FeeDetails } from '@chainify/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
@@ -182,6 +182,22 @@ export const retrySwap = async (transaction: SwapHistoryItem) => {
   await wallet.dispatch.retrySwap({
     swap: transaction,
   })
+}
+
+export const fetchFeeDetailsForAsset = async (
+  asset: string,
+): Promise<FeeDetails> => {
+  const fees = await wallet.dispatch
+    .updateFees({
+      asset: getFeeAsset(asset) || getNativeAsset(asset),
+    })
+    .catch((e) => {
+      Log(`Failed to update fees: ${e}`, 'error')
+    })
+
+  if (!fees) throw new Error('Failed to fetch gas fees: ' + asset)
+
+  return fees
 }
 
 export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {

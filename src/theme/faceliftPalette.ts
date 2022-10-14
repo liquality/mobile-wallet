@@ -28,4 +28,8 @@ export const faceliftPalette = {
   lightText: '#3D4767',
   darkText: '#EEEEEE',
   red: '#E40000',
+  slow: '#FF740F',
+  average: '#4F67E4',
+  fast: '#3AB24D',
+  selectedBackground: '#F8F0FF',
 }

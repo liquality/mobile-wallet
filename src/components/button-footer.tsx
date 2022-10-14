@@ -16,7 +16,6 @@ const ButtonFooter: React.FC<ButtonFooterProps> = ({
       flexDirection={'column'}
       justifyContent="center"
       paddingBottom={'m'}
-      paddingHorizontal="l"
       style={!unpositioned && styles.container_absolute}>
       {Children.map(children, (child, key) => (
         <Box key={key} style={styles.item}>

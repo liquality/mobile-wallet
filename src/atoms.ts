@@ -150,6 +150,11 @@ export const showFilterState = atom<boolean>({
   default: false,
 })
 
+export const selectedAssetState = atom<string>({
+  key: 'selectedAsset',
+  default: 'BTC',
+})
+
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',
