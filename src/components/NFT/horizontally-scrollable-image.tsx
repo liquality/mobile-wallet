@@ -13,9 +13,7 @@ type HorizontallyScrollableImageProps = {
   index: number
   nftItem: NFT[]
   seeNftDetail: (nftItem: NFTAsset[]) => void
-  setImgError: (err: boolean) => void
   imgError: string[]
-
   activeWalletId: string
   handleGoToCollection: (nftItem: NFTAsset[]) => void
 }
@@ -27,7 +25,7 @@ const HorizontallyScrollableImage: React.FC<
     index,
     nftItem,
     seeNftDetail,
-    setImgError,
+
     imgError,
     activeWalletId,
     handleGoToCollection,
@@ -59,7 +57,7 @@ const HorizontallyScrollableImage: React.FC<
           </Box>
         )
       }),
-    [activeWalletId, imgError, nftItem, seeNftDetail, setImgError],
+    [activeWalletId, imgError, nftItem, seeNftDetail],
   )
   return (
     <Box>

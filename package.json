@@ -21,7 +21,8 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "prettier": "prettier --write '*.js' './src/**/*.{ts,tsx}'",
     "prepare": "husky install",
-    "postinstall": "rn-nodeify --install 'crypto,stream,assert,fs,os,path,tty,http,https,url' --hack && node patch.js"
+    "postinstall": "rn-nodeify --install 'crypto,stream,assert,fs,os,path,tty,http,https,url' --hack && node patch.js",
+    "fix lint": "yarn run lint -- --fix"
   },
   "dependencies": {
     "@chainify/types": "^1.2.13",

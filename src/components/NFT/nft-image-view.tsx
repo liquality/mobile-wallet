@@ -34,7 +34,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
     activeWalletId,
     accountIdsToSendIn,
   } = props
-  const [imgError, setImgError] = useState<string[]>([])
+  const [imgError] = useState<string[]>([])
   const navigation = useNavigation()
 
   const handleGoToCollection = useCallback(
@@ -167,7 +167,6 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
           <HorizontallyScrollableImage
             nftItem={nftItem}
             seeNftDetail={seeNftDetail}
-            setImgError={setImgError}
             imgError={imgError}
             activeWalletId={activeWalletId}
             handleGoToCollection={handleGoToCollection}

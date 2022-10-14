@@ -1,5 +1,3 @@
-import { setupWallet } from '@liquality/wallet-core'
-import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import {
@@ -12,45 +10,25 @@ import {
 import { ScrollView } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
 import { useRecoilValue } from 'recoil'
-import { AppIcons, Fonts, Images } from '../../../assets'
-import { networkState, themeMode } from '../../../atoms'
+import { AppIcons, Fonts } from '../../../assets'
+import { themeMode } from '../../../atoms'
 
-import { sendNFTTransaction, updateNFTs } from '../../../store/store'
-import { Text, Box, palette, faceliftPalette } from '../../../theme'
+import { Text, Box, faceliftPalette } from '../../../theme'
 import { showCopyToast } from '../../../theme/toastConfig'
-import { RootStackParamList, UseInputStateReturnType } from '../../../types'
+import { RootStackParamList } from '../../../types'
 import { checkIfCollectionNameExists, labelTranslateFn } from '../../../utils'
 
-const {
-  NftCard,
-  AngleDownIcon,
-  AngleUpIcon,
-  Line,
-  PurpleCopy,
-  ConfirmationTrackerLine,
-  CheckmarkCircle,
-} = AppIcons
-const useInputState = (
-  initialValue: string,
-): UseInputStateReturnType<string> => {
-  const [value, setValue] = useState<string>(initialValue)
-  return { value, onChangeText: setValue }
-}
+const { NftCard, AngleDownIcon, AngleUpIcon, Line, PurpleCopy } = AppIcons
 
 type NftOverviewScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'NftOverviewScreen'
 >
 
-const wallet = setupWallet({
-  ...defaultOptions,
-})
-
 const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
-  const { nftItem, accountIdsToSendIn } = route.params
-  const activeNetwork = useRecoilValue(networkState)
-  const { activeWalletId } = wallet.state
-  const [loadingSend, setLoadingSend] = useState(false)
+  const { nftItem } = route.params
+  //TODO: Implement loading for transaction to display transaction steps
+  //const [loadingSend, setLoadingSend] = useState(false)
   const theme = useRecoilValue(themeMode)
   const [showAccordion, setShowAccordion] = useState(false)
 
@@ -58,8 +36,8 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
   if (theme) {
     currentTheme = theme
   }
-
-  const addressInput = useInputState('')
+  const backgroundColor =
+    currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
 
   const handleCopyAddressPress = async (stringToCopy: string) => {
     showCopyToast('copyToast', labelTranslateFn('nft.addressCopied')!)
@@ -173,7 +151,7 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
       flex={1}
       paddingVertical={'xxl'}
       paddingHorizontal={'xl'}
-      backgroundColor={'white'}>
+      backgroundColor={backgroundColor}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Box
           flexDirection={'row'}

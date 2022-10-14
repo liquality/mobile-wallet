@@ -218,5 +218,7 @@ export const checkIfDescriptionExists = (str: string) => {
 }
 
 export const checkImgUrlExists = (imgUrl: string, imgError: string[]) => {
-  if (!imgError.includes(imgUrl) && imgUrl) { return { uri: imgUrl } } else return Images.nftThumbnail
+  if (!imgError.includes(imgUrl) && imgUrl) {
+    return { uri: imgUrl }
+  } else return Images.nftThumbnail
 }

@@ -35,7 +35,7 @@ import {
 import i18n from 'i18n-js'
 import ErrMsgBanner, { ErrorBtn } from '../../../components/ui/err-msg-banner'
 import { palette } from '../../../theme'
-import { AppIcons, Fonts, SecondaryFont } from '../../../assets'
+import { AppIcons, Fonts } from '../../../assets'
 
 const { QRCode } = AppIcons
 

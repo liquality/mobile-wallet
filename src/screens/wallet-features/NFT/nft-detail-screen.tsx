@@ -33,7 +33,7 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
 
-  const [imgError, setImgError] = useState<string[]>([])
+  const [imgError] = useState<string[]>([])
   const [showExpanded, setShowExpanded] = useState<boolean>(false)
   const [showOverview, setShowOverview] = useState<boolean>(true)
 

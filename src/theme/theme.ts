@@ -598,7 +598,7 @@ export const theme = createTheme({
       paddingTop: 's',
       color: 'greyMeta',
       fontWeight: '400',
-      fontSize: scale(16)
+      fontSize: scale(16),
     },
     default: {
       fontWeight: '400',

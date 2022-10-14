@@ -4,16 +4,11 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 import { useRecoilValue } from 'recoil'
-import {
-  accountInfoStateFamily,
-  addressStateFamily,
-  networkState,
-} from '../../../atoms'
+import { networkState } from '../../../atoms'
 import NftHeader from '../../../components/NFT/nft-header'
 import NftImageView from '../../../components/NFT/nft-image-view'
 import NftTabBar from '../../../components/NFT/nft-tab-bar'
 import {
-  allNfts,
   getAllEnabledAccounts,
   getNftsForAccount,
   updateNFTs,
@@ -44,7 +39,6 @@ const NftForSpecificChainScreen = ({
 
   const [numberOfNfts, setNumberOfNfts] = useState<number>(0)
 
-  console.log('In paretn accountif', currentAccount.assets)
   async function fetchData() {
     const enabledAccountsToSendIn = await getAllEnabledAccounts()
     const accIds = enabledAccountsToSendIn.map((account) => {

@@ -36,7 +36,7 @@ const NftCollectionScreen = ({
 }: NftCollectionScreenProps) => {
   const { nftCollection, accountIdsToSendIn } = route.params
   const { activeWalletId } = wallet.state
-  const [imgError, setImgError] = useState<string[]>([])
+  const [imgError] = useState<string[]>([])
 
   const seeNftDetail = useCallback(
     (nftItem) => {

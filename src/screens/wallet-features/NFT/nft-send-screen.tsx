@@ -19,7 +19,6 @@ import { AppIcons, Fonts } from '../../../assets'
 import {
   accountInfoStateFamily,
   addressStateFamily,
-  balanceStateFamily,
   networkState,
   themeMode,
 } from '../../../atoms'
@@ -59,21 +58,15 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   const [isCameraVisible, setIsCameraVisible] = useState(false)
   const [showReviewDrawer, setShowReviewDrawer] = useState(false)
   const addressInput = useInputState('')
-
-  const theme = useRecoilValue(themeMode)
-
-  let currentTheme = useColorScheme() as string
-  if (theme) {
-    currentTheme = theme
-  }
-
   const addressForAccount = useRecoilValue(
     addressStateFamily(nftItem.accountId),
   ) as string
   const accountInfo = useRecoilValue(accountInfoStateFamily(nftItem.accountId))
-
-  console.log(accountInfo, 'acc info ')
-
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
   const backgroundColor =
     currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
 
@@ -161,7 +154,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
         variant={'headerCard'}
         height={GRADIENT_BACKGROUND_HEIGHT}
         paddingHorizontal="xl">
-        <Box flex={0.4} justifyContent="center"></Box>
+        <Box flex={0.4} justifyContent="center" />
         <Box flex={1}>
           <Box alignItems="center" justifyContent="center">
             <Image
