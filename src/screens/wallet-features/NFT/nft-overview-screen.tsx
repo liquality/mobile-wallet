@@ -19,7 +19,7 @@ import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import { Text, Box, palette, faceliftPalette } from '../../../theme'
 import { showCopyToast } from '../../../theme/toastConfig'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
-import { labelTranslateFn } from '../../../utils'
+import { checkIfCollectionNameExists, labelTranslateFn } from '../../../utils'
 
 const {
   NftCard,
@@ -131,7 +131,7 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
           <Text style={styles.upperRowText}>Token Standard</Text>
 
           <Box flexDirection={'row'} justifyContent={'space-between'}>
-            <Text style={styles.lowerRowText}>ERC-721</Text>
+            <Text style={styles.lowerRowText}>{nftItem.standard}</Text>
             <Pressable onPress={() => handleCopyAddressPress('string-to-copy')}>
               <PurpleCopy />
             </Pressable>
@@ -182,9 +182,12 @@ const NftOverviewScreen = ({ route }: NftOverviewScreenProps) => {
           <Pressable style={styles.pressable}>
             <NftCard width={355} height={154} />
 
-            <Text style={styles.collectionName}>{nftItem.collection.name}</Text>
+            <Text style={styles.collectionName}>
+              {checkIfCollectionNameExists(nftItem.collection.name)}
+            </Text>
             <Text style={styles.nftName}>
-              {nftItem.name} {'\n'} #{nftItem.token_id}
+              {checkIfCollectionNameExists(nftItem.name)} {'\n'} #
+              {nftItem.token_id}
             </Text>
 
             <Image

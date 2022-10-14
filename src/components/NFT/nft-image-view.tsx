@@ -16,6 +16,7 @@ import StarFavorite from './star-favorite'
 import { NFTAsset } from '../../types'
 import FullWidthImage from './full-width-image'
 import HorizontallyScrollableImage from './horizontally-scrollable-image'
+import { checkIfCollectionNameExists, checkImgUrlExists } from '../../utils'
 
 type NftImageViewProps = {
   iterableNftArray: NFTAsset[]
@@ -35,12 +36,6 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
   } = props
   const [imgError, setImgError] = useState<boolean>(false)
   const navigation = useNavigation()
-
-  const checkImgUrlExists = (imgUrl: string) => {
-    return !imgError && imgUrl
-      ? { uri: imgUrl }
-      : require('../../assets/icons/nft_thumbnail.png')
-  }
 
   const handleGoToCollection = useCallback(
     (nftCollection) => {
@@ -63,13 +58,14 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
             nftItem={nftItem}
             seeNftDetail={seeNftDetail}
             setImgError={setImgError}
-            checkImgUrlExists={checkImgUrlExists}
+            imgError={imgError}
             activeWalletId={activeWalletId}
             handleGoToCollection={handleGoToCollection}
           />
         )
         //If NFT collection array is 2, images should be on 1 row next to eachother
       } else if (nftItem.length === 2) {
+        console.log(nftItem, 'IN TWO')
         return (
           <Box>
             <Pressable
@@ -78,7 +74,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
               <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
                 <Text style={styles.collectionNameText}>
                   {' '}
-                  {nftItem[0].collection.name}{' '}
+                  {checkIfCollectionNameExists(nftItem[0].collection.name)}{' '}
                 </Text>
                 <Text style={[styles.collectionNameText, styles.pipe]}>
                   {' '}
@@ -98,9 +94,11 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                     <Box style={styles.inner}>
                       <Pressable onPress={() => seeNftDetail(item)}>
                         <Image
-                          source={{
-                            uri: item.image_original_url,
-                          }}
+                          source={checkImgUrlExists(
+                            item.image_original_url,
+                            imgError,
+                          )}
+                          onError={() => setImgError(true)}
                           style={styles.twoImagesOnRow}
                         />
                       </Pressable>
@@ -115,7 +113,10 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
             </SafeAreaView>
           </Box>
         )
-      } else if (nftItem === 3 || (nftItem.length > 4 && !showAllNftsScreen)) {
+      } else if (
+        nftItem.length === 3 ||
+        (nftItem.length > 4 && !showAllNftsScreen)
+      ) {
         return (
           <Box>
             <Pressable
@@ -124,7 +125,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
               <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
                 <Text style={styles.collectionNameText}>
                   {' '}
-                  {nftItem[0].collection.name}{' '}
+                  {checkIfCollectionNameExists(nftItem[0].collection.name)}{' '}
                 </Text>
                 <Text style={[styles.collectionNameText, styles.pipe]}>
                   {' '}
@@ -164,12 +165,13 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
       }
       //If NFT collection array is more than 4 and ShowAllNftsScreen is images should appear in scrollable list
       else if (nftItem.length > 4 && showAllNftsScreen) {
+        console.log('GOT IN IFF')
         return (
           <HorizontallyScrollableImage
             nftItem={nftItem}
             seeNftDetail={seeNftDetail}
             setImgError={setImgError}
-            checkImgUrlExists={checkImgUrlExists}
+            imgError={imgError}
             activeWalletId={activeWalletId}
             handleGoToCollection={handleGoToCollection}
           />
@@ -210,8 +212,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   twoImagesOnRow: {
-    width: Dimensions.get('screen').width / 2.2,
-    height: Dimensions.get('screen').width / 2.2,
+    width: Dimensions.get('screen').width / 2.1,
+    height: Dimensions.get('screen').width / 2.1,
   },
   threeImagesOnRow: {
     width: Dimensions.get('screen').width / 3.3,

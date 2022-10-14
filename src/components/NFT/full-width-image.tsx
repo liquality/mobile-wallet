@@ -6,13 +6,14 @@ import { Text } from '../text/text'
 import StarFavorite from './star-favorite'
 import { NFTAsset } from '@chainify/types'
 import { NFT } from '../../types'
+import { checkIfCollectionNameExists, checkImgUrlExists } from '../../utils'
 
 type FullWidthImageProps = {
   index: number
   nftItem: NFT[]
   seeNftDetail: (nftItem: NFTAsset[]) => void
   setImgError: (err: boolean) => void
-  checkImgUrlExists: (param: string) => void
+  imgError: boolean
   activeWalletId: string
   handleGoToCollection: (nftItem: NFTAsset[]) => void
 }
@@ -23,7 +24,7 @@ const FullWidthImage: React.FC<FullWidthImageProps> = (props) => {
     nftItem,
     seeNftDetail,
     setImgError,
-    checkImgUrlExists,
+    imgError,
     activeWalletId,
     handleGoToCollection,
   } = props
@@ -37,24 +38,27 @@ const FullWidthImage: React.FC<FullWidthImageProps> = (props) => {
           <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
             <Text style={styles.collectionNameText}>
               {' '}
-              {nftItem[0].collection.name}{' '}
+              {checkIfCollectionNameExists(nftItem[0].collection.name)}{' '}
             </Text>
             <Text style={[styles.collectionNameText, styles.pipe]}> | </Text>{' '}
             {nftItem.length}{' '}
           </Text>
         </Pressable>
-
         <Box>
-          <Pressable
-            style={styles.pressable}
-            onPress={() => seeNftDetail(nftItem[0])}>
-            <Image
-              source={checkImgUrlExists(nftItem[0].image_original_url)}
-              style={styles.oneImageBig}
-              onError={() => setImgError(true)}
-            />
-          </Pressable>
-
+          <Box justifyContent={'center'} alignItems={'center'}>
+            <Pressable
+              style={styles.pressable}
+              onPress={() => seeNftDetail(nftItem[0])}>
+              <Image
+                source={checkImgUrlExists(
+                  nftItem[0].image_original_url,
+                  imgError,
+                )}
+                style={styles.oneImageBig}
+                onError={() => setImgError(true)}
+              />
+            </Pressable>
+          </Box>
           <StarFavorite nftAsset={nftItem[0]} activeWalletId={activeWalletId} />
         </Box>
       </Box>

@@ -20,7 +20,10 @@ import ReviewDrawer from '../../../components/review-drawer'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
 import { Text, Button, Box, Card, faceliftPalette } from '../../../theme'
 import { RootStackParamList, UseInputStateReturnType } from '../../../types'
-import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
+import {
+  checkIfCollectionNameExists,
+  GRADIENT_BACKGROUND_HEIGHT,
+} from '../../../utils'
 
 const { PurpleCopy, QRCode } = AppIcons
 const useInputState = (
@@ -147,11 +150,11 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
               }}
             />
             <Text variant={'sendNftCollectionNameHeader'}>
-              {nftItem.collection.name}
+              {checkIfCollectionNameExists(nftItem.collection.name)}
             </Text>
 
             <Text variant={'sendNftNameHeader'}>
-              {nftItem.name} #{nftItem.token_id}
+              {checkIfCollectionNameExists(nftItem.name)} #{nftItem.token_id}
             </Text>
           </Box>
         </Box>

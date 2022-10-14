@@ -17,6 +17,7 @@ import { RootStackParamList } from '../../../types'
 import { Fonts, AppIcons } from '../../../assets'
 import DetailsDrawerExpanded from '../../../components/NFT/details-drawer-expanded'
 import StarAndThreeDots from '../../../components/NFT/star-and-three-dots'
+import { checkIfCollectionNameExists } from '../../../utils'
 
 type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -52,14 +53,17 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
   const renderDrawerCollapsed = () => {
     return (
       <Text style={styles.drawerClosedText}>
-        {nftItem.name} #{nftItem?.token_id}
+        {checkIfCollectionNameExists(nftItem.name)} #{nftItem?.token_id}
       </Text>
     )
   }
 
   return (
     <Box flex={1} style={styles.overviewBlock}>
-      <Box style={styles.headerContainer}>
+      <Box
+        style={styles.headerContainer}
+        justifyContent={'center'}
+        alignItems={'center'}>
         <Image
           source={checkImgUrlExists(nftItem.image_original_url)}
           style={styles.image}

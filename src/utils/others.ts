@@ -16,6 +16,7 @@ import { Buffer } from '@craftzdog/react-native-buffer'
 import QuickCrypto from 'react-native-quick-crypto'
 
 import { translate, TxKeyPath } from '../i18n'
+import { Images } from '../assets'
 
 export const sortQuotes = (
   network: string,
@@ -199,4 +200,23 @@ export const widthInPerFn = (value: number) => {
   return {
     width: `${value}%`,
   }
+}
+
+export const checkIfCollectionNameExists = (str: string) => {
+  if (!str) {
+    return 'Unknown Collection'
+  }
+  return str
+}
+
+export const checkIfDescriptionExists = (str: string) => {
+  if (!str) {
+    return 'This NFT has no description.'
+  }
+  return str
+}
+
+export const checkImgUrlExists = (imgUrl: string, imgError: boolean) => {
+  console.log(imgUrl, 'imgurl?', imgError, 'IMGURL AND ERROR')
+  return !imgError && imgUrl ? { uri: imgUrl } : Images.nftThumbnail
 }

@@ -76,7 +76,9 @@ const NftCollectionScreen = ({
       <ScrollView>
         <Box style={styles.headerContainer}>
           <NftHeader
-            blackText={nftCollection[0].collection.name.toUpperCase()}
+            blackText={checkIfCollectionNameExists(
+              nftCollection.collection.name,
+            ).toUpperCase()}
             greyText={`${nftCollection.length} ${labelTranslateFn('nft.nfts')}`}
             width={Dimensions.get('screen').width}
             height={225}

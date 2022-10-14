@@ -6,6 +6,7 @@ import { Text } from '../text/text'
 import StarFavorite from './star-favorite'
 import { NFTAsset } from '@chainify/types'
 import { NFT } from '../../types'
+import { checkIfCollectionNameExists, checkImgUrlExists } from '../../utils'
 const { SeeAllNftsIcon, LongArrow } = AppIcons
 
 type HorizontallyScrollableImageProps = {
@@ -13,7 +14,8 @@ type HorizontallyScrollableImageProps = {
   nftItem: NFT[]
   seeNftDetail: (nftItem: NFTAsset[]) => void
   setImgError: (err: boolean) => void
-  checkImgUrlExists: (param: string) => void
+  imgError: boolean
+
   activeWalletId: string
   handleGoToCollection: (nftItem: NFTAsset[]) => void
 }
@@ -26,7 +28,7 @@ const HorizontallyScrollableImage: React.FC<
     nftItem,
     seeNftDetail,
     setImgError,
-    checkImgUrlExists,
+    imgError,
     activeWalletId,
     handleGoToCollection,
   } = props
@@ -42,6 +44,7 @@ const HorizontallyScrollableImage: React.FC<
               <Image
                 source={checkImgUrlExists(
                   nftItemInsideCollection.image_original_url,
+                  imgError,
                 )}
                 style={styles.scrollableImg}
                 onError={() => setImgError(true)}
@@ -54,7 +57,7 @@ const HorizontallyScrollableImage: React.FC<
           </Box>
         )
       }),
-    [activeWalletId, checkImgUrlExists, nftItem, seeNftDetail, setImgError],
+    [activeWalletId, imgError, nftItem, seeNftDetail, setImgError],
   )
   return (
     <Box>
@@ -64,7 +67,7 @@ const HorizontallyScrollableImage: React.FC<
         <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
           <Text style={styles.collectionNameText}>
             {' '}
-            {nftItem[0].collection.name}{' '}
+            {checkIfCollectionNameExists(nftItem[0].collection.name)}{' '}
           </Text>
           <Text style={[styles.collectionNameText, styles.pipe]}> | </Text>{' '}
           {nftItem.length}{' '}
