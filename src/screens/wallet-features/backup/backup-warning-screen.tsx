@@ -2,11 +2,12 @@ import React, { useCallback } from 'react'
 import { Text, Box, Pressable } from '../../../theme'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
-import { labelTranslateFn } from '../../../utils'
 import { AppIcons } from '../../../assets'
-import { Alert } from 'react-native'
+import { scale } from 'react-native-size-matters'
 
 const { PrivateKeyWarn, SeedPhraseWarn } = AppIcons
+
+const lineHeightAdjustment = scale(-20)
 
 const BackupWarningScreen: React.FC<
   NativeStackScreenProps<MainStackParamList, 'BackupWarningScreen'>
@@ -16,15 +17,11 @@ const BackupWarningScreen: React.FC<
   const { isPrivateKey = false } = route.params
 
   const handleBackupBtnPress = useCallback(() => {
-    if (isPrivateKey) {
-      Alert.alert('Work in progress')
-      return
-    }
-    navigation.navigate('BackupLoginScreen', {
-      backupSeed: true,
-      screenTitle: labelTranslateFn('backupWarningScreen.signIn')!,
-    })
-  }, [navigation, isPrivateKey])
+    const routeName: keyof MainStackParamList = isPrivateKey
+      ? 'BackupPrivateKeyScreen'
+      : 'BackupLoginScreen'
+    navigation.navigate(routeName, { ...route.params })
+  }, [navigation, isPrivateKey, route])
 
   return (
     <Box
@@ -38,17 +35,19 @@ const BackupWarningScreen: React.FC<
           backgroundColor={'yellow'}
           padding="s"
           alignSelf="flex-start">
-          <Text tx="warning" variant={'warnHighlight'} color={'black'} />
+          <Text tx="warning" variant={'warnHighlight'} color={'black2'} />
         </Box>
         <Text
           marginTop={'l'}
-          tx={
-            isPrivateKey
-              ? 'backupWarningScreen.showPrivateKey'
-              : 'backupWarningScreen.showSeedPhrase'
-          }
+          tx={'backupWarningScreen.show'}
           variant={'warnHeader'}
-          color={'black'}
+          color={'black2'}
+        />
+        <Text
+          tx={isPrivateKey ? 'privateKey' : 'backupWarningScreen.seedPhrase'}
+          variant={'warnHeader'}
+          style={{ marginTop: lineHeightAdjustment }}
+          color={'black2'}
         />
         <Text
           tx={
@@ -57,7 +56,7 @@ const BackupWarningScreen: React.FC<
               : 'backupWarningScreen.anyoneWhoSeed'
           }
           variant={'warnText'}
-          color={'black'}
+          color={'black2'}
         />
       </Box>
       <Box flex={0.25}>

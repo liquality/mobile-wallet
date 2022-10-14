@@ -38,7 +38,7 @@ export const APP_BUTTON_STYLE: ViewStyle = {
 
 export const APP_HALF_BUTTON_STYLE: ViewStyle = {
   ...APP_BUTTON_STYLE,
-  height: scale(40),
+  height: scale(36),
   width: '50%',
 }
 

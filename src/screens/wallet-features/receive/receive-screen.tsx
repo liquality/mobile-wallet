@@ -10,7 +10,7 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { AccountType, RootStackParamList } from '../../../types'
+import { AccountType, MainStackParamList } from '../../../types'
 import AssetIcon from '../../../components/asset-icon'
 import { Text, Button, palette } from '../../../theme'
 import { useRecoilValue } from 'recoil'
@@ -34,7 +34,7 @@ const PowerByTransak = () => (
 )
 
 type ReceiveScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'ReceiveScreen'
 >
 

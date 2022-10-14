@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
-import { AccountType, MainStackParamList } from '../../../types'
+import { MainStackParamList } from '../../../types'
 import AssetFlatList from '../../../components/overview/asset-flat-list'
 import { useInputState } from '../../../hooks'
 import { useRecoilValue } from 'recoil'
@@ -12,11 +11,17 @@ import {
   networkState,
   accountsIdsForMainnetState,
 } from '../../../atoms'
-import { Box, palette, TextInput } from '../../../theme'
+import { Box, faceliftPalette, TextInput } from '../../../theme'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
-import { AppIcons, Fonts } from '../../../assets'
+import { AppIcons } from '../../../assets'
+import Fuse from 'fuse.js'
 
 const { SearchIcon } = AppIcons
+
+const options = {
+  includeScore: true,
+  keys: ['name', 'code', 'assets.name', 'assets.code'],
+}
 
 type AssetChooserProps = NativeStackScreenProps<
   MainStackParamList,
@@ -33,72 +38,49 @@ const AssetChooserScreen: React.FC<AssetChooserProps> = () => {
   const [data, setData] =
     useState<Array<{ id: string; name: string }>>(accountIds)
 
-  const filterByTerm = useCallback((): void => {
-    const term = searchInput.value
-
-    if (term.length === 0 || !accountList) {
-      return setData(accountList || ([] as AccountType[]))
-    }
-
-    const filteredResults: { id: string; name: string }[] = accountList
-      .filter((item) => item != null)
-      .map((item) => {
-        const subs = Object.values(item.assets).filter(
-          (sub) => sub.name.toLowerCase().indexOf(term.toLowerCase()) >= 0,
-        )
-        if (subs && subs.length > 0) {
-          return {
-            ...item,
-          }
-        } else {
-          return {} as AccountType
-        }
-      })
-      .filter((item) => item.name)
-      .map((item) => ({ id: item.id, name: item.name }))
-
-    setData(filteredResults || [])
-  }, [accountList, searchInput.value])
+  const filterItems = useCallback(
+    (term: string) => {
+      if (term.length === 0) {
+        searchInput.onChangeText(term)
+        setData(accountIds)
+        return
+      }
+      const fuse = new Fuse(accountList, options)
+      const rawData = fuse.search(term)
+      const results = rawData.map((result) => ({
+        id: result.item.id || '',
+        name: result.item.code || '',
+      }))
+      if (results.length) {
+        setData(results)
+      }
+      searchInput.onChangeText(term)
+    },
+    [accountIds, accountList, searchInput],
+  )
 
   return (
     <Box flex={1} backgroundColor="mainBackground" paddingHorizontal={'xl'}>
-      <View style={styles.searchBox}>
+      <Box flexDirection={'row'} paddingVertical={'m'} alignItems="center">
         <SearchIcon />
-        <TextInput
-          style={styles.sendInput}
-          placeholderTx={'assetChooserScreen.searchCurrency'}
-          keyboardType={'ascii-capable'}
-          onChangeText={searchInput.onChangeText}
-          onEndEditing={filterByTerm}
-          value={searchInput.value}
-          autoCorrect={false}
-          autoCapitalize="none"
-          returnKeyType="done"
-        />
-      </View>
+        <Box paddingLeft={'m'} width={'98%'}>
+          <TextInput
+            variant={'searchBoxInput'}
+            placeholderTx={'assetChooserScreen.searchCurrency'}
+            keyboardType={'ascii-capable'}
+            onChangeText={(text) => filterItems(text)}
+            value={searchInput.value}
+            autoCorrect={false}
+            autoCapitalize="none"
+            clearButtonMode="while-editing"
+            returnKeyType="done"
+            cursorColor={faceliftPalette.greyMeta}
+          />
+        </Box>
+      </Box>
       <AssetFlatList accounts={data} />
     </Box>
   )
 }
-
-const styles = StyleSheet.create({
-  sendInput: {
-    fontFamily: Fonts.Regular,
-    fontWeight: '500',
-    fontSize: 17,
-    textAlign: 'left',
-    height: 40,
-    width: '90%',
-    color: palette.seedInputColor,
-  },
-  searchBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomColor: palette.mediumGreen,
-    borderBottomWidth: 1,
-  },
-})
 
 export default AssetChooserScreen

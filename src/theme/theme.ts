@@ -32,6 +32,7 @@ export const theme = createTheme({
     transparent: 'transparent',
     white: faceliftPalette.white,
     black: faceliftPalette.black,
+    black2: palette.black2,
     mediumWhite: faceliftPalette.mediumWhite,
     darkGrey: faceliftPalette.darkGrey,
     activeButton: faceliftPalette.buttonActive,
@@ -290,9 +291,8 @@ export const theme = createTheme({
     },
     normalText: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(15),
+      fontSize: scale(14),
       fontWeight: '400',
-      lineHeight: scale(20),
     },
     activityText: {
       fontFamily: Fonts.Regular,

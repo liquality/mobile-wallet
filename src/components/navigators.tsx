@@ -61,12 +61,16 @@ import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
 import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
 import NftCollectionScreen from '../screens/wallet-features/NFT/nft-collection-screen'
+import SelectChainScreen from '../screens/wallet-features/settings/select-chain-screen'
 import { AppIcons, Fonts } from '../assets'
 import { networkState, showSearchBarInputState, themeMode } from '../atoms'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
 import { labelTranslateFn } from '../utils'
+import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
+import { useNavigation } from '@react-navigation/core'
+import { CommonActions } from '@react-navigation/native'
 
 const {
   SwapCheck,
@@ -102,6 +106,28 @@ const LiqLogoHeaderLeft = () => {
   return (
     <Box marginLeft={'onboardingHeaderPadding'}>
       <ThemeIcon iconName="OnlyLqLogo" />
+    </Box>
+  )
+}
+
+const DoneButton = () => {
+  const navigation = useNavigation()
+  const onDonePress = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'MainNavigator' }],
+      }),
+    )
+  }
+  return (
+    <Box paddingHorizontal={'s'}>
+      <Text
+        variant={'listText'}
+        color="defaultButton"
+        tx="receiveScreen.done"
+        onPress={onDonePress}
+      />
     </Box>
   )
 }
@@ -192,6 +218,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'BackupWarningScreen'
   | 'SwapConfirmationScreen'
   | 'AssetManagementScreen'
+  | 'AssetChooserScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -327,11 +354,17 @@ export const AppStackNavigator = () => {
         </MainStack.Screen>
         <MainStack.Screen
           name="AssetChooserScreen"
-          options={() => ({
-            headerRight: PlaceholderComp,
-          })}>
-          {(props) => AssetChooserScreen(props)}
-        </MainStack.Screen>
+          component={AssetChooserScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerBackVisible: false,
+            title: route.params.screenTitle || '',
+            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerStyle: { backgroundColor },
+            headerRight: undefined,
+            headerLeft: () =>
+              AssetManageScreenHeaderLeft({ navigation, route }),
+          })}
+        />
         <MainStack.Screen name="AssetScreen">
           {(props) => AssetScreen(props)}
         </MainStack.Screen>
@@ -557,6 +590,18 @@ export const MainNavigator = () => (
   </Tab.Navigator>
 )
 
+const SelectChainScreenHeaderLeft = () => {
+  const navigation = useNavigation()
+
+  return (
+    <TouchableWithoutFeedback onPress={navigation.goBack}>
+      <Box paddingHorizontal={'s'} paddingVertical="m">
+        <ChevronLeft width={scale(15)} height={scale(15)} />
+      </Box>
+    </TouchableWithoutFeedback>
+  )
+}
+
 export const StackMainNavigator = () => {
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
@@ -576,10 +621,10 @@ export const StackMainNavigator = () => {
       <MainStack.Screen
         name="MainNavigator"
         component={MainNavigator}
-        options={() => ({
+        options={{
           headerShown: false,
           headerRight: PlaceholderComp,
-        })}
+        }}
       />
       <MainStack.Screen
         name="BackupWarningScreen"
@@ -587,18 +632,34 @@ export const StackMainNavigator = () => {
         options={screenNavOptions}
       />
       <MainStack.Screen
+        name="BackupPrivateKeyScreen"
+        component={BackupPrivateKeyScreen}
+        options={{ ...screenNavOptions, headerRight: DoneButton }}
+      />
+      <MainStack.Screen
+        name="SelectChainScreen"
+        component={SelectChainScreen}
+        options={{
+          ...screenNavOptions,
+          headerTitle: labelTranslateFn('selectChain')!,
+          headerTitleStyle: HEADER_TITLE_STYLE,
+          headerLeft: SelectChainScreenHeaderLeft,
+          headerStyle: { backgroundColor },
+        }}
+      />
+      <MainStack.Screen
         name="BackupLoginScreen"
         component={BackupLoginScreen}
-        options={({}) => ({
+        options={{
           headerShown: false,
-        })}
+        }}
       />
       <MainStack.Screen
         name="BackupSeedScreen"
         component={BackupSeedScreen}
-        options={({}) => ({
+        options={{
           headerShown: false,
-        })}
+        }}
       />
       <MainStack.Screen
         name="TermsScreen"

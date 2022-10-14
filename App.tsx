@@ -14,10 +14,11 @@ import {
 } from './src/components/navigators'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { RecoilRoot, useRecoilValue } from 'recoil'
-import { Box, theme, darkTheme } from './src/theme'
+import { Box, theme, darkTheme, toastConfig } from './src/theme'
 import { StatusBar, useColorScheme } from 'react-native'
 import { themeMode } from './src/atoms'
 import { createSwitchNavigator } from '@react-navigation/compat'
+import Toast from 'react-native-toast-message'
 
 const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const selectedTheme = useRecoilValue(themeMode)
@@ -84,6 +85,7 @@ const App: FC = () => {
           </GestureHandlerRootView>
         </ThemeProvider>
       </SafeAreaProvider>
+      <Toast config={toastConfig} />
     </RecoilRoot>
   )
 }

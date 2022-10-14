@@ -126,9 +126,9 @@
     "iSaveSeed": "I saved the seed"
   },
   "backupWarningScreen": {
-    "showSeedPhrase": "Show Seed Phrase?",
-    "anyoneWhoSeed": "Anyone who has this seed phrase can steal your funds.",
-    "showPrivateKey": "Show Private Key?",
+    "show": "Show",
+    "seedPhrase": "Seed Phrase?",
+    "anyoneWhoSeed": "Anyone who has this seed phrase can steal your funds. View it in private space.",
     "anyOneWhoPrivate": "Anyone who has your private key can steal your funds. View it in private space.",
     "viewItPrivate": "View it in private without any cameras around.",
     "iHavePrivacy": "I Have Privacy",
@@ -332,8 +332,8 @@
   },
   "summaryBlockComp": {
     "selectAssetSend": "Select asset for Send",
-    "selectAssetReceive": "Select asset for receive",
-    "selectAssetSwap": "Select asset for swap",
+    "selectAssetReceive": "Select asset for Receive",
+    "selectAssetSwap": "Select asset for Swap",
     "asset": " ASSET",
     "assets": " ASSETS",
     "send": "Send",
@@ -441,11 +441,18 @@
   "tabBarOverview": "Overview",
   "tabBarDetails": "Details",
   "description": "DESCRIPTION",
+  "your": "Your",
+  "privateKey": "Private Key",
+  "neverDiscloseInfo": "Never disclose your private key. Anyone with that key has access to your funds. Ensure it is stored securely.",
+  "copyPrivateKey": "Copy Private Key",
+  "privateKeyCopied": "Private Key copied.",
+  "selectChain": "Select Chain",
   "manageAssetsCaps": "MANAGE ASSETS",
   "searchAsset": "Search Asset",
   "gas": "Gas",
   "gasInfo": "A gas token can’t be switched off, as you do need to pay for transactions with it.",
   "gotIt": "Got It",
   "hmm": "Hmm.",
-  "cantFndTkn": "Can’t find this token"
+  "cantFndTkn": "Can’t find this token",
+  "notFound": "Not found"
 }
