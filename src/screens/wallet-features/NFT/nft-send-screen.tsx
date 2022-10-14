@@ -4,9 +4,12 @@ import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaul
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import {
+  Alert,
   Clipboard,
   Image,
+  KeyboardAvoidingView,
   Pressable,
+  ScrollView,
   StyleSheet,
   TextInput,
   useColorScheme,
@@ -46,7 +49,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
-  const [statusMsg, setStatusMsg] = useState('')
+  const [errorMsg, setErrorMsg] = useState('')
   const [isCameraVisible, setIsCameraVisible] = useState(false)
   const [showReviewDrawer, setShowReviewDrawer] = useState(false)
 
@@ -115,9 +118,22 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
         network: activeNetwork,
         accountIds: accountIdsToSendIn,
       })
-      setStatusMsg('Success! You sent the NFT')
+      //Success! You sent the NFT
+      navigation.navigate('NftOverviewScreen', {
+        nftItem,
+        accountIdsToSendIn,
+        addressInput: addressInput.value,
+      })
     } catch (error) {
-      setStatusMsg('Failed to send the NFT')
+      Alert.alert('Failed to send the NFT')
+    }
+  }
+
+  const handleOpenDrawer = () => {
+    if (!addressInput.value) {
+      setErrorMsg('Please enter a valid address.')
+    } else {
+      setShowReviewDrawer(true)
     }
   }
 
@@ -129,7 +145,6 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
           title={'Review Send NFT'}
           height={481}
           nftItem={nftItem}
-          accountIdsToSendIn={accountIdsToSendIn}
         />
       ) : null}
       {isCameraVisible ? (
@@ -153,7 +168,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
             </Text>
 
             <Text variant={'sendNftNameHeader'}>
-              {checkIfCollectionNameExists(nftItem.name)} #{nftItem.token_id}
+              {checkIfCollectionNameExists(nftItem.name)}
             </Text>
           </Box>
         </Box>
@@ -195,19 +210,24 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
         <Box backgroundColor={'mediumWhite'} padding={'l'} paddingTop={'xl'}>
           <Text variant={'miniNftHeader'}>SEND TO</Text>
           <Box flexDirection={'row'}>
-            <TextInput
-              underlineColorAndroid="transparent"
-              placeholder="Enter Address"
-              style={styles.sendToInput}
-              onChangeText={addressInput.onChangeText}
-              value={addressInput.value}
-              autoCorrect={false}
-              returnKeyType="done"
-            />
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              removeClippedSubviews={false}>
+              <KeyboardAvoidingView>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="Enter Address"
+                  style={styles.sendToInput}
+                  onChangeText={addressInput.onChangeText}
+                  value={addressInput.value}
+                />
+              </KeyboardAvoidingView>
+            </ScrollView>
             <Pressable onPress={handleQRCodeBtnPress}>
               <QRCode />
             </Pressable>
           </Box>
+          <Text style={styles.errorText}>{errorMsg}</Text>
         </Box>
         <Box flexDirection={'row'} paddingVertical="l">
           <Text fontSize={16} style={(styles.textRegular, styles.purpleLink)}>
@@ -231,7 +251,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
             label={'Review'}
             isBorderless={false}
             isActive={true}
-            onPress={() => setShowReviewDrawer(true)}
+            onPress={() => handleOpenDrawer()}
           />
           <Button
             type="secondary"
@@ -265,6 +285,14 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
 
     color: faceliftPalette.darkGrey,
+  },
+  errorText: {
+    fontFamily: Fonts.Regular,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 25,
+    letterSpacing: 0.5,
+    color: faceliftPalette.error,
   },
 
   image: {

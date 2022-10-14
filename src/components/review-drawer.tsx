@@ -6,24 +6,17 @@ import BottomDrawer from 'react-native-bottom-drawer-view'
 import { NFTAsset } from '../types'
 import { useNavigation } from '@react-navigation/core'
 type ReviewDrawerProps = {
-  handlePressSend: (nftItem: NFTAsset[]) => void
+  handlePressSend: () => void
   height: number
   title: string
   nftItem?: NFTAsset[]
   accountIdsToSendIn?: string[]
+  addressInput: string
 }
 
 const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
-  const { accountIdsToSendIn, nftItem, height, title } = props
+  const { handlePressSend, nftItem, height, title } = props
 
-  const navigation = useNavigation()
-
-  const navigateToReview = () => {
-    navigation.navigate('NftOverviewScreen', {
-      nftItem,
-      accountIdsToSendIn,
-    })
-  }
   const renderNftSendContent = () => {
     return (
       <Box style={styles.drawerContainer}>
@@ -43,11 +36,7 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
         <Text style={(styles.text, styles.subheadingInfo)}>000x0000</Text>
 
         <Box alignItems={'center'} paddingTop={'xl'}>
-          <Pressable
-            variant="solid"
-            label={'Send'}
-            onPress={navigateToReview}
-          />
+          <Pressable variant="solid" label={'Send'} onPress={handlePressSend} />
         </Box>
       </Box>
     )

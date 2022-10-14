@@ -17,7 +17,7 @@ import { RootStackParamList } from '../../../types'
 import { Fonts, AppIcons } from '../../../assets'
 import DetailsDrawerExpanded from '../../../components/NFT/details-drawer-expanded'
 import StarAndThreeDots from '../../../components/NFT/star-and-three-dots'
-import { checkIfCollectionNameExists } from '../../../utils'
+import { checkIfCollectionNameExists, checkImgUrlExists } from '../../../utils'
 
 type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -36,12 +36,6 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
   const [imgError, setImgError] = useState<string[]>([])
   const [showExpanded, setShowExpanded] = useState<boolean>(false)
   const [showOverview, setShowOverview] = useState<boolean>(true)
-
-  const checkImgUrlExists = (imgUrl: string) => {
-    return !imgError && imgUrl
-      ? { uri: imgUrl }
-      : require('../../../assets/icons/nft_thumbnail.png')
-  }
 
   const { activeWalletId } = wallet.state
 
@@ -65,7 +59,7 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
         justifyContent={'center'}
         alignItems={'center'}>
         <Image
-          source={checkImgUrlExists(nftItem.image_original_url)}
+          source={checkImgUrlExists(nftItem.image_original_url, imgError)}
           style={styles.image}
           onError={() => imgError.push(nftItem.image_original_url)}
         />

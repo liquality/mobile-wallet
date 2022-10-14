@@ -34,4 +34,5 @@ export const faceliftPalette = {
   yellow: '#FBFF4A',
   greyBackground: '#F9F9F9',
   linkTextColor: '#8835E7',
+  error: '#EF0505',
 }
