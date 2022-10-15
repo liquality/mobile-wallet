@@ -5,6 +5,7 @@ export const COPY_BUTTON_TIMEOUT = 2000
 export const FADE_IN_OUT_DURATION = 400
 export const GRADIENT_BACKGROUND_HEIGHT = scale(222)
 export const LARGE_TITLE_HEADER_HEIGHT = scale(81)
+export const RECEIVE_HEADER_HEIGHT = scale(160)
 export const ICON_SIZE = scale(23)
 export const ONBOARDING_PADDING = 36
 export const SCREEN_PADDING = 20

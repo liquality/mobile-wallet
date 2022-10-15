@@ -144,10 +144,10 @@
     "availableGas": "Available Gas {{gas} {{token}}"
   },
   "receiveScreen": {
-    "yourCurrent": "Your current {{code}}/{{activeNetwork}} address",
-    "scanORcode": "Scan QR code with a mobile wallet to send funds to this address.",
+    "yourCurrent": "YOUR CURRENT {{code}} ADDRESS",
+    "scanORcode": "Scan QR code with a mobile wallet to send funds.",
     "done": "Done",
-    "copied": "Copied!",
+    "copied": "Address copied!",
     "copyAdd": "Copy Address",
     "addressEmpty": "Address empty. Please try again!",
     "buyCrypto": "Buy Crypto",

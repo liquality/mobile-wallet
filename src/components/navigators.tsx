@@ -225,6 +225,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'SwapConfirmationScreen'
   | 'AssetManagementScreen'
   | 'AssetChooserScreen'
+  | 'ReceiveScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -374,13 +375,6 @@ export const AppStackNavigator = () => {
         <MainStack.Screen name="AssetScreen">
           {(props) => AssetScreen(props)}
         </MainStack.Screen>
-        <MainStack.Screen
-          name="ReceiveScreen"
-          component={ReceiveScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
-          })}
-        />
         <MainStack.Screen
           name="SendScreen"
           component={SendScreen}
@@ -709,6 +703,19 @@ export const StackMainNavigator = () => {
           headerStyle: { backgroundColor },
           headerLeft: LiqLogoHeaderLeft,
         }}
+      />
+      <MainStack.Screen
+        name="ReceiveScreen"
+        component={ReceiveScreen}
+        options={({ route }: NavigationProps) => ({
+          headerShadowVisible: false,
+          headerBackVisible: false,
+          title: route.params.screenTitle || '',
+          headerTitleStyle: MANAGE_ASSET_HEADER,
+          headerStyle: { backgroundColor },
+          headerRight: undefined,
+          headerLeft: undefined,
+        })}
       />
     </MainStack.Navigator>
   )
