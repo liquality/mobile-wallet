@@ -9,6 +9,7 @@ import {
   SwapQuote,
 } from '@liquality/wallet-core/dist/src/swaps/types'
 import {
+  Account,
   Network,
   SwapProviderType,
 } from '@liquality/wallet-core/dist/src/store/types'
@@ -218,7 +219,19 @@ export const checkIfDescriptionExists = (str: string) => {
 }
 
 export const checkImgUrlExists = (imgUrl: string, imgError: string[]) => {
+
   if (!imgError.includes(imgUrl) && imgUrl) {
+    console.log('return URI', imgUrl)
     return { uri: imgUrl }
-  } else return Images.nftThumbnail
+  } else {
+    console.log('IN ELSE THERE WAS ERROR', imgError)
+    return Images.nftThumbnail
+  }
+}
+
+
+export const calculateNrOfAccsWithNfts = async (accountsData: Account[]) => {
+  return accountsData.filter(
+    (account: Account) => account.nfts && account.nfts.length > 0,
+  ).length
 }
