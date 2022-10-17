@@ -42,6 +42,8 @@ import CancelledIcon from '../assets/icons/failedGradSm.svg'
 import NeedsAttentionIcon from '../assets/icons/loadingEmpty.svg'
 import CalendarIcon from '../assets/icons/calendar.svg'
 import ChevronRightIcon from '../assets/icons/chevronRight.svg'
+import ChevronUp from '../assets/icons/chevronUp.svg'
+import ChevronDown from '../assets/icons/chevronDown.svg'
 import AngleRightIcon from '../assets/icons/chevronRight.svg'
 import AngleDownIcon from '../assets/icons/chevronDown.svg'
 import PlusSign from '../assets/icons/plus.svg'
@@ -264,4 +266,6 @@ export default {
   SwapSuccess,
   SwapRetry,
   SwapTknIcon,
+  ChevronDown,
+  ChevronUp,
 }

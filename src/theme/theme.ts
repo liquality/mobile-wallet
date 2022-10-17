@@ -202,6 +202,12 @@ export const theme = createTheme({
       fontSize: scale(13),
       color: 'link',
     },
+    speedUp: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: scale(15),
+      lineHeight: scale(20),
+    },
     transLink: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',

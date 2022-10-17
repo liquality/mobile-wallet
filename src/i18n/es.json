@@ -256,7 +256,8 @@
     "yourToFunding": "Your ${to} funding transaction",
     "yourToReceive": "Your ${to} receive transactionn",
     "actions": "Actions",
-    "retry": "Retry"
+    "retry": "Retry",
+    "link": "Link"
   },
   "swapReviewScreen": {
     "swapDetails": "Swap {{fromCode} to {{toCode}} Details",
@@ -456,5 +457,6 @@
   "cantFndTkn": "Can’t find this token",
   "notFound": "Not found",
   "swapDetails": "SWAP DETAILS",
-  "transaction": "TRANSACTION"
+  "transaction": "TRANSACTION",
+  "optionTbd": "Option Tbd"
 }

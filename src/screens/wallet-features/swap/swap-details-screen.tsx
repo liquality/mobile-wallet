@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ScrollView, useColorScheme } from 'react-native'
-import { Box, faceliftPalette, Text } from '../../../theme'
+import { Box, faceliftPalette, Pressable, Text } from '../../../theme'
 import { MainStackParamList } from '../../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { scale } from 'react-native-size-matters'
@@ -9,7 +9,7 @@ import { useRecoilValue } from 'recoil'
 import { themeMode } from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
 import { ChainId } from '@chainify/types'
-import { SCREEN_WIDTH } from '../../../utils'
+import { labelTranslateFn, SCREEN_WIDTH } from '../../../utils'
 import SwapRow from './swap-row'
 import SwapThreeRow from './swap-three-row'
 import TransactionTimeline from './transaction-timeline'
@@ -22,6 +22,8 @@ const {
   SwapIconRed,
   CopyIcon,
   SwapRetry,
+  ChevronUp,
+  ChevronDown,
   SwapSuccess,
   SwapTknIcon,
 } = AppIcons
@@ -38,6 +40,8 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
   const fromChain = 'bitcoin' as ChainId
   const toChain = 'ethereum' as ChainId
 
+  const [showDetails, setShowDetails] = React.useState(false)
+
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
   if (theme) {
@@ -49,6 +53,8 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
   const UppperBgSvg = currentTheme === 'dark' ? SwapDarkRect : SwapLightRect
   const success = true
   const SwapIcon = success ? SwapIconGrey : SwapIconRed
+
+  const DynamicIcon = showDetails ? ChevronUp : ChevronDown
 
   return (
     <Box
@@ -99,40 +105,37 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
             </Box>
           </Box>
         </Box>
-        <Box
-          flexDirection={'row'}
-          justifyContent="space-between"
-          alignItems={'center'}
-          marginTop={'xxl'}>
-          <Box flex={0.65}>
-            <Text variant={'listText'} color="greyMeta">
-              Status
-            </Text>
-            <Text
-              variant={'termsBody'}
-              color={success ? 'greyBlack' : 'danger'}>
-              {success ? 'Completed' : 'Failed - refunded'}
-            </Text>
-          </Box>
-          {success ? (
-            <SwapSuccess />
-          ) : (
+        <Box marginTop={'xxl'}>
+          <Text variant={'listText'} color="greyMeta">
+            Status
+          </Text>
+          <Box
+            flexDirection={'row'}
+            justifyContent="space-between"
+            alignItems={'center'}>
+            <Box flex={0.65}>
+              <Text
+                variant={'termsBody'}
+                color={success ? 'greyBlack' : 'danger'}>
+                {success ? 'Completed' : 'Failed - refunded'}
+              </Text>
+            </Box>
             <Box
               flex={0.35}
               flexDirection={'row'}
               alignItems="center"
               justifyContent="space-between">
               <Text variant={'h6'} color="link">
-                Retry
+                {success ? 'Link' : 'Retry'}
               </Text>
               <Box
                 width={1}
                 height={scale(15)}
                 backgroundColor="inactiveText"
               />
-              <SwapRetry />
+              {success ? <SwapSuccess /> : <SwapRetry />}
             </Box>
-          )}
+          </Box>
         </Box>
         <Box marginTop={'xl'}>
           <SwapRow title="Initiated" subTitle="4/27/2022, 6:51pm" />
@@ -183,26 +186,37 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
           <Text variant={'listText'} color="greyMeta">
             Network Speed/Fee
           </Text>
-          <Box flexDirection={'row'}>
-            <Text variant={'swapSubTitle'} color={'darkGrey'}>
-              Avg 0.014446 BTC
-            </Text>
-            <Box
-              alignSelf={'flex-start'}
-              width={1}
-              marginHorizontal="m"
-              height={scale(15)}
-              backgroundColor="inactiveText"
-            />
-            <Text marginLeft={'s'} variant={'swapSubTitle'} color={'darkGrey'}>
-              $ 0.02
-            </Text>
+          <Box
+            flexDirection={'row'}
+            justifyContent="space-between"
+            alignItems={'center'}>
+            <Box flexDirection={'row'} alignItems={'center'}>
+              <Text variant={'swapSubTitle'} color={'darkGrey'}>
+                Avg 0.014446 BTC
+              </Text>
+              <Box
+                alignSelf={'flex-start'}
+                width={1}
+                marginHorizontal="m"
+                height={scale(15)}
+                backgroundColor="inactiveText"
+              />
+              <Text
+                marginLeft={'s'}
+                variant={'swapSubTitle'}
+                color={'darkGrey'}>
+                $ 0.02
+              </Text>
+            </Box>
+            <Text variant={'speedUp'} color={'link'} tx="common.speedUp" />
           </Box>
         </Box>
         <Box marginTop={'xl'}>
           <TransactionTimeline
             startDate="4/27/2022, 6:51pm"
             completed="4/27/2022, 7:51pm"
+            transBtnLabel={labelTranslateFn('swapConfirmationScreen.retry')!}
+            tranBtnPress={() => {}}
             customComponent={[
               {
                 customView: (
@@ -252,6 +266,46 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
               },
             ]}
           />
+        </Box>
+        <Box
+          flexDirection={'row'}
+          marginTop="xl"
+          justifyContent="space-between"
+          alignItems={'center'}>
+          <Text
+            variant={'listText'}
+            color="greyBlack"
+            tx="swapConfirmationScreen.actions"
+          />
+          <Pressable
+            label={{ tx: 'optionTbd' }}
+            style={{
+              width: scale(100),
+              height: scale(40),
+              paddingHorizontal: scale(10),
+            }}
+            variant={'defaultOutline'}
+            onPress={() => {}}
+          />
+        </Box>
+        <Box
+          flexDirection={'row'}
+          marginTop="xl"
+          justifyContent="space-between"
+          borderBottomWidth={1}
+          borderBottomColor={'greyBlack'}
+          paddingBottom="m"
+          alignItems={'center'}>
+          <Text
+            variant={'listText'}
+            color="greyBlack"
+            tx="swapConfirmationScreen.advanced"
+          />
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => setShowDetails((prev) => !prev)}>
+            <DynamicIcon width={scale(15)} height={scale(15)} />
+          </TouchableOpacity>
         </Box>
       </ScrollView>
     </Box>

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Box, Text, ColorType } from '../../../theme'
+import { Box, Text, ColorType, Pressable } from '../../../theme'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import { labelTranslateFn } from '../../../utils'
 const dotAndCircleWidth = scale(14)
@@ -13,16 +13,32 @@ type TransactionTimelineProps = {
   startDate: string
   customComponent: Array<CustomComponentProps>
   completed: string
+  transBtnLabel: string
+  tranBtnPress: () => void
 }
 
 const TransactionTimeline = ({
   customComponent: CC,
   startDate,
   completed,
+  tranBtnPress,
+  transBtnLabel,
 }: TransactionTimelineProps) => {
   return (
     <Box padding="screenPadding" backgroundColor="transGrey">
-      <Text variant={'h5'} color="greyBlack" tx="transaction" />
+      <Box
+        flexDirection={'row'}
+        justifyContent="space-between"
+        alignItems={'center'}>
+        <Text variant={'h5'} color="greyBlack" tx="transaction" />
+        <Pressable
+          label={transBtnLabel}
+          variant="defaultOutline"
+          buttonSize="half"
+          style={{ width: scale(60) }}
+          onPress={tranBtnPress}
+        />
+      </Box>
       <Box marginVertical={'xl'}>
         <Box flexDirection={'row'} height={scale(60)}>
           <Box
