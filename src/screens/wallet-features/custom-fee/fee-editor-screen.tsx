@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import {
   NavigationState,
@@ -16,6 +16,7 @@ import {
 import {
   Box,
   Button,
+  faceliftPalette,
   OVERVIEW_TAB_BAR_STYLE,
   OVERVIEW_TAB_STYLE,
   TabBar,
@@ -45,11 +46,18 @@ import { FeeDetails as FDs } from '@chainify/types/dist/lib/Fees'
 import { v4 as uuidv4 } from 'uuid'
 import { fetchFeeDetailsForAsset } from '../../../store/store'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import { BigNumber } from '@liquality/types'
+import { labelTranslateFn } from '../../../utils'
 
 type SpeedType = 'slow' | 'average' | 'fast'
 const SLOW = 'slow'
 const AVERAGE = 'average'
 const FAST = 'fast'
+
+type MinerTipType = 'low' | 'medium' | 'high'
+const LOW = 'low'
+const MEDIUM = 'medium'
+const HIGH = 'high'
 
 const StandardRoute = () => {
   const activeNetwork = useRecoilValue(networkState)
@@ -64,7 +72,7 @@ const StandardRoute = () => {
 
   useEffect(() => {
     fetchFeeDetailsForAsset(selectedAsset).then(setGasFees)
-  }, [setError, fees, activeWalletId, activeNetwork, gasFees, selectedAsset])
+  }, [setError, fees, activeWalletId, activeNetwork, selectedAsset])
 
   return (
     <Box flex={1}>
@@ -107,14 +115,17 @@ const StandardRoute = () => {
                   ? `~${gasFees[speedType].wait / 1000}s`
                   : ''}
               </Text>
-              <Text
-                variant="normalText"
-                color="textColor"
-                lineBreakMode={'middle'}
-                numberOfLines={2}
-                marginTop="l">
-                ~{`${selectedAsset} ${gasFees?.[speedType]?.fee.toString()}`}
-              </Text>
+              {gasFees?.[speedType]?.fee && (
+                <Text
+                  variant="normalText"
+                  color="textColor"
+                  lineBreakMode={'middle'}
+                  numberOfLines={2}
+                  marginTop="l">
+                  ~{`${selectedAsset} ${gasFees?.[speedType]?.fee.toString()}`}
+                </Text>
+              )}
+
               <Text variant="normalText" color="textColor">
                 {gasFees?.[speedType]?.fee &&
                   `$${prettyFiatBalance(
@@ -143,7 +154,6 @@ const StandardRoute = () => {
           </Pressable>
         ))}
       </Box>
-      {speed}
       <ButtonFooter>
         <Button
           type="primary"
@@ -159,24 +169,147 @@ const StandardRoute = () => {
 }
 
 const CustomizeRoute = () => {
+  const [minerTipLevel, setMinerTipLevel] = useState<MinerTipType>(LOW)
+
+  const handleApplyPress = () => {}
+
   return (
-    <Box>
-      <Text>Customize</Text>
+    <Box flex={1}>
+      <Box flex={1} marginTop="m">
+        <Text variant="normalText" color="greyMeta" marginTop="l">
+          Per Gas
+        </Text>
+        <Box flexDirection="row" marginVertical={'m'}>
+          <Text variant="normalText" marginRight={'m'}>
+            {`${labelTranslateFn('customFeeScreen.currentBaseFee')}`}
+          </Text>
+          <Text variant="normalText" marginRight={'m'}>
+            {'|'}
+          </Text>
+          <Text variant="normalText">GWEI 151</Text>
+        </Box>
+        <Box marginTop="s" backgroundColor="blockBackgroundColor" padding="l">
+          <Box flexDirection="row">
+            <Text variant="normalText" marginRight={'m'}>
+              GWEI
+            </Text>
+            <Text variant="normalText" marginRight={'m'} color="greyMeta">
+              {'|'}
+            </Text>
+            <Text variant="normalText" marginRight={'m'}>
+              MINER TIP
+            </Text>
+            <Text variant="normalText" color="greyMeta">
+              TO SPEED UP
+            </Text>
+          </Box>
+          <Text variant="amountLarge" marginTop="m">
+            1.5
+          </Text>
+          <Box flexDirection="row" marginTop="l" alignItems={'flex-end'}>
+            <Text variant="normalText" marginRight={'m'}>
+              $109.23
+            </Text>
+            <Text variant="normalText" marginRight={'m'} color="greyMeta">
+              {'|'}
+            </Text>
+            {Array.of<MinerTipType>(LOW, MEDIUM, HIGH).map((minerTipValue) => (
+              <Pressable
+                key={uuidv4()}
+                style={
+                  minerTipValue === minerTipLevel
+                    ? {
+                        borderBottomColor: faceliftPalette.active,
+                        borderBottomWidth: 2,
+                      }
+                    : {
+                        borderBottomColor: faceliftPalette.transparent,
+                        borderBottomWidth: 2,
+                      }
+                }
+                onPress={() => setMinerTipLevel(minerTipValue)}>
+                <Text
+                  variant={
+                    minerTipValue === minerTipLevel
+                      ? 'activeLink'
+                      : 'normalText'
+                  }
+                  marginRight="s">
+                  {minerTipValue.toUpperCase()}
+                </Text>
+              </Pressable>
+            ))}
+          </Box>
+          <Box
+            borderColor="secondaryButtonBorderColor"
+            borderWidth={1}
+            marginVertical="xl"
+            borderRadius={3}
+          />
+          <Box flexDirection="row">
+            <Text variant="normalText" marginRight={'m'}>
+              GWEI
+            </Text>
+            <Text color={'greyMeta'} variant="normalText" marginRight={'m'}>
+              {'|'}
+            </Text>
+            <Text variant="normalText" marginRight={'m'}>
+              MAX FEE
+            </Text>
+            <Text color={'greyMeta'} variant="normalText" marginRight={'m'}>
+              TO SPEED UP
+            </Text>
+          </Box>
+          <Text variant="amountLarge" marginTop="m">
+            134.2334
+          </Text>
+          <Text variant="normalText" color="greyMeta" marginTop="s">
+            $109.23
+          </Text>
+        </Box>
+
+        <Box flexDirection="row" marginVertical="xl">
+          <SlowIcon width={scale(20)} height={scale(20)} />
+          <Box marginLeft={'m'} marginTop="s">
+            <Box flexDirection="row">
+              <Text variant="normalText">CUSTOM</Text>
+              <Text variant="normalText" marginLeft={'m'}>
+                {'< 15 sec'}
+              </Text>
+            </Box>
+            <Text variant="normalText" color="greyMeta" marginTop="s">
+              {'~0.20390 ETH'}
+            </Text>
+            <Text variant="normalText" color="greyMeta" marginTop="s">
+              {'~$123.34'}
+            </Text>
+            <Text variant="normalText" color="greyMeta" marginTop="s">
+              {'max $42.23'}
+            </Text>
+          </Box>
+        </Box>
+      </Box>
+      <ButtonFooter>
+        <Button
+          type="primary"
+          variant="l"
+          label={'APPLY'}
+          onPress={handleApplyPress}
+          isBorderless={true}
+          isActive
+        />
+      </ButtonFooter>
     </Box>
   )
 }
-
-const renderScene = SceneMap({
-  standard: StandardRoute,
-  customize: CustomizeRoute,
-})
 
 type RenderTabBar = SceneRendererProps & {
   navigationState: NavigationState<Route>
 }
 
 type FeeEditorScreenType = {
-  onClose: () => void
+  onClose: Dispatch<SetStateAction<boolean>>
+  amount: BigNumber
 }
 
 const FeeEditorScreen = ({ onClose }: FeeEditorScreenType) => {
@@ -186,6 +319,11 @@ const FeeEditorScreen = ({ onClose }: FeeEditorScreenType) => {
     { key: 'standard', title: 'Standard' },
     { key: 'customize', title: 'Customize' },
   ])
+
+  const renderScene = SceneMap({
+    standard: StandardRoute,
+    customize: CustomizeRoute,
+  })
 
   const renderTabBar = (props: RenderTabBar) => {
     return (
@@ -218,7 +356,7 @@ const FeeEditorScreen = ({ onClose }: FeeEditorScreenType) => {
             alignItems={'center'}
             justifyContent={'space-between'}
             marginBottom={'xl'}>
-            <Pressable onPress={onClose}>
+            <Pressable onPress={() => onClose(false)}>
               <CloseIcon width={15} height={15} />
             </Pressable>
             <Box flex={0.5} flexDirection="row" alignItems={'center'}>

@@ -18,10 +18,7 @@ import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import { chainDefaultColors } from '../../../core/config'
 import { Box, TextInput, Text, Button } from '../../../theme'
-import {
-  getSendFee,
-  isEIP1559Fees,
-} from '@liquality/wallet-core/dist/src/utils/fees'
+import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import { fetchFeesForAsset } from '../../../store/store'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import ButtonFooter from '../../../components/button-footer'
@@ -36,6 +33,7 @@ import i18n from 'i18n-js'
 import ErrMsgBanner, { ErrorBtn } from '../../../components/ui/err-msg-banner'
 import { palette } from '../../../theme'
 import { AppIcons, Fonts, SecondaryFont } from '../../../assets'
+import FeeEditorScreen from '../custom-fee/fee-editor-screen'
 
 const { QRCode } = AppIcons
 
@@ -76,13 +74,13 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const balance = useRecoilValue(
     balanceStateFamily({ asset: code, assetId: id }),
   )
-  const [fee, setFee] = useState<GasFees | null>(null)
+  const [, setFee] = useState<GasFees | null>(null)
   const [availableAmount, setAvailableAmount] = useState<string>('')
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
   const [amountInNative, setAmountInNative] = useState<number>(0)
   const [showAmountsInFiat, setShowAmountsInFiat] = useState<boolean>(false)
   const [isCameraVisible, setIsCameraVisible] = useState(false)
-  const [networkSpeed, setNetworkSpeed] = useState<FeeLabel>(FeeLabel.Average)
+  const [, setNetworkSpeed] = useState<FeeLabel>(FeeLabel.Average)
   const [error, setError] = useState('')
   const [errorMessage, setErrorMessage] = useState<ErrorMsgAndType>({
     msg: '',
@@ -92,6 +90,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const addressInput = useInputState('')
   const networkFee = useRef<NetworkFeeType>()
   const activeNetwork = useRecoilValue(networkState)
+  const [showFeeEditorModal, setShowFeeEditorModal] = useState<boolean>(false)
 
   const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
@@ -265,22 +264,23 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   )
 
   const handleCustomPress = () => {
-    navigation.navigate(
-      isEIP1559() ? 'CustomFeeEIP1559Screen' : 'CustomFeeScreen',
-      {
-        assetData: route.params.assetData,
-        code,
-        screenTitle: labelTranslateFn('sendScreen.networkSpeed')!,
-        amountInput: amountInput.value,
-        fee: fee,
-        speedMode: networkSpeed,
-      },
-    )
+    setShowFeeEditorModal(true)
+    // navigation.navigate(
+    //   isEIP1559() ? 'CustomFeeEIP1559Screen' : 'CustomFeeScreen',
+    //   {
+    //     assetData: route.params.assetData,
+    //     code,
+    //     screenTitle: labelTranslateFn('sendScreen.networkSpeed')!,
+    //     amountInput: amountInput.value,
+    //     fee: fee,
+    //     speedMode: networkSpeed,
+    //   },
+    // )
   }
 
-  const isEIP1559 = () => {
-    return isEIP1559Fees(chain)
-  }
+  // const isEIP1559 = () => {
+  //   return isEIP1559Fees(chain)
+  // }
 
   const handleQRCodeBtnPress = () => {
     setIsCameraVisible(!isCameraVisible)
@@ -553,6 +553,9 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               Network Speed
             </Text>
           </Pressable>
+          {showFeeEditorModal && (
+            <FeeEditorScreen onClose={setShowFeeEditorModal} />
+          )}
           {!!error && <Text variant="error">{error}</Text>}
         </Box>
         <ButtonFooter>
