@@ -285,6 +285,7 @@
     "notEnoughLiquidityLowerSpeed": "Not enough {{token}} to cover fees. Lower speed to account for gas fee or get more."
   },
   "customFeeScreen": {
+    "custom": "CUSTOM",
     "presets": "PRESETS",
     "customSettings": "CUSTOMIZED SETTINGS",
     "gasPrice": "Gas Price",
@@ -293,7 +294,7 @@
     "likelyLess15": "likely in < 15",
     "gasFeeMissing": "Gas fees missing",
     "currentBaseFee": "CURRENT BASE FEE",
-    "perGas": "PER Gas",
+    "perGas": "Per Gas",
     "minerTip": "Miner Tip",
     "toSpeedUp": "TO SPEED UP",
     "maxFee": "MAX FEE",
@@ -303,7 +304,8 @@
     "maxHere": "max here",
     "newSpeedFee": "New Speed/Fee",
     "btcAmountHere": "BTC amount here",
-    "fiatAmountHere": "fiat amount here"
+    "fiatAmountHere": "fiat amount here",
+    "max": "max"
   },
   "loadingScreen": {
     "failedImport": "Failed to import/create wallet. Please try again!"

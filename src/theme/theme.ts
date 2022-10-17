@@ -184,7 +184,6 @@ export const theme = createTheme({
       fontWeight: '300',
       fontSize: 28,
     },
-
     sendNftNameHeader: {
       fontFamily: Fonts.Regular,
       fontWeight: '400',
@@ -331,7 +330,7 @@ export const theme = createTheme({
     },
     activeLink: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(15),
+      fontSize: scale(14),
       fontWeight: '400',
       color: 'activeLink',
     },

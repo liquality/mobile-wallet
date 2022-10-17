@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, {
+  Dispatch,
+  Fragment,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react'
 
 import {
   NavigationState,
@@ -11,6 +17,8 @@ import {
   Modal,
   Pressable,
   SafeAreaView,
+  StyleSheet,
+  TextInput,
   useWindowDimensions,
 } from 'react-native'
 import {
@@ -29,7 +37,7 @@ import CloseIcon from '../../../assets/icons/close.svg'
 import { scale } from 'react-native-size-matters'
 import ButtonFooter from '../../../components/button-footer'
 import AssetIcon from '../../../components/asset-icon'
-import { ChainId, getAsset } from '@liquality/cryptoassets'
+import { ChainId, getAsset, getChain } from '@liquality/cryptoassets'
 import { useRecoilValue } from 'recoil'
 import {
   fiatRatesState,
@@ -48,6 +56,8 @@ import { fetchFeeDetailsForAsset } from '../../../store/store'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { labelTranslateFn } from '../../../utils'
+import { useInputState } from '../../../hooks'
+import { Fonts } from '../../../assets'
 
 type SpeedType = 'slow' | 'average' | 'fast'
 const SLOW = 'slow'
@@ -133,23 +143,23 @@ const StandardRoute = () => {
                     fiatRates[selectedAsset],
                   )}`}
               </Text>
-              <Text variant="normalText" color="greyMeta" marginTop="l">
-                max
-              </Text>
-              <Text variant="normalText" color="greyMeta">
-                {gasFees?.[speedType].fee &&
-                  `$${prettyFiatBalance(
-                    getSendFee(
-                      selectedAsset,
-                      isEIP1559Fees(
-                        getAsset(activeNetwork, selectedAsset).chain,
-                      )
-                        ? maxFeePerUnitEIP1559(gasFees[speedType].fee)
-                        : gasFees?.[speedType].fee,
-                    ),
-                    fiatRates[selectedAsset],
-                  )}`}
-              </Text>
+              {isEIP1559Fees(getAsset(activeNetwork, selectedAsset).chain) && (
+                <Fragment>
+                  <Text variant="normalText" color="greyMeta" marginTop="l">
+                    max
+                  </Text>
+                  <Text variant="normalText" color="greyMeta">
+                    {gasFees?.[speedType].fee &&
+                      `$${prettyFiatBalance(
+                        getSendFee(
+                          selectedAsset,
+                          maxFeePerUnitEIP1559(gasFees[speedType].fee),
+                        ),
+                        fiatRates[selectedAsset],
+                      )}`}
+                  </Text>
+                </Fragment>
+              )}
             </Box>
           </Pressable>
         ))}
@@ -169,15 +179,37 @@ const StandardRoute = () => {
 }
 
 const CustomizeRoute = () => {
+  const activeNetwork = useRecoilValue(networkState)
+  const fiatRates = useRecoilValue(fiatRatesState)
+  const selectedAsset = useRecoilValue(selectedAssetState)
   const [minerTipLevel, setMinerTipLevel] = useState<MinerTipType>(LOW)
+  const [unit, setUnit] = useState<string | undefined>()
 
   const handleApplyPress = () => {}
+
+  const minerTipInput = useInputState('0')
+  const maxFeeInput = useInputState('0')
+
+  const handleMinerTip = (text: string) => {
+    minerTipInput.onChangeText(text)
+  }
+
+  const handleMaxFee = (text: string) => {
+    maxFeeInput.onChangeText(text)
+  }
+
+  useEffect(() => {
+    setUnit(
+      getChain(activeNetwork, getAsset(activeNetwork, selectedAsset).chain).fees
+        .unit,
+    )
+  }, [activeNetwork, selectedAsset])
 
   return (
     <Box flex={1}>
       <Box flex={1} marginTop="m">
         <Text variant="normalText" color="greyMeta" marginTop="l">
-          Per Gas
+          {`${labelTranslateFn('customFeeScreen.perGas')}`}
         </Text>
         <Box flexDirection="row" marginVertical={'m'}>
           <Text variant="normalText" marginRight={'m'}>
@@ -186,58 +218,70 @@ const CustomizeRoute = () => {
           <Text variant="normalText" marginRight={'m'}>
             {'|'}
           </Text>
-          <Text variant="normalText">GWEI 151</Text>
+          <Text variant="normalText">{`${unit?.toUpperCase()} 151`}</Text>
         </Box>
         <Box marginTop="s" backgroundColor="blockBackgroundColor" padding="l">
           <Box flexDirection="row">
             <Text variant="normalText" marginRight={'m'}>
-              GWEI
+              {unit?.toUpperCase()}
             </Text>
             <Text variant="normalText" marginRight={'m'} color="greyMeta">
               {'|'}
             </Text>
             <Text variant="normalText" marginRight={'m'}>
-              MINER TIP
+              {`${labelTranslateFn('customFeeScreen.minerTip')}`}
             </Text>
             <Text variant="normalText" color="greyMeta">
               TO SPEED UP
             </Text>
           </Box>
-          <Text variant="amountLarge" marginTop="m">
-            1.5
-          </Text>
-          <Box flexDirection="row" marginTop="l" alignItems={'flex-end'}>
-            <Text variant="normalText" marginRight={'m'}>
-              $109.23
+          <TextInput
+            keyboardType={'numeric'}
+            onChangeText={handleMinerTip}
+            value={minerTipInput.value}
+            autoCorrect={false}
+            autoCapitalize={'none'}
+            returnKeyType="done"
+            style={styles.amountLarge}
+          />
+          <Box flexDirection="row" marginTop="s" alignItems={'flex-end'}>
+            <Text
+              variant="normalText"
+              marginRight={'m'}
+              style={styles.transparentBottomBorder}>
+              {`$${prettyFiatBalance(
+                getSendFee(selectedAsset, Number(minerTipInput.value)),
+                fiatRates[selectedAsset],
+              )}`}
             </Text>
-            <Text variant="normalText" marginRight={'m'} color="greyMeta">
+            <Text
+              variant="normalText"
+              marginRight={'m'}
+              color="greyMeta"
+              style={styles.transparentBottomBorder}>
               {'|'}
             </Text>
             {Array.of<MinerTipType>(LOW, MEDIUM, HIGH).map((minerTipValue) => (
-              <Pressable
-                key={uuidv4()}
-                style={
-                  minerTipValue === minerTipLevel
-                    ? {
-                        borderBottomColor: faceliftPalette.active,
-                        borderBottomWidth: 2,
-                      }
-                    : {
-                        borderBottomColor: faceliftPalette.transparent,
-                        borderBottomWidth: 2,
-                      }
-                }
-                onPress={() => setMinerTipLevel(minerTipValue)}>
-                <Text
-                  variant={
+              <Box marginRight="m">
+                <Pressable
+                  key={uuidv4()}
+                  style={
                     minerTipValue === minerTipLevel
-                      ? 'activeLink'
-                      : 'normalText'
+                      ? styles.activeBottomBorder
+                      : styles.transparentBottomBorder
                   }
-                  marginRight="s">
-                  {minerTipValue.toUpperCase()}
-                </Text>
-              </Pressable>
+                  onPress={() => setMinerTipLevel(minerTipValue)}>
+                  <Text
+                    variant={
+                      minerTipValue === minerTipLevel
+                        ? 'activeLink'
+                        : 'normalText'
+                    }
+                    marginRight="s">
+                    {minerTipValue.toUpperCase()}
+                  </Text>
+                </Pressable>
+              </Box>
             ))}
           </Box>
           <Box
@@ -248,23 +292,32 @@ const CustomizeRoute = () => {
           />
           <Box flexDirection="row">
             <Text variant="normalText" marginRight={'m'}>
-              GWEI
+              {unit?.toLocaleUpperCase()}
             </Text>
             <Text color={'greyMeta'} variant="normalText" marginRight={'m'}>
               {'|'}
             </Text>
             <Text variant="normalText" marginRight={'m'}>
-              MAX FEE
+              {`${labelTranslateFn('customFeeScreen.maxFee')}`}
             </Text>
             <Text color={'greyMeta'} variant="normalText" marginRight={'m'}>
-              TO SPEED UP
+              {`${labelTranslateFn('customFeeScreen.toSpeedUp')}`}
             </Text>
           </Box>
-          <Text variant="amountLarge" marginTop="m">
-            134.2334
-          </Text>
-          <Text variant="normalText" color="greyMeta" marginTop="s">
-            $109.23
+          <TextInput
+            keyboardType={'numeric'}
+            onChangeText={handleMaxFee}
+            value={maxFeeInput.value}
+            autoCorrect={false}
+            autoCapitalize={'none'}
+            returnKeyType="done"
+            style={styles.amountLarge}
+          />
+          <Text variant="normalText" color="greyMeta">
+            {`$${prettyFiatBalance(
+              getSendFee(selectedAsset, Number(maxFeeInput.value)),
+              fiatRates[selectedAsset],
+            )}`}
           </Text>
         </Box>
 
@@ -272,19 +325,21 @@ const CustomizeRoute = () => {
           <SlowIcon width={scale(20)} height={scale(20)} />
           <Box marginLeft={'m'} marginTop="s">
             <Box flexDirection="row">
-              <Text variant="normalText">CUSTOM</Text>
+              <Text variant="normalText">{`${labelTranslateFn(
+                'customFeeScreen.custom',
+              )}`}</Text>
               <Text variant="normalText" marginLeft={'m'}>
                 {'< 15 sec'}
               </Text>
             </Box>
-            <Text variant="normalText" color="greyMeta" marginTop="s">
-              {'~0.20390 ETH'}
+            <Text variant="normalText" color="greyMeta">
+              {`~0.20390 ${unit}`}
             </Text>
-            <Text variant="normalText" color="greyMeta" marginTop="s">
+            <Text variant="normalText" color="greyMeta">
               {'~$123.34'}
             </Text>
-            <Text variant="normalText" color="greyMeta" marginTop="s">
-              {'max $42.23'}
+            <Text variant="normalText" color="greyMeta">
+              {`${labelTranslateFn('customFeeScreen.max')} $123`}
             </Text>
           </Box>
         </Box>
@@ -376,5 +431,21 @@ const FeeEditorScreen = ({ onClose }: FeeEditorScreenType) => {
     </Modal>
   )
 }
+
+const styles = StyleSheet.create({
+  activeBottomBorder: {
+    borderBottomColor: faceliftPalette.active,
+    borderBottomWidth: 2,
+  },
+  transparentBottomBorder: {
+    borderBottomColor: faceliftPalette.transparent,
+    borderBottomWidth: 2,
+  },
+  amountLarge: {
+    fontFamily: Fonts.Regular,
+    fontWeight: '300',
+    fontSize: 28,
+  },
+})
 
 export default FeeEditorScreen
