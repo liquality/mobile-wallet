@@ -6,6 +6,9 @@ import { GRADIENT_BACKGROUND_HEIGHT } from '../../utils'
 import { scale } from 'react-native-size-matters'
 import AssetIcon from '../asset-icon'
 import { AccountType } from '../../types'
+import { addressStateFamily } from '../../atoms'
+import { useRecoilValue } from 'recoil'
+import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 const adjustLineHeight = -scale(30)
 
 const { Eye, Refresh, NftChain } = AppIcons
@@ -27,6 +30,8 @@ const NftHeader: React.FC<NftHeaderProps> = (props) => {
     greyText,
   } = props
 
+  const addressForAccount = useRecoilValue(addressStateFamily(accountInfo?.id))
+
   const renderAllNftsHeaderText = () => {
     return (
       <Card
@@ -39,15 +44,11 @@ const NftHeader: React.FC<NftHeaderProps> = (props) => {
           justifyContent="center">
           {isSpecificChain ? (
             <Box marginBottom={'xl'} flexDirection={'row'}>
-              {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
-              <AssetIcon
-                chain={accountInfo.chain ? accountInfo.chain : 'ethereum'}
-              />
+              <AssetIcon chain={accountInfo.chain} />
               <NftChain style={styles.nftChainOverlap} />
 
               <Text style={styles.addressText}>
-                {/*   TODO: change to just use accountinfo  when assets are loading again, for now hardcoded*/}
-                {accountInfo.address ? accountInfo.address : '0xb81B9...E020'}{' '}
+                {shortenAddress(addressForAccount)}{' '}
               </Text>
               <Eye style={styles.eye} />
             </Box>

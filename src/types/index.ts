@@ -41,6 +41,7 @@ export interface AccountType {
   activeNetwork?: Network
 }
 export interface NFTAsset {
+  length: number
   token_id?: string
   asset_contract?: {
     address?: string

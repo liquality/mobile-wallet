@@ -17,6 +17,7 @@ import { RootStackParamList } from '../../../types'
 import { Fonts, AppIcons } from '../../../assets'
 import DetailsDrawerExpanded from '../../../components/NFT/details-drawer-expanded'
 import StarAndThreeDots from '../../../components/NFT/star-and-three-dots'
+import { checkIfCollectionNameExists, checkImgUrlExists } from '../../../utils'
 
 type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -32,15 +33,9 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
   const { nftItem, accountIdsToSendIn } = route.params
   const activeNetwork = useRecoilValue(networkState)
 
-  const [imgError, setImgError] = useState<boolean>(false)
+  const [imgError] = useState<string[]>([])
   const [showExpanded, setShowExpanded] = useState<boolean>(false)
   const [showOverview, setShowOverview] = useState<boolean>(true)
-
-  const checkImgUrlExists = (imgUrl: string) => {
-    return !imgError && imgUrl
-      ? { uri: imgUrl }
-      : require('../../../assets/icons/nft_thumbnail.png')
-  }
 
   const { activeWalletId } = wallet.state
 
@@ -52,18 +47,21 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
   const renderDrawerCollapsed = () => {
     return (
       <Text style={styles.drawerClosedText}>
-        {nftItem.name} #{nftItem?.token_id}
+        {checkIfCollectionNameExists(nftItem.name)} #{nftItem?.token_id}
       </Text>
     )
   }
 
   return (
     <Box flex={1} style={styles.overviewBlock}>
-      <Box style={styles.headerContainer}>
+      <Box
+        style={styles.headerContainer}
+        justifyContent={'center'}
+        alignItems={'center'}>
         <Image
-          source={checkImgUrlExists(nftItem.image_original_url)}
+          source={checkImgUrlExists(nftItem.image_original_url, imgError)}
           style={styles.image}
-          onError={() => setImgError(true)}
+          onError={() => imgError.push(nftItem.image_original_url)}
         />
       </Box>
       <BottomDrawer

@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 import { useRecoilValue } from 'recoil'
-import { accountInfoStateFamily, networkState } from '../../../atoms'
+import { networkState } from '../../../atoms'
 import NftHeader from '../../../components/NFT/nft-header'
 import NftImageView from '../../../components/NFT/nft-image-view'
 import NftTabBar from '../../../components/NFT/nft-tab-bar'
@@ -36,7 +36,7 @@ const NftForSpecificChainScreen = ({
   const [iterableNftArray, setIterableNftArray] = useState([])
   const [accountIdsToSendIn, setAccountIdsToSendIn] = useState<string[]>([])
   const [showNfts, setShowNfts] = useState(true)
-  const accountInfo = useRecoilValue(accountInfoStateFamily(currentAccount))
+
   const [numberOfNfts, setNumberOfNfts] = useState<number>(0)
 
   async function fetchData() {
@@ -91,12 +91,8 @@ const NftForSpecificChainScreen = ({
         <Box>
           <NftHeader
             isSpecificChain={true}
-            accountInfo={accountInfo}
-            blackText={`${
-              accountInfo.chain?.toUpperCase()
-                ? accountInfo.chain?.toUpperCase()
-                : 'ETHEREUM'
-            }  `}
+            accountInfo={currentAccount}
+            blackText={currentAccount.chain?.toUpperCase()}
             greyText={`${numberOfNfts} ${labelTranslateFn('nft.nfts')}`}
             handleRefreshNftsPress={handleRefreshNftsPress}
           />

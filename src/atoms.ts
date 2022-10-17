@@ -286,26 +286,29 @@ export const totalFiatBalanceState = selector<string>({
     )
     const fiatRates = get(fiatRatesState)
 
-    const totalFiatBalance = accountsIds.reduce((acc, account) => {
-      const balanceState = balanceStateFamily({
-        asset: account.name,
-        assetId: account.id,
-      })
+    if (!accountsIds || accountsIds.length === 0) return '0'
 
-      return BigNumber.sum(
-        acc,
-        balanceState && fiatRates[account.name] > 0
+    const totalFiatBalance = accountsIds.reduce((acc, account) => {
+      const assetBalance = get(
+        balanceStateFamily({
+          asset: account.name,
+          assetId: account.id,
+        }),
+      )
+
+      const balance =
+        assetBalance > 0 && fiatRates[account.name] > 0
           ? new BigNumber(
               cryptoToFiat(
                 unitToCurrency(
                   getAsset(activeNetwork, getNativeAsset(account.name)),
-                  get(balanceState),
+                  assetBalance,
                 ).toNumber(),
                 fiatRates[account.name],
               ),
             )
-          : 0,
-      )
+          : 0
+      return BigNumber.sum(acc, balance)
     }, new BigNumber(0))
 
     return formatFiat(totalFiatBalance).toString()

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { getAsset } from '@liquality/cryptoassets'
 import { AES } from 'crypto-js'
 import { fetchFeesForAsset, fetchSwapProvider } from '../store/store'
@@ -16,6 +17,7 @@ import { Buffer } from '@craftzdog/react-native-buffer'
 import QuickCrypto from 'react-native-quick-crypto'
 
 import { translate, TxKeyPath } from '../i18n'
+import { Images } from '../assets'
 
 export const sortQuotes = (
   network: string,
@@ -199,4 +201,24 @@ export const widthInPerFn = (value: number) => {
   return {
     width: `${value}%`,
   }
+}
+
+export const checkIfCollectionNameExists = (str: string) => {
+  if (!str) {
+    return 'Unknown Collection'
+  }
+  return str
+}
+
+export const checkIfDescriptionExists = (str: string) => {
+  if (!str) {
+    return 'This NFT has no description.'
+  }
+  return str
+}
+
+export const checkImgUrlExists = (imgUrl: string, imgError: string[]) => {
+  if (!imgError.includes(imgUrl) && imgUrl) {
+    return { uri: imgUrl }
+  } else return Images.nftThumbnail
 }
