@@ -422,6 +422,11 @@ export const theme = createTheme({
       fontSize: scale(16),
       fontFamily: Fonts.Regular,
     },
+    iconLabel: {
+      fontSize: scale(13),
+      fontWeight: '600',
+      fontFamily: Fonts.Regular,
+    },
   },
   pressableVariants: {
     outline: {

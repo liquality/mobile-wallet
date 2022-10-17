@@ -123,6 +123,10 @@ import GasDarkRect from '../assets/icons/gasDarkRectangle.svg'
 import GasLightRect from '../assets/icons/gasLightRectangle.svg'
 import RectangleDark from '../assets/icons/rectangleDark.svg'
 import RectangleLight from '../assets/icons/rectangleLight.svg'
+import SwapLightRect from '../assets/icons/swapLightRect.svg'
+import SwapDarkRect from '../assets/icons/swapDarkRect.svg'
+import SwapIconGrey from '../assets/icons/swapIconGray.svg'
+import SwapIconRed from '../assets/icons/swapIconRed.svg'
 
 export default {
   PendingSwap,
@@ -250,4 +254,8 @@ export default {
   GasLightRect,
   RectangleDark,
   RectangleLight,
+  SwapLightRect,
+  SwapDarkRect,
+  SwapIconGrey,
+  SwapIconRed,
 }

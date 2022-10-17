@@ -454,5 +454,6 @@
   "gotIt": "Got It",
   "hmm": "Hmm.",
   "cantFndTkn": "Can’t find this token",
-  "notFound": "Not found"
+  "notFound": "Not found",
+  "swapDetails": "SWAP DETAILS"
 }

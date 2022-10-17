@@ -71,6 +71,7 @@ import { labelTranslateFn } from '../utils'
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
 import { useNavigation } from '@react-navigation/core'
 import { CommonActions } from '@react-navigation/native'
+import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
 
 const {
   SwapCheck,
@@ -226,6 +227,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'AssetManagementScreen'
   | 'AssetChooserScreen'
   | 'ReceiveScreen'
+  | 'SwapDetailsScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -590,7 +592,7 @@ export const MainNavigator = () => (
   </Tab.Navigator>
 )
 
-const SelectChainScreenHeaderLeft = () => {
+const StackMainNavigatorHeaderLeft = () => {
   const navigation = useNavigation()
 
   return (
@@ -643,7 +645,7 @@ export const StackMainNavigator = () => {
           ...screenNavOptions,
           headerTitle: labelTranslateFn('selectChain')!,
           headerTitleStyle: HEADER_TITLE_STYLE,
-          headerLeft: SelectChainScreenHeaderLeft,
+          headerLeft: StackMainNavigatorHeaderLeft,
           headerStyle: { backgroundColor },
         }}
       />
@@ -716,6 +718,19 @@ export const StackMainNavigator = () => {
           headerRight: undefined,
           headerLeft: undefined,
         })}
+      />
+      <MainStack.Screen
+        name="SwapDetailsScreen"
+        component={SwapDetailsScreen}
+        options={{
+          headerShadowVisible: false,
+          headerBackVisible: false,
+          headerTitle: labelTranslateFn('swapDetails')!,
+          headerTitleStyle: MANAGE_ASSET_HEADER,
+          headerStyle: { backgroundColor },
+          headerRight: undefined,
+          headerLeft: StackMainNavigatorHeaderLeft,
+        }}
       />
     </MainStack.Navigator>
   )

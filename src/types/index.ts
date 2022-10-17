@@ -195,6 +195,7 @@ export type MainStackParamList = {
   SettingsScreen: { shouldLogOut?: boolean }
   WithPopupMenu: undefined
   SelectChainScreen: undefined
+  SwapDetailsScreen: StackPayload
 }
 
 export type RootTabParamList = {
