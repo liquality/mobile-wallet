@@ -1,25 +1,29 @@
-import React, { Fragment, useState } from 'react'
-import {
-  Alert,
-  Dimensions,
-  Linking,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native'
+import React, { useState } from 'react'
+import { Alert, Linking, StyleSheet, View } from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { AccountType, RootStackParamList } from '../../../types'
+import { AccountType, MainStackParamList } from '../../../types'
 import AssetIcon from '../../../components/asset-icon'
-import { Text, Button, palette } from '../../../theme'
+import {
+  Text,
+  palette,
+  Box,
+  Card,
+  Pressable,
+  showCopyToast,
+} from '../../../theme'
 import { useRecoilValue } from 'recoil'
 import i18n from 'i18n-js'
 import { addressStateFamily, networkState } from '../../../atoms'
-import { labelTranslateFn, COPY_BUTTON_TIMEOUT } from '../../../utils'
+import { labelTranslateFn, RECEIVE_HEADER_HEIGHT } from '../../../utils'
 import BuyCryptoModal from './buyCryptoModal'
 import { AppIcons, Fonts } from '../../../assets'
-const { SwapCheck: CheckIcon, CopyIcon, TransakIcon } = AppIcons
+import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
+import { moderateScale, scale } from 'react-native-size-matters'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+
+const { CopyIcon, TransakIcon } = AppIcons
 
 const PowerByTransak = () => (
   <View style={styles.poweredTransakIconView}>
@@ -34,16 +38,14 @@ const PowerByTransak = () => (
 )
 
 type ReceiveScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'ReceiveScreen'
 >
 
 const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
-  const [buttonPressed, setButtonPressed] = useState<boolean>(false)
-  const { name, chain, code, id }: AccountType = route.params.assetData!
+  const { chain, code, id }: AccountType = route.params.assetData!
   const address = useRecoilValue(addressStateFamily(id))
   const activeNetwork = useRecoilValue(networkState)
-  const { width } = Dimensions.get('screen')
   const [cryptoModalVisible, setCryptoModalVisible] = useState(false)
 
   const isPoweredByTransak = true
@@ -52,7 +54,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
     setCryptoModalVisible(false)
   }
 
-  const QRCodeSize = width < 390 ? width / 2.4 : width / 2
+  const QRCodeSize = moderateScale(100, 0.1)
 
   //TODO Read this from a config file
   const getFaucetUrl = (asset: string): { name: string; url: string } => {
@@ -104,15 +106,12 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
 
   const handleCopyAddressPress = async () => {
     if (!address) Alert.alert(labelTranslateFn('receiveScreen.addressEmpty')!)
+    showCopyToast('copyToast', labelTranslateFn('receiveScreen.copied')!)
     Clipboard.setString(address)
-    setButtonPressed(true)
-    setTimeout(() => {
-      setButtonPressed(false)
-    }, COPY_BUTTON_TIMEOUT)
   }
 
   return (
-    <View style={styles.container}>
+    <Box flex={1} backgroundColor={'mainBackground'}>
       <BuyCryptoModal
         visible={cryptoModalVisible}
         onPress={onCloseButtonPress}
@@ -120,156 +119,116 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
         poweredTransakComp={<PowerByTransak />}
         handleLinkPress={handleLinkPress}
       />
-      <View style={styles.headerBlock}>
-        <AssetIcon asset={code} chain={chain} />
-        <Text style={styles.addressLabel}>
-          {i18n.t('receiveScreen.yourCurrent', { code, activeNetwork })}
+      <Card
+        variant={'headerCard'}
+        height={RECEIVE_HEADER_HEIGHT}
+        paddingHorizontal="screenPadding"
+        justifyContent={'center'}
+        alignItems="center">
+        <AssetIcon chain={chain} asset={code} size={scale(54)} />
+        <Text variant={'addressLabel'} color="greyMeta" marginTop={'xl'}>
+          {i18n.t('receiveScreen.yourCurrent', { code })}
         </Text>
-        <View style={styles.addressWrapper}>
-          <Text style={styles.address}>{address}</Text>
-          <Pressable onPress={handleCopyAddressPress}>
-            <CopyIcon width={10} stroke={palette.blueVioletPrimary} />
-          </Pressable>
-        </View>
-      </View>
-      <View style={styles.ContentBlock}>
-        <Text style={styles.scanPrompt} tx="receiveScreen.scanORcode" />
-        {!!address && <QRCode value={address} size={QRCodeSize} />}
-        {activeNetwork === 'testnet' && (
-          <Fragment>
-            <Text style={styles.linkLabel}>
-              {getFaucetUrl(name).name} Testnet faucet
-            </Text>
-            <Text
-              style={styles.link}
-              onPress={() => handleLinkPress(getFaucetUrl(name).url)}>
-              {getFaucetUrl(name).url}
-            </Text>
-          </Fragment>
-        )}
-        <View style={styles.buyCryptoBtnView}>
-          <Button
-            type="secondary"
-            variant="m"
-            label={{ tx: 'receiveScreen.buyCrypto' }}
-            onPress={() => setCryptoModalVisible(true)}
-            isBorderless={false}
-            isActive={true}
+        <Box
+          flexDirection={'row'}
+          justifyContent="center"
+          alignItems={'center'}>
+          <Text color={'textColor'} variant={'h4'} paddingRight={'m'}>
+            {shortenAddress(address)}
+          </Text>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={handleCopyAddressPress}>
+            <CopyIcon width={20} stroke={palette.blueVioletPrimary} />
+          </TouchableOpacity>
+        </Box>
+      </Card>
+      <Box flex={1} paddingHorizontal="screenPadding">
+        <Box flex={0.7} alignItems="center">
+          <Text
+            textAlign={'center'}
+            paddingTop={'mxxl'}
+            paddingBottom={'l'}
+            paddingHorizontal={'lxxl'}
+            tx="receiveScreen.scanORcode"
+            color={'textColor'}
+            variant="h7"
           />
-          {isPoweredByTransak && <PowerByTransak />}
-        </View>
-      </View>
-      <View style={styles.actionBlock}>
-        <Button
-          type="secondary"
-          variant="m"
-          label={{ tx: 'receiveScreen.done' }}
-          onPress={navigation.goBack}
-          isBorderless={false}
-          isActive={true}
-        />
-        <Button
-          type="primary"
-          variant="m"
-          label={
-            buttonPressed
-              ? { tx: 'receiveScreen.copied' }
-              : { tx: 'receiveScreen.copyAdd' }
-          }
-          onPress={handleCopyAddressPress}
-          isBorderless={false}
-          isActive={true}>
-          {buttonPressed ? (
-            <CheckIcon
-              width={15}
-              height={15}
-              stroke={palette.white}
-              style={styles.icon}
-            />
-          ) : (
-            <CopyIcon
-              width={15}
-              height={15}
-              stroke={palette.white}
-              style={styles.icon}
-            />
+          {!!address && <QRCode value={address} size={QRCodeSize} />}
+          {activeNetwork === 'testnet' && (
+            <>
+              <Text variant={'subListText'} color="textColor" paddingTop={'xl'}>
+                {getFaucetUrl(code).name} Testnet faucet
+              </Text>
+              <Text
+                variant={'subListText'}
+                color={'link'}
+                onPress={() => handleLinkPress(getFaucetUrl(code).url)}>
+                {getFaucetUrl(code).url}
+              </Text>
+            </>
           )}
-        </Button>
-      </View>
-    </View>
+          <Box marginVertical={'xl'} alignItems="center">
+            <Pressable
+              label={{ tx: 'receiveScreen.buyCrypto' }}
+              onPress={() => setCryptoModalVisible(true)}
+              variant="defaultOutline"
+              style={styles.buyCryptoBtnStyle}
+              textStyle={styles.buyCryptoTxtStyle}
+            />
+          </Box>
+        </Box>
+        <Box flex={0.3}>
+          <Box marginVertical={'xl'}>
+            <Pressable
+              onPress={handleCopyAddressPress}
+              variant="solid"
+              customView={
+                <Box
+                  flexDirection={'row'}
+                  alignItems="center"
+                  justifyContent={'center'}>
+                  <CopyIcon
+                    width={scale(20)}
+                    height={scale(20)}
+                    stroke={palette.white}
+                    style={styles.icon}
+                  />
+                  <Text
+                    variant={'h6'}
+                    color="white"
+                    tx="receiveScreen.copyAdd"
+                  />
+                </Box>
+              }
+            />
+          </Box>
+          <Text
+            onPress={navigation.goBack}
+            textAlign={'center'}
+            variant="link"
+            tx="termsScreen.cancel"
+          />
+        </Box>
+      </Box>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: palette.white,
-  },
-  headerBlock: {
-    flex: 0.2,
+  buyCryptoBtnStyle: {
+    height: scale(36),
+    width: scale(100),
     justifyContent: 'center',
     alignItems: 'center',
   },
-  addressLabel: {
+  buyCryptoTxtStyle: {
     fontFamily: Fonts.Regular,
-    fontSize: 12,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    color: palette.sectionTitleColor,
-    marginVertical: 5,
-  },
-  addressWrapper: {
-    flexDirection: 'row',
-  },
-  address: {
-    fontFamily: Fonts.Regular,
-    fontSize: 12,
-    fontWeight: '300',
-    textTransform: 'uppercase',
-    color: palette.black,
-    marginRight: 5,
-  },
-  ContentBlock: {
-    flex: 0.6,
-    alignItems: 'center',
-  },
-  scanPrompt: {
-    fontFamily: Fonts.Regular,
-    fontSize: 12,
-    fontWeight: '400',
-    textAlign: 'center',
-    lineHeight: 20,
-    color: palette.black2,
-    width: '70%',
-    marginBottom: 20,
-  },
-  linkLabel: {
-    fontFamily: Fonts.Regular,
-    fontSize: 12,
     fontWeight: '500',
-    marginTop: 20,
-    lineHeight: 18,
-  },
-  link: {
-    fontFamily: Fonts.Regular,
-    fontSize: 12,
-    fontWeight: '500',
-    lineHeight: 18,
-    color: palette.blueVioletPrimary,
-  },
-  actionBlock: {
-    flex: 0.2,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    paddingHorizontal: (Dimensions.get('window').width - 315) / 2,
-    paddingBottom: 20,
+    fontSize: scale(13),
   },
   icon: {
     marginRight: 5,
-  },
-  buyCryptoBtnView: {
-    alignItems: 'center',
   },
   poweredTransakIconView: {
     flexDirection: 'row',

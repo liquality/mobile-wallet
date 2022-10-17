@@ -108,7 +108,7 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
 
   return (
     <Card
-      variant={'summaryCard'}
+      variant={'headerCard'}
       height={GRADIENT_BACKGROUND_HEIGHT}
       paddingHorizontal="xl">
       <Box flex={0.65} justifyContent="center">

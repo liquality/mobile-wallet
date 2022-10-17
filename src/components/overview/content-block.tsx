@@ -158,7 +158,7 @@ const ContentBlock = () => {
         }
       }}
       onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
+      initialLayout={{ width: layout.width - scale(30) }} //approx to horizontal patting
       sceneContainerStyle={{
         marginTop: scale(15),
       }}

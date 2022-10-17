@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList, UseInputStateReturnType } from '../../../types'
+import { MainStackParamList, UseInputStateReturnType } from '../../../types'
 import Header from '../../header'
 import { createWallet, restoreWallet } from '../../../store/store'
 import { Box, Button, palette, Text } from '../../../theme'
@@ -20,7 +20,7 @@ import { labelTranslateFn } from '../../../utils'
 import { Fonts } from '../../../assets'
 
 type BackupLoginScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'BackupLoginScreen'
 >
 const useInputState = (

@@ -3,6 +3,7 @@ import { Fonts } from '../assets'
 import { faceliftPalette } from './faceliftPalette'
 import { palette } from './palette'
 import { scale } from 'react-native-size-matters'
+import { ONBOARDING_PADDING, SCREEN_PADDING } from './../utils/constants'
 
 export const theme = createTheme({
   colors: {
@@ -24,13 +25,15 @@ export const theme = createTheme({
     cardPrimaryBackground: palette.purplePrimary,
     buttonPrimaryBackground: palette.purplePrimary,
     mainBorderColor: palette.gray,
-    link: faceliftPalette.active,
+    link: faceliftPalette.linkTextColor,
     transparentBlack: palette.transparentBlack,
     progressDotColor: palette.turquoise,
     addressColor: palette.black2,
     errorMsgBarColor: palette.yellowBar,
     transparent: 'transparent',
     white: faceliftPalette.white,
+    black: faceliftPalette.black,
+    black2: palette.black2,
     mediumWhite: faceliftPalette.mediumWhite,
     darkGrey: faceliftPalette.darkGrey,
     activeButton: faceliftPalette.buttonActive,
@@ -47,6 +50,12 @@ export const theme = createTheme({
     tablabelActiveColor: palette.buttonActive,
     tablabelInactiveColor: palette.darkGray,
     greyMeta: faceliftPalette.greyMeta,
+    headerColor: faceliftPalette.black,
+    mediumGrey: faceliftPalette.mediumGrey,
+    greyBlack: faceliftPalette.greyBlack,
+    yellow: faceliftPalette.yellow,
+    darkPink: palette.darkPink,
+    greyBackground: faceliftPalette.greyBackground,
     blockBackgroundColor: faceliftPalette.orangeGrey,
     slowColor: faceliftPalette.fast,
     averageColor: faceliftPalette.average,
@@ -60,10 +69,13 @@ export const theme = createTheme({
     m: scale(10),
     l: scale(15),
     xl: scale(20),
+    mxxl: scale(30),
+    lxxl: scale(45),
     xxl: scale(50),
     xxxl: scale(70),
-    onboardingPadding: scale(36),
-    onboardingHeaderPadding: scale(21),
+    onboardingPadding: scale(ONBOARDING_PADDING),
+    onboardingHeaderPadding: scale(25),
+    screenPadding: scale(SCREEN_PADDING),
   },
   breakpoints: {
     phone: 0,
@@ -86,7 +98,7 @@ export const theme = createTheme({
     },
     pinkText: {
       fontFamily: Fonts.Regular,
-      color: palette.darkPink,
+      color: 'darkPink',
       fontWeight: '600',
       fontSize: 20,
     },
@@ -172,11 +184,36 @@ export const theme = createTheme({
       fontWeight: '300',
       fontSize: 28,
     },
+
+    sendNftNameHeader: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '400',
+      fontSize: 28,
+      letterSpacing: 0.5,
+      color: 'darkGrey',
+    },
+
+    sendNftCollectionNameHeader: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontStyle: 'normal',
+      fontWeight: '500',
+      fontSize: 14,
+      lineHeight: 18,
+      color: 'greyMeta',
+    },
+
     amountLabel: {
       fontFamily: Fonts.Light,
       fontWeight: '400',
       fontSize: 14,
       color: 'tertiaryForeground',
+    },
+    miniNftHeader: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: 15,
+      lineHeight: 21,
+      letterSpacing: 0.5,
     },
     warningBold: {
       fontFamily: Fonts.Regular,
@@ -260,9 +297,8 @@ export const theme = createTheme({
     settingLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
-      fontSize: 16,
-      color: 'addressColor',
-      marginRight: 's',
+      fontSize: scale(14),
+      lineHeight: scale(18),
     },
     pressableLabel: {
       fontFamily: Fonts.Regular,
@@ -290,15 +326,13 @@ export const theme = createTheme({
     },
     normalText: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(15),
+      fontSize: scale(14),
       fontWeight: '400',
-      lineHeight: scale(20),
     },
     activeLink: {
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
       fontWeight: '400',
-      // lineHeight: scale(20),
       color: 'activeLink',
     },
     activityText: {
@@ -314,18 +348,34 @@ export const theme = createTheme({
     },
     h1: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(37),
+      fontSize: scale(41),
       fontWeight: '500',
-      lineHeight: scale(49),
+      lineHeight: scale(55),
     },
     h3: {
       fontFamily: Fonts.Regular,
       fontSize: scale(22),
       fontWeight: '500',
     },
+    h4: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(22),
+      fontWeight: '400',
+    },
+    h6: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(15),
+      fontWeight: '500',
+    },
+    h7: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(15),
+      fontWeight: '400',
+      lineHeight: scale(15),
+    },
     radioText: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(16),
+      fontSize: scale(14),
       fontWeight: '400',
     },
     listText: {
@@ -337,10 +387,16 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(13),
       fontWeight: '400',
+      lineHeight: scale(17),
     },
     networkStatus: {
       fontFamily: Fonts.JetBrainsMono,
       fontSize: scale(11),
+      fontWeight: '400',
+    },
+    addressLabel: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(13),
       fontWeight: '400',
     },
     totalBalance: {
@@ -364,11 +420,19 @@ export const theme = createTheme({
     solid: {
       color: 'white',
     },
+    warn: {
+      color: 'black',
+    },
     defaultOutline: {
       color: 'defaultButton',
     },
     solidDisabled: {
       color: 'inactiveText',
+    },
+    largerHeaderTitle: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '600',
+      fontSize: scale(36),
     },
     gasIndicatorLabel: {
       fontFamily: Fonts.JetBrainsMono,
@@ -379,6 +443,28 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(13),
       fontWeight: '400',
+    },
+    warnHighlight: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(14),
+      fontWeight: '600',
+    },
+    warnText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(20),
+      fontWeight: '400',
+      lineHeight: scale(25),
+    },
+    warnHeader: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(45),
+      lineHeight: scale(60),
+      fontWeight: '400',
+    },
+    seedPhraseLabel: {
+      fontWeight: '400',
+      fontSize: scale(16),
+      fontFamily: Fonts.Regular,
     },
   },
   pressableVariants: {
@@ -395,6 +481,9 @@ export const theme = createTheme({
     },
     solidDisabled: {
       backgroundColor: 'inactiveButton',
+    },
+    warn: {
+      backgroundColor: 'yellow',
     },
   },
   buttonVariants: {
@@ -513,7 +602,7 @@ export const theme = createTheme({
       shadowRadius: 2,
       elevation: 3,
     },
-    summaryCard: {
+    headerCard: {
       backgroundColor: 'mainBackground',
       shadowOffset: {
         width: 0,
@@ -526,9 +615,7 @@ export const theme = createTheme({
   },
   dropDownVariants: {
     language: {
-      width: '50%',
-      borderBottomColor: 'progressDotColor',
-      borderBottomWidth: 1,
+      width: '100%',
     },
   },
   textInputVariants: {
@@ -550,6 +637,12 @@ export const theme = createTheme({
       fontWeight: '400',
       fontSize: scale(16),
       fontFamily: Fonts.Regular,
+    },
+    searchBoxInput: {
+      paddingTop: 's',
+      color: 'greyMeta',
+      fontWeight: '400',
+      fontSize: scale(16),
     },
     default: {
       fontWeight: '400',
@@ -599,6 +692,7 @@ export const darkTheme: ThemeType = {
     textColor: faceliftPalette.darkText,
     spinner: faceliftPalette.darkGrey,
     popMenuColor: faceliftPalette.semiTransparentDark,
+    headerColor: faceliftPalette.white,
   },
 }
 

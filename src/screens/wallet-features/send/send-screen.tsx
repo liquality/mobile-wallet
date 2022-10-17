@@ -32,7 +32,7 @@ import {
 import i18n from 'i18n-js'
 import ErrMsgBanner, { ErrorBtn } from '../../../components/ui/err-msg-banner'
 import { palette } from '../../../theme'
-import { AppIcons, Fonts, SecondaryFont } from '../../../assets'
+import { AppIcons, Fonts } from '../../../assets'
 import FeeEditorScreen from '../custom-fee/fee-editor-screen'
 
 const { QRCode } = AppIcons
@@ -613,7 +613,7 @@ const styles = StyleSheet.create({
     lineHeight: 30,
   },
   textRegular: {
-    fontFamily: SecondaryFont.Regular,
+    fontFamily: Fonts.Regular,
     fontStyle: 'normal',
     fontWeight: '400',
     fontSize: 16,

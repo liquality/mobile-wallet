@@ -41,6 +41,7 @@ export interface AccountType {
   activeNetwork?: Network
 }
 export interface NFTAsset {
+  length: number
   token_id?: string
   asset_contract?: {
     address?: string
@@ -120,6 +121,17 @@ export type StackPayload = {
   amountInput?: string
   fee?: GasFees | null
   speedMode?: FeeLabel
+  isPrivateKey?: boolean
+  walletId?: string
+  accountId?: string
+  chain?: ChainId
+  network?: Network
+  accountName?: string
+  shortenAddress?: string
+}
+
+export type SettingStackParamList = {
+  Settings: { shouldLogOut?: boolean }
 }
 
 export type RootStackParamList = {
@@ -132,10 +144,11 @@ export type RootStackParamList = {
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   LoadingScreen: StackPayload
+  BackupWarningScreen: StackPayload
+  SelectChainScreen: undefined
 }
 
 export type MainStackParamList = {
-  Entry: undefined
   TermsScreen: StackPayload
   PasswordCreationScreen: StackPayload
   SeedPhraseScreen: StackPayload
@@ -150,6 +163,7 @@ export type MainStackParamList = {
   AssetManagementScreen: StackPayload
   BackupWarningScreen: StackPayload
   BackupSeedScreen: { screenTitle?: string }
+  BackupPrivateKeyScreen: StackPayload
   BackupLoginScreen: { backupSeed?: boolean; screenTitle?: string }
   AssetToggleScreen: StackPayload
   ReceiveScreen: StackPayload
@@ -181,6 +195,7 @@ export type MainStackParamList = {
   }
   SettingsScreen: { shouldLogOut?: boolean }
   WithPopupMenu: undefined
+  SelectChainScreen: undefined
 }
 
 export type RootTabParamList = {

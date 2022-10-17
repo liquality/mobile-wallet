@@ -7,7 +7,11 @@ import NftTabBar from './nft-tab-bar'
 import { NFTAsset } from '../../types'
 import { useRecoilValue } from 'recoil'
 import { accountInfoStateFamily, addressStateFamily } from '../../atoms'
-import { labelTranslateFn } from '../../utils'
+import {
+  checkIfCollectionNameExists,
+  checkIfDescriptionExists,
+  labelTranslateFn,
+} from '../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 
 const { Line, SmallPurpleArrow, LockIcon } = AppIcons
@@ -31,7 +35,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
       <Box>
         <Text style={styles.descriptionTitle} tx="nft.description" />
         <Text style={styles.descriptionText}>
-          {nftItem.description.substring(0, 100)}
+          {checkIfDescriptionExists(nftItem.description)}
         </Text>
         <Line style={styles.line} />
         <Text style={styles.createdBy}>
@@ -50,10 +54,10 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
         <Line style={styles.line} />
         <Text style={styles.descriptionTitle}>
           {labelTranslateFn('nft.about')}{' '}
-          {nftItem.collection.name.toUpperCase()}
+          {checkIfCollectionNameExists(nftItem.collection.name).toUpperCase()}
         </Text>
         <Text style={styles.descriptionText}>
-          {nftItem.description.substring(0, 100)}
+          {checkIfDescriptionExists(nftItem.description)}
         </Text>
         <Line style={styles.line} />
         <Text style={styles.createdBy}>
@@ -61,7 +65,8 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
           <Pressable onPress={() => Linking.openURL(nftItem.external_link)}>
             <Text style={[styles.createdBy, styles.leftLink, styles.link]}>
               {' '}
-              {nftItem.collection.name} <SmallPurpleArrow />
+              {checkIfCollectionNameExists(nftItem.collection.name)}{' '}
+              <SmallPurpleArrow />
             </Text>
           </Pressable>
         </Text>
@@ -112,7 +117,7 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
           />
 
           <Text style={(styles.descriptionText, styles.leftLink, styles.flex)}>
-            ERC-721
+            {nftItem.standard}
           </Text>
         </Box>
         <Line style={styles.line} />
@@ -160,7 +165,9 @@ const DetailsDrawerExpanded: React.FC<DetailsDrawerExpandedProps> = (props) => {
   }
   return (
     <Box>
-      <Text style={styles.collectionName}>{nftItem.collection.name}</Text>
+      <Text style={styles.collectionName}>
+        {checkIfCollectionNameExists(nftItem.collection.name)}
+      </Text>
       <Text style={styles.expandedTitle}>{nftItem.name}</Text>
       <NftTabBar
         leftTabText={'nft.tabBarOverview'}

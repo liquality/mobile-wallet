@@ -1,7 +1,7 @@
 import { ViewStyle, StyleProp, TextStyle } from 'react-native'
 import { scale } from 'react-native-size-matters'
 import { Fonts } from '../assets'
-import { ONBOARDING_SCREEN_DEFAULT_PADDING } from '../utils'
+import { ONBOARDING_PADDING } from '../utils'
 import { faceliftPalette } from './faceliftPalette'
 
 export const FLEX_1: ViewStyle = {
@@ -10,7 +10,7 @@ export const FLEX_1: ViewStyle = {
 
 export const GRADIENT_STYLE: ViewStyle = {
   flex: 1,
-  paddingHorizontal: ONBOARDING_SCREEN_DEFAULT_PADDING,
+  paddingHorizontal: scale(ONBOARDING_PADDING),
 }
 
 export const OVERVIEW_TAB_BAR_STYLE: ViewStyle = {
@@ -38,7 +38,7 @@ export const APP_BUTTON_STYLE: ViewStyle = {
 
 export const APP_HALF_BUTTON_STYLE: ViewStyle = {
   ...APP_BUTTON_STYLE,
-  height: scale(40),
+  height: scale(36),
   width: '50%',
 }
 
@@ -62,4 +62,13 @@ export const HEADER_TITLE_STYLE: StyleProp<
   fontWeight: '500',
   fontSize: scale(14),
   color: faceliftPalette.black,
+}
+
+export const MANAGE_ASSET_HEADER: StyleProp<
+  Pick<TextStyle, 'fontFamily' | 'fontWeight' | 'fontSize'> & {
+    color?: string | undefined
+  }
+> = {
+  ...HEADER_TITLE_STYLE,
+  color: faceliftPalette.darkGrey,
 }

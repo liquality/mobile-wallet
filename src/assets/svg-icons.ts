@@ -44,6 +44,8 @@ import CalendarIcon from '../assets/icons/calendar.svg'
 import ChevronRightIcon from '../assets/icons/chevronRight.svg'
 import AngleRightIcon from '../assets/icons/chevronRight.svg'
 import AngleDownIcon from '../assets/icons/chevronDown.svg'
+import AngleUpIcon from '../assets/icons/chevronUp.svg'
+
 import PlusSign from '../assets/icons/plus.svg'
 import MinusSign from '../assets/icons/minus.svg'
 import ExportIcon from '../assets/icons/download.svg'
@@ -93,6 +95,14 @@ import ThreeDots from '../assets/icons/nfts/three-dots.svg'
 import Share from '../assets/icons/nfts/share.svg'
 import Send from '../assets/icons/nfts/send.svg'
 import Sell from '../assets/icons/nfts/sell.svg'
+import NftChain from '../assets/icons/nfts/nft-chain.svg'
+import PurpleCopy from '../assets/icons/nfts/purpleCopy.svg'
+import NftCard from '../assets/icons/nfts/nft-card-new.svg'
+import GreenCheckMark from '../assets/icons/nfts/green-check-mark.svg'
+import CheckmarkCircle from '../assets/icons/nfts/checkmark-circle.svg'
+
+import ConfirmationTrackerLine from '../assets/icons/nfts/confirmation-tracker.svg'
+
 import ShortLine from '../assets/icons/nfts/short-line.svg'
 import NetworkActiveDot from '../assets/icons/dot.svg'
 import Ellipses from '../assets/icons/ellipses.svg'
@@ -107,6 +117,20 @@ import TabSettingInactive from '../assets/icons/tabSettingInactive.svg'
 import TabWalletInactive from '../assets/icons/tabWalletInactive.svg'
 import TransakIcon from '../assets/icons/transak.svg'
 import Filter from '../assets/icons/filter.svg'
+import Refresh from '../assets/icons/refresh.svg'
+import LightMoon from '../assets/icons/lightMoon.svg'
+import LightSun from '../assets/icons/lightSun.svg'
+import DarkMoon from '../assets/icons/darkMoon.svg'
+import DarkSun from '../assets/icons/darkSun.svg'
+import PrivateKeyWarn from '../assets/icons/pkWarn.svg'
+import SeedPhraseWarn from '../assets/icons/spWarn.svg'
+import PrivateKeyIcon from '../assets/icons/privateKeyIcon.svg'
+import CopySuccessTick from '../assets/icons/copySuccessTick.svg'
+import AllChainIndicator from '../assets/icons/allChainIndicator.svg'
+import GasDarkRect from '../assets/icons/gasDarkRectangle.svg'
+import GasLightRect from '../assets/icons/gasLightRectangle.svg'
+import RectangleDark from '../assets/icons/rectangleDark.svg'
+import RectangleLight from '../assets/icons/rectangleLight.svg'
 
 export default {
   PendingSwap,
@@ -154,6 +178,7 @@ export default {
   ChevronRightIcon,
   AngleRightIcon,
   AngleDownIcon,
+  AngleUpIcon,
   PlusSign,
   MinusSign,
   ExportIcon,
@@ -195,6 +220,13 @@ export default {
   Send,
   Sell,
   ShortLine,
+  Refresh,
+  NftChain,
+  PurpleCopy,
+  NftCard,
+  GreenCheckMark,
+  ConfirmationTrackerLine,
+  CheckmarkCircle,
 
   LogoFull,
   OnlyLqLogoDark,
@@ -219,4 +251,17 @@ export default {
   TabWalletInactive,
   TransakIcon,
   Filter,
+  LightMoon,
+  LightSun,
+  DarkMoon,
+  DarkSun,
+  PrivateKeyWarn,
+  SeedPhraseWarn,
+  PrivateKeyIcon,
+  CopySuccessTick,
+  AllChainIndicator,
+  GasDarkRect,
+  GasLightRect,
+  RectangleDark,
+  RectangleLight,
 }

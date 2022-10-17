@@ -1,5 +1,4 @@
 import { setupWallet } from '@liquality/wallet-core'
-import { Account } from '@liquality/wallet-core/dist/src/store/types'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import React, { useEffect, useCallback, useState } from 'react'
@@ -14,7 +13,7 @@ import NftTabBar from '../../../components/NFT/nft-tab-bar'
 import { getAllEnabledAccounts, updateNFTs } from '../../../store/store'
 import { Box, palette } from '../../../theme'
 import { RootTabParamList } from '../../../types'
-import { labelTranslateFn } from '../../../utils'
+import { calculateNrOfAccsWithNfts, labelTranslateFn } from '../../../utils'
 type ShowAllNftsScreenProps = BottomTabScreenProps<
   RootTabParamList,
   'ShowAllNftsScreen'
@@ -51,6 +50,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
         network: activeNetwork,
         accountIds: accIds,
       })
+      //Use dummydata here if no assets load
       let allNfts = await fetchAllNfts()
       setAllNftData(allNfts)
       let wholeNftArr = Object.values(allNfts).map((val) => {
@@ -83,12 +83,6 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
     [navigation, accountIdsToSendIn],
   )
 
-  const calculateNrOfAccsWithNfts = async (accountsData: Account[]) => {
-    return accountsData.filter(
-      (account: Account) => account.nfts && account.nfts.length > 0,
-    ).length
-  }
-
   return (
     <Box flex={1} style={styles.overviewBlock}>
       <ScrollView>
@@ -114,6 +108,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
             />
             {showNfts ? (
               <NftImageView
+                showAllNftsScreen={true}
                 accountIdsToSendIn={accountIdsToSendIn}
                 iterableNftArray={iterableNftArray}
                 seeNftDetail={seeNftDetail}

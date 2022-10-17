@@ -31,7 +31,6 @@ const BackupWarningScreen: React.FC<
       <View style={styles.textContainer}>
         <Text
           variant="pinkText"
-          style={styles.tapAndHold}
           tx="overlayTutorial.hiddenForSecurityTapAndHold"
         />
         <Text
