@@ -219,16 +219,12 @@ export const checkIfDescriptionExists = (str: string) => {
 }
 
 export const checkImgUrlExists = (imgUrl: string, imgError: string[]) => {
-
   if (!imgError.includes(imgUrl) && imgUrl) {
-    console.log('return URI', imgUrl)
     return { uri: imgUrl }
   } else {
-    console.log('IN ELSE THERE WAS ERROR', imgError)
     return Images.nftThumbnail
   }
 }
-
 
 export const calculateNrOfAccsWithNfts = async (accountsData: Account[]) => {
   return accountsData.filter(

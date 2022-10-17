@@ -25,6 +25,9 @@ import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaul
 import { Box, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
 import { checkImgUrlExists } from '../../utils'
+import { AppIcons } from '../../assets'
+
+const { ChevronRightIcon: ChevronRight } = AppIcons
 
 type SubRowProps = {
   parentItem: Partial<AccountType>
@@ -103,11 +106,7 @@ const SubRow: FC<SubRowProps> = (props) => {
         <Pressable
           onPress={handlePressOnRow}
           style={[styles.row, styles.subElement]}>
-          <Box
-            height={scale(50)}
-            width={scale(3)}
-            style={{ backgroundColor: parentItem.color }}
-          />
+          <Box height={scale(50)} width={scale(3)} />
           <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
             <Image
               source={checkImgUrlExists(
@@ -123,13 +122,13 @@ const SubRow: FC<SubRowProps> = (props) => {
                 paddingLeft={'s'}
                 variant={'listText'}
                 color="darkGrey">
-                NFT <Text color="mediumGrey">|</Text> {numberOfNfts}
+                NFT <Text color="mediumGrey">|</Text> {numberOfNfts}{' '}
               </Text>
             </Box>
           </Box>
           <Box flex={0.4} alignItems={'flex-end'} paddingLeft={'m'}>
             <Text variant={'listText'} color="darkGrey">
-              See All
+              See All <ChevronRight style={styles.chevronNft} />
             </Text>
           </Box>
         </Pressable>
@@ -151,11 +150,7 @@ const SubRow: FC<SubRowProps> = (props) => {
           <Pressable
             onPress={handlePressOnRow}
             style={[styles.row, styles.subElement]}>
-            <Box
-              height={scale(50)}
-              width={scale(3)}
-              style={{ backgroundColor: parentItem.color }}
-            />
+            <Box height={scale(50)} width={scale(3)} />
             <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
               <AssetIcon asset={item.code} />
               <Box width={'80%'}>
@@ -168,14 +163,17 @@ const SubRow: FC<SubRowProps> = (props) => {
                 </Text>
               </Box>
             </Box>
+
             <Box flex={0.4} alignItems={'flex-end'} paddingLeft={'m'}>
               <Text variant={'listText'} color="darkGrey">
                 {prettyNativeBalance}
               </Text>
+
               <Text variant={'subListText'} color="greyMeta">
                 {prettyFiatBalance}
               </Text>
             </Box>
+            <ChevronRight style={(styles.chevronNft, styles.chevronRow)} />
           </Pressable>
         </AssetListSwipeableRow>
       )}
@@ -193,9 +191,19 @@ const styles = StyleSheet.create({
     paddingLeft: scale(15),
   },
   nftImg: {
+    marginLeft: scale(3),
+    marginRight: scale(5),
+
     width: scale(25),
     height: scale(25),
     borderRadius: 4,
+  },
+  chevronNft: {
+    marginTop: scale(13),
+  },
+  chevronRow: {
+    marginTop: scale(13),
+    marginLeft: scale(5),
   },
 })
 
