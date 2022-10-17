@@ -427,6 +427,12 @@ export const theme = createTheme({
       fontWeight: '600',
       fontFamily: Fonts.Regular,
     },
+    swapSubTitle: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(15),
+      fontWeight: '400',
+      lineHeight: scale(20),
+    },
   },
   pressableVariants: {
     outline: {

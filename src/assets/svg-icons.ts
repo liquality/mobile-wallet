@@ -127,6 +127,9 @@ import SwapLightRect from '../assets/icons/swapLightRect.svg'
 import SwapDarkRect from '../assets/icons/swapDarkRect.svg'
 import SwapIconGrey from '../assets/icons/swapIconGray.svg'
 import SwapIconRed from '../assets/icons/swapIconRed.svg'
+import SwapSuccess from '../assets/icons/swapSucess.svg'
+import SwapRetry from '../assets/icons/swapRetry.svg'
+import SwapTknIcon from '../assets/icons/swapTknIcon.svg'
 
 export default {
   PendingSwap,
@@ -258,4 +261,7 @@ export default {
   SwapDarkRect,
   SwapIconGrey,
   SwapIconRed,
+  SwapSuccess,
+  SwapRetry,
+  SwapTknIcon,
 }

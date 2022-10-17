@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useColorScheme } from 'react-native'
+import { ScrollView, useColorScheme } from 'react-native'
 import { Box, Text } from '../../../theme'
 import { MainStackParamList } from '../../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -10,8 +10,17 @@ import { themeMode } from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
 import { ChainId } from '@chainify/types'
 import { SCREEN_WIDTH } from '../../../utils'
-
-const { SwapDarkRect, SwapLightRect, SwapIconGrey, SwapIconRed } = AppIcons
+import SwapRow from './swap-row'
+import SwapThreeRow from './swap-three-row'
+const {
+  SwapDarkRect,
+  SwapLightRect,
+  SwapIconGrey,
+  SwapIconRed,
+  SwapRetry,
+  SwapSuccess,
+  SwapTknIcon,
+} = AppIcons
 
 const svgCardWidth = scale(SCREEN_WIDTH)
 const svgCardHeight = scale(120)
@@ -42,43 +51,151 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
       flex={1}
       backgroundColor="mainBackground"
       paddingHorizontal="screenPadding">
-      <Box alignItems={'center'} marginTop="m">
-        <Box
-          width={svgCardWidth}
-          height={svgCardHeight}
-          alignItems="center"
-          justifyContent={'center'}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: scale(30) }}
+        showsVerticalScrollIndicator={false}>
+        <Box alignItems={'center'} marginTop="m">
           <Box
-            flexDirection={'row'}
-            width={scale(240)}
-            justifyContent="space-evenly">
-            <Box alignItems={'center'}>
-              <AssetIcon chain={fromChain} size={scale(41)} />
-              <Text marginTop={'m'} color="textColor" variant={'iconLabel'}>
-                BTC
-              </Text>
+            width={svgCardWidth}
+            height={svgCardHeight}
+            alignItems="center"
+            justifyContent={'center'}>
+            <Box
+              flexDirection={'row'}
+              width={scale(240)}
+              justifyContent="space-evenly">
+              <Box alignItems={'center'}>
+                <AssetIcon chain={fromChain} size={scale(41)} />
+                <Text marginTop={'m'} color="textColor" variant={'iconLabel'}>
+                  BTC
+                </Text>
+              </Box>
+              <Box
+                height={scale(65)}
+                alignItems="center"
+                justifyContent={'center'}>
+                <SwapIcon />
+              </Box>
+              <Box alignItems={'center'}>
+                <AssetIcon chain={toChain} size={scale(41)} />
+                <Text marginTop={'m'} color="textColor" variant={'iconLabel'}>
+                  ETH
+                </Text>
+              </Box>
+            </Box>
+            <Box position={'absolute'} zIndex={-1}>
+              <UppperBgSvg width={svgCardWidth} height={svgCardHeight} />
             </Box>
             <Box
-              height={scale(65)}
-              alignItems="center"
-              justifyContent={'center'}>
-              <SwapIcon />
+              position={'absolute'}
+              zIndex={-2}
+              top={scale(5)}
+              left={scale(5)}>
+              <LowerBgSvg width={svgCardWidth} height={svgCardHeight} />
             </Box>
-            <Box alignItems={'center'}>
-              <AssetIcon chain={toChain} size={scale(41)} />
-              <Text marginTop={'m'} color="textColor" variant={'iconLabel'}>
-                ETH
-              </Text>
-            </Box>
-          </Box>
-          <Box position={'absolute'} zIndex={-1}>
-            <UppperBgSvg width={svgCardWidth} height={svgCardHeight} />
-          </Box>
-          <Box position={'absolute'} zIndex={-2} top={scale(5)} left={scale(5)}>
-            <LowerBgSvg width={svgCardWidth} height={svgCardHeight} />
           </Box>
         </Box>
-      </Box>
+        <Box
+          flexDirection={'row'}
+          justifyContent="space-between"
+          alignItems={'center'}
+          marginTop={'xxl'}>
+          <Box flex={0.65}>
+            <Text variant={'listText'} color="greyMeta">
+              Status
+            </Text>
+            <Text
+              variant={'termsBody'}
+              color={success ? 'greyBlack' : 'danger'}>
+              {success ? 'Completed' : 'Failed - refunded'}
+            </Text>
+          </Box>
+          {success ? (
+            <SwapSuccess />
+          ) : (
+            <Box
+              flex={0.35}
+              flexDirection={'row'}
+              alignItems="center"
+              justifyContent="space-between">
+              <Text variant={'h6'} color="link">
+                Retry
+              </Text>
+              <Box
+                width={1}
+                height={scale(15)}
+                backgroundColor="inactiveText"
+              />
+              <SwapRetry />
+            </Box>
+          )}
+        </Box>
+        <Box marginTop={'xl'}>
+          <SwapRow title="Initiated" subTitle="4/27/2022, 6:51pm" />
+        </Box>
+        <Box marginTop={'xl'}>
+          <SwapRow title="Completed" subTitle="4/27/2022, 7:51pm" />
+        </Box>
+        <Box marginTop={'xl'}>
+          <SwapThreeRow
+            title="Sent"
+            subTitle="0.67281, BTC"
+            today="$104.59 today"
+            then="$112.12 then"
+          />
+        </Box>
+        <Box marginTop={'xl'}>
+          <SwapThreeRow
+            title="Received"
+            subTitle="0.67281, ETH"
+            today="$104.59 today"
+            then="$112.12 then"
+          />
+        </Box>
+        <Box marginTop={'xl'}>
+          <Text variant={'listText'} color="greyMeta">
+            Rate
+          </Text>
+          <Box flexDirection={'row'}>
+            <Text variant={'swapSubTitle'} color={'darkGrey'}>
+              1 BTC = 19.2939 ETH
+            </Text>
+            <Box
+              alignSelf={'flex-start'}
+              width={1}
+              marginHorizontal="m"
+              height={scale(15)}
+              backgroundColor="inactiveText"
+            />
+            <Box marginRight="s" style={{ marginTop: -scale(2) }}>
+              <SwapTknIcon width={20} />
+            </Box>
+            <Text marginLeft={'s'} variant={'swapSubTitle'} color={'darkGrey'}>
+              1 inch
+            </Text>
+          </Box>
+        </Box>
+        <Box marginTop={'xl'}>
+          <Text variant={'listText'} color="greyMeta">
+            Network Speed/Fee
+          </Text>
+          <Box flexDirection={'row'}>
+            <Text variant={'swapSubTitle'} color={'darkGrey'}>
+              Avg 0.014446 BTC
+            </Text>
+            <Box
+              alignSelf={'flex-start'}
+              width={1}
+              marginHorizontal="m"
+              height={scale(15)}
+              backgroundColor="inactiveText"
+            />
+            <Text marginLeft={'s'} variant={'swapSubTitle'} color={'darkGrey'}>
+              $ 0.02
+            </Text>
+          </Box>
+        </Box>
+      </ScrollView>
     </Box>
   )
 }
