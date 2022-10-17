@@ -5,10 +5,6 @@ import { AppIcons, Fonts } from '../assets'
 import { Box, palette, Text } from '.'
 
 const { CopySuccessTick } = AppIcons
-/**
- * for toastConfig we cannot pass color or padding directly to the Box component,
- * we should use style prop for styling
- */
 export const toastConfig: ToastConfig = {
   copyToast: ({ text1 }) => (
     <Box
@@ -25,6 +21,10 @@ export const toastConfig: ToastConfig = {
   ),
 }
 
+/**
+ * for toastConfig we cannot pass color or padding directly to the Box component,
+ * we should use style prop for styling
+ */
 const styles = ScaledSheet.create({
   copyToastBoxStyle: {
     backgroundColor: palette.sectionTitleColor,

@@ -179,6 +179,12 @@ export const WalletCreationNavigator = () => {
         <WalletCreationStack.Screen
           name="SeedPhraseScreen"
           component={SeedPhraseScreen}
+          options={{
+            ...screenNavOptions,
+            headerTitleStyle: HEADER_TITLE_STYLE,
+            headerStyle: { backgroundColor },
+            headerLeft: LiqLogoHeaderLeft,
+          }}
         />
         <WalletCreationStack.Screen
           name="SeedPhraseConfirmationScreen"
@@ -219,6 +225,8 @@ type NavigationProps = NativeStackScreenProps<
   | 'BackupWarningScreen'
   | 'SwapConfirmationScreen'
   | 'AssetManagementScreen'
+  | 'AssetChooserScreen'
+  | 'ReceiveScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -354,21 +362,20 @@ export const AppStackNavigator = () => {
         </MainStack.Screen>
         <MainStack.Screen
           name="AssetChooserScreen"
-          options={() => ({
-            headerRight: PlaceholderComp,
-          })}>
-          {(props) => AssetChooserScreen(props)}
-        </MainStack.Screen>
+          component={AssetChooserScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerBackVisible: false,
+            title: route.params.screenTitle || '',
+            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerStyle: { backgroundColor },
+            headerRight: undefined,
+            headerLeft: () =>
+              AssetManageScreenHeaderLeft({ navigation, route }),
+          })}
+        />
         <MainStack.Screen name="AssetScreen">
           {(props) => AssetScreen(props)}
         </MainStack.Screen>
-        <MainStack.Screen
-          name="ReceiveScreen"
-          component={ReceiveScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
-          })}
-        />
         <MainStack.Screen
           name="SendScreen"
           component={SendScreen}
@@ -677,7 +684,16 @@ export const StackMainNavigator = () => {
         component={PasswordCreationScreen}
         options={{ ...screenNavOptions, headerTransparent: true }}
       />
-      <MainStack.Screen name="SeedPhraseScreen" component={SeedPhraseScreen} />
+      <MainStack.Screen
+        name="SeedPhraseScreen"
+        component={SeedPhraseScreen}
+        options={{
+          ...screenNavOptions,
+          headerTitleStyle: HEADER_TITLE_STYLE,
+          headerStyle: { backgroundColor },
+          headerLeft: LiqLogoHeaderLeft,
+        }}
+      />
       <MainStack.Screen
         name="SeedPhraseConfirmationScreen"
         component={SeedPhraseConfirmationScreen}
@@ -696,6 +712,19 @@ export const StackMainNavigator = () => {
           headerStyle: { backgroundColor },
           headerLeft: LiqLogoHeaderLeft,
         }}
+      />
+      <MainStack.Screen
+        name="ReceiveScreen"
+        component={ReceiveScreen}
+        options={({ route }: NavigationProps) => ({
+          headerShadowVisible: false,
+          headerBackVisible: false,
+          title: route.params.screenTitle || '',
+          headerTitleStyle: MANAGE_ASSET_HEADER,
+          headerStyle: { backgroundColor },
+          headerRight: undefined,
+          headerLeft: undefined,
+        })}
       />
     </MainStack.Navigator>
   )

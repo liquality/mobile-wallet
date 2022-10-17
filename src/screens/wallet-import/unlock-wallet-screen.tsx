@@ -48,7 +48,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
     const opacity = chosenSeedWords[index].length ? 1 : 0.4
     return (
       <Box width={'27%'}>
-        <Text variant={'numberLabel'} color="textColor">{`${index + 1}`}</Text>
+        <Text variant={'numberLabel'} color="greyBlack">{`${index + 1}`}</Text>
         <TextInput
           variant={'seedPhraseInputs'}
           autoCorrect={false}

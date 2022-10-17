@@ -64,6 +64,8 @@ export const theme = createTheme({
     m: scale(10),
     l: scale(15),
     xl: scale(20),
+    mxxl: scale(30),
+    lxxl: scale(45),
     xxl: scale(50),
     xxxl: scale(70),
     onboardingPadding: scale(ONBOARDING_PADDING),
@@ -344,6 +346,22 @@ export const theme = createTheme({
       fontSize: scale(22),
       fontWeight: '500',
     },
+    h4: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(22),
+      fontWeight: '400',
+    },
+    h6: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(15),
+      fontWeight: '500',
+    },
+    h7: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(15),
+      fontWeight: '400',
+      lineHeight: scale(15),
+    },
     radioText: {
       fontFamily: Fonts.Regular,
       fontSize: scale(14),
@@ -363,6 +381,11 @@ export const theme = createTheme({
     networkStatus: {
       fontFamily: Fonts.JetBrainsMono,
       fontSize: scale(11),
+      fontWeight: '400',
+    },
+    addressLabel: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(13),
       fontWeight: '400',
     },
     totalBalance: {
@@ -421,6 +444,11 @@ export const theme = createTheme({
       fontSize: scale(45),
       lineHeight: scale(60),
       fontWeight: '400',
+    },
+    seedPhraseLabel: {
+      fontWeight: '400',
+      fontSize: scale(16),
+      fontFamily: Fonts.Regular,
     },
   },
   pressableVariants: {

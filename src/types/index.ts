@@ -149,7 +149,6 @@ export type RootStackParamList = {
 }
 
 export type MainStackParamList = {
-  Entry: undefined
   TermsScreen: StackPayload
   PasswordCreationScreen: StackPayload
   SeedPhraseScreen: StackPayload

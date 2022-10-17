@@ -4,6 +4,7 @@ import {
   StyleProp,
   ActivityIndicator,
   ViewStyle,
+  TextStyle,
 } from 'react-native'
 import {
   ColorProps,
@@ -38,12 +39,14 @@ const BaseButton = createRestyleComponent<
 
 type Props = React.ComponentProps<typeof BaseButton> &
   ColorProps<Theme> & {
-    label: string | { tx: TxKeyPath }
+    label?: string | { tx: TxKeyPath }
     txOptions?: i18n.TranslateOptions
     style?: StyleProp<ViewStyle>
+    textStyle?: StyleProp<TextStyle>
     icon?: boolean
     isLoading?: boolean
     buttonSize?: 'full' | 'half'
+    customView?: React.ReactElement
   }
 
 export const Pressable: FC<Props> = (props) => {
@@ -51,11 +54,13 @@ export const Pressable: FC<Props> = (props) => {
     variant = 'solid',
     buttonSize = 'full',
     icon = false,
-    label,
+    label = '',
     disabled,
     txOptions,
     style: styles,
+    textStyle: overrideTextStyle,
     isLoading = false,
+    customView: CV,
     ...rest
   } = props
   const langSelected = useRecoilValue(LS)
@@ -91,22 +96,28 @@ export const Pressable: FC<Props> = (props) => {
       {isLoading ? (
         <ActivityIndicator color={theme.colors.spinner} />
       ) : icon ? (
-        <Box
-          alignItems={'center'}
-          flexDirection={'row'}
-          width="100%"
-          height={'100%'}
-          paddingHorizontal="xl"
-          justifyContent="space-between">
-          <Text variant={currentVariant} style={textStyle}>
+        CV || (
+          <Box
+            alignItems={'center'}
+            flexDirection={'row'}
+            width="100%"
+            height={'100%'}
+            paddingHorizontal="xl"
+            justifyContent="space-between">
+            <Text
+              variant={currentVariant}
+              style={[textStyle, overrideTextStyle]}>
+              {content}
+            </Text>
+            <ArrowLeft stroke={disabled ? faceliftPalette.grey : ''} />
+          </Box>
+        )
+      ) : (
+        CV || (
+          <Text variant={currentVariant} style={[textStyle, overrideTextStyle]}>
             {content}
           </Text>
-          <ArrowLeft stroke={disabled ? faceliftPalette.grey : ''} />
-        </Box>
-      ) : (
-        <Text variant={currentVariant} style={textStyle}>
-          {content}
-        </Text>
+        )
       )}
     </BaseButton>
   )

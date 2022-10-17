@@ -129,6 +129,8 @@ import CopySuccessTick from '../assets/icons/copySuccessTick.svg'
 import AllChainIndicator from '../assets/icons/allChainIndicator.svg'
 import GasDarkRect from '../assets/icons/gasDarkRectangle.svg'
 import GasLightRect from '../assets/icons/gasLightRectangle.svg'
+import RectangleDark from '../assets/icons/rectangleDark.svg'
+import RectangleLight from '../assets/icons/rectangleLight.svg'
 
 export default {
   PendingSwap,
@@ -260,4 +262,6 @@ export default {
   AllChainIndicator,
   GasDarkRect,
   GasLightRect,
+  RectangleDark,
+  RectangleLight,
 }
