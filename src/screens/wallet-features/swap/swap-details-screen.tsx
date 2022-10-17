@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ScrollView, useColorScheme } from 'react-native'
-import { Box, Text } from '../../../theme'
+import { Box, faceliftPalette, Text } from '../../../theme'
 import { MainStackParamList } from '../../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { scale } from 'react-native-size-matters'
@@ -12,11 +12,15 @@ import { ChainId } from '@chainify/types'
 import { SCREEN_WIDTH } from '../../../utils'
 import SwapRow from './swap-row'
 import SwapThreeRow from './swap-three-row'
+import TransactionTimeline from './transaction-timeline'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+
 const {
   SwapDarkRect,
   SwapLightRect,
   SwapIconGrey,
   SwapIconRed,
+  CopyIcon,
   SwapRetry,
   SwapSuccess,
   SwapTknIcon,
@@ -194,6 +198,60 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
               $ 0.02
             </Text>
           </Box>
+        </Box>
+        <Box marginTop={'xl'}>
+          <TransactionTimeline
+            startDate="4/27/2022, 6:51pm"
+            completed="4/27/2022, 7:51pm"
+            customComponent={[
+              {
+                customView: (
+                  <Box marginLeft={'xl'}>
+                    <TouchableOpacity activeOpacity={0.7}>
+                      <Box flexDirection={'row'}>
+                        <Text
+                          marginRight={'m'}
+                          variant={'transLink'}
+                          color="link">
+                          BTC Approved
+                        </Text>
+                        <CopyIcon stroke={faceliftPalette.linkTextColor} />
+                      </Box>
+                    </TouchableOpacity>
+                    <Text variant={'subListText'} color="darkGrey">
+                      Fee: 0.007446 MATIC / ~ $0.01
+                    </Text>
+                    <Text variant={'subListText'} color="darkGrey">
+                      {'Confirmation {00}'}
+                    </Text>
+                  </Box>
+                ),
+              },
+              {
+                customView: (
+                  <Box marginLeft={'xl'}>
+                    <TouchableOpacity activeOpacity={0.7}>
+                      <Box flexDirection={'row'}>
+                        <Text
+                          marginRight={'m'}
+                          variant={'transLink'}
+                          color="link">
+                          Swap BTC for ETH
+                        </Text>
+                        <CopyIcon stroke={faceliftPalette.linkTextColor} />
+                      </Box>
+                    </TouchableOpacity>
+                    <Text variant={'subListText'} color="darkGrey">
+                      Fee: 0.007446 MATIC / ~ $0.01
+                    </Text>
+                    <Text variant={'subListText'} color="darkGrey">
+                      {'Confirmation {00}'}
+                    </Text>
+                  </Box>
+                ),
+              },
+            ]}
+          />
         </Box>
       </ScrollView>
     </Box>

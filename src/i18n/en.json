@@ -455,5 +455,6 @@
   "hmm": "Hmm.",
   "cantFndTkn": "Can’t find this token",
   "notFound": "Not found",
-  "swapDetails": "SWAP DETAILS"
+  "swapDetails": "SWAP DETAILS",
+  "transaction": "TRANSACTION"
 }

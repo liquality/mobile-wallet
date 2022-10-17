@@ -54,6 +54,7 @@ export const theme = createTheme({
     greyBlack: faceliftPalette.greyBlack,
     yellow: faceliftPalette.yellow,
     darkPink: palette.darkPink,
+    transGrey: faceliftPalette.transGrey,
   },
   spacing: {
     vs: scale(2),
@@ -201,6 +202,11 @@ export const theme = createTheme({
       fontSize: scale(13),
       color: 'link',
     },
+    transLink: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: scale(14),
+    },
     boldLink: {
       fontFamily: Fonts.Regular,
       fontWeight: '600',
@@ -322,6 +328,11 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(22),
       fontWeight: '400',
+    },
+    h5: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(16),
+      fontWeight: '500',
     },
     h6: {
       fontFamily: Fonts.Regular,
@@ -649,6 +660,7 @@ export const theme = createTheme({
 })
 
 export type ThemeType = typeof theme
+export type ColorType = typeof theme.colors
 
 export const darkTheme: ThemeType = {
   ...theme,
