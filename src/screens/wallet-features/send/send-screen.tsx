@@ -128,8 +128,8 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     activeNetwork,
     balance,
     code,
-    route.params.customFee,
-    route.params.speed,
+    route?.params?.customFee,
+    route?.params?.speed,
     setNetworkSpeed,
   ])
 
@@ -554,7 +554,15 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             </Text>
           </Pressable>
           {showFeeEditorModal && (
-            <FeeEditorScreen onClose={setShowFeeEditorModal} />
+            <FeeEditorScreen
+              onClose={setShowFeeEditorModal}
+              selectedAsset={code}
+              amount={new BigNumber(amountInput.value)}
+              applyFee={(fee) => {
+                setCustomFee(fee.toNumber)
+                setShowFeeEditorModal(false)
+              }}
+            />
           )}
           {!!error && <Text variant="error">{error}</Text>}
         </Box>
