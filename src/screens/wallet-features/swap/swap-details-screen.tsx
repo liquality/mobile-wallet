@@ -31,6 +31,9 @@ import ProgressCircle from '../../../components/animations/progress-circle'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
+import { TimelineStep } from '@liquality/wallet-core/dist/src/utils/timeline'
+import { getTimeline } from '../../../store/store'
+import { SwapHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 
 const {
   SwapDarkRect,
@@ -59,10 +62,20 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   const toAsset = route.params.toAssetData
   const fiatRates = useRecoilValue(fiatRatesState)
 
-  const historyItem = useRecoilValue(historyStateFamily(transaction!.id!))
+  const historyItem = useRecoilValue(
+    historyStateFamily(transaction!.id!),
+  ) as SwapHistoryItem
   const activeNetwork = useRecoilValue(networkState)
   const historyStatus = historyItem ? historyItem.status : ''
   const endTime = historyItem ? historyItem.endTime : 0
+  const [timeline, setTimeline] = React.useState<TimelineStep[]>()
+
+  React.useEffect(() => {
+    if (!historyItem) {
+      return
+    }
+    getTimeline(historyItem).then(setTimeline)
+  }, [historyItem])
 
   const [isExpanded, setIsExpanded] = React.useState(false)
   // const [isSecretRevealed, setIsSecretRevealed] = useState(false)
@@ -349,7 +362,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
             />
           </Box>
         </Box>
-        {historyItem ? (
+        {historyItem && timeline?.length ? (
           <Box marginTop={'xl'}>
             <TransactionTimeline
               startDate={formatDate(startTime)}
@@ -367,29 +380,6 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
                             variant={'transLink'}
                             color="link">
                             BTC Approved
-                          </Text>
-                          <CopyIcon stroke={faceliftPalette.linkTextColor} />
-                        </Box>
-                      </TouchableOpacity>
-                      <Text variant={'subListText'} color="darkGrey">
-                        Fee: 0.007446 MATIC / ~ $0.01
-                      </Text>
-                      <Text variant={'subListText'} color="darkGrey">
-                        {'Confirmation {00}'}
-                      </Text>
-                    </Box>
-                  ),
-                },
-                {
-                  customView: (
-                    <Box marginLeft={'xl'}>
-                      <TouchableOpacity activeOpacity={0.7}>
-                        <Box flexDirection={'row'}>
-                          <Text
-                            marginRight={'m'}
-                            variant={'transLink'}
-                            color="link">
-                            Swap BTC for ETH
                           </Text>
                           <CopyIcon stroke={faceliftPalette.linkTextColor} />
                         </Box>
