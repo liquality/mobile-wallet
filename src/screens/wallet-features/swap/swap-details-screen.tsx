@@ -41,11 +41,21 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
   const toChain = 'ethereum' as ChainId
 
   const [showDetails, setShowDetails] = React.useState(false)
+  const scrollRef = React.useRef<ScrollView>(null)
 
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
   if (theme) {
     currentTheme = theme
+  }
+
+  const onTogglePress = () => {
+    setShowDetails((prev) => {
+      return !prev
+    })
+    setTimeout(() => {
+      scrollRef.current?.scrollToEnd()
+    }, 0)
   }
 
   const LowerBgSvg = currentTheme === 'light' ? SwapDarkRect : SwapLightRect
@@ -63,7 +73,8 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
       paddingHorizontal="screenPadding">
       <ScrollView
         contentContainerStyle={{ paddingBottom: scale(30) }}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        ref={scrollRef}>
         <Box alignItems={'center'} marginTop="m">
           <Box
             width={svgCardWidth}
@@ -285,8 +296,8 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
             style={{
               width: scale(100),
               height: scale(30),
-              paddingHorizontal: scale(10),
             }}
+            buttonSize="half"
             variant={'defaultOutline'}
             onPress={() => {}}
           />
@@ -304,9 +315,7 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
             color="greyBlack"
             tx="swapConfirmationScreen.advanced"
           />
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => setShowDetails((prev) => !prev)}>
+          <TouchableOpacity activeOpacity={0.7} onPress={onTogglePress}>
             <DynamicIcon width={scale(15)} height={scale(15)} />
           </TouchableOpacity>
         </Box>
