@@ -80,7 +80,6 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   }, [historyItem])
 
   const [isExpanded, setIsExpanded] = React.useState(false)
-  // const [isSecretRevealed, setIsSecretRevealed] = useState(false)
   const [swapProvider, setSwapProvider] = React.useState<SwapProvider>()
 
   const { from, to, fromAmount, toAmount, startTime, network, provider } =
