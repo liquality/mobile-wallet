@@ -20,6 +20,7 @@ import DetailsDrawerExpanded from '../../../components/NFT/details-drawer-expand
 import StarAndThreeDots from '../../../components/NFT/star-and-three-dots'
 import { checkIfCollectionNameExists, checkImgUrlExists } from '../../../utils'
 import { toggleNFTStarred } from '../../../store/store'
+import { scale } from 'react-native-size-matters'
 
 type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -84,9 +85,9 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
           />
         </Box>
         <BottomDrawer
-          containerHeight={641}
-          downDisplay={600}
-          offset={130}
+          containerHeight={scale(621)}
+          downDisplay={scale(570)}
+          offset={scale(130)}
           startUp={false}
           roundedEdges={false}
           backgroundColor={'rgba(255, 255, 255, 0.77)'}
