@@ -17,7 +17,7 @@ import { Box, faceliftPalette, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/core'
 
-const { Star, BlackStar, ThreeDots, ModalClose, Send, Sell, Share } = AppIcons
+const { PurpleThreeDots, ThreeDots, ModalClose, Send, Sell, Share } = AppIcons
 
 type StarAndThreeDots = {
   activeWalletId: string
@@ -28,7 +28,6 @@ type StarAndThreeDots = {
 const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
   const { accountIdsToSendIn, activeWalletId, nftItem } = props
   const activeNetwork = useRecoilValue(networkState)
-  const [, setShowStarred] = useState(false)
   const [showPopUp, setShowPopUp] = useState(false)
   const accountInfo = useRecoilValue(accountInfoStateFamily(nftItem.accountId))
 
@@ -43,10 +42,10 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
     currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
 
   const lowerBgImg =
-    currentTheme === 'light' ? Images.rectangleDark : Images.rectangleLight
+    currentTheme === 'light' ? Images.contextMenuDark : Images.contextMenuLight
 
   const uppperBgImg =
-    currentTheme === 'dark' ? Images.rectangleDark : Images.rectangleLight
+    currentTheme === 'dark' ? Images.contextMenuDark : Images.contextMenuLight
 
   const navigateToSendNftScreen = useCallback(() => {
     setShowPopUp(false)
@@ -112,8 +111,8 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
               </ImageBackground>
             </ImageBackground>
             <TouchableWithoutFeedback onPress={() => setShowPopUp(false)}>
-              <Box position={'absolute'} right={scale(-5)} top={scale(-10)}>
-                <ModalClose />
+              <Box position={'absolute'} right={scale(10)} top={scale(-10)}>
+                <PurpleThreeDots />
               </Box>
             </TouchableWithoutFeedback>
           </Box>
@@ -122,30 +121,8 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
     )
   }
 
-  const toggleStarred = useCallback(async () => {
-    nftItem.starred = !nftItem.starred
-    setShowStarred(!nftItem.starred)
-    const payload = {
-      network: activeNetwork,
-      walletId: activeWalletId,
-      accountId: nftItem.accountId,
-      nft: nftItem,
-    }
-    await toggleNFTStarred(payload)
-  }, [activeNetwork, activeWalletId, nftItem])
   return (
     <>
-      <Pressable
-        onPress={() => {
-          toggleStarred()
-        }}>
-        {nftItem.starred ? (
-          <BlackStar width={22} height={22} />
-        ) : (
-          <Star width={22} height={22} />
-        )}
-      </Pressable>
-
       <Pressable
         onPress={() => {
           setShowPopUp(true)

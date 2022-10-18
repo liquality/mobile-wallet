@@ -1,13 +1,14 @@
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   StyleSheet,
   Image,
   Dimensions,
   ScrollView,
   TouchableOpacity,
+  Pressable,
 } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
@@ -18,13 +19,14 @@ import { Fonts, AppIcons } from '../../../assets'
 import DetailsDrawerExpanded from '../../../components/NFT/details-drawer-expanded'
 import StarAndThreeDots from '../../../components/NFT/star-and-three-dots'
 import { checkIfCollectionNameExists, checkImgUrlExists } from '../../../utils'
+import { toggleNFTStarred } from '../../../store/store'
 
 type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'NftDetailScreen'
 >
 
-const { ShortLine } = AppIcons
+const { ShortLine, BlackStar, Star } = AppIcons
 
 const wallet = setupWallet({
   ...defaultOptions,
@@ -36,6 +38,7 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
   const [imgError] = useState<string[]>([])
   const [showExpanded, setShowExpanded] = useState<boolean>(false)
   const [showOverview, setShowOverview] = useState<boolean>(true)
+  const [, setShowStarred] = useState(false)
 
   const { activeWalletId } = wallet.state
 
@@ -51,9 +54,24 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
       </Text>
     )
   }
-
+  const toggleStarred = useCallback(async () => {
+    nftItem.starred = !nftItem.starred
+    setShowStarred(!nftItem.starred)
+    const payload = {
+      network: activeNetwork,
+      walletId: activeWalletId,
+      accountId: nftItem.accountId,
+      nft: nftItem,
+    }
+    await toggleNFTStarred(payload)
+  }, [activeNetwork, activeWalletId, nftItem])
   return (
     <Box flex={1} style={styles.overviewBlock}>
+      <StarAndThreeDots
+        accountIdsToSendIn={accountIdsToSendIn}
+        activeWalletId={activeWalletId}
+        nftItem={nftItem}
+      />
       <Box
         style={styles.headerContainer}
         justifyContent={'center'}
@@ -84,11 +102,16 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
                 <Text style={[styles.descriptionTitle, styles.flex]}>
                   {!showExpanded ? renderDrawerCollapsed() : null}
                 </Text>
-                <StarAndThreeDots
-                  accountIdsToSendIn={accountIdsToSendIn}
-                  activeWalletId={activeWalletId}
-                  nftItem={nftItem}
-                />
+                <Pressable
+                  onPress={() => {
+                    toggleStarred()
+                  }}>
+                  {nftItem.starred ? (
+                    <BlackStar width={22} height={22} />
+                  ) : (
+                    <Star width={22} height={22} />
+                  )}
+                </Pressable>
               </Box>
               {showExpanded ? (
                 <DetailsDrawerExpanded
