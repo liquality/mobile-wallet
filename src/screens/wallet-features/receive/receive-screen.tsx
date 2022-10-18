@@ -198,6 +198,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
                     variant={'h6'}
                     color="white"
                     tx="receiveScreen.copyAdd"
+                    style={{ marginTop: scale(5) }}
                   />
                 </Box>
               }
