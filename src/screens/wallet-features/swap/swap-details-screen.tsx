@@ -10,7 +10,7 @@ import { themeMode } from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
 import { ChainId } from '@chainify/types'
 import { labelTranslateFn, SCREEN_WIDTH } from '../../../utils'
-import SwapRow from './swap-row'
+import SwapPartitionRow from './swap-partition-row'
 import SwapThreeRow from './swap-three-row'
 import TransactionTimeline from './transaction-timeline'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -106,24 +106,22 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
           </Box>
         </Box>
         <Box marginTop={'xxl'}>
-          <Text variant={'listText'} color="greyMeta">
-            Status
-          </Text>
-          <Box
-            flexDirection={'row'}
-            justifyContent="space-between"
-            alignItems={'center'}>
+          <Text variant={'listText'} color="greyMeta" tx="status" />
+          <Box flexDirection={'row'} justifyContent="space-between">
             <Box flex={0.65}>
               <Text
-                variant={'termsBody'}
+                variant={'swapSubTitle'}
                 color={success ? 'greyBlack' : 'danger'}>
-                {success ? 'Completed' : 'Failed - refunded'}
+                {
+                  labelTranslateFn(
+                    success ? 'common.completed' : 'failedRefunded',
+                  )!
+                }
               </Text>
             </Box>
             <Box
               flex={0.35}
               flexDirection={'row'}
-              alignItems="center"
               justifyContent="space-between">
               <Text variant={'h6'} color="link">
                 {success ? 'Link' : 'Retry'}
@@ -133,19 +131,33 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
                 height={scale(15)}
                 backgroundColor="inactiveText"
               />
-              {success ? <SwapSuccess /> : <SwapRetry />}
+              <Box style={{ marginTop: -scale(5) }}>
+                {success ? (
+                  <SwapSuccess width={20} />
+                ) : (
+                  <SwapRetry width={20} />
+                )}
+              </Box>
             </Box>
           </Box>
         </Box>
         <Box marginTop={'xl'}>
-          <SwapRow title="Initiated" subTitle="4/27/2022, 6:51pm" />
+          <SwapPartitionRow
+            title={labelTranslateFn('initiated')!}
+            showParitionLine={false}
+            subTitle="4/27/2022, 6:51pm"
+          />
         </Box>
         <Box marginTop={'xl'}>
-          <SwapRow title="Completed" subTitle="4/27/2022, 7:51pm" />
+          <SwapPartitionRow
+            title={labelTranslateFn('common.completed')!}
+            subTitle="4/27/2022, 7:51pm"
+            showParitionLine={false}
+          />
         </Box>
         <Box marginTop={'xl'}>
           <SwapThreeRow
-            title="Sent"
+            title={labelTranslateFn('sendTranDetailComp.sent')!}
             subTitle="0.67281, BTC"
             today="$104.59 today"
             then="$112.12 then"
@@ -153,39 +165,30 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
         </Box>
         <Box marginTop={'xl'}>
           <SwapThreeRow
-            title="Received"
+            title={labelTranslateFn('swapConfirmationScreen.received')!}
             subTitle="0.67281, ETH"
             today="$104.59 today"
             then="$112.12 then"
           />
         </Box>
         <Box marginTop={'xl'}>
-          <Text variant={'listText'} color="greyMeta">
-            Rate
-          </Text>
-          <Box flexDirection={'row'}>
-            <Text variant={'swapSubTitle'} color={'darkGrey'}>
-              1 BTC = 19.2939 ETH
-            </Text>
-            <Box
-              alignSelf={'flex-start'}
-              width={1}
-              marginHorizontal="m"
-              height={scale(15)}
-              backgroundColor="inactiveText"
-            />
-            <Box marginRight="s" style={{ marginTop: -scale(2) }}>
-              <SwapTknIcon width={20} />
-            </Box>
-            <Text marginLeft={'s'} variant={'swapSubTitle'} color={'darkGrey'}>
-              1 inch
-            </Text>
-          </Box>
+          <SwapPartitionRow
+            title={labelTranslateFn('swapConfirmationScreen.rate')!}
+            subTitle="1 inch"
+            leftSubTitle="1 BTC = 19.2939 ETH"
+            customView={
+              <Box marginRight="s" style={{ marginTop: -scale(2) }}>
+                <SwapTknIcon width={20} />
+              </Box>
+            }
+          />
         </Box>
         <Box marginTop={'xl'}>
-          <Text variant={'listText'} color="greyMeta">
-            Network Speed/Fee
-          </Text>
+          <Text
+            variant={'listText'}
+            color="greyMeta"
+            tx="common.networkSpeed"
+          />
           <Box
             flexDirection={'row'}
             justifyContent="space-between"
@@ -281,7 +284,7 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
             label={{ tx: 'optionTbd' }}
             style={{
               width: scale(100),
-              height: scale(40),
+              height: scale(30),
               paddingHorizontal: scale(10),
             }}
             variant={'defaultOutline'}
@@ -307,6 +310,60 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
             <DynamicIcon width={scale(15)} height={scale(15)} />
           </TouchableOpacity>
         </Box>
+        {showDetails ? (
+          <>
+            <Box marginTop={'xl'}>
+              <SwapPartitionRow
+                title={labelTranslateFn('swapConfirmationScreen.startedAt')!}
+                leftSubTitle="Thu April 27, 2020"
+                subTitle="06:51:33 GMT-0400 (EST)"
+              />
+            </Box>
+            <Box marginTop={'xl'}>
+              <SwapPartitionRow
+                title={labelTranslateFn('swapConfirmationScreen.finishedAt')!}
+                leftSubTitle="Thu April 27, 2020"
+                subTitle="06:51:33 GMT-0400 (EST)"
+              />
+            </Box>
+            <Box marginTop={'xl'}>
+              <SwapPartitionRow
+                title={labelTranslateFn('swapConfirmationScreen.rate')!}
+                subTitle="1 inch"
+                leftSubTitle="1 BTC = 19.2939 ETH"
+                customView={
+                  <Box marginRight="s" style={{ marginTop: -scale(2) }}>
+                    <SwapTknIcon width={20} />
+                  </Box>
+                }
+              />
+            </Box>
+            <Box marginTop={'xl'}>
+              <SwapPartitionRow
+                title={labelTranslateFn('swapConfirmationScreen.buy')!}
+                showParitionLine={false}
+                subTitle="130.42222 ETH"
+              />
+            </Box>
+            <Box marginTop={'xl'}>
+              <SwapPartitionRow
+                title={labelTranslateFn('swapConfirmationScreen.sell')!}
+                showParitionLine={false}
+                subTitle="0.34212 BTC"
+              />
+            </Box>
+            <Box
+              paddingVertical={'xl'}
+              borderBottomWidth={scale(1)}
+              borderBottomColor="mediumGrey">
+              <SwapPartitionRow
+                title={labelTranslateFn('swapConfirmationScreen.yourTrans')!}
+                showParitionLine={false}
+                subTitle="999af94e46d9154680bb6ea839549598cd306e863a59192161e536b4e43281b5"
+              />
+            </Box>
+          </>
+        ) : null}
       </ScrollView>
     </Box>
   )

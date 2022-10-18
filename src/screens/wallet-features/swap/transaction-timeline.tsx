@@ -35,7 +35,7 @@ const TransactionTimeline = ({
           label={transBtnLabel}
           variant="defaultOutline"
           buttonSize="half"
-          style={{ width: scale(60) }}
+          style={{ width: scale(60), height: scale(30) }}
           onPress={tranBtnPress}
         />
       </Box>
