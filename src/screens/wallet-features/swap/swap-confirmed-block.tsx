@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Linking, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import { Box, faceliftPalette, Text, showCopyToast } from '../../../theme'
 import {
   dpUI,
@@ -9,6 +9,7 @@ import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { AppIcons } from '../../../assets'
 import { labelTranslateFn } from '../../../utils'
+import { FiatRates } from '@liquality/wallet-core/dist/src/store/types'
 
 const { CopyIcon } = AppIcons
 
@@ -18,8 +19,7 @@ type SwapConfirmedBlockProps = {
   fee?: number
   confirmations: number
   asset: string
-  fiatRates: any['fiatRates']
-  url: string
+  fiatRates: FiatRates
   fiatRate: number
   txHash?: string
 }
@@ -28,10 +28,9 @@ const SwapConfirmedBlock = ({
   status,
   txHash,
   fiatRates,
-  fiatRate,
   fee,
   asset,
-  url,
+  fiatRate,
   address,
   confirmations,
 }: SwapConfirmedBlockProps) => {
@@ -40,12 +39,6 @@ const SwapConfirmedBlock = ({
       showCopyToast('copyToast', labelTranslateFn('receiveScreen.copied')!)
       Clipboard.setString(address)
     }
-  }
-
-  const handleLinkPress = () => {
-    Linking.canOpenURL(url).then((canOpen) => {
-      if (canOpen) Linking.openURL(url)
-    })
   }
 
   const formatFeeAmountAndFiat = () => {
@@ -60,16 +53,14 @@ const SwapConfirmedBlock = ({
 
   return (
     <Box marginLeft={'xl'}>
-      <Box flexDirection={'row'}>
-        <TouchableOpacity activeOpacity={0.7} onPress={handleLinkPress}>
+      <TouchableOpacity activeOpacity={0.7} onPress={handleCopyAddressPress}>
+        <Box flexDirection={'row'}>
           <Text marginRight={'m'} variant={'transLink'} color="link">
             {status}
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.7} onPress={handleCopyAddressPress}>
           <CopyIcon stroke={faceliftPalette.linkTextColor} />
-        </TouchableOpacity>
-      </Box>
+        </Box>
+      </TouchableOpacity>
       {txHash ? (
         <>
           <Box flexDirection={'row'}>

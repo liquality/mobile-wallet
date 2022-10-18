@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ScrollView, useColorScheme } from 'react-native'
-import { Box, faceliftPalette, Pressable, Text } from '../../../theme'
+import { Box, Pressable, Text } from '../../../theme'
 import { MainStackParamList } from '../../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { scale } from 'react-native-size-matters'
@@ -34,13 +34,15 @@ import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { TimelineStep } from '@liquality/wallet-core/dist/src/utils/timeline'
 import { getTimeline } from '../../../store/store'
 import { SwapHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
+import { CustomComponentProps } from './transaction-timeline'
+import { TxStatus } from '@chainify/types'
+import SwapConfirmedBlock from './swap-confirmed-block'
 
 const {
   SwapDarkRect,
   SwapLightRect,
   SwapIconGrey,
   SwapIconRed,
-  CopyIcon,
   SwapRetry,
   ChevronUp,
   ChevronDown,
@@ -137,6 +139,51 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   const SwapIcon = success ? SwapIconGrey : SwapIconRed
 
   const DynamicIcon = isExpanded ? ChevronUp : ChevronDown
+
+  const customComponent: Array<CustomComponentProps> = []
+
+  if (timeline?.length) {
+    let isFromIdAdded = false
+    for (let item of timeline) {
+      if (item.tx?.status === TxStatus.Failed) {
+        customComponent.push({
+          dotColor: 'danger',
+          customView: (
+            <Box marginLeft={'xl'}>
+              <Text marginRight={'m'} variant={'transLink'} color="danger">
+                {item.title}
+              </Text>
+              <Text variant={'subListText'} color="danger">
+                {`${item.tx.from} for ${item.tx.to}`}
+              </Text>
+            </Box>
+          ),
+        })
+      } else {
+        customComponent.push({
+          customView: (
+            <SwapConfirmedBlock
+              address={
+                isFromIdAdded
+                  ? historyItem.toAccountId
+                  : historyItem.fromAccountId
+              }
+              status={item.title}
+              confirmations={item.tx?.confirmations || 0}
+              fee={item.tx?.fee}
+              asset={historyItem.from}
+              fiatRates={fiatRates}
+              txHash={historyItem.id}
+              fiatRate={
+                isFromIdAdded ? fiatRates?.[to] || 0 : fiatRates?.[from] || 0
+              }
+            />
+          ),
+        })
+        isFromIdAdded = true
+      }
+    }
+  }
 
   return (
     <Box
@@ -369,31 +416,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
               completed={endTime ? formatDate(endTime) : ''}
               transBtnLabel={labelTranslateFn('swapConfirmationScreen.retry')!}
               tranBtnPress={() => {}}
-              customComponent={[
-                {
-                  customView: (
-                    <Box marginLeft={'xl'}>
-                      <TouchableOpacity activeOpacity={0.7}>
-                        <Box flexDirection={'row'}>
-                          <Text
-                            marginRight={'m'}
-                            variant={'transLink'}
-                            color="link">
-                            BTC Approved
-                          </Text>
-                          <CopyIcon stroke={faceliftPalette.linkTextColor} />
-                        </Box>
-                      </TouchableOpacity>
-                      <Text variant={'subListText'} color="darkGrey">
-                        Fee: 0.007446 MATIC / ~ $0.01
-                      </Text>
-                      <Text variant={'subListText'} color="darkGrey">
-                        {'Confirmation {00}'}
-                      </Text>
-                    </Box>
-                  ),
-                },
-              ]}
+              customComponent={customComponent}
             />
           </Box>
         ) : null}

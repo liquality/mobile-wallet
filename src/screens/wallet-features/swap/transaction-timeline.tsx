@@ -4,7 +4,7 @@ import { scale, ScaledSheet } from 'react-native-size-matters'
 import { labelTranslateFn } from '../../../utils'
 const dotAndCircleWidth = scale(14)
 
-type CustomComponentProps = {
+export type CustomComponentProps = {
   dotColor?: keyof ColorType
   customView: React.ReactElement
 }
