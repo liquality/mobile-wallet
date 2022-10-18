@@ -113,6 +113,8 @@ export type StackPayload = {
   swapAssetPair?: SwapAssetPairType
   swapTransaction?: SwapInfoType
   swapTransactionConfirmation?: SwapHistoryItem
+  fromAssetData?: AccountType
+  toAssetData?: AccountType
   action?: ActionEnum
   selectedAssetCodes?: string[]
   onSelectAssetCodes?: (selectedAssetCodes: string[]) => void

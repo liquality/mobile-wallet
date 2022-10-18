@@ -88,10 +88,8 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           addTransaction(transaction.id, transaction)
           navigation.navigate('SwapConfirmationScreen', {
             swapTransactionConfirmation: transaction,
-            screenTitle: I18n.t('swapReviewScreen.swapDetails', {
-              fromCode: fromAsset.code,
-              toCode: toAsset.code,
-            }),
+            fromAssetData: fromAsset,
+            toAssetData: toAsset,
           })
         } else {
           setIsLoading(false)

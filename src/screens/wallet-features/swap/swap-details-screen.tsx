@@ -6,14 +6,31 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { scale } from 'react-native-size-matters'
 import { AppIcons } from '../../../assets'
 import { useRecoilValue } from 'recoil'
-import { themeMode } from '../../../atoms'
+import {
+  fiatRatesState,
+  historyStateFamily,
+  networkState,
+  themeMode,
+} from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
-import { ChainId } from '@chainify/types'
-import { labelTranslateFn, SCREEN_WIDTH } from '../../../utils'
+import { retrySwap } from '../../../store/store'
+import { BigNumber } from '@liquality/types'
+import { formatDate, labelTranslateFn, SCREEN_WIDTH } from '../../../utils'
 import SwapPartitionRow from './swap-partition-row'
 import SwapThreeRow from './swap-three-row'
 import TransactionTimeline from './transaction-timeline'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { SwapProvider } from '@liquality/wallet-core/dist/src/swaps/SwapProvider'
+import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
+import {
+  dpUI,
+  prettyBalance,
+  prettyFiatBalance,
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import ProgressCircle from '../../../components/animations/progress-circle'
+import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
+import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
+import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 
 const {
   SwapDarkRect,
@@ -36,11 +53,24 @@ type SwapDetailsScreenProps = NativeStackScreenProps<
   'SwapDetailsScreen'
 >
 
-const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
-  const fromChain = 'bitcoin' as ChainId
-  const toChain = 'ethereum' as ChainId
+const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
+  const transaction = route.params.swapTransactionConfirmation!
+  const fromAsset = route.params.fromAssetData
+  const toAsset = route.params.toAssetData
+  const fiatRates = useRecoilValue(fiatRatesState)
 
-  const [showDetails, setShowDetails] = React.useState(false)
+  const historyItem = useRecoilValue(historyStateFamily(transaction!.id!))
+  const activeNetwork = useRecoilValue(networkState)
+  const historyStatus = historyItem ? historyItem.status : ''
+  const endTime = historyItem ? historyItem.endTime : 0
+
+  const [isExpanded, setIsExpanded] = React.useState(false)
+  // const [isSecretRevealed, setIsSecretRevealed] = useState(false)
+  const [swapProvider, setSwapProvider] = React.useState<SwapProvider>()
+
+  const { from, to, fromAmount, toAmount, startTime, network, provider } =
+    transaction
+
   const scrollRef = React.useRef<ScrollView>(null)
 
   const theme = useRecoilValue(themeMode)
@@ -50,12 +80,41 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
   }
 
   const onTogglePress = () => {
-    setShowDetails((prev) => {
+    setIsExpanded((prev) => {
       return !prev
     })
     setTimeout(() => {
       scrollRef.current?.scrollToEnd()
     }, 0)
+  }
+
+  const handleSpeedUpTransaction = () => {
+    navigation.navigate('CustomFeeScreen', {
+      assetData: route.params.fromAssetData,
+      screenTitle: labelTranslateFn('swapConfirmationScreen.networkSpeed')!,
+    })
+  }
+
+  const handleRetrySwapPress = async () => {
+    if (transaction) await retrySwap(transaction)
+  }
+
+  const computeRate = React.useCallback((swapQuote: SwapQuote) => {
+    return dpUI(calculateQuoteRate(swapQuote))
+  }, [])
+
+  React.useEffect(() => {
+    if (network && provider) {
+      setSwapProvider(getSwapProvider(network, provider))
+    }
+  }, [network, provider])
+
+  if (!historyItem || !swapProvider) {
+    return (
+      <Box backgroundColor={'mainBackground'} paddingVertical="l">
+        <Text tx="common.load" />
+      </Box>
+    )
   }
 
   const LowerBgSvg = currentTheme === 'light' ? SwapDarkRect : SwapLightRect
@@ -64,7 +123,7 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
   const success = true
   const SwapIcon = success ? SwapIconGrey : SwapIconRed
 
-  const DynamicIcon = showDetails ? ChevronUp : ChevronDown
+  const DynamicIcon = isExpanded ? ChevronUp : ChevronDown
 
   return (
     <Box
@@ -85,24 +144,28 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
               flexDirection={'row'}
               width={scale(240)}
               justifyContent="space-evenly">
-              <Box alignItems={'center'}>
-                <AssetIcon chain={fromChain} size={scale(41)} />
-                <Text marginTop={'m'} color="textColor" variant={'iconLabel'}>
-                  BTC
-                </Text>
-              </Box>
+              {fromAsset ? (
+                <Box alignItems={'center'}>
+                  <AssetIcon chain={fromAsset.chain} size={scale(41)} />
+                  <Text marginTop={'m'} color="textColor" variant={'iconLabel'}>
+                    {fromAsset.code}
+                  </Text>
+                </Box>
+              ) : null}
               <Box
                 height={scale(65)}
                 alignItems="center"
                 justifyContent={'center'}>
                 <SwapIcon />
               </Box>
-              <Box alignItems={'center'}>
-                <AssetIcon chain={toChain} size={scale(41)} />
-                <Text marginTop={'m'} color="textColor" variant={'iconLabel'}>
-                  ETH
-                </Text>
-              </Box>
+              {toAsset ? (
+                <Box alignItems={'center'}>
+                  <AssetIcon chain={toAsset.chain} size={scale(41)} />
+                  <Text marginTop={'m'} color="textColor" variant={'iconLabel'}>
+                    {toAsset.code}
+                  </Text>
+                </Box>
+              ) : null}
             </Box>
             <Box position={'absolute'} zIndex={-1}>
               <UppperBgSvg width={svgCardWidth} height={svgCardHeight} />
@@ -123,70 +186,126 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
               <Text
                 variant={'swapSubTitle'}
                 color={success ? 'greyBlack' : 'danger'}>
-                {
-                  labelTranslateFn(
-                    success ? 'common.completed' : 'failedRefunded',
-                  )!
-                }
+                {from &&
+                  to &&
+                  swapProvider?.statuses[historyStatus!].label
+                    .replace('{from}', from)
+                    .replace('{to}', to)}
               </Text>
             </Box>
             <Box
               flex={0.35}
               flexDirection={'row'}
               justifyContent="space-between">
-              <Text variant={'h6'} color="link">
-                {success ? 'Link' : 'Retry'}
-              </Text>
+              {historyStatus === 'SUCCESS' ? (
+                <Text
+                  variant={'h6'}
+                  color="link"
+                  onPress={() => {}}
+                  tx="swapConfirmationScreen.link"
+                />
+              ) : (
+                <Text
+                  variant={'h6'}
+                  color="link"
+                  onPress={handleRetrySwapPress}
+                  tx="swapConfirmationScreen.retry"
+                />
+              )}
               <Box
                 width={1}
                 height={scale(15)}
                 backgroundColor="inactiveText"
               />
               <Box style={{ marginTop: -scale(5) }}>
-                {success ? (
+                {historyStatus === 'SUCCESS' ? (
                   <SwapSuccess width={20} />
-                ) : (
+                ) : historyStatus === 'REFUNDED' ? (
                   <SwapRetry width={20} />
+                ) : (
+                  <ProgressCircle
+                    radius={17}
+                    current={swapProvider?.statuses[historyStatus!].step + 1}
+                    total={swapProvider?.totalSteps}
+                  />
                 )}
               </Box>
             </Box>
           </Box>
         </Box>
-        <Box marginTop={'xl'}>
-          <SwapPartitionRow
-            title={labelTranslateFn('initiated')!}
-            showParitionLine={false}
-            subTitle="4/27/2022, 6:51pm"
-          />
-        </Box>
-        <Box marginTop={'xl'}>
-          <SwapPartitionRow
-            title={labelTranslateFn('common.completed')!}
-            subTitle="4/27/2022, 7:51pm"
-            showParitionLine={false}
-          />
-        </Box>
+        {startTime ? (
+          <Box marginTop={'xl'}>
+            <SwapPartitionRow
+              title={labelTranslateFn('initiated')!}
+              showParitionLine={false}
+              subTitle={formatDate(startTime)}
+            />
+          </Box>
+        ) : null}
+        {endTime ? (
+          <Box marginTop={'xl'}>
+            <SwapPartitionRow
+              title={labelTranslateFn('common.completed')!}
+              subTitle={formatDate(endTime)}
+              showParitionLine={false}
+            />
+          </Box>
+        ) : null}
         <Box marginTop={'xl'}>
           <SwapThreeRow
             title={labelTranslateFn('sendTranDetailComp.sent')!}
-            subTitle="0.67281, BTC"
-            today="$104.59 today"
-            then="$112.12 then"
+            subTitle={
+              fromAmount &&
+              from &&
+              `${unitToCurrency(
+                getAsset(activeNetwork, from),
+                new BigNumber(fromAmount),
+              )} ${from}`
+            }
+            today={
+              fromAmount &&
+              from &&
+              `$${prettyFiatBalance(
+                unitToCurrency(
+                  getAsset(activeNetwork, from),
+                  new BigNumber(fromAmount),
+                ),
+                fiatRates?.[from] || 0,
+              )}`
+            }
+            then="$112.12 then" // temp hardcoded
           />
         </Box>
         <Box marginTop={'xl'}>
           <SwapThreeRow
             title={labelTranslateFn('swapConfirmationScreen.received')!}
-            subTitle="0.67281, ETH"
-            today="$104.59 today"
-            then="$112.12 then"
+            subTitle={
+              to &&
+              toAmount &&
+              `${unitToCurrency(
+                getAsset(activeNetwork, to),
+                new BigNumber(toAmount),
+              )} ${to}`
+            }
+            today={
+              to &&
+              toAmount &&
+              `$${prettyFiatBalance(
+                unitToCurrency(
+                  getAsset(activeNetwork, to),
+                  new BigNumber(toAmount),
+                ),
+                fiatRates?.[to] || 0,
+              )}`
+            }
+            then="$112.12 then" // temp hardcoded
           />
         </Box>
         <Box marginTop={'xl'}>
           <SwapPartitionRow
             title={labelTranslateFn('swapConfirmationScreen.rate')!}
-            subTitle="1 inch"
-            leftSubTitle="1 BTC = 19.2939 ETH"
+            subTitle="1 inch" // temp hardcoded
+            leftSubTitle={`1${from} = ${computeRate(transaction)} ${to}`}
             customView={
               <Box marginRight="s" style={{ marginTop: -scale(2) }}>
                 <SwapTknIcon width={20} />
@@ -222,65 +341,72 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
                 $ 0.02
               </Text>
             </Box>
-            <Text variant={'speedUp'} color={'link'} tx="common.speedUp" />
+            <Text
+              onPress={handleSpeedUpTransaction}
+              variant={'speedUp'}
+              color={'link'}
+              tx="common.speedUp"
+            />
           </Box>
         </Box>
-        <Box marginTop={'xl'}>
-          <TransactionTimeline
-            startDate="4/27/2022, 6:51pm"
-            completed="4/27/2022, 7:51pm"
-            transBtnLabel={labelTranslateFn('swapConfirmationScreen.retry')!}
-            tranBtnPress={() => {}}
-            customComponent={[
-              {
-                customView: (
-                  <Box marginLeft={'xl'}>
-                    <TouchableOpacity activeOpacity={0.7}>
-                      <Box flexDirection={'row'}>
-                        <Text
-                          marginRight={'m'}
-                          variant={'transLink'}
-                          color="link">
-                          BTC Approved
-                        </Text>
-                        <CopyIcon stroke={faceliftPalette.linkTextColor} />
-                      </Box>
-                    </TouchableOpacity>
-                    <Text variant={'subListText'} color="darkGrey">
-                      Fee: 0.007446 MATIC / ~ $0.01
-                    </Text>
-                    <Text variant={'subListText'} color="darkGrey">
-                      {'Confirmation {00}'}
-                    </Text>
-                  </Box>
-                ),
-              },
-              {
-                customView: (
-                  <Box marginLeft={'xl'}>
-                    <TouchableOpacity activeOpacity={0.7}>
-                      <Box flexDirection={'row'}>
-                        <Text
-                          marginRight={'m'}
-                          variant={'transLink'}
-                          color="link">
-                          Swap BTC for ETH
-                        </Text>
-                        <CopyIcon stroke={faceliftPalette.linkTextColor} />
-                      </Box>
-                    </TouchableOpacity>
-                    <Text variant={'subListText'} color="darkGrey">
-                      Fee: 0.007446 MATIC / ~ $0.01
-                    </Text>
-                    <Text variant={'subListText'} color="darkGrey">
-                      {'Confirmation {00}'}
-                    </Text>
-                  </Box>
-                ),
-              },
-            ]}
-          />
-        </Box>
+        {historyItem ? (
+          <Box marginTop={'xl'}>
+            <TransactionTimeline
+              startDate={formatDate(startTime)}
+              completed={endTime ? formatDate(endTime) : ''}
+              transBtnLabel={labelTranslateFn('swapConfirmationScreen.retry')!}
+              tranBtnPress={() => {}}
+              customComponent={[
+                {
+                  customView: (
+                    <Box marginLeft={'xl'}>
+                      <TouchableOpacity activeOpacity={0.7}>
+                        <Box flexDirection={'row'}>
+                          <Text
+                            marginRight={'m'}
+                            variant={'transLink'}
+                            color="link">
+                            BTC Approved
+                          </Text>
+                          <CopyIcon stroke={faceliftPalette.linkTextColor} />
+                        </Box>
+                      </TouchableOpacity>
+                      <Text variant={'subListText'} color="darkGrey">
+                        Fee: 0.007446 MATIC / ~ $0.01
+                      </Text>
+                      <Text variant={'subListText'} color="darkGrey">
+                        {'Confirmation {00}'}
+                      </Text>
+                    </Box>
+                  ),
+                },
+                {
+                  customView: (
+                    <Box marginLeft={'xl'}>
+                      <TouchableOpacity activeOpacity={0.7}>
+                        <Box flexDirection={'row'}>
+                          <Text
+                            marginRight={'m'}
+                            variant={'transLink'}
+                            color="link">
+                            Swap BTC for ETH
+                          </Text>
+                          <CopyIcon stroke={faceliftPalette.linkTextColor} />
+                        </Box>
+                      </TouchableOpacity>
+                      <Text variant={'subListText'} color="darkGrey">
+                        Fee: 0.007446 MATIC / ~ $0.01
+                      </Text>
+                      <Text variant={'subListText'} color="darkGrey">
+                        {'Confirmation {00}'}
+                      </Text>
+                    </Box>
+                  ),
+                },
+              ]}
+            />
+          </Box>
+        ) : null}
         <Box
           flexDirection={'row'}
           marginTop="xl"
@@ -319,27 +445,29 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
             <DynamicIcon width={scale(15)} height={scale(15)} />
           </TouchableOpacity>
         </Box>
-        {showDetails ? (
+        {isExpanded ? (
           <>
             <Box marginTop={'xl'}>
               <SwapPartitionRow
                 title={labelTranslateFn('swapConfirmationScreen.startedAt')!}
-                leftSubTitle="Thu April 27, 2020"
+                leftSubTitle={formatDate(startTime)}
                 subTitle="06:51:33 GMT-0400 (EST)"
               />
             </Box>
-            <Box marginTop={'xl'}>
-              <SwapPartitionRow
-                title={labelTranslateFn('swapConfirmationScreen.finishedAt')!}
-                leftSubTitle="Thu April 27, 2020"
-                subTitle="06:51:33 GMT-0400 (EST)"
-              />
-            </Box>
+            {endTime ? (
+              <Box marginTop={'xl'}>
+                <SwapPartitionRow
+                  title={labelTranslateFn('swapConfirmationScreen.finishedAt')!}
+                  leftSubTitle={formatDate(endTime)}
+                  subTitle="06:51:33 GMT-0400 (EST)"
+                />
+              </Box>
+            ) : null}
             <Box marginTop={'xl'}>
               <SwapPartitionRow
                 title={labelTranslateFn('swapConfirmationScreen.rate')!}
-                subTitle="1 inch"
-                leftSubTitle="1 BTC = 19.2939 ETH"
+                subTitle="1 inch" //hardcoded temp
+                leftSubTitle={`1${from} = ${computeRate(transaction)} ${to}`}
                 customView={
                   <Box marginRight="s" style={{ marginTop: -scale(2) }}>
                     <SwapTknIcon width={20} />
@@ -347,30 +475,51 @@ const SwapDetailsScreen = ({}: SwapDetailsScreenProps) => {
                 }
               />
             </Box>
-            <Box marginTop={'xl'}>
-              <SwapPartitionRow
-                title={labelTranslateFn('swapConfirmationScreen.buy')!}
-                showParitionLine={false}
-                subTitle="130.42222 ETH"
-              />
-            </Box>
-            <Box marginTop={'xl'}>
-              <SwapPartitionRow
-                title={labelTranslateFn('swapConfirmationScreen.sell')!}
-                showParitionLine={false}
-                subTitle="0.34212 BTC"
-              />
-            </Box>
-            <Box
-              paddingVertical={'xl'}
-              borderBottomWidth={scale(1)}
-              borderBottomColor="mediumGrey">
-              <SwapPartitionRow
-                title={labelTranslateFn('swapConfirmationScreen.yourTrans')!}
-                showParitionLine={false}
-                subTitle="999af94e46d9154680bb6ea839549598cd306e863a59192161e536b4e43281b5"
-              />
-            </Box>
+            {historyItem ? (
+              <Box marginTop={'xl'}>
+                <SwapPartitionRow
+                  title={labelTranslateFn('status')!}
+                  showParitionLine={false}
+                  subTitle={historyItem.status || ''}
+                />
+              </Box>
+            ) : null}
+            {!!toAmount && !!to ? (
+              <Box marginTop={'xl'}>
+                <SwapPartitionRow
+                  title={labelTranslateFn('swapConfirmationScreen.buy')!}
+                  showParitionLine={false}
+                  subTitle={`${prettyBalance(
+                    new BigNumber(toAmount),
+                    to,
+                  )} ${to}`}
+                />
+              </Box>
+            ) : null}
+            {!!fromAmount && !!from ? (
+              <Box marginTop={'xl'}>
+                <SwapPartitionRow
+                  title={labelTranslateFn('swapConfirmationScreen.sell')!}
+                  showParitionLine={false}
+                  subTitle={`${prettyBalance(
+                    new BigNumber(fromAmount),
+                    from,
+                  )} ${from}`}
+                />
+              </Box>
+            ) : null}
+            {transaction ? (
+              <Box
+                paddingVertical={'xl'}
+                borderBottomWidth={scale(1)}
+                borderBottomColor="mediumGrey">
+                <SwapPartitionRow
+                  title={labelTranslateFn('swapConfirmationScreen.yourTrans')!}
+                  showParitionLine={false}
+                  subTitle={transaction.id}
+                />
+              </Box>
+            ) : null}
           </>
         ) : null}
       </ScrollView>
