@@ -66,64 +66,66 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
     await toggleNFTStarred(payload)
   }, [activeNetwork, activeWalletId, nftItem])
   return (
-    <Box flex={1} style={styles.overviewBlock}>
+    <Box flex={1} backgroundColor={'white'}>
       <StarAndThreeDots
         accountIdsToSendIn={accountIdsToSendIn}
         activeWalletId={activeWalletId}
         nftItem={nftItem}
       />
-      <Box
-        style={styles.headerContainer}
-        justifyContent={'center'}
-        alignItems={'center'}>
-        <Image
-          source={checkImgUrlExists(nftItem.image_original_url, imgError)}
-          style={styles.image}
-          onError={() => imgError.push(nftItem.image_original_url)}
-        />
-      </Box>
-      <BottomDrawer
-        containerHeight={671}
-        downDisplay={580}
-        offset={150}
-        startUp={false}
-        roundedEdges={false}
-        backgroundColor={'rgba(255, 255, 255, 0.77)'}
-        onExpanded={() => setShowExpanded(true)}
-        onCollapsed={() => setShowExpanded(false)}>
-        <Box justifyContent={'center'} alignItems={'center'}>
-          <ShortLine style={styles.shortLine} />
-          <ShortLine />
+      <Box flex={1} style={styles.overviewBlock}>
+        <Box
+          style={styles.headerContainer}
+          justifyContent={'center'}
+          alignItems={'center'}>
+          <Image
+            source={checkImgUrlExists(nftItem.image_original_url, imgError)}
+            style={styles.image}
+            onError={() => imgError.push(nftItem.image_original_url)}
+          />
         </Box>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <TouchableOpacity>
-            <Box style={styles.drawerContainer}>
-              <Box marginVertical={'s'} flexDirection={'row'}>
-                <Text style={[styles.descriptionTitle, styles.flex]}>
-                  {!showExpanded ? renderDrawerCollapsed() : null}
-                </Text>
-                <Pressable
-                  onPress={() => {
-                    toggleStarred()
-                  }}>
-                  {nftItem.starred ? (
-                    <BlackStar width={22} height={22} />
-                  ) : (
-                    <Star width={22} height={22} />
-                  )}
-                </Pressable>
+        <BottomDrawer
+          containerHeight={641}
+          downDisplay={600}
+          offset={130}
+          startUp={false}
+          roundedEdges={false}
+          backgroundColor={'rgba(255, 255, 255, 0.77)'}
+          onExpanded={() => setShowExpanded(true)}
+          onCollapsed={() => setShowExpanded(false)}>
+          <Box justifyContent={'center'} alignItems={'center'}>
+            <ShortLine style={styles.shortLine} />
+            <ShortLine />
+          </Box>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <TouchableOpacity>
+              <Box style={styles.drawerContainer}>
+                <Box marginVertical={'s'} flexDirection={'row'}>
+                  <Text style={[styles.descriptionTitle, styles.flex]}>
+                    {!showExpanded ? renderDrawerCollapsed() : null}
+                  </Text>
+                  <Pressable
+                    onPress={() => {
+                      toggleStarred()
+                    }}>
+                    {nftItem.starred ? (
+                      <BlackStar width={22} height={22} />
+                    ) : (
+                      <Star width={22} height={22} />
+                    )}
+                  </Pressable>
+                </Box>
+                {showExpanded ? (
+                  <DetailsDrawerExpanded
+                    nftItem={nftItem}
+                    showOverview={showOverview}
+                    setShowOverview={setShowOverview}
+                  />
+                ) : null}
               </Box>
-              {showExpanded ? (
-                <DetailsDrawerExpanded
-                  nftItem={nftItem}
-                  showOverview={showOverview}
-                  setShowOverview={setShowOverview}
-                />
-              ) : null}
-            </Box>
-          </TouchableOpacity>
-        </ScrollView>
-      </BottomDrawer>
+            </TouchableOpacity>
+          </ScrollView>
+        </BottomDrawer>
+      </Box>
     </Box>
   )
 }
@@ -135,7 +137,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     height: 225,
-    backgroundColor: palette.white,
   },
 
   shortLine: { padding: 3 },

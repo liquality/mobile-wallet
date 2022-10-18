@@ -17,7 +17,8 @@ import { Box, faceliftPalette, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/core'
 
-const { PurpleThreeDots, ThreeDots, ModalClose, Send, Sell, Share } = AppIcons
+const { PurpleThreeDots, ThreeDots, ModalClose, Send, Sell, Share, XIcon } =
+  AppIcons
 
 type StarAndThreeDots = {
   activeWalletId: string
@@ -120,10 +121,25 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
       </Modal>
     )
   }
-
   return (
-    <>
+    <Box
+      style={styles.container}
+      flexDirection={'row'}
+      justifyContent={'space-between'}>
       <Pressable
+        onPress={() => {
+          navigation.goBack()
+        }}
+        style={styles.threeDots}>
+        <XIcon />
+      </Pressable>
+      {showPopUp ? renderPopUp() : null}
+
+      <Pressable
+        onStartShouldSetResponder={() => true}
+        onTouchEnd={(e) => {
+          e.stopPropagation()
+        }}
         onPress={() => {
           setShowPopUp(true)
         }}
@@ -131,15 +147,17 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
         <ThreeDots />
       </Pressable>
       {showPopUp ? renderPopUp() : null}
-    </>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
   threeDots: {
-    marginLeft: 20,
-    marginTop: 10,
+    marginLeft: scale(20),
+    marginRight: scale(20),
+    marginTop: scale(10),
   },
+  container: { marginTop: scale(34) },
 
   textPurple: {},
 
