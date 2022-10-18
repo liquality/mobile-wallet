@@ -48,7 +48,7 @@ const TransactionTimeline = ({
           />
           <Text
             marginLeft={'xl'}
-            variant="listText"
+            variant="normalText"
             style={styles.marginTopAdjust}
             color={'greyMeta'}>{`${labelTranslateFn(
             'common.started',
@@ -99,7 +99,7 @@ const TransactionTimeline = ({
           />
           <Text
             marginLeft={'xl'}
-            variant="listText"
+            variant="normalText"
             style={styles.marginBottomAdjust}
             color={'greyMeta'}>{`${labelTranslateFn(
             'common.completed',
