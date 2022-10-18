@@ -468,14 +468,14 @@ export const AppStackNavigator = () => {
           name="NftDetailScreen"
           component={NftDetailScreen}
           options={() => ({
-            headerRight: PlaceholderComp,
+            headerShown: false,
           })}
         />
         <MainStack.Screen
           name="NftSendScreen"
           component={NftSendScreen}
           options={() => ({
-            headerRight: PlaceholderComp,
+            headerShown: false,
           })}
         />
         <MainStack.Screen

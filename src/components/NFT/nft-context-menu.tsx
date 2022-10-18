@@ -10,25 +10,21 @@ import {
 import React, { useCallback, useState } from 'react'
 import { AppIcons, Fonts, Images } from '../../assets'
 import { useRecoilValue } from 'recoil'
-import { accountInfoStateFamily, networkState, themeMode } from '../../atoms'
-import { toggleNFTStarred } from '../../store/store'
+import { accountInfoStateFamily, themeMode } from '../../atoms'
 import { NFT } from '../../types'
 import { Box, faceliftPalette, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/core'
 
-const { Star, BlackStar, ThreeDots, ModalClose, Send, Sell, Share } = AppIcons
+const { PurpleThreeDots, ThreeDots, Send, Sell, Share, XIcon } = AppIcons
 
-type StarAndThreeDots = {
-  activeWalletId: string
+type NftContextMenu = {
   nftItem: NFT
   accountIdsToSendIn: string[]
 }
 
-const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
-  const { accountIdsToSendIn, activeWalletId, nftItem } = props
-  const activeNetwork = useRecoilValue(networkState)
-  const [, setShowStarred] = useState(false)
+const NftContextMenu: React.FC<NftContextMenu> = (props) => {
+  const { accountIdsToSendIn, nftItem } = props
   const [showPopUp, setShowPopUp] = useState(false)
   const accountInfo = useRecoilValue(accountInfoStateFamily(nftItem.accountId))
 
@@ -43,10 +39,10 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
     currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
 
   const lowerBgImg =
-    currentTheme === 'light' ? Images.rectangleDark : Images.rectangleLight
+    currentTheme === 'light' ? Images.contextMenuDark : Images.contextMenuLight
 
   const uppperBgImg =
-    currentTheme === 'dark' ? Images.rectangleDark : Images.rectangleLight
+    currentTheme === 'dark' ? Images.contextMenuDark : Images.contextMenuLight
 
   const navigateToSendNftScreen = useCallback(() => {
     setShowPopUp(false)
@@ -97,7 +93,11 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
                         )
                       }
                       style={styles.row}>
-                      <Sell style={styles.sellIcon} />
+                      <Sell
+                        width={scale(19)}
+                        height={scale(19)}
+                        style={styles.sellIcon}
+                      />
                       <Text
                         style={(styles.modalRowText, styles.textPurple)}
                         tx={'nft.sell'}
@@ -112,8 +112,8 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
               </ImageBackground>
             </ImageBackground>
             <TouchableWithoutFeedback onPress={() => setShowPopUp(false)}>
-              <Box position={'absolute'} right={scale(-5)} top={scale(-10)}>
-                <ModalClose />
+              <Box position={'absolute'} right={scale(10)} top={scale(-10)}>
+                <PurpleThreeDots />
               </Box>
             </TouchableWithoutFeedback>
           </Box>
@@ -121,32 +121,25 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
       </Modal>
     )
   }
-
-  const toggleStarred = useCallback(async () => {
-    nftItem.starred = !nftItem.starred
-    setShowStarred(!nftItem.starred)
-    const payload = {
-      network: activeNetwork,
-      walletId: activeWalletId,
-      accountId: nftItem.accountId,
-      nft: nftItem,
-    }
-    await toggleNFTStarred(payload)
-  }, [activeNetwork, activeWalletId, nftItem])
   return (
-    <>
+    <Box
+      style={styles.container}
+      flexDirection={'row'}
+      justifyContent={'space-between'}>
       <Pressable
         onPress={() => {
-          toggleStarred()
-        }}>
-        {nftItem.starred ? (
-          <BlackStar width={22} height={22} />
-        ) : (
-          <Star width={22} height={22} />
-        )}
+          navigation.goBack()
+        }}
+        style={styles.threeDots}>
+        <XIcon />
       </Pressable>
+      {showPopUp ? renderPopUp() : null}
 
       <Pressable
+        onStartShouldSetResponder={() => true}
+        onTouchEnd={(e) => {
+          e.stopPropagation()
+        }}
         onPress={() => {
           setShowPopUp(true)
         }}
@@ -154,17 +147,19 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
         <ThreeDots />
       </Pressable>
       {showPopUp ? renderPopUp() : null}
-    </>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
   threeDots: {
-    marginLeft: 20,
-    marginTop: 10,
+    marginLeft: scale(20),
+    marginRight: scale(20),
+    marginTop: scale(10),
   },
+  container: { marginTop: scale(34) },
 
-  textPurple: {},
+  textPurple: { color: faceliftPalette.buttonDefault, fontSize: 17 },
 
   row: { flexDirection: 'row', justifyContent: 'space-between', padding: 5 },
 
@@ -179,7 +174,7 @@ const styles = StyleSheet.create({
     color: faceliftPalette.greyMeta,
   },
   icon: { marginRight: 10 },
-  sellIcon: { marginRight: 15 },
+  sellIcon: { marginLeft: scale(-10), marginRight: scale(8) },
 
   popup: {
     position: 'absolute',
@@ -203,4 +198,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default StarAndThreeDots
+export default NftContextMenu
