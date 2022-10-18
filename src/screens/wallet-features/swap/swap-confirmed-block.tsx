@@ -12,7 +12,7 @@ import { labelTranslateFn } from '../../../utils'
 
 const { CopyIcon } = AppIcons
 
-type ConfirmedBlockProps = {
+type SwapConfirmedBlockProps = {
   address?: string
   status: string
   fee?: number
@@ -24,7 +24,7 @@ type ConfirmedBlockProps = {
   txHash?: string
 }
 
-const ConfirmedBlock = ({
+const SwapConfirmedBlock = ({
   status,
   txHash,
   fiatRates,
@@ -34,7 +34,7 @@ const ConfirmedBlock = ({
   url,
   address,
   confirmations,
-}: ConfirmedBlockProps) => {
+}: SwapConfirmedBlockProps) => {
   const handleCopyAddressPress = async () => {
     if (address) {
       showCopyToast('copyToast', labelTranslateFn('receiveScreen.copied')!)
@@ -104,4 +104,4 @@ const ConfirmedBlock = ({
   )
 }
 
-export default ConfirmedBlock
+export default SwapConfirmedBlock
