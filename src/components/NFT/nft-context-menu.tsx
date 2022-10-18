@@ -10,25 +10,21 @@ import {
 import React, { useCallback, useState } from 'react'
 import { AppIcons, Fonts, Images } from '../../assets'
 import { useRecoilValue } from 'recoil'
-import { accountInfoStateFamily, networkState, themeMode } from '../../atoms'
-import { toggleNFTStarred } from '../../store/store'
+import { accountInfoStateFamily, themeMode } from '../../atoms'
 import { NFT } from '../../types'
 import { Box, faceliftPalette, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/core'
 
-const { PurpleThreeDots, ThreeDots, ModalClose, Send, Sell, Share, XIcon } =
-  AppIcons
+const { PurpleThreeDots, ThreeDots, Send, Sell, Share, XIcon } = AppIcons
 
-type StarAndThreeDots = {
-  activeWalletId: string
+type NftContextMenu = {
   nftItem: NFT
   accountIdsToSendIn: string[]
 }
 
-const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
-  const { accountIdsToSendIn, activeWalletId, nftItem } = props
-  const activeNetwork = useRecoilValue(networkState)
+const NftContextMenu: React.FC<NftContextMenu> = (props) => {
+  const { accountIdsToSendIn, nftItem } = props
   const [showPopUp, setShowPopUp] = useState(false)
   const accountInfo = useRecoilValue(accountInfoStateFamily(nftItem.accountId))
 
@@ -97,7 +93,11 @@ const StarAndThreeDots: React.FC<StarAndThreeDots> = (props) => {
                         )
                       }
                       style={styles.row}>
-                      <Sell style={styles.sellIcon} />
+                      <Sell
+                        width={scale(19)}
+                        height={scale(19)}
+                        style={styles.sellIcon}
+                      />
                       <Text
                         style={(styles.modalRowText, styles.textPurple)}
                         tx={'nft.sell'}
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   container: { marginTop: scale(34) },
 
-  textPurple: {},
+  textPurple: { color: faceliftPalette.buttonDefault, fontSize: 17 },
 
   row: { flexDirection: 'row', justifyContent: 'space-between', padding: 5 },
 
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     color: faceliftPalette.greyMeta,
   },
   icon: { marginRight: 10 },
-  sellIcon: { marginRight: 15 },
+  sellIcon: { marginLeft: scale(-10), marginRight: scale(8) },
 
   popup: {
     position: 'absolute',
@@ -198,4 +198,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default StarAndThreeDots
+export default NftContextMenu

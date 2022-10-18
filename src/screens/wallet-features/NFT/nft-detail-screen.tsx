@@ -12,12 +12,12 @@ import {
 } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { networkState } from '../../../atoms'
-import { Box, faceliftPalette, palette, Text } from '../../../theme'
+import { Box, faceliftPalette, Text } from '../../../theme'
 import BottomDrawer from 'react-native-bottom-drawer-view'
 import { RootStackParamList } from '../../../types'
 import { Fonts, AppIcons } from '../../../assets'
 import DetailsDrawerExpanded from '../../../components/NFT/details-drawer-expanded'
-import StarAndThreeDots from '../../../components/NFT/star-and-three-dots'
+import NftContextMenu from '../../../components/NFT/nft-context-menu'
 import { checkIfCollectionNameExists, checkImgUrlExists } from '../../../utils'
 import { toggleNFTStarred } from '../../../store/store'
 import { scale } from 'react-native-size-matters'
@@ -68,9 +68,8 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
   }, [activeNetwork, activeWalletId, nftItem])
   return (
     <Box flex={1} backgroundColor={'white'}>
-      <StarAndThreeDots
+      <NftContextMenu
         accountIdsToSendIn={accountIdsToSendIn}
-        activeWalletId={activeWalletId}
         nftItem={nftItem}
       />
       <Box flex={1} style={styles.overviewBlock}>
@@ -86,7 +85,7 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
         </Box>
         <BottomDrawer
           containerHeight={scale(621)}
-          downDisplay={scale(570)}
+          downDisplay={scale(560)}
           offset={scale(130)}
           startUp={false}
           roundedEdges={false}
