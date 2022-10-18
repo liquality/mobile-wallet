@@ -29,7 +29,7 @@ import {
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import ProgressCircle from '../../../components/animations/progress-circle'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
-import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
+import { unitToCurrency, getAsset, getChain } from '@liquality/cryptoassets'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { TimelineStep } from '@liquality/wallet-core/dist/src/utils/timeline'
 import { getTimeline } from '../../../store/store'
@@ -82,8 +82,17 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   const [isExpanded, setIsExpanded] = React.useState(false)
   const [swapProvider, setSwapProvider] = React.useState<SwapProvider>()
 
-  const { from, to, fromAmount, toAmount, startTime, network, provider } =
-    transaction
+  const {
+    from,
+    to,
+    fromAmount,
+    toAmount,
+    startTime,
+    network,
+    provider,
+    fee,
+    claimFee,
+  } = transaction
 
   const scrollRef = React.useRef<ScrollView>(null)
 
@@ -332,7 +341,6 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
                 fiatRates?.[from] || 0,
               )}`
             }
-            then="$112.12 then" // temp hardcoded
           />
         </Box>
         <Box marginTop={'xl'}>
@@ -357,7 +365,6 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
                 fiatRates?.[to] || 0,
               )}`
             }
-            then="$112.12 then" // temp hardcoded
           />
         </Box>
         <Box marginTop={'xl'}>
@@ -384,7 +391,11 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
             alignItems={'center'}>
             <Box flexDirection={'row'} alignItems={'center'}>
               <Text variant={'swapSubTitle'} color={'darkGrey'}>
-                Avg 0.014446 BTC
+                {from &&
+                  `${from} Fee: ${fee} ${
+                    getChain(activeNetwork, getAsset(activeNetwork, from).chain)
+                      .fees.unit
+                  }`}
               </Text>
               <Box
                 alignSelf={'flex-start'}
@@ -397,7 +408,11 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
                 marginLeft={'s'}
                 variant={'swapSubTitle'}
                 color={'darkGrey'}>
-                $ 0.02
+                {to &&
+                  `${to} Fee: ${claimFee} ${
+                    getChain(activeNetwork, getAsset(activeNetwork, to).chain)
+                      .fees.unit
+                  }`}
               </Text>
             </Box>
             <Text
@@ -414,7 +429,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
               startDate={formatDate(startTime)}
               completed={endTime ? formatDate(endTime) : ''}
               transBtnLabel={labelTranslateFn('swapConfirmationScreen.retry')!}
-              tranBtnPress={() => {}}
+              tranBtnPress={handleRetrySwapPress}
               customComponent={customComponent}
             />
           </Box>

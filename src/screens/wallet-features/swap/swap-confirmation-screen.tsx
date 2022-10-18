@@ -227,7 +227,7 @@ const SwapConfirmationScreen: React.FC<SwapConfirmationScreenProps> = ({
         <Text style={styles.content}>
           {from &&
             `${from} Fee: ${fee} ${
-              getChain(activeNetwork, getAsset(activeNetwork, to).chain).fees
+              getChain(activeNetwork, getAsset(activeNetwork, from).chain).fees
                 .unit
             }`}
         </Text>
