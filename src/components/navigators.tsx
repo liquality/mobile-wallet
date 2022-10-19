@@ -356,6 +356,7 @@ export const AppStackNavigator = () => {
         <MainStack.Screen
           name="OverviewScreen"
           options={{
+            headerStyle: { backgroundColor },
             ...appStackScreenNavOptions(),
           }}>
           {(props) => OverviewScreen(props)}
