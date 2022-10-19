@@ -33,7 +33,7 @@ const wallet = setupWallet({
   ...defaultOptions,
 })
 const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
-  const { nftItem, accountIdsToSendIn } = route.params
+  const { nftItem, accountIdsToSendIn, accountId } = route.params
   const activeNetwork = useRecoilValue(networkState)
 
   const [imgError] = useState<string[]>([])
@@ -48,6 +48,7 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
     fetchData()
   }, [activeNetwork, activeWalletId])
 
+  console.log(nftItem, 'NFTITEM??')
   const renderDrawerCollapsed = () => {
     return (
       <Text style={styles.drawerClosedText}>
@@ -56,21 +57,23 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
     )
   }
   const toggleStarred = useCallback(async () => {
+    console.log(nftItem.accountId, 'acc id?', accountId)
     nftItem.starred = !nftItem.starred
     setShowStarred(!nftItem.starred)
     const payload = {
       network: activeNetwork,
       walletId: activeWalletId,
-      accountId: nftItem.accountId,
+      accountId: nftItem.accountId || accountId,
       nft: nftItem,
     }
     await toggleNFTStarred(payload)
-  }, [activeNetwork, activeWalletId, nftItem])
+  }, [accountId, activeNetwork, activeWalletId, nftItem])
   return (
     <Box flex={1} backgroundColor={'white'}>
       <NftContextMenu
         accountIdsToSendIn={accountIdsToSendIn}
         nftItem={nftItem}
+        accountId={nftItem.accountId || accountId}
       />
       <Box flex={1} style={styles.overviewBlock}>
         <Box

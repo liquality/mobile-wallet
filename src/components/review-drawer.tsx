@@ -4,18 +4,35 @@ import { Box, faceliftPalette, Pressable, Text } from '../theme'
 import { Fonts } from '../assets'
 import BottomDrawer from 'react-native-bottom-drawer-view'
 import { NFTAsset } from '../types'
+import { AccountId } from '@liquality/wallet-core/dist/src/store/types'
+import { useRecoilValue } from 'recoil'
+import { accountInfoStateFamily, addressStateFamily } from '../atoms'
 type ReviewDrawerProps = {
   handlePressSend: () => void
   height: number
   title: string
   nftItem?: NFTAsset[]
   accountIdsToSendIn?: string[]
-  addressInput: string
+  destinationAddress: string
+  accountId?: AccountId
 }
 
 const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
-  const { handlePressSend, nftItem, height, title } = props
+  const {
+    handlePressSend,
+    nftItem,
+    height,
+    title,
+    accountId,
+    destinationAddress,
+  } = props
+  const addressForAccount = useRecoilValue(
+    addressStateFamily(accountId),
+  ) as string
 
+  const accountInfo = useRecoilValue(accountInfoStateFamily(accountId))
+
+  console.log()
   const renderNftSendContent = () => {
     return (
       <Box style={styles.drawerContainer}>
@@ -30,9 +47,11 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
         </Box>
         <Text style={(styles.text, styles.subheadingText)}>Send To</Text>
         <Text style={(styles.text, styles.subheadingInfo)}>
-          sample.blockchain
+          {accountInfo.chain}
         </Text>
-        <Text style={(styles.text, styles.subheadingInfo)}>000x0000</Text>
+        <Text style={(styles.text, styles.subheadingInfo)}>
+          {destinationAddress}
+        </Text>
 
         <Box alignItems={'center'} paddingTop={'xl'}>
           <Pressable variant="solid" label={'Send'} onPress={handlePressSend} />
@@ -57,7 +76,7 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
       <BottomDrawer
         containerHeight={height}
         downDisplay={580}
-        offset={50}
+        offset={0}
         startUp={true}
         roundedEdges={false}
         backgroundColor={faceliftPalette.white}>

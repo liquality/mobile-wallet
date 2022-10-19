@@ -76,6 +76,7 @@ const NftForSpecificChainScreen = ({
         screenTitle: 'NFT Detail',
         nftItem,
         accountIdsToSendIn,
+        accountId: currentAccount.id,
       })
     },
     [navigation, accountIdsToSendIn],

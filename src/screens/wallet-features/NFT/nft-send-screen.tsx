@@ -53,7 +53,7 @@ const wallet = setupWallet({
 })
 
 const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
-  const { nftItem, accountIdsToSendIn } = route.params
+  const { nftItem, accountIdsToSendIn, accountId } = route.params
   const activeNetwork = useRecoilValue(networkState)
   const { activeWalletId } = wallet.state
   const [errorMsg, setErrorMsg] = useState('')
@@ -61,12 +61,12 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   const [showReviewDrawer, setShowReviewDrawer] = useState(false)
   const addressInput = useInputState('')
   const addressForAccount = useRecoilValue(
-    addressStateFamily(nftItem.accountId),
+    addressStateFamily(accountId),
   ) as string
-  console.log(addressForAccount, 'nft send screen addres for acc')
-  //const account = useRecoilValue(accountInfoStateFamily(item.id))
-  console.log(nftItem.accountId, 'acc id', nftItem)
-  const accountInfo = useRecoilValue(accountInfoStateFamily(nftItem.accountId))
+
+  const accountInfo = useRecoilValue(accountInfoStateFamily(accountId))
+  console.log(accountInfo, 'ACCOUNT INFO')
+  console.log(nftItem.accountId, 'acc id', accountId)
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
   if (theme) {
@@ -106,7 +106,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
         : undefined */
       const data = {
         network: activeNetwork,
-        accountId: nftItem?.accountId,
+        accountId: accountId,
         walletId: activeWalletId,
         receiver: addressInput.value,
         contract: nftItem?.asset_contract.address,
@@ -128,6 +128,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
         nftItem,
         accountIdsToSendIn,
         addressInput: addressInput.value,
+        accountId,
       })
     } catch (error) {
       Alert.alert('Failed to send the NFT')
@@ -141,17 +142,17 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
       setShowReviewDrawer(true)
     }
   }
-  console.log(accountInfo, 'accInfo')
 
   return (
     <Box flex={1} backgroundColor={backgroundColor}>
       {showReviewDrawer ? (
         <ReviewDrawer
-          addressInput={addressInput.value}
+          destinationAddress={addressInput.value}
           handlePressSend={sendNft}
           title={'Review Send NFT'}
-          height={481}
+          height={441}
           nftItem={nftItem}
+          accountId={accountId}
         />
       ) : null}
       {isCameraVisible ? (

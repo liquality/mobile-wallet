@@ -16,16 +16,18 @@ import { Box, faceliftPalette, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/core'
 import { getNftTransferLink } from '@liquality/wallet-core/dist/src/utils/asset'
+import { AccountId } from '@liquality/wallet-core/dist/src/store/types'
 
 const { PurpleThreeDots, ThreeDots, Send, Sell, Share, XIcon } = AppIcons
 
 type NftContextMenu = {
   nftItem: NFT
   accountIdsToSendIn: string[]
+  accountId: AccountId
 }
 
 const NftContextMenu: React.FC<NftContextMenu> = (props) => {
-  const { accountIdsToSendIn, nftItem } = props
+  const { accountIdsToSendIn, nftItem, accountId } = props
   const [showPopUp, setShowPopUp] = useState(false)
   const [marketplaceLink, setMarketplaceLink] = useState('')
 
@@ -66,6 +68,7 @@ const NftContextMenu: React.FC<NftContextMenu> = (props) => {
     navigation.navigate('NftSendScreen', {
       nftItem,
       accountIdsToSendIn,
+      accountId,
     })
   }, [accountIdsToSendIn, navigation, nftItem])
 
