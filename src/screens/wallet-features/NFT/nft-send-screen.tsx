@@ -65,8 +65,6 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   ) as string
 
   const accountInfo = useRecoilValue(accountInfoStateFamily(accountId))
-  console.log(accountInfo, 'ACCOUNT INFO')
-  console.log(nftItem.accountId, 'acc id', accountId)
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
   if (theme) {
@@ -153,6 +151,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
           height={441}
           nftItem={nftItem}
           accountId={accountId}
+          showDrawer={setShowReviewDrawer}
         />
       ) : null}
       {isCameraVisible ? (
@@ -262,7 +261,6 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
               isBorderless={true}
               isActive={addressInput.value !== '' || errorMsg}
             />
-            {console.log(addressInput.value, 'ERRORMSG T F', !errorMsg)}
             <Button
               type="secondary"
               variant="l"

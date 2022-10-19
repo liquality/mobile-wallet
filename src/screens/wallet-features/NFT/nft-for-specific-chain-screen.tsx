@@ -52,7 +52,6 @@ const NftForSpecificChainScreen = ({
     })
     //Use dummydata here if no assets load
     let nfts = await getNftsForAccount(currentAccount.id)
-    console.log(nfts, 'NFTS')
     setChainSpecificNfts(nfts)
     //Manipulate NFT object to be iterable
     let wholeNftArr = Object.values(nfts).map((val) => {
@@ -79,7 +78,7 @@ const NftForSpecificChainScreen = ({
         accountId: currentAccount.id,
       })
     },
-    [navigation, accountIdsToSendIn],
+    [navigation, accountIdsToSendIn, currentAccount.id],
   )
 
   const handleRefreshNftsPress = async () => {

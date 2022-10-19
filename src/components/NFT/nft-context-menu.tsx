@@ -10,7 +10,7 @@ import {
 import React, { useCallback, useState } from 'react'
 import { AppIcons, Fonts, Images } from '../../assets'
 import { useRecoilValue } from 'recoil'
-import { accountInfoStateFamily, networkState, themeMode } from '../../atoms'
+import { networkState, themeMode } from '../../atoms'
 import { NFT } from '../../types'
 import { Box, faceliftPalette, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
@@ -70,7 +70,7 @@ const NftContextMenu: React.FC<NftContextMenu> = (props) => {
       accountIdsToSendIn,
       accountId,
     })
-  }, [accountIdsToSendIn, navigation, nftItem])
+  }, [accountId, accountIdsToSendIn, navigation, nftItem])
 
   const renderPopUp = () => {
     return (

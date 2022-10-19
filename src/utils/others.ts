@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { getAsset } from '@liquality/cryptoassets'
 import { AES } from 'crypto-js'
 import { fetchFeesForAsset, fetchSwapProvider } from '../store/store'

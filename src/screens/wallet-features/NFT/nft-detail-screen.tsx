@@ -48,7 +48,6 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
     fetchData()
   }, [activeNetwork, activeWalletId])
 
-  console.log(nftItem, 'NFTITEM??')
   const renderDrawerCollapsed = () => {
     return (
       <Text style={styles.drawerClosedText}>
@@ -57,7 +56,6 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
     )
   }
   const toggleStarred = useCallback(async () => {
-    console.log(nftItem.accountId, 'acc id?', accountId)
     nftItem.starred = !nftItem.starred
     setShowStarred(!nftItem.starred)
     const payload = {

@@ -53,7 +53,6 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
       //Use dummydata here if no assets load
       let allNfts = await fetchAllNfts()
       setAllNftData(allNfts)
-      console.log(allNfts, 'ALL MFTSSS')
       let wholeNftArr = Object.values(allNfts).map((val) => {
         return val
       })
