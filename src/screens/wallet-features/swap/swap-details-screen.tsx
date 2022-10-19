@@ -60,14 +60,13 @@ type SwapDetailsScreenProps = NativeStackScreenProps<
 
 const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   const transaction = route.params.swapTransactionConfirmation!
-  const fromAsset = route.params.fromAssetData
-  const toAsset = route.params.toAssetData
   const fiatRates = useRecoilValue(fiatRatesState)
-
   const historyItem = useRecoilValue(
     historyStateFamily(transaction!.id!),
   ) as SwapHistoryItem
   const activeNetwork = useRecoilValue(networkState)
+  const fromAsset = getAsset(activeNetwork, transaction.from)
+  const toAsset = getAsset(activeNetwork, transaction.to)
   const historyStatus = historyItem ? historyItem.status : ''
   const endTime = historyItem ? historyItem.endTime : 0
   const [timeline, setTimeline] = React.useState<TimelineStep[]>()
@@ -90,7 +89,6 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
     startTime,
     network,
     provider,
-    fee,
     claimFee,
   } = transaction
 
@@ -113,7 +111,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
 
   const handleSpeedUpTransaction = () => {
     navigation.navigate('CustomFeeScreen', {
-      assetData: route.params.fromAssetData,
+      assetData: route.params.assetData,
       screenTitle: labelTranslateFn('swapConfirmationScreen.networkSpeed')!,
     })
   }
@@ -391,23 +389,6 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
             alignItems={'center'}>
             <Box flexDirection={'row'} alignItems={'center'}>
               <Text variant={'swapSubTitle'} color={'darkGrey'}>
-                {from &&
-                  `${from} Fee: ${fee} ${
-                    getChain(activeNetwork, getAsset(activeNetwork, from).chain)
-                      .fees.unit
-                  }`}
-              </Text>
-              <Box
-                alignSelf={'flex-start'}
-                width={1}
-                marginHorizontal="m"
-                height={scale(15)}
-                backgroundColor="inactiveText"
-              />
-              <Text
-                marginLeft={'s'}
-                variant={'swapSubTitle'}
-                color={'darkGrey'}>
                 {to &&
                   `${to} Fee: ${claimFee} ${
                     getChain(activeNetwork, getAsset(activeNetwork, to).chain)

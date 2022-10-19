@@ -6,7 +6,7 @@ import {
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { AccountType, RootStackParamList } from '../../../types'
+import { AccountType, MainStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { Text, Box, RoundButton, palette } from '../../../theme'
 import GradientBackground from '../../../components/gradient-background'
@@ -25,7 +25,7 @@ import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { Fonts } from '../../../assets'
 
 type AssetScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'AssetScreen'
 >
 

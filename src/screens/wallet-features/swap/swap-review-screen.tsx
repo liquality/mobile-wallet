@@ -86,10 +86,9 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           delete transaction.fromFundTx._raw */
 
           addTransaction(transaction.id, transaction)
-          navigation.navigate('SwapConfirmationScreen', {
+          navigation.navigate('SwapDetailsScreen', {
             swapTransactionConfirmation: transaction,
-            fromAssetData: fromAsset,
-            toAssetData: toAsset,
+            screenTitle: `Swap ${transaction.from} to ${transaction.to} Details`,
           })
         } else {
           setIsLoading(false)
