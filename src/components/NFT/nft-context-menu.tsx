@@ -10,23 +10,29 @@ import {
 import React, { useCallback, useState } from 'react'
 import { AppIcons, Fonts, Images } from '../../assets'
 import { useRecoilValue } from 'recoil'
-import { accountInfoStateFamily, themeMode } from '../../atoms'
+import { accountInfoStateFamily, networkState, themeMode } from '../../atoms'
 import { NFT } from '../../types'
 import { Box, faceliftPalette, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/core'
+import { getNftTransferLink } from '@liquality/wallet-core/dist/src/utils/asset'
+import { AccountId } from '@liquality/wallet-core/dist/src/store/types'
 
 const { PurpleThreeDots, ThreeDots, Send, Sell, Share, XIcon } = AppIcons
 
 type NftContextMenu = {
   nftItem: NFT
   accountIdsToSendIn: string[]
+  accountId: AccountId
 }
 
 const NftContextMenu: React.FC<NftContextMenu> = (props) => {
-  const { accountIdsToSendIn, nftItem } = props
+  const { accountIdsToSendIn, nftItem, accountId } = props
   const [showPopUp, setShowPopUp] = useState(false)
-  const accountInfo = useRecoilValue(accountInfoStateFamily(nftItem.accountId))
+  const [marketplaceLink, setMarketplaceLink] = useState('')
+
+  const activeNetwork = useRecoilValue(networkState)
+  const accountInfo = useRecoilValue(accountInfoStateFamily(accountId))
 
   const navigation = useNavigation()
   const theme = useRecoilValue(themeMode)
@@ -44,13 +50,27 @@ const NftContextMenu: React.FC<NftContextMenu> = (props) => {
   const uppperBgImg =
     currentTheme === 'dark' ? Images.contextMenuDark : Images.contextMenuLight
 
+  React.useEffect(() => {
+    async function fetchData() {
+      const transferLink = await getNftTransferLink(
+        accountInfo.code,
+        activeNetwork,
+        nftItem?.token_id,
+        nftItem?.asset_contract.address,
+      )
+      setMarketplaceLink(transferLink)
+    }
+    fetchData()
+  }, [accountInfo.code, activeNetwork, nftItem])
+
   const navigateToSendNftScreen = useCallback(() => {
     setShowPopUp(false)
     navigation.navigate('NftSendScreen', {
       nftItem,
       accountIdsToSendIn,
+      accountId,
     })
-  }, [accountIdsToSendIn, navigation, nftItem])
+  }, [accountId, accountIdsToSendIn, navigation, nftItem])
 
   const renderPopUp = () => {
     return (
@@ -86,12 +106,7 @@ const NftContextMenu: React.FC<NftContextMenu> = (props) => {
                       <Text style={styles.modalRowText} tx={'nft.send'} />
                     </Pressable>
                     <Pressable
-                      onPress={() =>
-                        //TODO: Maybe make this more dynamic since more marketplaces may exist?
-                        Linking.openURL(
-                          `https://opensea.io/assets/${accountInfo.chain}/${nftItem.asset_contract?.address}/${nftItem.token_id}`,
-                        )
-                      }
+                      onPress={() => Linking.openURL(marketplaceLink)}
                       style={styles.row}>
                       <Sell
                         width={scale(19)}

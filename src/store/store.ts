@@ -474,6 +474,12 @@ export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
       Log(`Failed update balances: ${e}`, 'error')
     })
 
+  await updateNFTs({
+    network: activeNetwork,
+    walletId: activeWalletId,
+    accountIds: [account.id],
+  })
+
   await wallet.dispatch
     .updateFiatRates({
       assets: account.assets,
@@ -543,11 +549,9 @@ export const updateNFTs = async (paramObj: {
   network: Network
   accountIds: string[]
 }): Promise<void> => {
-  if (wallet) {
-    await wallet.dispatch.updateNFTs(paramObj).catch((e) => {
-      Log(`Failed to FETCH NFTS: ${e}`, 'error')
-    })
-  } else Log(`Failed to fetch WALLET DISPATCH: ${wallet}`, 'error')
+  await wallet.dispatch.updateNFTs(paramObj).catch((e) => {
+    Log(`Failed to FETCH NFTS: ${e}`, 'error')
+  })
 }
 
 /**

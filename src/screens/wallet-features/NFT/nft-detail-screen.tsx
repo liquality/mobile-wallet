@@ -33,7 +33,7 @@ const wallet = setupWallet({
   ...defaultOptions,
 })
 const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
-  const { nftItem, accountIdsToSendIn } = route.params
+  const { nftItem, accountIdsToSendIn, accountId } = route.params
   const activeNetwork = useRecoilValue(networkState)
 
   const [imgError] = useState<string[]>([])
@@ -61,16 +61,17 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
     const payload = {
       network: activeNetwork,
       walletId: activeWalletId,
-      accountId: nftItem.accountId,
+      accountId: nftItem.accountId || accountId,
       nft: nftItem,
     }
     await toggleNFTStarred(payload)
-  }, [activeNetwork, activeWalletId, nftItem])
+  }, [accountId, activeNetwork, activeWalletId, nftItem])
   return (
     <Box flex={1} backgroundColor={'white'}>
       <NftContextMenu
         accountIdsToSendIn={accountIdsToSendIn}
         nftItem={nftItem}
+        accountId={nftItem.accountId || accountId}
       />
       <Box flex={1} style={styles.overviewBlock}>
         <Box
@@ -84,9 +85,9 @@ const NftDetailScreen = ({ route }: NftDetailScreenProps) => {
           />
         </Box>
         <BottomDrawer
-          containerHeight={scale(621)}
-          downDisplay={scale(560)}
-          offset={scale(130)}
+          containerHeight={scale(700)}
+          downDisplay={scale(550)}
+          offset={scale(0)}
           startUp={false}
           roundedEdges={false}
           backgroundColor={'rgba(255, 255, 255, 0.77)'}

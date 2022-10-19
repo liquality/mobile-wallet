@@ -75,9 +75,10 @@ const NftForSpecificChainScreen = ({
         screenTitle: 'NFT Detail',
         nftItem,
         accountIdsToSendIn,
+        accountId: currentAccount.id,
       })
     },
-    [navigation, accountIdsToSendIn],
+    [navigation, accountIdsToSendIn, currentAccount.id],
   )
 
   const handleRefreshNftsPress = async () => {
