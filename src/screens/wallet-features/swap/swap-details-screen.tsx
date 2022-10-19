@@ -37,6 +37,7 @@ import { SwapHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import { CustomComponentProps } from './transaction-timeline'
 import { TxStatus } from '@chainify/types'
 import SwapConfirmedBlock from './swap-confirmed-block'
+import { getTransactionExplorerLink } from '@liquality/wallet-core/dist/src/utils/asset'
 
 const {
   SwapDarkRect,
@@ -184,6 +185,13 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
           ),
         })
       } else {
+        const constructUrl = item.tx
+          ? getTransactionExplorerLink(
+              item.tx.hash,
+              isFromIdAdded ? historyItem.from : historyItem.to,
+              historyItem.network,
+            )
+          : ''
         customComponent.push({
           customView: (
             <SwapConfirmedBlock
@@ -201,6 +209,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
               fiatRate={
                 isFromIdAdded ? fiatRates?.[to] || 0 : fiatRates?.[from] || 0
               }
+              url={constructUrl}
             />
           ),
         })

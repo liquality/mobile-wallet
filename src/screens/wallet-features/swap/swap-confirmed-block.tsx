@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
+import { Linking, TouchableOpacity } from 'react-native'
 import { Box, faceliftPalette, Text, showCopyToast } from '../../../theme'
 import {
   dpUI,
@@ -22,6 +22,7 @@ type SwapConfirmedBlockProps = {
   fiatRates: FiatRates
   fiatRate: number
   txHash?: string
+  url: string
 }
 
 const SwapConfirmedBlock = ({
@@ -31,6 +32,7 @@ const SwapConfirmedBlock = ({
   fee,
   asset,
   fiatRate,
+  url,
   address,
   confirmations,
 }: SwapConfirmedBlockProps) => {
@@ -39,6 +41,12 @@ const SwapConfirmedBlock = ({
       showCopyToast('copyToast', labelTranslateFn('receiveScreen.copied')!)
       Clipboard.setString(address)
     }
+  }
+
+  const handleLinkPress = () => {
+    Linking.canOpenURL(url).then((canOpen) => {
+      if (canOpen) Linking.openURL(url)
+    })
   }
 
   const formatFeeAmountAndFiat = () => {
@@ -53,14 +61,17 @@ const SwapConfirmedBlock = ({
 
   return (
     <Box marginLeft={'xl'}>
-      <TouchableOpacity activeOpacity={0.7} onPress={handleCopyAddressPress}>
-        <Box flexDirection={'row'}>
+      <Box flexDirection={'row'}>
+        <TouchableOpacity activeOpacity={0.7} onPress={handleLinkPress}>
           <Text marginRight={'m'} variant={'transLink'} color="link">
             {status}
           </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity activeOpacity={0.7} onPress={handleCopyAddressPress}>
           <CopyIcon stroke={faceliftPalette.linkTextColor} />
-        </Box>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </Box>
       {txHash ? (
         <>
           <Box flexDirection={'row'}>
