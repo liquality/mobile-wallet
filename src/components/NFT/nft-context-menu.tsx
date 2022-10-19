@@ -10,7 +10,7 @@ import {
 import React, { useCallback, useState } from 'react'
 import { AppIcons, Fonts, Images } from '../../assets'
 import { useRecoilValue } from 'recoil'
-import { networkState, themeMode } from '../../atoms'
+import { accountInfoStateFamily, networkState, themeMode } from '../../atoms'
 import { NFT } from '../../types'
 import { Box, faceliftPalette, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
@@ -32,6 +32,7 @@ const NftContextMenu: React.FC<NftContextMenu> = (props) => {
   const [marketplaceLink, setMarketplaceLink] = useState('')
 
   const activeNetwork = useRecoilValue(networkState)
+  const accountInfo = useRecoilValue(accountInfoStateFamily(accountId))
 
   const navigation = useNavigation()
   const theme = useRecoilValue(themeMode)
@@ -51,9 +52,8 @@ const NftContextMenu: React.FC<NftContextMenu> = (props) => {
 
   React.useEffect(() => {
     async function fetchData() {
-      //TODO: pass accountinfo as props so we dont hardcode asset name
       const transferLink = await getNftTransferLink(
-        'MATIC',
+        accountInfo.code,
         activeNetwork,
         nftItem?.token_id,
         nftItem?.asset_contract.address,
@@ -61,7 +61,7 @@ const NftContextMenu: React.FC<NftContextMenu> = (props) => {
       setMarketplaceLink(transferLink)
     }
     fetchData()
-  }, [activeNetwork, nftItem])
+  }, [accountInfo.code, activeNetwork, nftItem])
 
   const navigateToSendNftScreen = useCallback(() => {
     setShowPopUp(false)
