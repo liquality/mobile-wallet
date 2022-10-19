@@ -63,6 +63,9 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
   const addressForAccount = useRecoilValue(
     addressStateFamily(nftItem.accountId),
   ) as string
+  console.log(addressForAccount, 'nft send screen addres for acc')
+  //const account = useRecoilValue(accountInfoStateFamily(item.id))
+  console.log(nftItem.accountId, 'acc id', nftItem)
   const accountInfo = useRecoilValue(accountInfoStateFamily(nftItem.accountId))
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
@@ -138,6 +141,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
       setShowReviewDrawer(true)
     }
   }
+  console.log(accountInfo, 'accInfo')
 
   return (
     <Box flex={1} backgroundColor={backgroundColor}>

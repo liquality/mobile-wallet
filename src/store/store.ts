@@ -845,165 +845,165 @@ export const getTimeline = async (
 
 export const balanceEffect: (assetObject: string) => AtomEffect<number> =
   (assetObject) =>
-  ({ setSelf }) => {
-    wallet.original.subscribe((mutation) => {
-      const asset = assetObject.split('|')[0]
-      const accountId = assetObject.split('|')[1]
-      const { type, payload } = mutation
-      if (
-        accountId === payload.accountId &&
-        type === 'UPDATE_BALANCE' &&
-        payload.asset === asset
-      ) {
-        setSelf(Number(payload.balance))
-      } else if (
-        accountId === payload.accountId &&
-        type === 'UPDATE_MULTIPLE_BALANCES' &&
-        payload.assets.includes(asset)
-      ) {
-        setSelf(Number(payload.balances[payload.assets.indexOf(asset)]))
-      }
-    })
-  }
+    ({ setSelf }) => {
+      wallet.original.subscribe((mutation) => {
+        const asset = assetObject.split('|')[0]
+        const accountId = assetObject.split('|')[1]
+        const { type, payload } = mutation
+        if (
+          accountId === payload.accountId &&
+          type === 'UPDATE_BALANCE' &&
+          payload.asset === asset
+        ) {
+          setSelf(Number(payload.balance))
+        } else if (
+          accountId === payload.accountId &&
+          type === 'UPDATE_MULTIPLE_BALANCES' &&
+          payload.assets.includes(asset)
+        ) {
+          setSelf(Number(payload.balances[payload.assets.indexOf(asset)]))
+        }
+      })
+    }
 
 export const addressEffect: (accountId: string) => AtomEffect<string> =
   (accountId) =>
-  ({ setSelf }) => {
-    wallet.original.subscribe((mutation) => {
-      const { type, payload } = mutation
-      if (type === 'UPDATE_ACCOUNT_ADDRESSES') {
-        if (payload.accountId === accountId) {
-          setSelf(payload.addresses[0])
+    ({ setSelf }) => {
+      wallet.original.subscribe((mutation) => {
+        const { type, payload } = mutation
+        if (type === 'UPDATE_ACCOUNT_ADDRESSES') {
+          if (payload.accountId === accountId) {
+            setSelf(payload.addresses[0])
+          }
         }
-      }
-    })
-  }
+      })
+    }
 
 export const fiatRateEffect: () => AtomEffect<FiatRates> =
   () =>
-  ({ setSelf }) => {
-    wallet.original.subscribe((mutation) => {
-      const { type, payload } = mutation
+    ({ setSelf }) => {
+      wallet.original.subscribe((mutation) => {
+        const { type, payload } = mutation
 
-      if (type === 'UPDATE_FIAT_RATES') {
-        setSelf(Object.assign(wallet.state.fiatRates, payload.fiatRates))
-      }
-    })
-  }
+        if (type === 'UPDATE_FIAT_RATES') {
+          setSelf(Object.assign(wallet.state.fiatRates, payload.fiatRates))
+        }
+      })
+    }
 
 export const enabledAssetsEffect: () => AtomEffect<string[]> =
   () =>
-  ({ setSelf, trigger }) => {
-    if (trigger === 'get') {
-      const { activeNetwork, activeWalletId } = wallet.state
-      setSelf(
-        wallet.state?.enabledAssets?.[activeNetwork]?.[activeWalletId] || [],
-      )
+    ({ setSelf, trigger }) => {
+      if (trigger === 'get') {
+        const { activeNetwork, activeWalletId } = wallet.state
+        setSelf(
+          wallet.state?.enabledAssets?.[activeNetwork]?.[activeWalletId] || [],
+        )
+      }
     }
-  }
 
 export const transactionHistoryEffect: (
   transactionId: string,
 ) => AtomEffect<Partial<HistoryItem>> =
   (transactionId) =>
-  ({ setSelf, trigger }) => {
-    if (trigger === 'get') {
-      const item = wallet.getters.activity.find(
-        (activity) => activity.id === transactionId,
-      )
-      if (item) setSelf(item)
-    }
+    ({ setSelf, trigger }) => {
+      if (trigger === 'get') {
+        const item = wallet.getters.activity.find(
+          (activity) => activity.id === transactionId,
+        )
+        if (item) setSelf(item)
+      }
 
-    wallet.original.subscribe((mutation) => {
-      const { type, payload } = mutation
+      wallet.original.subscribe((mutation) => {
+        const { type, payload } = mutation
 
-      if (type === 'UPDATE_HISTORY') {
-        const { id, updates } = payload
-        if (id === transactionId) {
-          const historyItem = wallet.getters.activity.find(
-            (activity) => activity.id === transactionId,
-          )
-          if (historyItem) {
-            if (historyItem.type === 'SEND' || historyItem.type === 'NFT') {
-              fetchConfirmationByHash(
-                historyItem.from,
-                historyItem.txHash,
-              ).then((confirmations) => {
+        if (type === 'UPDATE_HISTORY') {
+          const { id, updates } = payload
+          if (id === transactionId) {
+            const historyItem = wallet.getters.activity.find(
+              (activity) => activity.id === transactionId,
+            )
+            if (historyItem) {
+              if (historyItem.type === 'SEND' || historyItem.type === 'NFT') {
+                fetchConfirmationByHash(
+                  historyItem.from,
+                  historyItem.txHash,
+                ).then((confirmations) => {
+                  setSelf({
+                    ...historyItem,
+                    tx: { ...historyItem.tx, confirmations },
+                    ...updates,
+                  })
+                })
+              } else {
                 setSelf({
                   ...historyItem,
-                  tx: { ...historyItem.tx, confirmations },
                   ...updates,
                 })
-              })
-            } else {
-              setSelf({
-                ...historyItem,
-                ...updates,
-              })
+              }
             }
           }
         }
-      }
-    })
-  }
+      })
+    }
 
 export const localStorageLangEffect: <T>(key: string) => AtomEffect<T> =
   (key) =>
-  ({ setSelf, onSet, trigger }) => {
-    const loadPersisted = async () => {
-      const savedValue = storageManager.read(key, '')
+    ({ setSelf, onSet, trigger }) => {
+      const loadPersisted = async () => {
+        const savedValue = storageManager.read(key, '')
 
-      if (savedValue) {
-        setSelf(savedValue)
+        if (savedValue) {
+          setSelf(savedValue)
+        }
       }
-    }
-    if (trigger === 'get') {
-      loadPersisted()
-    }
+      if (trigger === 'get') {
+        loadPersisted()
+      }
 
-    onSet((newValue, _, isReset) => {
-      isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
-    })
-  }
+      onSet((newValue, _, isReset) => {
+        isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
+      })
+    }
 
 export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
   (key) =>
-  ({ setSelf, onSet, trigger }) => {
-    if (trigger === 'get') {
-      const savedValue = storageManager.read(key, '')
-      setSelf(
-        savedValue !== null && savedValue ? savedValue : new DefaultValue(),
-      )
-    }
+    ({ setSelf, onSet, trigger }) => {
+      if (trigger === 'get') {
+        const savedValue = storageManager.read(key, '')
+        setSelf(
+          savedValue !== null && savedValue ? savedValue : new DefaultValue(),
+        )
+      }
 
-    onSet((newValue, _, isReset) => {
-      if (newValue instanceof DefaultValue && trigger === 'get') return
-      isReset
-        ? storageManager.remove(key)
-        : newValue !== null &&
+      onSet((newValue, _, isReset) => {
+        if (newValue instanceof DefaultValue && trigger === 'get') return
+        isReset
+          ? storageManager.remove(key)
+          : newValue !== null &&
           typeof newValue !== 'undefined' &&
           newValue !== -1
-      storageManager.write(key, newValue)
-    })
-  }
+        storageManager.write(key, newValue)
+      })
+    }
 
 export const localStorageAssetEffect: (key: string) => AtomEffect<boolean> =
   (key) =>
-  ({ setSelf, onSet, trigger }) => {
-    const loadPersisted = async () => {
-      const savedValue = storageManager.read(key, '')
+    ({ setSelf, onSet, trigger }) => {
+      const loadPersisted = async () => {
+        const savedValue = storageManager.read(key, '')
 
-      if (savedValue !== '') {
-        setSelf(savedValue)
+        if (savedValue !== '') {
+          setSelf(savedValue)
+        }
       }
-    }
-    if (trigger === 'get') {
-      loadPersisted()
-    }
+      if (trigger === 'get') {
+        loadPersisted()
+      }
 
-    onSet((newValue, _, isReset) => {
-      isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
-    })
-  }
+      onSet((newValue, _, isReset) => {
+        isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
+      })
+    }
 
 export type RootState = typeof wallet.state
