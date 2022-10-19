@@ -538,41 +538,53 @@ const SettingStackNavigator = () => {
   )
 }
 
-export const MainNavigator = () => (
-  <Tab.Navigator
-    initialRouteName="AppStackNavigator"
-    screenOptions={{
-      headerShown: false,
-      headerTitle: '',
-      tabBarLabelStyle: {
-        fontFamily: Fonts.JetBrainsMono,
-        fontWeight: '500',
-        fontSize: scale(11),
-      },
-      tabBarActiveTintColor: palette.buttonDefault,
-      tabBarInactiveTintColor: palette.nestedColor,
-    }}>
-    <Tab.Screen
-      name="AppStackNavigator"
-      component={AppStackNavigator}
-      options={{ ...TabBarOption(labelTranslateFn('wallet')!) }}
-    />
-    <Tab.Screen
-      name="ShowAllNftsScreen"
-      component={ShowAllNftsScreen}
-      options={{ ...TabBarOption(labelTranslateFn('tabNFT')!) }}
-    />
-    <Tab.Screen
-      name="SettingsScreen"
-      component={SettingStackNavigator}
-      options={{
-        ...TabBarOption(labelTranslateFn('settings')!),
+export const MainNavigator = () => {
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
+  const backgroundColor =
+    currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
+  return (
+    <Tab.Navigator
+      initialRouteName="AppStackNavigator"
+      screenOptions={{
         headerShown: false,
-        headerLeft: undefined,
-      }}
-    />
-  </Tab.Navigator>
-)
+        headerTitle: '',
+        tabBarStyle: {
+          backgroundColor,
+        },
+        tabBarLabelStyle: {
+          fontFamily: Fonts.JetBrainsMono,
+          fontWeight: '500',
+          fontSize: scale(11),
+        },
+        tabBarActiveTintColor: palette.buttonDefault,
+        tabBarInactiveTintColor: palette.nestedColor,
+      }}>
+      <Tab.Screen
+        name="AppStackNavigator"
+        component={AppStackNavigator}
+        options={{ ...TabBarOption(labelTranslateFn('wallet')!) }}
+      />
+      <Tab.Screen
+        name="ShowAllNftsScreen"
+        component={ShowAllNftsScreen}
+        options={{ ...TabBarOption(labelTranslateFn('tabNFT')!) }}
+      />
+      <Tab.Screen
+        name="SettingsScreen"
+        component={SettingStackNavigator}
+        options={{
+          ...TabBarOption(labelTranslateFn('settings')!),
+          headerShown: false,
+          headerLeft: undefined,
+        }}
+      />
+    </Tab.Navigator>
+  )
+}
 
 const StackMainNavigatorHeaderLeft = () => {
   const navigation = useNavigation()
