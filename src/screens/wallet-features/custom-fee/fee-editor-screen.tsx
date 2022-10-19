@@ -34,6 +34,7 @@ import SlowIcon from '../../../assets/icons/slow.svg'
 import AverageIcon from '../../../assets/icons/average.svg'
 import FastIcon from '../../../assets/icons/fast.svg'
 import CloseIcon from '../../../assets/icons/close.svg'
+import SwapIcon from '../../../assets/icons/swap.svg'
 import SwapProviderInfoIcon from '../../../assets/icons/swapProviderInfo.svg'
 import { scale } from 'react-native-size-matters'
 import ButtonFooter from '../../../components/button-footer'
@@ -270,8 +271,11 @@ const StandardRoute = ({
           label={{ tx: 'common.apply' }}
           onPress={handleApplyPress}
           isBorderless={true}
-          isActive={!!speed}
-        />
+          isActive={!!speed}>
+          <Box marginLeft="s">
+            <SwapIcon width={scale(20)} height={scale(15)} />
+          </Box>
+        </Button>
       </ButtonFooter>
     </Box>
   )
@@ -571,8 +575,11 @@ const CustomizeRoute = ({
           label={{ tx: 'common.apply' }}
           onPress={handleApplyPress}
           isBorderless={true}
-          isActive
-        />
+          isActive>
+          <Box marginLeft="s">
+            <SwapIcon width={scale(20)} height={scale(15)} />
+          </Box>
+        </Button>
       </ButtonFooter>
     </Box>
   )
