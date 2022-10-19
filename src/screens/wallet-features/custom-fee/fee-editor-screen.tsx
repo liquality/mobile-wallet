@@ -34,16 +34,16 @@ import SlowIcon from '../../../assets/icons/slow.svg'
 import AverageIcon from '../../../assets/icons/average.svg'
 import FastIcon from '../../../assets/icons/fast.svg'
 import CloseIcon from '../../../assets/icons/close.svg'
+import SwapProviderInfoIcon from '../../../assets/icons/swapProviderInfo.svg'
 import { scale } from 'react-native-size-matters'
 import ButtonFooter from '../../../components/button-footer'
 import AssetIcon from '../../../components/asset-icon'
-import { ChainId, getAsset, getChain } from '@liquality/cryptoassets'
+import { getAsset, getChain } from '@liquality/cryptoassets'
 import { useRecoilValue } from 'recoil'
 import {
   accountForAssetState,
   fiatRatesState,
   networkState,
-  walletState,
 } from '../../../atoms'
 import {
   getSendFee,
@@ -97,7 +97,6 @@ const StandardRoute = ({
 }) => {
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
-  const { activeWalletId, fees } = useRecoilValue(walletState)
   const [speed, setSpeed] = useState<SpeedType | undefined>()
   const [, setError] = useState('')
   const [gasFees, setGasFees] = useState<FDs>()
@@ -105,6 +104,10 @@ const StandardRoute = ({
   const nativeAssetCode = getNativeAsset(selectedAsset)
   const accountForAsset = useRecoilValue(accountForAssetState(nativeAssetCode))
   const [fee, setFee] = useState<GasFees | null>(null)
+  const wallet = setupWallet({
+    ...defaultOptions,
+  })
+  const { activeWalletId, fees } = wallet.state
   const [presets, setPresets] = useState<{
     speed: SpeedType
     preset: PresetType
@@ -162,7 +165,7 @@ const StandardRoute = ({
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [fee],
+    [fee, gasFees],
   )
 
   useEffect(() => {
@@ -228,7 +231,7 @@ const StandardRoute = ({
               </Text>
               <Text variant="normalText" color="slowColor">
                 {gasFees?.[speedType]?.wait
-                  ? `~${gasFees[speedType].wait / 1000}s`
+                  ? `~ ${gasFees[speedType].wait / 1000}s`
                   : ''}
               </Text>
               {gasFees?.[speedType]?.fee && (
@@ -238,7 +241,7 @@ const StandardRoute = ({
                   lineBreakMode={'middle'}
                   numberOfLines={2}
                   marginTop="l">
-                  ~{`${selectedAsset} ${presets[speedType]?.amount}`}
+                  ~ {`${selectedAsset} ${presets[speedType]?.amount}`}
                 </Text>
               )}
 
@@ -264,7 +267,7 @@ const StandardRoute = ({
         <Button
           type="primary"
           variant="l"
-          label={'APPLY'}
+          label={{ tx: 'common.apply' }}
           onPress={handleApplyPress}
           isBorderless={true}
           isActive={!!speed}
@@ -420,11 +423,11 @@ const CustomizeRoute = ({
     <Box flex={1}>
       <Box flex={1} marginTop="m">
         <Text variant="normalText" color="greyMeta" marginTop="l">
-          {`${labelTranslateFn('customFeeScreen.perGas')}`}
+          {labelTranslateFn('customFeeScreen.perGas')}
         </Text>
         <Box flexDirection="row" marginVertical={'m'}>
           <Text variant="normalText" marginRight={'m'}>
-            {`${labelTranslateFn('customFeeScreen.currentBaseFee')}`}
+            {labelTranslateFn('customFeeScreen.currentBaseFee')}
           </Text>
           <Text variant="normalText" marginRight={'m'}>
             {'|'}
@@ -440,10 +443,10 @@ const CustomizeRoute = ({
               {'|'}
             </Text>
             <Text variant="normalText" marginRight={'m'}>
-              {`${labelTranslateFn('customFeeScreen.minerTip')}`}
+              {labelTranslateFn('customFeeScreen.minerTip')}
             </Text>
             <Text variant="normalText" color="greyMeta">
-              TO SPEED UP
+              {labelTranslateFn('customFeeScreen.toSpeedUp')}
             </Text>
           </Box>
           <TextInput
@@ -541,10 +544,10 @@ const CustomizeRoute = ({
               )}
             </Box>
             <Text variant="normalText" color="greyMeta">
-              {`~${getSummaryMaximum()?.amount} ${nativeAssetCode}`}
+              {`~ ${getSummaryMaximum()?.amount} ${nativeAssetCode}`}
             </Text>
             <Text variant="normalText" color="greyMeta">
-              {`~$${getSummaryMaximum()?.fiat}`}
+              {`~ $${getSummaryMaximum()?.fiat}`}
             </Text>
             <Text variant="normalText" color="greyMeta">
               {gasFees?.[speed].fee &&
@@ -565,7 +568,7 @@ const CustomizeRoute = ({
         <Button
           type="primary"
           variant="l"
-          label={'APPLY'}
+          label={{ tx: 'common.apply' }}
           onPress={handleApplyPress}
           isBorderless={true}
           isActive
@@ -657,9 +660,12 @@ const FeeEditorScreen = ({
               <CloseIcon width={15} height={15} />
             </Pressable>
             <Box flex={0.5} flexDirection="row" alignItems={'center'}>
-              <AssetIcon size={20} chain={ChainId.Ethereum} />
-              <Text>Network Speed/Fee</Text>
+              <AssetIcon size={20} asset={selectedAsset} />
+              <Text>{labelTranslateFn('common.networkSpeed')}</Text>
             </Box>
+            <Pressable onPress={() => onClose(false)}>
+              <SwapProviderInfoIcon width={24} height={20} />
+            </Pressable>
           </Box>
           <TabView
             renderTabBar={renderTabBar}
