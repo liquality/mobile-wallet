@@ -73,13 +73,6 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   const [timeline, setTimeline] = React.useState<TimelineStep[]>()
   const setSwapPair = useSetRecoilState(swapPairState)
 
-  React.useEffect(() => {
-    if (!historyItem) {
-      return
-    }
-    getTimeline(historyItem).then(setTimeline)
-  }, [historyItem])
-
   const [isExpanded, setIsExpanded] = React.useState(false)
   const [swapProvider, setSwapProvider] = React.useState<SwapProvider>()
 
@@ -97,10 +90,18 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   const scrollRef = React.useRef<ScrollView>(null)
 
   const theme = useRecoilValue(themeMode)
+
   let currentTheme = useColorScheme() as string
   if (theme) {
     currentTheme = theme
   }
+
+  React.useEffect(() => {
+    if (!historyItem) {
+      return
+    }
+    getTimeline(historyItem).then(setTimeline)
+  }, [historyItem])
 
   const onTogglePress = () => {
     setIsExpanded((prev) => {
