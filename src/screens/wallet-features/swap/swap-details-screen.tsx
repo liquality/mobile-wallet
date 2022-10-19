@@ -1,19 +1,19 @@
 import * as React from 'react'
 import { ScrollView, useColorScheme } from 'react-native'
 import { Box, Pressable, Text } from '../../../theme'
-import { MainStackParamList } from '../../../types'
+import { AccountType, MainStackParamList } from '../../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { scale } from 'react-native-size-matters'
 import { AppIcons } from '../../../assets'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   fiatRatesState,
   historyStateFamily,
   networkState,
+  swapPairState,
   themeMode,
 } from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
-import { retrySwap } from '../../../store/store'
 import { BigNumber } from '@liquality/types'
 import { formatDate, labelTranslateFn, SCREEN_WIDTH } from '../../../utils'
 import SwapPartitionRow from './swap-partition-row'
@@ -70,6 +70,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   const historyStatus = historyItem ? historyItem.status : ''
   const endTime = historyItem ? historyItem.endTime : 0
   const [timeline, setTimeline] = React.useState<TimelineStep[]>()
+  const setSwapPair = useSetRecoilState(swapPairState)
 
   React.useEffect(() => {
     if (!historyItem) {
@@ -117,7 +118,24 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   }
 
   const handleRetrySwapPress = async () => {
-    if (transaction) await retrySwap(transaction)
+    const tempFromAsset = getAsset(activeNetwork, transaction.from)
+    const tempToAsset = getAsset(activeNetwork, transaction.to)
+    const fA: AccountType = {
+      id: transaction.fromAccountId || '',
+      ...tempFromAsset,
+      assets: {},
+      balance: 0,
+    }
+    const tA: AccountType = {
+      id: transaction.toAccountId || '',
+      ...tempToAsset,
+      balance: 0,
+      assets: {},
+    }
+    setSwapPair({ fromAsset: fA, toAsset: tA })
+    navigation.navigate('SwapScreen', {
+      swapAssetPair: { fromAsset: fA, toAsset: tA },
+    })
   }
 
   const computeRate = React.useCallback((swapQuote: SwapQuote) => {
@@ -267,17 +285,17 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
                 <Text
                   variant={'h6'}
                   color="link"
-                  onPress={() => {}}
+                  onPress={handleRetrySwapPress}
                   tx="swapConfirmationScreen.link"
                 />
-              ) : (
+              ) : transaction ? (
                 <Text
                   variant={'h6'}
                   color="link"
                   onPress={handleRetrySwapPress}
                   tx="swapConfirmationScreen.retry"
                 />
-              )}
+              ) : null}
               <Box
                 width={1}
                 height={scale(15)}
