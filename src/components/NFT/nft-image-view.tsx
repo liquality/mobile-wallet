@@ -16,6 +16,7 @@ import StarFavorite from './star-favorite'
 import { NFTAsset } from '../../types'
 import FullWidthImage from './full-width-image'
 import HorizontallyScrollableImage from './horizontally-scrollable-image'
+import { checkIfCollectionNameExists, checkImgUrlExists } from '../../utils'
 
 type NftImageViewProps = {
   iterableNftArray: NFTAsset[]
@@ -33,14 +34,8 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
     activeWalletId,
     accountIdsToSendIn,
   } = props
-  const [imgError, setImgError] = useState<boolean>(false)
+  const [imgError] = useState<string[]>([])
   const navigation = useNavigation()
-
-  const checkImgUrlExists = (imgUrl: string) => {
-    return !imgError && imgUrl
-      ? { uri: imgUrl }
-      : require('../../assets/icons/nft_thumbnail.png')
-  }
 
   const handleGoToCollection = useCallback(
     (nftCollection) => {
@@ -52,7 +47,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
     [navigation, accountIdsToSendIn],
   )
 
-  const renderNftArray = () => {
+  const renderNftArray = useCallback(() => {
     let rows = []
     rows = iterableNftArray.map((nftItem, index) => {
       //If NFT collection array is 1, image should cover full width
@@ -62,8 +57,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
             index={index}
             nftItem={nftItem}
             seeNftDetail={seeNftDetail}
-            setImgError={setImgError}
-            checkImgUrlExists={checkImgUrlExists}
+            imgError={imgError}
             activeWalletId={activeWalletId}
             handleGoToCollection={handleGoToCollection}
           />
@@ -78,7 +72,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
               <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
                 <Text style={styles.collectionNameText}>
                   {' '}
-                  {nftItem[0].collection.name}{' '}
+                  {checkIfCollectionNameExists(nftItem[0].collection.name)}{' '}
                 </Text>
                 <Text style={[styles.collectionNameText, styles.pipe]}>
                   {' '}
@@ -98,9 +92,11 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
                     <Box style={styles.inner}>
                       <Pressable onPress={() => seeNftDetail(item)}>
                         <Image
-                          source={{
-                            uri: item.image_original_url,
-                          }}
+                          source={checkImgUrlExists(
+                            item.image_original_url,
+                            imgError,
+                          )}
+                          onError={() => imgError.push(item.image_original_url)}
                           style={styles.twoImagesOnRow}
                         />
                       </Pressable>
@@ -115,7 +111,10 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
             </SafeAreaView>
           </Box>
         )
-      } else if (nftItem === 3 || (nftItem.length > 4 && !showAllNftsScreen)) {
+      } else if (
+        nftItem.length === 3 ||
+        (nftItem.length > 4 && !showAllNftsScreen)
+      ) {
         return (
           <Box>
             <Pressable
@@ -124,7 +123,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
               <Text style={[styles.collectionNameText, styles.numberOfNfts]}>
                 <Text style={styles.collectionNameText}>
                   {' '}
-                  {nftItem[0].collection.name}{' '}
+                  {checkIfCollectionNameExists(nftItem[0].collection.name)}{' '}
                 </Text>
                 <Text style={[styles.collectionNameText, styles.pipe]}>
                   {' '}
@@ -168,8 +167,7 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
           <HorizontallyScrollableImage
             nftItem={nftItem}
             seeNftDetail={seeNftDetail}
-            setImgError={setImgError}
-            checkImgUrlExists={checkImgUrlExists}
+            imgError={imgError}
             activeWalletId={activeWalletId}
             handleGoToCollection={handleGoToCollection}
           />
@@ -178,7 +176,14 @@ const NftImageView: React.FC<NftImageViewProps> = (props) => {
     })
 
     return rows
-  }
+  }, [
+    activeWalletId,
+    handleGoToCollection,
+    imgError,
+    iterableNftArray,
+    seeNftDetail,
+    showAllNftsScreen,
+  ])
 
   return renderNftArray()
 }
@@ -210,8 +215,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   twoImagesOnRow: {
-    width: Dimensions.get('screen').width / 2.2,
-    height: Dimensions.get('screen').width / 2.2,
+    width: Dimensions.get('screen').width / 2.1,
+    height: Dimensions.get('screen').width / 2.1,
   },
   threeImagesOnRow: {
     width: Dimensions.get('screen').width / 3.3,

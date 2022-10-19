@@ -6,6 +6,7 @@ export const faceliftPalette = {
   whiteGrey: '#EEEEEE',
   lightGrey: '#D9DFE5',
   mediumGrey: '#BFC3C7',
+  orangeGrey: '#F9F9F9',
   grey: '#A8AEB7',
   greyMeta: '#646F85',
   darkGrey: '#3D4767',
@@ -31,6 +32,8 @@ export const faceliftPalette = {
   switchInactiveColor: '#E7E7E7',
   switchInactiveBorderColor: '#94939B',
   yellow: '#FBFF4A',
+  greyBackground: '#F9F9F9',
   linkTextColor: '#8835E7',
   transGrey: '#F9F9F9',
+  error: '#EF0505',
 }

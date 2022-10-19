@@ -1,5 +1,6 @@
 import React, { Children } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
+import { Box } from '../theme'
 
 type ButtonFooterProps = {
   children: React.ReactElement[]
@@ -11,24 +12,22 @@ const ButtonFooter: React.FC<ButtonFooterProps> = ({
   unpositioned,
 }) => {
   return (
-    <View
-      style={[styles.container, !unpositioned && styles.container_absolute]}>
+    <Box
+      flexDirection={'column'}
+      justifyContent="center"
+      paddingBottom={'m'}
+      paddingHorizontal="l"
+      style={!unpositioned && styles.container_absolute}>
       {Children.map(children, (child, key) => (
-        <View key={key} style={styles.item}>
+        <Box key={key} style={styles.item}>
           {child}
-        </View>
+        </Box>
       ))}
-    </View>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    paddingBottom: 10,
-  },
   container_absolute: {
     position: 'absolute',
     bottom: 0,

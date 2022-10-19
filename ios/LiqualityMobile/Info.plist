@@ -42,7 +42,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Needs camera access to scan QR code addresses</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AnekKannada-Bold.ttf</string>
@@ -51,6 +51,7 @@
 		<string>AnekKannada-SemiBold.ttf</string>
 		<string>AnekKannada-Thin.ttf</string>
 		<string>JetBrainsMono-Regular.ttf</string>
+		<string>AnekBangla-Regular.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

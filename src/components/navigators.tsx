@@ -67,6 +67,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
 import { labelTranslateFn } from '../utils'
+import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-screen'
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
 import { useNavigation } from '@react-navigation/core'
 import { CommonActions } from '@react-navigation/native'
@@ -451,23 +452,18 @@ export const AppStackNavigator = () => {
             headerRight: PlaceholderComp,
           })}
         />
-        <MainStack.Screen
-          name="NftDetailScreen"
-          component={NftDetailScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
-          })}
-        />
-        <MainStack.Screen
-          name="NftSendScreen"
-          component={NftSendScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
-          })}
-        />
+
         <MainStack.Screen
           name="NftCollectionScreen"
           component={NftCollectionScreen}
+          options={() => ({
+            headerShown: false,
+            headerRight: PlaceholderComp,
+          })}
+        />
+        <MainStack.Screen
+          name="NftOverviewScreen"
+          component={NftOverviewScreen}
           options={() => ({
             headerShown: false,
             headerRight: PlaceholderComp,
@@ -590,6 +586,7 @@ const StackMainNavigatorHeaderLeft = () => {
   )
 }
 
+//If you dont want your screen to include tabbar, add it to StackMainNavigator obj
 export const StackMainNavigator = () => {
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
@@ -727,6 +724,20 @@ export const StackMainNavigator = () => {
           headerRight: undefined,
           headerLeft: StackMainNavigatorHeaderLeft,
         }}
+      />
+      <MainStack.Screen
+        name="NftDetailScreen"
+        component={NftDetailScreen}
+        options={() => ({
+          headerShown: false,
+        })}
+      />
+      <MainStack.Screen
+        name="NftSendScreen"
+        component={NftSendScreen}
+        options={() => ({
+          headerShown: false,
+        })}
       />
     </MainStack.Navigator>
   )

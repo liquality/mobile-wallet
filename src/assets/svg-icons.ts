@@ -46,6 +46,8 @@ import ChevronUp from '../assets/icons/chevronUp.svg'
 import ChevronDown from '../assets/icons/chevronDown.svg'
 import AngleRightIcon from '../assets/icons/chevronRight.svg'
 import AngleDownIcon from '../assets/icons/chevronDown.svg'
+import AngleUpIcon from '../assets/icons/chevronUp.svg'
+
 import PlusSign from '../assets/icons/plus.svg'
 import MinusSign from '../assets/icons/minus.svg'
 import ExportIcon from '../assets/icons/download.svg'
@@ -96,6 +98,13 @@ import Share from '../assets/icons/nfts/share.svg'
 import Send from '../assets/icons/nfts/send.svg'
 import Sell from '../assets/icons/nfts/sell.svg'
 import NftChain from '../assets/icons/nfts/nft-chain.svg'
+import PurpleCopy from '../assets/icons/nfts/purpleCopy.svg'
+import NftCard from '../assets/icons/nfts/nft-card-new.svg'
+import GreenCheckMark from '../assets/icons/nfts/green-check-mark.svg'
+import CheckmarkCircle from '../assets/icons/nfts/checkmark-circle.svg'
+import PurpleThreeDots from '../assets/icons/nfts/purple-three-dots.svg'
+
+import ConfirmationTrackerLine from '../assets/icons/nfts/confirmation-tracker.svg'
 
 import ShortLine from '../assets/icons/nfts/short-line.svg'
 import NetworkActiveDot from '../assets/icons/dot.svg'
@@ -179,6 +188,7 @@ export default {
   ChevronRightIcon,
   AngleRightIcon,
   AngleDownIcon,
+  AngleUpIcon,
   PlusSign,
   MinusSign,
   ExportIcon,
@@ -222,6 +232,12 @@ export default {
   ShortLine,
   Refresh,
   NftChain,
+  PurpleCopy,
+  NftCard,
+  GreenCheckMark,
+  ConfirmationTrackerLine,
+  CheckmarkCircle,
+  PurpleThreeDots,
 
   LogoFull,
   OnlyLqLogoDark,

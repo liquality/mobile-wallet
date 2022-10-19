@@ -47,10 +47,12 @@ const WrappedRow: FC<{
   }, [isExpanded])
 
   const onNFTPress = () => {
-    navigation.navigate('NftForSpecificChainScreen', {
-      screenTitle: 'NFTs for CODE',
-      currentAccount: account as AccountType,
-    })
+    if (account.id) {
+      navigation.navigate('NftForSpecificChainScreen', {
+        screenTitle: 'NFTs for CODE',
+        currentAccount: account as AccountType,
+      })
+    }
   }
 
   const onAssetSelected = useCallback(

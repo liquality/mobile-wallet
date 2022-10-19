@@ -98,9 +98,9 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
     //TODO we still need to handle custom tokens
     let myAssets: Asset[] = []
 
-    if (activeNetwork === Network.Testnet) {
+    if (activeNetwork === Network.Testnet && enabledAssets) {
       myAssets =
-        enabledAssets?.reduce((assetList: Asset[], asset) => {
+        enabledAssets.reduce((assetList: Asset[], asset) => {
           if (getAllAssets().testnet.hasOwnProperty(asset)) {
             assetList.push({
               ...getAsset(activeNetwork, asset),
