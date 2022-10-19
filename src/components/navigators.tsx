@@ -464,20 +464,7 @@ export const AppStackNavigator = () => {
             headerRight: PlaceholderComp,
           })}
         />
-        <MainStack.Screen
-          name="NftDetailScreen"
-          component={NftDetailScreen}
-          options={() => ({
-            headerShown: false,
-          })}
-        />
-        <MainStack.Screen
-          name="NftSendScreen"
-          component={NftSendScreen}
-          options={() => ({
-            headerShown: false,
-          })}
-        />
+
         <MainStack.Screen
           name="NftCollectionScreen"
           component={NftCollectionScreen}
@@ -611,6 +598,7 @@ const SelectChainScreenHeaderLeft = () => {
   )
 }
 
+//If you dont want your screen to include tabbar, add it to StackMainNavigator obj
 export const StackMainNavigator = () => {
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
@@ -724,6 +712,20 @@ export const StackMainNavigator = () => {
           headerStyle: { backgroundColor },
           headerRight: undefined,
           headerLeft: undefined,
+        })}
+      />
+      <MainStack.Screen
+        name="NftDetailScreen"
+        component={NftDetailScreen}
+        options={() => ({
+          headerShown: false,
+        })}
+      />
+      <MainStack.Screen
+        name="NftSendScreen"
+        component={NftSendScreen}
+        options={() => ({
+          headerShown: false,
         })}
       />
     </MainStack.Navigator>

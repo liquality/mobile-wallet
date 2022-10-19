@@ -259,8 +259,9 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
               }}
               onPress={() => handleOpenDrawer()}
               isBorderless={true}
-              isActive={!errorMsg}
+              isActive={addressInput.value !== '' || errorMsg}
             />
+            {console.log(addressInput.value, 'ERRORMSG T F', !errorMsg)}
             <Button
               type="secondary"
               variant="l"
@@ -300,7 +301,7 @@ const styles = StyleSheet.create({
     height: 95,
     marginBottom: 20,
   },
-  btnBox: { alignItems: 'center', marginTop: scale(150) },
+  btnBox: { alignItems: 'center', marginTop: scale(220) },
   sendToInput: {
     marginTop: scale(5),
     fontSize: 19,
