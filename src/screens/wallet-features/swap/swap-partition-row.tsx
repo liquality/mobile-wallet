@@ -4,7 +4,7 @@ import { Box, Text } from '../../../theme'
 
 type SwapPartitionRowProps = {
   title: string
-  subTitle: string
+  subTitle?: string
   leftSubTitle?: string
   showParitionLine?: boolean
   customView?: React.ReactElement

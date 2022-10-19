@@ -48,7 +48,6 @@ const {
   ChevronUp,
   ChevronDown,
   SwapSuccess,
-  SwapTknIcon,
 } = AppIcons
 
 const svgCardWidth = scale(SCREEN_WIDTH)
@@ -397,13 +396,8 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
         <Box marginTop={'xl'}>
           <SwapPartitionRow
             title={labelTranslateFn('swapConfirmationScreen.rate')!}
-            subTitle="1 inch" // temp hardcoded
-            leftSubTitle={`1${from} = ${computeRate(transaction)} ${to}`}
-            customView={
-              <Box marginRight="s" style={{ marginTop: -scale(2) }}>
-                <SwapTknIcon width={20} />
-              </Box>
-            }
+            subTitle={`1 ${from} = ${computeRate(transaction)} ${to}`}
+            showParitionLine={false}
           />
         </Box>
         <Box marginTop={'xl'}>
@@ -503,13 +497,8 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
             <Box marginTop={'xl'}>
               <SwapPartitionRow
                 title={labelTranslateFn('swapConfirmationScreen.rate')!}
-                subTitle="1 inch" //hardcoded temp
-                leftSubTitle={`1${from} = ${computeRate(transaction)} ${to}`}
-                customView={
-                  <Box marginRight="s" style={{ marginTop: -scale(2) }}>
-                    <SwapTknIcon width={20} />
-                  </Box>
-                }
+                subTitle={`1 ${from} = ${computeRate(transaction)} ${to}`}
+                showParitionLine={false}
               />
             </Box>
             {historyItem ? (

@@ -40,7 +40,6 @@ import AssetManagementScreen from '../screens/wallet-features/asset/asset-manage
 import AssetToggleScreen from '../screens/wallet-features/asset/asset-toggle-screen'
 import SwapScreen from '../screens/wallet-features/swap/swap-screen'
 import SwapReviewScreen from '../screens/wallet-features/swap/swap-review-screen'
-import SwapConfirmationScreen from '../screens/wallet-features/swap/swap-confirmation-screen'
 import { TransitionPresets } from '@react-navigation/stack'
 import LoginScreen from '../screens/wallet-creation/loginScreen'
 import BackupWarningScreen from '../screens/wallet-features/backup/backup-warning-screen'
@@ -223,7 +222,6 @@ type NavigationProps = NativeStackScreenProps<
   | 'OverviewScreen'
   | 'SendConfirmationScreen'
   | 'BackupWarningScreen'
-  | 'SwapConfirmationScreen'
   | 'AssetManagementScreen'
   | 'AssetChooserScreen'
   | 'ReceiveScreen'
@@ -444,15 +442,6 @@ export const AppStackNavigator = () => {
           component={SwapReviewScreen}
           options={() => ({
             headerRight: PlaceholderComp,
-          })}
-        />
-        <MainStack.Screen
-          name="SwapConfirmationScreen"
-          component={SwapConfirmationScreen}
-          options={({ navigation, route }: NavigationProps) => ({
-            headerRight: () => SwapCheckHeaderRight({ navigation, route }),
-            title: route?.params?.screenTitle || 'Overview',
-            headerLeft: PlaceholderComp,
           })}
         />
         <MainStack.Screen
@@ -734,11 +723,6 @@ export const StackMainNavigator = () => {
         component={AssetScreen}
         options={{
           ...screenNavOptions,
-
-          // headerShadowVisible: false,
-          // headerBackVisible: false,
-          // headerTitle: labelTranslateFn('swapDetails')!,
-          // headerTitleStyle: MANAGE_ASSET_HEADER,
           headerStyle: { backgroundColor },
           headerRight: undefined,
           headerLeft: StackMainNavigatorHeaderLeft,
