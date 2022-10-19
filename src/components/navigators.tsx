@@ -374,9 +374,6 @@ export const AppStackNavigator = () => {
               AssetManageScreenHeaderLeft({ navigation, route }),
           })}
         />
-        <MainStack.Screen name="AssetScreen">
-          {(props) => AssetScreen(props)}
-        </MainStack.Screen>
         <MainStack.Screen
           name="SendScreen"
           component={SendScreen}
@@ -727,6 +724,21 @@ export const StackMainNavigator = () => {
           headerBackVisible: false,
           headerTitle: labelTranslateFn('swapDetails')!,
           headerTitleStyle: MANAGE_ASSET_HEADER,
+          headerStyle: { backgroundColor },
+          headerRight: undefined,
+          headerLeft: StackMainNavigatorHeaderLeft,
+        }}
+      />
+      <MainStack.Screen
+        name="AssetScreen"
+        component={AssetScreen}
+        options={{
+          ...screenNavOptions,
+
+          // headerShadowVisible: false,
+          // headerBackVisible: false,
+          // headerTitle: labelTranslateFn('swapDetails')!,
+          // headerTitleStyle: MANAGE_ASSET_HEADER,
           headerStyle: { backgroundColor },
           headerRight: undefined,
           headerLeft: StackMainNavigatorHeaderLeft,
