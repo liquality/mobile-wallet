@@ -280,15 +280,10 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
             <Box
               flex={0.35}
               flexDirection={'row'}
-              justifyContent="space-between">
-              {historyStatus === 'SUCCESS' ? (
-                <Text
-                  variant={'h6'}
-                  color="link"
-                  onPress={handleRetrySwapPress}
-                  tx="swapConfirmationScreen.link"
-                />
-              ) : transaction ? (
+              justifyContent={
+                historyStatus === 'SUCCESS' ? 'flex-end' : 'space-between'
+              }>
+              {historyStatus !== 'SUCCESS' ? (
                 <Text
                   variant={'h6'}
                   color="link"
@@ -296,24 +291,30 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
                   tx="swapConfirmationScreen.retry"
                 />
               ) : null}
-              <Box
-                width={1}
-                height={scale(15)}
-                backgroundColor="inactiveText"
-              />
-              <Box style={{ marginTop: -scale(5) }}>
-                {historyStatus === 'SUCCESS' ? (
+              {historyStatus !== 'SUCCESS' ? (
+                <Box
+                  width={1}
+                  height={scale(15)}
+                  backgroundColor="inactiveText"
+                />
+              ) : null}
+              {historyStatus === 'SUCCESS' ? (
+                <Box style={{ marginTop: -scale(5) }}>
                   <SwapSuccess width={20} />
-                ) : historyStatus === 'REFUNDED' ? (
+                </Box>
+              ) : historyStatus === 'REFUNDED' ? (
+                <Box style={{ marginTop: -scale(5) }}>
                   <SwapRetry width={20} />
-                ) : (
+                </Box>
+              ) : (
+                <Box style={{ marginTop: -scale(8) }}>
                   <ProgressCircle
                     radius={17}
                     current={swapProvider?.statuses[historyStatus!].step + 1}
                     total={swapProvider?.totalSteps}
                   />
-                )}
-              </Box>
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>
