@@ -161,7 +161,7 @@ const ActivityFlatList = ({
   return (
     <>
       {showFilter ? <ActivityFilter numOfResults={history.length} /> : null}
-      {historyCount ? (
+      {historyCount || history.length ? (
         <>
           {history.map((item) => {
             return renderActivity({ item })
