@@ -14,6 +14,7 @@ import {
   TextInput,
   useColorScheme,
 } from 'react-native'
+import { scale } from 'react-native-size-matters'
 import { useRecoilValue } from 'recoil'
 import { AppIcons, Fonts } from '../../../assets'
 import {
@@ -23,6 +24,7 @@ import {
   themeMode,
 } from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
+import ButtonFooter from '../../../components/button-footer'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import ReviewDrawer from '../../../components/review-drawer'
 import { sendNFTTransaction, updateNFTs } from '../../../store/store'
@@ -68,7 +70,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
     currentTheme = theme
   }
   const backgroundColor =
-    currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
+    currentTheme === 'dark' ? 'semiTransparentDark' : 'white'
 
   const handleCopyAddressPress = async () => {
     if (addressForAccount) {
@@ -141,6 +143,7 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
     <Box flex={1} backgroundColor={backgroundColor}>
       {showReviewDrawer ? (
         <ReviewDrawer
+          addressInput={addressInput.value}
           handlePressSend={sendNft}
           title={'Review Send NFT'}
           height={481}
@@ -243,22 +246,26 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
           </Text>
         </Box>
         <Box style={styles.btnBox}>
-          <Button
-            type="primary"
-            variant="l"
-            label={'Review'}
-            isBorderless={false}
-            isActive={true}
-            onPress={() => handleOpenDrawer()}
-          />
-          <Button
-            type="secondary"
-            variant="l"
-            label="Cancel"
-            onPress={() => navigation.goBack()}
-            isBorderless={false}
-            isActive={true}
-          />
+          <ButtonFooter>
+            <Button
+              type="primary"
+              variant="l"
+              label={{
+                tx: errorMsg ? 'sendScreen.insufficientFund' : 'common.review',
+              }}
+              onPress={() => handleOpenDrawer()}
+              isBorderless={true}
+              isActive={!errorMsg}
+            />
+            <Button
+              type="secondary"
+              variant="l"
+              label={{ tx: 'common.cancel' }}
+              onPress={navigation.goBack}
+              isBorderless={true}
+              isActive={true}
+            />
+          </ButtonFooter>
         </Box>
       </Box>
     </Box>
@@ -289,9 +296,9 @@ const styles = StyleSheet.create({
     height: 95,
     marginBottom: 20,
   },
-  btnBox: { alignItems: 'center' },
+  btnBox: { alignItems: 'center', marginTop: scale(150) },
   sendToInput: {
-    marginTop: 5,
+    marginTop: scale(5),
     fontSize: 19,
 
     fontFamily: Fonts.Regular,

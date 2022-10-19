@@ -100,6 +100,7 @@ import PurpleCopy from '../assets/icons/nfts/purpleCopy.svg'
 import NftCard from '../assets/icons/nfts/nft-card-new.svg'
 import GreenCheckMark from '../assets/icons/nfts/green-check-mark.svg'
 import CheckmarkCircle from '../assets/icons/nfts/checkmark-circle.svg'
+import PurpleThreeDots from '../assets/icons/nfts/purple-three-dots.svg'
 
 import ConfirmationTrackerLine from '../assets/icons/nfts/confirmation-tracker.svg'
 
@@ -227,6 +228,7 @@ export default {
   GreenCheckMark,
   ConfirmationTrackerLine,
   CheckmarkCircle,
+  PurpleThreeDots,
 
   LogoFull,
   OnlyLqLogoDark,
