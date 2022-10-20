@@ -1,41 +1,59 @@
 import React, { FC, useEffect, useState } from 'react'
-import { StatusBar } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { NavigationContainer } from '@react-navigation/native'
+import {
+  SafeAreaProvider,
+  initialWindowMetrics,
+} from 'react-native-safe-area-context'
 
-import { createSwitchNavigator } from '@react-navigation/compat'
-import { ThemeProvider } from '@shopify/restyle'
+import { ThemeProvider as TP } from '@shopify/restyle'
 import { isNewInstallation } from './src/store/store'
 import {
   WalletCreationNavigator,
-  WalletImportNavigator,
-  MainNavigator,
+  StackMainNavigator,
 } from './src/components/navigators'
-import LoginScreen from './src/screens/wallet-creation/loginScreen'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { RecoilRoot } from 'recoil'
-import { Box, theme } from './src/theme'
+import { RecoilRoot, useRecoilValue } from 'recoil'
+import { Box, theme, darkTheme, toastConfig } from './src/theme'
+import { StatusBar, useColorScheme } from 'react-native'
+import { themeMode } from './src/atoms'
+import { createSwitchNavigator } from '@react-navigation/compat'
+import Toast from 'react-native-toast-message'
+
+const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const selectedTheme = useRecoilValue(themeMode)
+  let colorScheme = useColorScheme() as string
+  if (selectedTheme) {
+    colorScheme = selectedTheme
+  }
+
+  const statusBar = colorScheme === 'dark' ? 'light-content' : 'dark-content'
+
+  const currentTheme = colorScheme === 'dark' ? darkTheme : theme
+
+  return (
+    <TP theme={currentTheme}>
+      <StatusBar barStyle={statusBar} />
+      {children}
+    </TP>
+  )
+}
 
 const AppNavigator = ({ initialRouteName }: { initialRouteName: string }) => {
   const Navigator = createSwitchNavigator(
     {
+      StackMainNavigator,
       WalletCreationNavigator,
-      WalletImportNavigator,
-      MainNavigator,
-      LoginScreen,
     },
     {
       initialRouteName,
     },
   )
-
   return <Navigator />
 }
 
 const App: FC = () => {
-  const [initialRouteName, setInitialRouteName] = useState(
-    'WalletCreationNavigator',
-  )
+  const [initialRouteName, setInitialRouteName] = useState('')
   const backgroundStyle = {
     flex: 1,
   }
@@ -43,9 +61,9 @@ const App: FC = () => {
   useEffect(() => {
     const isNew = isNewInstallation()
     if (!isNew) {
-      setInitialRouteName('LoginScreen')
+      setInitialRouteName('StackMainNavigator')
     } else {
-      setInitialRouteName('EntryScreen')
+      setInitialRouteName('WalletCreationNavigator')
     }
     SplashScreen.hide()
   }, [])
@@ -56,16 +74,18 @@ const App: FC = () => {
 
   return (
     <RecoilRoot>
-      <ThemeProvider theme={theme}>
-        <Box style={backgroundStyle} testID={'app-test'}>
-          <StatusBar barStyle={'dark-content'} backgroundColor="white" />
+      <SafeAreaProvider
+        initialMetrics={initialWindowMetrics}
+        testID={'app-test'}>
+        <ThemeProvider>
           <GestureHandlerRootView style={backgroundStyle}>
             <NavigationContainer>
               <AppNavigator initialRouteName={initialRouteName} />
             </NavigationContainer>
           </GestureHandlerRootView>
-        </Box>
-      </ThemeProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
+      <Toast config={toastConfig} />
     </RecoilRoot>
   )
 }

@@ -1,10 +1,10 @@
 import StorageManager from '../core/storage-manager'
 import { BigNumber } from '@liquality/types'
-import { FeeDetail } from '@chainify/types'
+import { ChainId, FeeDetail } from '@chainify/types'
 import 'react-native-reanimated'
 import { setupWallet } from '@liquality/wallet-core'
 import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
-import { AccountType, CustomRootState, GasFees } from '../types'
+import { AccountType, CustomRootState, GasFees, NFT } from '../types'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import {
   Notification,
@@ -35,6 +35,311 @@ import {
 import { AtomEffect, DefaultValue } from 'recoil'
 import dayjs from 'dayjs'
 import { showNotification } from './pushNotification'
+
+export const allNfts = {
+  'The Merge: Regenesis': [
+    {
+      asset_contract: {
+        address: '0xe42cad6fc883877a76a26a16ed92444ab177e306',
+        external_link: 'https://consensys.net/merge',
+        image_url:
+          'https://i.seadn.io/gcs/files/6ae69eaefbf70905a975423ad9e16607.jpg?w=500&auto=format',
+        name: 'TheMerge',
+        symbol: 'MERGE',
+      },
+      collection: {
+        name: 'The Merge: Regenesis',
+      },
+      description:
+        "Regenesis is a collection of art NFTs celebrating the Ethereum Merge, a historic technological milestone and testament to the power of decentralized software development.\n\nThis edition of the NFT collection illustrates an elaborately detailed world embodying the most important benefit of the Merge: sustainability. The art explores the scale and significance of the Merge, an ambitious re-architecture of the world's largest open programmable blockchain, which makes the network 2000x more energy efficient and positions Ethereum to sustainably support the next generation of Web3 creators and developers.",
+      external_link: 'https://consensys.net/merge',
+      id: 642879097,
+      image_original_url:
+        'https://opensea-private.mypinata.cloud/ipfs/Qma3dgNvmqabeVchAfG95KyESXCDojo4b1Fc8U5xiZ89hf',
+      image_preview_url:
+        'https://lh3.googleusercontent.com/VTjV3wixgJKaj39Ue741dEa6BUkKO9KB7sX2z6oXiZAD-h-syGztoBavJmIYM-OMKrJzSM3ODCmKo6mm99LarjuaFrSHysokWNRojuc=s250',
+      image_thumbnail_url:
+        'https://lh3.googleusercontent.com/VTjV3wixgJKaj39Ue741dEa6BUkKO9KB7sX2z6oXiZAD-h-syGztoBavJmIYM-OMKrJzSM3ODCmKo6mm99LarjuaFrSHysokWNRojuc=s128',
+      name: 'TheMerge',
+      token_id: '33495',
+      starred: false,
+      accountId: '94aefc1e-4dc6-46f5-a378-d8ba65dfde15',
+    },
+  ],
+  'OpenSea Collections': [
+    {
+      asset_contract: {
+        address: '0x2953399124f0cbb46d2cbacd8a89cf0599974963',
+        name: 'OpenSea Collections',
+        symbol: 'OPENSTORE',
+      },
+      collection: {
+        name: 'OpenSea Collections',
+      },
+      token_id:
+        '108547238217244398352317081414267526150613564148133429667396751442451678373648',
+      amount: '1',
+      standard: 'ERC1155',
+      name: 'Dogg on it: Death Row x Bored Ape #( FREE DROP - With buying 3 NFT you get 1 Free NFT )',
+      description:
+        '[GIVEAWAY : With buying 3 NFT you get 1 Free NFT](https://opensea.io/collection/dogg-onit)\n\nCheck Out This [COLLECTION ✅](https://opensea.io/collection/dogg-onit)\n\n(Not This One)',
+      image_original_url:
+        'https://lh3.googleusercontent.com/b-UtXxy1LITn8FK55jBYq9YGwO6u4GjryRUVKn0xdk00q4mtcYKFPRWtkcDjJaRs9idVHlfGPjrikqrdd6o08WXy5r1r13WihHBZ',
+      image_preview_url:
+        'https://lh3.googleusercontent.com/b-UtXxy1LITn8FK55jBYq9YGwO6u4GjryRUVKn0xdk00q4mtcYKFPRWtkcDjJaRs9idVHlfGPjrikqrdd6o08WXy5r1r13WihHBZ',
+      image_thumbnail_url:
+        'https://lh3.googleusercontent.com/b-UtXxy1LITn8FK55jBYq9YGwO6u4GjryRUVKn0xdk00q4mtcYKFPRWtkcDjJaRs9idVHlfGPjrikqrdd6o08WXy5r1r13WihHBZ',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
+    {
+      asset_contract: {
+        address: '0x2953399124f0cbb46d2cbacd8a89cf0599974963',
+        name: 'OpenSea Collections',
+        symbol: 'OPENSTORE',
+      },
+      collection: {
+        name: 'OpenSea Collections',
+      },
+      token_id:
+        '108547238217244398352317081414267526150613564148133429667396751442451678373648',
+      amount: '1',
+      standard: 'ERC1155',
+      name: 'Dogg on it: Death Row x Bored Ape #( FREE DROP - With buying 3 NFT you get 1 Free NFT )',
+      description:
+        '[GIVEAWAY : With buying 3 NFT you get 1 Free NFT](https://opensea.io/collection/dogg-onit)\n\nCheck Out This [COLLECTION ✅](https://opensea.io/collection/dogg-onit)\n\n(Not This One)',
+      image_original_url:
+        'https://lh3.googleusercontent.com/b-UtXxy1LITn8FK55jBYq9YGwO6u4GjryRUVKn0xdk00q4mtcYKFPRWtkcDjJaRs9idVHlfGPjrikqrdd6o08WXy5r1r13WihHBZ',
+      image_preview_url:
+        'https://lh3.googleusercontent.com/b-UtXxy1LITn8FK55jBYq9YGwO6u4GjryRUVKn0xdk00q4mtcYKFPRWtkcDjJaRs9idVHlfGPjrikqrdd6o08WXy5r1r13WihHBZ',
+      image_thumbnail_url:
+        'https://lh3.googleusercontent.com/b-UtXxy1LITn8FK55jBYq9YGwO6u4GjryRUVKn0xdk00q4mtcYKFPRWtkcDjJaRs9idVHlfGPjrikqrdd6o08WXy5r1r13WihHBZ',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
+    {
+      asset_contract: {
+        address: '0x2953399124f0cbb46d2cbacd8a89cf0599974963',
+        name: 'OpenSea Collections',
+        symbol: 'OPENSTORE',
+      },
+      collection: {
+        name: 'OpenSea Collections',
+      },
+      token_id:
+        '74099691892997789040072932098170896380307251443958573627201600418187315274152',
+      amount: '1',
+      standard: 'ERC1155',
+      name: 'Dark Soul Ape X ( FREE DROP - With buying 3 NFT you get 1 Free NFT )',
+      description:
+        '[GIVEAWAY : With buying 3 NFT you get 1 Free NFT]()\n\nCheck Out This [COLLECTION ✅]()\n\n(Not This One)',
+      image_original_url:
+        'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
+      image_preview_url:
+        'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
+      image_thumbnail_url:
+        'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
+      starred: false,
+    },
+    {
+      asset_contract: {
+        address: '0x2953399124f0cbb46d2cbacd8a89cf0599974963',
+        name: 'OpenSea Collections',
+        symbol: 'OPENSTORE',
+      },
+      collection: {
+        name: 'OpenSea Collections',
+      },
+      token_id:
+        '69409568717421957810771230577962440870804356018059572674892187908130255939344',
+      amount: '1',
+      standard: 'ERC1155',
+      name: '(Pre Sale) Metaverse Bored Ape( FREE DROP - With buying 3 NFT you get 1 Free NFT )',
+      description:
+        '[GIVEAWAY : With buying 3 NFT you get 1 Free NFT](https://opensea.io/collection/ulimitedmeta/)\n\nCheck Out This [COLLECTION ✅](https://opensea.io/collection/ulimitedmeta/)\n\n(Not This One)',
+      image_original_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      image_preview_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      image_thumbnail_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
+    {
+      asset_contract: {
+        address: '0x2953399124f0cbb46d2cbacd8a89cf0599974963',
+        name: 'OpenSea Collections',
+        symbol: 'OPENSTORE',
+      },
+      collection: {
+        name: 'OpenSea Collections',
+      },
+      token_id:
+        '69409568717421957810771230577962440870804356018059572674892187908130255939344',
+      amount: '1',
+      standard: 'ERC1155',
+      name: '(Pre Sale) Metaverse Bored Ape( FREE DROP - With buying 3 NFT you get 1 Free NFT )',
+      description:
+        '[GIVEAWAY : With buying 3 NFT you get 1 Free NFT](https://opensea.io/collection/ulimitedmeta/)\n\nCheck Out This [COLLECTION ✅](https://opensea.io/collection/ulimitedmeta/)\n\n(Not This One)',
+      image_original_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      image_preview_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      image_thumbnail_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
+    {
+      asset_contract: {
+        address: '0x2953399124f0cbb46d2cbacd8a89cf0599974963',
+        name: 'OpenSea Collections',
+        symbol: 'OPENSTORE',
+      },
+      collection: {
+        name: 'OpenSea Collections',
+      },
+      token_id:
+        '74099691892997789040072932098170896380307251443958573627201600418187315274152',
+      amount: '1',
+      standard: 'ERC1155',
+      name: 'Dark Soul Ape X ( FREE DROP - With buying 3 NFT you get 1 Free NFT )',
+      description:
+        '[GIVEAWAY : With buying 3 NFT you get 1 Free NFT]()\n\nCheck Out This [COLLECTION ✅]()\n\n(Not This One)',
+      image_original_url:
+        'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
+      image_preview_url:
+        'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
+      image_thumbnail_url:
+        'https://lh3.googleusercontent.com/vnb-58krKGOaiYWFoG0pVN6Kp0U64CMU9Nbq4KLNFNOKjZB84qpWm3QvVGcZQYe-hQoMbV2pB9oBPcL4PAFpGjRUt2EVodp2XZrAhIQ',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
+    {
+      asset_contract: {
+        address: '0x2953399124f0cbb46d2cbacd8a89cf0599974963',
+        name: 'OpenSea Collections',
+        symbol: 'OPENSTORE',
+      },
+      collection: {
+        name: 'OpenSea Collections',
+      },
+      token_id:
+        '69409568717421957810771230577962440870804356018059572674892187908130255939344',
+      amount: '1',
+      standard: 'ERC1155',
+      name: '(Pre Sale) Metaverse Bored Ape( FREE DROP - With buying 3 NFT you get 1 Free NFT )',
+      description:
+        '[GIVEAWAY : With buying 3 NFT you get 1 Free NFT](https://opensea.io/collection/ulimitedmeta/)\n\nCheck Out This [COLLECTION ✅](https://opensea.io/collection/ulimitedmeta/)\n\n(Not This One)',
+      image_original_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      image_preview_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      image_thumbnail_url:
+        'https://lh3.googleusercontent.com/HdBnC2WcXhlhRe3hxq_aa5QkOMD_2uKXZ3vWsw1K_AEvoGZrUv8nMvROytSqdGzVPCbXJJMk7frWgzbj3K7MeqZSji6lwwEhAknYkg',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
+  ],
+  'Neon District Season One Item': [
+    {
+      asset_contract: {
+        address: '0x7227e371540cf7b8e512544ba6871472031f3335',
+        name: 'Neon District Season One Item',
+        symbol: 'NDITEM1',
+      },
+      collection: {
+        name: 'Neon District Season One Item',
+      },
+      token_id: '158456337646102184554375542858',
+      amount: '1',
+      standard: 'ERC721',
+      name: 'Factor Fabricator: Paragon',
+      description:
+        'Armor found within Neon District.\n\nA Neon District: Season One game item, playable on https://portal.neondistrict.io.\n\nNeon District is a free-to-play cyberpunk role-playing game. Collect characters and gear, craft and level up teams, and battle against other players through competitive multiplayer and in turn-based combat.',
+      image_original_url:
+        'https://neon-district-season-one.s3.amazonaws.com/images/factorfabricatorp-uncommon-arms-female-thumb.png',
+      image_preview_url:
+        'https://neon-district-season-one.s3.amazonaws.com/images/factorfabricatorp-uncommon-arms-female-thumb.png',
+      image_thumbnail_url:
+        'https://neon-district-season-one.s3.amazonaws.com/images/factorfabricatorp-uncommon-arms-female-thumb.png',
+      external_link:
+        'https://portal.neondistrict.io/asset/158456337646102184554375542858',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
+  ],
+  'Sunflower Land': [
+    {
+      asset_contract: {
+        address: '0x2b4a66557a79263275826ad31a4cddc2789334bd',
+        name: 'Sunflower Land',
+        symbol: 'SL',
+      },
+      collection: {
+        name: 'Sunflower Land',
+      },
+      token_id: '95834',
+      amount: '1',
+      standard: 'ERC721',
+      name: 'Sunflower Land #95834',
+      description:
+        'A new farm at Sunflower Land. It is still being verified and not recommended to buy as it may be blacklisted.',
+      image_original_url:
+        'https://sunflower-land.com/testnet/farms/verifying.png',
+      image_preview_url:
+        'https://sunflower-land.com/testnet/farms/verifying.png',
+      image_thumbnail_url:
+        'https://sunflower-land.com/testnet/farms/verifying.png',
+      external_link: 'https://sunflower-land.com/play/?farmId=95834',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
+    {
+      asset_contract: {
+        address: '0x2b4a66557a79263275826ad31a4cddc2789334bd',
+        name: 'Sunflower Land',
+        symbol: 'SL',
+      },
+      collection: {
+        name: 'Sunflower Land',
+      },
+      token_id: '95834',
+      amount: '1',
+      standard: 'ERC721',
+      name: 'Sunflower Land #95834',
+      description:
+        'A new farm at Sunflower Land. It is still being verified and not recommended to buy as it may be blacklisted.',
+      image_original_url:
+        'https://sunflower-land.com/testnet/farms/verifying.png',
+      image_preview_url:
+        'https://sunflower-land.com/testnet/farms/verifying.png',
+      image_thumbnail_url:
+        'https://sunflower-land.com/testnet/farms/verifying.png',
+      external_link: 'https://sunflower-land.com/play/?farmId=95834',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
+  ],
+  'Galaxy OAT': [
+    {
+      asset_contract: {
+        address: '0x1871464f087db27823cff66aa88599aa4815ae95',
+        name: 'Galaxy OAT',
+        symbol: 'OAT',
+      },
+      collection: {
+        name: 'Galaxy OAT',
+      },
+      token_id: '824888',
+      amount: '1',
+      standard: 'ERC721',
+      starred: false,
+      accountId: '3a2a2b3f-7b9f-447d-944e-a1bf8cb3fcfa',
+    },
+  ],
+}
 
 // Unwrap the type returned by a promise
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
@@ -112,7 +417,7 @@ export const createWallet = async (
 /**
  * Populates an already instantiated wallet with account information
  */
-export const populateWallet = async (): Promise<void> => {
+export const populateWallet = async (accountIds?: string[]): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet.state
   await wallet.dispatch
     .initializeAddresses({
@@ -127,6 +432,7 @@ export const populateWallet = async (): Promise<void> => {
     .updateBalances({
       network: activeNetwork,
       walletId: activeWalletId,
+      accountIds,
     })
     .catch((e) => {
       Log(`Failed update balances: ${e}`, 'error')
@@ -155,19 +461,28 @@ export const populateWallet = async (): Promise<void> => {
 
 export const updateBalanceRatesMarketLoop = async (): Promise<void> => {
   const { activeNetwork, activeWalletId } = wallet?.state
+  const allAccounts = wallet.getters.accountsData
+  const account = allAccounts[Math.floor(Math.random() * allAccounts.length)]
 
   await wallet.dispatch
     .updateBalances({
       network: activeNetwork,
       walletId: activeWalletId,
+      accountIds: [account.id],
     })
     .catch((e) => {
       Log(`Failed update balances: ${e}`, 'error')
     })
 
+  await updateNFTs({
+    network: activeNetwork,
+    walletId: activeWalletId,
+    accountIds: [account.id],
+  })
+
   await wallet.dispatch
     .updateFiatRates({
-      assets: wallet.getters.allNetworkAssets,
+      assets: account.assets,
     })
     .catch((e) => {
       Log(`Failed to update fiat rates: ${e}`, 'error')
@@ -200,7 +515,7 @@ export const fetchFeesForAsset = async (asset: string): Promise<GasFees> => {
       Log(`Failed to update fees: ${e}`, 'error')
     })
 
-  if (!fees) throw new Error('Failed to fetch gas fees')
+  if (!fees) throw new Error('Failed to fetch gas fees: ' + asset)
 
   return {
     slow: new BigNumber(extractFee(fees.slow)),
@@ -234,11 +549,9 @@ export const updateNFTs = async (paramObj: {
   network: Network
   accountIds: string[]
 }): Promise<void> => {
-  if (wallet) {
-    await wallet.dispatch.updateNFTs(paramObj).catch((e) => {
-      Log(`Failed to FETCH NFTS: ${e}`, 'error')
-    })
-  } else Log(`Failed to fetch WALLET DISPATCH: ${wallet}`, 'error')
+  await wallet.dispatch.updateNFTs(paramObj).catch((e) => {
+    Log(`Failed to FETCH NFTS: ${e}`, 'error')
+  })
 }
 
 /**
@@ -259,7 +572,35 @@ export const getNftsForAccount = async (
   return wallet.getters.accountNftCollections(accountId)
 }
 
-export const getAllEnabledAccounts = async () => {
+export const showPrivateKeyAsPerChain = async ({
+  network,
+  accountId,
+  walletId,
+  chainId,
+}: {
+  network: Network
+  accountId: string
+  walletId: string
+  chainId: ChainId
+}): Promise<string | void> => {
+  return await wallet.dispatch.exportPrivateKey({
+    network,
+    walletId,
+    accountId,
+    chainId,
+  })
+}
+
+export const toggleNFTStarred = async (payload: {
+  network: Network
+  walletId: string
+  accountId: string
+  nft: NFT
+}) => {
+  await wallet.dispatch.toggleNFTStarred(payload)
+}
+
+export const getAllEnabledAccounts = () => {
   return wallet.getters.accountsData
 }
 /**
@@ -353,10 +694,10 @@ export const performSwap = async (
     to: to.code,
     fromAmount: new BigNumber(
       currencyToUnit(getAsset(network, from.code), fromAmount.toNumber()),
-    ),
+    ).toString(),
     toAmount: new BigNumber(
       currencyToUnit(getAsset(network, to.code), toAmount.toNumber()),
-    ),
+    ).toString(),
     fee: fromNetworkFee,
     claimFee: toNetworkFee,
   }
@@ -370,7 +711,8 @@ export const performSwap = async (
     claimFeeLabel: toGasSpeed,
   }
 
-  return await wallet.dispatch.newSwap(params)
+  // return await wallet.dispatch.newSwap(params)
+  return await wallet.dispatch.newSwap({ ...params })
 }
 
 /**
@@ -560,7 +902,7 @@ export const fiatRateEffect: () => AtomEffect<FiatRates> =
       const { type, payload } = mutation
 
       if (type === 'UPDATE_FIAT_RATES') {
-        setSelf(payload.fiatRates)
+        setSelf(Object.assign(wallet.state.fiatRates, payload.fiatRates))
       }
     })
   }
@@ -598,10 +940,10 @@ export const transactionHistoryEffect: (
             (activity) => activity.id === transactionId,
           )
           if (historyItem) {
-            if (historyItem.type === 'SEND') {
+            if (historyItem.type === 'SEND' || historyItem.type === 'NFT') {
               fetchConfirmationByHash(
                 historyItem.from,
-                historyItem.hash || historyItem.tx?.hash,
+                historyItem.txHash,
               ).then((confirmations) => {
                 setSelf({
                   ...historyItem,
@@ -658,6 +1000,25 @@ export const localStorageEffect: <T>(key: string) => AtomEffect<T> =
           typeof newValue !== 'undefined' &&
           newValue !== -1
       storageManager.write(key, newValue)
+    })
+  }
+
+export const localStorageAssetEffect: (key: string) => AtomEffect<boolean> =
+  (key) =>
+  ({ setSelf, onSet, trigger }) => {
+    const loadPersisted = async () => {
+      const savedValue = storageManager.read(key, '')
+
+      if (savedValue !== '') {
+        setSelf(savedValue)
+      }
+    }
+    if (trigger === 'get') {
+      loadPersisted()
+    }
+
+    onSet((newValue, _, isReset) => {
+      isReset ? storageManager.remove(key) : storageManager.write(key, newValue)
     })
   }
 

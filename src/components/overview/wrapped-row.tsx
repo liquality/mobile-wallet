@@ -1,5 +1,5 @@
-import React, { FC, Fragment, useCallback, useMemo, useState } from 'react'
-import { AccountType, ActionEnum, RootStackParamList } from '../../types'
+import React, { FC, Fragment, useCallback, useState } from 'react'
+import { AccountType, ActionEnum, MainStackParamList } from '../../types'
 import Row from './row'
 import SubRow from './sub-row'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -13,12 +13,11 @@ import {
   networkState,
   swapPairState,
 } from '../../atoms'
-import { useNavigation, useRoute } from '@react-navigation/core'
+import { useNavigation, NavigationProp, useRoute } from '@react-navigation/core'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
 import AssetIcon from '../asset-icon'
 import { getAsset } from '@liquality/cryptoassets'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
-import { palette } from '../../theme'
 
 const WrappedRow: FC<{
   item: { id: string; name: string }
@@ -40,26 +39,20 @@ const WrappedRow: FC<{
   const isAssetEnabled = useRecoilValue(enabledAssetsStateFamily(item.name))
   const assets = Object.values(account?.assets || {}) || []
   const isNested = assets.length > 0 && item.name !== 'BTC'
-  const screenMap: Record<ActionEnum, keyof RootStackParamList> = useMemo(
-    () => ({
-      [ActionEnum.RECEIVE]: 'ReceiveScreen',
-      [ActionEnum.SWAP]: 'SwapScreen',
-      [ActionEnum.SEND]: 'SendScreen',
-    }),
-    [],
-  )
-  const navigation = useNavigation<OverviewProps['navigation']>()
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   const route = useRoute<OverviewProps['route']>()
 
   const toggleRow = useCallback(() => {
     setIsExpanded(!isExpanded)
   }, [isExpanded])
 
-  const onNFTPress = (account: AccountType) => {
-    navigation.navigate('NftForSpecificChainScreen', {
-      screenTitle: 'NFTs for CODE',
-      currentAccount: account,
-    })
+  const onNFTPress = () => {
+    if (account.id) {
+      navigation.navigate('NftForSpecificChainScreen', {
+        screenTitle: 'NFTs for CODE',
+        currentAccount: account as AccountType,
+      })
+    }
   }
 
   const onAssetSelected = useCallback(
@@ -72,13 +65,15 @@ const WrappedRow: FC<{
         balance,
       }
 
-      let fromAsset: AccountType, toAsset: AccountType
+      let fromAsset: AccountType, toAsset: AccountType | undefined
       toAsset = selectedAccount.code === 'ETH' ? btcAccount : ethAccount
 
       if (route?.params?.action === ActionEnum.SWAP) {
         if (!swapPair.fromAsset && !swapPair.toAsset) {
           fromAsset = selectedAccount
-          setSwapPair({ fromAsset, toAsset })
+          if (toAsset) {
+            setSwapPair({ fromAsset, toAsset })
+          }
         } else if (!swapPair.fromAsset) {
           setSwapPair((previousValue) => ({
             ...previousValue,
@@ -91,20 +86,19 @@ const WrappedRow: FC<{
           }))
         }
 
-        navigation.navigate({
-          name: screenMap[route.params.action],
-          params: {
-            swapAssetPair: swapPair,
-            screenTitle: `${route.params.action} ${item.name}`,
-          },
+        navigation.navigate('SwapScreen', {
+          swapAssetPair: swapPair,
+          screenTitle: `${route.params.action} ${item.name}`,
         })
       } else if (route?.params?.action === ActionEnum.SEND) {
-        navigation.navigate({
-          name: screenMap[route.params.action],
-          params: {
-            assetData: selectedAccount,
-            screenTitle: `${route.params.action} ${item.name}`,
-          },
+        navigation.navigate('SendScreen', {
+          assetData: selectedAccount,
+          screenTitle: `${route.params.action} ${item.name}`,
+        })
+      } else if (route?.params?.action === ActionEnum.RECEIVE) {
+        navigation.navigate('ReceiveScreen', {
+          assetData: selectedAccount,
+          screenTitle: `${route.params.action} ${item.name}`,
         })
       } else {
         setSwapPair({ fromAsset: selectedAccount, toAsset })
@@ -127,7 +121,6 @@ const WrappedRow: FC<{
       route.params,
       swapPair,
       navigation,
-      screenMap,
       item.name,
       setSwapPair,
     ],
@@ -188,10 +181,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: palette.gray,
-    borderLeftWidth: 3,
     paddingVertical: 10,
+    paddingHorizontal: 20,
     height: 60,
   },
 })

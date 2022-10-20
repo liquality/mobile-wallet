@@ -1,12 +1,12 @@
+export const secondaryFont = {
+  Regular: 'AnekBangla-Regular',
+}
+
 export default {
-  Black: 'Montserrat-Black',
-  Bold: 'Montserrat-Bold',
-  ExtraBold: 'Montserrat-ExtraBold',
-  ExtraLight: 'Montserrat-ExtraLight',
-  Light: 'Montserrat-Light',
-  Medium: 'Montserrat-Medium',
-  Regular: 'Montserrat-Regular',
-  SemiBold: 'Montserrat-SemiBold',
-  Thin: 'Montserrat-Thin',
-  AlternatesLight: 'MontserratAlternates-Light',
+  Bold: 'AnekKannada-Bold',
+  Light: 'AnekKannada-Light',
+  Regular: 'AnekKannada-Regular',
+  SemiBold: 'AnekKannada-SemiBold',
+  Thin: 'AnekKannada-Thin',
+  JetBrainsMono: 'JetBrainsMono-Regular',
 }

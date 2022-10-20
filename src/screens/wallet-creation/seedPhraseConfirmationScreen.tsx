@@ -1,308 +1,251 @@
 import React, { useEffect, useState } from 'react'
-import {
-  View,
-  StyleSheet,
-  Pressable,
-  FlatList,
-  Alert,
-  Dimensions,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native'
+import { ScrollView, TouchableWithoutFeedback } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import Header from '../header'
-import ButtonFooter from '../../components/button-footer'
-import { Box, Button, palette } from '../../theme'
-import GradientBackground from '../../components/gradient-background'
-import { Text } from '../../components/text/text'
-import { labelTranslateFn } from '../../utils'
-import { Fonts } from '../../assets'
+import { Box, faceliftPalette, Pressable, Text } from '../../theme'
+import { labelTranslateFn, SCREEN_HEIGHT } from '../../utils'
+import { scale, ScaledSheet } from 'react-native-size-matters'
+import { CommonActions } from '@react-navigation/native'
 
 type SeedPhraseConfirmationProps = NativeStackScreenProps<
   RootStackParamList,
   'SeedPhraseConfirmationScreen'
 >
 
-const SeedWord = ({
-  item,
-  chosenSeedWords,
-  onPress,
-}: {
-  item: SeedWordType
-  chosenSeedWords: Array<string>
-  onPress: () => void
-}) => {
-  const [pressed, setPressed] = useState(false)
-  const { word } = item
-  return (
-    <Pressable
-      style={styles.word}
-      onPress={() => {
-        if (chosenSeedWords.length <= 3) {
-          setPressed(!pressed)
-        }
-        onPress()
-      }}>
-      <Text style={[styles.wordText, pressed ? styles.pressedWord : {}]}>
-        {word}
-      </Text>
-    </Pressable>
-  )
+const selectedWords = [
+  {
+    placeholder: labelTranslateFn('seedPhraseConfirmationScreen.1stWord'),
+    value: '',
+  },
+  {
+    placeholder: labelTranslateFn('seedPhraseConfirmationScreen.5thWord'),
+    value: '',
+  },
+  {
+    placeholder: labelTranslateFn('seedPhraseConfirmationScreen.12thWord'),
+    value: '',
+  },
+]
+
+const activeOpacity = 1
+const inactiveOpacity = 0.5
+
+interface CustomSeedWordType extends SeedWordType {
+  selected: boolean
 }
 
 const SeedPhraseConfirmationScreen = ({
   route,
   navigation,
 }: SeedPhraseConfirmationProps) => {
-  const [chosenSeedWords, setChosenSeedWords] = useState<Array<string>>([])
   const [shuffledSeedWords, setShuffledSeedWords] = useState<
-    Array<SeedWordType>
+    Array<CustomSeedWordType>
   >([])
+  const [words, setWords] = useState(selectedWords)
+  const [error, setError] = useState(false)
 
-  const renderSeedWord = ({ item }: { item: SeedWordType }) => {
-    return (
-      <SeedWord
-        onPress={() => {
-          if (
-            chosenSeedWords.length < 3 &&
-            chosenSeedWords.indexOf(item.word) < 0
-          ) {
-            setChosenSeedWords(Array.of(...chosenSeedWords, item.word))
-          } else {
-            setChosenSeedWords(chosenSeedWords.filter((w) => w !== item.word))
-          }
-        }}
-        item={item}
-        chosenSeedWords={chosenSeedWords}
-      />
-    )
-  }
+  useEffect(() => {
+    let customSeedWords = route.params.seedWords
+      ? route.params.seedWords.map((item) => ({ ...item, selected: false }))
+      : []
+    setShuffledSeedWords([...customSeedWords].sort(() => Math.random() - 0.5))
+    setWords(words.map((item) => ({ ...item, value: '' })))
+    // Need only once at the time of component mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const confirmSeedPhrase = () => {
     const seedWords = route.params.seedWords
     return (
       seedWords &&
-      seedWords[0].word === chosenSeedWords[0] &&
-      seedWords[4].word === chosenSeedWords[1] &&
-      seedWords[11].word === chosenSeedWords[2]
+      seedWords[0].word === words[0].value &&
+      seedWords[4].word === words[1].value &&
+      seedWords[11].word === words[2].value
     )
   }
 
   const onContinue = () => {
     if (!confirmSeedPhrase()) {
-      Alert.alert(
-        labelTranslateFn('seedPhraseConfirmationScreen.keyInfoMissing')!,
-        labelTranslateFn('common.pleaseTryAgain')!,
-      )
+      setError(true)
       return
     }
 
-    navigation.navigate('PasswordCreationScreen', {
-      ...route.params,
-      mnemonic:
-        route.params.seedWords?.map((item) => item.word).join(' ') || '',
-      imported: false,
-    })
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'PasswordCreationScreen',
+            params: {
+              ...route.params,
+              mnemonic:
+                route.params.seedWords?.map((item) => item.word).join(' ') ||
+                '',
+              imported: false,
+            },
+          },
+        ],
+      }),
+    )
   }
 
-  useEffect(() => {
-    setShuffledSeedWords(
-      [...(route.params.seedWords || [])].sort(() => Math.random() - 0.5),
-    )
-  }, [route.params.seedWords])
+  const onWordPress = (customSeedWords: CustomSeedWordType, index: number) => {
+    let tempWords = [...words]
+    let tempShuffledSeedWords = [...shuffledSeedWords]
+    let shuffle = false
+    if (!customSeedWords.selected) {
+      if (!tempWords[0].value) {
+        tempWords[0].value = customSeedWords.word
+        shuffle = true
+      } else if (!tempWords[1].value) {
+        tempWords[1].value = customSeedWords.word
+        shuffle = true
+      } else if (!tempWords[2].value) {
+        tempWords[2].value = customSeedWords.word
+        shuffle = true
+      }
+    } else {
+      if (tempWords[0].value === customSeedWords.word) {
+        tempWords[0].value = ''
+        shuffle = true
+      } else if (tempWords[1].value === customSeedWords.word) {
+        tempWords[1].value = ''
+        shuffle = true
+      } else if (tempWords[2].value === customSeedWords.word) {
+        tempWords[2].value = ''
+        shuffle = true
+      }
+    }
+
+    if (shuffle) {
+      tempShuffledSeedWords[index].selected =
+        !tempShuffledSeedWords[index].selected
+      setWords([...tempWords])
+      setShuffledSeedWords([...tempShuffledSeedWords])
+    }
+    if (error && shuffle) {
+      setError(false)
+    }
+  }
+
+  let isDisabled = !words.every((item) => !!item.value)
+
+  const enableScroll = SCREEN_HEIGHT < 700
 
   return (
-    <Box style={styles.container}>
-      <GradientBackground
-        width={Dimensions.get('screen').width}
-        height={Dimensions.get('screen').height}
-        isFullPage
-      />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-        style={[styles.keyboard, StyleSheet.absoluteFillObject]}>
-        <Header showText={true} />
-        <View style={styles.prompt}>
+    <Box
+      flex={1}
+      backgroundColor="mainBackground"
+      paddingHorizontal={'onboardingPadding'}>
+      <Box flex={0.75}>
+        <Box marginTop={'xl'}>
           <Text
-            style={styles.promptText}
+            color={'textColor'}
+            variant="h1"
             tx="seedPhraseConfirmationScreen.confirmSeed"
           />
-          <Text
-            style={styles.description}
-            tx="seedPhraseConfirmationScreen.tap3wordMatching"
-          />
-        </View>
-
-        <View style={styles.main}>
-          <View style={styles.seedPhrase}>
-            <View style={styles.seedWordLengthOptions} />
-
-            <View style={styles.missingWords}>
-              <View style={styles.missingWordView}>
+        </Box>
+        <Text
+          variant={'normalText'}
+          color={'textColor'}
+          tx="seedPhraseConfirmationScreen.tap3wordMatching"
+        />
+        <Box marginTop={'xl'} marginBottom={'m'}>
+          <Box flexDirection={'row'} justifyContent="space-between">
+            {words.map((item, index) => (
+              <Box
+                key={index}
+                width={'30%'}
+                borderBottomWidth={scale(1)}
+                borderBottomColor={error ? 'danger' : 'textColor'}
+                style={{
+                  opacity: item.value ? activeOpacity : inactiveOpacity,
+                }}>
                 <Text
-                  style={styles.wordOrderText}
-                  tx="seedPhraseConfirmationScreen.1stWord"
-                />
-                <Text style={styles.missingWordText}>
-                  {chosenSeedWords.length >= 1 && chosenSeedWords[0]}
+                  marginBottom={'s'}
+                  variant="normalText"
+                  color={'textColor'}>
+                  {item.value ? item.value : item.placeholder}
                 </Text>
-              </View>
-              <View style={styles.missingWordView}>
-                <Text
-                  style={styles.wordOrderText}
-                  tx="seedPhraseConfirmationScreen.5thWord"
-                />
-                <Text style={styles.missingWordText}>
-                  {chosenSeedWords.length >= 2 && chosenSeedWords[1]}
-                </Text>
-              </View>
-              <View style={styles.missingWordView}>
-                <Text
-                  style={styles.wordOrderText}
-                  tx="seedPhraseConfirmationScreen.12thWord"
-                />
-                <Text style={styles.missingWordText}>
-                  {chosenSeedWords.length >= 3 && chosenSeedWords[2]}
-                </Text>
-              </View>
-            </View>
-
-            <FlatList
-              style={styles.flatList}
-              numColumns={4}
-              data={shuffledSeedWords}
-              renderItem={renderSeedWord}
-              keyExtractor={(item) => `${item.id}`}
-              columnWrapperStyle={styles.columnWrapperStyle}
+              </Box>
+            ))}
+          </Box>
+          {error ? (
+            <Text
+              marginTop={'s'}
+              textAlign="center"
+              variant={'errorText'}
+              color={'danger'}
+              tx="wordsNotMatch"
             />
-            <ButtonFooter unpositioned>
-              <Button
-                type="secondary"
-                variant="m"
-                label={{ tx: 'common.back' }}
-                onPress={navigation.goBack}
-                isBorderless={false}
-                isActive={true}
-              />
-              <Button
-                type="primary"
-                variant="m"
-                label={{ tx: 'common.continue' }}
-                onPress={onContinue}
-                isBorderless={true}
-                isActive={chosenSeedWords.length >= 3}
-              />
-            </ButtonFooter>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
+          ) : null}
+        </Box>
+        <ScrollView scrollEnabled={enableScroll}>
+          <Box height={200} flexDirection="row" flexWrap="wrap">
+            {shuffledSeedWords.map((item: CustomSeedWordType, index) => (
+              <TouchableWithoutFeedback
+                onPress={() => onWordPress(item, index)}
+                key={item.id}>
+                <Box
+                  style={
+                    item.selected
+                      ? styles.inactiveButtonStyle
+                      : styles.buttonStyle
+                  }>
+                  <Text
+                    style={
+                      item.selected
+                        ? styles.inactiveTextStyle
+                        : styles.textStyle
+                    }>
+                    {item.word}
+                  </Text>
+                </Box>
+              </TouchableWithoutFeedback>
+            ))}
+          </Box>
+        </ScrollView>
+      </Box>
+      <Box flex={0.25}>
+        <Box marginVertical={'xl'}>
+          <Pressable
+            label={{ tx: 'common.next' }}
+            onPress={onContinue}
+            variant="solid"
+            icon
+            disabled={isDisabled}
+          />
+        </Box>
+        <Text
+          onPress={navigation.goBack}
+          textAlign={'center'}
+          variant="link"
+          tx="termsScreen.cancel"
+        />
+      </Box>
     </Box>
   )
 }
 
-const styles = StyleSheet.create({
-  missingWords: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    margin: 20,
-    marginBottom: 40,
+const styles = ScaledSheet.create({
+  buttonStyle: {
+    borderRadius: '15@s',
+    borderColor: faceliftPalette.buttonDefault,
+    borderWidth: '1@s',
+    margin: '3@ms0.1',
   },
-  missingWordView: {
-    borderBottomWidth: 1,
-    borderBottomColor: palette.turquoise,
+  textStyle: {
+    padding: '12@ms0.1',
+    color: faceliftPalette.buttonDefault,
   },
-  wordOrderText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: palette.sectionTitleColor,
-    marginBottom: 3,
+  inactiveButtonStyle: {
+    backgroundColor: faceliftPalette.whiteGrey,
+    margin: '3@ms0.1',
+    borderRadius: '15@s',
   },
-  missingWordText: {
-    fontSize: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: palette.turquoise,
-  },
-  seedWordLengthOptions: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 25,
-  },
-
-  word: {
-    flex: 0.2,
-    width: 60,
-    height: 23,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
-    backgroundColor: palette.white,
-    borderColor: palette.gray,
-    borderWidth: 1,
-  },
-
-  wordText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: palette.blueVioletPrimary,
-  },
-
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    paddingVertical: 20,
-  },
-  main: {
-    flex: 0.9,
-    alignItems: 'center',
-    width: Dimensions.get('window').width,
-  },
-
-  prompt: {
-    flex: 0.3,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingHorizontal: 10,
-  },
-  promptText: {
-    fontFamily: Fonts.Regular,
-    color: palette.white,
-    fontSize: 30,
-    lineHeight: 30,
-  },
-  description: {
-    fontFamily: Fonts.SemiBold,
-    marginTop: 10,
-    marginBottom: 18,
-    alignSelf: 'center',
-    textAlign: 'center',
-    color: palette.white,
-    fontSize: 15,
-    fontWeight: '600',
-    lineHeight: 24,
-  },
-  seedPhrase: {
-    backgroundColor: palette.white,
-    width: Dimensions.get('window').width,
-    height: '100%',
-  },
-  flatList: {
-    marginTop: 15,
-    marginHorizontal: 20,
-  },
-  columnWrapperStyle: {
-    marginBottom: 50,
-    marginTop: 0,
-    justifyContent: 'space-between',
-  },
-
-  keyboard: {
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  pressedWord: {
-    color: palette.nestedColor,
+  inactiveTextStyle: {
+    padding: '12@ms0.1',
+    color: faceliftPalette.grey,
   },
 })
 

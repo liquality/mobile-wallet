@@ -6,13 +6,19 @@ import {
   isDoneFetchingData,
   langSelected as LS,
   networkState,
+  historyItemsState,
+  showFilterState,
 } from '../../atoms'
-import { populateWallet } from '../../store/store'
+import { getAllEnabledAccounts, populateWallet } from '../../store/store'
 import ActivityFlatList from '../activity-flat-list'
 import AssetFlatList from './asset-flat-list'
 import * as React from 'react'
-import { labelTranslateFn, Log } from '../../utils'
-import { useWindowDimensions } from 'react-native'
+import { downloadAssetAcitivity, labelTranslateFn, Log } from '../../utils'
+import {
+  ActivityIndicator,
+  useWindowDimensions,
+  TouchableOpacity,
+} from 'react-native'
 import {
   TabView,
   SceneRendererProps,
@@ -20,8 +26,18 @@ import {
   Route,
 } from 'react-native-tab-view'
 import i18n from 'i18n-js'
-import { TabBar } from '../../theme'
+import {
+  Box,
+  OVERVIEW_TAB_BAR_STYLE,
+  OVERVIEW_TAB_STYLE,
+  TabBar,
+  Text,
+} from '../../theme'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
+import { scale } from 'react-native-size-matters'
+import { AppIcons } from '../../assets'
+
+const { Filter, ExportIcon } = AppIcons
 
 type RenderTabBar = SceneRendererProps & {
   navigationState: NavigationState<Route>
@@ -33,11 +49,18 @@ const ContentBlock = () => {
     network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
   )
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
+  const [delayTabView, setDelayTabView] = React.useState(false)
   const langSelected = useRecoilValue(LS)
+  const setShowFilter = useSetRecoilState(showFilterState)
+
   i18n.locale = langSelected
   useEffect(() => {
     setIsDoneFetchingData(false)
-    populateWallet()
+    const enabledAccountsToSendIn = getAllEnabledAccounts()
+    const accIds = enabledAccountsToSendIn.map((account) => {
+      return account.id
+    })
+    populateWallet(accIds)
       .then(() => {
         setIsDoneFetchingData(true)
       })
@@ -46,6 +69,16 @@ const ContentBlock = () => {
         Log(`Failed to populateWallet: ${e}`, 'error')
       })
   }, [setIsDoneFetchingData, accountsIds, network])
+
+  useEffect(() => {
+    // Issue is if UI is not loaded completely and user tap on tabBar then the tabView get stuck
+    // workaround to avoid tab view stuck issue,
+    setTimeout(() => {
+      setDelayTabView(true)
+    }, 0)
+  }, [])
+
+  const historyItem = useRecoilValue(historyItemsState)
 
   const layout = useWindowDimensions()
   const [index, setIndex] = React.useState(0)
@@ -61,9 +94,56 @@ const ContentBlock = () => {
     ])
   }, [langSelected])
 
+  // workaround to avoid tab view stuck issue
+  if (!delayTabView) {
+    return (
+      <Box flex={1} justifyContent="center">
+        <ActivityIndicator />
+      </Box>
+    )
+  }
+
+  const onExportIconPress = async () => {
+    try {
+      await downloadAssetAcitivity(historyItem)
+    } catch (error) {}
+  }
+
   const renderTabBar = (props: RenderTabBar) => (
     // Redline because of theme issue with TabBar props
-    <TabBar {...props} variant="light" />
+    <Box>
+      <TabBar
+        {...props}
+        renderLabel={({ route, focused }) => (
+          <Text
+            variant={'tabLabel'}
+            color={focused ? 'tablabelActiveColor' : 'tablabelInactiveColor'}>
+            {route.title}
+          </Text>
+        )}
+        tabStyle={OVERVIEW_TAB_BAR_STYLE}
+        variant="light"
+        style={OVERVIEW_TAB_STYLE}
+      />
+      {props.navigationState.index && historyItem.length ? (
+        <Box width={'20%'} position={'absolute'} zIndex={100} top={0} right={0}>
+          <Box
+            flexDirection={'row'}
+            height={scale(40)}
+            justifyContent="space-between"
+            alignItems="center">
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => setShowFilter((old) => !old)}>
+              <Filter />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => onExportIconPress()}>
+              <ExportIcon />
+            </TouchableOpacity>
+          </Box>
+        </Box>
+      ) : null}
+    </Box>
   )
 
   return (
@@ -75,13 +155,14 @@ const ContentBlock = () => {
           case 'asset':
             return <AssetFlatList accounts={accountsIds} />
           case 'activity':
-            return <ActivityFlatList />
-          default:
-            return null
+            return <ActivityFlatList historyCount={historyItem.length} />
         }
       }}
       onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
+      initialLayout={{ width: layout.width - scale(30) }} //approx to horizontal patting
+      sceneContainerStyle={{
+        marginTop: scale(15),
+      }}
     />
   )
 }

@@ -27,6 +27,7 @@ import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms'
 import GestureDetector from '../gesture-detector/gesture-detector'
 import { Fonts } from '../../assets'
+import { ICON_SIZE } from '../../utils'
 
 type AmountTextInputBlockProps = {
   type: 'FROM' | 'TO'
@@ -188,7 +189,7 @@ const AmountTextInputBlock: ForwardRefRenderFunction<
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get('screen').width - 40 - 25,
+    width: Dimensions.get('screen').width - 40 - ICON_SIZE,
     marginVertical: 5,
   },
   row: {
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   md3: {
-    width: '75%',
+    width: '70%',
   },
   inputWrapper: {
     flexDirection: 'row',
@@ -208,7 +209,6 @@ const styles = StyleSheet.create({
   },
   font: {
     fontFamily: Fonts.Regular,
-
     fontWeight: '400',
   },
   input: {

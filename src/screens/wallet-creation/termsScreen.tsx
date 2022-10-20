@@ -1,117 +1,109 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, ScrollView, Dimensions } from 'react-native'
+import { ScrollView, useColorScheme, View } from 'react-native'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import ButtonFooter from '../../components/button-footer'
-import Header from '../header'
-import { Box, Button, palette } from '../../theme'
-import GradientBackground from '../../components/gradient-background'
+import { Box, faceliftPalette, Text, Pressable } from '../../theme'
+import { scale, ScaledSheet } from 'react-native-size-matters'
+import LinearGradient from 'react-native-linear-gradient'
+import { themeMode } from '../../atoms'
+import { useRecoilValue } from 'recoil'
 import AnalyticsModal from './optInAnalyticsModal'
-import { Text } from '../../components/text/text'
-import { Fonts } from '../../assets'
+
+const lightGradient = [
+  'rgba(255,255,255,0.6)',
+  faceliftPalette.white,
+  faceliftPalette.white,
+  faceliftPalette.white,
+  faceliftPalette.white,
+]
+
+const darkGradient = [
+  'rgba(61, 71, 103, 0.6)',
+  faceliftPalette.darkGrey,
+  faceliftPalette.darkGrey,
+  faceliftPalette.darkGrey,
+  faceliftPalette.darkGrey,
+]
 
 type TermsProps = NativeStackScreenProps<RootStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation, route }: TermsProps) => {
   const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
+  const theme = useRecoilValue(themeMode)
+
+  let currentTheme = useColorScheme() || 'light'
+  if (theme) {
+    currentTheme = theme
+  }
+
+  const gradientType = currentTheme === 'light' ? lightGradient : darkGradient
 
   return (
-    <Box style={styles.container}>
-      <GradientBackground
-        width={Dimensions.get('screen').width}
-        height={Dimensions.get('screen').height}
-        isFullPage
-      />
-      <Header showText={true} />
-      <View style={styles.containerWrapper}>
-        <Text style={styles.termsTitle} tx="termsScreen.termPrivacy" />
-
-        <ScrollView
-          contentContainerStyle={styles.termsSection}
-          scrollEventThrottle={1000}
-          /*
-          No mandatory scrolling to activate button,
-          but keeping the code if we need it in the future again
-          onScroll={({ nativeEvent }) => {
-            if (
-              !scrolledToEnd &&
-              Math.floor(
-                nativeEvent.contentOffset.y +
-                  nativeEvent.layoutMeasurement.height,
-              ) >= Math.floor(nativeEvent.contentSize.height)
-            ) {
-              setScrolledToEnd(true)
-            }
-          }} */
-        >
-          <Text style={styles.termsCopy} tx="termsScreen.termCopy" />
-        </ScrollView>
-        <ButtonFooter unpositioned>
-          <Button
-            type="secondary"
-            variant="m"
-            label={{ tx: 'termsScreen.cancel' }}
-            onPress={navigation.goBack}
-            isBorderless={false}
-            isActive={true}
-          />
-          <Button
-            type="primary"
-            variant="m"
-            label={{ tx: 'termsScreen.iAccept:' }}
-            onPress={() => setShowAnalyticsModal(true)}
-            isBorderless={true}
-            //isActive={scrolledToEnd}
-          />
-        </ButtonFooter>
-        {showAnalyticsModal ? (
-          <React.Suspense
-            fallback={
-              <View>
-                <Text tx="common.loading" />
-              </View>
-            }>
-            <AnalyticsModal
-              nextScreen={route?.params?.nextScreen || 'UnlockWalletScreen'}
-              onAction={setShowAnalyticsModal}
+    <Box
+      flex={1}
+      backgroundColor="mainBackground"
+      paddingHorizontal={'onboardingPadding'}>
+      <Box marginTop={'xl'}>
+        <Text color={'textColor'} variant="h1" tx="termsScreen.termPrivacy" />
+      </Box>
+      <Box flex={1}>
+        <Box flex={0.7}>
+          <ScrollView
+            contentContainerStyle={styles.contentContainerStyle}
+            showsVerticalScrollIndicator={false}>
+            <Text
+              variant={'termsBody'}
+              color={'textColor'}
+              tx="termsScreen.termCopy"
             />
-          </React.Suspense>
-        ) : null}
-      </View>
+          </ScrollView>
+        </Box>
+        <Box flex={0.3} backgroundColor="transparent">
+          <LinearGradient colors={gradientType} style={styles.linearStyle} />
+          <Box marginVertical={'xl'}>
+            <Pressable
+              label={{ tx: 'termsScreen.iAgree:' }}
+              onPress={() => setShowAnalyticsModal(true)}
+              variant="solid"
+            />
+          </Box>
+          <Text
+            onPress={navigation.goBack}
+            textAlign={'center'}
+            variant="link"
+            tx="termsScreen.cancel"
+          />
+        </Box>
+      </Box>
+      {showAnalyticsModal ? (
+        <React.Suspense
+          fallback={
+            <View>
+              <Text tx="common.loading" />
+            </View>
+          }>
+          <AnalyticsModal
+            nextScreen={route?.params?.nextScreen || 'UnlockWalletScreen'}
+            previousScreen={route.params.previousScreen || 'Entry'}
+            onAction={setShowAnalyticsModal}
+          />
+        </React.Suspense>
+      ) : null}
     </Box>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
+const styles = ScaledSheet.create({
+  linearStyle: {
+    left: 0,
+    bottom: 0,
+    right: 0,
+    position: 'absolute',
+    top: scale(-30),
   },
-  containerWrapper: {
-    flex: 1,
-    backgroundColor: palette.white,
-    marginTop: 20,
-    paddingBottom: 20,
-  },
-  termsSection: {
-    paddingBottom: 20,
-    backgroundColor: palette.white,
-    alignItems: 'center',
-  },
-  termsTitle: {
-    fontFamily: Fonts.Regular,
-    marginTop: 20,
-    fontSize: 28,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  termsCopy: {
-    fontFamily: Fonts.Regular,
-    marginHorizontal: 20,
-    marginTop: 20,
-    justifyContent: 'center',
-    lineHeight: 20,
-    textAlign: 'justify',
+  contentContainerStyle: {
+    paddingBottom: '25@s',
   },
 })
+
 export default TermsScreen

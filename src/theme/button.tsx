@@ -68,30 +68,25 @@ export const Button: FC<Props> = (props) => {
     [isBorderless],
   )
 
-  const opacity = useMemo(
-    () => ({
-      opacity: onlyDisabled ? 1 : isActive ? 1 : 0.7,
-    }),
-    [isActive, onlyDisabled],
-  )
-
   const backgroundColor = useMemo(
     () => ({
       backgroundColor:
         theme.colors[
           type === 'primary'
-            ? 'buttonBackgroundPrimary'
+            ? isActive
+              ? 'defaultButton'
+              : 'inactiveButton'
             : 'buttonBackgroundSecondary'
         ],
     }),
-    [type, theme.colors],
+    [theme.colors, type, isActive],
   )
 
   return (
     <BaseButton
       disabled={onlyDisabled ? onlyDisabled : !isActive}
       variant={variant}
-      style={[borderWidth, opacity, backgroundColor]}
+      style={[borderWidth, backgroundColor]}
       onPress={onPress}>
       {!isLoading && !appendChildren && children}
       {isLoading ? (
@@ -105,7 +100,9 @@ export const Button: FC<Props> = (props) => {
             color:
               theme.colors[
                 type === 'primary'
-                  ? 'buttonFontPrimary'
+                  ? isActive
+                    ? 'buttonFontPrimary'
+                    : 'inactiveText'
                   : type === 'secondary'
                   ? 'buttonFontSecondary'
                   : 'buttonFontTertiary'

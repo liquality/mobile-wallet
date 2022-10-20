@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, StyleSheet } from 'react-native'
 import {
   cryptoToFiat,
   formatFiat,
@@ -22,8 +22,10 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { getNftsForAccount, updateNFTs } from '../../store/store'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import { AppIcons, Fonts } from '../../assets'
-import { palette } from '../../theme'
+import { Box, Text } from '../../theme'
+import { scale } from 'react-native-size-matters'
+import { checkImgUrlExists } from '../../utils'
+import { AppIcons } from '../../assets'
 
 const { ChevronRightIcon: ChevronRight } = AppIcons
 
@@ -49,6 +51,8 @@ const SubRow: FC<SubRowProps> = (props) => {
   const activeNetwork = useRecoilValue(networkState)
   const [chainSpecificNfts, setChainSpecificNfts] = useState({})
   const [accountIdsToSendIn] = useState<string[]>([])
+  const [imgError] = useState<string[]>([])
+  const [numberOfNfts, setNumberOfNfts] = useState<number>()
 
   const { activeWalletId } = wallet.state
 
@@ -69,7 +73,13 @@ const SubRow: FC<SubRowProps> = (props) => {
         network: activeNetwork,
         accountIds: accountIdsToSendIn,
       })
+      //Use dummydata here if no assets load
       let nfts = await getNftsForAccount(parentItem.id)
+      let totalAmountOfNfts = Object.values(nfts).reduce(
+        (acc, nft) => acc + nft.length,
+        0,
+      )
+      setNumberOfNfts(totalAmountOfNfts)
       setChainSpecificNfts(nfts)
     }
     fetchData()
@@ -90,25 +100,44 @@ const SubRow: FC<SubRowProps> = (props) => {
   }, [activeNetwork, balance, fiatRates, item.code])
 
   const renderNFTRow = () => {
-    if (Object.keys(chainSpecificNfts).length > 0)
+    if (Object.keys(chainSpecificNfts).length > 0) {
+      let firstNftItem = chainSpecificNfts[Object.keys(chainSpecificNfts)[0]][0]
       return (
-        <View>
-          <Pressable
-            onPress={handlePressOnRow}
-            style={[
-              styles.row,
-              styles.subElement,
-              { borderLeftColor: parentItem.color },
-            ]}>
-            <Text>NFT</Text>
-          </Pressable>
-        </View>
+        <Pressable
+          onPress={handlePressOnRow}
+          style={[styles.row, styles.subElement]}>
+          <Box height={scale(50)} width={scale(3)} />
+          <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
+            <Image
+              source={checkImgUrlExists(
+                firstNftItem.image_original_url,
+                imgError,
+              )}
+              style={styles.nftImg}
+              onError={() => imgError.push(firstNftItem.image_original_url)}
+            />
+            <Box width={'80%'}>
+              <Text
+                numberOfLines={1}
+                paddingLeft={'s'}
+                variant={'listText'}
+                color="darkGrey">
+                NFT <Text color="mediumGrey">|</Text> {numberOfNfts}{' '}
+              </Text>
+            </Box>
+          </Box>
+          <Box flex={0.4} alignItems={'flex-end'} paddingLeft={'m'}>
+            <Text variant={'listText'} color="darkGrey">
+              See All <ChevronRight style={styles.chevronNft} />
+            </Text>
+          </Box>
+        </Pressable>
       )
-    else return null
+    } else return null
   }
 
   return (
-    <View>
+    <Box>
       {nft ? (
         renderNFTRow()
       ) : (
@@ -120,74 +149,61 @@ const SubRow: FC<SubRowProps> = (props) => {
           assetSymbol={item.code}>
           <Pressable
             onPress={handlePressOnRow}
-            style={[
-              styles.row,
-              styles.subElement,
-              { borderLeftColor: parentItem.color },
-            ]}>
-            <View style={styles.col1}>
-              <AssetIcon size={25} asset={item.code} />
-              <Text style={styles.name}>{item.name}</Text>
-            </View>
-            <View style={styles.col2}>
-              <Text style={styles.balance}>{prettyNativeBalance}</Text>
-              <Text style={styles.balanceInUSD}>{prettyFiatBalance}</Text>
-            </View>
-            <View style={styles.col3}>
-              <ChevronRight width={12} height={12} />
-            </View>
+            style={[styles.row, styles.subElement]}>
+            <Box height={scale(50)} width={scale(3)} />
+            <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
+              <AssetIcon asset={item.code} />
+              <Box width={'80%'}>
+                <Text
+                  numberOfLines={1}
+                  paddingLeft={'s'}
+                  variant={'listText'}
+                  color="darkGrey">
+                  {item.name}
+                </Text>
+              </Box>
+            </Box>
+
+            <Box flex={0.4} alignItems={'flex-end'} paddingLeft={'m'}>
+              <Text variant={'listText'} color="darkGrey">
+                {prettyNativeBalance}
+              </Text>
+
+              <Text variant={'subListText'} color="greyMeta">
+                {prettyFiatBalance}
+              </Text>
+            </Box>
+            <ChevronRight style={(styles.chevronNft, styles.chevronRow)} />
           </Pressable>
         </AssetListSwipeableRow>
       )}
-    </View>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderBottomWidth: 1,
-    borderBottomColor: palette.gray,
-    borderLeftWidth: 3,
     paddingVertical: 10,
-    height: 60,
-  },
-  col1: {
-    flex: 0.35,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  col2: {
-    flex: 0.55,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-  },
-  col3: {
-    flex: 0.1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: scale(60),
   },
   subElement: {
-    paddingLeft: 50,
+    paddingLeft: scale(15),
   },
-  name: {
-    fontFamily: Fonts.Regular,
+  nftImg: {
+    marginLeft: scale(3),
+    marginRight: scale(5),
 
-    color: palette.black2,
-    fontWeight: '500',
-    fontSize: 12,
+    width: scale(25),
+    height: scale(25),
+    borderRadius: 4,
   },
-  balance: {
-    fontFamily: Fonts.Regular,
-    color: palette.black2,
-    fontSize: 13,
+  chevronNft: {
+    marginTop: scale(13),
   },
-  balanceInUSD: {
-    fontFamily: Fonts.Regular,
-    color: palette.darkGray,
-    fontSize: 12,
+  chevronRow: {
+    marginTop: scale(13),
+    marginLeft: scale(5),
   },
 })
 

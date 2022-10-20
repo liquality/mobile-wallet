@@ -1,27 +1,37 @@
-import { StyleSheet, Switch } from 'react-native'
 import React from 'react'
 import { useRecoilState } from 'recoil'
 import { enabledAssetsStateFamily } from '../../atoms'
-import { palette } from '../../theme'
+import { faceliftPalette } from '../../theme'
+import { Switch } from 'react-native-switch'
+import { scale } from 'react-native-size-matters'
+
+const borderWidth = 1
 
 const SettingsSwitch = ({ asset }: { asset: string }) => {
   const [isFeatureEnabled, toggleFeature] = useRecoilState(
     enabledAssetsStateFamily(asset),
   )
-  const styles = StyleSheet.create({
-    switch: {
-      borderColor: isFeatureEnabled ? palette.blueVioletPrimary : palette.gray,
-      borderWidth: 1,
-    },
-  })
+
+  const borderColor = isFeatureEnabled
+    ? faceliftPalette.switchActiveColor
+    : faceliftPalette.switchInactiveBorderColor
+
   return (
     <Switch
-      trackColor={{ false: palette.white, true: palette.white }}
-      style={styles.switch}
-      thumbColor={isFeatureEnabled ? palette.blueVioletPrimary : palette.gray}
-      ios_backgroundColor={palette.white}
       onValueChange={() => toggleFeature(!isFeatureEnabled)}
       value={isFeatureEnabled}
+      circleSize={scale(20)}
+      activeText={''}
+      inActiveText={''}
+      circleBorderWidth={1}
+      backgroundActive={faceliftPalette.white}
+      backgroundInactive={faceliftPalette.white}
+      circleActiveColor={faceliftPalette.switchActiveColor}
+      circleInActiveColor={faceliftPalette.switchInactiveColor}
+      circleBorderActiveColor={faceliftPalette.switchActiveColor}
+      circleBorderInactiveColor={faceliftPalette.switchInactiveBorderColor}
+      switchWidthMultiplier={2}
+      containerStyle={{ borderColor, borderWidth }}
     />
   )
 }

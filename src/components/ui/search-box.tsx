@@ -1,15 +1,18 @@
 import React, { Dispatch, SetStateAction, useCallback } from 'react'
-import { Pressable, StyleSheet, View } from 'react-native'
 import Fuse from 'fuse.js'
 import { useInputState } from '../../hooks'
-import { palette, Text, TextInput } from '../../theme'
-import { AppIcons, Fonts } from '../../assets'
+import { Box, faceliftPalette, TextInput } from '../../theme'
+import { AppIcons } from '../../assets'
+import { scale } from 'react-native-size-matters'
+import { useNavigation } from '@react-navigation/core'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
-const { SearchIcon, TimesIcon } = AppIcons
+const { ChevronLeft } = AppIcons
 
 type SearchBoxPropsType<T> = {
   updateData: Dispatch<SetStateAction<T[]>>
   items: T[]
+  mainItems: T[]
 }
 
 const options = {
@@ -20,84 +23,50 @@ const options = {
 const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
   props: SearchBoxPropsType<T>,
 ) => {
-  const { updateData, items } = props
+  const { updateData, items, mainItems } = props
   const searchInput = useInputState('')
+  const navigation = useNavigation()
 
-  const filterItems = useCallback(() => {
-    const term = searchInput.value
-
-    if (term.length === 0 || !items) {
-      updateData(items || ([] as T[]))
-      return
-    }
-    const fuse = new Fuse(items, options)
-    const results = fuse.search<T>(term)
-    updateData(results.map((result) => result.item))
-  }, [items, searchInput.value, updateData])
-
-  const handleClearBtnPress = () => {
-    searchInput.onChangeText('')
-    updateData(items)
-  }
+  const filterItems = useCallback(
+    (term: string) => {
+      if (term.length === 0 || !items.length) {
+        searchInput.onChangeText(term)
+        updateData(mainItems)
+        return
+      }
+      const fuse = new Fuse(items, options)
+      const results = fuse.search<T>(term)
+      updateData(results.map((result) => result.item))
+      searchInput.onChangeText(term)
+    },
+    [items, updateData, searchInput, mainItems],
+  )
 
   return (
-    <View style={styles.searchBox}>
-      <SearchIcon style={styles.icon} />
-      <TextInput
-        style={styles.sendInput}
-        placeholderTx="searchForCurrency"
-        keyboardType={'numeric'}
-        onChangeText={searchInput.onChangeText}
-        onEndEditing={filterItems}
-        value={searchInput.value}
-        autoCorrect={false}
-        returnKeyType="done"
-      />
-      {searchInput.value.length > 0 && (
-        <Pressable style={styles.clearBtn} onPress={handleClearBtnPress}>
-          <TimesIcon fill={palette.darkGray} />
-          <Text style={styles.clearBtnText} tx="common.reset" />
-        </Pressable>
-      )}
-    </View>
+    <Box
+      flexDirection={'row'}
+      alignItems="center"
+      height={scale(46)}
+      width={'100%'}>
+      <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
+        <ChevronLeft width={scale(15)} height={scale(15)} />
+      </TouchableOpacity>
+      <Box marginLeft={'m'} width={'95%'}>
+        <TextInput
+          variant={'searchBoxInput'}
+          placeholderTx="searchAsset"
+          onChangeText={(text) => filterItems(text)}
+          autoFocus={true}
+          value={searchInput.value}
+          autoCorrect={false}
+          returnKeyType="done"
+          cursorColor={faceliftPalette.greyMeta}
+          maxLength={30}
+          clearButtonMode="while-editing"
+        />
+      </Box>
+    </Box>
   )
 }
-
-const styles = StyleSheet.create({
-  sendInput: {
-    fontFamily: Fonts.Regular,
-    fontWeight: '300',
-    fontSize: 13,
-    textAlign: 'left',
-    lineHeight: 14,
-    height: 14,
-    width: '80%',
-    color: palette.seedInputColor,
-  },
-  searchBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginVertical: 15,
-    paddingVertical: 10,
-    borderBottomColor: palette.mediumGreen,
-    borderBottomWidth: 1,
-  },
-  clearBtn: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-  },
-  clearBtnText: {
-    fontFamily: Fonts.Regular,
-    fontWeight: '300',
-    fontSize: 13,
-    color: palette.darkGray,
-    lineHeight: 14,
-  },
-  icon: {
-    marginRight: 5,
-  },
-})
 
 export default SearchBox

@@ -1,6 +1,6 @@
-import PendingSwap from '../assets/icons/activity-status/pending-swap.svg'
-import CompletedSwap from '../assets/icons/activity-status/completed-swap.svg'
-import RefundedIcon from '../assets/icons/activity-status/refunded.svg'
+import PendingSwap from '../assets/icons/swapStateInactive.svg'
+import CompletedSwap from '../assets/icons/swapStateDefault.svg'
+import RefundedIcon from '../assets/icons/loadingRefundingSm.svg'
 import BitcoinChainIcon from '../assets/icons/crypto/bitcoin_chain.svg'
 import EthereumChainIcon from '../assets/icons/crypto/ethereum_chain.svg'
 import RootstockChainIcon from '../assets/icons/crypto/rsk_chain.svg'
@@ -26,29 +26,34 @@ import ArbitrumIcon from '../assets/icons/crypto/arbeth.svg'
 import SolanaIcon from '../assets/icons/crypto/sol.svg'
 import BlankIcon from '../assets/icons/crypto/blank.svg'
 import UserCog from '../assets/icons/user-cog.svg'
-import SwapCheck from '../assets/icons/swap-check.svg'
+import SwapCheck from '../assets/icons/rightTick.svg'
 import InfinityIcon from '../assets/icons/infinity.svg'
-import TimesIcon from '../assets/icons/times.svg'
-import Loader from '../assets/icons/loader.svg'
+import TimesIcon from '../assets/icons/swapCancelStateDefault.svg'
+import Loader from '../assets/icons/progresssIndicatorLg.svg'
 import LockIcon from '../assets/icons/lock.svg'
-import ManageAssetsIcon from '../assets/icons/manage-assets.svg'
-import SendIcon from '../assets/icons/activity-status/send.svg'
+import ManageAssetsIcon from '../assets/icons/chart.svg'
+import ManageAssetsDarkIcon from '../assets/icons/chartDark.svg'
+import SendIcon from '../assets/icons/sendStateDefault.svg'
 import SwapIcon from '../assets/icons/exchange-red.svg'
-import ReceiveIcon from '../assets/icons/receive.svg'
-import PendingIcon from '../assets/icons/activity-status/pending.svg'
-import CompletedIcon from '../assets/icons/activity-status/completed.svg'
-import CancelledIcon from '../assets/icons/activity-status/canceled.svg'
-import NeedsAttentionIcon from '../assets/icons/activity-status/needs_attention.svg'
+import ReceiveIcon from '../assets/icons/recieveStateDefault.svg'
+import PendingIcon from '../assets/icons/loadingEmpty.svg'
+import CompletedIcon from '../assets/icons/loadingSuccessSm.svg'
+import CancelledIcon from '../assets/icons/failedGradSm.svg'
+import NeedsAttentionIcon from '../assets/icons/loadingEmpty.svg'
 import CalendarIcon from '../assets/icons/calendar.svg'
-import ChevronRightIcon from '../assets/icons/activity-status/chevron-right.svg'
-import AngleRightIcon from '../assets/icons/angle-right.svg'
-import AngleDownIcon from '../assets/icons/angle-down.svg'
-import PlusSign from '../assets/icons/plus-icon.svg'
-import MinusSign from '../assets/icons/minus-sign.svg'
-import ExportIcon from '../assets/icons/export-icon.svg'
+import ChevronRightIcon from '../assets/icons/chevronRight.svg'
+import ChevronUp from '../assets/icons/chevronUp.svg'
+import ChevronDown from '../assets/icons/chevronDown.svg'
+import AngleRightIcon from '../assets/icons/chevronRight.svg'
+import AngleDownIcon from '../assets/icons/chevronDown.svg'
+import AngleUpIcon from '../assets/icons/chevronUp.svg'
+
+import PlusSign from '../assets/icons/plus.svg'
+import MinusSign from '../assets/icons/minus.svg'
+import ExportIcon from '../assets/icons/download.svg'
 import Circle from '../assets/icons/circle.svg'
-import ChevronLeft from '../assets/icons/chevron-left.svg'
-import Bars from '../assets/icons/menu-bars.svg'
+import ChevronLeft from '../assets/icons/chevronLeft.svg'
+import Bars from '../assets/icons/hamburger.svg'
 import SignOut from '../assets/icons/logout.svg'
 import CopyIcon from '../assets/icons/copy.svg'
 import LiqualityBoost from '../assets/icons/swap-providers/liqualityboost.svg'
@@ -56,23 +61,86 @@ import Sovryn from '../assets/icons/swap-providers/sovryn.svg'
 import Thorchain from '../assets/icons/swap-providers/thorchain.svg'
 import Uniswap from '../assets/icons/swap-providers/uniswap.svg'
 import Liquality from '../assets/icons/swap-providers/liquality.svg'
-import GasIcon from '../assets/icons/gas-indicator.svg'
-import Logo from '../assets/icons/logo.svg'
+import GasIcon from '../assets/icons/gasIndicator.svg'
+import Logo from '../assets/icons/liqualityLgGradVert.svg'
 import SearchIcon from '../assets/icons/search.svg'
-import FailedIcon from '../assets/icons/activity-status/failed.svg'
+import FailedIcon from '../assets/icons/loadingFailedSm.svg'
 import Eye from '../assets/icons/eye.svg'
 import XPinkIcon from '../assets/icons/XPink.svg'
-import XIcon from '../assets/icons/X.svg'
+import XIcon from '../assets/icons/close.svg'
 import PointingFinger from '../assets/icons/pointingFinger.svg'
 import BentArrow from '../assets/icons/bentArrow.svg'
-import TransakIcon from '../assets/icons/transak.svg'
 import QRCode from '../assets/icons/qr-code.svg'
 import DropdownIcon from '../assets/icons/dropdownMenu.svg'
 import Clock from '../assets/icons/clock.svg'
-import ArrowDown from '../assets/icons/arrow-down.svg'
-import Exchange from '../assets/icons/exchange.svg'
-import DownIcon from '../assets/icons/down.svg'
-import UpIcon from '../assets/icons/up.svg'
+import ArrowDown from '../assets/icons/arrowDown.svg'
+import Exchange from '../assets/icons/doubleArrowThick.svg'
+import DownIcon from '../assets/icons/arrowDownThick.svg'
+import UpIcon from '../assets/icons/arrowUpThick.svg'
+import LogoFull from '../assets/icons/logoFull.svg'
+import OnlyLqLogoDark from '../assets/icons/onlyLqLogoDark.svg'
+import OnlyLqLogoLight from '../assets/icons/onlyLqLogoLight.svg'
+import ActiveRadioButton from '../assets/icons/activeRadioButton.svg'
+import InactiveRadioButtonDark from '../assets/icons/inactiveRadioButtonDark.svg'
+import InactiveRadioButtonLight from '../assets/icons/inactiveRadioButtonLight.svg'
+import ModalClose from '../assets/icons/modalClose.svg'
+import OneWalletAllChains from '../assets/icons/oneWalletAllChains.svg'
+import SeeAllNftsIcon from '../assets/icons/nfts/see-all-nfts.svg'
+import LongArrow from '../assets/icons/nfts/long-arrow.svg'
+import Ellipse from '../assets/icons/nfts/ellipse.svg'
+import Star from '../assets/icons/nfts/star.svg'
+import BlackStar from '../assets/icons/nfts/star-black.svg'
+import Line from '../assets/icons/nfts/line.svg'
+import ArrowLeft from '../assets/icons/arrowLeft.svg'
+import SmallPurpleArrow from '../assets/icons/nfts/small-purple-arrow.svg'
+import ThreeDots from '../assets/icons/nfts/three-dots.svg'
+import Share from '../assets/icons/nfts/share.svg'
+import Send from '../assets/icons/nfts/send.svg'
+import Sell from '../assets/icons/nfts/sell.svg'
+import NftChain from '../assets/icons/nfts/nft-chain.svg'
+import PurpleCopy from '../assets/icons/nfts/purpleCopy.svg'
+import NftCard from '../assets/icons/nfts/nft-card-new.svg'
+import GreenCheckMark from '../assets/icons/nfts/green-check-mark.svg'
+import CheckmarkCircle from '../assets/icons/nfts/checkmark-circle.svg'
+import PurpleThreeDots from '../assets/icons/nfts/purple-three-dots.svg'
+
+import ConfirmationTrackerLine from '../assets/icons/nfts/confirmation-tracker.svg'
+
+import ShortLine from '../assets/icons/nfts/short-line.svg'
+import NetworkActiveDot from '../assets/icons/dot.svg'
+import Ellipses from '../assets/icons/ellipses.svg'
+import Settings from '../assets/icons/settings.svg'
+import SettingsActive from '../assets/icons/settingsActive.svg'
+import DollarSign from '../assets/icons/dollarSign.svg'
+import TabNFT from '../assets/icons/tabNFT.svg'
+import TabSetting from '../assets/icons/tabSetting.svg'
+import TabWallet from '../assets/icons/tabWallet.svg'
+import TabNFTInactive from '../assets/icons/tabNFTInactive.svg'
+import TabSettingInactive from '../assets/icons/tabSettingInactive.svg'
+import TabWalletInactive from '../assets/icons/tabWalletInactive.svg'
+import TransakIcon from '../assets/icons/transak.svg'
+import Filter from '../assets/icons/filter.svg'
+import Refresh from '../assets/icons/refresh.svg'
+import LightMoon from '../assets/icons/lightMoon.svg'
+import LightSun from '../assets/icons/lightSun.svg'
+import DarkMoon from '../assets/icons/darkMoon.svg'
+import DarkSun from '../assets/icons/darkSun.svg'
+import PrivateKeyWarn from '../assets/icons/pkWarn.svg'
+import SeedPhraseWarn from '../assets/icons/spWarn.svg'
+import PrivateKeyIcon from '../assets/icons/privateKeyIcon.svg'
+import CopySuccessTick from '../assets/icons/copySuccessTick.svg'
+import AllChainIndicator from '../assets/icons/allChainIndicator.svg'
+import GasDarkRect from '../assets/icons/gasDarkRectangle.svg'
+import GasLightRect from '../assets/icons/gasLightRectangle.svg'
+import RectangleDark from '../assets/icons/rectangleDark.svg'
+import RectangleLight from '../assets/icons/rectangleLight.svg'
+import SwapLightRect from '../assets/icons/swapLightRect.svg'
+import SwapDarkRect from '../assets/icons/swapDarkRect.svg'
+import SwapIconGrey from '../assets/icons/swapIconGray.svg'
+import SwapIconRed from '../assets/icons/swapIconRed.svg'
+import SwapSuccess from '../assets/icons/swapSucess.svg'
+import SwapRetry from '../assets/icons/swapRetry.svg'
+import SwapTknIcon from '../assets/icons/swapTknIcon.svg'
 
 export default {
   PendingSwap,
@@ -120,6 +188,7 @@ export default {
   ChevronRightIcon,
   AngleRightIcon,
   AngleDownIcon,
+  AngleUpIcon,
   PlusSign,
   MinusSign,
   ExportIcon,
@@ -142,7 +211,6 @@ export default {
   PointingFinger,
   BentArrow,
   XIcon,
-  TransakIcon,
   QRCode,
   DropdownIcon,
   Clock,
@@ -150,4 +218,70 @@ export default {
   ArrowDown,
   DownIcon,
   UpIcon,
+  SeeAllNftsIcon,
+  LongArrow,
+  Ellipse,
+  Star,
+  BlackStar,
+  Line,
+  SmallPurpleArrow,
+  ThreeDots,
+  Share,
+  Send,
+  Sell,
+  ShortLine,
+  Refresh,
+  NftChain,
+  PurpleCopy,
+  NftCard,
+  GreenCheckMark,
+  ConfirmationTrackerLine,
+  CheckmarkCircle,
+  PurpleThreeDots,
+
+  LogoFull,
+  OnlyLqLogoDark,
+  OnlyLqLogoLight,
+  ActiveRadioButton,
+  InactiveRadioButtonDark,
+  InactiveRadioButtonLight,
+  ModalClose,
+  OneWalletAllChains,
+  ArrowLeft,
+  NetworkActiveDot,
+  Ellipses,
+  Settings,
+  SettingsActive,
+  ManageAssetsDarkIcon,
+  DollarSign,
+  TabNFT,
+  TabSetting,
+  TabWallet,
+  TabNFTInactive,
+  TabSettingInactive,
+  TabWalletInactive,
+  TransakIcon,
+  Filter,
+  LightMoon,
+  LightSun,
+  DarkMoon,
+  DarkSun,
+  PrivateKeyWarn,
+  SeedPhraseWarn,
+  PrivateKeyIcon,
+  CopySuccessTick,
+  AllChainIndicator,
+  GasDarkRect,
+  GasLightRect,
+  RectangleDark,
+  RectangleLight,
+  SwapLightRect,
+  SwapDarkRect,
+  SwapIconGrey,
+  SwapIconRed,
+  SwapSuccess,
+  SwapRetry,
+  SwapTknIcon,
+  ChevronDown,
+  ChevronUp,
 }

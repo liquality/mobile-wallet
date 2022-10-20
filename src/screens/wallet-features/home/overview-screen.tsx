@@ -1,21 +1,23 @@
 import * as React from 'react'
 import {
-  Dimensions,
   StyleSheet,
   ScrollView,
   RefreshControl,
   useWindowDimensions,
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../../types'
+import { MainStackParamList } from '../../../types'
 import ErrorBoundary from 'react-native-error-boundary'
 import ErrorFallback from '../../../components/error-fallback'
 import { Box, Text } from '../../../theme'
-import GradientBackground from '../../../components/gradient-background'
 import SummaryBlock from '../../../components/overview/summary-block'
 import ContentBlock from '../../../components/overview/content-block'
 import HandleLockWalletAndBackgroundTasks from '../../../components/handle-lock-wallet-and-background-tasks'
-import { populateWallet } from '../../../store/store'
+import {
+  getAllEnabledAccounts,
+  populateWallet,
+  updateNFTs,
+} from '../../../store/store'
 import RefreshIndicator from '../../../components/refresh-indicator'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { useHeaderHeight } from '@react-navigation/elements'
@@ -25,14 +27,23 @@ import ApproveInjectionModal from '../approve-injection-modal'
 import { EventEmitter } from 'events'
 
 const hub = new EventEmitter()
+import { scale } from 'react-native-size-matters'
+import { setupWallet } from '@liquality/wallet-core'
+import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
+import { useRecoilValue } from 'recoil'
+import { networkState } from '../../../atoms'
 
 export type OverviewProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'OverviewScreen'
 >
 
-const OverviewScreen = ({ navigation, route }: OverviewProps) => {
+const wallet = setupWallet({
+  ...defaultOptions,
+})
+const OverviewScreen = ({ route, navigation }: OverviewProps) => {
   const [refreshing, setRefreshing] = React.useState(false)
+  const [accountIds, setAccountIds] = React.useState<string[]>([])
   const [showInjectionModal, setShowInjectionModal] = React.useState(false)
   const [eventData, setEventData] = React.useState({})
 
@@ -40,8 +51,12 @@ const OverviewScreen = ({ navigation, route }: OverviewProps) => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
-    populateWallet().then(() => setRefreshing(false))
-  }, [])
+    populateWallet(accountIds).then(() => setRefreshing(false))
+  }, [accountIds])
+
+  const activeNetwork = useRecoilValue(networkState)
+
+  const { activeWalletId } = wallet.state
 
   useEffect(() => {
     if (route.params) {
@@ -65,8 +80,25 @@ const OverviewScreen = ({ navigation, route }: OverviewProps) => {
   const { height } = useWindowDimensions()
   const tabBarBottomHeight = useBottomTabBarHeight()
   const headerHeight = useHeaderHeight()
+
+  React.useEffect(() => {
+    async function fetchData() {
+      const enabledAccountsToSendIn = getAllEnabledAccounts()
+      const accIds = enabledAccountsToSendIn.map((account) => {
+        return account.id
+      })
+      setAccountIds(accIds)
+      await updateNFTs({
+        walletId: activeWalletId,
+        network: activeNetwork,
+        accountIds: accIds,
+      })
+    }
+    fetchData()
+  }, [activeWalletId, activeNetwork])
+
   return (
-    <Box flex={1}>
+    <Box flex={1} backgroundColor="mainBackground">
       {refreshing && (
         <RefreshIndicator
           position={'absolute'}
@@ -96,21 +128,21 @@ const OverviewScreen = ({ navigation, route }: OverviewProps) => {
           <React.Suspense
             fallback={
               <Box style={styles.overviewBlock}>
-                <GradientBackground
-                  width={Dimensions.get('screen').width}
-                  height={GRADIENT_BACKGROUND_HEIGHT}
-                />
                 <Text variant="loading" tx="overviewScreen.load" />
               </Box>
             }>
             <SummaryBlock navigation={navigation} />
           </React.Suspense>
           <Box
+            zIndex={-1}
+            marginTop={'l'}
+            paddingHorizontal={'l'}
             height={
               height -
               tabBarBottomHeight -
               headerHeight -
-              GRADIENT_BACKGROUND_HEIGHT
+              GRADIENT_BACKGROUND_HEIGHT -
+              scale(15) // marginTop usage minus
             }>
             <ContentBlock />
           </Box>

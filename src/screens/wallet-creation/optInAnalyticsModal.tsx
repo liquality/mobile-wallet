@@ -1,48 +1,97 @@
-import { Modal, StyleSheet, View } from 'react-native'
+import {
+  Modal,
+  ViewStyle,
+  TouchableWithoutFeedback,
+  useColorScheme,
+} from 'react-native'
 import React, { useCallback, useState } from 'react'
-import { Button, palette } from '../../theme'
+import { Box, Pressable, ThemeIcon, Text } from '../../theme'
 import { useNavigation } from '@react-navigation/core'
-import CheckBox from '../../components/checkbox'
-import { useRecoilState } from 'recoil'
-import { optInAnalyticsState } from '../../atoms'
-import { Text } from '../../components/text/text'
-import { Fonts } from '../../assets'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { optInAnalyticsState, themeMode } from '../../atoms'
+import { Fonts, AppIcons } from '../../assets'
+import { scale, ScaledSheet } from 'react-native-size-matters'
+import { SCREEN_PADDING } from '../../utils'
+import { CommonActions } from '@react-navigation/native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+
+const { ModalClose, RectangleDark, RectangleLight } = AppIcons
 
 type AnalyticsModalProps = {
   onAction: (params: boolean) => void
   nextScreen: string
+  previousScreen: string
+}
+
+enum SelectedOption {
+  Sure = 'sure',
+  Not = 'not',
+}
+
+type IconName = 'InactiveRadioButton' | 'ActiveRadioButton'
+
+const defaultPadding: ViewStyle = {
+  padding: scale(SCREEN_PADDING),
 }
 
 const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
   onAction,
   nextScreen,
+  previousScreen,
 }) => {
   const navigation = useNavigation()
-  const [userHasChecked, setUserHasChecked] = useState<boolean>(true)
   const [analytics, setAnalytics] = useRecoilState(optInAnalyticsState)
+  const [selectedOpt, setSelectedOpt] = useState(SelectedOption.Sure)
+
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
 
   const handleOkButtonPress = useCallback(() => {
     onAction(false)
     setAnalytics({
       ...(analytics || {}),
-      acceptedDate: userHasChecked ? Date.now() : undefined,
+      acceptedDate: selectedOpt === 'sure' ? Date.now() : undefined,
     })
-    navigation.navigate(nextScreen, {
-      termsAcceptedAt: Date.now(),
-      previousScreen: 'Entry',
-    })
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [
+          { name: previousScreen },
+          {
+            name: nextScreen,
+            params: {
+              termsAcceptedAt: Date.now(),
+            },
+          },
+        ],
+      }),
+    )
   }, [
     onAction,
     setAnalytics,
     analytics,
-    userHasChecked,
     navigation,
     nextScreen,
+    previousScreen,
+    selectedOpt,
   ])
 
-  const handleCheckBox = useCallback(() => {
-    setUserHasChecked(!userHasChecked)
-  }, [userHasChecked])
+  const sureIcon: IconName =
+    selectedOpt === 'sure' ? 'ActiveRadioButton' : 'InactiveRadioButton'
+
+  const notIcon: IconName =
+    selectedOpt === 'not' ? 'ActiveRadioButton' : 'InactiveRadioButton'
+
+  const backgroundColor =
+    currentTheme === 'dark' ? 'semiTransparentDark' : 'semiTransparentWhite'
+
+  const LowerBgSvg = currentTheme === 'light' ? RectangleDark : RectangleLight
+
+  const UppperBgSvg = currentTheme === 'dark' ? RectangleDark : RectangleLight
 
   return (
     <Modal
@@ -50,88 +99,116 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
       transparent={true}
       visible={true}
       style={styles.modalView}>
-      <View style={styles.container}>
-        <View style={styles.contentWrapper}>
-          <Text
-            style={[styles.content, styles.header]}
-            tx="optInAnalyticsModal.helpUsToImprove"
-          />
-          <Text
-            style={styles.content}
-            tx="optInAnalyticsModal.shareWhereYouClick"
-          />
-          <CheckBox
-            selected={userHasChecked}
-            onPress={handleCheckBox}
-            textStyle={styles.checkBoxText}
-            style={styles.checkBoxStyle}
-            color={palette.black2}
-            text={{ tx: 'optInAnalyticsModal.shareMyClicks' }}
-          />
-          <Button
-            type="secondary"
-            variant="l"
-            label={{ tx: 'common.ok' }}
-            onPress={handleOkButtonPress}
-            isBorderless={false}
-            isActive={true}
-          />
-        </View>
-      </View>
+      <Box
+        flex={1}
+        justifyContent="center"
+        alignItems="center"
+        backgroundColor={backgroundColor}
+        paddingHorizontal="onboardingPadding">
+        <Box width="100%" height={scale(400)}>
+          <Box flex={1} style={defaultPadding}>
+            <Text
+              color={'textColor'}
+              paddingTop="m"
+              style={styles.helpUsTextStyle}
+              tx="optInAnalyticsModal.helpUsToImprove"
+            />
+            <Text
+              color={'textColor'}
+              marginTop={'l'}
+              variant={'normalText'}
+              tx="optInAnalyticsModal.shareWhereYouClick"
+            />
+            <Box marginTop={'s'}>
+              <TouchableWithoutFeedback
+                onPress={() => setSelectedOpt(SelectedOption.Sure)}>
+                <Box marginTop={'m'} flexDirection="row" alignItems={'center'}>
+                  <ThemeIcon
+                    iconName={sureIcon}
+                    height={scale(20)}
+                    width={scale(20)}
+                  />
+                  <Text
+                    variant={'radioText'}
+                    color={'textColor'}
+                    marginLeft={'m'}
+                    tx="optInAnalyticsModal.shareMyClicks"
+                  />
+                </Box>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback
+                onPress={() => setSelectedOpt(SelectedOption.Not)}>
+                <Box marginTop={'m'} flexDirection="row" alignItems={'center'}>
+                  <ThemeIcon
+                    iconName={notIcon}
+                    height={scale(20)}
+                    width={scale(20)}
+                  />
+                  <Text
+                    color={'textColor'}
+                    variant={'radioText'}
+                    marginLeft={'m'}
+                    tx="optInAnalyticsModal.notToday"
+                  />
+                </Box>
+              </TouchableWithoutFeedback>
+            </Box>
+            <Box marginTop={'l'}>
+              <Pressable
+                label={{ tx: 'Ok' }}
+                onPress={handleOkButtonPress}
+                variant="solid"
+                style={styles.okButton}
+              />
+            </Box>
+            <Box position={'absolute'} top={5} zIndex={-1}>
+              <UppperBgSvg />
+            </Box>
+            <Box
+              position={'absolute'}
+              zIndex={-2}
+              left={scale(10)}
+              top={scale(27)}>
+              <LowerBgSvg />
+            </Box>
+            <Box position={'absolute'} zIndex={100} right={scale(-8)}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => onAction(false)}>
+                <ModalClose />
+              </TouchableOpacity>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
     </Modal>
   )
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   modalView: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  lowerBgImg: {
+    height: '100%',
+    marginLeft: scale(10),
   },
-  contentWrapper: {
-    width: '90%',
-    alignItems: 'center',
-    backgroundColor: palette.white,
-    borderColor: palette.gray,
-    borderWidth: 1,
-    padding: 20,
-    shadowColor: palette.black2,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+  upperBgImg: {
+    height: '100%',
+    marginTop: scale(-8),
+    marginLeft: scale(-8),
   },
-  content: {
+  helpUsTextStyle: {
     fontFamily: Fonts.Regular,
     fontWeight: '500',
-    fontSize: 14,
-    color: palette.black2,
-    textAlign: 'justify',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    fontSize: scale(24),
+    lineHeight: scale(30),
+    textAlign: 'left',
   },
-  header: {
-    fontSize: 16,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginVertical: 5,
-  },
-  checkBoxText: {
-    fontFamily: Fonts.Regular,
-    fontWeight: '600',
-    fontSize: 14,
-    marginLeft: 10,
-  },
-  checkBoxStyle: {
-    marginTop: 10,
-    marginBottom: 20,
+  okButton: {
+    height: scale(36),
+    width: scale(54),
   },
 })
 

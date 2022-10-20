@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList, UseInputStateReturnType } from '../../../types'
+import { MainStackParamList, UseInputStateReturnType } from '../../../types'
 import Header from '../../header'
 import { createWallet, restoreWallet } from '../../../store/store'
 import { Box, Button, palette, Text } from '../../../theme'
@@ -19,9 +19,9 @@ import GradientBackground from '../../../components/gradient-background'
 import { labelTranslateFn } from '../../../utils'
 import { Fonts } from '../../../assets'
 
-type LoginScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  'LoginScreen'
+type BackupLoginScreenProps = NativeStackScreenProps<
+  MainStackParamList,
+  'BackupLoginScreen'
 >
 const useInputState = (
   initialValue: string,
@@ -31,7 +31,7 @@ const useInputState = (
   return { value, onChangeText: setValue }
 }
 
-const BackupLoginScreen = ({ navigation }: LoginScreenProps) => {
+const BackupLoginScreen = ({ navigation }: BackupLoginScreenProps) => {
   const PASSWORD_LENGTH = 8
   const passwordInput = useInputState('')
   const [error, setError] = useState('')

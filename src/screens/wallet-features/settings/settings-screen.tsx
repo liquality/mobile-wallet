@@ -2,21 +2,24 @@ import React, { useCallback, useEffect, useState } from 'react'
 import {
   Alert,
   Linking,
-  Pressable,
   ScrollView,
   StyleSheet,
-  View,
   useColorScheme,
+  TouchableOpacity,
 } from 'react-native'
 import GeneralSwitch from '../../../components/ui/general-switch'
 import {
   DarkModeEnum,
-  RootTabParamList,
   RootStackParamList,
   CustomRootState,
+  SettingStackParamList,
 } from '../../../types'
 import WhatsNew from '../../../components/ui/whats-new'
-import { downloadWalletLogs, labelTranslateFn } from '../../../utils'
+import {
+  downloadWalletLogs,
+  labelTranslateFn,
+  SCREEN_PADDING,
+} from '../../../utils'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import {
   networkState,
@@ -31,14 +34,29 @@ import i18n from 'i18n-js'
 import { toggleNetwork } from '../../../store/store'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import { Dropdown, Box, Button, Text, palette } from '../../../theme'
+import { Dropdown, Box, Text, faceliftPalette } from '../../../theme'
 import { AppIcons, Fonts } from '../../../assets'
+import CustomHeaderBar from '../../../components/header-bar/custom-header-bar'
+import { scale } from 'react-native-size-matters'
+import { CustomSwitch } from './custom-switch'
+import SettingListComponent from './setting-list-component'
+import { CommonActions } from '@react-navigation/native'
 
-const { AngleRightIcon, SignOut: SignoutIcon, DropdownIcon } = AppIcons
+const {
+  DropdownIcon,
+  Refresh,
+  ExportIcon,
+  ChevronRightIcon,
+  DarkMoon,
+  DarkSun,
+  LightMoon,
+  LightSun,
+  LockIcon,
+} = AppIcons
 
 type SettingsScreenProps = BottomTabScreenProps<
-  RootTabParamList,
-  'SettingsScreen'
+  SettingStackParamList,
+  'Settings'
 >
 
 const SettingsScreen = ({ route }: SettingsScreenProps) => {
@@ -58,14 +76,20 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
   }
 
   const handleLockPress = useCallback(() => {
-    navigation.navigate('LoginScreen')
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'LoginScreen' }],
+      }),
+    )
   }, [navigation])
 
   const handleBackupSeedPress = useCallback(() => {
-    navigation.navigate('BackupWarningScreen', {
-      screenTitle: 'Warning',
-      includeBackBtn: false,
-    })
+    navigation.navigate('BackupWarningScreen', { isPrivateKey: false })
+  }, [navigation])
+
+  const handleBackupPrivateKeyPress = useCallback(() => {
+    navigation.navigate('SelectChainScreen')
   }, [navigation])
 
   const handNetworkPress = useCallback(
@@ -118,352 +142,210 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
     ? DarkModeEnum.Light === theme
     : DarkModeEnum.Light === deviceTheme
 
+  const isMainnet = activeNetwork === 'mainnet'
+  const isTestnet = activeNetwork === 'testnet'
+
   return (
-    <View style={styles.container}>
-      <ScrollView>
-        <View style={styles.row}>
-          <View style={styles.action}>
-            <View>
-              <Text variant="settingLabel" tx="settingsScreen.networks" />
-              <View style={styles.btnOptions}>
-                <Pressable
-                  style={[
-                    styles.btn,
-                    styles.leftBtn,
-                    activeNetwork === 'mainnet' && styles.btnSelected,
-                  ]}
-                  onPress={() => handNetworkPress(Network.Mainnet)}>
-                  <Text
-                    style={[styles.label, styles.small]}
-                    tx="settingsScreen.mainnet"
-                  />
-                </Pressable>
-                <Pressable
-                  style={[
-                    styles.btn,
-                    styles.rightBtn,
-                    activeNetwork === 'testnet' && styles.btnSelected,
-                  ]}
-                  onPress={() => handNetworkPress(Network.Testnet)}>
-                  <Text
-                    style={[styles.label, styles.small]}
-                    tx="settingsScreen.testnet"
-                  />
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        {/*
-  This feature is not included in MVP, but will have to be done at some point so keeping it here
-  <View style={styles.rowDesign}>
-          <View style={styles.action}>
-            <View style={styles.btnContainer}>
-              <View>
-                <Text style={styles.label}>Sync Devices</Text>
-                <Text style={styles.description}>
-                  Be up to date on all devices.
-                </Text>
-              </View>
-              <View style={styles.btnOptions}>
-                <Pressable
-                  onPress={() =>
-                    navigation.navigate('BackupWarningScreen', {
-                      screenTitle: 'Warning',
-                      includeBackBtn: false,
-                    })
-                  }>
-                  <FontAwesomeIcon icon={faAngleRight} size={40} />
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </View> */}
-
-        <View style={styles.rowDesign}>
-          <View style={styles.action}>
-            <View style={styles.btnContainer}>
-              <View>
-                <Text
-                  variant="settingLabel"
-                  tx="settingsScreen.backUpSeedPhrase"
-                />
-                <Text
-                  style={styles.description}
-                  tx="settingsScreen.alwayKeepSeedSafe"
-                />
-              </View>
-              <View style={styles.btnOptions}>
-                <Pressable onPress={handleBackupSeedPress}>
-                  <AngleRightIcon width={40} height={40} />
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.action}>
-            <Text variant="settingLabel" tx="settingsScreen.walletLogs" />
-            <Button
-              type="tertiary"
-              variant="s"
-              label={{ tx: 'settingsScreen.downloadLogs' }}
-              onPress={handleDownload}
-              isBorderless={false}
-              isActive={true}
-            />
-          </View>
+    <Box flex={1} backgroundColor={'mainBackground'}>
+      <CustomHeaderBar title={{ tx: 'settings' }} />
+      <ScrollView
+        contentContainerStyle={{
+          paddingHorizontal: scale(SCREEN_PADDING),
+          paddingBottom: scale(SCREEN_PADDING),
+        }}>
+        <Box
+          borderBottomWidth={1}
+          borderBottomColor={'mediumGrey'}
+          flexDirection={'row'}
+          marginTop="l"
+          alignItems="center"
+          justifyContent={'space-between'}
+          height={scale(70)}>
           <Text
-            style={styles.description}
-            tx="settingsScreen.walletLogPublicInfo"
+            variant={'listText'}
+            color="greyMeta"
+            tx="settingsScreen.networks"
           />
-        </View>
-        <View style={styles.row}>
-          <View style={styles.action}>
-            <Text variant="settingLabel" tx="settingsScreen.analytics" />
+          <CustomSwitch
+            width={150}
+            firstItemValue={isMainnet}
+            firstItemPress={() => handNetworkPress(Network.Mainnet)}
+            firstItemElement={
+              <Text
+                variant={'networkStatus'}
+                color={isMainnet ? 'white' : 'activeButton'}
+                tx={'settingsScreen.mainnet'}
+              />
+            }
+            secondItemValue={isTestnet}
+            secondItemPress={() => handNetworkPress(Network.Testnet)}
+            secondItemElement={
+              <Text
+                variant={'networkStatus'}
+                color={isTestnet ? 'white' : 'activeButton'}
+                tx={'settingsScreen.testnet'}
+              />
+            }
+          />
+        </Box>
+        <SettingListComponent
+          mainLabel={labelTranslateFn('settingsScreen.syncDevices')!}
+          sublabel={labelTranslateFn('settingsScreen.beUpToDate')!}
+          icon={<Refresh />}
+          onPress={() => Alert.alert('Coming Soon')}
+        />
+        <SettingListComponent
+          mainLabel={labelTranslateFn('settingsScreen.backUpSeedPhrase')!}
+          sublabel={labelTranslateFn('settingsScreen.alwayKeepSeedSafe')!}
+          icon={<ChevronRightIcon height={scale(15)} width={scale(15)} />}
+          onPress={handleBackupSeedPress}
+        />
+        <SettingListComponent
+          mainLabel={labelTranslateFn('settingsScreen.backUpPrivateKey')!}
+          sublabel={labelTranslateFn('settingsScreen.alwayKeepPrivateKeySafe')!}
+          icon={<ChevronRightIcon height={scale(15)} width={scale(15)} />}
+          onPress={handleBackupPrivateKeyPress}
+        />
+        <SettingListComponent
+          mainLabel={labelTranslateFn('settingsScreen.walletLogs')!}
+          sublabel={labelTranslateFn('settingsScreen.walletLogPublicInfo')!}
+          icon={<ExportIcon />}
+          onPress={handleDownload}
+        />
+        <SettingListComponent
+          mainLabel={labelTranslateFn('settingsScreen.analytics')!}
+          sublabel={labelTranslateFn('settingsScreen.shareYouClick')!}
+          reactElementPlusOnPress={
             <GeneralSwitch
               isEnabled={!!analytics?.acceptedDate}
               onValueChange={toggleAnalyticsOptin}
             />
-          </View>
-          <Text style={styles.description} tx="settingsScreen.shareYouClick" />
-        </View>
-        <View style={styles.row}>
-          <View style={styles.action}>
-            <Text variant="settingLabel" tx="settingsScreen.notifications" />
-            <Pressable
-              onPress={() => {
-                Linking.openSettings()
-              }}>
+          }
+        />
+        <SettingListComponent
+          mainLabel={labelTranslateFn('settingsScreen.notifications')!}
+          sublabel={labelTranslateFn('settingsScreen.notifyInfo')!}
+          reactElementPlusOnPress={
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={Linking.openSettings}>
               <Text
-                style={[styles.label, styles.link]}
+                variant={'listText'}
+                color={'defaultButton'}
                 tx="settingsScreen.manage"
               />
-            </Pressable>
-          </View>
-          <Text style={styles.description} tx="settingsScreen.getInfoAbout" />
-        </View>
-        <Box
-          paddingHorizontal="xl"
-          paddingVertical={'m'}
-          borderTopWidth={1}
-          borderTopColor="mainBorderColor">
-          <Text variant="settingLabel" tx="settingsScreen.language" />
+            </TouchableOpacity>
+          }
+        />
+        <Box marginTop={'l'}>
+          <Text
+            variant={'listText'}
+            color="greyMeta"
+            tx="settingsScreen.language"
+          />
           <Dropdown
             data={supportedLanguages}
             variant="language"
-            maxHeight={100}
             labelField="label"
-            selectedTextStyle={[styles.description, styles.selectedFontStyle]}
+            selectedTextStyle={[styles.description]}
             valueField="value"
             value={lang}
+            style={styles.marginAdjust}
             autoScroll={false}
-            renderRightIcon={() => <DropdownIcon width={15} height={15} />}
+            renderRightIcon={() => (
+              <Box style={styles.marginAdjust}>
+                <DropdownIcon width={scale(15)} height={scale(15)} />
+              </Box>
+            )}
             onChange={(item) => {
               setLangSelected(item.value)
             }}
           />
         </Box>
-
-        <View style={styles.rowDesign}>
-          <View style={styles.action}>
-            <View style={styles.btnContainer}>
-              <Text variant="settingLabel" tx="settingsScreen.design" />
-              <View style={styles.btnOptions}>
-                <Pressable
-                  style={[
-                    styles.btn,
-                    styles.leftBtn,
-                    enableLight && styles.btnSelected,
-                  ]}
-                  onPress={() => setTheme(DarkModeEnum.Light)}>
-                  <Text
-                    style={[styles.label, styles.small]}
-                    tx="settingsScreen.light"
-                  />
-                </Pressable>
-                <Pressable
-                  style={[
-                    styles.btn,
-                    styles.rightBtn,
-                    enableDark && styles.btnSelected,
-                  ]}
-                  onPress={() => setTheme(DarkModeEnum.Dark)}>
-                  <Text
-                    style={[styles.label, styles.small]}
-                    tx="settingsScreen.dark"
-                  />
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.rowDesign}>
-          <View style={styles.action}>
-            <View style={styles.btnContainer}>
-              <View>
-                <Text
-                  variant="settingLabel"
-                  tx="settingsScreen.aboutLiquality"
-                />
-              </View>
-              <View style={styles.toLiqualityWebsite}>
-                <Pressable
-                  onPress={() => Linking.openURL('https://liquality.io/')}>
-                  <AngleRightIcon width={40} height={40} />
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <View style={styles.lockInfo}>
-            <Pressable onPress={handleLockPress}>
-              <SignoutIcon
-                width={40}
-                height={40}
-                color={palette.timesIconColor}
-                style={styles.signOutIcon}
-              />
-            </Pressable>
+        <SettingListComponent
+          mainLabel={labelTranslateFn('settingsScreen.screenMode')!}
+          sublabel={labelTranslateFn('settingsScreen.screenModeInfo')!}
+          reactElementPlusOnPress={
+            <CustomSwitch
+              width={80}
+              firstItemValue={enableLight}
+              firstItemPress={() => setTheme(DarkModeEnum.Light)}
+              firstItemElement={enableLight ? <LightSun /> : <DarkSun />}
+              secondItemValue={enableDark}
+              secondItemPress={() => setTheme(DarkModeEnum.Dark)}
+              secondItemElement={enableDark ? <DarkMoon /> : <LightMoon />}
+            />
+          }
+        />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => Linking.openURL('https://liquality.io/')}>
+          <Box
+            flexDirection={'row'}
+            justifyContent="space-between"
+            alignItems={'center'}
+            marginTop={'l'}
+            borderBottomColor={'mediumGrey'}
+            borderBottomWidth={1}
+            height={scale(50)}>
             <Text
-              style={[styles.lockInfo, styles.lockLabel]}
+              variant={'listText'}
+              color={'defaultButton'}
+              tx="settingsScreen.aboutLiquality"
+            />
+            <ChevronRightIcon height={scale(15)} width={scale(15)} />
+          </Box>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.7} onPress={handleLockPress}>
+          <Box
+            flexDirection={'row'}
+            justifyContent="space-between"
+            alignItems={'center'}
+            marginTop={'l'}
+            borderBottomColor={'mediumGrey'}
+            borderBottomWidth={1}
+            height={scale(50)}>
+            <Text
+              variant={'listText'}
+              color={'defaultButton'}
               tx="settingsScreen.lock"
             />
-          </View>
-        </View>
-
-        <View style={styles.lastRow}>
-          <View style={styles.info}>
-            <Text style={[styles.label, styles.version]}>
-              {i18n.t('settingsScreen.version', { version })}
-            </Text>
-            <Pressable onPress={() => setIsWhatsNewVisible(true)}>
-              <Text
-                style={[styles.label, styles.link]}
-                tx="settingsScreen.whatNew"
-              />
-            </Pressable>
-          </View>
-        </View>
+            <LockIcon height={scale(15)} width={scale(15)} />
+          </Box>
+        </TouchableOpacity>
+        <Box
+          flexDirection={'row'}
+          justifyContent="space-between"
+          alignItems={'center'}
+          marginTop={'xxl'}>
+          <Text variant={'listText'} color={'greyMeta'}>
+            {i18n.t('settingsScreen.version', { version })}
+          </Text>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => setIsWhatsNewVisible(true)}>
+            <Text
+              variant={'listText'}
+              color={'defaultButton'}
+              tx="settingsScreen.whatNew"
+            />
+          </TouchableOpacity>
+        </Box>
+        {isWhatsNewVisible && <WhatsNew onAction={setIsWhatsNewVisible} />}
       </ScrollView>
-      {isWhatsNewVisible && <WhatsNew onAction={setIsWhatsNewVisible} />}
-    </View>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: palette.white,
-    alignItems: 'center',
-  },
-  row: {
-    borderTopWidth: 1,
-    borderColor: palette.gray,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    width: '100%',
-  },
-  lastRow: {
-    borderColor: palette.gray,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    width: '100%',
-  },
-  rowDesign: {
-    borderTopWidth: 1,
-    borderColor: palette.gray,
-    paddingVertical: 0,
-    paddingHorizontal: 20,
-    width: '100%',
-  },
-  action: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-
-  label: {
-    fontFamily: Fonts.Regular,
-    fontWeight: '500',
-    fontSize: 16,
-    color: palette.black2,
-    marginRight: 5,
-  },
-  lockLabel: {
-    marginTop: 12,
-  },
-  btnContainer: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-  },
-  btnOptions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
-  },
-  toLiqualityWebsite: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  btn: {
-    borderWidth: 1,
-    borderColor: palette.gray,
-    paddingHorizontal: 10,
-  },
-  leftBtn: {
-    borderRightWidth: 0,
-    borderBottomLeftRadius: 50,
-    borderTopLeftRadius: 50,
-  },
-  rightBtn: {
-    borderLeftWidth: 1,
-    borderBottomRightRadius: 50,
-    borderTopRightRadius: 50,
-  },
-  btnSelected: {
-    backgroundColor: palette.selectedColor,
-  },
-  link: {
-    fontSize: 14,
-    color: palette.blueVioletPrimary,
-  },
-  version: {
-    fontSize: 14,
-  },
-  info: {
-    flexDirection: 'row',
-    marginTop: 20,
-  },
-  lockInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  signOutIcon: {
-    marginRight: 10,
-  },
   description: {
     fontFamily: Fonts.Regular,
-    fontWeight: '300',
-    fontSize: 12,
-    lineHeight: 18,
-    color: palette.darkGray,
+    fontSize: scale(15),
+    fontWeight: '400',
+    color: faceliftPalette.greyBlack,
   },
-  small: {
-    fontWeight: '300',
-    fontSize: 11,
-    lineHeight: 26,
-    color: palette.black,
-  },
-  selectedFontStyle: {
-    fontSize: 14,
+  marginAdjust: {
+    marginTop: -scale(10),
   },
 })
 

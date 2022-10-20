@@ -23,7 +23,7 @@ import Label from '../../../components/ui/label'
 import Warning from '../../../components/ui/warning'
 import SwapRates from '../../../components/swap/swap-rates'
 import { getQuotes } from '../../../store/store'
-import { ActionEnum, NetworkFeeType, RootStackParamList } from '../../../types'
+import { ActionEnum, MainStackParamList, NetworkFeeType } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import {
@@ -174,7 +174,7 @@ export const reducer: Reducer<SwapEventType, SwapEventAction> = (
   }
 }
 
-type SwapScreenProps = NativeStackScreenProps<RootStackParamList, 'SwapScreen'>
+type SwapScreenProps = NativeStackScreenProps<MainStackParamList, 'SwapScreen'>
 
 const SwapScreen: FC<SwapScreenProps> = (props) => {
   const { route, navigation } = props
@@ -991,8 +991,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   chevronBtn: {
-    marginLeft: 15,
-    marginBottom: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
   icon: {
     alignSelf: 'flex-start',

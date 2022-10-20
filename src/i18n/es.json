@@ -1,10 +1,10 @@
 {
   "common": {
-    "one": "one 🇪🇸",
-    "wallet": "wallet 🇪🇸",
-    "all_chains": "all chains 🇪🇸",
+    "one": "one",
+    "wallet": "wallet",
+    "all_chains": "all chains",
     "forgotPassword": "Forgot password? ",
-    "importWithSeedPhrase": "Import with seed phrase",
+    "importWithSeedPhrase": "Import with seed phrase.",
     "openSesame": "Open Sesame",
     "ok": "OK",
     "pleaseTryAgain": "Please try again",
@@ -20,7 +20,7 @@
     "speedUp": "Speed Up",
     "send": "SEND",
     "sent": "SENT",
-    "networkSpeed": "NETWORK SPEED/FEE",
+    "networkSpeed": "Network Speed/Fee",
     "edit": "Edit",
     "error": "Error",
     "addLiquidity": "Add Liquidity",
@@ -48,7 +48,7 @@
     "filterOptions": "filter options",
     "sort": "SORT",
     "onceYouStart": "Once you start using your wallet you will see the activity here.",
-    "totalPrettyFiatBal": "Total {{prettyFiatBalance}}",
+    "totalPrettyFiatBal": "{{prettyFiatBalance}}",
     "started": "Started",
     "completed": "Completed",
     "custom": "Custom"
@@ -57,47 +57,45 @@
     "congrats": "Congrats!"
   },
   "entryScreen": {
-    "createNewWallet": "Create a new Wallet"
+    "createNewWallet": "Create a New Wallet"
   },
   "loginScreen": {
-    "password": "PASSWORD",
+    "password": "ENTER PASSWORD",
     "unlock": "Unlock",
-    "invalidPassword": "Password is invalid"
+    "invalidPassword": "Password is invalid",
+    "passwordError": "Passwords do not match. Try again."
   },
   "optInAnalyticsModal": {
-    "helpUsToImprove": "HELP US IMPROVE LIQUALITY TO BETTER SERVE YOU",
-    "shareWhereYouClick": "Share where you click. There is no identifying data. This permission can be revoked at any time.",
-    "shareMyClicks": "Share my clicks"
+    "helpUsToImprove": "Help Us Improve Liquality.",
+    "shareWhereYouClick": "We want to better serve you. Share where you click. There is no identifying data. This permission can be revoked any time.",
+    "shareMyClicks": "Sure, I’ll share my clicks",
+    "notToday": "Not today, ask me later"
   },
   "passwordCreationScreen": {
     "createPassword": "Create Password",
-    "choosePassword": "CHOOSE PASSWORD (at least 8 characters)",
     "confirmPassword": "CONFIRM PASSWORD",
     "passwordDontMatch": "Passwords don't match",
-    "password8char": "Passwords must be at least 8 characters"
+    "password8char": "Passwords must be at least 8 characters.",
+    "orImportWallet": "Or import other wallet with seed phrase."
   },
   "seedPhraseConfirmationScreen": {
     "keyInfoMissing": "Key information missing",
     "confirmSeed": "Confirm Seed Phrase",
     "tap3wordMatching": "Tap the 3 words matching their position in the seed phrase. Once confirmed, store the phrase securely.",
-    "1stWord": "1ST WORD",
-    "5thWord": "5th WORD",
-    "12thWord": "12TH WORD"
+    "1stWord": "1st word",
+    "5thWord": "5th word",
+    "12thWord": "12th word"
   },
   "seedPhraseScreen": {
     "backupYourWallet": "Backup your Wallet",
-    "restoreYourWallet": "The seed phrase is the only way to restore your wallet. Write itdown. Next you will confirm it."
+    "restoreYourWallet": "The seed phrase is the only way to restore your wallet. Write it down. Next you will confirm it."
   },
+
   "termsScreen": {
-    "termPrivacy": "Term & Privacy",
-    "termCopy": "THIS IS THE BETA VERSION OF THE LIQUALITY PLATFORM WHICH IS STILL BEING ACTIVELY DEVELOPED. YOU ACKNOWLEDGE THE INFORMATION AVAILABLE IS NOT INTENDED TO BE RELIED ON OR USED IN A PRODUCTION ENVIRONMENT. YOU ACKNOWLEDGE AND ACCEPT THAT THE SITE OR SERVICES \n (A) MAY CONTAIN BUGS, ERRORS, AND DEFECTS, \n (B) MAY FUNCTION IMPROPERLY OR BE SUBJECT TO PERIODS OF DOWNTIME AN UNAVAILABILITY, \n (C) MAY RESULT IN TOTAL OR PARTIAL LOSS OR CORRUPTION OF DATA USED IN THE SITE, AND \n (D) MAY BE MODIFIED AT ANY TIME, INCLUDING THROUGH THE RELEASE OF SUBSEQUENT VERSIONS, ALL WITH OR WITHOUT NOTICE. THE ALPHA PLATFORM IS AVAILABLE ON AN “AS IS” AND “AS AVAILABLE” BASIS FOR THE SOLE PURPOSE OF COLLECTING FEEDBACK ON QUALITY, USABILITY, PERFORMANCE AND ANY DEFECTS. THANK YOU FOR YOUR SUPPORT WHILE WE CONTINUE TO WORK ON DELIVERING A PERFECT PRODUCT.",
-    "iAccept:": "I Accept",
+    "termPrivacy": "Terms & Privacy",
+    "termCopy": "THIS IS THE BETA VERSION OF THE LIQUALITY PLATFORM WHICH IS STILL BEING ACTIVELY DEVELOPED. YOU ACKNOWLEDGE THE INFORMATION AVAILABLE IS NOT INTENDED TO BE RELIED ON OR USED IN A PRODUCTION ENVIRONMENT. YOU ACKNOWLEDGE AND ACCEPT THAT THE SITE OR SERVICES \n (A) MAY CONTAIN BUGS, ERRORS, AND DEFECTS, \n (B) MAY FUNCTION IMPROPERLY OR BE SUBJECT TO PERIODS OF DOWNTIME AN UNAVAILABILITY, \n (C) MAY RESULT IN TOTAL OR PARTIAL LOSS OR CORRUPTION OF DATA USED IN THE SITE, AND \n (D) MAY BE MODIFIED AT ANY TIME, INCLUDING THROUGH THE RELEASE OF SUBSEQUENT VERSIONS, \n\nALL WITH OR WITHOUT NOTICE. THE ALPHA PLATFORM IS AVAILABLE ON AN “AS IS” AND “AS AVAILABLE” BASIS FOR THE SOLE PURPOSE OF COLLECTING FEEDBACK ON QUALITY, USABILITY, PERFORMANCE AND ANY DEFECTS. THANK YOU FOR YOUR SUPPORT WHILE WE CONTINUE TO WORK ON DELIVERING A PERFECT PRODUCT.",
+    "iAgree:": "I Agree",
     "cancel": "Cancel"
-  },
-  "overlayTutorial": {
-    "hiddenForSecurityTapAndHold": "Hidden for security. Tap and hold to reveal phrase.",
-    "tryIt": "Try it.",
-    "gotIt": "GOT IT"
   },
   "assetChooserScreen": {
     "searchCurrency": "Search for a Currency"
@@ -128,21 +126,28 @@
     "iSaveSeed": "I saved the seed"
   },
   "backupWarningScreen": {
-    "showSeedPhrase": "Show Seed Phrase?",
-    "anyoneWhoSeed": "Anyone who has this seed phrase can steal your funds.",
+    "show": "Show",
+    "seedPhrase": "Seed Phrase?",
+    "anyoneWhoSeed": "Anyone who has this seed phrase can steal your funds. View it in private space.",
+    "anyOneWhoPrivate": "Anyone who has your private key can steal your funds. View it in private space.",
     "viewItPrivate": "View it in private without any cameras around.",
-    "iHavePrivacy": "I have privacy",
+    "iHavePrivacy": "I Have Privacy",
     "signIn": "Sign In"
+  },
+  "overlayTutorial": {
+    "hiddenForSecurityTapAndHold": "Hidden for security. Tap and hold to reveal phrase.",
+    "tryIt": "Try it.",
+    "gotIt": "GOT IT"
   },
   "overviewScreen": {
     "load": "Loading...",
     "availableGas": "Available Gas {{gas} {{token}}"
   },
   "receiveScreen": {
-    "yourCurrent": "Your current {{code}}/{{activeNetwork}} address",
-    "scanORcode": "Scan QR code with a mobile wallet to send funds to this address.",
+    "yourCurrent": "YOUR CURRENT {{code}} ADDRESS",
+    "scanORcode": "Scan QR code with a mobile wallet to send funds.",
     "done": "Done",
-    "copied": "Copied!",
+    "copied": "Address copied!",
     "copyAdd": "Copy Address",
     "addressEmpty": "Address empty. Please try again!",
     "buyCrypto": "Buy Crypto",
@@ -184,7 +189,7 @@
     "available": "Available",
     "max": "Max",
     "sndTo": "SEND TO",
-    "address": "Address",
+    "address": "Enter Address",
     "memoOpt": "MEMO (OPTIONAL)",
     "getTkn": "Get {{token}}",
     "notEnoughTkn": "Not enough {{token}} to make this transfer.",
@@ -198,29 +203,36 @@
   "settingsScreen": {
     "reloadApp": "Please reload your app",
     "networks": "Networks",
-    "mainnet": "Mainnet",
-    "testnet": "Testnet",
+    "mainnet": "MAINNET",
+    "testnet": "TESTNET",
     "backUpSeedPhrase": "Back-up Seed Phrase",
     "alwayKeepSeedSafe": "Always keep your seed phrase safe.",
+    "backUpPrivateKey": "Back-up Private Key",
+    "alwayKeepPrivateKeySafe": "Always keep your private key safe.",
     "walletLogs": "Wallet Logs",
     "downloadLogs": "Download Logs",
-    "walletLogPublicInfo": "The wallet logs contain your public information such as addresses and transactions.",
+    "syncDevices": "Sync Devices",
+    "beUpToDate": "Be up to date across connected devices.",
+    "walletLogPublicInfo": "Your public information such as addresses and transactions.",
     "analytics": "Analytics",
-    "shareYouClick": "Share where you click. No identifying data is collected.",
+    "shareYouClick": "To improve your experience, share clicks without identifying data.",
     "notifications": "Notifications",
-    "manage": "manage",
+    "notifyInfo": "Status of transactions and funds",
+    "screenMode": "Screen Mode",
+    "screenModeInfo": "Choose between light or dark",
+    "manage": "Manage",
     "getInfoAbout": "Get informed about transaction status and funds received.",
     "design": "Design",
     "light": "light",
     "dark": "dark",
     "aboutLiquality": "About Liquality",
-    "lock": "Lock",
+    "lock": "Lock Wallet",
     "version": "Version: {{version}}",
     "whatNew": "What's new",
     "language": "Language",
-    "english": "English 🇪🇸",
-    "spanish": "Spanish 🇪🇸",
-    "mandarin": "Mandarin 🇪🇸"
+    "english": "English",
+    "spanish": "Spanish",
+    "mandarin": "Mandarin"
   },
   "swapConfirmationScreen": {
     "networkSpeed": "NETWORK SPEED/FEE",
@@ -244,7 +256,9 @@
     "yourToFunding": "Your ${to} funding transaction",
     "yourToReceive": "Your ${to} receive transactionn",
     "actions": "Actions",
-    "retry": "Retry"
+    "retry": "Retry",
+    "link": "Link",
+    "yourTrans": "Your transaction"
   },
   "swapReviewScreen": {
     "swapDetails": "Swap {{fromCode} to {{toCode}} Details",
@@ -298,10 +312,11 @@
   },
   "unlockWalletScreen": {
     "invalidSeedPhrase": "Your seed phrase is invalid', 'Please try again",
-    "unlockWallet": "Unlock Wallet",
-    "enterSeedPhrase": "Enter the seed phrase, in the same order saved when creating your wallet.",
-    "12words": "12 words",
-    "24words": "24 words"
+    "unlockWallet": "Unlock your Wallet",
+    "enterSeedPhrase": "Enter the seed phrase in the same order saved when creating your wallet.",
+    "12words": "12",
+    "24words": "24",
+    "wordCount": "WORD COUNT"
   },
   "header": {
     "wallet": "Wallet"
@@ -319,13 +334,14 @@
   },
   "summaryBlockComp": {
     "selectAssetSend": "Select asset for Send",
-    "selectAssetReceive": "Select asset for receive",
-    "selectAssetSwap": "Select asset for swap",
-    "asset": " Asset",
-    "assets": " Assets",
+    "selectAssetReceive": "Select asset for Receive",
+    "selectAssetSwap": "Select asset for Swap",
+    "asset": " ASSET",
+    "assets": " ASSETS",
     "send": "Send",
     "swap": "Swap",
-    "receive": "Receive"
+    "receive": "Receive",
+    "buy": "Buy"
   },
   "sendTranDetailComp": {
     "transId": "TRANSACTION ID",
@@ -374,14 +390,78 @@
   "invalidQRCode": "Invalid QR Code",
   "manageAssets": "Manage Assets",
   "accountDetails": "Account Details",
+  "manageAccs": "Manage Accounts",
   "lock": "Lock",
   "settings": "SETTINGS",
-  "warning": "WARNING",
-  "asset": "ASSET 🇪🇸",
-  "activity": "ACTIVITY 🇪🇸",
+  "warning": "WARNING!",
+  "asset": "Assets",
+  "activity": "Activity",
   "sec": "{{sec}} sec",
   "maybeIn30": "maybe in 30 sec",
   "likelyLess30": "likely in < 30 sec",
   "likelyLess15": "likely in < 15 sec",
-  "txId": "Transaction Id"
+  "txId": "Transaction Id",
+  "Ok": "Ok",
+  "wallet": "WALLET",
+  "tabNFT": "NFTs",
+  "nft": {
+    "noNftsTitle": "No NFTs Just Yet",
+    "noNftsHeaderText": "Once you start owning NFTs you will see them here. In the mean time, catch up on the latest in our NFT hub.",
+    "accounts": "ACCOUNTS",
+    "nfts": "NFTS",
+    "tabBarNfts": "Nfts",
+    "tabBarActivity": "Activity",
+    "tabBarOverview": "Overview",
+    "tabBarDetails": "Details",
+    "description": "DESCRIPTION",
+
+    "createdBy": "Created By:",
+    "creator": "CREATOR",
+    "unlockableContent": "Unlockable Content:",
+    "goSee": "Go See",
+    "about": "ABOUT",
+    "moreOf": "More Of:",
+    "account": "ACCOUNT",
+    "contractAddress": "CONTRACT ADDRESS",
+    "tokenId": "TOKEN ID",
+    "tokenStandard": "TOKEN STANDARD",
+    "blockchain": "BLOCKCHAIN",
+    "metadata": "METADATA",
+    "decentralized": "Decentralized",
+    "creatorFee": "CREATOR FEE",
+    "itemActivity": "ITEM ACTIVITY",
+    "explorer": "Explorer",
+    "send": "Send",
+    "share": "Share",
+    "sell": "Sell",
+    "addressCopied": "Address Copied!"
+  },
+  "letGetYouStarted": "Let’s Get You Started",
+  "buyCrypto": "Buy Crypto",
+  "unlockWalletUpperCase": "UNLOCK YOUR WALLET",
+  "wordsNotMatch": "Words don’t match. Try again.",
+  "tabBarActivity": "Activity",
+  "tabBarOverview": "Overview",
+  "tabBarDetails": "Details",
+  "description": "DESCRIPTION",
+  "your": "Your",
+  "privateKey": "Private Key",
+  "neverDiscloseInfo": "Never disclose your private key. Anyone with that key has access to your funds. Ensure it is stored securely.",
+  "copyPrivateKey": "Copy Private Key",
+  "privateKeyCopied": "Private Key copied.",
+  "selectChain": "Select Chain",
+  "manageAssetsCaps": "MANAGE ASSETS",
+  "searchAsset": "Search Asset",
+  "gas": "Gas",
+  "gasInfo": "A gas token can’t be switched off, as you do need to pay for transactions with it.",
+  "gotIt": "Got It",
+  "hmm": "Hmm.",
+  "cantFndTkn": "Can’t find this token",
+  "notFound": "Not found",
+  "swapDetails": "SWAP DETAILS",
+  "transaction": "TRANSACTION",
+  "optionTbd": "Option Tbd",
+  "status": "Status",
+  "failedRefunded": "Failed - refunded",
+  "initiated": "Initiated"
 }

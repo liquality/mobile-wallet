@@ -1,4 +1,4 @@
-import { DarkModeEnum, LanguageEnum } from './types/index'
+import { DarkModeEnum, LanguageEnum } from './types'
 import { atom, atomFamily, selector, selectorFamily } from 'recoil'
 import { AccountType, SwapAssetPairType, CustomRootState } from './types'
 import { BigNumber } from '@liquality/types'
@@ -11,6 +11,7 @@ import {
   balanceEffect,
   enabledAssetsEffect,
   fiatRateEffect,
+  localStorageAssetEffect,
   localStorageEffect,
   localStorageLangEffect,
   transactionHistoryEffect,
@@ -93,6 +94,11 @@ export const isDoneFetchingData = atom<boolean>({
   default: false,
 })
 
+export const showSearchBarInputState = atom<boolean>({
+  key: 'ShowSearchBarInput',
+  default: false,
+})
+
 export const themeMode = atom<DarkModeEnum>({
   key: 'ThemeMode',
   default: DarkModeEnum.Null,
@@ -144,6 +150,11 @@ export const swapScreenDoubleLongEvent = atom<SwapScreenPopUpTypes>({
   default: SwapScreenPopUpTypes.Null,
 })
 
+export const showFilterState = atom<boolean>({
+  key: 'showFilter',
+  default: false,
+})
+
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',
@@ -186,7 +197,7 @@ export const historyStateFamily = atomFamily<Partial<HistoryItem>, string>({
 export const enabledAssetsStateFamily = atomFamily<boolean, string>({
   key: 'EnabledAssetsState',
   default: true,
-  effects: (asset) => [localStorageEffect(`enabled-asset-${asset}`)],
+  effects: (asset) => [localStorageAssetEffect(`enabled-asset-${asset}`)],
 })
 
 //--------------ATOM SELECTORS--------------
@@ -275,26 +286,29 @@ export const totalFiatBalanceState = selector<string>({
     )
     const fiatRates = get(fiatRatesState)
 
-    const totalFiatBalance = accountsIds.reduce((acc, account) => {
-      const balanceState = balanceStateFamily({
-        asset: account.name,
-        assetId: account.id,
-      })
+    if (!accountsIds || accountsIds.length === 0) return '0'
 
-      return BigNumber.sum(
-        acc,
-        balanceState && fiatRates[account.name] > 0
+    const totalFiatBalance = accountsIds.reduce((acc, account) => {
+      const assetBalance = get(
+        balanceStateFamily({
+          asset: account.name,
+          assetId: account.id,
+        }),
+      )
+
+      const balance =
+        assetBalance > 0 && fiatRates[account.name] > 0
           ? new BigNumber(
               cryptoToFiat(
                 unitToCurrency(
                   getAsset(activeNetwork, getNativeAsset(account.name)),
-                  get(balanceState),
+                  assetBalance,
                 ).toNumber(),
                 fiatRates[account.name],
               ),
             )
-          : 0,
-      )
+          : 0
+      return BigNumber.sum(acc, balance)
     }, new BigNumber(0))
 
     return formatFiat(totalFiatBalance).toString()

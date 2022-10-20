@@ -3,7 +3,9 @@ import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import { FeeDetails } from '@liquality/types/lib/fees'
 import { BigNumber } from '@liquality/types'
 import {
+  AccountId,
   FeeLabel,
+  FiatRates,
   Network,
   RootState,
   SendHistoryItem,
@@ -38,24 +40,36 @@ export interface AccountType {
   fees?: FeeDetails
   activeNetwork?: Network
 }
+export interface NFTAsset {
+  length: number
+  token_id?: string
+  asset_contract?: {
+    address?: string
+    name?: string
+    symbol?: string
+    image_url?: string
+    external_link?: string
+  }
+  collection?: {
+    name: string
+  }
+  id?: number
+  description?: string
+  external_link?: string
+  image_original_url?: string
+  image_preview_url?: string
+  image_thumbnail_url?: string
+  name?: string
+  amount?: string
+  standard?: string
+}
 
-export interface NftObj {
-  String: [
-    {
-      amount: Number
-      asset_contract: Object
-      collection: [Object]
-      description: String
-      external_link: undefined
-      image_original_url: String
-      image_preview_url: String
-      image_thumbnail_url: String
-      name: String
-      standard: String
-      starred: boolean
-      token_id: Number
-    },
-  ]
+export interface NFTWithAccount extends NFT {
+  accountId: AccountId
+}
+
+export interface NFT extends NFTAsset {
+  starred: boolean
 }
 
 export type SwapAssetPairType = {
@@ -104,10 +118,37 @@ export type StackPayload = {
   selectedAssetCodes?: string[]
   onSelectAssetCodes?: (selectedAssetCodes: string[]) => void
   code?: string
+  amountInput?: string
+  fee?: GasFees | null
+  speedMode?: FeeLabel
+  isPrivateKey?: boolean
+  walletId?: string
+  accountId?: string
+  chain?: ChainId
+  network?: Network
+  accountName?: string
+  shortenAddress?: string
+}
+
+export type SettingStackParamList = {
+  Settings: { shouldLogOut?: boolean }
 }
 
 export type RootStackParamList = {
   Entry: undefined
+  TermsScreen: StackPayload
+  PasswordCreationScreen: StackPayload
+  SeedPhraseScreen: StackPayload
+  SeedPhraseConfirmationScreen: StackPayload
+  CongratulationsScreen: undefined
+  UnlockWalletScreen: StackPayload
+  LoginScreen: undefined
+  LoadingScreen: StackPayload
+  BackupWarningScreen: StackPayload
+  SelectChainScreen: undefined
+}
+
+export type MainStackParamList = {
   TermsScreen: StackPayload
   PasswordCreationScreen: StackPayload
   SeedPhraseScreen: StackPayload
@@ -122,6 +163,7 @@ export type RootStackParamList = {
   AssetManagementScreen: StackPayload
   BackupWarningScreen: StackPayload
   BackupSeedScreen: { screenTitle?: string }
+  BackupPrivateKeyScreen: StackPayload
   BackupLoginScreen: { backupSeed?: boolean; screenTitle?: string }
   AssetToggleScreen: StackPayload
   ReceiveScreen: StackPayload
@@ -133,21 +175,29 @@ export type RootStackParamList = {
   CustomFeeEIP1559Screen: StackPayload
   SwapScreen: StackPayload
   SwapReviewScreen: StackPayload
-  WalletImportNavigator: undefined
   MainNavigator: undefined
+  AppStackNavigator: undefined
   NftForSpecificChainScreen: {
     screenTitle?: string
     currentAccount?: AccountType
   }
   NftSendScreen: {
-    nftItem?: NftObj
+    nftItem?: NFTAsset
     accountIdsToSendIn: Object
   }
   NftDetailScreen: {
     screenTitle?: string
-    nftItem?: NftObj
+    nftItem?: NFTAsset
     accountIdsToSendIn: string[]
   }
+  NftCollectionScreen: {
+    nftCollection: NFTAsset[]
+    accountIdsToSendIn: string[]
+  }
+  SettingsScreen: { shouldLogOut?: boolean }
+  WithPopupMenu: undefined
+  SelectChainScreen: undefined
+  SwapDetailsScreen: StackPayload
 }
 
 export type RootTabParamList = {

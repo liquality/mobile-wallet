@@ -1,12 +1,24 @@
 import React, { Dispatch, SetStateAction, useState } from 'react'
-import { View, StyleSheet, TextInput, Dimensions } from 'react-native'
+import { Keyboard } from 'react-native'
 
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import Header from '../header'
-import ButtonFooter from '../../components/button-footer'
-import { Box, Text, Button, palette } from '../../theme'
-import GradientBackground from '../../components/gradient-background'
+import {
+  Box,
+  Text,
+  GRADIENT_COLORS,
+  GRADIENT_STYLE,
+  TextInput,
+  Pressable,
+} from '../../theme'
+import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
+import LinearGradient from 'react-native-linear-gradient'
+import { AppIcons } from '../../assets'
+import { useHeaderHeight } from '@react-navigation/elements'
+import { scale } from 'react-native-size-matters'
+import { INPUT_OPACITY_ACTIVE, INPUT_OPACITY_INACTIVE } from '../../utils'
+
+const { LogoFull } = AppIcons
 
 type PasswordCreationProps = NativeStackScreenProps<
   RootStackParamList,
@@ -32,6 +44,8 @@ const PasswordCreationScreen = ({
   route,
   navigation,
 }: PasswordCreationProps) => {
+  const headerHeight = useHeaderHeight()
+
   const PASSWORD_LENGTH = 8
   const passwordInput = useInputState('')
   const passwordConfirmationInput = useInputState('')
@@ -56,117 +70,125 @@ const PasswordCreationScreen = ({
     }
     return isError
   }
+
+  const onPress = () => {
+    Keyboard.dismiss()
+    if (arePasswordsValid()) {
+      navigation.navigate('LoadingScreen', {
+        ...route.params,
+        password: passwordInput.value,
+      })
+    }
+  }
+
+  let disabled = true
+  const { value: passValue } = passwordInput
+  const { value: passConfirmValue } = passwordConfirmationInput
+
+  const passwordInputOpacity =
+    error || passValue.length === 0
+      ? INPUT_OPACITY_INACTIVE
+      : INPUT_OPACITY_ACTIVE
+
+  const passwordConfirmationInputOpacity =
+    error || passConfirmValue.length === 0
+      ? INPUT_OPACITY_INACTIVE
+      : INPUT_OPACITY_ACTIVE
+
+  if (passValue.trim().length >= 8 && passConfirmValue.trim().length >= 8) {
+    disabled = false
+  }
+
   return (
-    <Box style={styles.container}>
-      <GradientBackground
-        width={Dimensions.get('screen').width}
-        height={Dimensions.get('screen').height}
-        isFullPage
-      />
-      <Header showText={true} />
-      <View style={styles.prompt}>
-        <Text
-          variant="mainInputLabel"
-          tx="passwordCreationScreen.createPassword"
-        />
-        <View style={styles.inputs}>
-          <View style={styles.inputWrapper}>
-            <Text
-              variant="description"
-              tx="passwordCreationScreen.choosePassword"
-            />
+    <KeyboardAvoidingView>
+      <LinearGradient
+        colors={GRADIENT_COLORS}
+        style={[GRADIENT_STYLE, { paddingTop: headerHeight }]}>
+        <LogoFull width={scale(100)} />
+        <Box marginTop="xl">
+          <Text
+            variant="h1"
+            color={'white'}
+            tx="passwordCreationScreen.createPassword"
+          />
+        </Box>
+        <Box flex={0.9} marginTop={'xxl'}>
+          <Box>
+            <Text variant="mainInputLabel" tx="loginScreen.password" />
             <TextInput
-              style={styles.input}
+              variant={'passwordInputs'}
               onChangeText={passwordInput.onChangeText}
               onFocus={resetInput}
               value={passwordInput.value}
               secureTextEntry
               autoCorrect={false}
-              returnKeyType="done"
+              style={{ opacity: passwordInputOpacity }}
             />
-          </View>
-          <View style={styles.inputWrapper}>
+          </Box>
+          <Box marginTop={'xl'}>
             <Text
               variant="mainInputLabel"
               tx="passwordCreationScreen.confirmPassword"
             />
             <TextInput
-              style={styles.input}
+              variant={'passwordInputs'}
               onChangeText={passwordConfirmationInput.onChangeText}
               onFocus={resetInput}
               value={passwordConfirmationInput.value}
               secureTextEntry
               autoCorrect={false}
               returnKeyType="done"
+              style={{ opacity: passwordConfirmationInputOpacity }}
+              onSubmitEditing={onPress}
             />
-          </View>
-          {!!error && (
+            {error.length ? (
+              <Box
+                marginTop="m"
+                borderRadius={5}
+                padding={'s'}
+                backgroundColor={'mainBackground'}>
+                <Text color={'danger'} tx="loginScreen.passwordError" />
+              </Box>
+            ) : null}
+          </Box>
+          {!error.length ? (
             <Text
-              variant="error"
-              tx="passwordCreationScreen.passwordDontMatch"
+              marginTop={'s'}
+              opacity={0.6}
+              variant={'hintLabel'}
+              tx="passwordCreationScreen.password8char"
             />
-          )}
-          <Text
-            variant="description"
-            marginTop="l"
-            tx="passwordCreationScreen.password8char"
-          />
-        </View>
-      </View>
-
-      <ButtonFooter>
-        <Button
-          type="secondary"
-          variant="m"
-          label={{ tx: 'common.cancel' }}
-          onPress={() =>
-            navigation.navigate(route.params.nextScreen || 'Entry')
-          }
-          isBorderless
-          isActive
-        />
-        <Button
-          type="primary"
-          variant="m"
+          ) : null}
+        </Box>
+        <Pressable
           label={{ tx: 'common.next' }}
-          onPress={() =>
-            arePasswordsValid() &&
-            navigation.navigate('LoadingScreen', {
-              ...route.params,
-              password: passwordInput.value,
-            })
-          }
-          isBorderless
-          isActive={!!passwordInput.value && !!passwordConfirmationInput.value}
+          onPress={onPress}
+          variant="outline"
+          icon
+          disabled={disabled}
         />
-      </ButtonFooter>
-    </Box>
+        <Box
+          marginTop={'s'}
+          alignItems="center"
+          paddingHorizontal={'onboardingPadding'}>
+          <Text
+            opacity={0.8}
+            textAlign={'center'}
+            variant={'whiteLabel'}
+            textDecorationLine={'underline'}
+            tx="passwordCreationScreen.orImportWallet"
+            marginTop={'s'}
+            onPress={() =>
+              navigation.navigate('TermsScreen', {
+                previousScreen: 'PasswordCreationScreen',
+                nextScreen: 'UnlockWalletScreen',
+              })
+            }
+          />
+        </Box>
+      </LinearGradient>
+    </KeyboardAvoidingView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    paddingVertical: 20,
-  },
-  prompt: {
-    flex: 1,
-    marginTop: 62,
-    alignItems: 'center',
-  },
-  inputs: {
-    marginHorizontal: 20,
-  },
-  inputWrapper: {
-    marginTop: 30,
-  },
-  input: {
-    marginTop: 5,
-    color: palette.white,
-    borderBottomColor: palette.mediumGreen,
-    borderBottomWidth: 1,
-    padding: 10,
-  },
-})
 export default PasswordCreationScreen
