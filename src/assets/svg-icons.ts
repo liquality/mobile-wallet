@@ -116,7 +116,8 @@ import TabWallet from '../assets/icons/tabWallet.svg'
 import TabNFTInactive from '../assets/icons/tabNFTInactive.svg'
 import TabSettingInactive from '../assets/icons/tabSettingInactive.svg'
 import TabWalletInactive from '../assets/icons/tabWalletInactive.svg'
-import TransakIcon from '../assets/icons/transak.svg'
+import TransakIcon from '../assets/icons/transakLogo.svg'
+import OnRamperIcon from '../assets/icons/onRamper.svg'
 import Filter from '../assets/icons/filter.svg'
 import Refresh from '../assets/icons/refresh.svg'
 import LightMoon from '../assets/icons/lightMoon.svg'
@@ -141,6 +142,7 @@ import SwapRetry from '../assets/icons/swapRetry.svg'
 import SwapTknIcon from '../assets/icons/swapTknIcon.svg'
 import BuyCryptoCloseLight from '../assets/icons/buyCryptoCloseLight.svg'
 import BuyCryptoCloseDark from '../assets/icons/buyCryptoCloseDark.svg'
+import TiltedArrow from '../assets/icons/tiltedArrow.svg'
 
 export default {
   PendingSwap,
@@ -286,4 +288,6 @@ export default {
   ChevronUp,
   BuyCryptoCloseLight,
   BuyCryptoCloseDark,
+  OnRamperIcon,
+  TiltedArrow,
 }

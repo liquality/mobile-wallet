@@ -620,9 +620,7 @@ const BuyCryptoDrawerHeaderTitle = () => {
       flexDirection="row"
       justifyContent={'space-between'}
       alignItems="flex-start">
-      <Text variant={'buyCryptoHeader'} color="darkGrey">
-        BuyCrypto
-      </Text>
+      <Text variant={'buyCryptoHeader'} color="darkGrey" tx="buyCrypto" />
     </Box>
   )
 }

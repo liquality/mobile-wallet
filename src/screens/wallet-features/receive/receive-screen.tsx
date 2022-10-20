@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Alert, Linking, StyleSheet, View } from 'react-native'
+import React from 'react'
+import { Alert, Linking, StyleSheet } from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -17,25 +17,12 @@ import { useRecoilValue } from 'recoil'
 import i18n from 'i18n-js'
 import { addressStateFamily, networkState } from '../../../atoms'
 import { labelTranslateFn, RECEIVE_HEADER_HEIGHT } from '../../../utils'
-import BuyCryptoModal from './buyCryptoModal'
 import { AppIcons, Fonts } from '../../../assets'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { moderateScale, scale } from 'react-native-size-matters'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-const { CopyIcon, TransakIcon } = AppIcons
-
-const PowerByTransak = () => (
-  <View style={styles.poweredTransakIconView}>
-    <Text style={styles.poweredBuyTextStyle} tx="receiveScreen.poweredBy" />
-    <TransakIcon
-      width={85}
-      height={24}
-      stroke={palette.white}
-      style={styles.icon}
-    />
-  </View>
-)
+const { CopyIcon } = AppIcons
 
 type ReceiveScreenProps = NativeStackScreenProps<
   MainStackParamList,
@@ -46,13 +33,6 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   const { chain, code, id }: AccountType = route.params.assetData!
   const address = useRecoilValue(addressStateFamily(id))
   const activeNetwork = useRecoilValue(networkState)
-  const [cryptoModalVisible, setCryptoModalVisible] = useState(false)
-
-  const isPoweredByTransak = true
-
-  const onCloseButtonPress = () => {
-    setCryptoModalVisible(false)
-  }
 
   const QRCodeSize = moderateScale(100, 0.1)
 
@@ -112,13 +92,6 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
 
   return (
     <Box flex={1} backgroundColor={'mainBackground'}>
-      <BuyCryptoModal
-        visible={cryptoModalVisible}
-        onPress={onCloseButtonPress}
-        isPoweredByTransak={isPoweredByTransak}
-        poweredTransakComp={<PowerByTransak />}
-        handleLinkPress={handleLinkPress}
-      />
       <Card
         variant={'headerCard'}
         height={RECEIVE_HEADER_HEIGHT}
@@ -172,7 +145,10 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
             <Pressable
               label={{ tx: 'receiveScreen.buyCrypto' }}
               onPress={() =>
-                navigation.navigate('BuyCryptoDrawer', { isScrolledUp: false })
+                navigation.navigate('BuyCryptoDrawer', {
+                  isScrolledUp: false,
+                  token: code,
+                })
               }
               variant="defaultOutline"
               style={styles.buyCryptoBtnStyle}
@@ -232,16 +208,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 5,
-  },
-  poweredTransakIconView: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  poweredBuyTextStyle: {
-    fontSize: 12,
-    lineHeight: 18,
-    color: palette.darkGray,
   },
 })
 

@@ -129,6 +129,7 @@ export type StackPayload = {
   accountName?: string
   shortenAddress?: string
   isScrolledUp?: boolean
+  token?: string
 }
 
 export type SettingStackParamList = {

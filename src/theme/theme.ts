@@ -379,7 +379,13 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
       fontWeight: '400',
-      lineHeight: scale(15),
+      lineHeight: scale(19),
+    },
+    h10: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(12),
+      fontWeight: '500',
+      lineHeight: scale(17),
     },
     radioText: {
       fontFamily: Fonts.Regular,
