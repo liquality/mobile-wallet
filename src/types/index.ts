@@ -176,6 +176,7 @@ export type MainStackParamList = {
   SwapScreen: StackPayload
   SwapReviewScreen: StackPayload
   MainNavigator: undefined
+  AppStackNavigator: undefined
   NftForSpecificChainScreen: {
     screenTitle?: string
     currentAccount?: AccountType

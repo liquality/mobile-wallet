@@ -69,8 +69,7 @@ import { scale } from 'react-native-size-matters'
 import { labelTranslateFn } from '../utils'
 import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-screen'
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
-import { useNavigation } from '@react-navigation/core'
-import { CommonActions } from '@react-navigation/native'
+import { useNavigation, NavigationProp } from '@react-navigation/core'
 import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
 
 const {
@@ -112,14 +111,9 @@ const LiqLogoHeaderLeft = () => {
 }
 
 const DoneButton = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   const onDonePress = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: 'MainNavigator' }],
-      }),
-    )
+    navigation.navigate('AppStackNavigator')
   }
   return (
     <Box paddingHorizontal={'s'}>
