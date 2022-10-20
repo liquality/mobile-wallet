@@ -40,7 +40,6 @@ import AssetManagementScreen from '../screens/wallet-features/asset/asset-manage
 import AssetToggleScreen from '../screens/wallet-features/asset/asset-toggle-screen'
 import SwapScreen from '../screens/wallet-features/swap/swap-screen'
 import SwapReviewScreen from '../screens/wallet-features/swap/swap-review-screen'
-import SwapConfirmationScreen from '../screens/wallet-features/swap/swap-confirmation-screen'
 import { TransitionPresets } from '@react-navigation/stack'
 import LoginScreen from '../screens/wallet-creation/loginScreen'
 import BackupWarningScreen from '../screens/wallet-features/backup/backup-warning-screen'
@@ -70,8 +69,8 @@ import { scale } from 'react-native-size-matters'
 import { labelTranslateFn } from '../utils'
 import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-screen'
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
-import { useNavigation } from '@react-navigation/core'
-import { CommonActions } from '@react-navigation/native'
+import { useNavigation, NavigationProp } from '@react-navigation/core'
+import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
 
 const {
   SwapCheck,
@@ -112,14 +111,9 @@ const LiqLogoHeaderLeft = () => {
 }
 
 const DoneButton = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   const onDonePress = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: 'MainNavigator' }],
-      }),
-    )
+    navigation.navigate('AppStackNavigator')
   }
   return (
     <Box paddingHorizontal={'s'}>
@@ -223,10 +217,10 @@ type NavigationProps = NativeStackScreenProps<
   | 'OverviewScreen'
   | 'SendConfirmationScreen'
   | 'BackupWarningScreen'
-  | 'SwapConfirmationScreen'
   | 'AssetManagementScreen'
   | 'AssetChooserScreen'
   | 'ReceiveScreen'
+  | 'SwapDetailsScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -356,6 +350,7 @@ export const AppStackNavigator = () => {
         <MainStack.Screen
           name="OverviewScreen"
           options={{
+            headerStyle: { backgroundColor },
             ...appStackScreenNavOptions(),
           }}>
           {(props) => OverviewScreen(props)}
@@ -373,9 +368,6 @@ export const AppStackNavigator = () => {
               AssetManageScreenHeaderLeft({ navigation, route }),
           })}
         />
-        <MainStack.Screen name="AssetScreen">
-          {(props) => AssetScreen(props)}
-        </MainStack.Screen>
         <MainStack.Screen
           name="SendScreen"
           component={SendScreen}
@@ -449,35 +441,13 @@ export const AppStackNavigator = () => {
           })}
         />
         <MainStack.Screen
-          name="SwapConfirmationScreen"
-          component={SwapConfirmationScreen}
-          options={({ navigation, route }: NavigationProps) => ({
-            headerRight: () => SwapCheckHeaderRight({ navigation, route }),
-            title: route?.params?.screenTitle || 'Overview',
-            headerLeft: PlaceholderComp,
-          })}
-        />
-        <MainStack.Screen
           name="NftForSpecificChainScreen"
           component={NftForSpecificChainScreen}
           options={() => ({
             headerRight: PlaceholderComp,
           })}
         />
-        <MainStack.Screen
-          name="NftDetailScreen"
-          component={NftDetailScreen}
-          options={() => ({
-            headerShown: false,
-          })}
-        />
-        <MainStack.Screen
-          name="NftSendScreen"
-          component={NftSendScreen}
-          options={() => ({
-            headerShown: false,
-          })}
-        />
+
         <MainStack.Screen
           name="NftCollectionScreen"
           component={NftCollectionScreen}
@@ -563,43 +533,55 @@ const SettingStackNavigator = () => {
   )
 }
 
-export const MainNavigator = () => (
-  <Tab.Navigator
-    initialRouteName="AppStackNavigator"
-    screenOptions={{
-      headerShown: false,
-      headerTitle: '',
-      tabBarLabelStyle: {
-        fontFamily: Fonts.JetBrainsMono,
-        fontWeight: '500',
-        fontSize: scale(11),
-      },
-      tabBarActiveTintColor: palette.buttonDefault,
-      tabBarInactiveTintColor: palette.nestedColor,
-    }}>
-    <Tab.Screen
-      name="AppStackNavigator"
-      component={AppStackNavigator}
-      options={{ ...TabBarOption(labelTranslateFn('wallet')!) }}
-    />
-    <Tab.Screen
-      name="ShowAllNftsScreen"
-      component={ShowAllNftsScreen}
-      options={{ ...TabBarOption(labelTranslateFn('tabNFT')!) }}
-    />
-    <Tab.Screen
-      name="SettingsScreen"
-      component={SettingStackNavigator}
-      options={{
-        ...TabBarOption(labelTranslateFn('settings')!),
+export const MainNavigator = () => {
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
+  const backgroundColor =
+    currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
+  return (
+    <Tab.Navigator
+      initialRouteName="AppStackNavigator"
+      screenOptions={{
         headerShown: false,
-        headerLeft: undefined,
-      }}
-    />
-  </Tab.Navigator>
-)
+        headerTitle: '',
+        tabBarStyle: {
+          backgroundColor,
+        },
+        tabBarLabelStyle: {
+          fontFamily: Fonts.JetBrainsMono,
+          fontWeight: '500',
+          fontSize: scale(11),
+        },
+        tabBarActiveTintColor: palette.buttonDefault,
+        tabBarInactiveTintColor: palette.nestedColor,
+      }}>
+      <Tab.Screen
+        name="AppStackNavigator"
+        component={AppStackNavigator}
+        options={{ ...TabBarOption(labelTranslateFn('wallet')!) }}
+      />
+      <Tab.Screen
+        name="ShowAllNftsScreen"
+        component={ShowAllNftsScreen}
+        options={{ ...TabBarOption(labelTranslateFn('tabNFT')!) }}
+      />
+      <Tab.Screen
+        name="SettingsScreen"
+        component={SettingStackNavigator}
+        options={{
+          ...TabBarOption(labelTranslateFn('settings')!),
+          headerShown: false,
+          headerLeft: undefined,
+        }}
+      />
+    </Tab.Navigator>
+  )
+}
 
-const SelectChainScreenHeaderLeft = () => {
+const StackMainNavigatorHeaderLeft = () => {
   const navigation = useNavigation()
 
   return (
@@ -611,6 +593,7 @@ const SelectChainScreenHeaderLeft = () => {
   )
 }
 
+//If you dont want your screen to include tabbar, add it to StackMainNavigator obj
 export const StackMainNavigator = () => {
   const theme = useRecoilValue(themeMode)
   let currentTheme = useColorScheme() as string
@@ -652,7 +635,7 @@ export const StackMainNavigator = () => {
           ...screenNavOptions,
           headerTitle: labelTranslateFn('selectChain')!,
           headerTitleStyle: HEADER_TITLE_STYLE,
-          headerLeft: SelectChainScreenHeaderLeft,
+          headerLeft: StackMainNavigatorHeaderLeft,
           headerStyle: { backgroundColor },
         }}
       />
@@ -724,6 +707,43 @@ export const StackMainNavigator = () => {
           headerStyle: { backgroundColor },
           headerRight: undefined,
           headerLeft: undefined,
+        })}
+      />
+      <MainStack.Screen
+        name="SwapDetailsScreen"
+        component={SwapDetailsScreen}
+        options={{
+          headerShadowVisible: false,
+          headerBackVisible: false,
+          headerTitle: labelTranslateFn('swapDetails')!,
+          headerTitleStyle: MANAGE_ASSET_HEADER,
+          headerStyle: { backgroundColor },
+          headerRight: undefined,
+          headerLeft: StackMainNavigatorHeaderLeft,
+        }}
+      />
+      <MainStack.Screen
+        name="AssetScreen"
+        component={AssetScreen}
+        options={{
+          ...screenNavOptions,
+          headerStyle: { backgroundColor },
+          headerRight: undefined,
+          headerLeft: StackMainNavigatorHeaderLeft,
+        }}
+      />
+      <MainStack.Screen
+        name="NftDetailScreen"
+        component={NftDetailScreen}
+        options={() => ({
+          headerShown: false,
+        })}
+      />
+      <MainStack.Screen
+        name="NftSendScreen"
+        component={NftSendScreen}
+        options={() => ({
+          headerShown: false,
         })}
       />
     </MainStack.Navigator>

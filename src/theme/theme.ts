@@ -55,6 +55,7 @@ export const theme = createTheme({
     greyBlack: faceliftPalette.greyBlack,
     yellow: faceliftPalette.yellow,
     darkPink: palette.darkPink,
+    transGrey: faceliftPalette.transGrey,
     greyBackground: faceliftPalette.greyBackground,
     blockBackgroundColor: faceliftPalette.orangeGrey,
     slowColor: faceliftPalette.fast,
@@ -233,6 +234,17 @@ export const theme = createTheme({
       fontSize: scale(13),
       color: 'link',
     },
+    speedUp: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: scale(15),
+      lineHeight: scale(20),
+    },
+    transLink: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: scale(14),
+    },
     boldLink: {
       fontFamily: Fonts.Regular,
       fontWeight: '600',
@@ -361,10 +373,16 @@ export const theme = createTheme({
       fontSize: scale(22),
       fontWeight: '400',
     },
+    h5: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(16),
+      fontWeight: '500',
+    },
     h6: {
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
       fontWeight: '500',
+      lineHeight: scale(20),
     },
     h7: {
       fontFamily: Fonts.Regular,
@@ -464,6 +482,17 @@ export const theme = createTheme({
       fontWeight: '400',
       fontSize: scale(16),
       fontFamily: Fonts.Regular,
+    },
+    iconLabel: {
+      fontSize: scale(13),
+      fontWeight: '600',
+      fontFamily: Fonts.Regular,
+    },
+    swapSubTitle: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(15),
+      fontWeight: '400',
+      lineHeight: scale(20),
     },
   },
   pressableVariants: {
@@ -682,6 +711,7 @@ export const theme = createTheme({
 })
 
 export type ThemeType = typeof theme
+export type ColorType = typeof theme.colors
 
 export const darkTheme: ThemeType = {
   ...theme,

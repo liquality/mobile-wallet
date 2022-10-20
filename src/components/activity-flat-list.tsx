@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, TouchableWithoutFeedback } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import {
@@ -47,7 +47,7 @@ const ActivityFlatList = ({
 
   const handleChevronPress = (historyItem: HistoryItem) => {
     if (historyItem.type === TransactionType.Swap) {
-      navigation.navigate('SwapConfirmationScreen', {
+      navigation.navigate('SwapDetailsScreen', {
         swapTransactionConfirmation: historyItem,
         screenTitle: `Swap ${historyItem.from} to ${historyItem.to} Details`,
       })
@@ -147,9 +147,11 @@ const ActivityFlatList = ({
             )}
           </Box>
           <Box flex={0.1} justifyContent="center" alignItems="center">
-            <TouchableWithoutFeedback onPress={() => handleChevronPress(item)}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => handleChevronPress(item)}>
               <ChevronRight width={12} height={12} />
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           </Box>
         </React.Suspense>
       </Box>
@@ -159,7 +161,7 @@ const ActivityFlatList = ({
   return (
     <>
       {showFilter ? <ActivityFilter numOfResults={history.length} /> : null}
-      {historyCount ? (
+      {historyCount || history.length ? (
         <>
           {history.map((item) => {
             return renderActivity({ item })

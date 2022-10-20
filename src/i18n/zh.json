@@ -20,7 +20,7 @@
     "speedUp": "Speed Up",
     "send": "SEND",
     "sent": "SENT",
-    "networkSpeed": "NETWORK SPEED/FEE",
+    "networkSpeed": "Network Speed/Fee",
     "edit": "Edit",
     "error": "Error",
     "addLiquidity": "Add Liquidity",
@@ -256,7 +256,9 @@
     "yourToFunding": "Your ${to} funding transaction",
     "yourToReceive": "Your ${to} receive transactionn",
     "actions": "Actions",
-    "retry": "Retry"
+    "retry": "Retry",
+    "link": "Link",
+    "yourTrans": "Your transaction"
   },
   "swapReviewScreen": {
     "swapDetails": "Swap {{fromCode} to {{toCode}} Details",
@@ -457,5 +459,11 @@
   "gotIt": "Got It",
   "hmm": "Hmm.",
   "cantFndTkn": "Can’t find this token",
-  "notFound": "Not found"
+  "notFound": "Not found",
+  "swapDetails": "SWAP DETAILS",
+  "transaction": "TRANSACTION",
+  "optionTbd": "Option Tbd",
+  "status": "Status",
+  "failedRefunded": "Failed - refunded",
+  "initiated": "Initiated"
 }

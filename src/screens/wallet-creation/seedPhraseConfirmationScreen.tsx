@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { TouchableWithoutFeedback } from 'react-native'
+import { ScrollView, TouchableWithoutFeedback } from 'react-native'
 import { RootStackParamList, SeedWordType } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Box, faceliftPalette, Pressable, Text } from '../../theme'
-import { labelTranslateFn } from '../../utils'
+import { labelTranslateFn, SCREEN_HEIGHT } from '../../utils'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import { CommonActions } from '@react-navigation/native'
 
@@ -130,6 +130,8 @@ const SeedPhraseConfirmationScreen = ({
 
   let isDisabled = !words.every((item) => !!item.value)
 
+  const enableScroll = SCREEN_HEIGHT < 700
+
   return (
     <Box
       flex={1}
@@ -178,27 +180,31 @@ const SeedPhraseConfirmationScreen = ({
             />
           ) : null}
         </Box>
-        <Box height={200} flexDirection="row" flexWrap="wrap">
-          {shuffledSeedWords.map((item: CustomSeedWordType, index) => (
-            <TouchableWithoutFeedback
-              onPress={() => onWordPress(item, index)}
-              key={item.id}>
-              <Box
-                style={
-                  item.selected
-                    ? styles.inactiveButtonStyle
-                    : styles.buttonStyle
-                }>
-                <Text
+        <ScrollView scrollEnabled={enableScroll}>
+          <Box height={200} flexDirection="row" flexWrap="wrap">
+            {shuffledSeedWords.map((item: CustomSeedWordType, index) => (
+              <TouchableWithoutFeedback
+                onPress={() => onWordPress(item, index)}
+                key={item.id}>
+                <Box
                   style={
-                    item.selected ? styles.inactiveTextStyle : styles.textStyle
+                    item.selected
+                      ? styles.inactiveButtonStyle
+                      : styles.buttonStyle
                   }>
-                  {item.word}
-                </Text>
-              </Box>
-            </TouchableWithoutFeedback>
-          ))}
-        </Box>
+                  <Text
+                    style={
+                      item.selected
+                        ? styles.inactiveTextStyle
+                        : styles.textStyle
+                    }>
+                    {item.word}
+                  </Text>
+                </Box>
+              </TouchableWithoutFeedback>
+            ))}
+          </Box>
+        </ScrollView>
       </Box>
       <Box flex={0.25}>
         <Box marginVertical={'xl'}>

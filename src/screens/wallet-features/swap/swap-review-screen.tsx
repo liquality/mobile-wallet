@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { Dimensions, StyleSheet, View, ScrollView, Alert } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { MainStackParamList, SwapInfoType } from '../../../types'
+import { AccountType, MainStackParamList, SwapInfoType } from '../../../types'
 import Warning from '../../../components/ui/warning'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
 import { Button, palette } from '../../../theme'
@@ -17,7 +17,9 @@ import {
   networkState,
 } from '../../../atoms'
 import I18n from 'i18n-js'
+import { CommonActions } from '@react-navigation/native'
 import { AppIcons } from '../../../assets'
+import { getAsset } from '@liquality/cryptoassets'
 
 const { Clock, Exchange } = AppIcons
 
@@ -86,13 +88,31 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
           delete transaction.fromFundTx._raw */
 
           addTransaction(transaction.id, transaction)
-          navigation.navigate('SwapConfirmationScreen', {
-            swapTransactionConfirmation: transaction,
-            screenTitle: I18n.t('swapReviewScreen.swapDetails', {
-              fromCode: fromAsset.code,
-              toCode: toAsset.code,
+
+          const tempAsset = getAsset(activeNetwork, transaction.from)
+          const assetData: AccountType = {
+            ...tempAsset,
+            id: transaction.fromAccountId,
+            balance: 0,
+            assets: {},
+          }
+
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [
+                { name: 'MainNavigator' },
+                { name: 'AssetScreen', params: { assetData } },
+                {
+                  name: 'SwapDetailsScreen',
+                  params: {
+                    swapTransactionConfirmation: transaction,
+                    screenTitle: `Swap ${transaction.from} to ${transaction.to} Details`,
+                  },
+                },
+              ],
             }),
-          })
+          )
         } else {
           setIsLoading(false)
           Alert.alert(labelTranslateFn('swapReviewScreen.swapRespNull')!)
