@@ -85,6 +85,7 @@ const {
   TabSettingInactive,
   TabWalletInactive,
   SearchIcon,
+  // BuyCryptoCloseDark,
 } = AppIcons
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
@@ -599,6 +600,17 @@ const StackMainNavigatorHeaderLeft = () => {
   )
 }
 
+// const BuyCryptoDrawerHeaderRight = () => {
+//   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+//   return (
+//     <Box paddingHorizontal={'m'}>
+//       <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
+//         <BuyCryptoCloseDark />
+//       </TouchableOpacity>
+//     </Box>
+//   )
+// }
+
 //If you dont want your screen to include tabbar, add it to StackMainNavigator obj
 export const StackMainNavigator = () => {
   const theme = useRecoilValue(themeMode)
@@ -757,7 +769,6 @@ export const StackMainNavigator = () => {
       <MainStack.Group
         screenOptions={{
           presentation: 'transparentModal',
-          // presentation: 'fullScreenModal',
           headerLeft: undefined,
           headerRight: undefined,
         }}>
@@ -766,7 +777,24 @@ export const StackMainNavigator = () => {
           component={BuyCryptoDrawer}
           options={{
             ...screenNavOptions,
+            // headerStyle: {
+            //   backgroundColor: faceliftPalette.white,
+            // },
             headerTransparent: true,
+            // headerTitle: () => (
+            //   <Box
+            //     marginLeft={'l'}
+            //     width={SCREEN_WIDTH}
+            //     flexDirection="row"
+            //     justifyContent={'space-between'}
+            //     alignItems="flex-start">
+            //     <Text variant={'buyCryptoHeader'} color="darkGrey">
+            //       BuyCrypto
+            //     </Text>
+            //   </Box>
+            // ),
+            headerLeft: undefined,
+            // headerRight: BuyCryptoDrawerHeaderRight,
           }}
         />
       </MainStack.Group>

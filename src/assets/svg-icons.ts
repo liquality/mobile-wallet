@@ -139,7 +139,8 @@ import SwapIconRed from '../assets/icons/swapIconRed.svg'
 import SwapSuccess from '../assets/icons/swapSucess.svg'
 import SwapRetry from '../assets/icons/swapRetry.svg'
 import SwapTknIcon from '../assets/icons/swapTknIcon.svg'
-import BuyModalClose from '../assets/icons/buyModalClose.svg'
+import BuyCryptoCloseLight from '../assets/icons/buyCryptoCloseLight.svg'
+import BuyCryptoCloseDark from '../assets/icons/buyCryptoCloseDark.svg'
 
 export default {
   PendingSwap,
@@ -283,5 +284,6 @@ export default {
   SwapTknIcon,
   ChevronDown,
   ChevronUp,
-  BuyModalClose,
+  BuyCryptoCloseLight,
+  BuyCryptoCloseDark,
 }

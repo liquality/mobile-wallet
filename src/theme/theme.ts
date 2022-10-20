@@ -480,6 +480,11 @@ export const theme = createTheme({
       fontWeight: '400',
       lineHeight: scale(20),
     },
+    buyCryptoHeader: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: scale(28),
+    },
   },
   pressableVariants: {
     outline: {
