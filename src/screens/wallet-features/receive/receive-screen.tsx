@@ -171,8 +171,9 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
           <Box marginVertical={'xl'} alignItems="center">
             <Pressable
               label={{ tx: 'receiveScreen.buyCrypto' }}
-              // onPress={() => setCryptoModalVisible(true)}
-              onPress={() => navigation.navigate('BuyCryptoDrawer')}
+              onPress={() =>
+                navigation.navigate('BuyCryptoDrawer', { isScrolledUp: false })
+              }
               variant="defaultOutline"
               style={styles.buyCryptoBtnStyle}
               textStyle={styles.buyCryptoTxtStyle}

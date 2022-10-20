@@ -483,7 +483,7 @@ export const theme = createTheme({
     buyCryptoHeader: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
-      fontSize: scale(28),
+      fontSize: scale(27),
     },
   },
   pressableVariants: {

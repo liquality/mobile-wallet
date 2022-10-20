@@ -67,7 +67,7 @@ import { networkState, showSearchBarInputState, themeMode } from '../atoms'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
-import { labelTranslateFn } from '../utils'
+import { labelTranslateFn, SCREEN_WIDTH } from '../utils'
 import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-screen'
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
@@ -85,7 +85,7 @@ const {
   TabSettingInactive,
   TabWalletInactive,
   SearchIcon,
-  // BuyCryptoCloseDark,
+  BuyCryptoCloseDark,
 } = AppIcons
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
@@ -223,6 +223,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'AssetChooserScreen'
   | 'ReceiveScreen'
   | 'SwapDetailsScreen'
+  | 'BuyCryptoDrawer'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -600,16 +601,31 @@ const StackMainNavigatorHeaderLeft = () => {
   )
 }
 
-// const BuyCryptoDrawerHeaderRight = () => {
-//   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
-//   return (
-//     <Box paddingHorizontal={'m'}>
-//       <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
-//         <BuyCryptoCloseDark />
-//       </TouchableOpacity>
-//     </Box>
-//   )
-// }
+const BuyCryptoDrawerHeaderRight = () => {
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+  return (
+    <Box paddingHorizontal={'m'}>
+      <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
+        <BuyCryptoCloseDark />
+      </TouchableOpacity>
+    </Box>
+  )
+}
+
+const BuyCryptoDrawerHeaderTitle = () => {
+  return (
+    <Box
+      marginLeft={'l'}
+      width={SCREEN_WIDTH}
+      flexDirection="row"
+      justifyContent={'space-between'}
+      alignItems="flex-start">
+      <Text variant={'buyCryptoHeader'} color="darkGrey">
+        BuyCrypto
+      </Text>
+    </Box>
+  )
+}
 
 //If you dont want your screen to include tabbar, add it to StackMainNavigator obj
 export const StackMainNavigator = () => {
@@ -766,36 +782,29 @@ export const StackMainNavigator = () => {
           })}
         />
       </MainStack.Group>
-      <MainStack.Group
-        screenOptions={{
-          presentation: 'transparentModal',
-          headerLeft: undefined,
-          headerRight: undefined,
-        }}>
+      <MainStack.Group>
         <MainStack.Screen
           name="BuyCryptoDrawer"
           component={BuyCryptoDrawer}
-          options={{
+          options={({ route }: NavigationProps) => ({
             ...screenNavOptions,
-            // headerStyle: {
-            //   backgroundColor: faceliftPalette.white,
-            // },
-            headerTransparent: true,
-            // headerTitle: () => (
-            //   <Box
-            //     marginLeft={'l'}
-            //     width={SCREEN_WIDTH}
-            //     flexDirection="row"
-            //     justifyContent={'space-between'}
-            //     alignItems="flex-start">
-            //     <Text variant={'buyCryptoHeader'} color="darkGrey">
-            //       BuyCrypto
-            //     </Text>
-            //   </Box>
-            // ),
+            presentation: route.params.isScrolledUp
+              ? 'fullScreenModal'
+              : 'transparentModal',
+            headerStyle: {
+              backgroundColor: route.params.isScrolledUp
+                ? faceliftPalette.white
+                : faceliftPalette.transparent,
+            },
+            headerTransparent: !route.params.isScrolledUp,
+            headerTitle: route.params.isScrolledUp
+              ? BuyCryptoDrawerHeaderTitle
+              : '',
             headerLeft: undefined,
-            // headerRight: BuyCryptoDrawerHeaderRight,
-          }}
+            headerRight: route.params.isScrolledUp
+              ? BuyCryptoDrawerHeaderRight
+              : undefined,
+          })}
         />
       </MainStack.Group>
     </MainStack.Navigator>
