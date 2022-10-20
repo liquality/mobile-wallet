@@ -196,6 +196,7 @@ export type MainStackParamList = {
   }
   SettingsScreen: { shouldLogOut?: boolean }
   WithPopupMenu: undefined
+  BuyCryptoDrawer: undefined
   SelectChainScreen: undefined
   SwapDetailsScreen: StackPayload
 }

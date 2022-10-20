@@ -58,6 +58,7 @@ export const theme = createTheme({
     transGrey: faceliftPalette.transGrey,
     greyBackground: faceliftPalette.greyBackground,
     blockBackgroundColor: faceliftPalette.orangeGrey,
+    semiTransparentGrey: faceliftPalette.semiTransparentGrey,
   },
   spacing: {
     vs: scale(2),

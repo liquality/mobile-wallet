@@ -103,9 +103,7 @@ import NftCard from '../assets/icons/nfts/nft-card-new.svg'
 import GreenCheckMark from '../assets/icons/nfts/green-check-mark.svg'
 import CheckmarkCircle from '../assets/icons/nfts/checkmark-circle.svg'
 import PurpleThreeDots from '../assets/icons/nfts/purple-three-dots.svg'
-
 import ConfirmationTrackerLine from '../assets/icons/nfts/confirmation-tracker.svg'
-
 import ShortLine from '../assets/icons/nfts/short-line.svg'
 import NetworkActiveDot from '../assets/icons/dot.svg'
 import Ellipses from '../assets/icons/ellipses.svg'
@@ -141,6 +139,7 @@ import SwapIconRed from '../assets/icons/swapIconRed.svg'
 import SwapSuccess from '../assets/icons/swapSucess.svg'
 import SwapRetry from '../assets/icons/swapRetry.svg'
 import SwapTknIcon from '../assets/icons/swapTknIcon.svg'
+import BuyModalClose from '../assets/icons/buyModalClose.svg'
 
 export default {
   PendingSwap,
@@ -284,4 +283,5 @@ export default {
   SwapTknIcon,
   ChevronDown,
   ChevronUp,
+  BuyModalClose,
 }
