@@ -176,6 +176,7 @@ export type MainStackParamList = {
   SwapScreen: StackPayload
   SwapReviewScreen: StackPayload
   MainNavigator: undefined
+  AppStackNavigator: undefined
   NftForSpecificChainScreen: {
     screenTitle?: string
     currentAccount?: AccountType
@@ -196,6 +197,7 @@ export type MainStackParamList = {
   SettingsScreen: { shouldLogOut?: boolean }
   WithPopupMenu: undefined
   SelectChainScreen: undefined
+  SwapDetailsScreen: StackPayload
 }
 
 export type RootTabParamList = {

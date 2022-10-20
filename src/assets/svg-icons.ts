@@ -42,6 +42,8 @@ import CancelledIcon from '../assets/icons/failedGradSm.svg'
 import NeedsAttentionIcon from '../assets/icons/loadingEmpty.svg'
 import CalendarIcon from '../assets/icons/calendar.svg'
 import ChevronRightIcon from '../assets/icons/chevronRight.svg'
+import ChevronUp from '../assets/icons/chevronUp.svg'
+import ChevronDown from '../assets/icons/chevronDown.svg'
 import AngleRightIcon from '../assets/icons/chevronRight.svg'
 import AngleDownIcon from '../assets/icons/chevronDown.svg'
 import AngleUpIcon from '../assets/icons/chevronUp.svg'
@@ -132,6 +134,13 @@ import GasDarkRect from '../assets/icons/gasDarkRectangle.svg'
 import GasLightRect from '../assets/icons/gasLightRectangle.svg'
 import RectangleDark from '../assets/icons/rectangleDark.svg'
 import RectangleLight from '../assets/icons/rectangleLight.svg'
+import SwapLightRect from '../assets/icons/swapLightRect.svg'
+import SwapDarkRect from '../assets/icons/swapDarkRect.svg'
+import SwapIconGrey from '../assets/icons/swapIconGray.svg'
+import SwapIconRed from '../assets/icons/swapIconRed.svg'
+import SwapSuccess from '../assets/icons/swapSucess.svg'
+import SwapRetry from '../assets/icons/swapRetry.svg'
+import SwapTknIcon from '../assets/icons/swapTknIcon.svg'
 
 export default {
   PendingSwap,
@@ -266,4 +275,13 @@ export default {
   GasLightRect,
   RectangleDark,
   RectangleLight,
+  SwapLightRect,
+  SwapDarkRect,
+  SwapIconGrey,
+  SwapIconRed,
+  SwapSuccess,
+  SwapRetry,
+  SwapTknIcon,
+  ChevronDown,
+  ChevronUp,
 }

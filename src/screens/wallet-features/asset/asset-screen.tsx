@@ -1,12 +1,18 @@
 import React, { useCallback } from 'react'
-import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
+import {
+  Dimensions,
+  Pressable,
+  StyleSheet,
+  View,
+  ScrollView,
+} from 'react-native'
 import {
   prettyBalance,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { AccountType, RootStackParamList } from '../../../types'
+import { AccountType, MainStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { Text, Box, RoundButton, palette } from '../../../theme'
 import GradientBackground from '../../../components/gradient-background'
@@ -23,9 +29,10 @@ import I18n from 'i18n-js'
 import { labelTranslateFn } from '../../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { Fonts } from '../../../assets'
+import { scale } from 'react-native-size-matters'
 
 type AssetScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'AssetScreen'
 >
 
@@ -130,7 +137,12 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
         </View>
         {/* For some reason ActivityFlatList started throwing undefined errors upon SEND navigation and flow.
         Should be fixed, can be commented out to bypass that error for now */}
-        <ActivityFlatList selectedAsset={code} />
+        <ScrollView
+          contentContainerStyle={{
+            paddingBottom: scale(20),
+          }}>
+          <ActivityFlatList selectedAsset={code} />
+        </ScrollView>
       </React.Suspense>
     </Box>
   )

@@ -17,7 +17,7 @@ import { downloadAssetAcitivity, labelTranslateFn, Log } from '../../utils'
 import {
   ActivityIndicator,
   useWindowDimensions,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native'
 import {
   TabView,
@@ -132,13 +132,14 @@ const ContentBlock = () => {
             height={scale(40)}
             justifyContent="space-between"
             alignItems="center">
-            <TouchableWithoutFeedback
+            <TouchableOpacity
+              activeOpacity={0.7}
               onPress={() => setShowFilter((old) => !old)}>
               <Filter />
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={() => onExportIconPress()}>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => onExportIconPress()}>
               <ExportIcon />
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           </Box>
         </Box>
       ) : null}
