@@ -161,11 +161,11 @@ const ActivityFlatList = ({
   const onBuyCryptoPress = React.useCallback(() => {
     navigation.navigate('BuyCryptoDrawer', {
       isScrolledUp: false,
-      token: '',
+      token: selectedAsset || '',
       showIntro: false,
       screenTitle: labelTranslateFn('buyCrypto')!,
     })
-  }, [navigation])
+  }, [navigation, selectedAsset])
 
   return (
     <>
