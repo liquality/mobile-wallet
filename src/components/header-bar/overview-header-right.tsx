@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { AppIcons } from '../../assets'
+import { Text } from '../../theme'
 import QrCodeScanner from '../qr-code-scanner'
-import { Text } from '../text/text'
 
 const { Bars } = AppIcons
 
@@ -20,7 +20,7 @@ const OverviewHeaderRight = ({
   ) : (
     <View style={styles.container}>
       <Pressable onPress={() => setShowQRScanner(true)}>
-        <Text>QR SCANNER</Text>
+        <Text color={'white'}>QR SCANNER</Text>
       </Pressable>
 
       <Pressable onPress={onPress}>

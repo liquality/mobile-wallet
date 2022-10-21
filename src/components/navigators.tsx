@@ -1,9 +1,10 @@
-import React, { createContext } from 'react'
+import React, { createContext, useState } from 'react'
 import {
   StyleSheet,
   Pressable,
   useColorScheme,
   TouchableOpacity,
+  View,
 } from 'react-native'
 import {
   createNativeStackNavigator,
@@ -72,6 +73,7 @@ import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-scree
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
 import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
+import QrCodeScanner from './qr-code-scanner'
 
 const {
   SwapCheck,
@@ -238,6 +240,8 @@ const AppStackHeaderLeft = (navProps: NavigationProps) => {
 
   const canGoBack = navigation.canGoBack()
 
+  const [showQRScanner, setShowQRScanner] = useState(false)
+
   return (
     <Box flexDirection={'row'} alignItems="center">
       {canGoBack ? (
@@ -250,6 +254,18 @@ const AppStackHeaderLeft = (navProps: NavigationProps) => {
       <Box paddingLeft={'s'}>
         <ThemeIcon iconName="OnlyLqLogo" />
       </Box>
+      {showQRScanner ? (
+        <QrCodeScanner
+          onClose={() => setShowQRScanner(false)}
+          chain={'ethereum'}
+        />
+      ) : (
+        <View style={styles.container}>
+          <Pressable onPress={() => setShowQRScanner(true)}>
+            <Text color={'white'}>QR SCANNER</Text>
+          </Pressable>
+        </View>
+      )}
     </Box>
   )
 }
