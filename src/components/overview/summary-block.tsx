@@ -8,30 +8,21 @@ import {
   totalFiatBalanceState,
 } from '../../atoms'
 import { ActionEnum } from '../../types'
-import { Alert, ImageBackground, Platform, ViewStyle } from 'react-native'
+import { ImageBackground, Platform } from 'react-native'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
-import { Box, Text, Card } from '../../theme'
+import { Box, Text, Card, IMAGE_BACKGROUND_STYLE } from '../../theme'
 import * as React from 'react'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
-import {
-  GRADIENT_BACKGROUND_HEIGHT,
-  labelTranslateFn,
-  SCREEN_WIDTH,
-} from '../../utils'
+import { GRADIENT_BACKGROUND_HEIGHT, labelTranslateFn } from '../../utils'
 import { Network } from '@liquality/cryptoassets/dist/src/types'
-import { Fonts, Images, AppIcons } from '../../assets'
-import { scale, ScaledSheet } from 'react-native-size-matters'
+import { Images, AppIcons } from '../../assets'
+import { scale } from 'react-native-size-matters'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 const { Exchange: DoubleArrowThick, DownIcon, UpIcon, DollarSign } = AppIcons
 
 //Line height issue with Anek Kannada font
 const adjustLineHeight = -scale(30)
-
-const ImageBackgroundStyle: ViewStyle = {
-  height: 30,
-  width: SCREEN_WIDTH / 4.6,
-}
 
 type SummaryBlockProps = {
   navigation: OverviewProps['navigation']
@@ -68,7 +59,17 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
     })
   }, [navigation, setSwapPair])
 
-  const handleBuyPress = () => Alert.alert('Coming soon!')
+  const handleBuyPress = () => {
+    const showIntro = Number(totalFiatBalance) <= 0
+    navigation.navigate('BuyCryptoDrawer', {
+      isScrolledUp: false,
+      token: '',
+      showIntro,
+      screenTitle: labelTranslateFn(
+        showIntro ? 'gettingStartedWithCrypto' : 'buyCrypto',
+      )!,
+    })
+  }
 
   const appFeatures = [
     {
@@ -131,7 +132,7 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
             <Box key={index} alignItems={'center'}>
               <TouchableWithoutFeedback onPress={item.navigateTo}>
                 <ImageBackground
-                  style={ImageBackgroundStyle}
+                  style={IMAGE_BACKGROUND_STYLE}
                   resizeMode="cover"
                   source={Images.hexoNav}>
                   <Box flex={1} justifyContent="center" alignItems={'center'}>
@@ -139,7 +140,7 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
                   </Box>
                 </ImageBackground>
               </TouchableWithoutFeedback>
-              <Text marginTop={'m'} style={styles.appFeaturesTextStyle}>
+              <Text marginTop={'m'} variant="addressLabel" color={'darkGrey'}>
                 {item.name}
               </Text>
             </Box>
@@ -149,13 +150,5 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
     </Card>
   )
 }
-
-const styles = ScaledSheet.create({
-  appFeaturesTextStyle: {
-    fontFamily: Fonts.JetBrainsMono,
-    fontSize: scale(14),
-    fontWeight: '500',
-  },
-})
 
 export default SummaryBlock

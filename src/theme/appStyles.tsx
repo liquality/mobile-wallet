@@ -1,7 +1,7 @@
 import { ViewStyle, StyleProp, TextStyle } from 'react-native'
 import { scale } from 'react-native-size-matters'
 import { Fonts } from '../assets'
-import { ONBOARDING_PADDING } from '../utils'
+import { ONBOARDING_PADDING, SCREEN_WIDTH } from '../utils'
 import { faceliftPalette } from './faceliftPalette'
 
 export const FLEX_1: ViewStyle = {
@@ -71,4 +71,9 @@ export const MANAGE_ASSET_HEADER: StyleProp<
 > = {
   ...HEADER_TITLE_STYLE,
   color: faceliftPalette.darkGrey,
+}
+
+export const IMAGE_BACKGROUND_STYLE: ViewStyle = {
+  height: scale(30),
+  width: SCREEN_WIDTH / 4.6,
 }

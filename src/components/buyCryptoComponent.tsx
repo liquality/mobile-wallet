@@ -1,25 +1,79 @@
-import { Linking, TouchableOpacity } from 'react-native'
+import { ImageBackground, Linking, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { Box, Text } from '../theme'
-import { AppIcons } from '../assets'
+import { Box, IMAGE_BACKGROUND_STYLE, Text } from '../theme'
+import { AppIcons, Images } from '../assets'
 import I18n from 'i18n-js'
-import { useNavigation } from '@react-navigation/core'
+import { useNavigation, NavigationProp } from '@react-navigation/core'
 import { scale } from 'react-native-size-matters'
+import { MainStackParamList } from '../types'
+import { labelTranslateFn, SCREEN_WIDTH } from '../utils'
+import { ActionEnum } from '../types'
 
-const { BuyCryptoCloseLight, TransakIcon, TiltedArrow, OnRamperIcon } = AppIcons
+const {
+  BuyCryptoCloseLight,
+  TransakIcon,
+  TiltedArrow,
+  OnRamperIcon,
+  DownIcon,
+} = AppIcons
+
+const IntroComponent = ({
+  onPress,
+  isScrolledUp = false,
+}: {
+  onPress: () => void
+  isScrolledUp: boolean
+}) => {
+  return (
+    <>
+      {!isScrolledUp ? (
+        <Text
+          marginTop={'s'}
+          variant={'gettingStartHeader'}
+          color="darkGrey"
+          tx="gettingStartedWithCrypto"
+        />
+      ) : null}
+      <Text marginVertical={'l'} tx="weRecommedToStart" variant={'h7'} />
+
+      <Box width={SCREEN_WIDTH / 4.3} marginTop="s">
+        <TouchableOpacity onPress={onPress}>
+          <ImageBackground
+            style={IMAGE_BACKGROUND_STYLE}
+            resizeMode="cover"
+            source={Images.hexoNav}>
+            <Box flex={1} justifyContent="center" alignItems={'center'}>
+              <DownIcon height={scale(14)} />
+            </Box>
+          </ImageBackground>
+        </TouchableOpacity>
+        <Text
+          marginTop={'s'}
+          textAlign="center"
+          variant="addressLabel"
+          color={'darkGrey'}
+          tx="summaryBlockComp.receive"
+        />
+      </Box>
+      <Box marginVertical={'xl'} height={1} backgroundColor="inactiveText" />
+    </>
+  )
+}
 
 type BuyCryptoComponentProps = {
   headerHeight: number
   token: string
   isScrolledUp: boolean
+  showIntro: boolean
 }
 
 const BuyCryptoComponent: React.FC<BuyCryptoComponentProps> = ({
   headerHeight,
   token,
   isScrolledUp,
+  showIntro,
 }) => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
 
   const handleLinkPress = (url: string) => {
     Linking.canOpenURL(url).then((supported) => {
@@ -28,6 +82,13 @@ const BuyCryptoComponent: React.FC<BuyCryptoComponentProps> = ({
       }
     })
   }
+
+  const handleReceiveBtnPress = React.useCallback(() => {
+    navigation.navigate('AssetChooserScreen', {
+      screenTitle: labelTranslateFn('summaryBlockComp.selectAssetReceive')!,
+      action: ActionEnum.RECEIVE,
+    })
+  }, [navigation])
 
   return (
     <>
@@ -43,6 +104,12 @@ const BuyCryptoComponent: React.FC<BuyCryptoComponentProps> = ({
         backgroundColor="mainBackground"
         style={{ paddingTop: isScrolledUp ? scale(10) : headerHeight / 2 }}
         paddingHorizontal={'screenPadding'}>
+        {showIntro ? (
+          <IntroComponent
+            isScrolledUp={isScrolledUp}
+            onPress={handleReceiveBtnPress}
+          />
+        ) : null}
         {!isScrolledUp ? (
           <Text
             marginTop={'s'}

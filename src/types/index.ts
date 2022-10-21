@@ -130,6 +130,7 @@ export type StackPayload = {
   shortenAddress?: string
   isScrolledUp?: boolean
   token?: string
+  showIntro?: boolean
 }
 
 export type SettingStackParamList = {

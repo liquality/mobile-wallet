@@ -11,7 +11,7 @@ import ProgressCircle from './animations/progress-circle'
 import ActivityFilter from './activity-filter'
 import { useFilteredHistory } from '../custom-hooks'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
-import { formatDate } from '../utils'
+import { formatDate, labelTranslateFn } from '../utils'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { useNavigation } from '@react-navigation/core'
 import { OverviewProps } from '../screens/wallet-features/home/overview-screen'
@@ -158,6 +158,15 @@ const ActivityFlatList = ({
     )
   }
 
+  const onBuyCryptoPress = React.useCallback(() => {
+    navigation.navigate('BuyCryptoDrawer', {
+      isScrolledUp: false,
+      token: '',
+      showIntro: false,
+      screenTitle: labelTranslateFn('buyCrypto')!,
+    })
+  }, [navigation])
+
   return (
     <>
       {showFilter ? <ActivityFilter numOfResults={history.length} /> : null}
@@ -180,7 +189,7 @@ const ActivityFlatList = ({
           </Text>
           <Pressable
             label={{ tx: 'buyCrypto' }}
-            onPress={() => {}}
+            onPress={onBuyCryptoPress}
             variant="defaultOutline"
             buttonSize={'half'}
           />
