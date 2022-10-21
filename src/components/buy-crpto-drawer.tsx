@@ -1,7 +1,7 @@
 import React from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../types'
-import { Box, FLEX_1 } from '../theme'
+import { Box } from '../theme'
 import { useHeaderHeight } from '@react-navigation/elements'
 import {
   NativeScrollEvent,
@@ -9,6 +9,8 @@ import {
   ScrollView,
 } from 'react-native'
 import BuyCryptoComponent from './buyCryptoComponent'
+import { scale } from 'react-native-size-matters'
+import { SCREEN_HEIGHT } from '../utils'
 
 type Props = NativeStackScreenProps<MainStackParamList, 'BuyCryptoDrawer'>
 const BuyCryptoDrawer = (props: Props) => {
@@ -16,7 +18,9 @@ const BuyCryptoDrawer = (props: Props) => {
 
   const headerHeight = useHeaderHeight()
 
-  const isScrolledUp = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const isScrolledUpEvent = (
+    event: NativeSyntheticEvent<NativeScrollEvent>,
+  ) => {
     const { contentOffset } = event.nativeEvent
 
     if (contentOffset.y > headerHeight - 10) {
@@ -28,32 +32,48 @@ const BuyCryptoDrawer = (props: Props) => {
     }
   }
 
+  const { isScrolledUp } = route.params
+
+  const calculatedHeight = isScrolledUp
+    ? SCREEN_HEIGHT - scale(20)
+    : SCREEN_HEIGHT + headerHeight
+
   return (
-    <ScrollView
-      scrollEventThrottle={400}
-      onScroll={isScrolledUp}
-      contentContainerStyle={FLEX_1}>
-      {!route.params.isScrolledUp ? (
-        <Box
-          flex={1}
-          backgroundColor={'semiTransparentGrey'}
-          style={{ paddingTop: headerHeight }}>
-          <BuyCryptoComponent
-            token={route.params.token || ''}
-            headerHeight={headerHeight}
-            isScrolledUp={route.params.isScrolledUp || false}
-          />
-        </Box>
-      ) : (
-        <Box flex={1} backgroundColor="mainBackground">
-          <BuyCryptoComponent
-            token={route.params.token || ''}
-            headerHeight={0}
-            isScrolledUp={route.params.isScrolledUp}
-          />
-        </Box>
-      )}
-    </ScrollView>
+    <Box
+      flex={1}
+      backgroundColor={isScrolledUp ? 'mainBackground' : 'transparent'}>
+      <ScrollView
+        style={{ height: SCREEN_HEIGHT }}
+        scrollEventThrottle={400}
+        onScroll={isScrolledUpEvent}
+        contentContainerStyle={{
+          paddingBottom: scale(20),
+          height: calculatedHeight,
+        }}>
+        {!isScrolledUp ? (
+          <Box
+            flex={1}
+            style={{ paddingTop: headerHeight }}
+            backgroundColor="semiTransparentGrey">
+            <BuyCryptoComponent
+              token={route.params.token || ''}
+              headerHeight={headerHeight}
+              isScrolledUp={isScrolledUp || false}
+              showIntro={route.params.showIntro || false}
+            />
+          </Box>
+        ) : (
+          <Box flex={1} backgroundColor="mainBackground">
+            <BuyCryptoComponent
+              token={route.params.token || ''}
+              headerHeight={0}
+              isScrolledUp={isScrolledUp}
+              showIntro={route.params.showIntro || false}
+            />
+          </Box>
+        )}
+      </ScrollView>
+    </Box>
   )
 }
 

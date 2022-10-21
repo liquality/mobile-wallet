@@ -491,6 +491,12 @@ export const theme = createTheme({
       fontWeight: '500',
       fontSize: scale(27),
     },
+    gettingStartHeader: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: scale(27),
+      lineHeight: scale(35),
+    },
   },
   pressableVariants: {
     outline: {

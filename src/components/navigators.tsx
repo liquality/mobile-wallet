@@ -612,7 +612,7 @@ const BuyCryptoDrawerHeaderRight = () => {
   )
 }
 
-const BuyCryptoDrawerHeaderTitle = () => {
+const BuyCryptoDrawerHeaderTitle = (title: string) => {
   return (
     <Box
       marginLeft={'l'}
@@ -620,7 +620,9 @@ const BuyCryptoDrawerHeaderTitle = () => {
       flexDirection="row"
       justifyContent={'space-between'}
       alignItems="flex-start">
-      <Text variant={'buyCryptoHeader'} color="darkGrey" tx="buyCrypto" />
+      <Text variant={'buyCryptoHeader'} color="darkGrey" numberOfLines={1}>
+        {title}
+      </Text>
     </Box>
   )
 }
@@ -796,7 +798,10 @@ export const StackMainNavigator = () => {
             },
             headerTransparent: !route.params.isScrolledUp,
             headerTitle: route.params.isScrolledUp
-              ? BuyCryptoDrawerHeaderTitle
+              ? () =>
+                  BuyCryptoDrawerHeaderTitle(
+                    route.params.screenTitle || labelTranslateFn('buyCrypto')!,
+                  )
               : '',
             headerLeft: undefined,
             headerRight: route.params.isScrolledUp

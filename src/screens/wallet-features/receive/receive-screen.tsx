@@ -148,6 +148,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
                 navigation.navigate('BuyCryptoDrawer', {
                   isScrolledUp: false,
                   token: code,
+                  showIntro: false,
                 })
               }
               variant="defaultOutline"
