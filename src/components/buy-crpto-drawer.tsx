@@ -24,11 +24,17 @@ const BuyCryptoDrawer = (props: Props) => {
     const { contentOffset } = event.nativeEvent
 
     if (contentOffset.y > headerHeight - 10) {
-      navigation.setParams({ isScrolledUp: true })
+      navigation.setParams({
+        screenTitle: route.params.screenTitle,
+        isScrolledUp: true,
+      })
     }
 
     if (contentOffset.y + headerHeight - 10 < 0) {
-      navigation.setParams({ isScrolledUp: false })
+      navigation.setParams({
+        screenTitle: route.params.screenTitle,
+        isScrolledUp: false,
+      })
     }
   }
 

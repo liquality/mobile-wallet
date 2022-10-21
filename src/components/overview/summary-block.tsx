@@ -8,7 +8,7 @@ import {
   totalFiatBalanceState,
 } from '../../atoms'
 import { ActionEnum } from '../../types'
-import { Alert, ImageBackground, Platform } from 'react-native'
+import { ImageBackground, Platform } from 'react-native'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
 import { Box, Text, Card, IMAGE_BACKGROUND_STYLE } from '../../theme'
 import * as React from 'react'
@@ -59,7 +59,17 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
     })
   }, [navigation, setSwapPair])
 
-  const handleBuyPress = () => Alert.alert('Coming soon!')
+  const handleBuyPress = () => {
+    const showIntro = Number(totalFiatBalance) <= 0
+    navigation.navigate('BuyCryptoDrawer', {
+      isScrolledUp: false,
+      token: '',
+      showIntro,
+      screenTitle: labelTranslateFn(
+        showIntro ? 'gettingStartedWithCrypto' : 'buyCrypto',
+      )!,
+    })
+  }
 
   const appFeatures = [
     {

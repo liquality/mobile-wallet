@@ -89,6 +89,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
       isScrolledUp: false,
       token: code,
       showIntro: false,
+      screenTitle: labelTranslateFn('buyCrypto')!,
     })
   }, [code, navigation])
 

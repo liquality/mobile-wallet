@@ -479,11 +479,6 @@ export const AppStackNavigator = () => {
           component={WithPopupMenu}
           options={{ headerShown: true, headerTransparent: true }}
         />
-        <MainStack.Screen
-          name="BuyCryptoDrawer"
-          component={BuyCryptoDrawer}
-          options={{ headerShown: true, headerTransparent: true }}
-        />
       </MainStack.Group>
     </MainStack.Navigator>
   )
@@ -614,15 +609,12 @@ const BuyCryptoDrawerHeaderRight = () => {
 
 const BuyCryptoDrawerHeaderTitle = (title: string) => {
   return (
-    <Box
-      marginLeft={'l'}
-      width={SCREEN_WIDTH}
-      flexDirection="row"
-      justifyContent={'space-between'}
-      alignItems="flex-start">
-      <Text variant={'buyCryptoHeader'} color="darkGrey" numberOfLines={1}>
-        {title}
-      </Text>
+    <Box marginLeft={'l'} width={SCREEN_WIDTH} alignItems="flex-start">
+      <Box width={SCREEN_WIDTH / 1.4} alignItems="flex-start">
+        <Text variant={'buyCryptoHeader'} color="darkGrey" numberOfLines={1}>
+          {title}
+        </Text>
+      </Box>
     </Box>
   )
 }
@@ -786,28 +778,29 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="BuyCryptoDrawer"
           component={BuyCryptoDrawer}
-          options={({ route }: NavigationProps) => ({
-            ...screenNavOptions,
-            presentation: route.params.isScrolledUp
-              ? 'fullScreenModal'
-              : 'transparentModal',
-            headerStyle: {
-              backgroundColor: route.params.isScrolledUp
-                ? faceliftPalette.white
-                : faceliftPalette.transparent,
-            },
-            headerTransparent: !route.params.isScrolledUp,
-            headerTitle: route.params.isScrolledUp
-              ? () =>
-                  BuyCryptoDrawerHeaderTitle(
-                    route.params.screenTitle || labelTranslateFn('buyCrypto')!,
-                  )
-              : '',
-            headerLeft: undefined,
-            headerRight: route.params.isScrolledUp
-              ? BuyCryptoDrawerHeaderRight
-              : undefined,
-          })}
+          options={({ route }: NavigationProps) => {
+            const { isScrolledUp = false, screenTitle = '' } = route.params
+            const empty = ''
+            return {
+              ...screenNavOptions,
+              presentation: isScrolledUp
+                ? 'fullScreenModal'
+                : 'transparentModal',
+              headerStyle: {
+                backgroundColor: isScrolledUp
+                  ? faceliftPalette.white
+                  : faceliftPalette.transparent,
+              },
+              headerTransparent: !isScrolledUp,
+              headerTitle: isScrolledUp
+                ? () => BuyCryptoDrawerHeaderTitle(screenTitle)
+                : empty,
+              headerLeft: undefined,
+              headerRight: isScrolledUp
+                ? BuyCryptoDrawerHeaderRight
+                : undefined,
+            }
+          }}
         />
       </MainStack.Group>
     </MainStack.Navigator>
