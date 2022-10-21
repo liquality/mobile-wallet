@@ -36,4 +36,5 @@ export const faceliftPalette = {
   linkTextColor: '#8835E7',
   transGrey: '#F9F9F9',
   error: '#EF0505',
+  semiTransparentGrey: 'rgba(61, 71,103, 0.8)',
 }

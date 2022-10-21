@@ -58,6 +58,7 @@ export const theme = createTheme({
     transGrey: faceliftPalette.transGrey,
     greyBackground: faceliftPalette.greyBackground,
     blockBackgroundColor: faceliftPalette.orangeGrey,
+    semiTransparentGrey: faceliftPalette.semiTransparentGrey,
   },
   spacing: {
     vs: scale(2),
@@ -378,7 +379,13 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
       fontWeight: '400',
-      lineHeight: scale(15),
+      lineHeight: scale(19),
+    },
+    h10: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(12),
+      fontWeight: '500',
+      lineHeight: scale(17),
     },
     radioText: {
       fontFamily: Fonts.Regular,
@@ -478,6 +485,11 @@ export const theme = createTheme({
       fontSize: scale(15),
       fontWeight: '400',
       lineHeight: scale(20),
+    },
+    buyCryptoHeader: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: scale(27),
     },
   },
   pressableVariants: {

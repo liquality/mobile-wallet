@@ -34,6 +34,7 @@ import {
   SettingStackParamList,
 } from '../types'
 import WithPopupMenu from './with-popup-menu'
+import BuyCryptoDrawer from './buy-crpto-drawer'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
 
@@ -66,7 +67,7 @@ import { networkState, showSearchBarInputState, themeMode } from '../atoms'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
-import { labelTranslateFn } from '../utils'
+import { labelTranslateFn, SCREEN_WIDTH } from '../utils'
 import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-screen'
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
@@ -84,6 +85,7 @@ const {
   TabSettingInactive,
   TabWalletInactive,
   SearchIcon,
+  BuyCryptoCloseDark,
 } = AppIcons
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
@@ -221,6 +223,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'AssetChooserScreen'
   | 'ReceiveScreen'
   | 'SwapDetailsScreen'
+  | 'BuyCryptoDrawer'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -476,6 +479,11 @@ export const AppStackNavigator = () => {
           component={WithPopupMenu}
           options={{ headerShown: true, headerTransparent: true }}
         />
+        <MainStack.Screen
+          name="BuyCryptoDrawer"
+          component={BuyCryptoDrawer}
+          options={{ headerShown: true, headerTransparent: true }}
+        />
       </MainStack.Group>
     </MainStack.Navigator>
   )
@@ -593,6 +601,30 @@ const StackMainNavigatorHeaderLeft = () => {
   )
 }
 
+const BuyCryptoDrawerHeaderRight = () => {
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+  return (
+    <Box paddingHorizontal={'m'}>
+      <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
+        <BuyCryptoCloseDark />
+      </TouchableOpacity>
+    </Box>
+  )
+}
+
+const BuyCryptoDrawerHeaderTitle = () => {
+  return (
+    <Box
+      marginLeft={'l'}
+      width={SCREEN_WIDTH}
+      flexDirection="row"
+      justifyContent={'space-between'}
+      alignItems="flex-start">
+      <Text variant={'buyCryptoHeader'} color="darkGrey" tx="buyCrypto" />
+    </Box>
+  )
+}
+
 //If you dont want your screen to include tabbar, add it to StackMainNavigator obj
 export const StackMainNavigator = () => {
   const theme = useRecoilValue(themeMode)
@@ -605,147 +637,174 @@ export const StackMainNavigator = () => {
 
   return (
     <MainStack.Navigator initialRouteName="LoginScreen">
-      <MainStack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
-        options={{ ...screenNavOptions, headerTransparent: true }}
-      />
-      <MainStack.Screen
-        name="MainNavigator"
-        component={MainNavigator}
-        options={{
-          headerShown: false,
-          headerRight: PlaceholderComp,
-        }}
-      />
-      <MainStack.Screen
-        name="BackupWarningScreen"
-        component={BackupWarningScreen}
-        options={screenNavOptions}
-      />
-      <MainStack.Screen
-        name="BackupPrivateKeyScreen"
-        component={BackupPrivateKeyScreen}
-        options={{ ...screenNavOptions, headerRight: DoneButton }}
-      />
-      <MainStack.Screen
-        name="SelectChainScreen"
-        component={SelectChainScreen}
-        options={{
-          ...screenNavOptions,
-          headerTitle: labelTranslateFn('selectChain')!,
-          headerTitleStyle: HEADER_TITLE_STYLE,
-          headerLeft: StackMainNavigatorHeaderLeft,
-          headerStyle: { backgroundColor },
-        }}
-      />
-      <MainStack.Screen
-        name="BackupLoginScreen"
-        component={BackupLoginScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <MainStack.Screen
-        name="BackupSeedScreen"
-        component={BackupSeedScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <MainStack.Screen
-        name="TermsScreen"
-        component={TermsScreen}
-        options={{
-          ...screenNavOptions,
-          headerStyle: { backgroundColor },
-          headerLeft: LiqLogoHeaderLeft,
-        }}
-      />
-      <MainStack.Screen
-        name="PasswordCreationScreen"
-        component={PasswordCreationScreen}
-        options={{ ...screenNavOptions, headerTransparent: true }}
-      />
-      <MainStack.Screen
-        name="SeedPhraseScreen"
-        component={SeedPhraseScreen}
-        options={{
-          ...screenNavOptions,
-          headerTitleStyle: HEADER_TITLE_STYLE,
-          headerStyle: { backgroundColor },
-          headerLeft: LiqLogoHeaderLeft,
-        }}
-      />
-      <MainStack.Screen
-        name="SeedPhraseConfirmationScreen"
-        component={SeedPhraseConfirmationScreen}
-      />
-      <MainStack.Screen name="LoadingScreen" component={LoadingScreen} />
-      <MainStack.Screen
-        name="CongratulationsScreen"
-        component={CongratulationsScreen}
-      />
-      <MainStack.Screen
-        name="UnlockWalletScreen"
-        component={UnlockWalletScreen}
-        options={{
-          ...screenNavOptions,
-          headerTitleStyle: HEADER_TITLE_STYLE,
-          headerStyle: { backgroundColor },
-          headerLeft: LiqLogoHeaderLeft,
-        }}
-      />
-      <MainStack.Screen
-        name="ReceiveScreen"
-        component={ReceiveScreen}
-        options={({ route }: NavigationProps) => ({
-          headerShadowVisible: false,
-          headerBackVisible: false,
-          title: route.params.screenTitle || '',
-          headerTitleStyle: MANAGE_ASSET_HEADER,
-          headerStyle: { backgroundColor },
-          headerRight: undefined,
-          headerLeft: undefined,
-        })}
-      />
-      <MainStack.Screen
-        name="SwapDetailsScreen"
-        component={SwapDetailsScreen}
-        options={{
-          headerShadowVisible: false,
-          headerBackVisible: false,
-          headerTitle: labelTranslateFn('swapDetails')!,
-          headerTitleStyle: MANAGE_ASSET_HEADER,
-          headerStyle: { backgroundColor },
-          headerRight: undefined,
-          headerLeft: StackMainNavigatorHeaderLeft,
-        }}
-      />
-      <MainStack.Screen
-        name="AssetScreen"
-        component={AssetScreen}
-        options={{
-          ...screenNavOptions,
-          headerStyle: { backgroundColor },
-          headerRight: undefined,
-          headerLeft: StackMainNavigatorHeaderLeft,
-        }}
-      />
-      <MainStack.Screen
-        name="NftDetailScreen"
-        component={NftDetailScreen}
-        options={() => ({
-          headerShown: false,
-        })}
-      />
-      <MainStack.Screen
-        name="NftSendScreen"
-        component={NftSendScreen}
-        options={() => ({
-          headerShown: false,
-        })}
-      />
+      <MainStack.Group>
+        <MainStack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={{ ...screenNavOptions, headerTransparent: true }}
+        />
+        <MainStack.Screen
+          name="MainNavigator"
+          component={MainNavigator}
+          options={{
+            headerShown: false,
+            headerRight: PlaceholderComp,
+          }}
+        />
+        <MainStack.Screen
+          name="BackupWarningScreen"
+          component={BackupWarningScreen}
+          options={screenNavOptions}
+        />
+        <MainStack.Screen
+          name="BackupPrivateKeyScreen"
+          component={BackupPrivateKeyScreen}
+          options={{ ...screenNavOptions, headerRight: DoneButton }}
+        />
+        <MainStack.Screen
+          name="SelectChainScreen"
+          component={SelectChainScreen}
+          options={{
+            ...screenNavOptions,
+            headerTitle: labelTranslateFn('selectChain')!,
+            headerTitleStyle: HEADER_TITLE_STYLE,
+            headerLeft: StackMainNavigatorHeaderLeft,
+            headerStyle: { backgroundColor },
+          }}
+        />
+        <MainStack.Screen
+          name="BackupLoginScreen"
+          component={BackupLoginScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <MainStack.Screen
+          name="BackupSeedScreen"
+          component={BackupSeedScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <MainStack.Screen
+          name="TermsScreen"
+          component={TermsScreen}
+          options={{
+            ...screenNavOptions,
+            headerStyle: { backgroundColor },
+            headerLeft: LiqLogoHeaderLeft,
+          }}
+        />
+        <MainStack.Screen
+          name="PasswordCreationScreen"
+          component={PasswordCreationScreen}
+          options={{ ...screenNavOptions, headerTransparent: true }}
+        />
+        <MainStack.Screen
+          name="SeedPhraseScreen"
+          component={SeedPhraseScreen}
+          options={{
+            ...screenNavOptions,
+            headerTitleStyle: HEADER_TITLE_STYLE,
+            headerStyle: { backgroundColor },
+            headerLeft: LiqLogoHeaderLeft,
+          }}
+        />
+        <MainStack.Screen
+          name="SeedPhraseConfirmationScreen"
+          component={SeedPhraseConfirmationScreen}
+        />
+        <MainStack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <MainStack.Screen
+          name="CongratulationsScreen"
+          component={CongratulationsScreen}
+        />
+        <MainStack.Screen
+          name="UnlockWalletScreen"
+          component={UnlockWalletScreen}
+          options={{
+            ...screenNavOptions,
+            headerTitleStyle: HEADER_TITLE_STYLE,
+            headerStyle: { backgroundColor },
+            headerLeft: LiqLogoHeaderLeft,
+          }}
+        />
+        <MainStack.Screen
+          name="ReceiveScreen"
+          component={ReceiveScreen}
+          options={({ route }: NavigationProps) => ({
+            headerShadowVisible: false,
+            headerBackVisible: false,
+            title: route.params.screenTitle || '',
+            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerStyle: { backgroundColor },
+            headerRight: undefined,
+            headerLeft: undefined,
+          })}
+        />
+        <MainStack.Screen
+          name="SwapDetailsScreen"
+          component={SwapDetailsScreen}
+          options={{
+            headerShadowVisible: false,
+            headerBackVisible: false,
+            headerTitle: labelTranslateFn('swapDetails')!,
+            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerStyle: { backgroundColor },
+            headerRight: undefined,
+            headerLeft: StackMainNavigatorHeaderLeft,
+          }}
+        />
+        <MainStack.Screen
+          name="AssetScreen"
+          component={AssetScreen}
+          options={{
+            ...screenNavOptions,
+            headerStyle: { backgroundColor },
+            headerRight: undefined,
+            headerLeft: StackMainNavigatorHeaderLeft,
+          }}
+        />
+        <MainStack.Screen
+          name="NftDetailScreen"
+          component={NftDetailScreen}
+          options={() => ({
+            headerShown: false,
+          })}
+        />
+        <MainStack.Screen
+          name="NftSendScreen"
+          component={NftSendScreen}
+          options={() => ({
+            headerShown: false,
+          })}
+        />
+      </MainStack.Group>
+      <MainStack.Group>
+        <MainStack.Screen
+          name="BuyCryptoDrawer"
+          component={BuyCryptoDrawer}
+          options={({ route }: NavigationProps) => ({
+            ...screenNavOptions,
+            presentation: route.params.isScrolledUp
+              ? 'fullScreenModal'
+              : 'transparentModal',
+            headerStyle: {
+              backgroundColor: route.params.isScrolledUp
+                ? faceliftPalette.white
+                : faceliftPalette.transparent,
+            },
+            headerTransparent: !route.params.isScrolledUp,
+            headerTitle: route.params.isScrolledUp
+              ? BuyCryptoDrawerHeaderTitle
+              : '',
+            headerLeft: undefined,
+            headerRight: route.params.isScrolledUp
+              ? BuyCryptoDrawerHeaderRight
+              : undefined,
+          })}
+        />
+      </MainStack.Group>
     </MainStack.Navigator>
   )
 }
