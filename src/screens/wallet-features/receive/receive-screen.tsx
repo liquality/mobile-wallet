@@ -84,6 +84,14 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
     })
   }
 
+  const onBuyCryptoPress = React.useCallback(() => {
+    navigation.navigate('BuyCryptoDrawer', {
+      isScrolledUp: false,
+      token: code,
+      showIntro: false,
+    })
+  }, [code, navigation])
+
   const handleCopyAddressPress = async () => {
     if (!address) Alert.alert(labelTranslateFn('receiveScreen.addressEmpty')!)
     showCopyToast('copyToast', labelTranslateFn('receiveScreen.copied')!)
@@ -144,13 +152,7 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
           <Box marginVertical={'xl'} alignItems="center">
             <Pressable
               label={{ tx: 'receiveScreen.buyCrypto' }}
-              onPress={() =>
-                navigation.navigate('BuyCryptoDrawer', {
-                  isScrolledUp: false,
-                  token: code,
-                  showIntro: false,
-                })
-              }
+              onPress={onBuyCryptoPress}
               variant="defaultOutline"
               style={styles.buyCryptoBtnStyle}
               textStyle={styles.buyCryptoTxtStyle}
