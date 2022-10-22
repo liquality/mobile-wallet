@@ -40,4 +40,5 @@ export const faceliftPalette = {
   average: '#4F67E4',
   fast: '#3AB24D',
   selectedBackground: '#F8F0FF',
+  semiTransparentGrey: 'rgba(61, 71,103, 0.8)',
 }

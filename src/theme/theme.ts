@@ -64,6 +64,7 @@ export const theme = createTheme({
     selectedBackgroundColor: faceliftPalette.selectedBackground,
     activeLink: faceliftPalette.active,
     inactiveLink: faceliftPalette.black,
+    semiTransparentGrey: faceliftPalette.semiTransparentGrey,
   },
   spacing: {
     vs: scale(2),
@@ -89,14 +90,6 @@ export const theme = createTheme({
     largeTablet: 1024,
   },
   textVariants: {
-    navigationHeader: {
-      fontFamily: Fonts.Regular,
-      fontSize: 13,
-      fontWeight: '500',
-      lineHeight: 18,
-      color: 'secondaryForeground',
-      textTransform: 'uppercase',
-    },
     header: {
       fontFamily: Fonts.Regular,
       fontSize: 12,
@@ -396,7 +389,13 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
       fontWeight: '400',
-      lineHeight: scale(15),
+      lineHeight: scale(19),
+    },
+    h10: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(12),
+      fontWeight: '500',
+      lineHeight: scale(17),
     },
     radioText: {
       fontFamily: Fonts.Regular,
@@ -501,6 +500,17 @@ export const theme = createTheme({
       fontSize: scale(15),
       fontWeight: '400',
       lineHeight: scale(20),
+    },
+    buyCryptoHeader: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: scale(27),
+    },
+    gettingStartHeader: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: scale(27),
+      lineHeight: scale(35),
     },
   },
   pressableVariants: {
