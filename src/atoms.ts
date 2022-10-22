@@ -319,3 +319,8 @@ export const totalFiatBalanceState = selector<string>({
     return formatFiat(totalFiatBalance).toString()
   },
 })
+
+export const assetScreenPopupMenuVisible = atom<boolean>({
+  key: 'AssetScreenPopupMenu',
+  default: false,
+})

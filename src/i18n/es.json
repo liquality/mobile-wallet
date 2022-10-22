@@ -107,8 +107,8 @@
     "swap": "Swap",
     "receive": "Receive",
     "activity": "ACTIVITY",
-    "sendCode": "Send {{code}}",
-    "receiveCode": "Receive {{code}}"
+    "sendCode": "SEND {{code}}",
+    "receiveCode": "RECEIVE {{code}}"
   },
   "assetToggleScreen": {},
   "backupLoginScreen": {
@@ -187,7 +187,7 @@
     "networkSpeed": "NETWORK SPEED/FEE",
     "snd": "SEND",
     "available": "Available",
-    "max": "Max",
+    "max": "MAX",
     "sndTo": "SEND TO",
     "address": "Enter Address",
     "memoOpt": "MEMO (OPTIONAL)",
@@ -198,7 +198,8 @@
     "notEnoughGas": "Not enough Gas (available {{n}} {{token}}) to cover fess for this transfer. Check speed/fee.",
     "adjustSending": "Adjust sending amount and speed/fee and try again, or get more.",
     "and": "and",
-    "insufficientFund": "Insufficient Funds"
+    "insufficientFund": "Insufficient Funds",
+    "balance": "Balance"
   },
   "settingsScreen": {
     "reloadApp": "Please reload your app",

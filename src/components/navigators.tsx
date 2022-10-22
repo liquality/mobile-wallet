@@ -36,7 +36,6 @@ import {
 import WithPopupMenu from './with-popup-menu'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
-
 import AssetToggleScreen from '../screens/wallet-features/asset/asset-toggle-screen'
 import SwapScreen from '../screens/wallet-features/swap/swap-screen'
 import SwapReviewScreen from '../screens/wallet-features/swap/swap-review-screen'
@@ -62,8 +61,13 @@ import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-sp
 import NftCollectionScreen from '../screens/wallet-features/NFT/nft-collection-screen'
 import SelectChainScreen from '../screens/wallet-features/settings/select-chain-screen'
 import { AppIcons, Fonts } from '../assets'
-import { networkState, showSearchBarInputState, themeMode } from '../atoms'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import {
+  assetScreenPopupMenuVisible,
+  networkState,
+  showSearchBarInputState,
+  themeMode,
+} from '../atoms'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
 import { labelTranslateFn } from '../utils'
@@ -123,6 +127,38 @@ const DoneButton = () => {
         tx="receiveScreen.done"
         onPress={onDonePress}
       />
+    </Box>
+  )
+}
+
+const NetworkAndActionsHeaderRight = () => {
+  const activeNetwork = useRecoilValue(networkState)
+  const [isAssetScreenPopupMenuVisible, setAssetScreenPopuMenuVisible] =
+    useRecoilState(assetScreenPopupMenuVisible)
+
+  return (
+    <Box flexDirection={'row'} alignItems={'center'} padding="s">
+      <Box
+        backgroundColor={'mediumWhite'}
+        flexDirection={'row'}
+        alignItems={'center'}
+        paddingVertical={'s'}
+        paddingHorizontal={'m'}
+        marginRight="s">
+        <NetworkActiveDot />
+        <Text paddingLeft={'s'} color="darkGrey" variant="networkStatus">
+          {`${activeNetwork}`.toUpperCase()}
+        </Text>
+      </Box>
+
+      <TouchableWithoutFeedback
+        onPress={() =>
+          setAssetScreenPopuMenuVisible(!isAssetScreenPopupMenuVisible)
+        }>
+        <Box padding="s">
+          <Ellipses width={20} height={20} />
+        </Box>
+      </TouchableWithoutFeedback>
     </Box>
   )
 }
@@ -221,6 +257,8 @@ type NavigationProps = NativeStackScreenProps<
   | 'AssetChooserScreen'
   | 'ReceiveScreen'
   | 'SwapDetailsScreen'
+  | 'AssetScreen'
+  | 'SendScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -371,8 +409,12 @@ export const AppStackNavigator = () => {
         <MainStack.Screen
           name="SendScreen"
           component={SendScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
+          options={({ route }: NavigationProps) => ({
+            title: route.params.screenTitle || '',
+            headerLeft: undefined,
+            headerBackVisible: false,
+            headerRight: undefined,
+            headerTitleStyle: HEADER_TITLE_STYLE,
           })}
         />
         <MainStack.Screen
@@ -725,12 +767,13 @@ export const StackMainNavigator = () => {
       <MainStack.Screen
         name="AssetScreen"
         component={AssetScreen}
-        options={{
+        options={({ navigation, route }: NavigationProps) => ({
           ...screenNavOptions,
           headerStyle: { backgroundColor },
-          headerRight: undefined,
+          headerRight: () =>
+            NetworkAndActionsHeaderRight({ navigation, route }),
           headerLeft: StackMainNavigatorHeaderLeft,
-        }}
+        })}
       />
       <MainStack.Screen
         name="NftDetailScreen"

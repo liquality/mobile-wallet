@@ -63,6 +63,7 @@ export const theme = createTheme({
     fastColor: faceliftPalette.fast,
     selectedBackgroundColor: faceliftPalette.selectedBackground,
     activeLink: faceliftPalette.active,
+    inactiveLink: faceliftPalette.black,
   },
   spacing: {
     vs: scale(2),
@@ -88,6 +89,14 @@ export const theme = createTheme({
     largeTablet: 1024,
   },
   textVariants: {
+    navigationHeader: {
+      fontFamily: Fonts.Regular,
+      fontSize: 13,
+      fontWeight: '500',
+      lineHeight: 18,
+      color: 'secondaryForeground',
+      textTransform: 'uppercase',
+    },
     header: {
       fontFamily: Fonts.Regular,
       fontSize: 12,
@@ -153,7 +162,6 @@ export const theme = createTheme({
       fontSize: 15,
       lineHeight: 21,
       color: 'secondaryForeground',
-      marginBottom: 's',
     },
     body: {
       fontFamily: Fonts.Regular,
@@ -167,6 +175,7 @@ export const theme = createTheme({
       fontWeight: '400',
       fontSize: 17,
       color: 'buttonFontPrimary',
+      lineHeight: 59.5,
     },
     tertiaryButtonLabel: {
       fontFamily: Fonts.Regular,
@@ -201,11 +210,10 @@ export const theme = createTheme({
       lineHeight: 18,
       color: 'greyMeta',
     },
-
     amountLabel: {
       fontFamily: Fonts.Light,
       fontWeight: '400',
-      fontSize: 14,
+      fontSize: 15,
       color: 'tertiaryForeground',
     },
     miniNftHeader: {
