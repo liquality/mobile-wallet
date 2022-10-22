@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
 import {
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -14,6 +13,7 @@ import {
   faceliftPalette,
   TextInput,
   ColorType,
+  ScrollView,
   FLEX_1,
 } from '../../../theme'
 import { AppIcons } from '../../../assets'

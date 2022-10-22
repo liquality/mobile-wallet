@@ -723,6 +723,7 @@ export const theme = createTheme({
       width: '100%',
     },
   },
+  scrollViewVariants: {},
 })
 
 export type ThemeType = typeof theme
