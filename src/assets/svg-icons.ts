@@ -143,6 +143,14 @@ import SwapTknIcon from '../assets/icons/swapTknIcon.svg'
 import BuyCryptoCloseLight from '../assets/icons/buyCryptoCloseLight.svg'
 import BuyCryptoCloseDark from '../assets/icons/buyCryptoCloseDark.svg'
 import TiltedArrow from '../assets/icons/tiltedArrow.svg'
+import SwapQuotes from '../assets/icons/swapQuotes.svg'
+import ThinDownArrowActive from '../assets/icons/thinDownArrowActive.svg'
+import ThinDoubleArrowActive from '../assets/icons/thinDoubleArrowActive.svg'
+import MaticNewIcon from '../assets/icons/newCrypto/matic.svg'
+import PwEthNewIcon from '../assets/icons/newCrypto/pweth.svg'
+import WavyArrow from '../assets/icons/wavyArrow.svg'
+import NetworkSpeedEdit from '../assets/icons/networkSpeedEdit.svg'
+import DoubleArrowThick from '../assets/icons/doubleArrowThick.svg'
 
 export default {
   PendingSwap,
@@ -240,7 +248,7 @@ export default {
   ConfirmationTrackerLine,
   CheckmarkCircle,
   PurpleThreeDots,
-
+  SwapQuotes,
   LogoFull,
   OnlyLqLogoDark,
   OnlyLqLogoLight,
@@ -290,4 +298,11 @@ export default {
   BuyCryptoCloseDark,
   OnRamperIcon,
   TiltedArrow,
+  ThinDownArrowActive,
+  MaticNewIcon,
+  PwEthNewIcon,
+  WavyArrow,
+  ThinDoubleArrowActive,
+  NetworkSpeedEdit,
+  DoubleArrowThick,
 }

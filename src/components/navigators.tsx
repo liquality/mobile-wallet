@@ -51,7 +51,7 @@ import {
   Box,
   faceliftPalette,
   HEADER_TITLE_STYLE,
-  MANAGE_ASSET_HEADER,
+  NORMAL_HEADER,
   palette,
   Text,
   ThemeIcon,
@@ -86,6 +86,7 @@ const {
   TabWalletInactive,
   SearchIcon,
   BuyCryptoCloseDark,
+  SwapQuotes,
 } = AppIcons
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
@@ -224,6 +225,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'ReceiveScreen'
   | 'SwapDetailsScreen'
   | 'BuyCryptoDrawer'
+  | 'SwapScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -265,6 +267,18 @@ const AssetManageScreenHeaderLeft = (navProps: NavigationProps) => {
         <ChevronLeft width={scale(15)} height={scale(15)} />
       </Box>
     </TouchableWithoutFeedback>
+  )
+}
+
+const SwapHeaderRight = (navProps: NavigationProps) => {
+  const { navigation } = navProps
+
+  return (
+    <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
+      <Box paddingHorizontal={'s'} paddingVertical="m">
+        <SwapQuotes width={scale(25)} />
+      </Box>
+    </TouchableOpacity>
   )
 }
 
@@ -364,7 +378,7 @@ export const AppStackNavigator = () => {
           options={({ navigation, route }: NavigationProps) => ({
             headerBackVisible: false,
             title: route.params.screenTitle || '',
-            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
             headerRight: undefined,
             headerLeft: () =>
@@ -414,7 +428,7 @@ export const AppStackNavigator = () => {
           options={({ navigation, route }: NavigationProps) => ({
             headerBackVisible: false,
             title: showSearchBar ? '' : labelTranslateFn('manageAssetsCaps')!,
-            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
             headerRight: () => AssetManageScreenHeaderRight(),
             headerLeft: showSearchBar
@@ -429,13 +443,13 @@ export const AppStackNavigator = () => {
             headerRight: PlaceholderComp,
           })}
         />
-        <MainStack.Screen
+        {/* <MainStack.Screen
           name="SwapScreen"
           component={SwapScreen}
           options={() => ({
             headerRight: PlaceholderComp,
           })}
-        />
+        /> */}
         <MainStack.Screen
           name="SwapReviewScreen"
           component={SwapReviewScreen}
@@ -630,7 +644,7 @@ export const StackMainNavigator = () => {
     currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
 
   return (
-    <MainStack.Navigator initialRouteName="LoginScreen">
+    <MainStack.Navigator initialRouteName="SwapScreen">
       <MainStack.Group>
         <MainStack.Screen
           name="LoginScreen"
@@ -730,10 +744,23 @@ export const StackMainNavigator = () => {
             headerShadowVisible: false,
             headerBackVisible: false,
             title: route.params.screenTitle || '',
-            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
             headerRight: undefined,
             headerLeft: undefined,
+          })}
+        />
+        <MainStack.Screen
+          name="SwapScreen"
+          component={SwapScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerBackVisible: false,
+            headerShadowVisible: false,
+            title: labelTranslateFn('assetScreen.swap') || '',
+            headerTitleStyle: NORMAL_HEADER,
+            headerStyle: { backgroundColor },
+            headerLeft: undefined,
+            headerRight: () => SwapHeaderRight({ navigation, route }),
           })}
         />
         <MainStack.Screen
@@ -743,7 +770,7 @@ export const StackMainNavigator = () => {
             headerShadowVisible: false,
             headerBackVisible: false,
             headerTitle: labelTranslateFn('swapDetails')!,
-            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
             headerRight: undefined,
             headerLeft: StackMainNavigatorHeaderLeft,
