@@ -3,16 +3,25 @@ import { View, StyleSheet, Modal, SafeAreaView, Pressable } from 'react-native'
 import { ChainId, getChain } from '@liquality/cryptoassets'
 import Svg, { Rect } from 'react-native-svg'
 import Error from '../components/ui/error'
+/* import useFrameProcessor from 'react-native-camera'
+import useCameraDevices from 'react-native-camera' 
+import Camera from 'react-native-camera'
+*/
 import {
   Camera,
   useCameraDevices,
   useFrameProcessor,
 } from 'react-native-vision-camera'
-import {
+
+import scanBarcodes from 'react-native-camera'
+import BarcodeFormat from 'react-native-camera'
+import Barcode from 'react-native-camera'
+
+/* import {
   Barcode,
   BarcodeFormat,
   scanBarcodes,
-} from 'vision-camera-code-scanner'
+} from 'vision-camera-code-scanner' */
 import { runOnJS } from 'react-native-reanimated'
 import { labelTranslateFn } from '../utils'
 import { useRecoilValue } from 'recoil'
@@ -73,7 +82,7 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
   const frameProcessor = useFrameProcessor(
     (frame) => {
       'worklet'
-      const qrCodes = scanBarcodes(frame, [BarcodeFormat.QR_CODE])
+      const qrCodes = new scanBarcodes(frame, [BarcodeFormat.QR_CODE])
       if (qrCodes.length > 0) {
         runOnJS(onQRCodeDetected)(qrCodes[0])
       }

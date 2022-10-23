@@ -163,7 +163,7 @@ async function fixBrowserCheck(path) {
   )
   const fixedVisionCameraFile = visionCameraFile.replaceAll(
     '__attribute__((constructor)) static void VISION_CONCAT(initialize_, objc_name)()',
-    '(void)load',
+    '(void)load { [Foo swiftyLoad]; }',
   )
   await fs.writeFile(
     'node_modules/react-native-vision-camera/ios/Frame Processor/FrameProcessorPlugin.h',
