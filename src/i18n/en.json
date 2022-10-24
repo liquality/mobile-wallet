@@ -107,8 +107,8 @@
     "swap": "Swap",
     "receive": "Receive",
     "activity": "ACTIVITY",
-    "sendCode": "Send {{code}}",
-    "receiveCode": "Receive {{code}}"
+    "sendCode": "SEND {{code}}",
+    "receiveCode": "RECEIVE {{code}}"
   },
   "assetToggleScreen": {},
   "backupLoginScreen": {
@@ -187,7 +187,7 @@
     "networkSpeed": "NETWORK SPEED/FEE",
     "snd": "SEND",
     "available": "Available",
-    "max": "Max",
+    "max": "MAX",
     "sndTo": "SEND TO",
     "address": "Enter Address",
     "memoOpt": "MEMO (OPTIONAL)",
@@ -198,7 +198,8 @@
     "notEnoughGas": "Not enough Gas (available {{n}} {{token}}) to cover fess for this transfer. Check speed/fee.",
     "adjustSending": "Adjust sending amount and speed/fee and try again, or get more.",
     "and": "and",
-    "insufficientFund": "Insufficient Funds"
+    "insufficientFund": "Insufficient Funds",
+    "balance": "Balance"
   },
   "settingsScreen": {
     "reloadApp": "Please reload your app",
@@ -287,6 +288,7 @@
     "notEnoughLiquidityLowerSpeed": "Not enough {{token}} to cover fees. Lower speed to account for gas fee or get more."
   },
   "customFeeScreen": {
+    "custom": "CUSTOM",
     "presets": "PRESETS",
     "customSettings": "CUSTOMIZED SETTINGS",
     "gasPrice": "Gas Price",
@@ -295,8 +297,8 @@
     "likelyLess15": "likely in < 15",
     "gasFeeMissing": "Gas fees missing",
     "currentBaseFee": "CURRENT BASE FEE",
-    "perGas": "PER Gas",
-    "minerTip": "Miner Tip",
+    "perGas": "PER GAS",
+    "minerTip": "MINER TIP",
     "toSpeedUp": "TO SPEED UP",
     "maxFee": "MAX FEE",
     "newFeeTotal": "New Fee Total",
@@ -305,7 +307,8 @@
     "maxHere": "max here",
     "newSpeedFee": "New Speed/Fee",
     "btcAmountHere": "BTC amount here",
-    "fiatAmountHere": "fiat amount here"
+    "fiatAmountHere": "fiat amount here",
+    "max": "max"
   },
   "loadingScreen": {
     "failedImport": "Failed to import/create wallet. Please try again!"

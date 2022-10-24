@@ -1,35 +1,35 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import {
-  Dimensions,
   Pressable,
   StyleSheet,
   View,
   ScrollView,
+  ImageBackground,
 } from 'react-native'
-import {
-  prettyBalance,
-  prettyFiatBalance,
-} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import { prettyBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, MainStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
-import { Text, Box, RoundButton, palette } from '../../../theme'
-import GradientBackground from '../../../components/gradient-background'
-import { useRecoilValue } from 'recoil'
+import { Text, Box, palette, Card, faceliftPalette } from '../../../theme'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import {
   addressStateFamily,
+  assetScreenPopupMenuVisible,
   balanceStateFamily,
-  fiatRatesState,
   networkState,
   swapPairState,
 } from '../../../atoms'
-import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
+import { getAsset } from '@liquality/cryptoassets'
 import I18n from 'i18n-js'
-import { labelTranslateFn } from '../../../utils'
+import { GRADIENT_BACKGROUND_HEIGHT, labelTranslateFn } from '../../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
-import { Fonts } from '../../../assets'
+import { AppIcons, Fonts, Images } from '../../../assets'
+import AssetIcon from '../../../components/asset-icon'
+const { Eye, Refresh } = AppIcons
+const adjustLineHeight = -scale(30)
 import { scale } from 'react-native-size-matters'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 type AssetScreenProps = NativeStackScreenProps<
   MainStackParamList,
@@ -43,8 +43,9 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const balance = useRecoilValue(
     balanceStateFamily({ asset: code, assetId: id }),
   )
-  const fiatRates = useRecoilValue(fiatRatesState)
   const activeNetwork = useRecoilValue(networkState)
+  const [isAssetScreenPopupMenuVisible, setAssetScreenPopuMenuVisible] =
+    useRecoilState(assetScreenPopupMenuVisible)
 
   const handleSendPress = useCallback(() => {
     navigation.navigate('SendScreen', {
@@ -68,6 +69,10 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
     })
   }, [navigation, swapPair])
 
+  useEffect(() => {
+    setAssetScreenPopuMenuVisible(false)
+  }, [setAssetScreenPopuMenuVisible])
+
   return (
     <Box flex={1} backgroundColor="mainBackground">
       <React.Suspense
@@ -76,115 +81,116 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             <Text tx="assetScreen.loadingAsset" />
           </View>
         }>
-        <Box style={styles.overviewBlock}>
-          <GradientBackground
-            width={Dimensions.get('screen').width}
-            height={225}
-          />
+        {isAssetScreenPopupMenuVisible && (
           <Box
-            flexDirection="row"
-            justifyContent="center"
-            alignItems="flex-end">
-            <Text style={styles.balanceInUSD}>
-              {`$${prettyFiatBalance(
-                unitToCurrency(
-                  getAsset(activeNetwork, code),
-                  new BigNumber(balance),
-                ),
-                fiatRates?.[code] || 0,
-              )}`}
-            </Text>
+            flex={1}
+            backgroundColor={'popMenuColor'}
+            paddingHorizontal={'xl'}
+            position="absolute"
+            zIndex={3000}
+            style={{ top: 5, right: 0 }}>
+            <Box flex={1} alignItems={'flex-end'}>
+              <Box height={scale(100)} width={scale(180)}>
+                <ImageBackground
+                  style={styles.lowerBgImg}
+                  resizeMode="contain"
+                  source={Images.popUpDark}>
+                  <ImageBackground
+                    style={styles.upperBgImg}
+                    resizeMode="contain"
+                    source={Images.popUpWhite}>
+                    <Box
+                      flex={1}
+                      justifyContent="center"
+                      padding={'onboardingPadding'}>
+                      <TouchableWithoutFeedback onPress={handleSendPress}>
+                        <Text
+                          variant={'normalText'}
+                          color="textColor"
+                          tx="assetScreen.send"
+                        />
+                      </TouchableWithoutFeedback>
+                      <TouchableWithoutFeedback onPress={handleSwapPress}>
+                        <Text
+                          variant={'normalText'}
+                          color="textColor"
+                          tx="assetScreen.swap"
+                        />
+                      </TouchableWithoutFeedback>
+                      <TouchableWithoutFeedback onPress={handleReceivePress}>
+                        <Text
+                          variant={'normalText'}
+                          color="textColor"
+                          tx="assetScreen.receive"
+                        />
+                      </TouchableWithoutFeedback>
+                    </Box>
+                  </ImageBackground>
+                </ImageBackground>
+              </Box>
+            </Box>
           </Box>
-          <Box
-            flexDirection="row"
-            justifyContent="center"
-            alignItems="flex-end">
-            <Text style={styles.balanceInNative} numberOfLines={1}>
-              {balance &&
-                code &&
-                prettyBalance(new BigNumber(balance), code).toString()}
-            </Text>
-            <Text style={styles.nativeCurrency}>{code}</Text>
-          </Box>
-          <Text style={styles.address}>
-            {!!address && `${shortenAddress(address)}`}
-          </Text>
-          <Box flexDirection="row" justifyContent="center" marginTop="l">
-            <RoundButton
-              onPress={handleSendPress}
-              tx={'assetScreen.send'}
-              type="SEND"
-              variant="smallPrimary"
-            />
-            <RoundButton
-              onPress={handleSwapPress}
-              tx={'assetScreen.swap'}
-              type="SWAP"
-              variant="largePrimary"
-            />
-            <RoundButton
-              onPress={handleReceivePress}
-              tx={'assetScreen.receive'}
-              type="RECEIVE"
-              variant="smallPrimary"
-            />
-          </Box>
-        </Box>
-        <View style={styles.tabBlack}>
-          <Pressable style={[styles.leftHeader, styles.headerFocused]}>
-            <Text variant="tabHeader" tx="assetScreen.activity" />
-          </Pressable>
-        </View>
-        {/* For some reason ActivityFlatList started throwing undefined errors upon SEND navigation and flow.
+        )}
+        <Box flex={1} onTouchStart={() => setAssetScreenPopuMenuVisible(false)}>
+          <Card
+            variant={'headerCard'}
+            height={GRADIENT_BACKGROUND_HEIGHT}
+            paddingHorizontal="xl">
+            <Box marginTop="xl" justifyContent="space-between">
+              <Box marginBottom={'xl'} flexDirection={'row'}>
+                <AssetIcon
+                  size={scale(25)}
+                  chain={getAsset(activeNetwork, code).chain}
+                />
+                <AssetIcon
+                  size={scale(25)}
+                  styles={{ right: scale(10) }}
+                  asset={code}
+                />
+                <Text style={styles.addressText}>
+                  {shortenAddress(address)}{' '}
+                </Text>
+                <Eye width={scale(20)} height={scale(10)} style={styles.eye} />
+              </Box>
+              <Text color={'darkGrey'} variant="totalBalance">
+                {getAsset(activeNetwork, code).chain.toUpperCase()}
+              </Text>
+              <Box style={styles.textContainer}>
+                <Text
+                  style={{ marginTop: adjustLineHeight }}
+                  variant="totalAsset"
+                  color={'nestedColor'}>
+                  {`${prettyBalance(
+                    new BigNumber(balance),
+                    code,
+                  ).toString()} ${code}`}
+                </Text>
+                <Pressable onPress={() => ({})} style={styles.refreshBtn}>
+                  <Refresh />
+                </Pressable>
+              </Box>
+            </Box>
+          </Card>
+          <View style={styles.tabBlack}>
+            <Pressable style={[styles.leftHeader, styles.headerFocused]}>
+              <Text variant="tabHeader" tx="assetScreen.activity" />
+            </Pressable>
+          </View>
+          {/* For some reason ActivityFlatList started throwing undefined errors upon SEND navigation and flow.
         Should be fixed, can be commented out to bypass that error for now */}
-        <ScrollView
-          contentContainerStyle={{
-            paddingBottom: scale(20),
-          }}>
-          <ActivityFlatList selectedAsset={code} />
-        </ScrollView>
+          <ScrollView
+            contentContainerStyle={{
+              paddingBottom: scale(20),
+            }}>
+            <ActivityFlatList selectedAsset={code} />
+          </ScrollView>
+        </Box>
       </React.Suspense>
     </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  overviewBlock: {
-    justifyContent: 'center',
-    width: '100%',
-    height: 225,
-    paddingVertical: 10,
-  },
-  balanceInUSD: {
-    color: palette.white,
-    fontFamily: Fonts.Regular,
-    fontWeight: '300',
-    fontSize: 12,
-    textAlignVertical: 'bottom',
-  },
-  balanceInNative: {
-    color: palette.white,
-    fontFamily: Fonts.Regular,
-    fontWeight: '500',
-    fontSize: 36,
-    textAlignVertical: 'bottom',
-  },
-  nativeCurrency: {
-    color: palette.white,
-    fontFamily: Fonts.Regular,
-    fontWeight: '500',
-    fontSize: 18,
-    paddingBottom: 3,
-    paddingLeft: 5,
-    textAlignVertical: 'bottom',
-  },
-  address: {
-    fontFamily: Fonts.Regular,
-    fontSize: 20,
-    fontWeight: '300',
-    color: palette.white,
-    textAlign: 'center',
-  },
   tabBlack: {
     flexDirection: 'row',
     alignItems: 'stretch',
@@ -202,6 +208,41 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: palette.black,
   },
+  refreshBtn: {
+    width: 37,
+    height: 37,
+    backgroundColor: faceliftPalette.mediumWhite,
+    marginBottom: 10,
+    position: 'relative',
+    bottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  eye: { marginTop: 10 },
+  addressText: {
+    fontFamily: Fonts.JetBrainsMono,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 14,
+    lineHeight: 20,
+    letterSpacing: 0.5,
+    marginTop: 7,
+    color: faceliftPalette.greyMeta,
+  },
+  textContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 10,
+  },
+  lowerBgImg: {
+    height: '100%',
+  },
+  upperBgImg: {
+    height: '100%',
+    width: '100%',
+    marginTop: scale(-5),
+    marginLeft: scale(-5),
+  },
 })
-
 export default AssetScreen

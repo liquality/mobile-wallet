@@ -16,12 +16,8 @@ import {
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
-import { chainDefaultColors } from '../../../core/config'
-import { Box, TextInput, Text, Button } from '../../../theme'
-import {
-  getSendFee,
-  isEIP1559Fees,
-} from '@liquality/wallet-core/dist/src/utils/fees'
+import { Box, TextInput, Text, Button, faceliftPalette } from '../../../theme'
+import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import { fetchFeesForAsset } from '../../../store/store'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import ButtonFooter from '../../../components/button-footer'
@@ -36,6 +32,11 @@ import i18n from 'i18n-js'
 import ErrMsgBanner, { ErrorBtn } from '../../../components/ui/err-msg-banner'
 import { palette } from '../../../theme'
 import { AppIcons, Fonts } from '../../../assets'
+import FeeEditorScreen from '../custom-fee/fee-editor-screen'
+import { scale } from 'react-native-size-matters'
+import FiatSwapSwitch from '../../../assets/icons/fiatCryptoSwitch.svg'
+import ChevronRight from '../../../assets/icons/chevronRight.svg'
+import ArrowUp from '../../../assets/icons/arrowUp.svg'
 
 const { QRCode } = AppIcons
 
@@ -76,13 +77,13 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const balance = useRecoilValue(
     balanceStateFamily({ asset: code, assetId: id }),
   )
-  const [fee, setFee] = useState<GasFees | null>(null)
+  const [, setFee] = useState<GasFees | null>(null)
   const [availableAmount, setAvailableAmount] = useState<string>('')
   const [amountInFiat, setAmountInFiat] = useState<number>(0)
   const [amountInNative, setAmountInNative] = useState<number>(0)
   const [showAmountsInFiat, setShowAmountsInFiat] = useState<boolean>(false)
   const [isCameraVisible, setIsCameraVisible] = useState(false)
-  const [networkSpeed, setNetworkSpeed] = useState<FeeLabel>(FeeLabel.Average)
+  const [, setNetworkSpeed] = useState<FeeLabel>(FeeLabel.Average)
   const [error, setError] = useState('')
   const [errorMessage, setErrorMessage] = useState<ErrorMsgAndType>({
     msg: '',
@@ -92,6 +93,8 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const addressInput = useInputState('')
   const networkFee = useRef<NetworkFeeType>()
   const activeNetwork = useRecoilValue(networkState)
+  const [showFeeEditorModal, setShowFeeEditorModal] = useState<boolean>(false)
+  const [maxPressed, setMaxPressed] = useState(false)
 
   const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
@@ -129,8 +132,8 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     activeNetwork,
     balance,
     code,
-    route.params.customFee,
-    route.params.speed,
+    route?.params?.customFee,
+    route?.params?.speed,
     setNetworkSpeed,
   ])
 
@@ -265,21 +268,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   )
 
   const handleCustomPress = () => {
-    navigation.navigate(
-      isEIP1559() ? 'CustomFeeEIP1559Screen' : 'CustomFeeScreen',
-      {
-        assetData: route.params.assetData,
-        code,
-        screenTitle: labelTranslateFn('sendScreen.networkSpeed')!,
-        amountInput: amountInput.value,
-        fee: fee,
-        speedMode: networkSpeed,
-      },
-    )
-  }
-
-  const isEIP1559 = () => {
-    return isEIP1559Fees(chain)
+    setShowFeeEditorModal(true)
   }
 
   const handleQRCodeBtnPress = () => {
@@ -420,89 +409,97 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   ])
 
   return (
-    <Box flex={1} backgroundColor="mainBackground">
+    <Box flex={1} backgroundColor="mainBackground" paddingHorizontal="l">
       {getCompatibleErrorMsg()}
-      <Box flex={1} paddingVertical="l" paddingHorizontal="xl">
+      <Box flex={1} paddingVertical="l">
         {isCameraVisible && chain && (
           <QrCodeScanner chain={chain} onClose={handleCameraModalClose} />
         )}
         <Box>
           <Box
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="flex-end"
-            marginBottom="m">
+            paddingVertical="xl"
+            backgroundColor="blockBackgroundColor"
+            paddingHorizontal="l">
             <Box
-              flex={1}
-              backgroundColor="blockBackgroundColor"
-              paddingVertical="xl"
-              paddingHorizontal="l">
-              <Box
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="flex-end"
-                marginBottom="m">
-                <Text
-                  variant="secondaryInputLabel"
-                  tx="sendScreen.snd"
-                  fontFamily="Anek Kannada"
-                />
-                <Button
-                  label={
-                    showAmountsInFiat
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="flex-end"
+              marginBottom="m">
+              <Box flex={1}>
+                <Box flexDirection="row" alignItems="flex-end" marginBottom="m">
+                  <Text variant="secondaryInputLabel" tx="sendScreen.snd" />
+                  <Text variant="secondaryInputLabel" marginLeft="s">
+                    {code}
+                  </Text>
+                  <Text
+                    variant="amountLabel"
+                    marginLeft="s">{` ${availableAmount}`}</Text>
+                  <Text
+                    variant="amountLabel"
+                    tx="sendScreen.balance"
+                    marginLeft="s"
+                  />
+                </Box>
+                <Box flexDirection="row" alignItems="center">
+                  <TextInput
+                    style={styles.sendInput}
+                    keyboardType={'numeric'}
+                    onChangeText={handleOnChangeText}
+                    onFocus={() => setError('')}
+                    value={amountInput.value}
+                    autoCorrect={false}
+                    returnKeyType="done"
+                  />
+                  <AssetIcon
+                    size={scale(25)}
+                    chain={getAsset(activeNetwork, code).chain}
+                  />
+                  <AssetIcon
+                    size={scale(25)}
+                    styles={{ right: scale(10), top: scale(5) }}
+                    asset={code}
+                  />
+                  <Pressable>
+                    <ChevronRight />
+                  </Pressable>
+                </Box>
+                <Box flexDirection="row" alignItems="center">
+                  <Pressable onPress={handleFiatBtnPress}>
+                    <FiatSwapSwitch width={scale(20)} height={scale(15)} />
+                  </Pressable>
+                  <Text
+                    variant={'mainButtonLabel'}
+                    color={'darkGrey'}
+                    marginLeft="m"
+                    marginTop="s">
+                    {showAmountsInFiat
                       ? `${amountInNative} ${code}`
-                      : `$${amountInFiat}`
-                  }
-                  type="tertiary"
-                  variant="s"
-                  onPress={handleFiatBtnPress}
-                />
+                      : `$${amountInFiat}`}
+                  </Text>
+                </Box>
               </Box>
-              <TextInput
-                style={[
-                  styles.sendInputCurrency,
-                  styles.sendInput,
-                  { color: chainDefaultColors[chain] },
-                ]}
-                keyboardType={'numeric'}
-                onChangeText={handleOnChangeText}
-                onFocus={() => setError('')}
-                value={amountInput.value}
-                autoCorrect={false}
-                returnKeyType="done"
-              />
             </Box>
-            <Box flexDirection="row" alignItems="flex-end">
-              <AssetIcon
-                asset={code}
-                chain={getAsset(activeNetwork, code).chain}
-              />
-              <Text style={styles.assetName}>{code}</Text>
-            </Box>
-          </Box>
-          <Box
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="flex-end"
-            marginBottom="m">
-            <Box flexDirection="row" alignItems={'baseline'}>
-              <Text variant="amountLabel" tx="sendScreen.available" />
-              <Text variant="amount">{` ${availableAmount} ${code}`}</Text>
-            </Box>
-            <Button
-              label={{ tx: 'sendScreen.max' }}
-              type="tertiary"
-              variant="s"
+            <Pressable
               onPress={() => {
-                let afterFeeDeduction = new BigNumber(availableAmount)
-                if (networkFee.current?.value) {
-                  afterFeeDeduction = afterFeeDeduction
-                    .minus(getSendFee(code, networkFee.current?.value))
-                    .dp(9)
+                if (maxPressed) {
+                  handleOnChangeText('0')
+                } else {
+                  let afterFeeDeduction = new BigNumber(availableAmount)
+                  if (networkFee.current?.value) {
+                    afterFeeDeduction = afterFeeDeduction
+                      .minus(getSendFee(code, networkFee.current?.value))
+                      .dp(9)
+                  }
+                  handleOnChangeText(afterFeeDeduction.toString())
                 }
-                handleOnChangeText(afterFeeDeduction.toString())
-              }}
-            />
+
+                setMaxPressed(!maxPressed)
+              }}>
+              <Text
+                tx={'sendScreen.max'}
+                color={maxPressed ? 'activeLink' : 'inactiveLink'}
+              />
+            </Pressable>
           </Box>
           <Box
             marginTop={'xl'}
@@ -513,13 +510,15 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             <Box
               flexDirection="row"
               justifyContent="space-between"
-              alignItems="flex-end"
+              alignItems="center"
               marginBottom="m">
               <TextInput
+                style={styles.sendToInput}
                 onChangeText={addressInput.onChangeText}
                 onFocus={() => setError('')}
                 value={addressInput.value}
                 placeholderTx="sendScreen.address"
+                placeholderTextColor={faceliftPalette.greyMeta}
                 autoCorrect={false}
                 returnKeyType="done"
               />
@@ -553,6 +552,17 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               Network Speed
             </Text>
           </Pressable>
+          {showFeeEditorModal && (
+            <FeeEditorScreen
+              onClose={setShowFeeEditorModal}
+              selectedAsset={code}
+              amount={new BigNumber(amountInput.value)}
+              applyFee={(fee) => {
+                setCustomFee(fee.toNumber)
+                setShowFeeEditorModal(false)
+              }}
+            />
+          )}
           {!!error && <Text variant="error">{error}</Text>}
         </Box>
         <ButtonFooter>
@@ -562,12 +572,21 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             label={{
               tx: errorMessage.msg
                 ? 'sendScreen.insufficientFund'
-                : 'common.review',
+                : 'common.send',
             }}
             onPress={handleReviewPress}
             isBorderless={true}
             isActive={!errorMessage.msg}
-          />
+            appendChildren={false}>
+            <Box alignItems={'center'} justifyContent={'center'}>
+              <ArrowUp
+                width={scale(11)}
+                height={scale(13)}
+                stroke={faceliftPalette.white}
+                style={styles.buttonIcon}
+              />
+            </Box>
+          </Button>
           <Button
             type="secondary"
             variant="l"
@@ -586,28 +605,13 @@ const styles = StyleSheet.create({
   sendInput: {
     fontFamily: Fonts.Regular,
     fontWeight: '300',
-    fontSize: 28,
-    textAlign: 'right',
-    lineHeight: 40,
-    height: 40,
-    width: '100%',
-    color: palette.darkYellow,
+    fontSize: scale(39),
+    width: '80%',
   },
-  sendInputCurrency: {
+  sendToInput: {
     fontFamily: Fonts.Regular,
     fontWeight: '300',
-    fontSize: 28,
-    textAlign: 'right',
-    color: palette.darkYellow,
-    lineHeight: 50,
-    height: 40,
-    paddingRight: 5,
-  },
-  assetName: {
-    fontFamily: Fonts.Regular,
-    fontWeight: '300',
-    fontSize: 24,
-    lineHeight: 30,
+    fontSize: scale(19),
   },
   textRegular: {
     fontFamily: Fonts.Regular,
@@ -616,6 +620,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 25,
     letterSpacing: 0.5,
+  },
+  buttonIcon: {
+    marginRight: 5,
   },
 })
 

@@ -16,12 +16,9 @@ const ButtonFooter: React.FC<ButtonFooterProps> = ({
       flexDirection={'column'}
       justifyContent="center"
       paddingBottom={'m'}
-      paddingHorizontal="l"
       style={!unpositioned && styles.container_absolute}>
       {Children.map(children, (child, key) => (
-        <Box key={key} style={styles.item}>
-          {child}
-        </Box>
+        <Box key={key}>{child}</Box>
       ))}
     </Box>
   )
@@ -33,11 +30,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-  },
-  item: {
-    paddingLeft: 10,
-    paddingRight: 10,
-    flex: 1,
   },
 })
 

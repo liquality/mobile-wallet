@@ -15,7 +15,7 @@ export const faceliftPalette = {
   greyBlack: '#000D35',
   buttonActive: '#7700D5',
   buttonInactive: '#EEEEEE',
-  buttonDefault: '#9742FB',
+  active: '#9742FB',
   buttonDisabled: '#BA62FE',
   gradientStartColor: '#1EAB94',
   gradientMiddeColor: '#853DE0',
@@ -36,5 +36,9 @@ export const faceliftPalette = {
   linkTextColor: '#8835E7',
   transGrey: '#F9F9F9',
   error: '#EF0505',
+  slow: '#FF740F',
+  average: '#4F67E4',
+  fast: '#3AB24D',
+  selectedBackground: '#F8F0FF',
   semiTransparentGrey: 'rgba(61, 71,103, 0.8)',
 }

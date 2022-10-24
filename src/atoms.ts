@@ -155,6 +155,11 @@ export const showFilterState = atom<boolean>({
   default: false,
 })
 
+export const selectedAssetState = atom<string>({
+  key: 'selectedAsset',
+  default: 'BTC',
+})
+
 //---------- ATOM FAMILIES----------------
 export const accountInfoStateFamily = atomFamily<Partial<AccountType>, string>({
   key: 'AccountInfo',
@@ -313,4 +318,9 @@ export const totalFiatBalanceState = selector<string>({
 
     return formatFiat(totalFiatBalance).toString()
   },
+})
+
+export const assetScreenPopupMenuVisible = atom<boolean>({
+  key: 'AssetScreenPopupMenu',
+  default: false,
 })
