@@ -1,50 +1,45 @@
 import React from 'react'
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import {
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native'
 import { Box, faceliftPalette, Pressable, Text } from '../theme'
 import { Fonts, AppIcons } from '../assets'
-import BottomDrawer from 'react-native-bottom-drawer-view'
 import { NFTAsset } from '../types'
 import { AccountId } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilValue } from 'recoil'
 import { accountInfoStateFamily } from '../atoms'
+import { labelTranslateFn } from '../utils'
+
 type ReviewDrawerProps = {
   handlePressSend: () => void
-  height: number
   title: string
   nftItem?: NFTAsset[]
-  accountIdsToSendIn?: string[]
   destinationAddress: string
   accountId: AccountId
-  showDrawer: (show: boolean) => void
+  setShowDrawer: (show: boolean) => void
 }
 
-const { XIcon } = AppIcons
+const { BuyCryptoCloseLight } = AppIcons
 const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
   const {
     handlePressSend,
-    nftItem,
-    height,
     title,
     accountId,
     destinationAddress,
-    showDrawer,
+    setShowDrawer,
+    nftItem,
   } = props
-
   const accountInfo = useRecoilValue(accountInfoStateFamily(accountId))
 
   const renderNftSendContent = () => {
     return (
       <Box style={styles.drawerContainer}>
-        {/* TODO: Fix the styling of this */}
-        <TouchableOpacity
-          onPress={() => {
-            showDrawer(false)
-          }}>
-          <XIcon width={20} height={20} />
-        </TouchableOpacity>
         <Text style={(styles.text, styles.drawerTitle)}>{title}</Text>
         <Text style={(styles.text, styles.subheadingText)}>
-          Network/Speed Fee
+          {labelTranslateFn('nft.speedFee')}
         </Text>
         <Box flexDirection={'row'}>
           <Text style={(styles.text, styles.subheadingInfo)}>
@@ -52,16 +47,24 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
             ~0.004325 ETH | $13.54
           </Text>
         </Box>
-        <Text style={(styles.text, styles.subheadingText)}>Send To</Text>
+        <Text style={(styles.text, styles.subheadingText)}>
+          {labelTranslateFn('nft.sendTo')}{' '}
+        </Text>
         <Text style={(styles.text, styles.subheadingInfo)}>
           {accountInfo.chain}
         </Text>
-        <Text style={(styles.text, styles.subheadingInfo)}>
+        <Text
+          style={(styles.text, styles.subheadingInfo)}
+          paddingBottom={'xxl'}>
           {destinationAddress}
         </Text>
 
         <Box alignItems={'center'} paddingTop={'xl'}>
-          <Pressable variant="solid" label={'Send'} onPress={handlePressSend} />
+          <Pressable
+            variant="solid"
+            label={{ tx: 'nft.sendNft' }}
+            onPress={handlePressSend}
+          />
         </Box>
       </Box>
     )
@@ -79,34 +82,43 @@ const ReviewDrawer: React.FC<ReviewDrawerProps> = (props) => {
   }
 
   return (
-    <Box flex={1} style={styles.overviewBlock}>
-      <BottomDrawer
-        containerHeight={height}
-        downDisplay={580}
-        offset={0}
-        startUp={true}
-        roundedEdges={false}
-        backgroundColor={faceliftPalette.white}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <TouchableOpacity>
-            {nftItem ? renderNftSendContent() : renderSwapReviewContent()}
+    <Box style={styles.container}>
+      <ScrollView style={styles.reviewContent}>
+        <Box marginTop={'xl'} alignItems="flex-end" padding={'screenPadding'}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              setShowDrawer(false)
+            }}>
+            <BuyCryptoCloseLight />
           </TouchableOpacity>
-        </ScrollView>
-      </BottomDrawer>
+        </Box>
+        <Box
+          flex={1}
+          backgroundColor="mainBackground"
+          paddingHorizontal={'screenPadding'}
+          paddingBottom={'xxl'}>
+          {nftItem ? renderNftSendContent() : renderSwapReviewContent()}
+        </Box>
+      </ScrollView>
     </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  drawerContainer: { paddingHorizontal: 35, paddingVertical: 20 },
-
-  overviewBlock: {
-    justifyContent: 'center',
-    width: '100%',
-    height: 225,
-    backgroundColor: faceliftPalette.white,
+  container: {
+    backgroundColor: faceliftPalette.semiTransparentGrey,
+    position: 'absolute',
+    height: Dimensions.get('screen').height,
+    width: Dimensions.get('screen').width,
     zIndex: 100,
   },
+  reviewContent: {
+    position: 'absolute',
+    bottom: 0,
+    width: Dimensions.get('screen').width,
+  },
+  drawerContainer: { paddingHorizontal: 15, paddingVertical: 20 },
 
   text: {
     fontFamily: Fonts.Regular,
