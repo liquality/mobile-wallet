@@ -434,7 +434,10 @@
     "send": "Send",
     "share": "Share",
     "sell": "Sell",
-    "addressCopied": "Address Copied!"
+    "addressCopied": "Address Copied!",
+    "sendNft": "Send NFT",
+    "sendTo": "Send To",
+    "speedFee": "Network/Speed Fee"
   },
   "letGetYouStarted": "Let’s Get You Started",
   "buyCrypto": "Buy Crypto",
