@@ -8,7 +8,7 @@ import { useRecoilValue } from 'recoil'
 import { emitterController } from '../../controllers/emitterController'
 import { INJECTION_REQUESTS } from '../../controllers/constants'
 import ButtonFooter from '../../components/button-footer'
-import { Box, Button } from '../../theme'
+import { Box, Button, Text } from '../../theme'
 import { RootStackParamList } from '../../types'
 import { networkState } from '../../atoms'
 import { Fonts } from '../../assets'
@@ -24,6 +24,7 @@ const wallet = setupWallet({
 })
 const InitInjectionScreen = ({ route }: NftDetailScreenProps) => {
   const { activeWalletId } = wallet.state
+  console.log(wallet.state, 'Wallet state')
   const activeNetwork = useRecoilValue(networkState)
 
   const [isOpen, setIsOpen] = useState(false)
@@ -51,7 +52,9 @@ const InitInjectionScreen = ({ route }: NftDetailScreenProps) => {
   }
 
   return (
-    <Box flex={1} backgroundColor={'white'}>
+    <Box flex={1} backgroundColor={'white'} padding={'xxl'}>
+      <Text style={styles.text}>Connection Request</Text>
+
       <ButtonFooter>
         <Button
           type="primary"

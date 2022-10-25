@@ -78,8 +78,11 @@ import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-scree
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
 import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
-import QrCodeScanner from './qr-code-scanner'
+//import QrCodeScanner from './qr-code-scanner'
+import QRCodeScanner from 'react-native-qrcode-scanner'
+import { RNCamera } from 'react-native-camera'
 import InitInjectionScreen from '../screens/wallet-injection/initiate-injection-screen'
+import WalletConnectController from '../controllers/walletConnectController'
 
 const {
   SwapCheck,
@@ -283,7 +286,14 @@ const AppStackHeaderLeft = (navProps: NavigationProps) => {
   const canGoBack = navigation.canGoBack()
 
   const [showQRScanner, setShowQRScanner] = useState(false)
-
+  const onSuccess = (e) => {
+    /* Linking.openURL(e.data).catch(err =>
+      console.error('An error occured', err)
+    ); */
+    console.log(e, 'SUCCESS READING QR')
+    new WalletConnectController(e.data)
+    navigation.navigate('InitInjectionScreen', { uri: e.data })
+  }
   return (
     <Box flexDirection={'row'} alignItems="center">
       {canGoBack ? (
@@ -297,14 +307,26 @@ const AppStackHeaderLeft = (navProps: NavigationProps) => {
         <ThemeIcon iconName="OnlyLqLogo" />
       </Box>
       {showQRScanner ? (
-        <QrCodeScanner
-          onClose={() => setShowQRScanner(false)}
-          chain={'ethereum'}
+        <QRCodeScanner
+          onRead={onSuccess}
+          flashMode={RNCamera.Constants.FlashMode.torch}
+          topContent={
+            <Text style={styles.centerText}>
+              Go to{' '}
+              <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
+              your computer and scan the QR code.
+            </Text>
+          }
+          bottomContent={
+            <TouchableOpacity style={styles.buttonTouchable}>
+              <Text style={styles.buttonText}>OK. Got it!</Text>
+            </TouchableOpacity>
+          }
         />
       ) : (
         <View style={styles.container}>
           <Pressable onPress={() => setShowQRScanner(true)}>
-            <Text color={'black'}>QR SCANNER</Text>
+            <Text color={'black'}>QR SCANNER!!</Text>
           </Pressable>
         </View>
       )}
@@ -878,5 +900,28 @@ export const StackMainNavigator = () => {
 const styles = StyleSheet.create({
   checkIcon: {
     marginRight: 20,
+  },
+
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  centerText: {
+    flex: 1,
+    fontSize: 18,
+    padding: 32,
+    color: '#777',
+  },
+  textBold: {
+    fontWeight: '500',
+    color: '#000',
+  },
+  buttonText: {
+    fontSize: 21,
+    color: 'rgb(0,122,255)',
+  },
+  buttonTouchable: {
+    padding: 16,
   },
 })

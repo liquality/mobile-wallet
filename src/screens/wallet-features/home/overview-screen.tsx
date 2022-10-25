@@ -47,7 +47,7 @@ const OverviewScreen = ({ route, navigation }: OverviewProps) => {
   const [showInjectionModal, setShowInjectionModal] = React.useState(false)
   const [eventData, setEventData] = React.useState({})
 
-  console.log(route.params, 'what is route params?')
+  console.log(route.params, 'what sis route params?')
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
