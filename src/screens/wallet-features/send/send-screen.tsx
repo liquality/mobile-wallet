@@ -119,86 +119,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     return true
   }, [activeNetwork, addressInput.value, amountInput.value, balance, chain])
 
-  useEffect(() => {
-    showSendToast('sendToast', {
-      errorMessage: {
-        msg: 'error',
-        type: customFee
-          ? ErrorMessages.NotEnoughCoverFees
-          : ErrorMessages.NotEnoughGas,
-      },
-      onGetPress,
-      onMaxPress,
-      code,
-      amount: amountInput.value,
-    })
-  }, [amountInput.value, code, customFee, errorMessage, onGetPress, onMaxPress])
-
-  useEffect(() => {
-    if (route.params.customFee && balance) {
-      setCustomFee(route.params.customFee)
-      const calculatedAmt = calculateAvailableAmnt(
-        activeNetwork,
-        code,
-        route.params.customFee,
-        balance,
-      )
-      setAvailableAmount(calculatedAmt)
-      if (route.params.speed) {
-        setNetworkSpeed(route.params.speed)
-      }
-    }
-  }, [
-    activeNetwork,
-    balance,
-    code,
-    route?.params?.customFee,
-    route?.params?.speed,
-    setNetworkSpeed,
-  ])
-
-  useEffect(() => {
-    let feeInUnit
-    customFee
-      ? (feeInUnit = customFee)
-      : (feeInUnit = networkFee?.current?.value)
-    if (feeInUnit) {
-      let total = new BigNumber(amountInput.value)
-        .plus(getSendFee(code, feeInUnit))
-        .dp(9)
-      const availAmtBN = new BigNumber(availableAmount)
-      const amtInpBN = new BigNumber(amountInput.value)
-      if (
-        !availAmtBN.eq(0) &&
-        availAmtBN.eq(amtInpBN) &&
-        availAmtBN.lt(total)
-      ) {
-        setErrorMessage({
-          msg: 'error',
-          type: customFee
-            ? ErrorMessages.NotEnoughCoverFees
-            : ErrorMessages.NotEnoughGas,
-        })
-      }
-    }
-  }, [amountInput.value, code, customFee, availableAmount])
-
-  useEffect(() => {
-    fetchFeesForAsset(code).then((gasFee) => {
-      setFee(gasFee)
-      const calculatedAmt = calculateAvailableAmnt(
-        activeNetwork,
-        code,
-        getSendFee(code, gasFee.average.toNumber()).toNumber(),
-        balance,
-      )
-      if (balance === 0) {
-        setErrorMessage({ msg: 'error', type: ErrorMessages.NotEnoughToken })
-      }
-      setAvailableAmount(calculatedAmt)
-    })
-  }, [code, chain, balance, activeNetwork])
-
   const handleReviewPress = useCallback(() => {
     let feeInUnit
     customFee
@@ -315,6 +235,88 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     },
     [addressInput, isCameraVisible],
   )
+
+  useEffect(() => {
+    if (errorMessage.msg) {
+      showSendToast('sendToast', {
+        errorMessage: {
+          msg: 'error',
+          type: customFee
+            ? ErrorMessages.NotEnoughCoverFees
+            : ErrorMessages.NotEnoughGas,
+        },
+        onGetPress,
+        onMaxPress,
+        code,
+        amount: amountInput.value,
+      })
+    }
+  }, [amountInput.value, code, customFee, errorMessage, onGetPress, onMaxPress])
+
+  useEffect(() => {
+    if (route.params.customFee && balance) {
+      setCustomFee(route.params.customFee)
+      const calculatedAmt = calculateAvailableAmnt(
+        activeNetwork,
+        code,
+        route.params.customFee,
+        balance,
+      )
+      setAvailableAmount(calculatedAmt)
+      if (route.params.speed) {
+        setNetworkSpeed(route.params.speed)
+      }
+    }
+  }, [
+    activeNetwork,
+    balance,
+    code,
+    route?.params?.customFee,
+    route?.params?.speed,
+    setNetworkSpeed,
+  ])
+
+  useEffect(() => {
+    let feeInUnit
+    customFee
+      ? (feeInUnit = customFee)
+      : (feeInUnit = networkFee?.current?.value)
+    if (feeInUnit) {
+      let total = new BigNumber(amountInput.value)
+        .plus(getSendFee(code, feeInUnit))
+        .dp(9)
+      const availAmtBN = new BigNumber(availableAmount)
+      const amtInpBN = new BigNumber(amountInput.value)
+      if (
+        !availAmtBN.eq(0) &&
+        availAmtBN.eq(amtInpBN) &&
+        availAmtBN.lt(total)
+      ) {
+        setErrorMessage({
+          msg: 'error',
+          type: customFee
+            ? ErrorMessages.NotEnoughCoverFees
+            : ErrorMessages.NotEnoughGas,
+        })
+      }
+    }
+  }, [amountInput.value, code, customFee, availableAmount])
+
+  useEffect(() => {
+    fetchFeesForAsset(code).then((gasFee) => {
+      setFee(gasFee)
+      const calculatedAmt = calculateAvailableAmnt(
+        activeNetwork,
+        code,
+        getSendFee(code, gasFee.average.toNumber()).toNumber(),
+        balance,
+      )
+      if (balance === 0) {
+        setErrorMessage({ msg: 'error', type: ErrorMessages.NotEnoughToken })
+      }
+      setAvailableAmount(calculatedAmt)
+    })
+  }, [code, chain, balance, activeNetwork])
 
   return (
     <Box flex={1} backgroundColor="mainBackground" paddingHorizontal="l">
