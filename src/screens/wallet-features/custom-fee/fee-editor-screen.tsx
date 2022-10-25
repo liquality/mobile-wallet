@@ -70,6 +70,7 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { GasFees, TotalFees } from '../../../types'
+import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 
 type LikelyWaitObjType = {
   slow: number | undefined
@@ -80,12 +81,11 @@ type LikelyWaitObjType = {
 type PresetType = {
   amount: string
   fiat: string
-  max: string
+  max: string | null
 }
-type SpeedType = 'slow' | 'average' | 'fast'
-const SLOW = 'slow'
-const AVERAGE = 'average'
-const FAST = 'fast'
+type PresetObjectType = {
+  [K in FeeLabel]?: PresetType
+}
 
 const StandardRoute = ({
   selectedAsset,
@@ -94,11 +94,11 @@ const StandardRoute = ({
 }: {
   selectedAsset: string
   amount: BigNumber
-  applyFee: (fee: BigNumber) => void
+  applyFee: (fee: BigNumber, speed: FeeLabel) => void
 }) => {
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
-  const [speed, setSpeed] = useState<SpeedType | undefined>()
+  const [speed, setSpeed] = useState<FeeLabel | undefined>()
   const [, setError] = useState('')
   const [gasFees, setGasFees] = useState<FDs>()
   const [totalFees, setTotalFees] = useState<TotalFees | undefined>()
@@ -109,18 +109,17 @@ const StandardRoute = ({
     ...defaultOptions,
   })
   const { activeWalletId, fees } = wallet.state
-  const [presets, setPresets] = useState<{
-    speed: SpeedType
-    preset: PresetType
-  }>({})
+  const [presets, setPresets] = useState<PresetObjectType>({})
 
   const handleApplyPress = () => {
-    applyFee(new BigNumber(computePreset(speed)?.amount))
+    if (!speed) return
+    const computed = computePreset(speed)?.amount
+    if (computed) applyFee(new BigNumber(computed), speed)
   }
 
   const computePreset = useCallback(
-    (speedValue: SpeedType) => {
-      if (!fee) return
+    (speedValue: FeeLabel): PresetType | undefined => {
+      if (!fee) return undefined
       let preset = gasFees?.[speedValue] || null
       let totalFeesSpeed = totalFees?.[speedValue] || null
       let feeInSatOrGwei = fee?.[speedValue] || fee
@@ -180,10 +179,10 @@ const StandardRoute = ({
       setTotalFees(totalFeesData)
     }
     fetchData()
-    const presetObject = {
-      [SLOW]: computePreset(SLOW),
-      [AVERAGE]: computePreset(AVERAGE),
-      [FAST]: computePreset(FAST),
+    const presetObject: PresetObjectType = {
+      [FeeLabel.Slow]: computePreset(FeeLabel.Slow),
+      [FeeLabel.Average]: computePreset(FeeLabel.Average),
+      [FeeLabel.Fast]: computePreset(FeeLabel.Fast),
     }
     setPresets(presetObject)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -201,68 +200,70 @@ const StandardRoute = ({
         flexDirection="row"
         justifyContent="space-between"
         marginTop="xl">
-        {Array.of<SpeedType>(SLOW, AVERAGE, FAST).map((speedType) => (
-          <Pressable
-            key={uuidv4()}
-            onPress={() => {
-              setSpeed(speedType)
-            }}>
-            <Box
-              backgroundColor={
-                speed === speedType
-                  ? 'selectedBackgroundColor'
-                  : 'blockBackgroundColor'
-              }
-              padding="l"
-              width={scale(108)}
-              height={scale(274)}
-              borderRadius={3}>
-              {speedType === SLOW ? (
-                <SlowIcon />
-              ) : speedType === AVERAGE ? (
-                <AverageIcon />
-              ) : (
-                <FastIcon />
-              )}
-              <Text
-                variant="gasIndicatorLabel"
-                color="slowColor"
-                marginTop="xl">
-                {speedType.toUpperCase()}
-              </Text>
-              <Text variant="normalText" color="slowColor">
-                {gasFees?.[speedType]?.wait
-                  ? `~ ${gasFees[speedType].wait / 1000}s`
-                  : ''}
-              </Text>
-              {gasFees?.[speedType]?.fee && (
-                <Text
-                  variant="normalText"
-                  color="textColor"
-                  lineBreakMode={'middle'}
-                  numberOfLines={2}
-                  marginTop="l">
-                  ~ {`${selectedAsset} ${presets[speedType]?.amount}`}
-                </Text>
-              )}
-
-              <Text variant="normalText" color="textColor">
-                {`$${presets[speedType]?.fiat}`}
-              </Text>
-              {isEIP1559Fees(getAsset(activeNetwork, selectedAsset).chain) &&
-                gasFees?.[speedType].fee && (
-                  <Fragment>
-                    <Text variant="normalText" color="greyMeta" marginTop="l">
-                      {labelTranslateFn('customFeeScreen.max')}
-                    </Text>
-                    <Text variant="normalText" color="greyMeta">
-                      {`$${presets[speedType]?.max}`}
-                    </Text>
-                  </Fragment>
+        {Array.of<FeeLabel>(FeeLabel.Slow, FeeLabel.Average, FeeLabel.Fast).map(
+          (feeLabel) => (
+            <Pressable
+              key={uuidv4()}
+              onPress={() => {
+                setSpeed(feeLabel)
+              }}>
+              <Box
+                backgroundColor={
+                  speed === feeLabel
+                    ? 'selectedBackgroundColor'
+                    : 'blockBackgroundColor'
+                }
+                padding="l"
+                width={scale(108)}
+                height={scale(274)}
+                borderRadius={3}>
+                {feeLabel === FeeLabel.Slow ? (
+                  <SlowIcon />
+                ) : feeLabel === FeeLabel.Average ? (
+                  <AverageIcon />
+                ) : (
+                  <FastIcon />
                 )}
-            </Box>
-          </Pressable>
-        ))}
+                <Text
+                  variant="gasIndicatorLabel"
+                  color="slowColor"
+                  marginTop="xl">
+                  {feeLabel.toUpperCase()}
+                </Text>
+                <Text variant="normalText" color="slowColor">
+                  {gasFees?.[feeLabel]?.wait
+                    ? `~ ${gasFees[feeLabel].wait / 1000}s`
+                    : ''}
+                </Text>
+                {gasFees?.[feeLabel]?.fee && (
+                  <Text
+                    variant="normalText"
+                    color="textColor"
+                    lineBreakMode={'middle'}
+                    numberOfLines={2}
+                    marginTop="l">
+                    ~ {`${selectedAsset} ${presets[feeLabel]?.amount}`}
+                  </Text>
+                )}
+
+                <Text variant="normalText" color="textColor">
+                  {`$${presets[feeLabel]?.fiat}`}
+                </Text>
+                {isEIP1559Fees(getAsset(activeNetwork, selectedAsset).chain) &&
+                  gasFees?.[feeLabel].fee && (
+                    <Fragment>
+                      <Text variant="normalText" color="greyMeta" marginTop="l">
+                        {labelTranslateFn('customFeeScreen.max')}
+                      </Text>
+                      <Text variant="normalText" color="greyMeta">
+                        {`$${presets[feeLabel]?.max}`}
+                      </Text>
+                    </Fragment>
+                  )}
+              </Box>
+            </Pressable>
+          ),
+        )}
       </Box>
       <ButtonFooter>
         <Button
@@ -288,12 +289,12 @@ const CustomizeRoute = ({
 }: {
   selectedAsset: string
   amount: BigNumber
-  applyFee: (fee: BigNumber) => void
+  applyFee: (fee: BigNumber, speed: FeeLabel) => void
 }) => {
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
   const [unit, setUnit] = useState<string | undefined>()
-  const [speed, setSpeed] = useState<SpeedType>(SLOW)
+  const [speed, setSpeed] = useState<FeeLabel>(FeeLabel.Slow)
   const [, setError] = useState('')
   const [currentBaseFee, setCurrentBaseFee] = useState()
   const [gasFees, setGasFees] = useState<FDs>()
@@ -311,6 +312,7 @@ const CustomizeRoute = ({
   const handleApplyPress = () => {
     applyFee(
       new BigNumber(minerTipInput.value).plus(new BigNumber(maxFeeInput.value)),
+      speed,
     )
   }
 
@@ -476,7 +478,11 @@ const CustomizeRoute = ({
               style={styles.transparentBottomBorder}>
               {'|'}
             </Text>
-            {Array.of<SpeedType>(SLOW, AVERAGE, FAST).map((speedValue) => (
+            {Array.of<FeeLabel>(
+              FeeLabel.Slow,
+              FeeLabel.Average,
+              FeeLabel.Fast,
+            ).map((speedValue) => (
               <Box marginRight="m" key={uuidv4()}>
                 <Pressable
                   style={
@@ -529,9 +535,9 @@ const CustomizeRoute = ({
         </Box>
 
         <Box flexDirection="row" marginVertical="xl">
-          {speed === SLOW ? (
+          {speed === FeeLabel.Slow ? (
             <SlowIcon width={scale(20)} height={scale(20)} />
-          ) : speed === AVERAGE ? (
+          ) : speed === FeeLabel.Average ? (
             <AverageIcon width={scale(20)} height={scale(20)} />
           ) : (
             <FastIcon width={scale(20)} height={scale(20)} />
@@ -593,7 +599,7 @@ type FeeEditorScreenType = {
   onClose: Dispatch<SetStateAction<boolean>>
   amount: BigNumber
   selectedAsset: string
-  applyFee: (fee: BigNumber) => void
+  applyFee: (fee: BigNumber, speed: FeeLabel) => void
 }
 
 const FeeEditorScreen = ({

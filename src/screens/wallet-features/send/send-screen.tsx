@@ -260,29 +260,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   }, [amountInNative, code, customFee, errorMessage, onGetPress, onMaxPress])
 
   useEffect(() => {
-    if (route.params.customFee && balance) {
-      setCustomFee(route.params.customFee)
-      const calculatedAmt = calculateAvailableAmnt(
-        activeNetwork,
-        code,
-        route.params.customFee,
-        balance,
-      )
-      setAvailableAmount(calculatedAmt)
-      if (route.params.speed) {
-        setNetworkSpeed(route.params.speed)
-      }
-    }
-  }, [
-    activeNetwork,
-    balance,
-    code,
-    route?.params?.customFee,
-    route?.params?.speed,
-    setNetworkSpeed,
-  ])
-
-  useEffect(() => {
     let feeInUnit
     customFee
       ? (feeInUnit = customFee)
@@ -323,6 +300,20 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       setAvailableAmount(calculatedAmt)
     })
   }, [code, chain, balance, activeNetwork])
+
+  const applyFee = (fee: BigNumber, speed: FeeLabel) => {
+    if (!fee) return
+    const calculatedAmt = calculateAvailableAmnt(
+      activeNetwork,
+      code,
+      fee.toNumber(),
+      balance,
+    )
+    setAvailableAmount(calculatedAmt)
+    setCustomFee(fee.toNumber())
+    setNetworkSpeed(speed)
+    setShowFeeEditorModal(false)
+  }
 
   return (
     <Box flex={1} backgroundColor="mainBackground" paddingHorizontal="l">
@@ -481,10 +472,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               onClose={setShowFeeEditorModal}
               selectedAsset={code}
               amount={new BigNumber(amountInput.value)}
-              applyFee={(fee) => {
-                setCustomFee(fee.toNumber)
-                setShowFeeEditorModal(false)
-              }}
+              applyFee={applyFee}
             />
           )}
         </Box>
