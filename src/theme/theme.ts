@@ -65,6 +65,8 @@ export const theme = createTheme({
     activeLink: faceliftPalette.active,
     inactiveLink: faceliftPalette.black,
     semiTransparentGrey: faceliftPalette.semiTransparentGrey,
+    sectionTitleColor: palette.sectionTitleColor,
+    warningButton: faceliftPalette.warningButton,
   },
   spacing: {
     vs: scale(2),
@@ -174,7 +176,7 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontWeight: '400',
       fontSize: 12,
-      color: 'buttonFontTertiary',
+      color: 'activeLink',
     },
     amount: {
       fontFamily: Fonts.Regular,
@@ -555,7 +557,7 @@ export const theme = createTheme({
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: 'm',
+      paddingHorizontal: 's',
       borderRadius: 2,
       height: 20,
     },
