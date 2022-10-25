@@ -323,4 +323,5 @@ export type SendToastProps = {
   amount: string
   onGetPress: () => void
   onMaxPress: () => void
+  resetMsg: () => void
 }

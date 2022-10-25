@@ -167,6 +167,7 @@ export const toastConfig: ToastConfig = {
     }
 
     const handleToastHide = () => {
+      props.resetMsg()
       Toast.hide()
     }
 
@@ -209,6 +210,7 @@ export const showCopyToast = (toastType: ToastType, toastMsg: string) => {
 export const showSendToast = (toastType: ToastType, props: SendToastProps) => {
   Toast.show({
     type: toastType,
+    autoHide: false,
     props,
   })
 }

@@ -174,7 +174,24 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         return
       }
 
-      const textInBN = new BigNumber(text)
+      let nativeAmnt = 0
+      let fiatAmnt = 0
+
+      if (showAmountsInFiat) {
+        nativeAmnt = new BigNumber(
+          fiatToCrypto(new BigNumber(text || 0), fiatRates[code!]),
+        ).toNumber()
+        fiatAmnt = new BigNumber(text || 0).toNumber()
+      } else {
+        fiatAmnt = new BigNumber(
+          cryptoToFiat(new BigNumber(text || 0).toNumber(), fiatRates[code]),
+        ).toNumber()
+        nativeAmnt = new BigNumber(text || 0).toNumber()
+      }
+
+      setAmountInNative(nativeAmnt)
+      setAmountInFiat(fiatAmnt)
+      const textInBN = new BigNumber(nativeAmnt)
       if (textInBN.gt(availableAmount)) {
         setErrorMessage({
           msg: 'error',
@@ -185,22 +202,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           msg: '',
           type: null,
         })
-      }
-
-      if (showAmountsInFiat) {
-        setAmountInNative(
-          new BigNumber(
-            fiatToCrypto(new BigNumber(text || 0), fiatRates[code!]),
-          ).toNumber(),
-        )
-        setAmountInFiat(new BigNumber(text || 0).toNumber())
-      } else {
-        setAmountInFiat(
-          new BigNumber(
-            cryptoToFiat(new BigNumber(text || 0).toNumber(), fiatRates[code]),
-          ).toNumber(),
-        )
-        setAmountInNative(new BigNumber(text || 0).toNumber())
       }
       amountInput.onChangeText(text)
     },
@@ -236,6 +237,10 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     [addressInput, isCameraVisible],
   )
 
+  const resetMsg = () => {
+    setErrorMessage({ msg: '', type: null })
+  }
+
   useEffect(() => {
     if (errorMessage.msg) {
       showSendToast('sendToast', {
@@ -247,11 +252,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         },
         onGetPress,
         onMaxPress,
+        resetMsg,
         code,
-        amount: amountInput.value,
+        amount: amountInNative.toString(),
       })
     }
-  }, [amountInput.value, code, customFee, errorMessage, onGetPress, onMaxPress])
+  }, [amountInNative, code, customFee, errorMessage, onGetPress, onMaxPress])
 
   useEffect(() => {
     if (route.params.customFee && balance) {
@@ -282,11 +288,11 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       ? (feeInUnit = customFee)
       : (feeInUnit = networkFee?.current?.value)
     if (feeInUnit) {
-      let total = new BigNumber(amountInput.value)
+      let total = new BigNumber(amountInNative)
         .plus(getSendFee(code, feeInUnit))
         .dp(9)
       const availAmtBN = new BigNumber(availableAmount)
-      const amtInpBN = new BigNumber(amountInput.value)
+      const amtInpBN = new BigNumber(amountInNative)
       if (
         !availAmtBN.eq(0) &&
         availAmtBN.eq(amtInpBN) &&
@@ -300,7 +306,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         })
       }
     }
-  }, [amountInput.value, code, customFee, availableAmount])
+  }, [code, customFee, availableAmount, amountInNative])
 
   useEffect(() => {
     fetchFeesForAsset(code).then((gasFee) => {
