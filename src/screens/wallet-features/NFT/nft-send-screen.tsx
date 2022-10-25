@@ -148,10 +148,9 @@ const NftSendScreen = ({ navigation, route }: NftSendScreenProps) => {
           destinationAddress={addressInput.value}
           handlePressSend={sendNft}
           title={'Review Send NFT'}
-          height={441}
           nftItem={nftItem}
           accountId={accountId}
-          showDrawer={setShowReviewDrawer}
+          setShowDrawer={setShowReviewDrawer}
         />
       ) : null}
       {isCameraVisible ? (

@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil'
 import { Fonts } from '../../assets'
 import { accountForAssetState, networkState } from '../../atoms'
 import { Button, palette, Text } from '../../theme'
-import { approveWalletConnect } from '../../WalletConnect'
+import { approveWalletConnect } from '../../controllers/walletConnectController'
 
 type ApproveInjectionModal = {
   setShowInjectionModal: (param: boolean) => void

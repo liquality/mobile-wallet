@@ -103,9 +103,7 @@ import NftCard from '../assets/icons/nfts/nft-card-new.svg'
 import GreenCheckMark from '../assets/icons/nfts/green-check-mark.svg'
 import CheckmarkCircle from '../assets/icons/nfts/checkmark-circle.svg'
 import PurpleThreeDots from '../assets/icons/nfts/purple-three-dots.svg'
-
 import ConfirmationTrackerLine from '../assets/icons/nfts/confirmation-tracker.svg'
-
 import ShortLine from '../assets/icons/nfts/short-line.svg'
 import NetworkActiveDot from '../assets/icons/dot.svg'
 import Ellipses from '../assets/icons/ellipses.svg'
@@ -118,7 +116,8 @@ import TabWallet from '../assets/icons/tabWallet.svg'
 import TabNFTInactive from '../assets/icons/tabNFTInactive.svg'
 import TabSettingInactive from '../assets/icons/tabSettingInactive.svg'
 import TabWalletInactive from '../assets/icons/tabWalletInactive.svg'
-import TransakIcon from '../assets/icons/transak.svg'
+import TransakIcon from '../assets/icons/transakLogo.svg'
+import OnRamperIcon from '../assets/icons/onRamper.svg'
 import Filter from '../assets/icons/filter.svg'
 import Refresh from '../assets/icons/refresh.svg'
 import LightMoon from '../assets/icons/lightMoon.svg'
@@ -141,6 +140,9 @@ import SwapIconRed from '../assets/icons/swapIconRed.svg'
 import SwapSuccess from '../assets/icons/swapSucess.svg'
 import SwapRetry from '../assets/icons/swapRetry.svg'
 import SwapTknIcon from '../assets/icons/swapTknIcon.svg'
+import BuyCryptoCloseLight from '../assets/icons/buyCryptoCloseLight.svg'
+import BuyCryptoCloseDark from '../assets/icons/buyCryptoCloseDark.svg'
+import TiltedArrow from '../assets/icons/tiltedArrow.svg'
 
 export default {
   PendingSwap,
@@ -284,4 +286,8 @@ export default {
   SwapTknIcon,
   ChevronDown,
   ChevronUp,
+  BuyCryptoCloseLight,
+  BuyCryptoCloseDark,
+  OnRamperIcon,
+  TiltedArrow,
 }

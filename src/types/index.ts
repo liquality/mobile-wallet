@@ -128,6 +128,9 @@ export type StackPayload = {
   network?: Network
   accountName?: string
   shortenAddress?: string
+  isScrolledUp?: boolean
+  token?: string
+  showIntro?: boolean
 }
 
 export type SettingStackParamList = {
@@ -196,6 +199,7 @@ export type MainStackParamList = {
   }
   SettingsScreen: { shouldLogOut?: boolean }
   WithPopupMenu: undefined
+  BuyCryptoDrawer: StackPayload
   SelectChainScreen: undefined
   SwapDetailsScreen: StackPayload
 }

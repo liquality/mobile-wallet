@@ -20,7 +20,7 @@ const BackupWarningScreen: React.FC<
     const routeName: keyof MainStackParamList = isPrivateKey
       ? 'BackupPrivateKeyScreen'
       : 'BackupLoginScreen'
-    navigation.navigate(routeName, { ...route.params })
+    navigation.replace(routeName, { ...route.params })
   }, [navigation, isPrivateKey, route])
 
   return (

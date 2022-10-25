@@ -3,25 +3,16 @@ import { View, StyleSheet, Modal, SafeAreaView, Pressable } from 'react-native'
 import { ChainId, getChain } from '@liquality/cryptoassets'
 import Svg, { Rect } from 'react-native-svg'
 import Error from '../components/ui/error'
-/* import useFrameProcessor from 'react-native-camera'
-import useCameraDevices from 'react-native-camera' 
-import Camera from 'react-native-camera'
-*/
 import {
   Camera,
   useCameraDevices,
   useFrameProcessor,
 } from 'react-native-vision-camera'
-
-import scanBarcodes from 'react-native-camera'
-import BarcodeFormat from 'react-native-camera'
-import Barcode from 'react-native-camera'
-
-/* import {
+import {
   Barcode,
   BarcodeFormat,
   scanBarcodes,
-} from 'vision-camera-code-scanner' */
+} from 'vision-camera-code-scanner'
 import { runOnJS } from 'react-native-reanimated'
 import { labelTranslateFn } from '../utils'
 import { useRecoilValue } from 'recoil'
@@ -29,7 +20,9 @@ import { networkState, accountForAssetState } from '../atoms'
 import { AppIcons } from '../assets'
 import { palette } from '../theme'
 const { TimesIcon } = AppIcons
-import { initWalletConnect } from '../WalletConnect'
+import WalletConnectController, {
+  initWalletConnect,
+} from '../controllers/walletConnectController'
 import { useNavigation } from '@react-navigation/native'
 
 type QrCodeScannerPropsType = {
@@ -49,20 +42,22 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
 
   const devices = useCameraDevices()
   const device = devices.back
-  console.log(walletConnectPayload, 'WC PAYLOAD STATE')
-
+  console.log('Do i even get in the qr comp???')
   const onQRCodeDetected = useCallback(
     async (qrCode: Barcode) => {
       if (error) {
         setError('')
       }
       const address = qrCode.displayValue?.split(':')?.[1]
+      console.log(qrCode, 'QR STRING')
       if (address && getChain(activeNetwork, chain).isValidAddress(address)) {
         onClose(address)
       } else if (qrCode.displayValue?.startsWith('wc')) {
-        console.log('inside if')
+        console.log('inside if WC')
 
-        await initWalletConnect(qrCode.displayValue, function (wcPayload) {
+        //new WalletConnectController(qrCode.displayValue)
+
+        /*    await initWalletConnect(qrCode.displayValue, function (wcPayload) {
           console.log(wcPayload, 'wcPayload IN CALLBACKKK')
           setWalletConnectPayload({
             payload: wcPayload.payload,
@@ -71,18 +66,22 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
           })
           setError('Wallet connect connected')
           setShowInjectionFlow(true)
-        })
+        }) */
+
+        /*  navigation.navigate('InitInjectionScreen', {
+          someVal: 'someval',
+        }) */
       } else {
         setError(labelTranslateFn('invalidQRCode')!)
       }
     },
-    [activeNetwork, chain, error, onClose],
+    [activeNetwork, chain, error, navigation, onClose],
   )
 
   const frameProcessor = useFrameProcessor(
     (frame) => {
       'worklet'
-      const qrCodes = new scanBarcodes(frame, [BarcodeFormat.QR_CODE])
+      const qrCodes = scanBarcodes(frame, [BarcodeFormat.QR_CODE])
       if (qrCodes.length > 0) {
         runOnJS(onQRCodeDetected)(qrCodes[0])
       }
@@ -101,7 +100,7 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
     })()
   }, [])
 
-  useEffect(() => {
+  /*   useEffect(() => {
     async function fetchData() {
       if (showInjectionFlow && Object.keys(walletConnectPayload).length !== 0) {
         console.log(walletConnectPayload, 'WC payload')
@@ -113,7 +112,7 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
     }
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showInjectionFlow, navigation, walletConnectPayload])
+  }, [showInjectionFlow, navigation, walletConnectPayload]) */
 
   return (
     <Modal style={styles.modalView}>

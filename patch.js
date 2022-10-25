@@ -154,19 +154,4 @@ async function fixBrowserCheck(path) {
     'node_modules/@eth-optimism/core-utils/dist/optimism/batch-encoding.js',
     fixedZLibFile,
   )
-
-  //There is a bug for Vision camera for this RN version we are using see below issue:
-  //https://github.com/rodgomesc/vision-camera-code-scanner/issues/79
-  const visionCameraFile = await fs.readFile(
-    'node_modules/react-native-vision-camera/ios/Frame Processor/FrameProcessorPlugin.h',
-    { encoding: 'utf8' },
-  )
-  const fixedVisionCameraFile = visionCameraFile.replaceAll(
-    '__attribute__((constructor)) static void VISION_CONCAT(initialize_, objc_name)()',
-    '(void)load { [Foo swiftyLoad]; }',
-  )
-  await fs.writeFile(
-    'node_modules/react-native-vision-camera/ios/Frame Processor/FrameProcessorPlugin.h',
-    fixedVisionCameraFile,
-  )
 })()
