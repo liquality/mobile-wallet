@@ -317,7 +317,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     setShowFeeEditorModal(false)
   }
 
-  function getBackgroundBox() {
+  const getBackgroundBox = () => {
     const width = 355
     const height = 200
     const flatRadius = 30
@@ -448,9 +448,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             paddingVertical="xl"
             paddingHorizontal="l"
             backgroundColor={
-              sendToBlockFocused
-                ? 'selectedBackgroundColor'
-                : 'blockBackgroundColor'
+              sendToBlockFocused ? 'selectedBackgroundColor' : 'mediumWhite'
             }>
             <Text variant="secondaryInputLabel" tx="sendScreen.sndTo" />
             <Box
@@ -532,7 +530,13 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               <ArrowUp
                 width={scale(11)}
                 height={scale(13)}
-                stroke={faceliftPalette.white}
+                stroke={
+                  !errorMessage.msg &&
+                  new BigNumber(amountInput.value).gt(0) &&
+                  addressInput.value.length > 0
+                    ? faceliftPalette.white
+                    : faceliftPalette.grey
+                }
                 style={styles.buttonIcon}
               />
             </Box>
@@ -573,7 +577,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   buttonIcon: {
-    marginRight: 5,
+    marginRight: scale(5),
+    marginBottom: scale(5),
   },
 })
 
