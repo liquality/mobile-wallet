@@ -270,10 +270,10 @@ export const theme = createTheme({
       color: 'addressColor',
     },
     error: {
-      fontFamily: Fonts.Light,
+      fontFamily: Fonts.Regular,
       color: 'danger',
       fontWeight: '500',
-      fontSize: 12,
+      fontSize: 14,
       marginTop: 's',
       paddingLeft: 's',
       paddingVertical: 's',

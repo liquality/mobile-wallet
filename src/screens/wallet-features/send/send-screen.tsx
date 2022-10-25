@@ -119,7 +119,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     return true
   }, [activeNetwork, addressInput.value, amountInput.value, balance, chain])
 
-  const handleReviewPress = useCallback(() => {
+  const handleSendPress = useCallback(() => {
     let feeInUnit
     customFee
       ? (feeInUnit = customFee)
@@ -324,7 +324,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         {isCameraVisible && chain && (
           <QrCodeScanner chain={chain} onClose={handleCameraModalClose} />
         )}
-        <Box>
+        <Box marginBottom={'m'}>
           <Box
             paddingVertical="xl"
             backgroundColor={
@@ -449,7 +449,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         </Box>
         <Box
           flexDirection={'row'}
-          paddingVertical="l"
           paddingHorizontal="l"
           justifyContent="space-between">
           <Pressable>
@@ -482,8 +481,8 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               }}
             />
           )}
-          {!!error && <Text variant="error">{error}</Text>}
         </Box>
+        {!!error && <Text variant="error">{error}</Text>}
         <ButtonFooter>
           <Button
             type="primary"
@@ -493,9 +492,13 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 ? 'sendScreen.insufficientFund'
                 : 'common.send',
             }}
-            onPress={handleReviewPress}
+            onPress={handleSendPress}
             isBorderless={true}
-            isActive={!errorMessage.msg}
+            isActive={
+              !errorMessage.msg &&
+              new BigNumber(amountInput.value).gt(0) &&
+              addressInput.value.length > 0
+            }
             appendChildren={false}>
             <Box alignItems={'center'} justifyContent={'center'}>
               <ArrowUp
