@@ -46,6 +46,7 @@ import { scale } from 'react-native-size-matters'
 import FiatSwapSwitch from '../../../assets/icons/fiatCryptoSwitch.svg'
 import ChevronRight from '../../../assets/icons/chevronRight.svg'
 import ArrowUp from '../../../assets/icons/arrowUp.svg'
+import { Path, Svg } from 'react-native-svg'
 
 const { QRCode } = AppIcons
 
@@ -92,6 +93,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const [showFeeEditorModal, setShowFeeEditorModal] = useState<boolean>(false)
   const [maxPressed, setMaxPressed] = useState(false)
   const [sendBlockFocused, setSendBlockFocused] = useState(false)
+  const [sendToBlockFocused, setSendToBlockFocused] = useState(false)
 
   const onGetPress = useCallback(() => {
     navigation.navigate('ReceiveScreen', {
@@ -315,6 +317,35 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     setShowFeeEditorModal(false)
   }
 
+  function getBackgroundBox() {
+    const width = 355
+    const height = 200
+    const flatRadius = 30
+    return (
+      <Box
+        alignItems="center"
+        justifyContent="center"
+        style={StyleSheet.absoluteFillObject}>
+        <Svg
+          width={`${width}`}
+          height={`${height}`}
+          viewBox={`0 0 ${width} ${height}`}
+          fill="none">
+          <Path
+            d={`M0 0 H ${
+              width - flatRadius
+            } L ${width} ${flatRadius} V ${height} H ${0} V ${0} Z`}
+            fill={
+              sendBlockFocused
+                ? faceliftPalette.selectedBackground
+                : faceliftPalette.mediumWhite
+            }
+          />
+        </Svg>
+      </Box>
+    )
+  }
+
   return (
     <Box flex={1} backgroundColor="mainBackground" paddingHorizontal="l">
       <Box flex={1} paddingVertical="l">
@@ -322,14 +353,8 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           <QrCodeScanner chain={chain} onClose={handleCameraModalClose} />
         )}
         <Box marginBottom={'m'}>
-          <Box
-            paddingVertical="xl"
-            backgroundColor={
-              sendBlockFocused
-                ? 'selectedBackgroundColor'
-                : 'blockBackgroundColor'
-            }
-            paddingHorizontal="l">
+          <Box paddingVertical="xl" paddingHorizontal="l">
+            {getBackgroundBox()}
             <Box
               flexDirection="row"
               justifyContent="space-between"
@@ -422,7 +447,11 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             marginTop={'xl'}
             paddingVertical="xl"
             paddingHorizontal="l"
-            backgroundColor="blockBackgroundColor">
+            backgroundColor={
+              sendToBlockFocused
+                ? 'selectedBackgroundColor'
+                : 'blockBackgroundColor'
+            }>
             <Text variant="secondaryInputLabel" tx="sendScreen.sndTo" />
             <Box
               flexDirection="row"
@@ -432,7 +461,11 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               <TextInput
                 style={styles.sendToInput}
                 onChangeText={addressInput.onChangeText}
-                onFocus={() => setError('')}
+                onFocus={() => {
+                  setError('')
+                  setSendToBlockFocused(true)
+                }}
+                onBlur={() => setSendToBlockFocused(false)}
                 value={addressInput.value}
                 placeholderTx="sendScreen.address"
                 placeholderTextColor={faceliftPalette.greyMeta}
