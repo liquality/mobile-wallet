@@ -239,6 +239,7 @@ export default class WalletConnectController {
         if (!address) {
           connector.rejectSession()
         } else {
+          console.log('SESSION APPROVED!')
           connector.approveSession({
             accounts: address,
             chainId: payload.params[0].chainId,
