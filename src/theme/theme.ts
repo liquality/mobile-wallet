@@ -170,7 +170,6 @@ export const theme = createTheme({
       fontWeight: '400',
       fontSize: 17,
       color: 'buttonFontPrimary',
-      lineHeight: 59.5,
     },
     tertiaryButtonLabel: {
       fontFamily: Fonts.Regular,

@@ -412,6 +412,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 setMaxPressed(!maxPressed)
               }}>
               <Text
+                marginTop="m"
                 tx={'sendScreen.max'}
                 color={maxPressed ? 'activeLink' : 'inactiveLink'}
               />
@@ -523,6 +524,7 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: scale(39),
     width: '80%',
+    height: scale(39),
   },
   sendToInput: {
     fontFamily: Fonts.Regular,
