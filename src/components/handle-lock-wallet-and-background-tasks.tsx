@@ -30,7 +30,7 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
   const [, setAppStateVisible] = useState(appState.current)
   const [isRunning] = useState(true)
   const [isOpen, setIsOpen] = useState(false)
-  const [data, setData] = useState()
+  //const [data, setData] = useState()
   const [chainId, setChainId] = useState()
 
   const handleLockPress = useCallback(() => {
@@ -64,7 +64,8 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
 
       navigation.navigate('ApproveTransactionInjectionScreen', {
         chainId,
-        walletConnectData: { ...data, gasPrice, fee },
+        //walletConnectData: { ...data, gasPrice, fee },
+        walletConnectData: { ...data },
       })
     })
   }, [navigation])

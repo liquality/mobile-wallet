@@ -288,12 +288,10 @@ const AppStackHeaderLeft = (navProps: NavigationProps) => {
 
   const [showQRScanner, setShowQRScanner] = useState(false)
   const onSuccess = (e) => {
-    /* Linking.openURL(e.data).catch(err =>
-      console.error('An error occured', err)
-    ); */
     console.log(e, 'SUCCESS READING QR')
     new WalletConnectController(e.data)
     navigation.navigate('InitInjectionScreen', { uri: e.data })
+    setShowQRScanner(false)
   }
   return (
     <Box flexDirection={'row'} alignItems="center">

@@ -12,6 +12,7 @@ import { Box, Button, faceliftPalette, Text } from '../../theme'
 import { RootStackParamList } from '../../types'
 import { networkState } from '../../atoms'
 import { Fonts, AppIcons } from '../../assets'
+import { sendTransaction } from '../../store/store'
 const { ON_SESSION_REQUEST, OFF_SESSION_REQUEST } = INJECTION_REQUESTS
 
 type ApproveTransactionInjectionScreenProps = NativeStackScreenProps<
@@ -24,37 +25,41 @@ const wallet = setupWallet({
   ...defaultOptions,
 })
 const ApproveTransactionInjectionScreen = ({
+  navigation,
   route,
 }: ApproveTransactionInjectionScreenProps) => {
   const { activeWalletId } = wallet.state
-  console.log(wallet.state, 'Wallet state')
   const activeNetwork = useRecoilValue(networkState)
 
-  const [isOpen, setIsOpen] = useState(false)
-  const [data, setData] = useState()
+  console.log(route.params, 'approve route params')
 
-  useEffect(() => {
-    emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
-      const [data] = params
-      setData(data)
-      setIsOpen(true)
+  const send = async () => {
+    const { data: txData, value, to, gasPrice } = data
+
+    /*   const hash = await sendTransaction(chainId, {
+      to,
+      value,
+      data: txData,
+      maxPriorityFeePerGas: gasPrice,
+      maxFeePerGas: gasPrice,
+    }) */
+
+    const transaction = await sendTransaction({
+      asset,
+      activeNetwork,
+      to: to,
+      value: value,
+      fee: gasFee,
+      feeLabel: 'average',
+      memo: '',
     })
-  }, [])
 
-  console.log(data, 'what is data?', data?.peerMeta.icons[0])
-  const connect = () => {
-    //TODO: make the wallet address come from getAddressByChainId(data.chainId) instead
-    emitterController.emit(OFF_SESSION_REQUEST, [
-      '0xD8CeBecb8a26864812E73A35B59f318890a76966',
-    ])
-    setIsOpen(false)
+    emitterController.emit(OFF_SEND_TRANSACTION, hash)
   }
 
-  const reject = () => {
-    emitterController.emit(OFF_SESSION_REQUEST, null)
-    setIsOpen(false)
-  }
+  const reject = () => {}
 
+  console.log(route.params, 'ROUTE PARAMS SHOULD BE WC DATA')
   return (
     <Box
       flex={1}
@@ -62,34 +67,26 @@ const ApproveTransactionInjectionScreen = ({
       padding={'xl'}
       justifyContent={'center'}
       alignItems={'center'}>
-      <Text style={styles.headerText}>Connect Request</Text>
-      <Box>
-        {data ? (
-          <Image
-            style={styles.imgLogo}
-            source={{ uri: data.peerMeta.icons[0] }}
-          />
-        ) : null}
-        <DottedLine />
-        <ChevronDown />
-      </Box>
+      <Text style={styles.headerText}>Approve</Text>
+
       <Text style={styles.permissionText}>
-        By granting permission to {data?.peerMeta.name} they can read your
-        public account addresses. Make sure you trust this site.
+        By granting permission to they can read your public account addresses.
+        Make sure you trust this site.
       </Text>
       <ButtonFooter>
         <Button
           type="primary"
           variant="l"
-          label={'Connect'}
-          onPress={connect}
+          label={'Approve'}
+          onPress={send}
           isBorderless={true}
-          appendChildren={false}></Button>
+          appendChildren={false}
+        />
         <Button
           type="secondary"
           variant="l"
           label={'Deny'}
-          onPress={reject}
+          onPress={() => navigation.goBack()}
           isBorderless={true}
           isActive={true}
         />

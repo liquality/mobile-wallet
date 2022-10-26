@@ -23,7 +23,7 @@ const { DottedLine, ChevronDown } = AppIcons
 const wallet = setupWallet({
   ...defaultOptions,
 })
-const InitInjectionScreen = ({ route }: NftDetailScreenProps) => {
+const InitInjectionScreen = ({ navigation, route }: NftDetailScreenProps) => {
   const { activeWalletId } = wallet.state
   console.log(wallet.state, 'Wallet state')
   const activeNetwork = useRecoilValue(networkState)
@@ -45,12 +45,12 @@ const InitInjectionScreen = ({ route }: NftDetailScreenProps) => {
     emitterController.emit(OFF_SESSION_REQUEST, [
       '0xD8CeBecb8a26864812E73A35B59f318890a76966',
     ])
-    setIsOpen(false)
+    navigation.navigate('OverviewScreen')
   }
 
   const reject = () => {
     emitterController.emit(OFF_SESSION_REQUEST, null)
-    setIsOpen(false)
+    navigation.navigate('OverviewScreen')
   }
 
   return (
@@ -68,8 +68,6 @@ const InitInjectionScreen = ({ route }: NftDetailScreenProps) => {
             source={{ uri: data.peerMeta.icons[0] }}
           />
         ) : null}
-        <DottedLine />
-        <ChevronDown />
       </Box>
       <Text style={styles.permissionText}>
         By granting permission to {data?.peerMeta.name} they can read your
