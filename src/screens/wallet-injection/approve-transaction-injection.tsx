@@ -124,4 +124,4 @@ const styles = StyleSheet.create({
   imgLogo: { width: 65, height: 65 },
 })
 
-export default ApproveTransactionInjectionScreenProps
+export default ApproveTransactionInjectionScreen

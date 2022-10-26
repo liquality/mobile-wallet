@@ -83,6 +83,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner'
 import { RNCamera } from 'react-native-camera'
 import InitInjectionScreen from '../screens/wallet-injection/initiate-injection-screen'
 import WalletConnectController from '../controllers/walletConnectController'
+import ApproveTransactionInjectionScreen from '../screens/wallet-injection/approve-transaction-injection'
 
 const {
   SwapCheck,
@@ -859,6 +860,13 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="InitInjectionScreen"
           component={InitInjectionScreen}
+          options={() => ({
+            headerShown: false,
+          })}
+        />
+        <MainStack.Screen
+          name="ApproveTransactionInjectionScreen"
+          component={ApproveTransactionInjectionScreen}
           options={() => ({
             headerShown: false,
           })}
