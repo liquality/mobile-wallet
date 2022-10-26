@@ -13,7 +13,8 @@ import { RootStackParamList } from '../../types'
 import { networkState } from '../../atoms'
 import { Fonts, AppIcons } from '../../assets'
 import { sendTransaction } from '../../store/store'
-const { ON_SESSION_REQUEST, OFF_SESSION_REQUEST } = INJECTION_REQUESTS
+import { getNativeAssetCode } from '@liquality/cryptoassets'
+const { OFF_SEND_TRANSACTION } = INJECTION_REQUESTS
 
 type ApproveTransactionInjectionScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -34,7 +35,13 @@ const ApproveTransactionInjectionScreen = ({
   console.log(route.params, 'approve route params')
 
   const send = async () => {
-    const { data: txData, value, to, gasPrice } = data
+    const {
+      data: txData,
+      value,
+      to,
+      gasPrice,
+      chainId,
+    } = route.params.walletConnectData.data
 
     /*   const hash = await sendTransaction(chainId, {
       to,
@@ -43,13 +50,28 @@ const ApproveTransactionInjectionScreen = ({
       maxPriorityFeePerGas: gasPrice,
       maxFeePerGas: gasPrice,
     }) */
+    console.log('CHAINID:', route.params.chainId)
+    let asset = getNativeAssetCode(activeNetwork, 'polygon')
+    console.log('ASSRT', asset)
 
-    const transaction = await sendTransaction({
+    console.log(
+      {
+        asset,
+        activeNetwork,
+        to: to,
+        value: value,
+        fee: 0.1,
+        feeLabel: 'average',
+        memo: '',
+      },
+      'SEND TRANSACTION PARAMS',
+    )
+    const hash = await sendTransaction({
       asset,
       activeNetwork,
       to: to,
       value: value,
-      fee: gasFee,
+      fee: 0.1,
       feeLabel: 'average',
       memo: '',
     })
