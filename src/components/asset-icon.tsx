@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
 import { AppIcons } from '../assets'
 import { ChainId } from '@liquality/cryptoassets/dist/src/types'
 import { FC } from 'react'
 import { ICON_SIZE } from '../utils'
+import { StyleProp, ViewStyle } from 'react-native'
 
 const {
   BitcoinChainIcon,
@@ -39,6 +39,7 @@ type AssetIconType = {
   chain?: ChainId
   asset?: string
   size?: number
+  styles?: StyleProp<ViewStyle>
 }
 
 const extractSpecificIcon = {
@@ -149,7 +150,7 @@ const extractSpecificIcon = {
 }
 
 const AssetIcon: FC<AssetIconType> = (props) => {
-  const { chain, asset, size = ICON_SIZE } = props
+  const { chain, asset, size = ICON_SIZE, styles } = props
   const extractedIcon = chain
     ? extractSpecificIcon[chain.toLowerCase()]
     : asset
@@ -164,21 +165,15 @@ const AssetIcon: FC<AssetIconType> = (props) => {
           viewBox={viewBoxValue}
           width={size}
           height={size}
-          style={styles.icon}
+          style={styles}
         />
       )
     } else {
-      return <AssetName width={size} height={size} style={styles.icon} />
+      return <AssetName width={size} height={size} style={styles} />
     }
   } else {
-    return <BlankIcon width={size} height={size} style={styles.icon} />
+    return <BlankIcon width={size} height={size} style={styles} />
   }
 }
-
-const styles = StyleSheet.create({
-  icon: {
-    marginHorizontal: 5,
-  },
-})
 
 export default AssetIcon

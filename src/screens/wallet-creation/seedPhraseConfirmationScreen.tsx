@@ -230,13 +230,13 @@ const SeedPhraseConfirmationScreen = ({
 const styles = ScaledSheet.create({
   buttonStyle: {
     borderRadius: '15@s',
-    borderColor: faceliftPalette.buttonDefault,
+    borderColor: faceliftPalette.active,
     borderWidth: '1@s',
     margin: '3@ms0.1',
   },
   textStyle: {
     padding: '12@ms0.1',
-    color: faceliftPalette.buttonDefault,
+    color: faceliftPalette.active,
   },
   inactiveButtonStyle: {
     backgroundColor: faceliftPalette.whiteGrey,
