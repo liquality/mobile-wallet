@@ -237,7 +237,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       dispatch({
         type: SwapEventActionKind.ToAmountUpdated,
         payload: {
-          toAmount: calculatedAmount,
+          toAmount: dpUI(Number(calculatedAmount), 6).toString(),
         },
       })
     }
@@ -394,10 +394,24 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           type: ErrorMessaging.NotEngLiq,
         })
       } else {
+        let calculatedAmount = ''
+        if (!isFromAmountNative) {
+          calculatedAmount =
+            (
+              swapPair.fromAsset &&
+              cryptoToFiat(
+                maximumValue,
+                fiatRates?.[swapPair.fromAsset.code] || 0,
+              )
+            )?.toString() || ''
+        } else {
+          calculatedAmount = maximumValue.toString()
+        }
+
         dispatch({
           type: SwapEventActionKind.SetMaxVal,
           payload: {
-            maximumValue: maximumValue.toString(),
+            maximumValue: dpUI(Number(calculatedAmount), 6).toString(),
           },
         })
       }
