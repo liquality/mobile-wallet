@@ -23,7 +23,12 @@ import Label from '../../../components/ui/label'
 import Warning from '../../../components/ui/warning'
 import SwapRates from '../../../components/swap/swap-rates'
 import { getQuotes } from '../../../store/store'
-import { ActionEnum, MainStackParamList, NetworkFeeType } from '../../../types'
+import {
+  ActionEnum,
+  GasFees,
+  MainStackParamList,
+  NetworkFeeType,
+} from '../../../types'
 import { BigNumber } from '@liquality/types'
 import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import {

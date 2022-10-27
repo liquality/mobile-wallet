@@ -15,12 +15,11 @@ import {
 import dayjs from 'dayjs'
 import { Buffer } from '@craftzdog/react-native-buffer'
 import QuickCrypto from 'react-native-quick-crypto'
-
 import { translate, TxKeyPath } from '../i18n'
 import { Images } from '../assets'
 
 export const sortQuotes = (
-  network: string,
+  network: Network,
   quotes: SwapQuote[],
 ): SwapQuote[] => {
   if (!quotes) {

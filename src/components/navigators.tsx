@@ -373,19 +373,6 @@ export const AppStackNavigator = () => {
           {(props) => OverviewScreen(props)}
         </MainStack.Screen>
         <MainStack.Screen
-          name="AssetChooserScreen"
-          component={AssetChooserScreen}
-          options={({ navigation, route }: NavigationProps) => ({
-            headerBackVisible: false,
-            title: route.params.screenTitle || '',
-            headerTitleStyle: NORMAL_HEADER,
-            headerStyle: { backgroundColor },
-            headerRight: undefined,
-            headerLeft: () =>
-              AssetManageScreenHeaderLeft({ navigation, route }),
-          })}
-        />
-        <MainStack.Screen
           name="SendScreen"
           component={SendScreen}
           options={() => ({
@@ -644,7 +631,7 @@ export const StackMainNavigator = () => {
     currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
 
   return (
-    <MainStack.Navigator initialRouteName="SwapScreen">
+    <MainStack.Navigator initialRouteName="LoginScreen">
       <MainStack.Group>
         <MainStack.Screen
           name="LoginScreen"
@@ -748,6 +735,20 @@ export const StackMainNavigator = () => {
             headerStyle: { backgroundColor },
             headerRight: undefined,
             headerLeft: undefined,
+          })}
+        />
+        <MainStack.Screen
+          name="AssetChooserScreen"
+          component={AssetChooserScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerShadowVisible: false,
+            headerBackVisible: false,
+            title: route.params.screenTitle || '',
+            headerTitleStyle: NORMAL_HEADER,
+            headerStyle: { backgroundColor },
+            headerRight: undefined,
+            headerLeft: () =>
+              AssetManageScreenHeaderLeft({ navigation, route }),
           })}
         />
         <MainStack.Screen
