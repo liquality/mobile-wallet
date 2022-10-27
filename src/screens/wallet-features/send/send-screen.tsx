@@ -21,11 +21,11 @@ import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import {
   Box,
-  TextInput,
-  Text,
   Button,
   faceliftPalette,
   showSendToast,
+  Text,
+  TextInput,
 } from '../../../theme'
 import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import { fetchFeesForAsset } from '../../../store/store'
@@ -39,7 +39,6 @@ import {
   networkState,
 } from '../../../atoms'
 import i18n from 'i18n-js'
-import { palette } from '../../../theme'
 import { AppIcons, Fonts } from '../../../assets'
 import FeeEditorScreen from '../custom-fee/fee-editor-screen'
 import { scale } from 'react-native-size-matters'
@@ -47,6 +46,7 @@ import FiatSwapSwitch from '../../../assets/icons/fiatCryptoSwitch.svg'
 import ChevronRight from '../../../assets/icons/chevronRight.svg'
 import ArrowUp from '../../../assets/icons/arrowUp.svg'
 import { Path, Svg } from 'react-native-svg'
+import SendReviewScreen from './send-review-screen'
 
 const { QRCode } = AppIcons
 
@@ -61,14 +61,8 @@ type SendScreenProps = NativeStackScreenProps<MainStackParamList, 'SendScreen'>
 
 const SendScreen: FC<SendScreenProps> = (props) => {
   const { navigation, route } = props
-  //TODO is there a better way to deal with this?
   const { assetData } = route.params
-  const {
-    code = 'ETH',
-    chain = ChainId.Ethereum,
-    color,
-    id = '',
-  } = assetData || {}
+  const { code = 'ETH', chain = ChainId.Ethereum, id = '' } = assetData || {}
   const [customFee, setCustomFee] = useState<number>(0)
   const fiatRates = useRecoilValue(fiatRatesState)
   const balance = useRecoilValue(
@@ -94,6 +88,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const [maxPressed, setMaxPressed] = useState(false)
   const [sendBlockFocused, setSendBlockFocused] = useState(false)
   const [sendToBlockFocused, setSendToBlockFocused] = useState(false)
+  const [showReviewScreen, setShowReviewScreen] = useState(false)
 
   const onGetPress = useCallback(() => {
     navigation.navigate('ReceiveScreen', {
@@ -121,38 +116,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     return true
   }, [activeNetwork, addressInput.value, amountInput.value, balance, chain])
 
-  const handleSendPress = useCallback(() => {
-    let feeInUnit
-    customFee
-      ? (feeInUnit = customFee)
-      : (feeInUnit = networkFee?.current?.value)
-
-    if (validate() && networkFee?.current?.value) {
-      navigation.navigate('SendReviewScreen', {
-        assetData: route.params.assetData,
-        screenTitle: i18n.t('sendScreen.sendReview', { code }),
-        sendTransaction: {
-          amount: new BigNumber(amountInput.value).toNumber(),
-          gasFee: feeInUnit || 0,
-          speedLabel: networkFee.current?.speed,
-          destinationAddress: addressInput.value,
-          asset: code,
-          memo: '',
-          color: color || palette.darkYellow,
-        },
-        customFee: customFee,
-      })
+  const handleReviewPress = useCallback(() => {
+    setError('')
+    if (validate() && customFee) {
+      setShowReviewScreen(true)
     }
-  }, [
-    customFee,
-    validate,
-    navigation,
-    route.params.assetData,
-    code,
-    amountInput.value,
-    addressInput.value,
-    color,
-  ])
+  }, [customFee, validate])
 
   const handleFiatBtnPress = useCallback(() => {
     if (showAmountsInFiat) {
@@ -317,6 +286,10 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     setShowFeeEditorModal(false)
   }
 
+  const onClose = () => {
+    setShowReviewScreen(false)
+  }
+
   const getBackgroundBox = () => {
     const width = 355
     const height = 200
@@ -436,11 +409,17 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
                 setMaxPressed(!maxPressed)
               }}>
-              <Text
+              <Box
                 marginTop="m"
-                tx={'sendScreen.max'}
-                color={maxPressed ? 'activeLink' : 'inactiveLink'}
-              />
+                paddingBottom="s"
+                borderBottomWidth={2}
+                borderBottomColor={maxPressed ? 'activeLink' : 'transparent'}
+                alignSelf={'flex-start'}>
+                <Text
+                  tx={'sendScreen.max'}
+                  color={maxPressed ? 'activeLink' : 'inactiveLink'}
+                />
+              </Box>
             </Pressable>
           </Box>
           <Box
@@ -471,7 +450,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 returnKeyType="done"
               />
               <Pressable onPress={handleQRCodeBtnPress}>
-                <QRCode />
+                <QRCode width={scale(20)} height={scale(20)} />
               </Pressable>
             </Box>
           </Box>
@@ -516,9 +495,9 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             label={{
               tx: errorMessage.msg
                 ? 'sendScreen.insufficientFund'
-                : 'common.send',
+                : 'common.review',
             }}
-            onPress={handleSendPress}
+            onPress={handleReviewPress}
             isBorderless={true}
             isActive={
               !errorMessage.msg &&
@@ -551,6 +530,17 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           />
         </ButtonFooter>
       </Box>
+      {showReviewScreen && (
+        <SendReviewScreen
+          assetData={assetData}
+          asset={code}
+          amount={amountInNative}
+          destinationAddress={addressInput.value}
+          gasFee={customFee}
+          speedLabel={FeeLabel.Average}
+          onClose={onClose}
+        />
+      )}
     </Box>
   )
 }
@@ -566,7 +556,7 @@ const styles = StyleSheet.create({
   sendToInput: {
     fontFamily: Fonts.Regular,
     fontWeight: '300',
-    fontSize: scale(19),
+    fontSize: scale(13),
   },
   textRegular: {
     fontFamily: Fonts.Regular,

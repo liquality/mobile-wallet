@@ -24,7 +24,6 @@ import SettingsScreen from '../screens/wallet-features/settings/settings-screen'
 import AssetScreen from '../screens/wallet-features/asset/asset-screen'
 import ReceiveScreen from '../screens/wallet-features/receive/receive-screen'
 import SendScreen from '../screens/wallet-features/send/send-screen'
-import SendReviewScreen from '../screens/wallet-features/send/send-review-screen'
 import CustomFeeScreen from '../screens/wallet-features/custom-fee/custom-fee-screen'
 import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
 import {
@@ -418,13 +417,6 @@ export const AppStackNavigator = () => {
             headerBackVisible: false,
             headerRight: undefined,
             headerTitleStyle: HEADER_TITLE_STYLE,
-          })}
-        />
-        <MainStack.Screen
-          name="SendReviewScreen"
-          component={SendReviewScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
           })}
         />
         <MainStack.Screen

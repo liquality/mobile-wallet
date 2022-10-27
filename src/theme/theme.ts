@@ -264,7 +264,7 @@ export const theme = createTheme({
     address: {
       fontFamily: Fonts.Regular,
       fontWeight: '300',
-      fontSize: 12,
+      fontSize: 15,
       lineHeight: 18,
       color: 'addressColor',
     },

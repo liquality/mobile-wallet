@@ -169,7 +169,7 @@
     "sendTransDetails": "SEND {{asset}} Transaction Details",
     "failedTrans": "Failed to send transaction: ",
     "rateNotAvail": "Rates not available",
-    "send": "Send",
+    "send": "SEND",
     "netFee": "NETWORK FEE",
     "amtFee": "AMOUNT + FEES",
     "sendTo": "SEND TO",
