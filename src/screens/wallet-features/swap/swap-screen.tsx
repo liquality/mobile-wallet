@@ -234,12 +234,28 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           ),
         )
       }
-      dispatch({
-        type: SwapEventActionKind.ToAmountUpdated,
-        payload: {
-          toAmount: dpUI(Number(calculatedAmount), 6).toString(),
-        },
-      })
+      const toCryptoToFiat =
+        (
+          swapPair.toAsset &&
+          cryptoToFiat(
+            new BigNumber(calculatedAmount || 0),
+            fiatRates?.[swapPair.toAsset.code] || 0,
+          )
+        )?.toString() || ''
+
+      if (isToAmountNative) {
+        dispatch({
+          type: SwapEventActionKind.ToAmountUpdated,
+          payload: {
+            toAmount: dpUI(Number(calculatedAmount), 6).toString(),
+          },
+        })
+      } else {
+        dispatch({
+          type: SwapEventActionKind.ToAmountUpdated,
+          payload: { toAmount: dpUI(Number(toCryptoToFiat), 6).toString() },
+        })
+      }
     }
   }, [
     activeNetwork,
@@ -249,6 +265,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     isFromAmountNative,
     swapPair.fromAsset,
     fiatRates,
+    swapPair.toAsset,
+    isToAmountNative,
   ])
 
   useEffect(() => {
@@ -512,12 +530,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       if (prev) {
         dispatch({
           type: SwapEventActionKind.FromAmountUpdated,
-          payload: { fromAmount: fromCryptoToFiat },
+          payload: { fromAmount: dpUI(Number(fromCryptoToFiat), 6).toString() },
         })
       } else {
         dispatch({
           type: SwapEventActionKind.FromAmountUpdated,
-          payload: { fromAmount: fromFiatToCrypto },
+          payload: { fromAmount: dpUI(Number(fromFiatToCrypto), 6).toString() },
         })
       }
       return !prev
@@ -529,12 +547,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       if (prev) {
         dispatch({
           type: SwapEventActionKind.ToAmountUpdated,
-          payload: { toAmount: toCryptoToFiat },
+          payload: { toAmount: dpUI(Number(toCryptoToFiat), 6).toString() },
         })
       } else {
         dispatch({
           type: SwapEventActionKind.ToAmountUpdated,
-          payload: { toAmount: toFiatToCrypto },
+          payload: { toAmount: dpUI(Number(toFiatToCrypto), 6).toString() },
         })
       }
       return !prev
