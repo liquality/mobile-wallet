@@ -16,8 +16,8 @@ const BaseScrollView = createRestyleComponent<
 type Props = React.ComponentProps<typeof BaseScrollView>
 
 export const ScrollView: FC<Props> = (props) => {
-  const { children, ...rest } = props
-  const enableScroll = SCREEN_HEIGHT < 700
+  const { children, scrollEnabled, ...rest } = props
+  const enableScroll = scrollEnabled || SCREEN_HEIGHT < 700
   return (
     <BaseScrollView {...rest} scrollEnabled={enableScroll}>
       {children}

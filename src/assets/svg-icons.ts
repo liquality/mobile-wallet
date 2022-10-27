@@ -151,6 +151,7 @@ import PwEthNewIcon from '../assets/icons/newCrypto/pweth.svg'
 import WavyArrow from '../assets/icons/wavyArrow.svg'
 import NetworkSpeedEdit from '../assets/icons/networkSpeedEdit.svg'
 import DoubleArrowThick from '../assets/icons/doubleArrowThick.svg'
+import DoubleArrowThickDisabled from '../assets/icons/doubleArrowThickDisabled.svg'
 
 export default {
   PendingSwap,
@@ -305,4 +306,5 @@ export default {
   ThinDoubleArrowActive,
   NetworkSpeedEdit,
   DoubleArrowThick,
+  DoubleArrowThickDisabled,
 }

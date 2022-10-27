@@ -83,8 +83,8 @@ export type SwapInfoType = {
   fromAmount: number
   toAmount: number
   quote: any
-  fromNetworkFee: NetworkFeeType
-  toNetworkFee: NetworkFeeType
+  fromNetworkFee: CustomNetworkFeeType
+  toNetworkFee: CustomNetworkFeeType
 }
 
 export type StackPayload = {
@@ -264,6 +264,17 @@ export enum ActivityStatusEnum {
 
 export type NetworkFeeType = {
   speed: FeeLabel
+  value: number
+}
+
+export enum CustomFeeLabel {
+  Custom = 'custom',
+}
+
+export type ExtendedFeeLabel = CustomFeeLabel | FeeLabel
+
+export type CustomNetworkFeeType = {
+  speed: FeeLabel | CustomFeeLabel
   value: number
 }
 

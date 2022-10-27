@@ -4,15 +4,23 @@ import React, {
   useCallback,
   useEffect,
   useReducer,
+  useRef,
   useState,
 } from 'react'
 import {
   StyleSheet,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Alert,
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ActionEnum, MainStackParamList } from '../../../types'
+import {
+  ActionEnum,
+  CustomNetworkFeeType,
+  MainStackParamList,
+  CustomFeeLabel,
+  GasFees,
+} from '../../../types'
 import {
   Box,
   Text,
@@ -44,12 +52,16 @@ import {
   fiatToCrypto,
   formatFiat,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
-import { getQuotes } from '../../../store/store'
+import { fetchFeesForAsset, getQuotes } from '../../../store/store'
 import { dpUI } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
 import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import { SwapProviderType } from '@liquality/wallet-core/dist/src/store/types'
 import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
+import MessageBanner from '../../../components/ui/message-banner'
+import I18n from 'i18n-js'
+import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
+import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 
 const {
   WavyArrow,
@@ -58,6 +70,7 @@ const {
   ThinDoubleArrowActive,
   NetworkSpeedEdit,
   DoubleArrowThick,
+  DoubleArrowThickDisabled,
 } = AppIcons
 
 type SwapScreenProps = NativeStackScreenProps<MainStackParamList, 'SwapScreen'>
@@ -74,14 +87,19 @@ enum MinOrMax {
   NULL,
 }
 
-// enum ErrorMessaging {
-//   EnableToken,
-//   PairsList,
-//   MultipleSwaps,
-//   NotEngRequestTkn,
-//   NotEngLiq,
-//   MoreTknReq,
-// }
+enum ErrorMessaging {
+  EnableToken,
+  PairsList,
+  MultipleSwaps,
+  NotEngRequestTkn,
+  NotEngLiq,
+  MoreTknReq,
+}
+
+interface ErrorMsgAndType {
+  msg: string
+  type: ErrorMessaging | null
+}
 
 type SwapEventType = {
   fromAmount: string
@@ -114,10 +132,6 @@ export type SwapEventAction =
   | {
       type: SwapEventActionKind.SetMaxVal
       payload: { maximumValue: string }
-    }
-  | {
-      type: SwapEventActionKind.SetFromAmtFrmMinVal
-      payload: { minimumValue: string }
     }
 
 const initialSwapSEventState: SwapEventType = {
@@ -154,24 +168,13 @@ export const reducer: Reducer<SwapEventType, SwapEventAction> = (
         ...state,
         minimumValue: payload.minimumValue,
       }
-    case SwapEventActionKind.SetFromAmtFrmMinVal:
-      return {
-        ...state,
-        fromAmount: payload.minimumValue,
-        maximumValue: '',
-      }
     default:
       throw new Error()
   }
 }
 
-// interface ErrorMsgAndType {
-//   msg: string
-//   type: ErrorMessaging | null
-// }
-
 const SwapScreen: FC<SwapScreenProps> = (props) => {
-  const { navigation } = props
+  const { navigation, route } = props
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
   const fromBalance = useRecoilValue(
     balanceStateFamily({
@@ -180,22 +183,18 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     }),
   )
   const activeNetwork = useRecoilValue(networkState)
-  // const [error, setError] = useState<ErrorMsgAndType>({ msg: '', type: null })
+  const [error, setError] = useState<ErrorMsgAndType>({ msg: '', type: null })
   const [quotes, setQuotes] = useState<any[]>([])
   const [focusType, setFocusType] = React.useState(InputFocus.NULL)
   const [minOrMax, setMinOrMax] = React.useState(MinOrMax.NULL)
-  // const [gas, setGasFee] = useState('0')
-  // const wallet = useRecoilValue(walletState)
-  // const { activeWalletId } = wallet
+  const fromNetworkFee = useRef<CustomNetworkFeeType>()
+  const toNetworkFee = useRef<CustomNetworkFeeType>()
+  const [gasFees, setGasFees] = useState<GasFees>()
   const [state, dispatch] = useReducer(reducer, initialSwapSEventState)
   const fiatRates = useRecoilValue(fiatRatesState)
   const [selectedQuote, setSelectedQuote] = useState<SwapQuote>()
   const [isFromAmountNative, setIsFromAmountNative] = useState(true)
   const [isToAmountNative, setIsToAmountNative] = useState(true)
-
-  // const assetsAreSameChain =
-  //   getNativeAsset(swapPair.fromAsset?.code || '') ===
-  //   getNativeAsset(swapPair.toAsset?.code || '')
 
   const fromFocused = () => {
     setFocusType(InputFocus.FROM)
@@ -253,6 +252,55 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   ])
 
   useEffect(() => {
+    let nativeCustomFeeCode = route.params.code
+      ? getNativeAsset(route.params.code)
+      : ''
+    let nativeToCode = swapPair.toAsset
+      ? getNativeAsset(swapPair.toAsset.code)
+      : ''
+    let nativeFromCode = swapPair.fromAsset
+      ? getNativeAsset(swapPair.fromAsset.code)
+      : ''
+    if (swapPair && route.params.customFee) {
+      let params = {
+        speed: CustomFeeLabel.Custom,
+        value: route.params.customFee,
+      }
+      if (
+        nativeCustomFeeCode === nativeToCode &&
+        nativeCustomFeeCode === nativeFromCode
+      ) {
+        toNetworkFee.current = params
+        fromNetworkFee.current = params
+      } else if (nativeCustomFeeCode === nativeToCode) {
+        toNetworkFee.current = params
+      } else if (nativeCustomFeeCode === nativeFromCode) {
+        fromNetworkFee.current = params
+      }
+    } else {
+      let params = {
+        speed: FeeLabel.Average,
+        value: gasFees?.average.toNumber() || 0,
+      }
+      toNetworkFee.current = params
+      fromNetworkFee.current = params
+    }
+  }, [
+    route.params.code,
+    route.params.customFee,
+    swapPair,
+    swapPair.fromAsset,
+    swapPair.toAsset,
+    gasFees,
+  ])
+
+  useEffect(() => {
+    fetchFeesForAsset(swapPair.fromAsset?.code || '').then((result) =>
+      setGasFees(result),
+    )
+  }, [swapPair.fromAsset])
+
+  useEffect(() => {
     async function getQuoteList() {
       if (swapPair.fromAsset?.code && swapPair.toAsset?.code) {
         try {
@@ -275,6 +323,20 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               amount: new BigNumber(1),
             })
 
+            const bestQuoteAmount = new BigNumber(
+              unitToCurrency(
+                getAsset(activeNetwork, swapPair.toAsset.code),
+                new BigNumber(sortedQuotes[0].toAmount || 0),
+              ),
+            )
+
+            if (bestQuoteAmount.eq(0)) {
+              setError({
+                msg: labelTranslateFn('swapScreen.quoteNotFnd')!,
+                type: null,
+              })
+            }
+
             dispatch({
               type: SwapEventActionKind.SetMinVal,
               payload: {
@@ -284,20 +346,62 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
 
             setSelectedQuote(sortedQuotes[0])
             setQuotes(sortedQuotes)
+          } else {
+            setError({
+              msg: labelTranslateFn('swapScreen.isNotTraded')!,
+              type: ErrorMessaging.PairsList,
+            })
           }
         } catch (error) {
           // handle error here
         }
       }
     }
+    if (fromBalance <= 0) {
+      setError({
+        type: ErrorMessaging.NotEngLiq,
+        msg: labelTranslateFn('swapScreen.notEnoughLiquidityTryAgain')!,
+      })
+      return
+    }
     getQuoteList()
-  }, [activeNetwork, swapPair.fromAsset?.code, swapPair.toAsset?.code])
+    setError({ msg: '', type: null })
+  }, [
+    activeNetwork,
+    swapPair.fromAsset?.code,
+    swapPair.toAsset?.code,
+    fromBalance,
+  ])
 
   const getMinValue = () => {
     dispatch({
       type: SwapEventActionKind.FromAmountUpdated,
       payload: { fromAmount: state.minimumValue },
     })
+  }
+
+  const getMaxValue = () => {
+    if (swapPair && swapPair.fromAsset && swapPair.fromAsset.code && gasFees) {
+      const amount = unitToCurrency(
+        getAsset(activeNetwork, swapPair.fromAsset.code),
+        fromBalance || 0,
+      )
+
+      const maximumValue = amount.minus(gasFees.average)
+      if (maximumValue.lte(0)) {
+        setError({
+          msg: labelTranslateFn('swapScreen.notEnoughLiquidityTryAgain')!,
+          type: ErrorMessaging.NotEngLiq,
+        })
+      } else {
+        dispatch({
+          type: SwapEventActionKind.SetMaxVal,
+          payload: {
+            maximumValue: maximumValue.toString(),
+          },
+        })
+      }
+    }
   }
 
   const handleTextChange = (text: string) => {
@@ -423,15 +527,140 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     })
   }
 
+  const handleReviewBtnPress = async () => {
+    const assetsAreNotSameChain =
+      getNativeAsset(swapPair.fromAsset?.code || '') ===
+      getNativeAsset(swapPair.toAsset?.code || '')
+
+    if (
+      !swapPair.fromAsset ||
+      !swapPair.toAsset ||
+      !state.fromAmount ||
+      !selectedQuote ||
+      !fromNetworkFee.current ||
+      !toNetworkFee.current ||
+      !assetsAreNotSameChain
+    ) {
+      Alert.alert(labelTranslateFn('swapScreen.invalidArgs')!)
+      return
+    }
+
+    //TODO Update wallet-core so it does not return objects with functions in them
+    delete selectedQuote.min
+    delete selectedQuote.max
+
+    navigation.navigate('SwapReviewScreen', {
+      swapTransaction: {
+        fromAsset: swapPair.fromAsset,
+        toAsset: swapPair.toAsset,
+        fromAmount: Number(state.fromAmount) || 0,
+        toAmount: Number(state.toAmount) || 0,
+        quote: selectedQuote,
+        fromNetworkFee: fromNetworkFee.current,
+        toNetworkFee: toNetworkFee.current,
+      },
+      screenTitle: I18n.t('swapScreen.swapReview', {
+        swapPairfromAssetCode: swapPair.fromAsset.code,
+        swapPairtoAssetCode: swapPair.toAsset.code,
+      }),
+    })
+  }
   const onSwapArrowPress = () => {
     setSwapPair({ fromAsset: swapPair.toAsset, toAsset: swapPair.fromAsset })
   }
+
+  const getCompatibleErrorMsg = React.useCallback(() => {
+    const { msg, type } = error
+    if (!msg) {
+      return null
+    }
+
+    const onOkDoItPress = () => {}
+    const onTextPress = () => {}
+    const onGetTokenPress = () => {}
+
+    switch (type) {
+      case ErrorMessaging.EnableToken:
+        return (
+          <MessageBanner
+            text1={I18n.t('swapScreen.toTradePair', {
+              token: swapPair.fromAsset?.code,
+            })}
+            btnLabel={{ tx: 'swapScreen.okDoIt' }}
+            onAction={onOkDoItPress}
+          />
+        )
+      case ErrorMessaging.PairsList:
+        return (
+          <MessageBanner
+            text1={{ tx: 'swapScreen.isNotTraded' }}
+            linkTxt={{ tx: 'swapScreen.here' }}
+            onTextPress={onTextPress}
+            text2={I18n.t('swapScreen.youCanAlsoSuggestToken', {
+              token: swapPair.fromAsset?.code,
+              channel: 'Discord',
+            })}
+          />
+        )
+      case ErrorMessaging.MultipleSwaps:
+        return (
+          <MessageBanner
+            text1={{ tx: 'swapScreen.isNotTradedMaybeThereIsWay' }}
+          />
+        )
+      case ErrorMessaging.NotEngRequestTkn:
+        return (
+          <MessageBanner
+            text1={I18n.t('swapScreen.notEnoughLiquidityYouCanReq', {
+              token: swapPair.fromAsset?.code,
+              channel: 'Discord',
+            })}
+          />
+        )
+      case ErrorMessaging.NotEngLiq:
+        return (
+          <MessageBanner
+            text1={{ tx: 'swapScreen.notEnoughLiquidityTryAgain' }}
+          />
+        )
+      case ErrorMessaging.MoreTknReq:
+        return (
+          <MessageBanner
+            text1={I18n.t('swapScreen.moreTokenRequired', {
+              token: swapPair.fromAsset?.code,
+            })}
+            btnLabel={I18n.t('swapScreen.getToken', {
+              token: swapPair.fromAsset?.code,
+            })}
+            onAction={onGetTokenPress}
+          />
+        )
+      case ErrorMessaging.EnableToken:
+        return (
+          <MessageBanner
+            text1={I18n.t('swapScreen.toTradePair', {
+              token: swapPair.fromAsset?.code,
+            })}
+            btnLabel={{ tx: 'swapScreen.okDoIt' }}
+            onAction={onOkDoItPress}
+          />
+        )
+      default:
+        return <MessageBanner text1={msg} />
+    }
+  }, [error, swapPair.fromAsset?.code])
 
   return (
     <Box flex={1} backgroundColor="mainBackground" paddingHorizontal={'xl'}>
       <Box flex={1}>
         <Box flex={0.75}>
-          <ScrollView style={FLEX_1}>
+          <ScrollView
+            style={FLEX_1}
+            scrollEnabled={!!error.msg}
+            showsVerticalScrollIndicator={false}>
+            {error.msg ? (
+              <Box paddingVertical={'xl'}>{getCompatibleErrorMsg()}</Box>
+            ) : null}
             <Box height={scale(355)} width="100%">
               <Box
                 height={scale(175)}
@@ -456,7 +685,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                   width={'100%'}>
                   <Box flex={0.8}>
                     <TextInput
-                      cursorColor={faceliftPalette.buttonDefault}
+                      cursorColor={faceliftPalette.active}
                       variant={'swapInput'}
                       placeholder="0.00"
                       onChangeText={handleTextChange}
@@ -519,6 +748,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => {
+                      getMaxValue()
                       onMinOrMaxFnPress(MinOrMax.MAX)
                     }}>
                     <Box
@@ -555,7 +785,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                   width={'100%'}>
                   <Box flex={0.8}>
                     <TextInput
-                      cursorColor={faceliftPalette.buttonDefault}
+                      cursorColor={faceliftPalette.active}
                       variant={'swapInput'}
                       placeholder="0.00"
                       editable={false}
@@ -662,17 +892,22 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           <Box marginVertical={'xl'}>
             <Pressable
               label={{ tx: 'common.next' }}
-              onPress={() => {}}
+              onPress={handleReviewBtnPress}
               variant="solid"
+              disabled={!!error.msg}
               customView={
                 <Box
                   flexDirection={'row'}
                   alignItems="center"
                   justifyContent={'center'}>
-                  <DoubleArrowThick />
+                  {error.msg ? (
+                    <DoubleArrowThickDisabled />
+                  ) : (
+                    <DoubleArrowThick />
+                  )}
                   <Text
                     marginLeft="m"
-                    color={'white'}
+                    color={error.msg ? 'inactiveText' : 'white'}
                     variant={'h6'}
                     lineHeight={scale(30)}
                     tx="common.review"
