@@ -17,6 +17,7 @@ import { useRecoilValue } from 'recoil'
 import { historyStateFamily, networkState } from '../../../atoms'
 import { isEIP1559Fees } from '@liquality/wallet-core/dist/src/utils/fees'
 import { AppIcons } from '../../../assets'
+import { cryptoToFiat } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 
 const { CompletedIcon: SuccessIcon } = AppIcons
 
@@ -37,6 +38,11 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
     //TODO is there a better way to deal with this?
     const { code = 'ETH', chain = ChainId.Ethereum } =
       route.params.assetData || {}
+
+    const gasFeeToFiat = (fee: number, fiatRate: number) => {
+      const currency = unitToCurrency(getAsset(activeNetwork, code), fee)
+      return cryptoToFiat(currency, fiatRate)
+    }
 
     const handleTransactionSpeedUp = () => {
       navigation.navigate(
@@ -66,10 +72,14 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
           justifyContent="space-between"
           alignItems="flex-end"
           paddingHorizontal="xl"
-          marginBottom="xl">
+          marginTop={'lxxl'}>
           <Box>
-            <Text variant="header" tx="sendConfirmationScreeen.status" />
-            <Text variant="content">
+            <Text
+              variant="amountLabel"
+              tx="sendConfirmationScreeen.status"
+              textTransform={'capitalize'}
+            />
+            <Text variant="normalText">
               {historyItem.status === 'SUCCESS'
                 ? `Completed / ${
                     getChain(
@@ -104,15 +114,23 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
           justifyContent="space-between"
           paddingHorizontal="xl"
           marginBottom="xl">
-          <Text variant="header" tx="sendConfirmationScreeen.time" />
-          <Text variant="content">{formatDate(historyItem.startTime)}</Text>
+          <Text
+            variant="amountLabel"
+            tx="sendConfirmationScreeen.time"
+            textTransform={'capitalize'}
+          />
+          <Text variant="normalText">{formatDate(historyItem.startTime)}</Text>
         </Box>
         <Box
           justifyContent="space-between"
           paddingHorizontal="xl"
           marginBottom="xl">
-          <Text variant="header" tx="sendConfirmationScreeen.sent" />
-          <Text variant="content">
+          <Text
+            variant="amountLabel"
+            tx="sendConfirmationScreeen.sent"
+            textTransform={'capitalize'}
+          />
+          <Text variant="normalText">
             {historyItem.fee &&
               `${unitToCurrency(
                 getAsset(activeNetwork, historyItem.from),
@@ -124,21 +142,20 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
           flexDirection="row"
           justifyContent="space-between"
           alignItems="flex-end"
-          paddingHorizontal="xl"
-          minHeight={60}
-          paddingVertical="m"
-          borderTopWidth={1}
-          borderBottomWidth={1}
-          borderColor="mainBorderColor">
+          paddingHorizontal="xl">
           <Box>
-            <Text variant="header" tx="sendConfirmationScreeen.networkSpeed" />
-            <Text variant="content">
-              {`${historyItem.from} Fee: ${historyItem.fee} x ${
+            <Text
+              variant="amountLabel"
+              tx="sendConfirmationScreeen.networkSpeed"
+              textTransform={'capitalize'}
+            />
+            <Text variant="normalText">
+              {`${historyItem.feeLabel} ${historyItem.fee} ${
                 getChain(
                   activeNetwork,
                   getAsset(activeNetwork, historyItem.from).chain,
                 ).fees.unit
-              }`}
+              } | ${gasFeeToFiat(historyItem.fee, historyItem.fiatRate)}`}
             </Text>
           </Box>
           {historyItem.status !== 'SUCCESS' && (
@@ -147,7 +164,9 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
             </Pressable>
           )}
         </Box>
-        {historyItem && <SendTransactionDetails historyItem={historyItem} />}
+        <Box paddingHorizontal={'xl'}>
+          {historyItem && <SendTransactionDetails historyItem={historyItem} />}
+        </Box>
       </ScrollView>
     )
   },
@@ -171,7 +190,6 @@ const SendConfirmationScreen: React.FC<SendConfirmationScreenProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: palette.white,
     paddingVertical: 15,
   },

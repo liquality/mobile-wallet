@@ -7,7 +7,7 @@ import {
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
-import { FADE_IN_OUT_DURATION } from '../../utils'
+import { FADE_IN_OUT_DURATION, labelTranslateFn } from '../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { Card, Box, Text, palette } from '../../theme'
 import GestureDetector from '../gesture-detector/gesture-detector'
@@ -106,20 +106,30 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
   const renderFeeConfirmationView = useCallback(() => {
     return (
       <>
-        <Box flexDirection="row" justifyContent="center" alignItems="center">
-          <Text variant="timelineLabel" tx="confirmationBlockComp.fee" />
-          <Text variant="amount">
+        <Box
+          flexDirection="row"
+          justifyContent="flex-start"
+          alignItems="flex-start">
+          <Text variant="timelineSubLabel" lineHeight={21}>
             {fiatRates && fee && asset
-              ? `${displayFormattedFee?.amount} ${asset} / $${displayFormattedFee?.fiat}`
+              ? `${labelTranslateFn('confirmationBlockComp.fee')}: ${
+                  displayFormattedFee?.amount
+                } ${asset} / $${displayFormattedFee?.fiat}`
               : null}
           </Text>
         </Box>
-        <Box flexDirection="row" justifyContent="center" alignItems="center">
+        <Box
+          flexDirection="row"
+          justifyContent="flex-start"
+          alignItems="center">
           <Text
-            variant="timelineLabel"
+            lineHeight={21}
+            variant="timelineSubLabel"
             tx="confirmationBlockComp.confirmations"
           />
-          <Text variant="amount">{confirmations} </Text>
+          <Text variant="timelineSubLabel" lineHeight={21}>
+            {confirmations}{' '}
+          </Text>
         </Box>
       </>
     )
@@ -133,13 +143,15 @@ const ConfirmationBlock: React.FC<ConfirmationBlockProps> = (
   ])
 
   return (
-    <Box width={'45%'} paddingVertical="s">
-      <Box flexDirection="row" justifyContent="center" alignItems="center">
+    <Box>
+      <Box flexDirection="row" justifyContent="flex-start" alignItems="center">
         <Pressable onPress={handleLinkPress}>
-          <Text variant="boldLink">{status}</Text>
+          <Text variant="timelineLabel" lineHeight={21}>
+            {status}
+          </Text>
         </Pressable>
         <Pressable style={styles.copyBtn} onPress={handleCopyAddressPress}>
-          <CopyIcon width={10} stroke={palette.blueVioletPrimary} />
+          <CopyIcon width={15} stroke={palette.blueVioletPrimary} />
         </Pressable>
       </Box>
       {txHash ? (

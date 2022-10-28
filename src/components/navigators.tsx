@@ -1,10 +1,5 @@
 import React, { createContext } from 'react'
-import {
-  StyleSheet,
-  Pressable,
-  useColorScheme,
-  TouchableOpacity,
-} from 'react-native'
+import { Pressable, useColorScheme, TouchableOpacity } from 'react-native'
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
@@ -77,7 +72,6 @@ import { useNavigation, NavigationProp } from '@react-navigation/core'
 import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
 
 const {
-  SwapCheck,
   NetworkActiveDot,
   Ellipses,
   ChevronLeft,
@@ -267,7 +261,7 @@ const SwapCheckHeaderRight = (navProps: NavigationProps) => {
   const { navigation } = navProps
   return (
     <Pressable onPress={() => navigation.navigate('OverviewScreen', {})}>
-      <SwapCheck style={styles.checkIcon} width={20} height={20} />
+      <Text variant={'headerLink'} tx={'common.done'} />
     </Pressable>
   )
 }
@@ -438,6 +432,7 @@ export const AppStackNavigator = () => {
           component={SendConfirmationScreen}
           options={({ navigation, route }: NavigationProps) => ({
             headerRight: () => SwapCheckHeaderRight({ navigation, route }),
+            headerTitleStyle: MANAGE_ASSET_HEADER,
             title: route?.params?.screenTitle || 'Overview',
             headerLeft: PlaceholderComp,
           })}
@@ -841,9 +836,3 @@ export const StackMainNavigator = () => {
     </MainStack.Navigator>
   )
 }
-
-const styles = StyleSheet.create({
-  checkIcon: {
-    marginRight: 20,
-  },
-})

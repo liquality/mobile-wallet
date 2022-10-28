@@ -6,7 +6,7 @@ import Label from '../ui/label'
 import { TimelineStep } from '@liquality/wallet-core/dist/src/utils/timeline'
 import { SwapHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import { getTimeline } from '../../store/store'
-import { Text, Box, palette } from '../../theme'
+import { Text, Box, palette, faceliftPalette } from '../../theme'
 import Timeline from './timeline'
 import { useRecoilValue } from 'recoil'
 import { fiatRatesState } from '../../atoms'
@@ -14,30 +14,28 @@ import { fiatRatesState } from '../../atoms'
 export const EmptyBlock = () => <View style={styles.emptyBlock} />
 
 export const Step = ({ completed }: { completed: boolean }) => (
-  <View>
-    <Svg height="10" width="10">
+  <Box marginVertical={'s'}>
+    <Svg height="16" width="16">
       <Circle
-        cx="5"
-        cy="5"
-        r="5"
-        fill={completed ? palette.turquoise : palette.nestedColor}
+        cx="8"
+        cy="8"
+        r="8"
+        fill={completed ? palette.buttonActive : palette.nestedColor}
       />
     </Svg>
-  </View>
+  </Box>
 )
 
-export const Separator = ({ completed }: { completed: boolean }) => (
+export const Separator = () => (
   <View>
-    <Svg height="50" width="10">
+    <Svg height="75" width="10">
       <Line
         x1={5}
         y1={0}
         x2={5}
-        y2={50}
-        strokeWidth={2}
-        strokeDasharray={[1, 1]}
-        fill="none"
-        stroke={completed ? palette.turquoise : palette.nestedColor}
+        y2={75}
+        strokeWidth={1}
+        stroke={faceliftPalette.greyBlack}
       />
     </Svg>
   </View>

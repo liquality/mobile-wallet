@@ -101,6 +101,12 @@ export const theme = createTheme({
       marginRight: 's',
       color: 'secondaryForeground',
     },
+    headerLink: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(16),
+      fontWeight: '400',
+      color: 'activeLink',
+    },
     pinkText: {
       fontFamily: Fonts.Regular,
       color: 'darkPink',
@@ -256,9 +262,16 @@ export const theme = createTheme({
     },
     timelineLabel: {
       fontFamily: Fonts.Regular,
-      fontWeight: '300',
-      fontSize: 12,
-      lineHeight: 18,
+      fontWeight: '500',
+      fontSize: 15,
+      color: 'link',
+      marginRight: 's',
+    },
+    timelineSubLabel: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '400',
+      fontSize: 14,
+      color: 'textColor',
       marginRight: 's',
     },
     address: {

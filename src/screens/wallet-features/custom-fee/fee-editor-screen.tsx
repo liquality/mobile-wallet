@@ -39,7 +39,7 @@ import SwapProviderInfoIcon from '../../../assets/icons/swapProviderInfo.svg'
 import { scale } from 'react-native-size-matters'
 import ButtonFooter from '../../../components/button-footer'
 import AssetIcon from '../../../components/asset-icon'
-import { getAsset, getChain } from '@liquality/cryptoassets'
+import { getAsset, getChain, unitToCurrency } from '@liquality/cryptoassets'
 import { useRecoilValue } from 'recoil'
 import {
   accountForAssetState,
@@ -54,10 +54,7 @@ import {
 } from '@liquality/wallet-core/dist/src/utils/fees'
 import { FeeDetails as FDs } from '@chainify/types/dist/lib/Fees'
 import { v4 as uuidv4 } from 'uuid'
-import {
-  fetchFeeDetailsForAsset,
-  fetchFeesForAsset,
-} from '../../../store/store'
+import { fetchFeeDetailsForAsset } from '../../../store/store'
 import {
   dpUI,
   prettyFiatBalance,
@@ -69,7 +66,7 @@ import { Fonts } from '../../../assets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import { GasFees, TotalFees } from '../../../types'
+import { TotalFees } from '../../../types'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 
 type LikelyWaitObjType = {
@@ -99,47 +96,34 @@ const StandardRoute = ({
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
   const [speed, setSpeed] = useState<FeeLabel | undefined>()
-  const [, setError] = useState('')
   const [gasFees, setGasFees] = useState<FDs>()
   const [totalFees, setTotalFees] = useState<TotalFees | undefined>()
   const nativeAssetCode = getNativeAsset(selectedAsset)
   const accountForAsset = useRecoilValue(accountForAssetState(nativeAssetCode))
-  const [fee, setFee] = useState<GasFees | null>(null)
-  const wallet = setupWallet({
-    ...defaultOptions,
-  })
-  const { activeWalletId, fees } = wallet.state
   const [presets, setPresets] = useState<PresetObjectType>({})
 
   const handleApplyPress = () => {
-    if (!speed) return
-    const computed = computePreset(speed)?.amount
+    if (!speed || !totalFees || !gasFees) return
+    const computed = computePreset(speed, totalFees, gasFees)?.amount
     if (computed) applyFee(new BigNumber(computed), speed)
   }
 
   const computePreset = useCallback(
-    (speedValue: FeeLabel): PresetType | undefined => {
-      if (!fee) return undefined
-      let preset = gasFees?.[speedValue] || null
-      let totalFeesSpeed = totalFees?.[speedValue] || null
-      let feeInSatOrGwei = fee?.[speedValue] || fee
+    (speedValue: FeeLabel, tf: TotalFees): PresetType | undefined => {
+      if (!gasFees) return undefined
+      let totalFeesSpeed = tf?.[speedValue] || null
+      let feeInSatOrGwei = gasFees?.[speedValue].fee
 
       if (
-        preset &&
+        feeInSatOrGwei &&
         totalFeesSpeed &&
         isEIP1559Fees(getAsset(activeNetwork, selectedAsset).chain)
       ) {
-        const gasFeeForSpeed = preset.fee
-        const maxSendFee = getSendFee(
-          selectedAsset,
-          maxFeePerUnitEIP1559(gasFeeForSpeed),
-        )
+        //TODO How to calculate maxSendFee
+        const maxSendFee = maxFeePerUnitEIP1559(feeInSatOrGwei)
+        let amountInNative = dpUI(feeInSatOrGwei, 6).toString()
+        let fiat = prettyFiatBalance(feeInSatOrGwei, fiatRates[selectedAsset])
 
-        let amountInNative = dpUI(
-          getSendFee(selectedAsset, feeInSatOrGwei.toNumber()),
-          6,
-        ).toString()
-        let fiat = prettyFiatBalance(totalFeesSpeed, fiatRates[selectedAsset])
         return {
           amount: amountInNative,
           fiat: fiat.toString(),
@@ -149,15 +133,15 @@ const StandardRoute = ({
           ).toString(),
         }
       } else {
-        let amountInNative = dpUI(
-          getSendFee(selectedAsset, feeInSatOrGwei.toNumber()),
-          9,
-        ).toString()
+        let amountInNative = dpUI(feeInSatOrGwei, 9).toString()
 
         return {
           amount: amountInNative,
           fiat: prettyFiatBalance(
-            Number(amountInNative),
+            unitToCurrency(
+              getAsset(activeNetwork, selectedAsset),
+              Number(amountInNative),
+            ),
             fiatRates[selectedAsset],
           ).toString(),
           max: labelTranslateFn('customFeeScreen.maxHere'),
@@ -165,7 +149,7 @@ const StandardRoute = ({
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [fee, gasFees],
+    [gasFees],
   )
 
   useEffect(() => {
@@ -177,21 +161,24 @@ const StandardRoute = ({
         amtInpBg,
       )
       setTotalFees(totalFeesData)
+      const presetObject: PresetObjectType = {
+        [FeeLabel.Slow]: computePreset(FeeLabel.Slow, totalFeesData, gasFees),
+        [FeeLabel.Average]: computePreset(
+          FeeLabel.Average,
+          totalFeesData,
+          gasFees,
+        ),
+        [FeeLabel.Fast]: computePreset(FeeLabel.Fast, totalFeesData, gasFees),
+      }
+      setPresets(presetObject)
     }
     fetchData()
-    const presetObject: PresetObjectType = {
-      [FeeLabel.Slow]: computePreset(FeeLabel.Slow),
-      [FeeLabel.Average]: computePreset(FeeLabel.Average),
-      [FeeLabel.Fast]: computePreset(FeeLabel.Fast),
-    }
-    setPresets(presetObject)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [computePreset])
 
   useEffect(() => {
-    fetchFeesForAsset(selectedAsset).then(setFee)
     fetchFeeDetailsForAsset(selectedAsset).then(setGasFees)
-  }, [setError, fees, activeWalletId, activeNetwork, selectedAsset])
+  }, [activeNetwork, selectedAsset])
 
   return (
     <Box flex={1}>
@@ -304,7 +291,7 @@ const CustomizeRoute = ({
   const wallet = setupWallet({
     ...defaultOptions,
   })
-  const { activeWalletId, fees } = wallet.state
+  const { activeWalletId } = wallet.state
   const [likelyWaitObj, setLikelyWaitObj] = useState<LikelyWaitObjType>()
   const minerTipInput = useInputState('0')
   const maxFeeInput = useInputState('0')
@@ -367,8 +354,15 @@ const CustomizeRoute = ({
   }
 
   useEffect(() => {
-    fetchFeeDetailsForAsset(selectedAsset).then(setGasFees)
-  }, [setError, fees, activeWalletId, activeNetwork, selectedAsset])
+    fetchFeeDetailsForAsset(selectedAsset).then((gf) => {
+      setLikelyWaitObj({
+        slow: gf?.slow.wait,
+        average: gf?.average.wait,
+        fast: gf?.fast.wait,
+      })
+      setGasFees(gf)
+    })
+  }, [setError, activeWalletId, activeNetwork, selectedAsset])
 
   useEffect(() => {
     async function fetchData() {
@@ -385,39 +379,26 @@ const CustomizeRoute = ({
   }, [])
 
   useEffect(() => {
-    const feesForThisAsset =
-      fees[activeNetwork]?.[activeWalletId]?.[selectedAsset]
-    setLikelyWaitObj({
-      slow: feesForThisAsset?.slow.wait,
-      average: feesForThisAsset?.average.wait,
-      fast: feesForThisAsset?.fast.wait,
-    })
-  }, [activeNetwork, activeWalletId, fees, selectedAsset, speed])
-
-  useEffect(() => {
     setUnit(
       getChain(activeNetwork, getAsset(activeNetwork, selectedAsset).chain).fees
         .unit,
     )
-    const feeDetails =
-      fees?.[activeNetwork]?.[activeWalletId]?.[getNativeAsset(selectedAsset)]
-    if (!feeDetails) {
+    if (!gasFees) {
       setError(labelTranslateFn('customFeeScreen.gasFeeMissing')!)
       return
     }
 
-    if (typeof feeDetails[speed].fee !== 'number') {
-      handleMinerTip(feeDetails[speed].fee.maxPriorityFeePerGas.toString())
-      handleMaxFee(feeDetails[speed].fee.maxFeePerGas.toString())
-      setCurrentBaseFee(feeDetails[speed].fee.suggestedBaseFeePerGas.toString())
+    if (typeof gasFees[speed].fee !== 'number') {
+      handleMinerTip(gasFees[speed].fee.maxPriorityFeePerGas.toString())
+      handleMaxFee(gasFees[speed].fee.maxFeePerGas.toString())
+      setCurrentBaseFee(gasFees[speed].fee.suggestedBaseFeePerGas.toString())
     } else {
-      handleMinerTip(feeDetails[speed].fee.toString())
-      handleMaxFee(feeDetails[speed].fee.toString())
+      handleMinerTip(gasFees[speed].fee.toString())
+      handleMaxFee(gasFees[speed].fee.toString())
     }
   }, [
     activeNetwork,
     activeWalletId,
-    fees,
     gasFees,
     handleMaxFee,
     handleMinerTip,

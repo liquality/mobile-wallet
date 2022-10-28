@@ -51,7 +51,8 @@
     "totalPrettyFiatBal": "{{prettyFiatBalance}}",
     "started": "Started",
     "completed": "Completed",
-    "custom": "Custom"
+    "custom": "Custom",
+    "done": "Done"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
@@ -166,7 +167,7 @@
   },
   "sendReviewScreen": {
     "inputDataInvalid": "Input data invalid",
-    "sendTransDetails": "SEND {{asset}} Transaction Details",
+    "sendTransDetails": "SEND Details",
     "failedTrans": "Failed to send transaction: ",
     "rateNotAvail": "Rates not available",
     "send": "SEND",
