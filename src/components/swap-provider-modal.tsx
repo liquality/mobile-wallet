@@ -85,23 +85,25 @@ const SwapProviderModal = (props: Props) => {
       backgroundColor="mainBackground"
       paddingHorizontal={'screenPadding'}>
       <Box flex={0.8}>
-        <Box flexDirection="row" marginTop={'xxl'} marginBottom="xl">
-          <Box flex={0.5} marginLeft="xl">
-            <Text
-              variant={'addressLabel'}
-              tx="listHeaderComp.rate"
-              color={'darkGrey'}
-            />
-          </Box>
-          <Box flex={0.5}>
-            <Text
-              variant={'addressLabel'}
-              tx="listHeaderComp.provider"
-              color={'darkGrey'}
-            />
-          </Box>
-        </Box>
         <FlatList
+          ListHeaderComponent={
+            <Box flexDirection="row" marginTop={'xxl'} marginBottom="xl">
+              <Box flex={0.5} marginLeft="xl">
+                <Text
+                  variant={'addressLabel'}
+                  tx="listHeaderComp.rate"
+                  color={'darkGrey'}
+                />
+              </Box>
+              <Box flex={0.5}>
+                <Text
+                  variant={'addressLabel'}
+                  tx="listHeaderComp.provider"
+                  color={'darkGrey'}
+                />
+              </Box>
+            </Box>
+          }
           data={quotes}
           renderItem={renderItem}
           keyExtractor={(item, index) => `${index}`}
