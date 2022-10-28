@@ -62,6 +62,7 @@ import MessageBanner from '../../../components/ui/message-banner'
 import I18n from 'i18n-js'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
+import FeeEditorScreen from '../custom-fee/fee-editor-screen'
 
 const {
   WavyArrow,
@@ -195,6 +196,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [selectedQuote, setSelectedQuote] = useState<SwapQuote>()
   const [isFromAmountNative, setIsFromAmountNative] = useState(true)
   const [isToAmountNative, setIsToAmountNative] = useState(true)
+  const [showFeeEditorModal, setShowFeeEditorModal] = useState(false)
 
   const fromFocused = () => {
     setFocusType(InputFocus.FROM)
@@ -725,6 +727,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                       onBlur={onBlur}
                       maxLength={15}
                       value={state.fromAmount}
+                      keyboardType="numeric"
                     />
                   </Box>
                   <TouchableWithoutFeedback onPress={handleFromAssetPress}>
@@ -915,6 +918,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                 color={'defaultButton'}
                 variant={'addressLabel'}
                 tx="common.networkSpeed"
+                onPress={() => setShowFeeEditorModal(true)}
               />
               <NetworkSpeedEdit />
             </Box>
@@ -956,6 +960,16 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           />
         </Box>
       </Box>
+      {showFeeEditorModal && swapPair.fromAsset && (
+        <FeeEditorScreen
+          onClose={setShowFeeEditorModal}
+          selectedAsset={swapPair.fromAsset?.code}
+          amount={new BigNumber(fromBalance)}
+          applyFee={() => {
+            setShowFeeEditorModal(false)
+          }}
+        />
+      )}
     </Box>
   )
 }
