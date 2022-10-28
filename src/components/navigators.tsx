@@ -472,20 +472,6 @@ export const AppStackNavigator = () => {
             headerRight: PlaceholderComp,
           })}
         />
-        {/* <MainStack.Screen
-          name="SwapScreen"
-          component={SwapScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
-          })}
-        /> */}
-        <MainStack.Screen
-          name="SwapReviewScreen"
-          component={SwapReviewScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
-          })}
-        />
         <MainStack.Screen
           name="NftForSpecificChainScreen"
           component={NftForSpecificChainScreen}
@@ -804,6 +790,13 @@ export const StackMainNavigator = () => {
             headerStyle: { backgroundColor },
             headerLeft: undefined,
             headerRight: () => SwapHeaderRight({ navigation, route }),
+          })}
+        />
+        <MainStack.Screen
+          name="SwapReviewScreen"
+          component={SwapReviewScreen}
+          options={() => ({
+            headerRight: PlaceholderComp,
           })}
         />
         <MainStack.Screen
