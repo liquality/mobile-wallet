@@ -107,8 +107,13 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
                 marginTop="m"
                 borderRadius={5}
                 padding={'s'}
+                alignSelf="flex-start"
                 backgroundColor={'mainBackground'}>
-                <Text color={'danger'} tx="loginScreen.passwordError" />
+                <Text
+                  padding={'s'}
+                  color={'danger'}
+                  tx="loginScreen.passwordError"
+                />
               </Box>
             ) : null}
           </Box>
