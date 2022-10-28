@@ -411,17 +411,6 @@ export const AppStackNavigator = () => {
           {(props) => OverviewScreen(props)}
         </MainStack.Screen>
         <MainStack.Screen
-          name="SendScreen"
-          component={SendScreen}
-          options={({ route }: NavigationProps) => ({
-            title: route.params.screenTitle || '',
-            headerLeft: undefined,
-            headerBackVisible: false,
-            headerRight: undefined,
-            headerTitleStyle: HEADER_TITLE_STYLE,
-          })}
-        />
-        <MainStack.Screen
           name="SendReviewScreen"
           component={SendReviewScreen}
           options={() => ({
@@ -777,6 +766,18 @@ export const StackMainNavigator = () => {
             headerRight: undefined,
             headerLeft: () =>
               AssetManageScreenHeaderLeft({ navigation, route }),
+          })}
+        />
+        <MainStack.Screen
+          name="SendScreen"
+          component={SendScreen}
+          options={({ route }: NavigationProps) => ({
+            headerShadowVisible: false,
+            title: route.params.screenTitle || '',
+            headerLeft: undefined,
+            headerBackVisible: false,
+            headerRight: undefined,
+            headerTitleStyle: HEADER_TITLE_STYLE,
           })}
         />
         <MainStack.Screen
