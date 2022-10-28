@@ -38,11 +38,10 @@ import {
   fiatRatesState,
   networkState,
   swapPairState,
-  // walletState,
+  swapQuotesState,
+  swapQuoteState,
 } from '../../../atoms'
 import { useRecoilState, useRecoilValue } from 'recoil'
-// import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
-import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { BigNumber } from '@liquality/types'
 import AssetIcon from '../../../components/asset-icon'
 import { labelTranslateFn, sortQuotes } from '../../../utils'
@@ -185,7 +184,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   )
   const activeNetwork = useRecoilValue(networkState)
   const [error, setError] = useState<ErrorMsgAndType>({ msg: '', type: null })
-  const [quotes, setQuotes] = useState<any[]>([])
+  const [quotes, setQuotes] = useRecoilState(swapQuotesState)
   const [focusType, setFocusType] = React.useState(InputFocus.NULL)
   const [minOrMax, setMinOrMax] = React.useState(MinOrMax.NULL)
   const fromNetworkFee = useRef<CustomNetworkFeeType>()
@@ -193,7 +192,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [gasFees, setGasFees] = useState<GasFees>()
   const [state, dispatch] = useReducer(reducer, initialSwapSEventState)
   const fiatRates = useRecoilValue(fiatRatesState)
-  const [selectedQuote, setSelectedQuote] = useState<SwapQuote>()
+  const [selectedQuote, setSelectedQuote] = useRecoilState(swapQuoteState)
   const [isFromAmountNative, setIsFromAmountNative] = useState(true)
   const [isToAmountNative, setIsToAmountNative] = useState(true)
   const [showFeeEditorModal, setShowFeeEditorModal] = useState(false)
@@ -364,9 +363,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               },
             })
 
-            setSelectedQuote(sortedQuotes[0])
-            setQuotes(sortedQuotes)
+            setSelectedQuote(quoteList[0])
+            setQuotes(quoteList)
           } else {
+            setSelectedQuote(null)
+            setQuotes([])
             setError({
               msg: labelTranslateFn('swapScreen.isNotTraded')!,
               type: ErrorMessaging.PairsList,
@@ -382,6 +383,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         type: ErrorMessaging.NotEngLiq,
         msg: labelTranslateFn('swapScreen.notEnoughLiquidityTryAgain')!,
       })
+      setSelectedQuote(null)
+      setQuotes([])
       return
     }
     getQuoteList()
@@ -391,6 +394,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     swapPair.fromAsset?.code,
     swapPair.toAsset?.code,
     fromBalance,
+    navigation,
+    setQuotes,
+    setSelectedQuote,
   ])
 
   const getMinValue = () => {
@@ -447,6 +453,14 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         payload: { fromAmount: text },
       })
     }
+  }
+
+  const onQuotesPress = () => {
+    const screenTitle = I18n.t(
+      quotes.length === 1 ? 'oneProviderQuote' : 'nosProviderQuote',
+      { quote: quotes.length },
+    )
+    navigation.navigate('SwapProviderModal', { screenTitle })
   }
 
   const onMinOrMaxFnPress = (selected: MinOrMax) => {
@@ -902,9 +916,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               <Text
                 textAlign={'center'}
                 color={'defaultButton'}
+                onPress={onQuotesPress}
                 marginTop="m"
                 variant={'addressLabel'}>
-                {quotes.length} Quotes
+                {quotes.length} {labelTranslateFn('quotes')}
               </Text>
             ) : null}
             <Box

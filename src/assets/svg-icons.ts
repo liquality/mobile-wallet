@@ -152,6 +152,8 @@ import WavyArrow from '../assets/icons/wavyArrow.svg'
 import NetworkSpeedEdit from '../assets/icons/networkSpeedEdit.svg'
 import DoubleArrowThick from '../assets/icons/doubleArrowThick.svg'
 import DoubleArrowThickDisabled from '../assets/icons/doubleArrowThickDisabled.svg'
+import HopProviderIcon from '../assets/icons/swap-providers/hop.svg'
+import OneInch from '../assets/icons/swap-providers/oneInch.svg'
 
 export default {
   PendingSwap,
@@ -307,4 +309,6 @@ export default {
   NetworkSpeedEdit,
   DoubleArrowThick,
   DoubleArrowThickDisabled,
+  OneInch,
+  HopProviderIcon,
 }

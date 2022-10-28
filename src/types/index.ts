@@ -131,6 +131,7 @@ export type StackPayload = {
   isScrolledUp?: boolean
   token?: string
   showIntro?: boolean
+  showProvideIcon?: boolean
 }
 
 export type SettingStackParamList = {
@@ -200,6 +201,7 @@ export type MainStackParamList = {
   SettingsScreen: { shouldLogOut?: boolean }
   WithPopupMenu: undefined
   BuyCryptoDrawer: StackPayload
+  SwapProviderModal: StackPayload
   SelectChainScreen: undefined
   SwapDetailsScreen: StackPayload
 }
