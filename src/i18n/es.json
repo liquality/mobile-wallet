@@ -475,5 +475,6 @@
   "feeAndLimit": "Fees and limits may vary. It usually takes just a couple of minutes and requires registration.",
   "buyTknWithTransak": "Buy {{token}} with Transak",
   "buyTknWithOnramper": "Buy {{token}} with Onramper",
-  "weRecommedToStart": "We recommend to start with sending ETH to your Liquality wallet because that fuels many transactions. Or you can also buy crypto at our trusted partners."
+  "weRecommedToStart": "We recommend to start with sending ETH to your Liquality wallet because that fuels many transactions. Or you can also buy crypto at our trusted partners.",
+  "balance": "Balance"
 }

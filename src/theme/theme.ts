@@ -65,6 +65,7 @@ export const theme = createTheme({
     activeLink: faceliftPalette.active,
     inactiveLink: faceliftPalette.black,
     semiTransparentGrey: faceliftPalette.semiTransparentGrey,
+    lightInputActiveColor: faceliftPalette.lightInputActiveColor,
   },
   spacing: {
     vs: scale(2),
@@ -413,6 +414,12 @@ export const theme = createTheme({
       fontWeight: '400',
       lineHeight: scale(17),
     },
+    subListBoldText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(13),
+      fontWeight: '600',
+      lineHeight: scale(17),
+    },
     networkStatus: {
       fontFamily: Fonts.JetBrainsMono,
       fontSize: scale(11),
@@ -690,6 +697,13 @@ export const theme = createTheme({
       fontWeight: '400',
       fontSize: scale(16),
     },
+    swapInput: {
+      fontWeight: '300',
+      fontSize: scale(35),
+      width: '100%',
+      height: scale(35),
+      color: 'darkGrey',
+    },
     default: {
       fontWeight: '400',
       fontSize: scale(19),
@@ -726,6 +740,7 @@ export const theme = createTheme({
       width: '100%',
     },
   },
+  scrollViewVariants: {},
 })
 
 export type ThemeType = typeof theme

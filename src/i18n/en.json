@@ -24,8 +24,8 @@
     "edit": "Edit",
     "error": "Error",
     "addLiquidity": "Add Liquidity",
-    "min": "Min",
-    "max": "Max",
+    "min": "MIN",
+    "max": "MAX",
     "available": "Available",
     "receive": "RECEIVE",
     "maxSlippage": "Max slippage is 0.5%.",
@@ -476,5 +476,6 @@
   "buyTknWithTransak": "Buy {{token}} with Transak",
   "buyTknWithOnramper": "Buy {{token}} with Onramper",
   "weRecommedToStart": "We recommend to start with sending ETH to your Liquality wallet because that fuels many transactions. Or you can also buy crypto at our trusted partners.",
-  "gettingStartedWithCrypto": "Getting Started with Crypto is Easy"
+  "gettingStartedWithCrypto": "Getting Started with Crypto is Easy",
+  "balance": "Balance"
 }
