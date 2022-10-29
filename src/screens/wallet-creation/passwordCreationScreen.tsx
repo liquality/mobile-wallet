@@ -146,6 +146,7 @@ const PasswordCreationScreen = ({
                 marginTop="m"
                 borderRadius={5}
                 padding={'s'}
+                alignSelf="flex-start"
                 backgroundColor={'mainBackground'}>
                 <Text color={'danger'} tx="loginScreen.passwordError" />
               </Box>

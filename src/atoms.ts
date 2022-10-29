@@ -27,6 +27,7 @@ import {
 } from '@liquality/wallet-core/dist/src/store/types'
 import { KEYS } from './utils'
 import * as Localization from 'expo-localization'
+import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 
 //------------ATOMS---------------------
 export const accountsIdsState = atom<{ id: string; name: Asset }[]>({
@@ -129,6 +130,16 @@ export const langSelected = atom<LanguageEnum | string>({
 export const doubleOrLongTapSelectedAsset = atom<string>({
   key: 'doubleOrLongTapSelectedAsset',
   default: '',
+})
+
+export const swapQuoteState = atom<SwapQuote | null>({
+  key: 'swapQuoteState',
+  default: null,
+})
+
+export const swapQuotesState = atom<SwapQuote[]>({
+  key: 'swapQuotesState',
+  default: [],
 })
 
 export enum SwapScreenPopUpTypes {

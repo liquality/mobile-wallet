@@ -558,7 +558,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               selectedAsset={code}
               amount={new BigNumber(amountInput.value)}
               applyFee={(fee) => {
-                setCustomFee(fee.toNumber)
+                setCustomFee(fee.toNumber())
                 setShowFeeEditorModal(false)
               }}
             />

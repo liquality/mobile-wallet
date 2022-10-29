@@ -4,6 +4,7 @@ import {
   Pressable,
   useColorScheme,
   TouchableOpacity,
+  Alert,
 } from 'react-native'
 import {
   createNativeStackNavigator,
@@ -35,6 +36,7 @@ import {
 } from '../types'
 import WithPopupMenu from './with-popup-menu'
 import BuyCryptoDrawer from './buy-crpto-drawer'
+import SwapProviderModal from './swap-provider-modal'
 import AssetChooserScreen from '../screens/wallet-features/asset/asset-chooser-screen'
 import AssetManagementScreen from '../screens/wallet-features/asset/asset-management-screen'
 import AssetToggleScreen from '../screens/wallet-features/asset/asset-toggle-screen'
@@ -264,6 +266,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'SendScreen'
   | 'BuyCryptoDrawer'
   | 'SwapScreen'
+  | 'SwapProviderModal'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -308,11 +311,11 @@ const AssetManageScreenHeaderLeft = (navProps: NavigationProps) => {
   )
 }
 
-const SwapHeaderRight = (navProps: NavigationProps) => {
-  const { navigation } = navProps
+const SwapHeaderRight = () => {
+  const onPress = () => Alert.alert('Work in Progress')
 
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
       <Box paddingHorizontal={'s'} paddingVertical="m">
         <SwapQuotes width={scale(25)} />
       </Box>
@@ -411,17 +414,6 @@ export const AppStackNavigator = () => {
           {(props) => OverviewScreen(props)}
         </MainStack.Screen>
         <MainStack.Screen
-          name="SendScreen"
-          component={SendScreen}
-          options={({ route }: NavigationProps) => ({
-            title: route.params.screenTitle || '',
-            headerLeft: undefined,
-            headerBackVisible: false,
-            headerRight: undefined,
-            headerTitleStyle: HEADER_TITLE_STYLE,
-          })}
-        />
-        <MainStack.Screen
           name="SendReviewScreen"
           component={SendReviewScreen}
           options={() => ({
@@ -468,20 +460,6 @@ export const AppStackNavigator = () => {
         <MainStack.Screen
           name="AssetToggleScreen"
           component={AssetToggleScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
-          })}
-        />
-        {/* <MainStack.Screen
-          name="SwapScreen"
-          component={SwapScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
-          })}
-        /> */}
-        <MainStack.Screen
-          name="SwapReviewScreen"
-          component={SwapReviewScreen}
           options={() => ({
             headerRight: PlaceholderComp,
           })}
@@ -794,16 +772,35 @@ export const StackMainNavigator = () => {
           })}
         />
         <MainStack.Screen
+          name="SendScreen"
+          component={SendScreen}
+          options={({ route }: NavigationProps) => ({
+            headerShadowVisible: false,
+            title: route.params.screenTitle || '',
+            headerLeft: undefined,
+            headerBackVisible: false,
+            headerRight: undefined,
+            headerTitleStyle: HEADER_TITLE_STYLE,
+          })}
+        />
+        <MainStack.Screen
           name="SwapScreen"
           component={SwapScreen}
-          options={({ navigation, route }: NavigationProps) => ({
+          options={() => ({
             headerBackVisible: false,
             headerShadowVisible: false,
             title: labelTranslateFn('assetScreen.swap') || '',
             headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
             headerLeft: undefined,
-            headerRight: () => SwapHeaderRight({ navigation, route }),
+            headerRight: SwapHeaderRight,
+          })}
+        />
+        <MainStack.Screen
+          name="SwapReviewScreen"
+          component={SwapReviewScreen}
+          options={() => ({
+            headerRight: PlaceholderComp,
           })}
         />
         <MainStack.Screen
@@ -822,11 +819,10 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="AssetScreen"
           component={AssetScreen}
-          options={({ navigation, route }: NavigationProps) => ({
+          options={() => ({
             ...screenNavOptions,
             headerStyle: { backgroundColor },
-            headerRight: () =>
-              NetworkAndActionsHeaderRight({ navigation, route }),
+            headerRight: NetworkAndActionsHeaderRight,
             headerLeft: StackMainNavigatorHeaderLeft,
           })}
         />
@@ -870,6 +866,24 @@ export const StackMainNavigator = () => {
               headerRight: isScrolledUp
                 ? BuyCryptoDrawerHeaderRight
                 : undefined,
+            }
+          }}
+        />
+        <MainStack.Screen
+          name="SwapProviderModal"
+          component={SwapProviderModal}
+          options={({ route }: NavigationProps) => {
+            const { screenTitle = '' } = route.params
+            return {
+              ...screenNavOptions,
+              presentation: 'fullScreenModal',
+              headerStyle: {
+                backgroundColor: faceliftPalette.white,
+              },
+              headerTitleStyle: NORMAL_HEADER,
+              headerTitle: screenTitle,
+              headerLeft: BuyCryptoDrawerHeaderRight,
+              headerRight: SwapHeaderRight,
             }
           }}
         />

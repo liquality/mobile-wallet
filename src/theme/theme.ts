@@ -470,6 +470,11 @@ export const theme = createTheme({
       fontSize: scale(17),
       fontWeight: '400',
     },
+    rateLabel: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(15),
+      fontWeight: '400',
+    },
     errorText: {
       fontFamily: Fonts.Regular,
       fontSize: scale(13),
