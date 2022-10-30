@@ -20,7 +20,7 @@ export const Step = ({ completed }: { completed: boolean }) => (
         cx="8"
         cy="8"
         r="8"
-        fill={completed ? palette.buttonActive : palette.nestedColor}
+        fill={completed ? faceliftPalette.buttonDisabled : palette.nestedColor}
       />
     </Svg>
   </Box>

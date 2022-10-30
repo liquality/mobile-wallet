@@ -86,7 +86,7 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
           alignItems="center"
           width="4%"
           marginHorizontal="l">
-          <Step completed={historyItem.status === 'SUCCESS'} />
+          <Step completed />
           <Separator />
         </Box>
         <Box>

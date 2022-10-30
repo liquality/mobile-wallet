@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, ScrollView, View, Dimensions } from 'react-native'
+import { StyleSheet, ScrollView, View, Dimensions, Linking } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { unitToCurrency, getChain, getAsset } from '@liquality/cryptoassets'
 import { SendHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
@@ -19,7 +19,7 @@ import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFor
 import { Path, Svg } from 'react-native-svg'
 import AssetIcon from '../../../components/asset-icon'
 import { scale } from 'react-native-size-matters'
-import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
+import { getTransactionExplorerLink } from '@liquality/wallet-core/dist/src/utils/asset'
 
 const { CompletedIcon: SuccessIcon } = AppIcons
 
@@ -52,6 +52,9 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
       return prettyFiatBalance(amountInNative(), historyItem.fiatRate)
     }
 
+    const shortenHash = (hash: string) => {
+      return `${hash.slice(0, 6)}...${hash.slice(hash.length - 4)}`
+    }
     const gasPricePerUnit = (): string => {
       if (!historyItem.tx?.feePrice) return 'N/A'
       return `${Math.floor(
@@ -61,6 +64,16 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
             getAsset(activeNetwork, historyItem.from).chain,
           ).gasLimit.send.native,
       )}`
+    }
+
+    const handleTansactionHashPress = () => {
+      Linking.openURL(
+        getTransactionExplorerLink(
+          historyItem.tx.hash,
+          historyItem.from,
+          historyItem.network,
+        ),
+      )
     }
 
     const getBackgroundBox = (height: number) => {
@@ -128,8 +141,11 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
             <Text variant={'amountMedium'} color={'darkGrey'}>
               {historyItem.fee}
             </Text>
-            <Text variant={'amountMedium'} color={'activeLink'}>
-              {shortenAddress(historyItem.toAddress)}
+            <Text
+              variant={'amountMedium'}
+              color={'activeLink'}
+              onPress={handleTansactionHashPress}>
+              {shortenHash(historyItem.tx.hash)}
             </Text>
           </Box>
         </Box>
