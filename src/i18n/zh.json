@@ -159,8 +159,9 @@
   },
   "sendConfirmationScreeen": {
     "status": "STATUS",
-    "time": "TIME",
+    "initiated": "Initiated",
     "sent": "SENT",
+    "completed": "Completed",
     "networkSpeed": "NETWORK SPEED/FEE",
     "speedUp": "Speed Up",
     "load": "Loading..."
@@ -348,9 +349,9 @@
     "buy": "Buy"
   },
   "sendTranDetailComp": {
-    "transId": "TRANSACTION ID",
+    "transaction": "TRANSACTION",
     "sent": "Sent",
-    "completed": "Completed"
+    "received": "Received"
   },
   "confirmationBlockComp": {
     "fee": "Fee",

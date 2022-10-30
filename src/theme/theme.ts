@@ -189,6 +189,11 @@ export const theme = createTheme({
       fontSize: 12,
       color: 'secondaryForeground',
     },
+    amountMedium: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '300',
+      fontSize: 21,
+    },
     amountLarge: {
       fontFamily: Fonts.Regular,
       fontWeight: '300',
@@ -260,18 +265,23 @@ export const theme = createTheme({
       lineHeight: 16,
       color: 'link',
     },
+    timelineHeader: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: 18,
+      color: 'greyBlack',
+    },
     timelineLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
       fontSize: 15,
-      color: 'link',
-      marginRight: 's',
+      color: 'darkGrey',
     },
     timelineSubLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '400',
       fontSize: 14,
-      color: 'textColor',
+      color: 'activeLink',
       marginRight: 's',
     },
     address: {
@@ -360,6 +370,12 @@ export const theme = createTheme({
       fontSize: scale(14),
       fontWeight: '400',
       color: 'activeLink',
+    },
+    bar: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(14),
+      fontWeight: '400',
+      color: 'greyMeta',
     },
     activityText: {
       fontFamily: Fonts.Regular,

@@ -1,14 +1,16 @@
 import { SendHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import React, { memo } from 'react'
-import { Text, Box } from '../../theme'
+import { Text, Box, palette, showCopyToast } from '../../theme'
 import { formatDate, labelTranslateFn } from '../../utils'
 import { v4 as uuidv4 } from 'uuid'
-import ConfirmationBlock from '../swap/confirmation-block'
 import { Separator, Step } from '../swap/swap-transaction-details'
-import { getTransactionExplorerLink } from '@liquality/wallet-core/dist/src/utils/asset'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { useRecoilValue } from 'recoil'
-import { fiatRatesState, addressStateFamily } from '../../atoms'
+import { addressStateFamily } from '../../atoms'
+import { Pressable } from 'react-native'
+import { AppIcons } from '../../assets'
+import Clipboard from '@react-native-clipboard/clipboard'
+const { CopyIcon } = AppIcons
 
 type SendTransactionDetailsProps = {
   historyItem: SendHistoryItem
@@ -17,12 +19,25 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
   props,
 ): React.ReactElement => {
   const { historyItem } = props
-  const fiatRates = useRecoilValue(fiatRatesState)
   const address = useRecoilValue(addressStateFamily(historyItem.accountId))
 
   // Bitcoin send's historyItem props missing 'from' key
   // to avoid crash
   const fromAddress = historyItem.tx?.from?.toString() || address
+
+  const handleCopyFromAddressPress = async () => {
+    if (address) {
+      Clipboard.setString(fromAddress)
+      showCopyToast('copyToast', labelTranslateFn('receiveScreen.copied')!)
+    }
+  }
+
+  const handleCopyToAddressPress = async () => {
+    if (historyItem.tx?.to) {
+      Clipboard.setString(historyItem.tx.to.toString())
+      showCopyToast('copyToast', labelTranslateFn('receiveScreen.copied')!)
+    }
+  }
 
   if (!historyItem) {
     return (
@@ -38,16 +53,11 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
       padding="xl"
       marginTop="xl"
       backgroundColor={'blockBackgroundColor'}>
-      <Box
-        flexDirection="row"
-        justifyContent="space-between"
-        marginBottom={'mxxl'}>
-        <Text variant="timelineLabel" tx="sendTranDetailComp.transId" />
-        <Box borderWidth={1} borderColor={'activeLink'} paddingHorizontal={'m'}>
-          <Text variant="link">Link</Text>
-        </Box>
-      </Box>
-
+      <Text
+        variant="timelineHeader"
+        tx="sendTranDetailComp.transaction"
+        marginBottom={'xl'}
+      />
       <Box flexDirection="row" alignItems="flex-start" key={uuidv4()}>
         <Box
           justifyContent="flex-start"
@@ -79,27 +89,29 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
           <Step completed={historyItem.status === 'SUCCESS'} />
           <Separator />
         </Box>
-        <ConfirmationBlock
-          address={historyItem.from}
-          status={`From: ${shortenAddress(fromAddress)}`}
-          confirmations={historyItem.tx?.confirmations || 0}
-          fee={historyItem.fee}
-          asset={historyItem.from}
-          fiatRate={historyItem.fiatRate}
-          fiatRates={fiatRates}
-          url={getTransactionExplorerLink(
-            historyItem.tx?.hash,
-            historyItem.from,
-            historyItem.network,
-          )}
-        />
+        <Box>
+          <Text variant={'timelineLabel'}>From</Text>
+          <Box flexDirection={'row'} alignItems={'center'}>
+            <Text variant={'timelineSubLabel'}>
+              {shortenAddress(fromAddress)}
+            </Text>
+            <Pressable onPress={handleCopyFromAddressPress}>
+              <CopyIcon
+                width={15}
+                stroke={palette.blueVioletPrimary}
+                strokeWidth={0.2}
+              />
+            </Pressable>
+          </Box>
+        </Box>
       </Box>
       <Box flexDirection="row" alignItems="stretch" key={uuidv4()}>
         <Box
           justifyContent="flex-start"
           alignItems="center"
           width="4%"
-          marginHorizontal="l">
+          marginHorizontal="l"
+          paddingBottom={'m'}>
           <Step completed={historyItem.status === 'SUCCESS'} />
           <Separator />
           <Box
@@ -111,23 +123,24 @@ const SendTransactionDetails: React.FC<SendTransactionDetailsProps> = (
           />
         </Box>
         <Box justifyContent={'space-between'} alignContent={'space-between'}>
-          <ConfirmationBlock
-            address={historyItem.toAddress}
-            status={`To: ${shortenAddress(historyItem.toAddress)}`}
-            confirmations={historyItem.tx?.confirmations || 0}
-            fee={historyItem.fee}
-            asset={historyItem.from}
-            fiatRates={fiatRates}
-            url={getTransactionExplorerLink(
-              historyItem.tx?.hash,
-              historyItem.from,
-              historyItem.network,
-            )}
-            fiatRate={historyItem.fiatRate}
-          />
-          {!historyItem.endTime && (
+          <Box>
+            <Text variant={'timelineLabel'}>To</Text>
+            <Box flexDirection={'row'} alignItems={'center'}>
+              <Text variant={'timelineSubLabel'}>
+                {shortenAddress(historyItem.toAddress)}
+              </Text>
+              <Pressable onPress={handleCopyToAddressPress}>
+                <CopyIcon
+                  width={15}
+                  strokeWidth={0.2}
+                  stroke={palette.blueVioletPrimary}
+                />
+              </Pressable>
+            </Box>
+          </Box>
+          {historyItem.endTime && (
             <Text variant="amountLabel" lineHeight={21}>{`${labelTranslateFn(
-              'sendTranDetailComp.completed',
+              'sendTranDetailComp.received',
             )} ${formatDate(historyItem.endTime)}`}</Text>
           )}
         </Box>
