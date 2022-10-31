@@ -157,7 +157,7 @@ const extractSpecificIcon = {
     assetName: HopProviderIcon,
     viewBoxValue: '',
   },
-  ['1inch']: {
+  ['oneinchV4']: {
     assetName: OneInch,
     viewBoxValue: '',
   },
