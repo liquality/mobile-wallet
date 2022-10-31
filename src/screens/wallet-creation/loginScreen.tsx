@@ -135,7 +135,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
           <Text
             opacity={0.8}
             variant={'whiteLabel'}
-            textDecorationLine={'underline'}
             tx="common.importWithSeedPhrase"
             marginTop={'s'}
             onPress={() =>

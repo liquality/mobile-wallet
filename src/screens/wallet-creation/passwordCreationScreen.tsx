@@ -95,7 +95,11 @@ const PasswordCreationScreen = ({
       ? INPUT_OPACITY_INACTIVE
       : INPUT_OPACITY_ACTIVE
 
-  if (passValue.trim().length >= 8 && passConfirmValue.trim().length >= 8) {
+  if (
+    passValue.trim().length >= PASSWORD_LENGTH &&
+    passConfirmValue.trim().length >= PASSWORD_LENGTH &&
+    passValue === passConfirmValue
+  ) {
     disabled = false
   }
 
