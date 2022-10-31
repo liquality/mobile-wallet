@@ -67,6 +67,7 @@ export const theme = createTheme({
     semiTransparentGrey: faceliftPalette.semiTransparentGrey,
     sectionTitleColor: palette.sectionTitleColor,
     warningButton: faceliftPalette.warningButton,
+    lightInputActiveColor: faceliftPalette.lightInputActiveColor,
   },
   spacing: {
     vs: scale(2),
@@ -443,6 +444,12 @@ export const theme = createTheme({
       fontWeight: '400',
       lineHeight: scale(17),
     },
+    subListBoldText: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(13),
+      fontWeight: '600',
+      lineHeight: scale(17),
+    },
     networkStatus: {
       fontFamily: Fonts.JetBrainsMono,
       fontSize: scale(11),
@@ -491,6 +498,11 @@ export const theme = createTheme({
     gasIndicatorLabel: {
       fontFamily: Fonts.JetBrainsMono,
       fontSize: scale(17),
+      fontWeight: '400',
+    },
+    rateLabel: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(15),
       fontWeight: '400',
     },
     errorText: {
@@ -720,6 +732,13 @@ export const theme = createTheme({
       fontWeight: '400',
       fontSize: scale(16),
     },
+    swapInput: {
+      fontWeight: '300',
+      fontSize: scale(35),
+      width: '100%',
+      height: scale(35),
+      color: 'darkGrey',
+    },
     default: {
       fontWeight: '400',
       fontSize: scale(19),
@@ -756,6 +775,7 @@ export const theme = createTheme({
       width: '100%',
     },
   },
+  scrollViewVariants: {},
 })
 
 export type ThemeType = typeof theme

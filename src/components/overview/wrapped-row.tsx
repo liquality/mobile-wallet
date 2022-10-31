@@ -74,7 +74,10 @@ const WrappedRow: FC<{
           if (toAsset) {
             setSwapPair({ fromAsset, toAsset })
           }
-        } else if (!swapPair.fromAsset) {
+        } else if (
+          !swapPair.fromAsset ||
+          !route.params.swapAssetPair?.fromAsset
+        ) {
           setSwapPair((previousValue) => ({
             ...previousValue,
             fromAsset: selectedAccount,
