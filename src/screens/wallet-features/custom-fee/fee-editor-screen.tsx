@@ -69,7 +69,12 @@ import { Fonts } from '../../../assets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import { GasFees, TotalFees } from '../../../types'
+import {
+  CustomFeeLabel,
+  ExtendedFeeLabel,
+  GasFees,
+  TotalFees,
+} from '../../../types'
 
 type LikelyWaitObjType = {
   slow: number | undefined
@@ -91,10 +96,12 @@ const StandardRoute = ({
   selectedAsset,
   amount,
   applyFee,
+  applyNetworkSpeed,
 }: {
   selectedAsset: string
   amount: BigNumber
   applyFee: (fee: BigNumber) => void
+  applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
 }) => {
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
@@ -116,6 +123,9 @@ const StandardRoute = ({
 
   const handleApplyPress = () => {
     applyFee(new BigNumber(computePreset(speed)?.amount))
+    if (applyNetworkSpeed && speed) {
+      applyNetworkSpeed(speed as ExtendedFeeLabel)
+    }
   }
 
   const computePreset = useCallback(
@@ -285,10 +295,12 @@ const CustomizeRoute = ({
   selectedAsset,
   amount,
   applyFee,
+  applyNetworkSpeed,
 }: {
   selectedAsset: string
   amount: BigNumber
   applyFee: (fee: BigNumber) => void
+  applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
 }) => {
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
@@ -312,6 +324,9 @@ const CustomizeRoute = ({
     applyFee(
       new BigNumber(minerTipInput.value).plus(new BigNumber(maxFeeInput.value)),
     )
+    if (applyNetworkSpeed && speed) {
+      applyNetworkSpeed(CustomFeeLabel.Custom)
+    }
   }
 
   const handleMinerTip = useCallback(
@@ -594,6 +609,7 @@ type FeeEditorScreenType = {
   amount: BigNumber
   selectedAsset: string
   applyFee: (fee: BigNumber) => void
+  applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
 }
 
 const FeeEditorScreen = ({
@@ -601,6 +617,7 @@ const FeeEditorScreen = ({
   selectedAsset,
   amount,
   applyFee,
+  applyNetworkSpeed,
 }: FeeEditorScreenType) => {
   const layout = useWindowDimensions()
   const [index, setIndex] = useState(0)
@@ -619,6 +636,7 @@ const FeeEditorScreen = ({
             selectedAsset={selectedAsset}
             amount={amount}
             applyFee={applyFee}
+            applyNetworkSpeed={applyNetworkSpeed}
           />
         )
       case 'customize':
@@ -627,6 +645,7 @@ const FeeEditorScreen = ({
             selectedAsset={selectedAsset}
             amount={amount}
             applyFee={applyFee}
+            applyNetworkSpeed={applyNetworkSpeed}
           />
         )
     }
