@@ -90,6 +90,7 @@ const {
   SearchIcon,
   BuyCryptoCloseDark,
   SwapQuotes,
+  ConnectionIndicator,
 } = AppIcons
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
@@ -133,31 +134,19 @@ const DoneButton = () => {
   )
 }
 
-const NetworkAndActionsHeaderRight = () => {
-  const activeNetwork = useRecoilValue(networkState)
+const AssetScreenHeaderRight = () => {
   const [isAssetScreenPopupMenuVisible, setAssetScreenPopuMenuVisible] =
     useRecoilState(assetScreenPopupMenuVisible)
 
   return (
     <Box flexDirection={'row'} alignItems={'center'} padding="s">
-      <Box
-        backgroundColor={'mediumWhite'}
-        flexDirection={'row'}
-        alignItems={'center'}
-        paddingVertical={'s'}
-        paddingHorizontal={'m'}
-        marginRight="s">
-        <NetworkActiveDot />
-        <Text paddingLeft={'s'} color="darkGrey" variant="networkStatus">
-          {`${activeNetwork}`.toUpperCase()}
-        </Text>
-      </Box>
+      <ConnectionIndicator />
 
       <TouchableWithoutFeedback
         onPress={() =>
           setAssetScreenPopuMenuVisible(!isAssetScreenPopupMenuVisible)
         }>
-        <Box padding="s">
+        <Box padding="s" marginLeft={'l'}>
           <Ellipses width={20} height={20} />
         </Box>
       </TouchableWithoutFeedback>
@@ -836,9 +825,27 @@ export const StackMainNavigator = () => {
           component={AssetScreen}
           options={({ route }: NavigationProps) => ({
             ...screenNavOptions,
-            headerTitle: route.params.screenTitle || 'TEST',
+            headerTitle: () => {
+              return (
+                <Box
+                  flexDirection={'row'}
+                  alignItems={'center'}
+                  paddingVertical={'s'}>
+                  <Box
+                    borderLeftWidth={3}
+                    height={scale(20)}
+                    style={{
+                      borderLeftColor: route.params.assetData?.color,
+                    }}
+                  />
+                  <Text variant={'headerTitle'} marginLeft={'m'}>
+                    {route.params.screenTitle?.toUpperCase()}
+                  </Text>
+                </Box>
+              )
+            },
             headerStyle: { backgroundColor },
-            headerRight: NetworkAndActionsHeaderRight,
+            headerRight: AssetScreenHeaderRight,
             headerLeft: StackMainNavigatorHeaderLeft,
           })}
         />

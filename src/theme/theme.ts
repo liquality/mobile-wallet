@@ -3,7 +3,7 @@ import { Fonts } from '../assets'
 import { faceliftPalette } from './faceliftPalette'
 import { palette } from './palette'
 import { scale } from 'react-native-size-matters'
-import { ONBOARDING_PADDING, SCREEN_PADDING } from './../utils/constants'
+import { ONBOARDING_PADDING, SCREEN_PADDING } from '../utils'
 
 export const theme = createTheme({
   colors: {
@@ -494,6 +494,12 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontWeight: '600',
       fontSize: scale(36),
+    },
+    headerTitle: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '600',
+      fontSize: scale(16),
+      color: 'textColor',
     },
     gasIndicatorLabel: {
       fontFamily: Fonts.JetBrainsMono,
