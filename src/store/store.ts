@@ -727,7 +727,6 @@ export const performSwap = async (
     claimFeeLabel: toGasSpeed,
   }
 
-  // return await wallet.dispatch.newSwap(params)
   return await wallet.dispatch.newSwap({ ...params })
 }
 

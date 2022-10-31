@@ -20,6 +20,7 @@ import {
   MainStackParamList,
   CustomFeeLabel,
   GasFees,
+  ExtendedFeeLabel,
 } from '../../../types'
 import {
   Box,
@@ -196,6 +197,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   const [isFromAmountNative, setIsFromAmountNative] = useState(true)
   const [isToAmountNative, setIsToAmountNative] = useState(true)
   const [showFeeEditorModal, setShowFeeEditorModal] = useState(false)
+  const [customFee, setCustomFee] = useState<number>(0)
+  const [networkSpeed, setNetworkSpeed] = useState<ExtendedFeeLabel>(
+    FeeLabel.Average,
+  )
 
   const fromFocused = () => {
     setFocusType(InputFocus.FROM)
@@ -280,10 +285,10 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     let nativeFromCode = swapPair.fromAsset
       ? getNativeAsset(swapPair.fromAsset.code)
       : ''
-    if (swapPair && route.params.customFee) {
+    if (swapPair && networkSpeed === CustomFeeLabel.Custom) {
       let params = {
         speed: CustomFeeLabel.Custom,
-        value: route.params.customFee,
+        value: customFee,
       }
       if (
         nativeCustomFeeCode === nativeToCode &&
@@ -298,19 +303,20 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       }
     } else {
       let params = {
-        speed: FeeLabel.Average,
-        value: gasFees?.average.toNumber() || 0,
+        speed: networkSpeed,
+        value: gasFees?.[networkSpeed].toNumber() || 0,
       }
       toNetworkFee.current = params
       fromNetworkFee.current = params
     }
   }, [
     route.params.code,
-    route.params.customFee,
-    swapPair,
     swapPair.fromAsset,
     swapPair.toAsset,
     gasFees,
+    customFee,
+    networkSpeed,
+    swapPair,
   ])
 
   useEffect(() => {
@@ -576,7 +582,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const handleReviewBtnPress = async () => {
-    const assetsAreNotSameChain =
+    const assetsAreSameChain =
       getNativeAsset(swapPair.fromAsset?.code || '') ===
       getNativeAsset(swapPair.toAsset?.code || '')
 
@@ -586,8 +592,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       !state.fromAmount ||
       !selectedQuote ||
       !fromNetworkFee.current ||
-      !toNetworkFee.current ||
-      !assetsAreNotSameChain
+      !toNetworkFee.current
     ) {
       Alert.alert(labelTranslateFn('swapScreen.invalidArgs')!)
       return
@@ -607,6 +612,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         fromNetworkFee: fromNetworkFee.current,
         toNetworkFee: toNetworkFee.current,
       },
+      assetsAreSameChain,
       screenTitle: I18n.t('swapScreen.swapReview', {
         swapPairfromAssetCode: swapPair.fromAsset.code,
         swapPairtoAssetCode: swapPair.toAsset.code,
@@ -980,9 +986,11 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           onClose={setShowFeeEditorModal}
           selectedAsset={swapPair.fromAsset?.code}
           amount={new BigNumber(fromBalance)}
-          applyFee={() => {
+          applyFee={(fee) => {
+            setCustomFee(fee.toNumber())
             setShowFeeEditorModal(false)
           }}
+          applyNetworkSpeed={setNetworkSpeed}
         />
       )}
     </Box>
