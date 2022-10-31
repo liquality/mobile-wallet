@@ -834,8 +834,9 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="AssetScreen"
           component={AssetScreen}
-          options={() => ({
+          options={({ route }: NavigationProps) => ({
             ...screenNavOptions,
+            headerTitle: route.params.screenTitle || 'TEST',
             headerStyle: { backgroundColor },
             headerRight: NetworkAndActionsHeaderRight,
             headerLeft: StackMainNavigatorHeaderLeft,

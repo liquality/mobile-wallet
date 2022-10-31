@@ -554,6 +554,12 @@ export const theme = createTheme({
       fontSize: scale(27),
       lineHeight: scale(35),
     },
+    menuItemText: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '400',
+      fontSize: scale(16),
+      color: 'textColor',
+    },
   },
   pressableVariants: {
     outline: {

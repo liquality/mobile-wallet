@@ -56,7 +56,7 @@ const WrappedRow: FC<{
   }
 
   const onAssetSelected = useCallback(
-    (currentAccount: AccountType) => {
+    (currentAccount: AccountType, parentAccount?: AccountType) => {
       // Make sure account assets have the same id (account id) as their parent
       const selectedAccount: AccountType = {
         ...currentAccount,
@@ -110,6 +110,7 @@ const WrappedRow: FC<{
           params: {
             ...route.params,
             assetData: selectedAccount,
+            screenTitle: parentAccount?.name || selectedAccount.name,
             includeBackBtn: true,
           },
         })
@@ -171,7 +172,7 @@ const WrappedRow: FC<{
               key={subItem.id}
               parentItem={account}
               item={subItem}
-              onAssetSelected={() => onAssetSelected(subItem)}
+              onAssetSelected={() => onAssetSelected(subItem, account)}
             />
           )
         })}
