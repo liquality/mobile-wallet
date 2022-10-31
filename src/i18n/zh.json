@@ -51,7 +51,8 @@
     "totalPrettyFiatBal": "{{prettyFiatBalance}}",
     "started": "Started",
     "completed": "Completed",
-    "custom": "Custom"
+    "custom": "Custom",
+    "done": "Done"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
@@ -158,18 +159,19 @@
   },
   "sendConfirmationScreeen": {
     "status": "STATUS",
-    "time": "TIME",
+    "initiated": "Initiated",
     "sent": "SENT",
+    "completed": "Completed",
     "networkSpeed": "NETWORK SPEED/FEE",
     "speedUp": "Speed Up",
     "load": "Loading..."
   },
   "sendReviewScreen": {
     "inputDataInvalid": "Input data invalid",
-    "sendTransDetails": "SEND {{asset}} Transaction Details",
+    "sendTransDetails": "SEND Details",
     "failedTrans": "Failed to send transaction: ",
     "rateNotAvail": "Rates not available",
-    "send": "Send",
+    "send": "SEND",
     "netFee": "NETWORK FEE",
     "amtFee": "AMOUNT + FEES",
     "sendTo": "SEND TO",
@@ -347,9 +349,9 @@
     "buy": "Buy"
   },
   "sendTranDetailComp": {
-    "transId": "TRANSACTION ID",
+    "transaction": "TRANSACTION",
     "sent": "Sent",
-    "completed": "Completed"
+    "received": "Received"
   },
   "confirmationBlockComp": {
     "fee": "Fee",

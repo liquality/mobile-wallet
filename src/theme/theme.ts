@@ -3,7 +3,7 @@ import { Fonts } from '../assets'
 import { faceliftPalette } from './faceliftPalette'
 import { palette } from './palette'
 import { scale } from 'react-native-size-matters'
-import { ONBOARDING_PADDING, SCREEN_PADDING } from './../utils/constants'
+import { ONBOARDING_PADDING, SCREEN_PADDING } from '../utils'
 
 export const theme = createTheme({
   colors: {
@@ -65,6 +65,8 @@ export const theme = createTheme({
     activeLink: faceliftPalette.active,
     inactiveLink: faceliftPalette.black,
     semiTransparentGrey: faceliftPalette.semiTransparentGrey,
+    sectionTitleColor: palette.sectionTitleColor,
+    warningButton: faceliftPalette.warningButton,
     lightInputActiveColor: faceliftPalette.lightInputActiveColor,
   },
   spacing: {
@@ -99,6 +101,12 @@ export const theme = createTheme({
       marginVertical: 's',
       marginRight: 's',
       color: 'secondaryForeground',
+    },
+    headerLink: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(16),
+      fontWeight: '400',
+      color: 'activeLink',
     },
     pinkText: {
       fontFamily: Fonts.Regular,
@@ -169,19 +177,23 @@ export const theme = createTheme({
       fontWeight: '400',
       fontSize: 17,
       color: 'buttonFontPrimary',
-      lineHeight: 59.5,
     },
     tertiaryButtonLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '400',
       fontSize: 12,
-      color: 'buttonFontTertiary',
+      color: 'activeLink',
     },
     amount: {
       fontFamily: Fonts.Regular,
       fontWeight: '400',
       fontSize: 12,
       color: 'secondaryForeground',
+    },
+    amountMedium: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '300',
+      fontSize: 21,
     },
     amountLarge: {
       fontFamily: Fonts.Regular,
@@ -254,25 +266,37 @@ export const theme = createTheme({
       lineHeight: 16,
       color: 'link',
     },
+    timelineHeader: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '500',
+      fontSize: 18,
+      color: 'greyBlack',
+    },
     timelineLabel: {
       fontFamily: Fonts.Regular,
-      fontWeight: '300',
-      fontSize: 12,
-      lineHeight: 18,
+      fontWeight: '500',
+      fontSize: 15,
+      color: 'darkGrey',
+    },
+    timelineSubLabel: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '400',
+      fontSize: 14,
+      color: 'activeLink',
       marginRight: 's',
     },
     address: {
       fontFamily: Fonts.Regular,
       fontWeight: '300',
-      fontSize: 12,
+      fontSize: 15,
       lineHeight: 18,
       color: 'addressColor',
     },
     error: {
-      fontFamily: Fonts.Light,
+      fontFamily: Fonts.Regular,
       color: 'danger',
       fontWeight: '500',
-      fontSize: 12,
+      fontSize: 14,
       marginTop: 's',
       paddingLeft: 's',
       paddingVertical: 's',
@@ -347,6 +371,12 @@ export const theme = createTheme({
       fontSize: scale(14),
       fontWeight: '400',
       color: 'activeLink',
+    },
+    bar: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(14),
+      fontWeight: '400',
+      color: 'greyMeta',
     },
     activityText: {
       fontFamily: Fonts.Regular,
@@ -465,6 +495,12 @@ export const theme = createTheme({
       fontWeight: '600',
       fontSize: scale(36),
     },
+    headerTitle: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '600',
+      fontSize: scale(16),
+      color: 'textColor',
+    },
     gasIndicatorLabel: {
       fontFamily: Fonts.JetBrainsMono,
       fontSize: scale(17),
@@ -524,6 +560,12 @@ export const theme = createTheme({
       fontSize: scale(27),
       lineHeight: scale(35),
     },
+    menuItemText: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '400',
+      fontSize: scale(16),
+      color: 'textColor',
+    },
   },
   pressableVariants: {
     outline: {
@@ -567,7 +609,7 @@ export const theme = createTheme({
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: 'm',
+      paddingHorizontal: 's',
       borderRadius: 2,
       height: 20,
     },

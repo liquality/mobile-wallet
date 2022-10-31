@@ -314,3 +314,28 @@ export interface CustomRootState extends RootState {
     sorter?: string | undefined
   }
 }
+
+export enum ErrorMessages {
+  NotEnoughToken,
+  NotEnoughTokenSelectMax,
+  NotEnoughCoverFees,
+  NotEnoughGas,
+  AdjustSending,
+}
+
+export interface ErrorMsgAndType {
+  msg: string
+  type: ErrorMessages | null
+}
+
+export type SendToastProps = {
+  errorMessage: {
+    msg: string
+    type: ErrorMessages
+  }
+  code: string
+  amount: string
+  onGetPress: () => void
+  onMaxPress: () => void
+  resetMsg: () => void
+}

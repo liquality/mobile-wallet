@@ -59,8 +59,8 @@ export const HEADER_TITLE_STYLE: StyleProp<
   }
 > = {
   fontFamily: Fonts.Regular,
-  fontWeight: '500',
-  fontSize: scale(14),
+  fontWeight: '400',
+  fontSize: scale(16),
   color: faceliftPalette.black,
 }
 

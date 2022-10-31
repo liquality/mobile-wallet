@@ -1,6 +1,5 @@
 import React, { createContext } from 'react'
 import {
-  StyleSheet,
   Pressable,
   useColorScheme,
   TouchableOpacity,
@@ -25,7 +24,6 @@ import SettingsScreen from '../screens/wallet-features/settings/settings-screen'
 import AssetScreen from '../screens/wallet-features/asset/asset-screen'
 import ReceiveScreen from '../screens/wallet-features/receive/receive-screen'
 import SendScreen from '../screens/wallet-features/send/send-screen'
-import SendReviewScreen from '../screens/wallet-features/send/send-review-screen'
 import CustomFeeScreen from '../screens/wallet-features/custom-fee/custom-fee-screen'
 import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
 import {
@@ -80,7 +78,6 @@ import { useNavigation, NavigationProp } from '@react-navigation/core'
 import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
 
 const {
-  SwapCheck,
   NetworkActiveDot,
   Ellipses,
   ChevronLeft,
@@ -93,6 +90,7 @@ const {
   SearchIcon,
   BuyCryptoCloseDark,
   SwapQuotes,
+  ConnectionIndicator,
 } = AppIcons
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
@@ -136,31 +134,19 @@ const DoneButton = () => {
   )
 }
 
-const NetworkAndActionsHeaderRight = () => {
-  const activeNetwork = useRecoilValue(networkState)
+const AssetScreenHeaderRight = () => {
   const [isAssetScreenPopupMenuVisible, setAssetScreenPopuMenuVisible] =
     useRecoilState(assetScreenPopupMenuVisible)
 
   return (
     <Box flexDirection={'row'} alignItems={'center'} padding="s">
-      <Box
-        backgroundColor={'mediumWhite'}
-        flexDirection={'row'}
-        alignItems={'center'}
-        paddingVertical={'s'}
-        paddingHorizontal={'m'}
-        marginRight="s">
-        <NetworkActiveDot />
-        <Text paddingLeft={'s'} color="darkGrey" variant="networkStatus">
-          {`${activeNetwork}`.toUpperCase()}
-        </Text>
-      </Box>
+      <ConnectionIndicator />
 
       <TouchableWithoutFeedback
         onPress={() =>
           setAssetScreenPopuMenuVisible(!isAssetScreenPopupMenuVisible)
         }>
-        <Box padding="s">
+        <Box padding="s" marginLeft={'l'}>
           <Ellipses width={20} height={20} />
         </Box>
       </TouchableWithoutFeedback>
@@ -273,7 +259,7 @@ const SwapCheckHeaderRight = (navProps: NavigationProps) => {
   const { navigation } = navProps
   return (
     <Pressable onPress={() => navigation.navigate('OverviewScreen', {})}>
-      <SwapCheck style={styles.checkIcon} width={20} height={20} />
+      <Text variant={'headerLink'} tx={'common.done'} />
     </Pressable>
   )
 }
@@ -414,10 +400,27 @@ export const AppStackNavigator = () => {
           {(props) => OverviewScreen(props)}
         </MainStack.Screen>
         <MainStack.Screen
-          name="SendReviewScreen"
-          component={SendReviewScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
+          name="AssetChooserScreen"
+          component={AssetChooserScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerBackVisible: false,
+            title: route.params.screenTitle || '',
+            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerStyle: { backgroundColor },
+            headerRight: undefined,
+            headerLeft: () =>
+              AssetManageScreenHeaderLeft({ navigation, route }),
+          })}
+        />
+        <MainStack.Screen
+          name="SendScreen"
+          component={SendScreen}
+          options={({ route }: NavigationProps) => ({
+            title: route.params.screenTitle || '',
+            headerLeft: undefined,
+            headerBackVisible: false,
+            headerRight: undefined,
+            headerTitleStyle: HEADER_TITLE_STYLE,
           })}
         />
         <MainStack.Screen
@@ -439,6 +442,7 @@ export const AppStackNavigator = () => {
           component={SendConfirmationScreen}
           options={({ navigation, route }: NavigationProps) => ({
             headerRight: () => SwapCheckHeaderRight({ navigation, route }),
+            headerTitleStyle: NORMAL_HEADER,
             title: route?.params?.screenTitle || 'Overview',
             headerLeft: PlaceholderComp,
           })}
@@ -819,10 +823,29 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="AssetScreen"
           component={AssetScreen}
-          options={() => ({
+          options={({ route }: NavigationProps) => ({
             ...screenNavOptions,
+            headerTitle: () => {
+              return (
+                <Box
+                  flexDirection={'row'}
+                  alignItems={'center'}
+                  paddingVertical={'s'}>
+                  <Box
+                    borderLeftWidth={3}
+                    height={scale(20)}
+                    style={{
+                      borderLeftColor: route.params.assetData?.color,
+                    }}
+                  />
+                  <Text variant={'headerTitle'} marginLeft={'m'}>
+                    {route.params.screenTitle?.toUpperCase()}
+                  </Text>
+                </Box>
+              )
+            },
             headerStyle: { backgroundColor },
-            headerRight: NetworkAndActionsHeaderRight,
+            headerRight: AssetScreenHeaderRight,
             headerLeft: StackMainNavigatorHeaderLeft,
           })}
         />
@@ -891,9 +914,3 @@ export const StackMainNavigator = () => {
     </MainStack.Navigator>
   )
 }
-
-const styles = StyleSheet.create({
-  checkIcon: {
-    marginRight: 20,
-  },
-})

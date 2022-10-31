@@ -71,22 +71,34 @@ export const Button: FC<Props> = (props) => {
   const backgroundColor = useMemo(
     () => ({
       backgroundColor:
-        theme.colors[
-          type === 'primary'
-            ? isActive
-              ? 'defaultButton'
-              : 'inactiveButton'
-            : 'buttonBackgroundSecondary'
-        ],
+        type === 'tertiary'
+          ? theme.colors.transparent
+          : theme.colors[
+              type === 'primary'
+                ? isActive
+                  ? 'defaultButton'
+                  : 'inactiveButton'
+                : 'buttonBackgroundSecondary'
+            ],
     }),
     [theme.colors, type, isActive],
+  )
+
+  const borderColor = useMemo(
+    () => ({
+      borderColor:
+        type === 'tertiary'
+          ? theme.colors.warningButton
+          : theme.colors.transparent,
+    }),
+    [theme.colors.transparent, theme.colors.warningButton, type],
   )
 
   return (
     <BaseButton
       disabled={onlyDisabled ? onlyDisabled : !isActive}
       variant={variant}
-      style={[borderWidth, backgroundColor]}
+      style={[borderWidth, backgroundColor, borderColor]}
       onPress={onPress}>
       {!isLoading && !appendChildren && children}
       {isLoading ? (
@@ -105,7 +117,7 @@ export const Button: FC<Props> = (props) => {
                     : 'inactiveText'
                   : type === 'secondary'
                   ? 'buttonFontSecondary'
-                  : 'buttonFontTertiary'
+                  : 'warningButton'
               ],
           }}>
           {content}

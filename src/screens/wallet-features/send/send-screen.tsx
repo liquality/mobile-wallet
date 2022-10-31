@@ -3,6 +3,9 @@ import { Pressable, StyleSheet } from 'react-native'
 import { ChainId, getAsset, getChain } from '@liquality/cryptoassets'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
+  ActionEnum,
+  ErrorMessages,
+  ErrorMsgAndType,
   GasFees,
   MainStackParamList,
   NetworkFeeType,
@@ -16,7 +19,14 @@ import {
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
-import { Box, TextInput, Text, Button, faceliftPalette } from '../../../theme'
+import {
+  Box,
+  Button,
+  faceliftPalette,
+  showSendToast,
+  Text,
+  TextInput,
+} from '../../../theme'
 import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import { fetchFeesForAsset } from '../../../store/store'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
@@ -29,14 +39,14 @@ import {
   networkState,
 } from '../../../atoms'
 import i18n from 'i18n-js'
-import ErrMsgBanner, { ErrorBtn } from '../../../components/ui/err-msg-banner'
-import { palette } from '../../../theme'
 import { AppIcons, Fonts } from '../../../assets'
 import FeeEditorScreen from '../custom-fee/fee-editor-screen'
 import { scale } from 'react-native-size-matters'
 import FiatSwapSwitch from '../../../assets/icons/fiatCryptoSwitch.svg'
 import ChevronRight from '../../../assets/icons/chevronRight.svg'
 import ArrowUp from '../../../assets/icons/arrowUp.svg'
+import { Path, Svg } from 'react-native-svg'
+import SendReviewScreen from './send-review-screen'
 
 const { QRCode } = AppIcons
 
@@ -49,29 +59,10 @@ const useInputState = (
 
 type SendScreenProps = NativeStackScreenProps<MainStackParamList, 'SendScreen'>
 
-enum ErrorMessages {
-  NotEnoughToken,
-  NotEnoughTokenSelectMax,
-  NotEnoughCoverFees,
-  NotEnoughGas,
-  AdjustSending,
-}
-
-interface ErrorMsgAndType {
-  msg: string
-  type: ErrorMessages | null
-}
-
 const SendScreen: FC<SendScreenProps> = (props) => {
   const { navigation, route } = props
-  //TODO is there a better way to deal with this?
   const { assetData } = route.params
-  const {
-    code = 'ETH',
-    chain = ChainId.Ethereum,
-    color,
-    id = '',
-  } = assetData || {}
+  const { code = 'ETH', chain = ChainId.Ethereum, id = '' } = assetData || {}
   const [customFee, setCustomFee] = useState<number>(0)
   const fiatRates = useRecoilValue(fiatRatesState)
   const balance = useRecoilValue(
@@ -90,11 +81,24 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     type: null,
   })
   const amountInput = useInputState('0')
-  const addressInput = useInputState('')
+  const addressInput = useInputState(
+    '0x1f49F22879C323514Fd6fe069A20d381E432Eb11',
+  )
   const networkFee = useRef<NetworkFeeType>()
   const activeNetwork = useRecoilValue(networkState)
   const [showFeeEditorModal, setShowFeeEditorModal] = useState<boolean>(false)
   const [maxPressed, setMaxPressed] = useState(false)
+  const [sendBlockFocused, setSendBlockFocused] = useState(false)
+  const [sendToBlockFocused, setSendToBlockFocused] = useState(false)
+  const [showReviewScreen, setShowReviewScreen] = useState(false)
+
+  const onGetPress = useCallback(() => {
+    navigation.navigate('ReceiveScreen', {
+      assetData,
+      includeBackBtn: true,
+      screenTitle: i18n.t('assetScreen.receiveCode', { code }),
+    })
+  }, [assetData, code, navigation])
 
   const validate = useCallback((): boolean => {
     if (amountInput.value.length === 0 || !isNumber(amountInput.value)) {
@@ -114,103 +118,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     return true
   }, [activeNetwork, addressInput.value, amountInput.value, balance, chain])
 
-  useEffect(() => {
-    if (route.params.customFee && balance) {
-      setCustomFee(route.params.customFee)
-      const calculatedAmt = calculateAvailableAmnt(
-        activeNetwork,
-        code,
-        route.params.customFee,
-        balance,
-      )
-      setAvailableAmount(calculatedAmt)
-      if (route.params.speed) {
-        setNetworkSpeed(route.params.speed)
-      }
-    }
-  }, [
-    activeNetwork,
-    balance,
-    code,
-    route?.params?.customFee,
-    route?.params?.speed,
-    setNetworkSpeed,
-  ])
-
-  useEffect(() => {
-    let feeInUnit
-    customFee
-      ? (feeInUnit = customFee)
-      : (feeInUnit = networkFee?.current?.value)
-    if (feeInUnit) {
-      let total = new BigNumber(amountInput.value)
-        .plus(getSendFee(code, feeInUnit))
-        .dp(9)
-      const availAmtBN = new BigNumber(availableAmount)
-      const amtInpBN = new BigNumber(amountInput.value)
-      if (
-        !availAmtBN.eq(0) &&
-        availAmtBN.eq(amtInpBN) &&
-        availAmtBN.lt(total)
-      ) {
-        setErrorMessage({
-          msg: 'error',
-          type: customFee
-            ? ErrorMessages.NotEnoughCoverFees
-            : ErrorMessages.NotEnoughGas,
-        })
-      }
-    }
-  }, [amountInput.value, code, customFee, setErrorMessage, availableAmount])
-
-  useEffect(() => {
-    fetchFeesForAsset(code).then((gasFee) => {
-      setFee(gasFee)
-      const calculatedAmt = calculateAvailableAmnt(
-        activeNetwork,
-        code,
-        getSendFee(code, gasFee.average.toNumber()).toNumber(),
-        balance,
-      )
-      if (balance === 0) {
-        setErrorMessage({ msg: 'error', type: ErrorMessages.NotEnoughToken })
-      }
-      setAvailableAmount(calculatedAmt)
-    })
-  }, [code, chain, balance, activeNetwork])
-
   const handleReviewPress = useCallback(() => {
-    let feeInUnit
-    customFee
-      ? (feeInUnit = customFee)
-      : (feeInUnit = networkFee?.current?.value)
-
-    if (validate() && networkFee?.current?.value) {
-      navigation.navigate('SendReviewScreen', {
-        assetData: route.params.assetData,
-        screenTitle: i18n.t('sendScreen.sendReview', { code }),
-        sendTransaction: {
-          amount: new BigNumber(amountInput.value).toNumber(),
-          gasFee: feeInUnit || 0,
-          speedLabel: networkFee.current?.speed,
-          destinationAddress: addressInput.value,
-          asset: code,
-          memo: '',
-          color: color || palette.darkYellow,
-        },
-        customFee: customFee,
-      })
+    setError('')
+    if (validate() && customFee) {
+      setShowReviewScreen(true)
     }
-  }, [
-    customFee,
-    validate,
-    navigation,
-    route.params.assetData,
-    code,
-    amountInput.value,
-    addressInput.value,
-    color,
-  ])
+  }, [customFee, validate])
 
   const handleFiatBtnPress = useCallback(() => {
     if (showAmountsInFiat) {
@@ -234,7 +147,24 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         return
       }
 
-      const textInBN = new BigNumber(text)
+      let nativeAmnt = 0
+      let fiatAmnt = 0
+
+      if (showAmountsInFiat) {
+        nativeAmnt = new BigNumber(
+          fiatToCrypto(new BigNumber(text || 0), fiatRates[code!]),
+        ).toNumber()
+        fiatAmnt = new BigNumber(text || 0).toNumber()
+      } else {
+        fiatAmnt = new BigNumber(
+          cryptoToFiat(new BigNumber(text || 0).toNumber(), fiatRates[code]),
+        ).toNumber()
+        nativeAmnt = new BigNumber(text || 0).toNumber()
+      }
+
+      setAmountInNative(nativeAmnt)
+      setAmountInFiat(fiatAmnt)
+      const textInBN = new BigNumber(nativeAmnt)
       if (textInBN.gt(availableAmount)) {
         setErrorMessage({
           msg: 'error',
@@ -246,26 +176,14 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           type: null,
         })
       }
-
-      if (showAmountsInFiat) {
-        setAmountInNative(
-          new BigNumber(
-            fiatToCrypto(new BigNumber(text || 0), fiatRates[code!]),
-          ).toNumber(),
-        )
-        setAmountInFiat(new BigNumber(text || 0).toNumber())
-      } else {
-        setAmountInFiat(
-          new BigNumber(
-            cryptoToFiat(new BigNumber(text || 0).toNumber(), fiatRates[code]),
-          ).toNumber(),
-        )
-        setAmountInNative(new BigNumber(text || 0).toNumber())
-      }
       amountInput.onChangeText(text)
     },
-    [amountInput, code, fiatRates, showAmountsInFiat, availableAmount],
+    [fiatRates, availableAmount, showAmountsInFiat, amountInput, code],
   )
+
+  const onMaxPress = useCallback(() => {
+    handleOnChangeText(availableAmount.toString())
+  }, [availableAmount, handleOnChangeText])
 
   const handleCustomPress = () => {
     setShowFeeEditorModal(true)
@@ -273,6 +191,13 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
   const handleQRCodeBtnPress = () => {
     setIsCameraVisible(!isCameraVisible)
+  }
+
+  const handleChevronRightPress = () => {
+    navigation.navigate('AssetChooserScreen', {
+      screenTitle: labelTranslateFn('summaryBlockComp.selectAssetSend') || '',
+      action: ActionEnum.SEND,
+    })
   }
 
   const handleCameraModalClose = useCallback(
@@ -285,141 +210,126 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     [addressInput, isCameraVisible],
   )
 
-  const getCompatibleErrorMsg = React.useCallback(() => {
-    const { msg, type } = errorMessage
-    if (!msg) {
-      return null
-    }
+  const resetMsg = () => {
+    setErrorMessage({ msg: '', type: null })
+  }
 
-    const onGetPress = () => {
-      navigation.navigate('ReceiveScreen', {
-        assetData,
-        includeBackBtn: true,
-        screenTitle: i18n.t('assetScreen.receiveCode', { code }),
+  useEffect(() => {
+    if (errorMessage.msg) {
+      showSendToast('sendToast', {
+        errorMessage: {
+          msg: 'error',
+          type: customFee
+            ? ErrorMessages.NotEnoughCoverFees
+            : ErrorMessages.NotEnoughGas,
+        },
+        onGetPress,
+        onMaxPress,
+        resetMsg,
+        code,
+        amount: amountInNative.toString(),
       })
     }
-    const onMaxPress = () => {
-      handleOnChangeText(availableAmount.toString())
-    }
+  }, [amountInNative, code, customFee, errorMessage, onGetPress, onMaxPress])
 
-    switch (type) {
-      case ErrorMessages.NotEnoughToken:
-        return (
-          <ErrMsgBanner>
-            <Text>{`${i18n.t('sendScreen.notEnoughTkn', {
-              token: code,
-            })}`}</Text>
-            <ErrorBtn
-              label={`${i18n.t('sendScreen.getTkn', {
-                token: code,
-              })}`}
-              onPress={onGetPress}
-            />
-          </ErrMsgBanner>
-        )
-      case ErrorMessages.NotEnoughTokenSelectMax:
-        return (
-          <ErrMsgBanner>
-            <Text padding={'vs'}>{`${i18n.t('sendScreen.notEnoughTkn', {
-              token: code,
-            })}`}</Text>
-            <ErrorBtn
-              label={`${i18n.t('sendScreen.getTkn', {
-                token: code,
-              })}`}
-              onPress={onGetPress}
-            />
-            <Text padding={'vs'} tx={'sendScreen.orSelect'} />
-            <ErrorBtn
-              label={`${labelTranslateFn('sendScreen.max')}`}
-              onPress={onMaxPress}
-            />
-          </ErrMsgBanner>
-        )
-      case ErrorMessages.NotEnoughCoverFees:
-        return (
-          <ErrMsgBanner>
-            <Text padding={'vs'}>{`${i18n.t('sendScreen.notEnoughTknForFees', {
-              token: code,
-            })}`}</Text>
-            <ErrorBtn
-              label={`${i18n.t('sendScreen.getTkn', {
-                token: code,
-              })}`}
-              onPress={onGetPress}
-            />
-            <Text padding={'vs'} tx={'sendScreen.orSelect'} />
-            <ErrorBtn
-              label={`${labelTranslateFn('sendScreen.max')}`}
-              onPress={onMaxPress}
-            />
-          </ErrMsgBanner>
-        )
-      case ErrorMessages.NotEnoughGas:
-        return (
-          <ErrMsgBanner>
-            <Text padding={'vs'}>
-              {`${i18n.t('sendScreen.notEnoughGas', {
-                n: amountInput.value,
-                token: code,
-              })}`}
-            </Text>
-            <ErrorBtn
-              label={`${i18n.t('sendScreen.getTkn', {
-                token: code,
-              })}`}
-              onPress={onGetPress}
-            />
-          </ErrMsgBanner>
-        )
-      case ErrorMessages.AdjustSending:
-        return (
-          <ErrMsgBanner>
-            <Text padding={'vs'} tx="sendScreen.adjustSending" />
-            <ErrorBtn
-              label={`${i18n.t('sendScreen.getTkn', {
-                token: code,
-              })}`}
-              onPress={onGetPress}
-            />
-            <Text padding={'vs'} tx={'sendScreen.and'} />
-            <ErrorBtn
-              label={`${i18n.t('sendScreen.getTkn', {
-                token: code,
-              })}`}
-              onPress={onGetPress}
-            />
-          </ErrMsgBanner>
-        )
-      default:
-        return (
-          <ErrMsgBanner>
-            <Text>{msg}</Text>
-          </ErrMsgBanner>
-        )
+  useEffect(() => {
+    let feeInUnit
+    customFee
+      ? (feeInUnit = customFee)
+      : (feeInUnit = networkFee?.current?.value)
+    if (feeInUnit) {
+      let total = new BigNumber(amountInNative)
+        .plus(getSendFee(code, feeInUnit))
+        .dp(9)
+      const availAmtBN = new BigNumber(availableAmount)
+      const amtInpBN = new BigNumber(amountInNative)
+      if (
+        !availAmtBN.eq(0) &&
+        availAmtBN.eq(amtInpBN) &&
+        availAmtBN.lt(total)
+      ) {
+        setErrorMessage({
+          msg: 'error',
+          type: customFee
+            ? ErrorMessages.NotEnoughCoverFees
+            : ErrorMessages.NotEnoughGas,
+        })
+      }
     }
-  }, [
-    errorMessage,
-    code,
-    amountInput,
-    assetData,
-    navigation,
-    handleOnChangeText,
-    availableAmount,
-  ])
+  }, [code, customFee, availableAmount, amountInNative])
+
+  useEffect(() => {
+    fetchFeesForAsset(code).then((gasFee) => {
+      setFee(gasFee)
+      const calculatedAmt = calculateAvailableAmnt(
+        activeNetwork,
+        code,
+        getSendFee(code, gasFee.average.toNumber()).toNumber(),
+        balance,
+      )
+      if (balance === 0) {
+        setErrorMessage({ msg: 'error', type: ErrorMessages.NotEnoughToken })
+      }
+      setAvailableAmount(calculatedAmt)
+    })
+  }, [code, chain, balance, activeNetwork])
+
+  const applyFee = (fee: BigNumber, speed: FeeLabel) => {
+    if (!fee) return
+    const calculatedAmt = calculateAvailableAmnt(
+      activeNetwork,
+      code,
+      fee.toNumber(),
+      balance,
+    )
+    setAvailableAmount(calculatedAmt)
+    setCustomFee(fee.toNumber())
+    setNetworkSpeed(speed)
+    setShowFeeEditorModal(false)
+  }
+
+  const onClose = () => {
+    setShowReviewScreen(false)
+  }
+
+  const getBackgroundBox = () => {
+    const width = 355
+    const height = 200
+    const flatRadius = 30
+    return (
+      <Box
+        alignItems="center"
+        justifyContent="center"
+        style={StyleSheet.absoluteFillObject}>
+        <Svg
+          width={`${width}`}
+          height={`${height}`}
+          viewBox={`0 0 ${width} ${height}`}
+          fill="none">
+          <Path
+            d={`M0 0 H ${
+              width - flatRadius
+            } L ${width} ${flatRadius} V ${height} H ${0} V ${0} Z`}
+            fill={
+              sendBlockFocused
+                ? faceliftPalette.selectedBackground
+                : faceliftPalette.mediumWhite
+            }
+          />
+        </Svg>
+      </Box>
+    )
+  }
 
   return (
     <Box flex={1} backgroundColor="mainBackground" paddingHorizontal="l">
-      {getCompatibleErrorMsg()}
       <Box flex={1} paddingVertical="l">
         {isCameraVisible && chain && (
           <QrCodeScanner chain={chain} onClose={handleCameraModalClose} />
         )}
-        <Box>
-          <Box
-            paddingVertical="xl"
-            backgroundColor="blockBackgroundColor"
-            paddingHorizontal="l">
+        <Box marginBottom={'m'}>
+          <Box paddingVertical="xl" paddingHorizontal="l">
+            {getBackgroundBox()}
             <Box
               flexDirection="row"
               justifyContent="space-between"
@@ -445,7 +355,13 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                     style={styles.sendInput}
                     keyboardType={'numeric'}
                     onChangeText={handleOnChangeText}
-                    onFocus={() => setError('')}
+                    onFocus={() => {
+                      setError('')
+                      setSendBlockFocused(true)
+                    }}
+                    onBlur={() => {
+                      setSendBlockFocused(false)
+                    }}
                     value={amountInput.value}
                     autoCorrect={false}
                     returnKeyType="done"
@@ -459,7 +375,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                     styles={{ right: scale(10), top: scale(5) }}
                     asset={code}
                   />
-                  <Pressable>
+                  <Pressable onPress={handleChevronRightPress}>
                     <ChevronRight />
                   </Pressable>
                 </Box>
@@ -495,17 +411,26 @@ const SendScreen: FC<SendScreenProps> = (props) => {
 
                 setMaxPressed(!maxPressed)
               }}>
-              <Text
-                tx={'sendScreen.max'}
-                color={maxPressed ? 'activeLink' : 'inactiveLink'}
-              />
+              <Box
+                marginTop="m"
+                paddingBottom="s"
+                borderBottomWidth={2}
+                borderBottomColor={maxPressed ? 'activeLink' : 'transparent'}
+                alignSelf={'flex-start'}>
+                <Text
+                  tx={'sendScreen.max'}
+                  color={maxPressed ? 'activeLink' : 'inactiveLink'}
+                />
+              </Box>
             </Pressable>
           </Box>
           <Box
             marginTop={'xl'}
             paddingVertical="xl"
             paddingHorizontal="l"
-            backgroundColor="blockBackgroundColor">
+            backgroundColor={
+              sendToBlockFocused ? 'selectedBackgroundColor' : 'mediumWhite'
+            }>
             <Text variant="secondaryInputLabel" tx="sendScreen.sndTo" />
             <Box
               flexDirection="row"
@@ -515,7 +440,11 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               <TextInput
                 style={styles.sendToInput}
                 onChangeText={addressInput.onChangeText}
-                onFocus={() => setError('')}
+                onFocus={() => {
+                  setError('')
+                  setSendToBlockFocused(true)
+                }}
+                onBlur={() => setSendToBlockFocused(false)}
                 value={addressInput.value}
                 placeholderTx="sendScreen.address"
                 placeholderTextColor={faceliftPalette.greyMeta}
@@ -523,14 +452,13 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                 returnKeyType="done"
               />
               <Pressable onPress={handleQRCodeBtnPress}>
-                <QRCode />
+                <QRCode width={scale(20)} height={scale(20)} />
               </Pressable>
             </Box>
           </Box>
         </Box>
         <Box
           flexDirection={'row'}
-          paddingVertical="l"
           paddingHorizontal="l"
           justifyContent="space-between">
           <Pressable>
@@ -557,14 +485,11 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               onClose={setShowFeeEditorModal}
               selectedAsset={code}
               amount={new BigNumber(amountInput.value)}
-              applyFee={(fee) => {
-                setCustomFee(fee.toNumber())
-                setShowFeeEditorModal(false)
-              }}
+              applyFee={applyFee}
             />
           )}
-          {!!error && <Text variant="error">{error}</Text>}
         </Box>
+        {!!error && <Text variant="error">{error}</Text>}
         <ButtonFooter>
           <Button
             type="primary"
@@ -572,17 +497,27 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             label={{
               tx: errorMessage.msg
                 ? 'sendScreen.insufficientFund'
-                : 'common.send',
+                : 'common.review',
             }}
             onPress={handleReviewPress}
             isBorderless={true}
-            isActive={!errorMessage.msg}
+            isActive={
+              !errorMessage.msg &&
+              new BigNumber(amountInput.value).gt(0) &&
+              addressInput.value.length > 0
+            }
             appendChildren={false}>
             <Box alignItems={'center'} justifyContent={'center'}>
               <ArrowUp
                 width={scale(11)}
                 height={scale(13)}
-                stroke={faceliftPalette.white}
+                stroke={
+                  !errorMessage.msg &&
+                  new BigNumber(amountInput.value).gt(0) &&
+                  addressInput.value.length > 0
+                    ? faceliftPalette.white
+                    : faceliftPalette.grey
+                }
                 style={styles.buttonIcon}
               />
             </Box>
@@ -597,6 +532,17 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           />
         </ButtonFooter>
       </Box>
+      {showReviewScreen && (
+        <SendReviewScreen
+          assetData={assetData}
+          asset={code}
+          amount={amountInNative}
+          destinationAddress={addressInput.value}
+          gasFee={customFee}
+          speedLabel={FeeLabel.Average}
+          onClose={onClose}
+        />
+      )}
     </Box>
   )
 }
@@ -607,11 +553,12 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: scale(39),
     width: '80%',
+    height: scale(39),
   },
   sendToInput: {
     fontFamily: Fonts.Regular,
     fontWeight: '300',
-    fontSize: scale(19),
+    fontSize: scale(13),
   },
   textRegular: {
     fontFamily: Fonts.Regular,
@@ -622,7 +569,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   buttonIcon: {
-    marginRight: 5,
+    marginRight: scale(5),
+    marginBottom: scale(5),
   },
 })
 
