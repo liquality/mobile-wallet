@@ -150,7 +150,11 @@ const SubRow: FC<SubRowProps> = (props) => {
           <Pressable
             onPress={handlePressOnRow}
             style={[styles.row, styles.subElement]}>
-            <Box height={scale(50)} width={scale(3)} />
+            <Box
+              height={scale(50)}
+              width={scale(3)}
+              style={{ borderLeftColor: item.color, borderLeftWidth: 3 }}
+            />
             <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
               <AssetIcon asset={item.code} />
               <Box width={'80%'}>
