@@ -576,7 +576,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   }
 
   const handleReviewBtnPress = async () => {
-    const assetsAreNotSameChain =
+    const assetsAreSameChain =
       getNativeAsset(swapPair.fromAsset?.code || '') ===
       getNativeAsset(swapPair.toAsset?.code || '')
 
@@ -586,8 +586,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
       !state.fromAmount ||
       !selectedQuote ||
       !fromNetworkFee.current ||
-      !toNetworkFee.current ||
-      !assetsAreNotSameChain
+      !toNetworkFee.current
     ) {
       Alert.alert(labelTranslateFn('swapScreen.invalidArgs')!)
       return
@@ -607,6 +606,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         fromNetworkFee: fromNetworkFee.current,
         toNetworkFee: toNetworkFee.current,
       },
+      assetsAreSameChain,
       screenTitle: I18n.t('swapScreen.swapReview', {
         swapPairfromAssetCode: swapPair.fromAsset.code,
         swapPairtoAssetCode: swapPair.toAsset.code,
