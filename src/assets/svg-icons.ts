@@ -144,6 +144,9 @@ import BuyCryptoCloseLight from '../assets/icons/buyCryptoCloseLight.svg'
 import BuyCryptoCloseDark from '../assets/icons/buyCryptoCloseDark.svg'
 import TiltedArrow from '../assets/icons/tiltedArrow.svg'
 import DottedLine from '../assets/icons/dottedLine.svg'
+import Connect from '../assets/icons/connect.svg'
+
+
 
 
 export default {
@@ -293,4 +296,5 @@ export default {
   OnRamperIcon,
   TiltedArrow,
   DottedLine,
+  Connect,
 }

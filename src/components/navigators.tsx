@@ -98,6 +98,7 @@ const {
   TabWalletInactive,
   SearchIcon,
   BuyCryptoCloseDark,
+  Connect,
 } = AppIcons
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
@@ -325,7 +326,7 @@ const AppStackHeaderLeft = (navProps: NavigationProps) => {
       ) : (
         <View style={styles.container}>
           <Pressable onPress={() => setShowQRScanner(true)}>
-            <Text color={'black'}>QR SCANNER!!</Text>
+            <Connect />
           </Pressable>
         </View>
       )}
