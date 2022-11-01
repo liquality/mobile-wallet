@@ -17,6 +17,9 @@ import { getAllAssets, getAsset } from '@liquality/cryptoassets'
 import { AppIcons } from '../../../assets'
 import { useTheme } from '@shopify/restyle'
 import I18n from 'i18n-js'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { MainStackParamList } from '../../../types'
+
 const { ChevronDown, SwapSuccess, CompletedSwap, ChevronRightIcon } = AppIcons
 
 const horizontalContentHeight = 60
@@ -31,7 +34,12 @@ interface CustomAsset extends Asset {
   showGasLink: boolean
 }
 
-const ActivityFilterScreen = () => {
+type ActivityFilterScreenProps = NativeStackScreenProps<
+  MainStackParamList,
+  'ActivityFilterScreen'
+>
+
+const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
   const [data, setData] = React.useState<IconAsset[]>([])
   const [chainCode, setChainCode] = React.useState('ALL')
   const activeNetwork = useRecoilValue(networkState)
@@ -150,7 +158,9 @@ const ActivityFilterScreen = () => {
             height={scale(15)}
             backgroundColor="inactiveText"
           />
-          <TouchableOpacity activeOpacity={0.7}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => navigation.navigate('ActivityFilterModal', {})}>
             <Text
               variant={'h7'}
               lineHeight={scale(20)}
@@ -172,7 +182,7 @@ const ActivityFilterScreen = () => {
         />
       </Box>
     )
-  }, [])
+  }, [navigation])
 
   const renderHistoryItem = React.useCallback(
     ({ item }: { item: any }) => {
@@ -207,7 +217,6 @@ const ActivityFilterScreen = () => {
           </Box>
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => {}}
             style={{ padding: tapPaddingStyle }}>
             <ChevronRightIcon />
           </TouchableOpacity>

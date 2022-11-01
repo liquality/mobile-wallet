@@ -82,6 +82,7 @@ import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-pri
 import { useNavigation, NavigationProp } from '@react-navigation/core'
 import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
 import ActivityFilterScreen from '../screens/wallet-features/home/activity-filter-screen'
+import ActivityFilterModal from '../screens/wallet-features/home/activity-filter-modal'
 
 const {
   NetworkActiveDot,
@@ -923,6 +924,17 @@ export const StackMainNavigator = () => {
             headerTitle: labelTranslateFn('activityFilter')!,
             headerLeft: CloseButtonLeft,
             headerRight: ActivityFilterScreenHeaderRight,
+          }}
+        />
+        <MainStack.Screen
+          name="ActivityFilterModal"
+          component={ActivityFilterModal}
+          options={{
+            headerTitle: '',
+            headerShown: true,
+            headerTransparent: true,
+            animation: 'none',
+            presentation: 'transparentModal',
           }}
         />
       </MainStack.Group>
