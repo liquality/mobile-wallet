@@ -3,7 +3,11 @@ import { Fonts } from '../assets'
 import { faceliftPalette } from './faceliftPalette'
 import { palette } from './palette'
 import { scale } from 'react-native-size-matters'
-import { ONBOARDING_PADDING, SCREEN_PADDING } from '../utils'
+import {
+  CONGRATULATIONS_MESSAGE_MARGIN_TOP,
+  ONBOARDING_PADDING,
+  SCREEN_PADDING,
+} from '../utils'
 
 export const theme = createTheme({
   colors: {
@@ -82,6 +86,7 @@ export const theme = createTheme({
     onboardingPadding: scale(ONBOARDING_PADDING),
     onboardingHeaderPadding: scale(25),
     screenPadding: scale(SCREEN_PADDING),
+    congratsMarginTop: scale(CONGRATULATIONS_MESSAGE_MARGIN_TOP),
   },
   breakpoints: {
     phone: 0,
@@ -565,6 +570,13 @@ export const theme = createTheme({
       fontWeight: '400',
       fontSize: scale(16),
       color: 'textColor',
+    },
+    congratulationsMessage: {
+      fontFamily: Fonts.Regular,
+      color: 'white',
+      fontWeight: '300',
+      fontSize: 53,
+      opacity: 0.7,
     },
   },
   pressableVariants: {

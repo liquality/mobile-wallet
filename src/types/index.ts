@@ -145,7 +145,7 @@ export type RootStackParamList = {
   PasswordCreationScreen: StackPayload
   SeedPhraseScreen: StackPayload
   SeedPhraseConfirmationScreen: StackPayload
-  CongratulationsScreen: undefined
+  CongratulationsScreen: StackPayload
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   LoadingScreen: StackPayload
@@ -158,7 +158,7 @@ export type MainStackParamList = {
   PasswordCreationScreen: StackPayload
   SeedPhraseScreen: StackPayload
   SeedPhraseConfirmationScreen: StackPayload
-  CongratulationsScreen: undefined
+  CongratulationsScreen: StackPayload
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   LoadingScreen: StackPayload

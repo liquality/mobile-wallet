@@ -12,6 +12,7 @@ export const SCREEN_PADDING = 20
 export const SCREEN_WIDTH = Dimensions.get('screen').width
 export const SCREEN_HEIGHT = Dimensions.get('screen').height
 export const INPUT_OPACITY_INACTIVE = 0.6
+export const CONGRATULATIONS_MESSAGE_MARGIN_TOP = 300
 export const INPUT_OPACITY_ACTIVE = 1
 export const KEYS = {
   ACTIVE_NETWORK_KEY: 'activeNetworkKey',

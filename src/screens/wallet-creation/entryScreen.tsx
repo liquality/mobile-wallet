@@ -51,7 +51,6 @@ const Entry: FC<EntryProps> = (props): JSX.Element => {
         <Text
           opacity={0.8}
           variant={'whiteLabel'}
-          textDecorationLine={'underline'}
           tx="common.importWithSeedPhrase"
           marginTop={'s'}
           onPress={handleImportPress}

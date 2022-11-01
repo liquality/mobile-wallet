@@ -219,10 +219,16 @@ export const WalletCreationNavigator = () => {
         <WalletCreationStack.Screen
           name="LoadingScreen"
           component={LoadingScreen}
+          options={{
+            headerShown: false,
+          }}
         />
         <WalletCreationStack.Screen
           name="CongratulationsScreen"
           component={CongratulationsScreen}
+          options={{
+            headerShown: false,
+          }}
         />
         <WalletCreationStack.Screen
           name="UnlockWalletScreen"
@@ -253,6 +259,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'BuyCryptoDrawer'
   | 'SwapScreen'
   | 'SwapProviderModal'
+  | 'CongratulationsScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -405,7 +412,7 @@ export const AppStackNavigator = () => {
           options={({ navigation, route }: NavigationProps) => ({
             headerBackVisible: false,
             title: route.params.screenTitle || '',
-            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
             headerRight: undefined,
             headerLeft: () =>
@@ -733,10 +740,19 @@ export const StackMainNavigator = () => {
           name="SeedPhraseConfirmationScreen"
           component={SeedPhraseConfirmationScreen}
         />
-        <MainStack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <MainStack.Screen
+          name="LoadingScreen"
+          component={LoadingScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
         <MainStack.Screen
           name="CongratulationsScreen"
           component={CongratulationsScreen}
+          options={{
+            headerShown: false,
+          }}
         />
         <MainStack.Screen
           name="UnlockWalletScreen"
