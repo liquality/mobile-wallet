@@ -865,20 +865,6 @@ export const StackMainNavigator = () => {
             headerShown: false,
           })}
         />
-        <MainStack.Screen
-          name="ActivityFilterScreen"
-          component={ActivityFilterScreen}
-          options={{
-            ...screenNavOptions,
-            headerStyle: {
-              backgroundColor,
-            },
-            headerTitleStyle: NORMAL_HEADER,
-            headerTitle: labelTranslateFn('activityFilter')!,
-            headerLeft: CloseButtonLeft,
-            headerRight: ActivityFilterScreenHeaderRight,
-          }}
-        />
       </MainStack.Group>
       <MainStack.Group>
         <MainStack.Screen
@@ -922,6 +908,21 @@ export const StackMainNavigator = () => {
               headerLeft: CloseButtonLeft,
               headerRight: SwapHeaderRight,
             }
+          }}
+        />
+        <MainStack.Screen
+          name="ActivityFilterScreen"
+          component={ActivityFilterScreen}
+          options={{
+            presentation: 'fullScreenModal',
+            ...screenNavOptions,
+            headerStyle: {
+              backgroundColor,
+            },
+            headerTitleStyle: NORMAL_HEADER,
+            headerTitle: labelTranslateFn('activityFilter')!,
+            headerLeft: CloseButtonLeft,
+            headerRight: ActivityFilterScreenHeaderRight,
           }}
         />
       </MainStack.Group>
