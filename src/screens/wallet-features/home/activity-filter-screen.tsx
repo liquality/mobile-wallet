@@ -211,7 +211,7 @@ const ActivityFilterScreen = () => {
     )
   }, [])
 
-  const marginBottom = theme.spacing.mxxl
+  const marginBottom = theme.spacing.m
 
   return (
     <Box flex={1} backgroundColor={'mainBackground'}>
