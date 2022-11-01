@@ -405,7 +405,7 @@ export const AppStackNavigator = () => {
           options={({ navigation, route }: NavigationProps) => ({
             headerBackVisible: false,
             title: route.params.screenTitle || '',
-            headerTitleStyle: MANAGE_ASSET_HEADER,
+            headerTitleStyle: HEADER_TITLE_STYLE,
             headerStyle: { backgroundColor },
             headerRight: undefined,
             headerLeft: () =>
