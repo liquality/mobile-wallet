@@ -485,5 +485,9 @@
   "bestRate": "BEST RATE",
   "quotes": "Quotes",
   "transferWithinAccs": "Transfer Within Accounts",
-  "activityFilter": "ACTIVITY FILTER"
+  "activityFilter": "ACTIVITY FILTER",
+  "oneResult": "{{count}} Result",
+  "nosResult": "{{count}} Results",
+  "sort": "Sort",
+  "advanced": "Advanced"
 }

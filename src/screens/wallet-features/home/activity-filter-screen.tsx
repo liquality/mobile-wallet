@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import { scale } from 'react-native-size-matters'
-import { Box, Card, Text } from '../../../theme'
+import { Box, Card, Text, ThemeType } from '../../../theme'
 import { LARGE_TITLE_HEADER_HEIGHT } from '../../../utils'
 import { Asset, ChainId } from '@chainify/types'
 import AssetIcon from '../../../components/asset-icon'
@@ -14,6 +14,10 @@ import {
 } from '../../../atoms'
 import { useRecoilValue } from 'recoil'
 import { getAllAssets, getAsset } from '@liquality/cryptoassets'
+import { AppIcons } from '../../../assets'
+import { useTheme } from '@shopify/restyle'
+import I18n from 'i18n-js'
+const { ChevronDown } = AppIcons
 
 const horizontalContentHeight = 60
 
@@ -32,6 +36,7 @@ const ActivityFilterScreen = () => {
   const [chainCode, setChainCode] = React.useState('ALL')
   const activeNetwork = useRecoilValue(networkState)
   const enabledAssets = useRecoilValue(enabledAssetsState)
+  const theme = useTheme<ThemeType>()
   const accounts = useRecoilValue(
     activeNetwork === Network.Testnet
       ? accountsIdsState
@@ -92,6 +97,8 @@ const ActivityFilterScreen = () => {
     setData(tempAssetsIcon)
   }, [accounts, activeNetwork, enabledAssets])
 
+  let fakeData = Array(10).fill(10)
+
   const renderAssetIcon = React.useCallback(
     ({ item }: { item: IconAsset }) => {
       const { code, chain } = item
@@ -125,16 +132,61 @@ const ActivityFilterScreen = () => {
     [chainCode],
   )
 
+  const ActivtyHeaderComponent = React.useCallback(() => {
+    const resultLength = 1
+    const resultString = I18n.t(resultLength > 1 ? 'nosResult' : 'oneResult', {
+      count: resultLength,
+    })
+    return (
+      <Box flexDirection={'row'} justifyContent="space-between">
+        <Box flexDirection={'row'}>
+          <Text variant={'h7'} lineHeight={scale(20)} color="black">
+            {resultString}
+          </Text>
+          <Box
+            width={1}
+            marginHorizontal="m"
+            height={scale(15)}
+            backgroundColor="inactiveText"
+          />
+          <TouchableOpacity activeOpacity={0.7}>
+            <Text
+              variant={'h7'}
+              lineHeight={scale(20)}
+              color="defaultButton"
+              marginRight={'s'}
+              tx="sort"
+            />
+          </TouchableOpacity>
+          <Box marginTop={'s'}>
+            <ChevronDown width={scale(10)} />
+          </Box>
+        </Box>
+        <Text
+          variant={'h7'}
+          lineHeight={scale(20)}
+          color="defaultButton"
+          marginRight={'s'}
+          tx="advanced"
+        />
+      </Box>
+    )
+  }, [])
+
+  const renderHistoryItem = React.useCallback(({ item }: { item: any }) => {
+    return <Text>{item}</Text>
+  }, [])
+
+  const marginBottom = theme.spacing.mxxl
+
   return (
     <Box flex={1} backgroundColor={'mainBackground'}>
-      <Card
-        variant={'headerCard'}
-        height={LARGE_TITLE_HEADER_HEIGHT}
-        paddingHorizontal="xl">
+      <Card variant={'headerCard'} height={LARGE_TITLE_HEADER_HEIGHT}>
         <Box
           width={'100%'}
           marginTop={'xl'}
           height={scale(horizontalContentHeight)}
+          paddingHorizontal="screenPadding"
           alignItems="center">
           <FlatList
             data={data}
@@ -145,6 +197,14 @@ const ActivityFilterScreen = () => {
           />
         </Box>
       </Card>
+      <Box flex={1} marginTop="mxxl" paddingHorizontal="screenPadding">
+        <FlatList
+          data={fakeData}
+          renderItem={renderHistoryItem}
+          ListHeaderComponent={ActivtyHeaderComponent}
+          ListHeaderComponentStyle={{ marginBottom }}
+        />
+      </Box>
     </Box>
   )
 }
