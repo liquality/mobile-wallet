@@ -17,7 +17,7 @@ import { getAllAssets, getAsset } from '@liquality/cryptoassets'
 import { AppIcons } from '../../../assets'
 import { useTheme } from '@shopify/restyle'
 import I18n from 'i18n-js'
-const { ChevronDown } = AppIcons
+const { ChevronDown, SwapSuccess, CompletedSwap, ChevronRightIcon } = AppIcons
 
 const horizontalContentHeight = 60
 
@@ -174,7 +174,41 @@ const ActivityFilterScreen = () => {
   }, [])
 
   const renderHistoryItem = React.useCallback(({ item }: { item: any }) => {
-    return <Text>{item}</Text>
+    return (
+      <Box height={scale(77)} flexDirection="row" alignItems={'center'}>
+        <CompletedSwap />
+        <Box flex={1} alignItems={'center'}>
+          <Box width={'85%'} alignItems={'center'}>
+            <Box alignSelf="flex-start">
+              {/* <Text>10.015493 ARBUSDTUEOHWHE to ARBDAI</Text> */}
+              <Text numberOfLines={2}>Not Sent 4.068823 USDC {item}</Text>
+            </Box>
+            <Box flexDirection={'row'} alignSelf="flex-start" marginTop={'m'}>
+              <Text variant={'h7'} lineHeight={scale(20)} color="inactiveText">
+                12.30.22, 3:45pm
+              </Text>
+              <Box
+                width={1}
+                marginHorizontal="m"
+                height={scale(15)}
+                backgroundColor="inactiveText"
+              />
+              <Text
+                variant={'h7'}
+                lineHeight={scale(20)}
+                color="inactiveText"
+                marginRight={'s'}>
+                $123.24
+              </Text>
+            </Box>
+          </Box>
+        </Box>
+        <Box marginRight={'m'}>
+          <SwapSuccess />
+        </Box>
+        <ChevronRightIcon />
+      </Box>
+    )
   }, [])
 
   const marginBottom = theme.spacing.mxxl
