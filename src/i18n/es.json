@@ -483,5 +483,6 @@
   "nosProviderQuote": "{{quote}} PROVIDER QUOTES",
   "bestRate": "BEST RATE",
   "quotes": "Quotes",
-  "transferWithinAccs": "Transfer Within Accounts"
+  "transferWithinAccs": "Transfer Within Accounts",
+  "activityFilter": "ACTIVITY FILTER"
 }

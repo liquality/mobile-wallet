@@ -64,6 +64,7 @@ import SelectChainScreen from '../screens/wallet-features/settings/select-chain-
 import { AppIcons, Fonts } from '../assets'
 import {
   assetScreenPopupMenuVisible,
+  historyItemsState,
   networkState,
   showSearchBarInputState,
   themeMode,
@@ -71,11 +72,16 @@ import {
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
-import { labelTranslateFn, SCREEN_WIDTH } from '../utils'
+import {
+  downloadAssetAcitivity,
+  labelTranslateFn,
+  SCREEN_WIDTH,
+} from '../utils'
 import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-screen'
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
 import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
+import ActivityFilterScreen from '../screens/wallet-features/home/activity-filter-screen'
 
 const {
   NetworkActiveDot,
@@ -90,6 +96,7 @@ const {
   SearchIcon,
   BuyCryptoCloseDark,
   SwapQuotes,
+  ExportIcon,
   ConnectionIndicator,
 } = AppIcons
 
@@ -253,6 +260,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'BuyCryptoDrawer'
   | 'SwapScreen'
   | 'SwapProviderModal'
+  | 'ActivityFilterScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -304,6 +312,24 @@ const SwapHeaderRight = () => {
     <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
       <Box paddingHorizontal={'s'} paddingVertical="m">
         <SwapQuotes width={scale(25)} />
+      </Box>
+    </TouchableOpacity>
+  )
+}
+
+const ActivityFilterScreenHeaderRight = () => {
+  const historyItem = useRecoilValue(historyItemsState)
+
+  const onExportIconPress = async () => {
+    try {
+      await downloadAssetAcitivity(historyItem)
+    } catch (error) {}
+  }
+
+  return (
+    <TouchableOpacity activeOpacity={0.7} onPress={() => onExportIconPress()}>
+      <Box paddingHorizontal={'s'} paddingVertical="m">
+        <ExportIcon width={scale(25)} />
       </Box>
     </TouchableOpacity>
   )
@@ -597,7 +623,7 @@ const StackMainNavigatorHeaderLeft = () => {
   )
 }
 
-const BuyCryptoDrawerHeaderRight = () => {
+const CloseButtonLeft = () => {
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   return (
     <Box paddingHorizontal={'m'}>
@@ -839,6 +865,20 @@ export const StackMainNavigator = () => {
             headerShown: false,
           })}
         />
+        <MainStack.Screen
+          name="ActivityFilterScreen"
+          component={ActivityFilterScreen}
+          options={{
+            ...screenNavOptions,
+            headerStyle: {
+              backgroundColor,
+            },
+            headerTitleStyle: NORMAL_HEADER,
+            headerTitle: labelTranslateFn('activityFilter')!,
+            headerLeft: CloseButtonLeft,
+            headerRight: ActivityFilterScreenHeaderRight,
+          }}
+        />
       </MainStack.Group>
       <MainStack.Group>
         <MainStack.Screen
@@ -862,9 +902,7 @@ export const StackMainNavigator = () => {
                 ? () => BuyCryptoDrawerHeaderTitle(screenTitle)
                 : empty,
               headerLeft: undefined,
-              headerRight: isScrolledUp
-                ? BuyCryptoDrawerHeaderRight
-                : undefined,
+              headerRight: isScrolledUp ? CloseButtonLeft : undefined,
             }
           }}
         />
@@ -877,11 +915,11 @@ export const StackMainNavigator = () => {
               ...screenNavOptions,
               presentation: 'fullScreenModal',
               headerStyle: {
-                backgroundColor: faceliftPalette.white,
+                backgroundColor,
               },
               headerTitleStyle: NORMAL_HEADER,
               headerTitle: screenTitle,
-              headerLeft: BuyCryptoDrawerHeaderRight,
+              headerLeft: CloseButtonLeft,
               headerRight: SwapHeaderRight,
             }
           }}

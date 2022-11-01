@@ -205,6 +205,7 @@ export type MainStackParamList = {
   SwapProviderModal: StackPayload
   SelectChainScreen: undefined
   SwapDetailsScreen: StackPayload
+  ActivityFilterScreen: StackPayload
 }
 
 export type RootTabParamList = {

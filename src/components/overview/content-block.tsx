@@ -7,7 +7,6 @@ import {
   langSelected as LS,
   networkState,
   historyItemsState,
-  showFilterState,
 } from '../../atoms'
 import { getAllEnabledAccounts, populateWallet } from '../../store/store'
 import ActivityFlatList from '../activity-flat-list'
@@ -36,6 +35,8 @@ import {
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { scale } from 'react-native-size-matters'
 import { AppIcons } from '../../assets'
+import { NavigationProp, useNavigation } from '@react-navigation/core'
+import { MainStackParamList } from '../../types'
 
 const { Filter, ExportIcon } = AppIcons
 
@@ -45,13 +46,14 @@ type RenderTabBar = SceneRendererProps & {
 
 const ContentBlock = () => {
   const network = useRecoilValue(networkState)
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+
   const accountsIds = useRecoilValue(
     network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
   )
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
   const [delayTabView, setDelayTabView] = React.useState(false)
   const langSelected = useRecoilValue(LS)
-  const setShowFilter = useSetRecoilState(showFilterState)
 
   i18n.locale = langSelected
   useEffect(() => {
@@ -134,7 +136,7 @@ const ContentBlock = () => {
             alignItems="center">
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => setShowFilter((old) => !old)}>
+              onPress={() => navigation.navigate('ActivityFilterScreen', {})}>
               <Filter />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => onExportIconPress()}>
