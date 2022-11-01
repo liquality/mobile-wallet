@@ -232,11 +232,12 @@ const ActivityFilterScreen = () => {
         </Box>
       </Card>
       <Box flex={1} marginTop="mxxl" paddingHorizontal="screenPadding">
+        <ActivtyHeaderComponent />
         <FlatList
           data={fakeData}
           renderItem={renderHistoryItem}
-          ListHeaderComponent={ActivtyHeaderComponent}
           ListHeaderComponentStyle={{ marginBottom }}
+          showsVerticalScrollIndicator={false}
         />
       </Box>
     </Box>
