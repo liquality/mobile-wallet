@@ -81,9 +81,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     type: null,
   })
   const amountInput = useInputState('0')
-  const addressInput = useInputState(
-    '0x1f49F22879C323514Fd6fe069A20d381E432Eb11',
-  )
+  const addressInput = useInputState('')
   const networkFee = useRef<NetworkFeeType>()
   const activeNetwork = useRecoilValue(networkState)
   const [showFeeEditorModal, setShowFeeEditorModal] = useState<boolean>(false)
@@ -465,9 +463,9 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             <Text
               color={'textButtonFontColor'}
               fontSize={16}
-              style={styles.textRegular}>
-              Transfer Within Accounts
-            </Text>
+              style={styles.textRegular}
+              tx="transferWithinAccs"
+            />
           </Pressable>
           <Text color="darkGrey" fontSize={16} style={styles.textRegular}>
             {' | '}
@@ -476,9 +474,9 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             <Text
               color={'textButtonFontColor'}
               fontSize={16}
-              style={styles.textRegular}>
-              Network Speed
-            </Text>
+              style={styles.textRegular}
+              tx="common.networkSpeed"
+            />
           </Pressable>
           {showFeeEditorModal && (
             <FeeEditorScreen

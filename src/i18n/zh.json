@@ -482,5 +482,6 @@
   "oneProviderQuote": "{{quote}} PROVIDER QUOTE",
   "nosProviderQuote": "{{quote}} PROVIDER QUOTES",
   "bestRate": "BEST RATE",
-  "quotes": "Quotes"
+  "quotes": "Quotes",
+  "transferWithinAccs": "Transfer Within Accounts"
 }
