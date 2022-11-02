@@ -2,11 +2,10 @@ import {
   Modal,
   TouchableWithoutFeedback,
   useColorScheme,
-  StyleSheet,
   LayoutChangeEvent,
 } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import { Box, Pressable, ThemeIcon, Text, faceliftPalette } from '../../theme'
+import { Box, Pressable, ThemeIcon, Text } from '../../theme'
 import { useNavigation } from '@react-navigation/core'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { optInAnalyticsState, themeMode } from '../../atoms'
@@ -14,7 +13,7 @@ import { Fonts, AppIcons } from '../../assets'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import { CommonActions } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Path, Svg } from 'react-native-svg'
+import BackgroundBlock from '../../components/ui/BackgroundBlock'
 
 const { ModalClose } = AppIcons
 
@@ -84,38 +83,6 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
     setViewWidth(event.nativeEvent.layout.width)
   }
 
-  const getBackgroundBox = (width: number, height: number) => {
-    const flatRadius = 60
-    return (
-      <Box
-        alignItems="center"
-        justifyContent="center"
-        shadowColor={'darkGrey'}
-        shadowOffset={{ width: 4, height: 6 }}
-        shadowOpacity={1}
-        shadowRadius={0}
-        elevation={2}
-        style={StyleSheet.absoluteFillObject}>
-        <Svg
-          width={`${width}`}
-          height={`${height}`}
-          viewBox={`0 0 ${width} ${height}`}
-          fill="none">
-          <Path
-            d={`M0 0 H ${
-              width - flatRadius
-            } L ${width} ${flatRadius} V ${height} H ${0} V ${0} Z`}
-            fill={faceliftPalette.white}
-            strokeWidth={4}
-            stroke={faceliftPalette.darkGrey}
-            strokeLinejoin={'round'}
-            strokeLinecap={'round'}
-          />
-        </Svg>
-      </Box>
-    )
-  }
-
   const sureIcon: IconName =
     selectedOpt === 'sure' ? 'ActiveRadioButton' : 'InactiveRadioButton'
 
@@ -137,7 +104,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
           paddingVertical={'mxxl'}
           paddingHorizontal={'onboardingPadding'}
           onLayout={onLayout}>
-          {getBackgroundBox(viewWidth, viewHeight)}
+          <BackgroundBlock width={viewWidth} height={viewHeight} />
           <Text
             color={'textColor'}
             paddingTop="m"
