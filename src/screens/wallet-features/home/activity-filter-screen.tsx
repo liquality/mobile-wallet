@@ -22,7 +22,7 @@ import { MainStackParamList } from '../../../types'
 
 const { ChevronDown, SwapSuccess, CompletedSwap, ChevronRightIcon } = AppIcons
 
-const horizontalContentHeight = 60
+const horizontalContentHeight = 65
 
 type IconAsset = {
   code: string
@@ -115,13 +115,7 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
         setChainCode(code)
       }
       return (
-        <Box
-          alignItems={'center'}
-          borderBottomColor={
-            code === chainCode ? 'activeButton' : 'transparent'
-          }
-          borderBottomWidth={code === chainCode ? scale(1) : 0}
-          width={scale(50)}>
+        <Box alignItems={'center'} width={scale(50)} justifyContent="flex-end">
           <TouchableOpacity
             onPress={onItemPress}
             activeOpacity={0.7}
@@ -135,6 +129,14 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
               {code}
             </Text>
           </TouchableOpacity>
+          <Box
+            width={scale(30)}
+            height={scale(1)}
+            marginTop={'m'}
+            backgroundColor={
+              code === chainCode ? 'activeButton' : 'transparent'
+            }
+          />
         </Box>
       )
     },
@@ -231,19 +233,19 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
   return (
     <Box flex={1} backgroundColor={'mainBackground'}>
       <Card variant={'headerCard'} height={LARGE_TITLE_HEADER_HEIGHT}>
-        <Box
-          width={'100%'}
-          marginTop={'xl'}
-          height={scale(horizontalContentHeight)}
-          paddingHorizontal="screenPadding"
-          alignItems="center">
-          <FlatList
-            data={data}
-            renderItem={renderAssetIcon}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => `${item.code}+${index}`}
-          />
+        <Box flex={1} justifyContent={'flex-end'}>
+          <Box
+            width={'100%'}
+            height={scale(horizontalContentHeight)}
+            paddingHorizontal="screenPadding">
+            <FlatList
+              data={data}
+              renderItem={renderAssetIcon}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => `${item.code}+${index}`}
+            />
+          </Box>
         </Box>
       </Card>
       <Box flex={1} marginTop="mxxl" paddingHorizontal="screenPadding">
