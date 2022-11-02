@@ -63,6 +63,8 @@ const OverviewScreen = ({ route, navigation }: OverviewProps) => {
       setShowInjectionModal(true)
     }
 
+    console.log('Hajhaj')
+
     const onNewEvent = (eventData) => {
       console.log(eventData, 'EVEEENTDATAA')
       setEventData(eventData)
@@ -124,7 +126,8 @@ const OverviewScreen = ({ route, navigation }: OverviewProps) => {
           />
         }>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <HandleLockWalletAndBackgroundTasks />
+          {/*           <HandleLockWalletAndBackgroundTasks />
+           */}
           <React.Suspense
             fallback={
               <Box style={styles.overviewBlock}>

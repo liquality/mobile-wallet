@@ -287,13 +287,6 @@ const AppStackHeaderLeft = (navProps: NavigationProps) => {
 
   const canGoBack = navigation.canGoBack()
 
-  const [showQRScanner, setShowQRScanner] = useState(false)
-  const onSuccess = (e) => {
-    console.log(e, 'SUCCESS READING QR')
-    new WalletConnectController(e.data)
-    navigation.navigate('InitInjectionScreen', { uri: e.data })
-    setShowQRScanner(false)
-  }
   return (
     <Box flexDirection={'row'} alignItems="center">
       {canGoBack ? (
@@ -306,30 +299,6 @@ const AppStackHeaderLeft = (navProps: NavigationProps) => {
       <Box paddingLeft={'s'}>
         <ThemeIcon iconName="OnlyLqLogo" />
       </Box>
-      {showQRScanner ? (
-        <QRCodeScanner
-          onRead={onSuccess}
-          flashMode={RNCamera.Constants.FlashMode.torch}
-          topContent={
-            <Text style={styles.centerText}>
-              Go to{' '}
-              <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
-              your computer and scan the QR code.
-            </Text>
-          }
-          bottomContent={
-            <TouchableOpacity style={styles.buttonTouchable}>
-              <Text style={styles.buttonText}>OK. Got it!</Text>
-            </TouchableOpacity>
-          }
-        />
-      ) : (
-        <View style={styles.container}>
-          <Pressable onPress={() => setShowQRScanner(true)}>
-            <Connect />
-          </Pressable>
-        </View>
-      )}
     </Box>
   )
 }
@@ -366,6 +335,14 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
   const { navigation } = navProps
   const activeNetwork = useRecoilValue(networkState)
 
+  const [showQRScanner, setShowQRScanner] = useState(false)
+  const onSuccess = (e) => {
+    console.log(e, 'SUCCESS READING QR')
+    new WalletConnectController(e.data)
+    navigation.navigate('InitInjectionScreen', { uri: e.data })
+    setShowQRScanner(false)
+  }
+
   return (
     <Box flexDirection={'row'} alignItems={'center'} padding="s">
       <Box
@@ -379,6 +356,32 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
         <Text paddingLeft={'s'} color="darkGrey" variant="networkStatus">
           {`${activeNetwork}`.toUpperCase()}
         </Text>
+      </Box>
+      <Box>
+        {showQRScanner ? (
+          <QRCodeScanner
+            onRead={onSuccess}
+            flashMode={RNCamera.Constants.FlashMode.torch}
+            topContent={
+              <Text style={styles.centerText}>
+                Go to{' '}
+                <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text>{' '}
+                on your computer and scan the QR code.
+              </Text>
+            }
+            bottomContent={
+              <TouchableOpacity style={styles.buttonTouchable}>
+                <Text style={styles.buttonText}>OK. Got it!</Text>
+              </TouchableOpacity>
+            }
+          />
+        ) : (
+          <View style={styles.container}>
+            <Pressable onPress={() => setShowQRScanner(true)}>
+              <Connect />
+            </Pressable>
+          </View>
+        )}
       </Box>
       <TouchableWithoutFeedback
         onPress={() => {
