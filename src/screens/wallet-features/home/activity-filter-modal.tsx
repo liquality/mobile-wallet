@@ -7,6 +7,7 @@ import { AppIcons } from '../../../assets'
 import I18n from 'i18n-js'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
+import { useHeaderHeight } from '@react-navigation/elements'
 
 const { ChevronUp } = AppIcons
 
@@ -16,6 +17,8 @@ type ActivityFilterModalProps = NativeStackScreenProps<
 >
 
 const ActivityFilterModal = ({ navigation }: ActivityFilterModalProps) => {
+  const headerHeight = useHeaderHeight()
+
   const ActivtyHeaderComponent = React.useCallback(() => {
     const resultLength = 1
     const resultString = I18n.t(resultLength > 1 ? 'nosResult' : 'oneResult', {
@@ -64,9 +67,8 @@ const ActivityFilterModal = ({ navigation }: ActivityFilterModalProps) => {
       paddingHorizontal="screenPadding">
       <TouchableWithoutFeedback onPress={navigation.goBack}>
         <Box flex={1}>
+          <Box height={headerHeight} />
           <Box height={LARGE_TITLE_HEADER_HEIGHT} />
-          <Box height={scale(60)} />
-          <Text marginTop={'m'} />
           <Box flex={1} marginTop="mxxl">
             <ActivtyHeaderComponent />
           </Box>

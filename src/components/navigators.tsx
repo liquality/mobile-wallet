@@ -930,8 +930,7 @@ export const StackMainNavigator = () => {
           name="ActivityFilterModal"
           component={ActivityFilterModal}
           options={{
-            headerTitle: '',
-            headerShown: true,
+            ...screenNavOptions,
             headerTransparent: true,
             animation: 'none',
             presentation: 'transparentModal',

@@ -13,6 +13,8 @@ export const SCREEN_WIDTH = Dimensions.get('screen').width
 export const SCREEN_HEIGHT = Dimensions.get('screen').height
 export const INPUT_OPACITY_INACTIVE = 0.6
 export const INPUT_OPACITY_ACTIVE = 1
+export const HORIZONTAL_CONTENT_HEIGHT = scale(65)
+
 export const KEYS = {
   ACTIVE_NETWORK_KEY: 'activeNetworkKey',
   ACTIVE_THEME: 'activeTheme',

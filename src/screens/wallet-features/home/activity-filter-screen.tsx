@@ -2,7 +2,10 @@ import * as React from 'react'
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import { scale } from 'react-native-size-matters'
 import { Box, Card, Text, ThemeType } from '../../../theme'
-import { LARGE_TITLE_HEADER_HEIGHT } from '../../../utils'
+import {
+  HORIZONTAL_CONTENT_HEIGHT,
+  LARGE_TITLE_HEADER_HEIGHT,
+} from '../../../utils'
 import { Asset, ChainId } from '@chainify/types'
 import AssetIcon from '../../../components/asset-icon'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
@@ -21,8 +24,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
 
 const { ChevronDown, SwapSuccess, CompletedSwap, ChevronRightIcon } = AppIcons
-
-const horizontalContentHeight = 65
 
 type IconAsset = {
   code: string
@@ -236,7 +237,7 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
         <Box flex={1} justifyContent={'flex-end'}>
           <Box
             width={'100%'}
-            height={scale(horizontalContentHeight)}
+            height={HORIZONTAL_CONTENT_HEIGHT}
             paddingHorizontal="screenPadding">
             <FlatList
               data={data}
