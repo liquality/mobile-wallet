@@ -139,7 +139,7 @@ const Row = (props: RowProps) => {
               <Box width={10} height={10} />
             </Box>
           )}
-          <Box flex={0.1} paddingLeft={'s'}>
+          <Box flex={0.1} paddingLeft={'m'}>
             <AssetIcon chain={item.chain} />
           </Box>
           <Box flex={0.5} paddingLeft={'m'}>

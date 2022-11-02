@@ -103,11 +103,17 @@ const SubRow: FC<SubRowProps> = (props) => {
     if (Object.keys(chainSpecificNfts).length > 0) {
       let firstNftItem = chainSpecificNfts[Object.keys(chainSpecificNfts)[0]][0]
       return (
-        <Pressable
-          onPress={handlePressOnRow}
-          style={[styles.row, styles.subElement]}>
-          <Box height={scale(50)} width={scale(3)} />
-          <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
+        <Pressable onPress={handlePressOnRow} style={styles.row}>
+          <Box
+            height={scale(50)}
+            width={scale(3)}
+            style={{ backgroundColor: item.color }}
+          />
+          <Box paddingLeft={'m'}>
+            <Box width={10} height={10} />
+          </Box>
+          <Box flex={0.1} paddingLeft={'m'} />
+          <Box flex={0.55} flexDirection="row" paddingLeft="m">
             <Image
               source={checkImgUrlExists(
                 firstNftItem.image_original_url,
@@ -116,18 +122,18 @@ const SubRow: FC<SubRowProps> = (props) => {
               style={styles.nftImg}
               onError={() => imgError.push(firstNftItem.image_original_url)}
             />
-            <Box width={'80%'}>
-              <Text
-                numberOfLines={1}
-                paddingLeft={'s'}
-                variant={'listText'}
-                color="darkGrey">
+            <Box width={'80%'} paddingLeft="m">
+              <Text numberOfLines={1} variant={'listText'} color="darkGrey">
                 NFT <Text color="mediumGrey">|</Text> {numberOfNfts}{' '}
               </Text>
             </Box>
           </Box>
-          <Box flex={0.4} alignItems={'flex-end'} paddingLeft={'m'}>
-            <Text variant={'listText'} color="darkGrey">
+          <Box
+            flex={0.45}
+            alignItems={'flex-end'}
+            justifyContent="flex-end"
+            paddingLeft={'s'}>
+            <Text variant={'listText'} color="darkGrey" numberOfLines={1}>
               See All <ChevronRight style={styles.chevronNft} />
             </Text>
           </Box>
@@ -147,29 +153,34 @@ const SubRow: FC<SubRowProps> = (props) => {
             address: address,
           }}
           assetSymbol={item.code}>
-          <Pressable
-            onPress={handlePressOnRow}
-            style={[styles.row, styles.subElement]}>
-            <Box height={scale(50)} width={scale(3)} />
-            <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
+          <Pressable onPress={handlePressOnRow} style={styles.row}>
+            <Box
+              height={scale(50)}
+              width={scale(3)}
+              style={{ backgroundColor: item.color }}
+            />
+            <Box paddingLeft={'m'}>
+              <Box width={10} height={10} />
+            </Box>
+            <Box flex={0.1} paddingLeft={'m'} />
+            <Box flex={0.55} flexDirection="row" paddingLeft="m">
               <AssetIcon asset={item.code} />
-              <Box width={'80%'}>
-                <Text
-                  numberOfLines={1}
-                  paddingLeft={'s'}
-                  variant={'listText'}
-                  color="darkGrey">
+              <Box width={'80%'} paddingLeft="m">
+                <Text numberOfLines={1} variant={'listText'} color="darkGrey">
                   {item.name}
                 </Text>
               </Box>
             </Box>
-
-            <Box flex={0.4} alignItems={'flex-end'} paddingLeft={'m'}>
-              <Text variant={'listText'} color="darkGrey">
+            <Box
+              flex={0.45}
+              alignItems="flex-end"
+              justifyContent="flex-end"
+              paddingRight={'s'}>
+              <Text variant={'listText'} color="darkGrey" numberOfLines={1}>
                 {prettyNativeBalance}
               </Text>
 
-              <Text variant={'subListText'} color="greyMeta">
+              <Text variant={'subListText'} color="greyMeta" numberOfLines={1}>
                 {prettyFiatBalance}
               </Text>
             </Box>
@@ -186,9 +197,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 10,
     height: scale(60),
-  },
-  subElement: {
-    paddingLeft: scale(15),
   },
   nftImg: {
     marginLeft: scale(3),
