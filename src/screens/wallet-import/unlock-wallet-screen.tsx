@@ -62,11 +62,14 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
           returnKeyType="done"
           cursorColor={faceliftPalette.buttonActive}
           style={{
-            lineHeight: scale(1.3 * 16),
+            lineHeight: scale(1.5 * 16),
+            height: scale(1.5 * 16),
             borderBottomColor:
               index === indexOfFocusedText
                 ? faceliftPalette.buttonActive
-                : faceliftPalette.darkText,
+                : chosenSeedWords[index].length
+                ? faceliftPalette.lightText
+                : faceliftPalette.mediumGrey,
           }}
         />
       </Box>

@@ -351,7 +351,6 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(14),
       lineHeight: scale(1.3 * 14),
-      height: scale(1.3 * 14),
       color: 'white',
     },
     hintLabel: {
@@ -731,8 +730,6 @@ export const theme = createTheme({
   },
   textInputVariants: {
     passwordInputs: {
-      paddingTop: 'm',
-      paddingBottom: 's',
       color: 'onboardInputColor',
       borderBottomColor: 'onboardInputBorder',
       borderBottomWidth: 1,
@@ -741,7 +738,6 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
     },
     seedPhraseInputs: {
-      paddingTop: 's',
       color: 'darkGrey',
       borderBottomColor: 'mediumGrey',
       borderBottomWidth: 1,
