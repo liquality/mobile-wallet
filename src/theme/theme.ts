@@ -742,8 +742,8 @@ export const theme = createTheme({
     },
     seedPhraseInputs: {
       paddingTop: 's',
-      color: 'textColor',
-      borderBottomColor: 'activeButton',
+      color: 'darkGrey',
+      borderBottomColor: 'mediumGrey',
       borderBottomWidth: 1,
       fontWeight: '400',
       fontSize: scale(16),

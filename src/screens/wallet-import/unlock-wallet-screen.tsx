@@ -16,6 +16,7 @@ const defaultArray = Array(12).fill('')
 
 const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
   const [seedPhraseLength, setPhraseLength] = useState(12)
+  const [indexOfFocusedText, setIndexOfFocusedText] = useState<number>(-1)
   const [chosenSeedWords, setChosenSeedWords] =
     useState<Array<string>>(defaultArray)
 
@@ -45,7 +46,6 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const renderSeedWord = ({ item, index }: { item: any; index: number }) => {
-    const opacity = chosenSeedWords[index].length ? 1 : 0.4
     return (
       <Box width={'27%'}>
         <Text variant={'numberLabel'} color="greyBlack">{`${index + 1}`}</Text>
@@ -54,13 +54,20 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
           autoCorrect={false}
           keyboardType="ascii-capable"
           autoCapitalize={'none'}
+          onFocus={() => setIndexOfFocusedText(index)}
           onChangeText={(value) => {
             chosenSeedWords[index] = value
             setChosenSeedWords([...chosenSeedWords])
           }}
           returnKeyType="done"
           cursorColor={faceliftPalette.buttonActive}
-          style={{ opacity }}
+          style={{
+            lineHeight: scale(1.3 * 16),
+            borderBottomColor:
+              index === indexOfFocusedText
+                ? faceliftPalette.buttonActive
+                : faceliftPalette.darkText,
+          }}
         />
       </Box>
     )
@@ -85,11 +92,13 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
           {isSeedPhrase12 ? (
             <Text
               variant={'normalText'}
+              fontSize={scale(17)}
+              lineHeight={scale(1.3 * 17)}
               color={'textColor'}
               tx="unlockWalletScreen.enterSeedPhrase"
             />
           ) : null}
-          <Box flexDirection={'row'} marginTop="l" alignItems={'center'}>
+          <Box flexDirection={'row'} marginTop="s" alignItems={'center'}>
             <Box
               flexDirection={'row'}
               alignItems="center"
@@ -110,6 +119,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
                   }
                   width={'50%'}>
                   <Text
+                    variant={'normalText'}
                     color={isSeedPhrase12 ? 'white' : 'activeButton'}
                     tx={'unlockWalletScreen.12words'}
                   />
@@ -144,7 +154,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
               tx={'unlockWalletScreen.wordCount'}
             />
           </Box>
-          <Box marginTop={'xl'} flex={1}>
+          <Box marginTop={'mxxl'} flex={1}>
             <FlatList
               data={chosenSeedWords}
               columnWrapperStyle={styles.columnWrapperStyle}
