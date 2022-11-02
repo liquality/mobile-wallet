@@ -488,5 +488,9 @@
   "oneResult": "{{count}} Result",
   "nosResult": "{{count}} Results",
   "sort": "Sort",
-  "advanced": "Advanced"
+  "advanced": "Advanced",
+  "nfts": "NFTs",
+  "advancedFilter": "Advanced Filter",
+  "showOneResult": "Show {{count}} Result",
+  "showMultipleResult": "Show {{count}} Results"
 }

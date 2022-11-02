@@ -177,7 +177,12 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
           </Box>
         </Box>
         <Text
-          onPress={() => navigation.navigate('AdvancedFilterModal', {})}
+          onPress={() =>
+            navigation.navigate('AdvancedFilterModal', {
+              code: chainCode,
+              network: activeNetwork,
+            })
+          }
           variant={'h7'}
           lineHeight={scale(20)}
           color="defaultButton"
@@ -186,7 +191,7 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
         />
       </Box>
     )
-  }, [navigation])
+  }, [navigation, chainCode, activeNetwork])
 
   const renderHistoryItem = React.useCallback(
     ({ item }: { item: any }) => {

@@ -158,6 +158,15 @@ import AccountDetailsIcon from '../assets/icons/accountDetails.svg'
 import ConnectionIndicator from '../assets/icons/connectionIndicator.svg'
 import ActivityFilterDarkIcon from '../assets/icons/activityFilterDarkIcon.svg'
 import ActivityFilterLightIcon from '../assets/icons/activityFilterLightIcon.svg'
+// filter related icons
+import CancelledFilterIcon from '../assets/icons/filterIcons/cancelledFilter.svg'
+import CompletedFilterIcon from '../assets/icons/filterIcons/completedFilter.svg'
+import PendingFilterIcon from '../assets/icons/filterIcons/pendingFliter.svg'
+import ReceiveFilterIcon from '../assets/icons/filterIcons/receiveFilter.svg'
+import SendFilterIcon from '../assets/icons/filterIcons/sendFilter.svg'
+import SwapFilterIcon from '../assets/icons/filterIcons/swapFilter.svg'
+import NftFilterIcon from '../assets/icons/filterIcons/nftFilter.svg'
+import NftFilterInactiveIcon from '../assets/icons/filterIcons/nftFilterInactive.svg'
 
 export default {
   PendingSwap,
@@ -319,4 +328,12 @@ export default {
   ConnectionIndicator,
   ActivityFilterDarkIcon,
   ActivityFilterLightIcon,
+  CancelledFilterIcon,
+  CompletedFilterIcon,
+  NftFilterIcon,
+  PendingFilterIcon,
+  ReceiveFilterIcon,
+  SendFilterIcon,
+  SwapFilterIcon,
+  NftFilterInactiveIcon,
 }
