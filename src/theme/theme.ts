@@ -3,7 +3,7 @@ import { Fonts } from '../assets'
 import { faceliftPalette } from './faceliftPalette'
 import { palette } from './palette'
 import { scale } from 'react-native-size-matters'
-import { ONBOARDING_PADDING, SCREEN_PADDING } from '../utils'
+import { DRAWER_PADDING, ONBOARDING_PADDING, SCREEN_PADDING } from '../utils'
 
 export const theme = createTheme({
   colors: {
@@ -82,6 +82,7 @@ export const theme = createTheme({
     onboardingPadding: scale(ONBOARDING_PADDING),
     onboardingHeaderPadding: scale(25),
     screenPadding: scale(SCREEN_PADDING),
+    drawerPadding: scale(DRAWER_PADDING),
   },
   breakpoints: {
     phone: 0,

@@ -122,14 +122,14 @@ const AdvancedFilterModal = (props: Props) => {
 
   const resultCount = 10
 
-  const addExtraheight = SCREEN_HEIGHT > 700 ? 50 : 0
+  const addExtraheight = SCREEN_HEIGHT > 700 ? 40 : 0
 
   return (
     <Box
       flex={1}
       style={{ paddingTop: headerHeight + scale(addExtraheight) }}
       backgroundColor="semiTransparentGrey">
-      <Box alignItems="flex-end" padding={'screenPadding'}>
+      <Box alignItems="flex-end" padding={'drawerPadding'}>
         <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
           <BuyCryptoCloseLight />
         </TouchableOpacity>
@@ -138,7 +138,7 @@ const AdvancedFilterModal = (props: Props) => {
         flex={1}
         backgroundColor="mainBackground"
         paddingTop="mxxl"
-        paddingHorizontal={'screenPadding'}>
+        paddingHorizontal={'drawerPadding'}>
         <Box flex={0.75}>
           {assetInfo ? (
             <Box flexDirection={'row'} alignItems="center">
