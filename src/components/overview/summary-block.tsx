@@ -13,16 +13,13 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios'
 import { Box, Text, Card, IMAGE_BACKGROUND_STYLE } from '../../theme'
 import * as React from 'react'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
-import { GRADIENT_BACKGROUND_HEIGHT, labelTranslateFn } from '../../utils'
+import { labelTranslateFn } from '../../utils'
 import { Network } from '@liquality/cryptoassets/dist/src/types'
 import { Images, AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 const { Exchange: DoubleArrowThick, DownIcon, UpIcon, DollarSign } = AppIcons
-
-//Line height issue with Anek Kannada font
-const adjustLineHeight = -scale(30)
 
 type SummaryBlockProps = {
   navigation: OverviewProps['navigation']
@@ -108,25 +105,19 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
   }, [])
 
   return (
-    <Card
-      variant={'headerCard'}
-      height={GRADIENT_BACKGROUND_HEIGHT}
-      paddingHorizontal="xl">
-      <Box flex={0.65} justifyContent="center">
-        <Text color={'darkGrey'} variant="totalBalance">
+    <Card variant={'headerCard'} paddingHorizontal="xl" padding={'mxxl'}>
+      <Box justifyContent="center" marginBottom={'lxxl'}>
+        <Text color={'darkGrey'} variant="totalAsset">
           $ {totalFiatBalance}
         </Text>
-        <Text
-          style={{ marginTop: adjustLineHeight }}
-          variant="totalAsset"
-          color={'nestedColor'}>
+        <Text variant="totalAsset" color={'nestedColor'}>
           {accountsIds.length}
           {accountsIds.length === 1
             ? `${labelTranslateFn('summaryBlockComp.asset')}`
             : `${labelTranslateFn('summaryBlockComp.assets')}`}
         </Text>
       </Box>
-      <Box flex={0.35}>
+      <Box>
         <Box flexDirection={'row'} justifyContent="space-evenly">
           {appFeatures.map((item, index) => (
             <Box key={index} alignItems={'center'}>

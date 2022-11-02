@@ -158,9 +158,9 @@ export const theme = createTheme({
     },
     mainInputLabel: {
       fontFamily: Fonts.Regular,
-      fontWeight: '500',
       fontSize: scale(15),
-      lineHeight: scale(21),
+      lineHeight: scale(1.3 * 15),
+      height: scale(1.3 * 15),
       color: 'mainForeground',
     },
     secondaryInputLabel: {
@@ -249,7 +249,6 @@ export const theme = createTheme({
     },
     link: {
       fontFamily: Fonts.Regular,
-      fontWeight: '500',
       fontSize: scale(13),
       color: 'link',
     },
@@ -350,8 +349,9 @@ export const theme = createTheme({
     },
     whiteLabel: {
       fontFamily: Fonts.Regular,
-      fontWeight: '500',
-      fontSize: scale(13),
+      fontSize: scale(14),
+      lineHeight: scale(1.3 * 14),
+      height: scale(1.3 * 14),
       color: 'white',
     },
     hintLabel: {
@@ -393,12 +393,12 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
       fontWeight: '400',
+      lineHeight: scale(1.3 * 15),
     },
     h1: {
       fontFamily: Fonts.Regular,
       fontSize: scale(41),
-      fontWeight: '500',
-      lineHeight: scale(55),
+      lineHeight: scale(1.3 * 41),
     },
     h3: {
       fontFamily: Fonts.Regular,
@@ -465,15 +465,12 @@ export const theme = createTheme({
       fontSize: scale(13),
       fontWeight: '400',
     },
-    totalBalance: {
-      fontFamily: Fonts.Regular,
-      fontSize: scale(37),
-      fontWeight: '600',
-    },
     totalAsset: {
       fontFamily: Fonts.Regular,
       fontSize: scale(36),
       fontWeight: '600',
+      height: scale(36),
+      lineHeight: scale(1.45 * 36),
     },
     tabLabel: {
       fontFamily: Fonts.Regular,
@@ -502,8 +499,9 @@ export const theme = createTheme({
     },
     headerTitle: {
       fontFamily: Fonts.Regular,
-      fontWeight: '600',
       fontSize: scale(16),
+      height: scale(1.45 * 16),
+      letterSpacing: 0.5,
       color: 'textColor',
     },
     gasIndicatorLabel: {
@@ -586,6 +584,7 @@ export const theme = createTheme({
     },
     solid: {
       backgroundColor: 'defaultButton',
+      borderRadius: 2,
     },
     defaultOutline: {
       borderColor: 'defaultButton',
