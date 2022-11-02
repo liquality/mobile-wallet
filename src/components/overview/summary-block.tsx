@@ -112,7 +112,7 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
       variant={'headerCard'}
       height={GRADIENT_BACKGROUND_HEIGHT}
       paddingHorizontal="xl">
-      <Box flex={0.65} justifyContent="center">
+      <Box flex={0.6}>
         <Text color={'darkGrey'} variant="totalBalance">
           $ {totalFiatBalance}
         </Text>
@@ -126,7 +126,7 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
             : `${labelTranslateFn('summaryBlockComp.assets')}`}
         </Text>
       </Box>
-      <Box flex={0.35}>
+      <Box flex={0.4}>
         <Box flexDirection={'row'} justifyContent="space-evenly">
           {appFeatures.map((item, index) => (
             <Box key={index} alignItems={'center'}>
