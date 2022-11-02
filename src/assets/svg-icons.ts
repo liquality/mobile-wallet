@@ -156,6 +156,8 @@ import HopProviderIcon from '../assets/icons/swap-providers/hop.svg'
 import OneInch from '../assets/icons/swap-providers/oneInch.svg'
 import AccountDetailsIcon from '../assets/icons/accountDetails.svg'
 import ConnectionIndicator from '../assets/icons/connectionIndicator.svg'
+import ActivityFilterDarkIcon from '../assets/icons/activityFilterDarkIcon.svg'
+import ActivityFilterLightIcon from '../assets/icons/activityFilterLightIcon.svg'
 
 export default {
   PendingSwap,
@@ -315,4 +317,6 @@ export default {
   HopProviderIcon,
   AccountDetailsIcon,
   ConnectionIndicator,
+  ActivityFilterDarkIcon,
+  ActivityFilterLightIcon,
 }

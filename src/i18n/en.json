@@ -327,13 +327,13 @@
     "wallet": "Wallet"
   },
   "sortPicker": {
+    "by_date": "By date (newest first)",
     "needs_attention": "Needs attention",
     "pending": "Pending",
-    "canceled": "Canceled",
+    "canceled": "Cancelled",
     "refunded": "Refunded",
-    "completed": "Completed",
     "failed": "Failed",
-    "by_date": "By date (newest first)",
+    "completed": "Completed",
     "by_type": "By type (A to Z)",
     "by_token": "By Token (A to Z)"
   },
