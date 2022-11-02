@@ -10,7 +10,8 @@ import { getAsset } from '@liquality/cryptoassets'
 import AssetIcon from '../../../components/asset-icon'
 import { statusFilterBtnState, transFilterBtnState } from '../../../atoms'
 import { useRecoilState } from 'recoil'
-import { ButtonProps } from '../../../utils'
+import { ButtonProps, SCREEN_HEIGHT } from '../../../utils'
+import I18n from 'i18n-js'
 
 const { BuyCryptoCloseLight, ExportIcon } = AppIcons
 
@@ -37,7 +38,14 @@ const FilterButton = (props: FilterButtonProps) => {
         borderRadius={scale(20)}
         borderWidth={1}
         borderColor="activeButton">
-        <Text paddingRight={'m'} tx={item.value} />
+        <Text
+          variant={'transLink'}
+          color="activeButton"
+          paddingRight={'m'}
+          marginTop="s"
+          fontWeight={'400'}
+          tx={item.value}
+        />
         <item.icon />
       </Box>
     </TouchableOpacity>
@@ -112,68 +120,93 @@ const AdvancedFilterModal = (props: Props) => {
     )
   }
 
+  const resultCount = 10
+
+  const addExtraheight = SCREEN_HEIGHT > 700 ? 50 : 0
+
   return (
-    <Box flex={1} backgroundColor={'transparent'}>
+    <Box
+      flex={1}
+      style={{ paddingTop: headerHeight + scale(addExtraheight) }}
+      backgroundColor="semiTransparentGrey">
+      <Box alignItems="flex-end" padding={'screenPadding'}>
+        <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
+          <BuyCryptoCloseLight />
+        </TouchableOpacity>
+      </Box>
       <Box
         flex={1}
-        style={{ paddingTop: headerHeight }}
-        backgroundColor="semiTransparentGrey">
-        <Box marginTop={'xl'} alignItems="flex-end" padding={'screenPadding'}>
-          <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
-            <BuyCryptoCloseLight />
-          </TouchableOpacity>
-        </Box>
-        <Box
-          flex={1}
-          backgroundColor="mainBackground"
-          paddingTop="mxxl"
-          paddingHorizontal={'screenPadding'}>
+        backgroundColor="mainBackground"
+        paddingTop="mxxl"
+        paddingHorizontal={'screenPadding'}>
+        <Box flex={0.75}>
           {assetInfo ? (
             <Box flexDirection={'row'} alignItems="center">
               <AssetIcon asset={code} size={scale(30)} />
-              <Text paddingLeft={'m'}>{code}</Text>
+              <Text paddingLeft={'m'} variant="chainLabel" color={'greyMeta'}>
+                {code}
+              </Text>
             </Box>
           ) : (
-            <Text onPress={navigation.goBack}>{code}</Text>
+            <Text paddingLeft={'m'} variant="chainLabel" color={'greyMeta'}>
+              {code}
+            </Text>
           )}
           <Box
             flexDirection={'row'}
             justifyContent="space-between"
+            alignItems={'center'}
             paddingTop={'s'}>
-            <Text>Advanced Filter</Text>
+            <Text
+              variant={'buyCryptoHeader'}
+              color="darkGrey"
+              tx="advancedFilter"
+            />
             <ExportIcon />
           </Box>
-          <Box marginTop={'xl'}>
-            <Text>DATE RANGE</Text>
+          <Box marginTop={'m'}>
+            <Text
+              tx="common.dateRange"
+              variant={'transLink'}
+              color={'black2'}
+            />
             <Box flexDirection={'row'} justifyContent="space-between">
               <Box
                 flex={0.48}
                 borderBottomWidth={1}
-                paddingTop="xl"
-                paddingBottom="m">
-                <Text>Start</Text>
+                borderBottomColor="mediumGrey"
+                paddingTop="m"
+                paddingBottom="s">
+                <Text
+                  variant={'normalText'}
+                  color={'black2'}
+                  tx="common.start"
+                />
               </Box>
               <Box
                 flex={0.48}
                 borderBottomWidth={1}
-                paddingTop="xl"
-                paddingBottom="m">
-                <Text>End</Text>
+                borderBottomColor="mediumGrey"
+                paddingTop="m"
+                paddingBottom="s">
+                <Text variant={'normalText'} color={'black2'} tx="common.end" />
               </Box>
             </Box>
           </Box>
           <Box marginTop={'xl'} flexDirection="row">
-            <Text>Transaction</Text>
+            <Text tx="transaction" variant={'transLink'} color={'black2'} />
             <Box
               alignSelf={'flex-start'}
               width={1}
               marginHorizontal="m"
-              height={scale(15)}
+              height={scale(20)}
               backgroundColor="inactiveText"
             />
-            <Text>0</Text>
+            <Text variant={'transLink'} color={'black2'}>
+              0
+            </Text>
           </Box>
-          <Box marginTop={'l'}>
+          <Box marginTop={'s'}>
             <FlatList
               data={transFilterBtn}
               renderItem={renderTransactionFilterItem}
@@ -183,17 +216,19 @@ const AdvancedFilterModal = (props: Props) => {
             />
           </Box>
           <Box marginTop={'xl'} flexDirection="row">
-            <Text>Status</Text>
+            <Text tx="common.status" variant={'transLink'} color={'black2'} />
             <Box
               alignSelf={'flex-start'}
               width={1}
               marginHorizontal="m"
-              height={scale(15)}
+              height={scale(20)}
               backgroundColor="inactiveText"
             />
-            <Text>0</Text>
+            <Text variant={'transLink'} color={'black2'}>
+              0
+            </Text>
           </Box>
-          <Box marginTop={'l'}>
+          <Box marginTop={'s'}>
             <FlatList
               data={statusFilterBtn}
               renderItem={renderStatusFilterItem}
@@ -202,9 +237,14 @@ const AdvancedFilterModal = (props: Props) => {
               keyExtractor={(item) => `${item.key}`}
             />
           </Box>
-          <Box marginTop={'xxl'}>
+        </Box>
+        <Box flex={0.25}>
+          <Box marginTop={'s'}>
             <Pressable
-              label="Show results"
+              label={I18n.t(
+                resultCount > 1 ? 'showOneResult' : 'showMultipleResult',
+                { count: resultCount },
+              )}
               onPress={() => {}}
               variant="solid"
             />
@@ -212,9 +252,10 @@ const AdvancedFilterModal = (props: Props) => {
           <Text
             onPress={navigation.goBack}
             textAlign={'center'}
-            variant="link"
+            variant="transLink"
             marginTop={'xl'}
-            tx="termsScreen.cancel"
+            color="greyMeta"
+            tx="common.reset"
           />
         </Box>
       </Box>

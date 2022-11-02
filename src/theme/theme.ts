@@ -516,6 +516,11 @@ export const theme = createTheme({
       fontSize: scale(13),
       fontWeight: '400',
     },
+    chainLabel: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(14),
+      fontWeight: '500',
+    },
     warnHighlight: {
       fontFamily: Fonts.JetBrainsMono,
       fontSize: scale(14),
