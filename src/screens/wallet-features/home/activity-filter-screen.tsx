@@ -177,6 +177,7 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
           </Box>
         </Box>
         <Text
+          onPress={() => navigation.navigate('AdvancedFilterModal', {})}
           variant={'h7'}
           lineHeight={scale(20)}
           color="defaultButton"

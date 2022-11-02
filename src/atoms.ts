@@ -1,4 +1,3 @@
-import { labelTranslateFn } from './utils/others'
 import { DarkModeEnum, LanguageEnum } from './types'
 import { atom, atomFamily, selector, selectorFamily } from 'recoil'
 import { AccountType, SwapAssetPairType, CustomRootState } from './types'
@@ -109,7 +108,7 @@ export const themeMode = atom<DarkModeEnum>({
 
 export const sortingOptionState = atom<string>({
   key: 'sortingOptionState',
-  default: labelTranslateFn('sortPicker.by_date')!,
+  default: '',
 })
 
 /**

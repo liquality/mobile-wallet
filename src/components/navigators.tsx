@@ -83,6 +83,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/core'
 import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
 import ActivityFilterScreen from '../screens/wallet-features/home/activity-filter-screen'
 import ActivityFilterModal from '../screens/wallet-features/home/activity-filter-modal'
+import AdvancedFilterModal from '../screens/wallet-features/home/advanced-filter-modal'
 
 const {
   NetworkActiveDot,
@@ -624,7 +625,7 @@ const StackMainNavigatorHeaderLeft = () => {
   )
 }
 
-const CloseButtonLeft = () => {
+const CloseButton = () => {
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   return (
     <Box paddingHorizontal={'m'}>
@@ -889,7 +890,7 @@ export const StackMainNavigator = () => {
                 ? () => BuyCryptoDrawerHeaderTitle(screenTitle)
                 : empty,
               headerLeft: undefined,
-              headerRight: isScrolledUp ? CloseButtonLeft : undefined,
+              headerRight: isScrolledUp ? CloseButton : undefined,
             }
           }}
         />
@@ -906,7 +907,7 @@ export const StackMainNavigator = () => {
               },
               headerTitleStyle: NORMAL_HEADER,
               headerTitle: screenTitle,
-              headerLeft: CloseButtonLeft,
+              headerLeft: CloseButton,
               headerRight: SwapHeaderRight,
             }
           }}
@@ -922,7 +923,7 @@ export const StackMainNavigator = () => {
             },
             headerTitleStyle: NORMAL_HEADER,
             headerTitle: labelTranslateFn('activityFilter')!,
-            headerLeft: CloseButtonLeft,
+            headerLeft: CloseButton,
             headerRight: ActivityFilterScreenHeaderRight,
           }}
         />
@@ -934,6 +935,21 @@ export const StackMainNavigator = () => {
             headerTransparent: true,
             animation: 'none',
             presentation: 'transparentModal',
+          }}
+        />
+        <MainStack.Screen
+          name="AdvancedFilterModal"
+          component={AdvancedFilterModal}
+          options={{
+            ...screenNavOptions,
+            presentation: 'transparentModal',
+            headerStyle: {
+              backgroundColor: faceliftPalette.transparent,
+            },
+            headerTransparent: true,
+            headerTitle: '',
+            headerLeft: undefined,
+            headerRight: undefined,
           }}
         />
       </MainStack.Group>
