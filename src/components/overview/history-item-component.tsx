@@ -69,7 +69,7 @@ const HistoryItemComponent = (props: HistoryItemProps) => {
   const tapPaddingStyle = theme.spacing.m
 
   return (
-    <Box height={scale(77)} flexDirection="row" alignItems={'center'}>
+    <Box height={scale(60)} flexDirection="row" alignItems={'center'}>
       {type === TransactionType.Swap ? (
         ['SUCCESS', 'REFUNDED'].includes(status) ? (
           <CompletedSwap width={23} height={24} />
