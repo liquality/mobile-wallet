@@ -170,6 +170,7 @@ import NftFilterInactiveIcon from '../assets/icons/filterIcons/nftFilterInactive
 import FailedFilterIcon from '../assets/icons/filterIcons/failterFilter.svg'
 import RefundedFilterIcon from '../assets/icons/filterIcons/refundedFilter.svg'
 import NeedsAttentionFilterIcon from '../assets/icons/filterIcons/needsAttentionFilter.svg'
+import ResetIcon from '../assets/icons/reset.svg'
 
 export default {
   PendingSwap,
@@ -342,4 +343,5 @@ export default {
   FailedFilterIcon,
   RefundedFilterIcon,
   NeedsAttentionFilterIcon,
+  ResetIcon,
 }

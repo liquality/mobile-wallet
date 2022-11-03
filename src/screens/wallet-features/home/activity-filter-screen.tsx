@@ -23,7 +23,8 @@ import I18n from 'i18n-js'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
 
-const { ChevronDown, SwapSuccess, CompletedSwap, ChevronRightIcon } = AppIcons
+const { ChevronDown, SwapSuccess, CompletedSwap, ChevronRightIcon, ResetIcon } =
+  AppIcons
 
 type IconAsset = {
   code: string
@@ -176,19 +177,35 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
             <ChevronDown width={scale(10)} />
           </Box>
         </Box>
-        <Text
-          onPress={() =>
-            navigation.navigate('AdvancedFilterModal', {
-              code: chainCode,
-              network: activeNetwork,
-            })
-          }
-          variant={'h7'}
-          lineHeight={scale(20)}
-          color="defaultButton"
-          marginRight={'s'}
-          tx="advanced"
-        />
+        <Box flexDirection={'row'}>
+          <Text
+            onPress={() =>
+              navigation.navigate('AdvancedFilterModal', {
+                code: chainCode,
+                network: activeNetwork,
+              })
+            }
+            variant={'h7'}
+            lineHeight={scale(20)}
+            color="defaultButton"
+            marginRight={'s'}
+            tx="advanced"
+          />
+          <Box
+            width={1}
+            marginHorizontal="m"
+            height={scale(15)}
+            backgroundColor="inactiveText"
+          />
+          <Text variant={'h7'} color={'darkGrey'} lineHeight={scale(20)}>
+            3
+          </Text>
+          <Box marginLeft={'s'} style={styles.iconAdjustment}>
+            <TouchableOpacity activeOpacity={0.7}>
+              <ResetIcon width={scale(20)} />
+            </TouchableOpacity>
+          </Box>
+        </Box>
       </Box>
     )
   }, [navigation, chainCode, activeNetwork])
@@ -271,6 +288,9 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
 const styles = StyleSheet.create({
   chainCodeStyle: {
     alignItems: 'center',
+  },
+  iconAdjustment: {
+    marginTop: -scale(2),
   },
 })
 
