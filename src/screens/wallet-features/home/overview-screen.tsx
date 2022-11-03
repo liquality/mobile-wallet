@@ -24,9 +24,7 @@ import { useHeaderHeight } from '@react-navigation/elements'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
 import { useEffect } from 'react'
 import ApproveInjectionModal from '../approve-injection-modal'
-import { EventEmitter } from 'events'
 
-const hub = new EventEmitter()
 import { scale } from 'react-native-size-matters'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
@@ -45,9 +43,6 @@ const OverviewScreen = ({ route, navigation }: OverviewProps) => {
   const [refreshing, setRefreshing] = React.useState(false)
   const [accountIds, setAccountIds] = React.useState<string[]>([])
   const [showInjectionModal, setShowInjectionModal] = React.useState(false)
-  const [eventData, setEventData] = React.useState({})
-
-  console.log(route.params, 'what sis route params?')
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
@@ -57,27 +52,6 @@ const OverviewScreen = ({ route, navigation }: OverviewProps) => {
   const activeNetwork = useRecoilValue(networkState)
 
   const { activeWalletId } = wallet.state
-
-  useEffect(() => {
-    if (route.params) {
-      setShowInjectionModal(true)
-    }
-
-    console.log('Hajhaj')
-
-    const onNewEvent = (eventData) => {
-      console.log(eventData, 'EVEEENTDATAA')
-      setEventData(eventData)
-    }
-    console.log(hub, 'wats hub inside component')
-
-    const listener = hub.addListener('signWalletConnectTransaction', onNewEvent)
-    return () => {
-      listener.removeListener('signWalletConnectTransaction', onNewEvent)
-    }
-  }, [route.params, eventData])
-
-  console.log(eventData, 'EVENT DATA SHOULD BE SET WITH PAYLOAD')
 
   const { height } = useWindowDimensions()
   const tabBarBottomHeight = useBottomTabBarHeight()
@@ -126,8 +100,8 @@ const OverviewScreen = ({ route, navigation }: OverviewProps) => {
           />
         }>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
-          {/*           <HandleLockWalletAndBackgroundTasks />
-           */}
+          <HandleLockWalletAndBackgroundTasks />
+
           <React.Suspense
             fallback={
               <Box style={styles.overviewBlock}>

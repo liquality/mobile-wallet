@@ -62,6 +62,7 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
       //const gasPrice = await getGasPrice(CHAIN_CONFIG[chainId].gasPrices)
       //const fee = parseInt(data.gas, 16) * gasPrice
 
+      console.log('params, chainid:', params, chainId, 'IN BACKGROUND TASK')
       navigation.navigate('ApproveTransactionInjectionScreen', {
         chainId,
         //walletConnectData: { ...data, gasPrice, fee },
