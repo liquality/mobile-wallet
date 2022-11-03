@@ -849,7 +849,7 @@ export const StackMainNavigator = () => {
                   paddingVertical={'s'}>
                   <Box
                     borderLeftWidth={3}
-                    height={scale(20)}
+                    height={scale(1.3 * 16)}
                     style={{
                       borderLeftColor: route.params.assetData?.color,
                     }}

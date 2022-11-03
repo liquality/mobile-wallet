@@ -126,10 +126,14 @@ const PasswordCreationScreen = ({
               value={passwordInput.value}
               secureTextEntry
               autoCorrect={false}
-              style={{ opacity: passwordInputOpacity }}
+              style={{
+                opacity: passwordInputOpacity,
+                lineHeight: scale(1.3 * 15),
+                height: scale(1.3 * 15),
+              }}
             />
           </Box>
-          <Box marginTop={'xl'}>
+          <Box marginTop={'xxl'}>
             <Text
               variant="mainInputLabel"
               tx="passwordCreationScreen.confirmPassword"
@@ -142,7 +146,11 @@ const PasswordCreationScreen = ({
               secureTextEntry
               autoCorrect={false}
               returnKeyType="done"
-              style={{ opacity: passwordConfirmationInputOpacity }}
+              style={{
+                opacity: passwordConfirmationInputOpacity,
+                lineHeight: scale(1.3 * 15),
+                height: scale(1.3 * 15),
+              }}
               onSubmitEditing={onPress}
             />
             {error.length ? (
@@ -180,9 +188,8 @@ const PasswordCreationScreen = ({
             opacity={0.8}
             textAlign={'center'}
             variant={'whiteLabel'}
-            textDecorationLine={'underline'}
             tx="passwordCreationScreen.orImportWallet"
-            marginTop={'s'}
+            marginTop={'m'}
             onPress={() =>
               navigation.navigate('TermsScreen', {
                 previousScreen: 'PasswordCreationScreen',

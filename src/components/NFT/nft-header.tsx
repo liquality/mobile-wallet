@@ -54,7 +54,7 @@ const NftHeader: React.FC<NftHeaderProps> = (props) => {
             </Box>
           ) : null}
 
-          <Text color={'darkGrey'} variant="totalBalance">
+          <Text color={'darkGrey'} variant="totalAsset">
             {blackText}
           </Text>
 
