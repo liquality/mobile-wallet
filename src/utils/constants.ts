@@ -2,6 +2,7 @@ import { Dimensions } from 'react-native'
 import { scale } from 'react-native-size-matters'
 import { SvgProps } from 'react-native-svg'
 import { AppIcons } from '../assets'
+import { SortFunctionKeyType } from '../custom-hooks/use-filtered-history'
 import { TxKeyPath } from '../i18n'
 
 export const COPY_BUTTON_TIMEOUT = 2000
@@ -120,5 +121,41 @@ export const statusFilterBtn: Array<ButtonProps> = [
     status: false,
     icon: FailedFilterIcon,
     inactiveIcon: FailedFilterIcon,
+  },
+]
+
+export type SortRadioButtonProp = {
+  key: SortFunctionKeyType
+  value: TxKeyPath
+}
+
+export const sortRadioButtons: Array<SortRadioButtonProp> = [
+  {
+    key: 'by_date',
+    value: 'sortPicker.by_date',
+  },
+  {
+    key: 'needs_attention',
+    value: 'sortPicker.needs_attention',
+  },
+  {
+    key: 'pending',
+    value: 'sortPicker.pending',
+  },
+  {
+    key: 'canceled',
+    value: 'sortPicker.canceled',
+  },
+  {
+    key: 'refunded',
+    value: 'sortPicker.refunded',
+  },
+  {
+    key: 'failed',
+    value: 'sortPicker.failed',
+  },
+  {
+    key: 'completed',
+    value: 'sortPicker.completed',
   },
 ]

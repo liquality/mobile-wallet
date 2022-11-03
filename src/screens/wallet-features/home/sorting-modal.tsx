@@ -10,15 +10,18 @@ import {
   labelTranslateFn,
   LARGE_TITLE_HEADER_HEIGHT,
   SCREEN_WIDTH,
+  SortRadioButtonProp,
+  sortRadioButtons,
 } from '../../../utils'
 import { AppIcons } from '../../../assets'
 import I18n from 'i18n-js'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
 import { useHeaderHeight } from '@react-navigation/elements'
-import { useRecoilValue, useRecoilState } from 'recoil'
-import { langSelected, sortingOptionState } from '../../../atoms'
+import { useRecoilState } from 'recoil'
+import { activityFilterState, sortingOptionState } from '../../../atoms'
 import { useTheme } from '@shopify/restyle'
+import { useFilteredHistory } from '../../../custom-hooks'
 
 const { ChevronUp, ActivityFilterDarkIcon, ActivityFilterLightIcon } = AppIcons
 
@@ -32,24 +35,30 @@ type SortingModalProps = NativeStackScreenProps<
 const SortingModal = ({ navigation }: SortingModalProps) => {
   const headerHeight = useHeaderHeight()
   const [selectedOpt, setSelectedOpt] = useRecoilState(sortingOptionState)
-  const currentLang = useRecoilValue(langSelected)
-  const sortingOptions = React.useMemo(
-    () => [
-      labelTranslateFn('sortPicker.by_date')!,
-      labelTranslateFn('sortPicker.needs_attention')!,
-      labelTranslateFn('sortPicker.pending')!,
-      labelTranslateFn('sortPicker.canceled')!,
-      labelTranslateFn('sortPicker.refunded')!,
-      labelTranslateFn('sortPicker.failed')!,
-      labelTranslateFn('sortPicker.completed')!,
-    ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentLang],
-  )
+  const historyItems = useFilteredHistory()
+  const [assetFilter, setAssetFilter] = useRecoilState(activityFilterState)
+
   const theme = useTheme<ThemeType>()
 
+  const handleUpdateFilter = React.useCallback(
+    (payload: any) => {
+      setAssetFilter({ ...payload })
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [assetFilter],
+  )
+
+  const handletSortPress = React.useCallback(
+    (item: SortRadioButtonProp) => {
+      setSelectedOpt(item)
+      handleUpdateFilter({ sorter: item.key })
+      navigation.goBack()
+    },
+    [handleUpdateFilter, navigation, setSelectedOpt],
+  )
+
   const ActivtyHeaderComponent = React.useCallback(() => {
-    const resultLength = 1
+    const resultLength = historyItems.length
     const resultString = I18n.t(resultLength > 1 ? 'nosResult' : 'oneResult', {
       count: resultLength,
     })
@@ -81,19 +90,19 @@ const SortingModal = ({ navigation }: SortingModalProps) => {
         </Box>
       </Box>
     )
-  }, [navigation.goBack])
+  }, [historyItems.length, navigation.goBack])
 
-  const renderSortingOptions = ({ item }: { item: string }) => {
+  const renderSortingOptions = ({ item }: { item: SortRadioButtonProp }) => {
     const sureIcon: IconName =
-      selectedOpt === item ? 'ActiveRadioButton' : 'InactiveRadioButton'
+      selectedOpt.key === item.key ? 'ActiveRadioButton' : 'InactiveRadioButton'
     return (
       <TouchableOpacity
         activeOpacity={0.7}
-        onPress={() => setSelectedOpt(item)}>
+        onPress={() => handletSortPress(item)}>
         <Box flexDirection={'row'} marginTop={'m'}>
           <ThemeIcon iconName={sureIcon} width={scale(22)} height={scale(22)} />
           <Text variant={'radioText'} color="darkGrey" marginLeft={'m'}>
-            {item}
+            {labelTranslateFn(item.value)}
           </Text>
         </Box>
       </TouchableOpacity>
@@ -117,9 +126,10 @@ const SortingModal = ({ navigation }: SortingModalProps) => {
               marginTop="m">
               <Box flex={1} paddingHorizontal="mxxl">
                 <FlatList
-                  data={sortingOptions}
+                  data={sortRadioButtons}
                   renderItem={renderSortingOptions}
                   style={{ marginTop: theme.spacing.xl }}
+                  keyExtractor={(item) => item.key}
                   scrollEnabled={false}
                   extraData={selectedOpt}
                 />

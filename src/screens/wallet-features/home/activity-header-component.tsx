@@ -8,6 +8,8 @@ import { MainStackParamList } from '../../../types'
 import { NavigationProp, useNavigation } from '@react-navigation/core'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { useFilteredHistory } from '../../../custom-hooks'
+import { useRecoilState } from 'recoil'
+import { activityFilterState } from '../../../atoms'
 
 const { ChevronDown, ResetIcon } = AppIcons
 
@@ -22,10 +24,25 @@ const ActivtyHeaderComponent = ({
 }: ActivityHeaderComponent) => {
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   const historyItems = useFilteredHistory()
+  const [assetFilter, setAssetFilter] = useRecoilState(activityFilterState)
+
   const resultLength = historyItems.length
   const resultString = I18n.t(resultLength > 1 ? 'nosResult' : 'oneResult', {
     count: resultLength,
   })
+
+  const handleUpdateFilter = React.useCallback(
+    (payload: any) => {
+      setAssetFilter({ ...payload })
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [assetFilter],
+  )
+
+  const handleResetPress = React.useCallback(() => {
+    handleUpdateFilter({ sorter: 'by_date' })
+  }, [handleUpdateFilter])
+
   return (
     <Box flexDirection={'row'} justifyContent="space-between">
       <Box flexDirection={'row'}>
@@ -77,7 +94,7 @@ const ActivtyHeaderComponent = ({
           3
         </Text>
         <Box marginLeft={'s'} style={styles.iconAdjustment}>
-          <TouchableOpacity activeOpacity={0.7}>
+          <TouchableOpacity activeOpacity={0.7} onPress={handleResetPress}>
             <ResetIcon width={scale(20)} />
           </TouchableOpacity>
         </Box>

@@ -59,7 +59,7 @@ const sortFunctions = {
   by_token: sortFunctionByField(FUSE_OPTIONS.keys.indexOf('from')),
 }
 
-type SortFunctionKeyType =
+export type SortFunctionKeyType =
   | 'needs_attention'
   | 'pending'
   | 'canceled'

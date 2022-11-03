@@ -25,7 +25,13 @@ import {
   HistoryItem,
   Network,
 } from '@liquality/wallet-core/dist/src/store/types'
-import { ButtonProps, KEYS, statusFilterBtn, transFilterBtns } from './utils'
+import {
+  ButtonProps,
+  KEYS,
+  SortRadioButtonProp,
+  statusFilterBtn,
+  transFilterBtns,
+} from './utils'
 import * as Localization from 'expo-localization'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 
@@ -106,9 +112,9 @@ export const themeMode = atom<DarkModeEnum>({
   effects: [localStorageEffect<DarkModeEnum>(KEYS.ACTIVE_THEME)],
 })
 
-export const sortingOptionState = atom<string>({
+export const sortingOptionState = atom<SortRadioButtonProp>({
   key: 'sortingOptionState',
-  default: '',
+  default: { key: 'by_date', value: 'sortPicker.by_date' },
 })
 
 export const transFilterBtnState = atom<Array<ButtonProps>>({
