@@ -213,9 +213,6 @@ const styles = StyleSheet.create({
   chainCodeStyle: {
     alignItems: 'center',
   },
-  iconAdjustment: {
-    marginTop: -scale(2),
-  },
 })
 
 export default ActivityFilterScreen
