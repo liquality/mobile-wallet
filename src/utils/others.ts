@@ -51,7 +51,7 @@ export const sortQuotes = (
 }
 
 export const formatDate = (ms: number): string => {
-  return dayjs(ms).format('DD/MM/YYYY, HH:mm a')
+  return dayjs(ms).format('MM.DD.YYYY, HH:mm a')
 }
 
 export const pbkdf2 = async (

@@ -3,12 +3,17 @@ import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import { scale } from 'react-native-size-matters'
 import { Box, Card, Text, ThemeType } from '../../../theme'
 import {
+  formatDate,
   HORIZONTAL_CONTENT_HEIGHT,
   LARGE_TITLE_HEADER_HEIGHT,
 } from '../../../utils'
-import { Asset, ChainId } from '@chainify/types'
+import { Asset, BigNumber, ChainId } from '@chainify/types'
 import AssetIcon from '../../../components/asset-icon'
-import { Network } from '@liquality/wallet-core/dist/src/store/types'
+import {
+  HistoryItem,
+  Network,
+  TransactionType,
+} from '@liquality/wallet-core/dist/src/store/types'
 import {
   accountsIdsForMainnetState,
   accountsIdsState,
@@ -16,15 +21,27 @@ import {
   networkState,
 } from '../../../atoms'
 import { useRecoilValue } from 'recoil'
-import { getAllAssets, getAsset } from '@liquality/cryptoassets'
+import { getAllAssets, getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import { AppIcons } from '../../../assets'
 import { useTheme } from '@shopify/restyle'
 import I18n from 'i18n-js'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
+import { useFilteredHistory } from '../../../custom-hooks'
+import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
+import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import ProgressCircle from '../../../components/animations/progress-circle'
 
-const { ChevronDown, SwapSuccess, CompletedSwap, ChevronRightIcon, ResetIcon } =
-  AppIcons
+const {
+  ChevronDown,
+  CompletedSwap,
+  ChevronRightIcon,
+  ResetIcon,
+  RefundedIcon,
+  PendingSwap,
+  SendIcon: Send,
+  CompletedIcon: SuccessIcon,
+} = AppIcons
 
 type IconAsset = {
   code: string
@@ -44,6 +61,8 @@ type ActivityFilterScreenProps = NativeStackScreenProps<
 const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
   const [data, setData] = React.useState<IconAsset[]>([])
   const [chainCode, setChainCode] = React.useState('ALL')
+  const historyItems = useFilteredHistory()
+
   const activeNetwork = useRecoilValue(networkState)
   const enabledAssets = useRecoilValue(enabledAssetsState)
   const theme = useTheme<ThemeType>()
@@ -107,8 +126,24 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
     setData(tempAssetsIcon)
   }, [accounts, activeNetwork, enabledAssets])
 
-  let fakeData = Array(10).fill(10)
   const tapPaddingStyle = theme.spacing.m
+
+  const handleChevronPress = React.useCallback(
+    (historyItem: HistoryItem) => {
+      if (historyItem.type === TransactionType.Swap) {
+        navigation.navigate('SwapDetailsScreen', {
+          swapTransactionConfirmation: historyItem,
+          screenTitle: `Swap ${historyItem.from} to ${historyItem.to} Details`,
+        })
+      } else if (historyItem.type === TransactionType.Send) {
+        navigation.navigate('SendConfirmationScreen', {
+          sendTransactionConfirmation: historyItem,
+          screenTitle: 'Send Details',
+        })
+      }
+    },
+    [navigation],
+  )
 
   const renderAssetIcon = React.useCallback(
     ({ item }: { item: IconAsset }) => {
@@ -211,20 +246,57 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
   }, [navigation, chainCode, activeNetwork])
 
   const renderHistoryItem = React.useCallback(
-    ({ item }: { item: any }) => {
+    ({ item }: { item: HistoryItem }) => {
+      const { type, startTime, from, to, status, network } = item
+      let transactionLabel,
+        amount,
+        amountInUsd,
+        totalSteps = 1,
+        currentStep = 2
+      if (item.type === TransactionType.Swap) {
+        amount = unitToCurrency(
+          getAsset(activeNetwork, from),
+          new BigNumber(item.fromAmount),
+        ).toNumber()
+        amountInUsd = amount
+        const swapProvider = getSwapProvider(network, item.provider)
+        totalSteps = swapProvider.totalSteps
+        currentStep = swapProvider.statuses[status].step + 1
+      } else if (item.type === TransactionType.Send) {
+        amount = unitToCurrency(
+          getAsset(activeNetwork, from),
+          new BigNumber(item.amount),
+        ).toNumber()
+        amountInUsd = prettyFiatBalance(amount, item.fiatRate)
+      }
+
+      if (type === TransactionType.Send) {
+        transactionLabel = `Send ${from}`
+      } else if (type === TransactionType.Swap) {
+        transactionLabel = `${from} to ${to}`
+      }
+
       return (
         <Box height={scale(77)} flexDirection="row" alignItems={'center'}>
-          <CompletedSwap />
+          {type === TransactionType.Swap ? (
+            ['SUCCESS', 'REFUNDED'].includes(status) ? (
+              <CompletedSwap width={23} height={24} />
+            ) : (
+              <PendingSwap width={23} height={24} />
+            )
+          ) : (
+            <Send width={16} height={18} />
+          )}
           <Box flex={1} alignItems={'center'}>
-            <Box width={'85%'} alignItems={'center'}>
+            <Box width={'90%'} alignItems={'center'}>
               <Box alignSelf="flex-start">
                 <Text variant={'h6'} lineHeight={scale(20)} color="darkGrey">
-                  10.015493 ARBUSDTUEOHWHE to ARBDAI {item}
+                  {transactionLabel}
                 </Text>
               </Box>
               <Box flexDirection={'row'} alignSelf="flex-start">
                 <Text variant={'h7'} lineHeight={scale(20)} color="greyMeta">
-                  12.30.22, 3:45pm
+                  {startTime && formatDate(startTime)}
                 </Text>
                 <Box
                   width={1}
@@ -232,24 +304,39 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
                   height={scale(15)}
                   backgroundColor="greyMeta"
                 />
-                <Text variant={'h7'} lineHeight={scale(20)} color="greyMeta">
-                  $123.24
-                </Text>
+                <Box width={'35%'}>
+                  <Text
+                    variant={'h7'}
+                    lineHeight={scale(20)}
+                    color="greyMeta"
+                    numberOfLines={1}>
+                    {`$${amountInUsd}`}
+                  </Text>
+                </Box>
               </Box>
             </Box>
           </Box>
           <Box marginRight={'s'}>
-            <SwapSuccess />
+            {status === 'REFUNDED' && <RefundedIcon width={28} height={28} />}
+            {status === 'SUCCESS' && <SuccessIcon width={28} height={28} />}
+            {!['SUCCESS', 'REFUNDED'].includes(status) && (
+              <ProgressCircle
+                radius={14}
+                current={currentStep}
+                total={totalSteps}
+              />
+            )}
           </Box>
           <TouchableOpacity
             activeOpacity={0.7}
+            onPress={() => handleChevronPress(item)}
             style={{ padding: tapPaddingStyle }}>
             <ChevronRightIcon />
           </TouchableOpacity>
         </Box>
       )
     },
-    [tapPaddingStyle],
+    [activeNetwork, handleChevronPress, tapPaddingStyle],
   )
 
   const marginBottom = theme.spacing.m
@@ -275,9 +362,10 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
       <Box flex={1} marginTop="mxxl" paddingHorizontal="screenPadding">
         <ActivtyHeaderComponent />
         <FlatList
-          data={fakeData}
+          data={historyItems}
           renderItem={renderHistoryItem}
           ListHeaderComponentStyle={{ marginBottom }}
+          keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
         />
       </Box>
