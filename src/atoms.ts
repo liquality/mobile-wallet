@@ -331,6 +331,26 @@ export const totalFiatBalanceState = selector<string>({
   },
 })
 
+export const totalEnabledAssetsWithBalance = selector<number>({
+  key: 'totalEnabledAssetsWithBalance',
+  get: ({ get }) => {
+    let total = 0
+    const enabledAssets = get(enabledAssetsState)
+    const accounts: Partial<AccountType>[] = get(accountListState)
+
+    for (const account of accounts) {
+      total += Object.values(account.assets).filter(
+        (asset) =>
+          account.id &&
+          enabledAssets.includes(asset.code) &&
+          get(balanceStateFamily({ asset: asset.code, assetId: account.id })) >
+            0,
+      ).length
+    }
+    return total
+  },
+})
+
 export const assetScreenPopupMenuVisible = atom<boolean>({
   key: 'AssetScreenPopupMenu',
   default: false,
