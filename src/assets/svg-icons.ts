@@ -156,6 +156,7 @@ import HopProviderIcon from '../assets/icons/swap-providers/hop.svg'
 import OneInch from '../assets/icons/swap-providers/oneInch.svg'
 import AccountDetailsIcon from '../assets/icons/accountDetails.svg'
 import ConnectionIndicator from '../assets/icons/connectionIndicator.svg'
+import OptimismChainIcon from '../assets/icons/crypto/optimism_chain.svg'
 
 export default {
   PendingSwap,
@@ -315,4 +316,5 @@ export default {
   HopProviderIcon,
   AccountDetailsIcon,
   ConnectionIndicator,
+  OptimismChainIcon,
 }

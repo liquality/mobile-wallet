@@ -108,8 +108,12 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
         justifyContent={'center'}
         alignItems="center">
         <AssetIcon chain={chain} asset={code} size={scale(54)} />
-        <Text variant={'addressLabel'} color="greyMeta" marginTop={'xl'}>
-          {i18n.t('receiveScreen.yourCurrent', { code })}
+        <Text
+          variant={'addressLabel'}
+          color="greyMeta"
+          marginTop={'xl'}
+          textTransform={'uppercase'}>
+          {i18n.t('receiveScreen.yourCurrent', { code, chain })}
         </Text>
         <Box
           flexDirection={'row'}
@@ -171,8 +175,8 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
                   alignItems="center"
                   justifyContent={'center'}>
                   <CopyIcon
-                    width={scale(20)}
-                    height={scale(20)}
+                    width={scale(1.3 * 15)}
+                    height={scale(1.3 * 15)}
                     stroke={palette.white}
                     style={styles.icon}
                   />
@@ -180,7 +184,6 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
                     variant={'h6'}
                     color="white"
                     tx="receiveScreen.copyAdd"
-                    style={{ marginTop: scale(5) }}
                   />
                 </Box>
               }
