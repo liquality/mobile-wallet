@@ -128,8 +128,10 @@ const ContentBlock = () => {
       )
       if (Object.keys(wallet.getters.allNftCollections).length === 0) {
         console.log('Inside if because length is 0')
-        setTimeout(() => {}, 2000)
-        fetchAllNfts()
+        setTimeout(() => {
+          console.log('JUST FIRED !!!')
+          fetchAllNfts()
+        }, 20000)
       }
 
       //addAllNfts(wholeNftArr)
@@ -153,6 +155,7 @@ const ContentBlock = () => {
 
     let allNfts = await wallet.getters.allNftCollections
     //setAllNftData(allNfts)
+    console.log(wallet.getters.allNftCollections, 'wallet getters nfts')
     let wholeNftArr = Object.values(allNfts).map((val) => {
       return val
     })
