@@ -315,6 +315,7 @@ export interface CustomRootState extends RootState {
     activityStatuses?: string[]
     assetToggles?: string[]
     sorter?: string | undefined
+    codeSort?: string | undefined
   }
 }
 

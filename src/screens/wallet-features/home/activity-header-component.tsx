@@ -7,6 +7,7 @@ import I18n from 'i18n-js'
 import { MainStackParamList } from '../../../types'
 import { NavigationProp, useNavigation } from '@react-navigation/core'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
+import { useFilteredHistory } from '../../../custom-hooks'
 
 const { ChevronDown, ResetIcon } = AppIcons
 
@@ -20,8 +21,8 @@ const ActivtyHeaderComponent = ({
   network,
 }: ActivityHeaderComponent) => {
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
-
-  const resultLength = 1
+  const historyItems = useFilteredHistory()
+  const resultLength = historyItems.length
   const resultString = I18n.t(resultLength > 1 ? 'nosResult' : 'oneResult', {
     count: resultLength,
   })

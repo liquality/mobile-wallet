@@ -10,16 +10,14 @@ import { Asset, ChainId } from '@chainify/types'
 import AssetIcon from '../../../components/asset-icon'
 import {
   HistoryItem,
-  Network,
   TransactionType,
 } from '@liquality/wallet-core/dist/src/store/types'
 import {
-  accountsIdsForMainnetState,
-  accountsIdsState,
+  activityFilterState,
   enabledAssetsState,
   networkState,
 } from '../../../atoms'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { getAllAssets, getAsset } from '@liquality/cryptoassets'
 import { useTheme } from '@shopify/restyle'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -33,11 +31,6 @@ type IconAsset = {
   chain: ChainId
 }
 
-interface CustomAsset extends Asset {
-  id: string
-  showGasLink: boolean
-}
-
 type ActivityFilterScreenProps = NativeStackScreenProps<
   MainStackParamList,
   'ActivityFilterScreen'
@@ -47,59 +40,50 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
   const [data, setData] = React.useState<IconAsset[]>([])
   const [chainCode, setChainCode] = React.useState('ALL')
   const historyItems = useFilteredHistory()
-
+  const [assetFilter, setAssetFilter] = useRecoilState(activityFilterState)
   const activeNetwork = useRecoilValue(networkState)
   const enabledAssets = useRecoilValue(enabledAssetsState)
   const theme = useTheme<ThemeType>()
-  const accounts = useRecoilValue(
-    activeNetwork === Network.Testnet
-      ? accountsIdsState
-      : accountsIdsForMainnetState,
+
+  const handleUpdateFilter = React.useCallback(
+    (payload: any) => {
+      setAssetFilter((currVal) => ({ ...currVal, ...payload }))
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [assetFilter],
+  )
+
+  const handleCodeSortFilter = React.useCallback(
+    (value: string) => {
+      handleUpdateFilter({ codeSort: value })
+    },
+    [handleUpdateFilter],
   )
 
   React.useEffect(() => {
-    let myAssets: Asset[] = []
+    let myAssets =
+      enabledAssets.reduce((assetList: Asset[], asset) => {
+        if (getAllAssets().testnet.hasOwnProperty(asset)) {
+          assetList.push({
+            ...getAsset(activeNetwork, asset),
+            contractAddress: getAsset(activeNetwork, asset).contractAddress,
+          })
+        }
+        return assetList
+      }, []) || []
 
-    if (activeNetwork === Network.Testnet) {
-      myAssets =
-        enabledAssets.reduce((assetList: Asset[], asset) => {
-          if (getAllAssets().testnet.hasOwnProperty(asset)) {
-            assetList.push({
-              ...getAsset(activeNetwork, asset),
-              contractAddress: getAsset(activeNetwork, asset).contractAddress,
-            })
-          }
-          return assetList
-        }, []) || []
-    } else {
-      myAssets = Object.keys(getAllAssets().mainnet).map((key) =>
-        getAsset(activeNetwork, key),
-      )
+    let customArray: IconAsset[] = []
+
+    for (let asset of myAssets) {
+      for (let item of historyItems) {
+        if (item.from === asset.code) {
+          customArray.push({ code: asset.code, chain: asset.chain })
+        }
+      }
     }
 
-    let tempAssets: Array<CustomAsset> = []
-    for (let assetItem of myAssets) {
-      let added = false
-      accounts.forEach((accItem) => {
-        if (assetItem.code === accItem.name) {
-          added = true
-          tempAssets.push({ ...assetItem, id: accItem.id, showGasLink: true })
-        }
-        if (!added) {
-          const chain = getAsset(activeNetwork, accItem.name).chain
-          if (chain === assetItem.chain) {
-            tempAssets.push({
-              ...assetItem,
-              id: accItem.id,
-              showGasLink: false,
-            })
-          }
-        }
-      })
-    }
-
-    let tempAssetsIcon: IconAsset[] = accounts.map((accItem) => {
-      const item = getAsset(activeNetwork, accItem.name)
+    let tempAssetsIcon: IconAsset[] = customArray.map((accItem) => {
+      const item = getAsset(activeNetwork, accItem.code)
       return {
         code: item.code,
         chain: item.chain,
@@ -109,7 +93,8 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
     tempAssetsIcon.unshift({ code: 'ALL', chain: 'ALL' as ChainId })
 
     setData(tempAssetsIcon)
-  }, [accounts, activeNetwork, enabledAssets])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeNetwork])
 
   const handleChevronPress = React.useCallback(
     (historyItem: HistoryItem) => {
@@ -133,6 +118,7 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
       const { code, chain } = item
       const onItemPress = () => {
         setChainCode(code)
+        handleCodeSortFilter(code)
       }
       return (
         <Box alignItems={'center'} width={scale(50)} justifyContent="flex-end">
@@ -160,7 +146,7 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
         </Box>
       )
     },
-    [chainCode],
+    [chainCode, handleCodeSortFilter],
   )
 
   const renderHistoryItem = React.useCallback(
