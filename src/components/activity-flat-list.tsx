@@ -68,7 +68,7 @@ const ActivityFlatList = ({
   }, [navigation, selectedAsset])
 
   return (
-    <Box paddingHorizontal="screenPadding">
+    <>
       {showFilter ? <ActivityFilter numOfResults={history.length} /> : null}
       {historyCount || history.length ? (
         <>
@@ -95,7 +95,7 @@ const ActivityFlatList = ({
           />
         </Box>
       )}
-    </Box>
+    </>
   )
 }
 

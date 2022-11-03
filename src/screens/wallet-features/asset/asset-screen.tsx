@@ -311,6 +311,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
           <ScrollView
             contentContainerStyle={{
               paddingBottom: scale(20),
+              paddingHorizontal: scale(20),
             }}>
             <ActivityFlatList selectedAsset={code} />
           </ScrollView>

@@ -442,16 +442,6 @@ export const AppStackNavigator = () => {
           })}
         />
         <MainStack.Screen
-          name="SendConfirmationScreen"
-          component={SendConfirmationScreen}
-          options={({ navigation, route }: NavigationProps) => ({
-            headerRight: () => SwapCheckHeaderRight({ navigation, route }),
-            headerTitleStyle: NORMAL_HEADER,
-            title: route?.params?.screenTitle || 'Overview',
-            headerLeft: PlaceholderComp,
-          })}
-        />
-        <MainStack.Screen
           name="AssetManagementScreen"
           component={AssetManagementScreen}
           options={({ navigation, route }: NavigationProps) => ({
@@ -865,6 +855,17 @@ export const StackMainNavigator = () => {
           component={NftSendScreen}
           options={() => ({
             headerShown: false,
+          })}
+        />
+        <MainStack.Screen
+          name="SendConfirmationScreen"
+          component={SendConfirmationScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerShadowVisible: false,
+            headerRight: () => SwapCheckHeaderRight({ navigation, route }),
+            headerTitleStyle: NORMAL_HEADER,
+            title: route?.params?.screenTitle || 'Overview',
+            headerLeft: PlaceholderComp,
           })}
         />
       </MainStack.Group>
