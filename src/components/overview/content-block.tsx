@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilCallback, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   accountsIdsState,
   accountsIdsForMainnetState,
@@ -8,8 +8,13 @@ import {
   networkState,
   historyItemsState,
   showFilterState,
+  allNftsState,
 } from '../../atoms'
-import { getAllEnabledAccounts, populateWallet } from '../../store/store'
+import {
+  getAllEnabledAccounts,
+  populateWallet,
+  updateNFTs,
+} from '../../store/store'
 import ActivityFlatList from '../activity-flat-list'
 import AssetFlatList from './asset-flat-list'
 import * as React from 'react'
@@ -37,6 +42,13 @@ import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { scale } from 'react-native-size-matters'
 import { AppIcons } from '../../assets'
 
+import { setupWallet } from '@liquality/wallet-core'
+import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions' // Default options
+
+const wallet = setupWallet({
+  ...defaultOptions,
+})
+
 const { Filter, ExportIcon } = AppIcons
 
 type RenderTabBar = SceneRendererProps & {
@@ -52,6 +64,17 @@ const ContentBlock = () => {
   const [delayTabView, setDelayTabView] = React.useState(false)
   const langSelected = useRecoilValue(LS)
   const setShowFilter = useSetRecoilState(showFilterState)
+  const activeNetwork = useRecoilValue(networkState)
+  //const allNfts = useRecoilValue(allNftsState)
+  //console.log(allNfts, 'ALL NFTS in state ')
+
+  const { activeWalletId } = wallet.state
+  const addAllNfts = useRecoilCallback(
+    ({ set }) =>
+      (iterableNftArr: NFTWithAccount[][]) => {
+        set(allNftsState, iterableNftArr)
+      },
+  )
 
   i18n.locale = langSelected
   useEffect(() => {
@@ -60,6 +83,7 @@ const ContentBlock = () => {
     const accIds = enabledAccountsToSendIn.map((account) => {
       return account.id
     })
+
     populateWallet(accIds)
       .then(() => {
         setIsDoneFetchingData(true)
@@ -77,6 +101,63 @@ const ContentBlock = () => {
       setDelayTabView(true)
     }, 0)
   }, [])
+
+  useEffect(() => {
+    async function fetchData() {
+      /*      const enabledAccountsToSendIn = getAllEnabledAccounts()
+      const accIds = enabledAccountsToSendIn.map((account) => {
+        return account.id
+      })
+      //setAccountIds(accIds)
+      await updateNFTs({
+        walletId: activeWalletId,
+        network: activeNetwork,
+        accountIds: accIds,
+      })
+
+      //Use dummydata here if no assets load
+      let allNfts = await fetchAllNfts()
+      //setAllNftData(allNfts)
+      let wholeNftArr = Object.values(allNfts).map((val) => {
+        return val
+      }) */
+      fetchAllNfts()
+      console.log(
+        Object.keys(wallet.getters.allNftCollections).length,
+        'Wat is length?',
+      )
+      if (Object.keys(wallet.getters.allNftCollections).length === 0) {
+        console.log('Inside if because length is 0')
+        setTimeout(() => {}, 2000)
+        fetchAllNfts()
+      }
+
+      //addAllNfts(wholeNftArr)
+    }
+    fetchData()
+  }, [activeWalletId, activeNetwork])
+
+  const fetchAllNfts = async () => {
+    const enabledAccountsToSendIn = getAllEnabledAccounts()
+    const accIds = enabledAccountsToSendIn.map((account) => {
+      return account.id
+    })
+
+    await updateNFTs({
+      walletId: activeWalletId,
+      network: activeNetwork,
+      accountIds: accIds,
+    })
+
+    //Use dummydata here if no assets load
+
+    let allNfts = await wallet.getters.allNftCollections
+    //setAllNftData(allNfts)
+    let wholeNftArr = Object.values(allNfts).map((val) => {
+      return val
+    })
+    console.log(wholeNftArr, 'WHOLE NFT ARR?')
+  }
 
   const historyItem = useRecoilValue(historyItemsState)
 

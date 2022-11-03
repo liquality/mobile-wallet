@@ -53,7 +53,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
   const tabBarBottomHeight = useBottomTabBarHeight()
   const headerHeight = useHeaderHeight()
 
-  React.useEffect(() => {
+  /*   React.useEffect(() => {
     async function fetchData() {
       const enabledAccountsToSendIn = getAllEnabledAccounts()
       const accIds = enabledAccountsToSendIn.map((account) => {
@@ -67,7 +67,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
       })
     }
     fetchData()
-  }, [activeWalletId, activeNetwork])
+  }, [activeWalletId, activeNetwork]) */
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
