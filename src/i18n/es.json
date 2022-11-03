@@ -492,5 +492,7 @@
   "nfts": "NFTs",
   "advancedFilter": "Advanced Filter",
   "showOneResult": "Show {{count}} Result",
-  "showMultipleResult": "Show {{count}} Results"
+  "showMultipleResult": "Show {{count}} Results",
+  "needsAttention": "Needs Attention",
+  "failed": "Failed"
 }

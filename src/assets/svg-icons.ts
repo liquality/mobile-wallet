@@ -167,6 +167,9 @@ import SendFilterIcon from '../assets/icons/filterIcons/sendFilter.svg'
 import SwapFilterIcon from '../assets/icons/filterIcons/swapFilter.svg'
 import NftFilterIcon from '../assets/icons/filterIcons/nftFilter.svg'
 import NftFilterInactiveIcon from '../assets/icons/filterIcons/nftFilterInactive.svg'
+import FailedFilterIcon from '../assets/icons/filterIcons/failterFilter.svg'
+import RefundedFilterIcon from '../assets/icons/filterIcons/refundedFilter.svg'
+import NeedsAttentionFilterIcon from '../assets/icons/filterIcons/needsAttentionFilter.svg'
 
 export default {
   PendingSwap,
@@ -336,4 +339,7 @@ export default {
   SendFilterIcon,
   SwapFilterIcon,
   NftFilterInactiveIcon,
+  FailedFilterIcon,
+  RefundedFilterIcon,
+  NeedsAttentionFilterIcon,
 }

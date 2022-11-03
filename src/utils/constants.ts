@@ -35,6 +35,9 @@ const {
   PendingFilterIcon,
   CancelledFilterIcon,
   CompletedFilterIcon,
+  RefundedFilterIcon,
+  NeedsAttentionFilterIcon,
+  FailedFilterIcon,
 } = AppIcons
 
 type IconType = React.FC<
@@ -96,5 +99,26 @@ export const statusFilterBtn: Array<ButtonProps> = [
     status: false,
     icon: CancelledFilterIcon,
     inactiveIcon: CancelledFilterIcon,
+  },
+  {
+    key: 'refunded',
+    value: 'sortPicker.refunded',
+    status: false,
+    icon: RefundedFilterIcon,
+    inactiveIcon: RefundedFilterIcon,
+  },
+  {
+    key: 'needsAttention',
+    value: 'needsAttention',
+    status: false,
+    icon: NeedsAttentionFilterIcon,
+    inactiveIcon: NeedsAttentionFilterIcon,
+  },
+  {
+    key: 'failed',
+    value: 'failed',
+    status: false,
+    icon: FailedFilterIcon,
+    inactiveIcon: FailedFilterIcon,
   },
 ]
