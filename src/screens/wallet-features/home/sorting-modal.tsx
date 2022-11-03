@@ -24,12 +24,12 @@ const { ChevronUp, ActivityFilterDarkIcon, ActivityFilterLightIcon } = AppIcons
 
 type IconName = 'InactiveRadioButton' | 'ActiveRadioButton'
 
-type ActivityFilterModalProps = NativeStackScreenProps<
+type SortingModalProps = NativeStackScreenProps<
   MainStackParamList,
-  'ActivityFilterModal'
+  'SortingModal'
 >
 
-const ActivityFilterModal = ({ navigation }: ActivityFilterModalProps) => {
+const SortingModal = ({ navigation }: SortingModalProps) => {
   const headerHeight = useHeaderHeight()
   const [selectedOpt, setSelectedOpt] = useRecoilState(sortingOptionState)
   const currentLang = useRecoilValue(langSelected)
@@ -148,4 +148,4 @@ const ActivityFilterModal = ({ navigation }: ActivityFilterModalProps) => {
   )
 }
 
-export default ActivityFilterModal
+export default SortingModal

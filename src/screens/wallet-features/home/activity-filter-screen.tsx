@@ -3,11 +3,10 @@ import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import { scale } from 'react-native-size-matters'
 import { Box, Card, Text, ThemeType } from '../../../theme'
 import {
-  formatDate,
   HORIZONTAL_CONTENT_HEIGHT,
   LARGE_TITLE_HEADER_HEIGHT,
 } from '../../../utils'
-import { Asset, BigNumber, ChainId } from '@chainify/types'
+import { Asset, ChainId } from '@chainify/types'
 import AssetIcon from '../../../components/asset-icon'
 import {
   HistoryItem,
@@ -21,27 +20,13 @@ import {
   networkState,
 } from '../../../atoms'
 import { useRecoilValue } from 'recoil'
-import { getAllAssets, getAsset, unitToCurrency } from '@liquality/cryptoassets'
-import { AppIcons } from '../../../assets'
+import { getAllAssets, getAsset } from '@liquality/cryptoassets'
 import { useTheme } from '@shopify/restyle'
-import I18n from 'i18n-js'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
 import { useFilteredHistory } from '../../../custom-hooks'
-import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
-import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
-import ProgressCircle from '../../../components/animations/progress-circle'
-
-const {
-  ChevronDown,
-  CompletedSwap,
-  ChevronRightIcon,
-  ResetIcon,
-  RefundedIcon,
-  PendingSwap,
-  SendIcon: Send,
-  CompletedIcon: SuccessIcon,
-} = AppIcons
+import HistoryItemComponent from '../../../components/overview/history-item-component'
+import ActivtyHeaderComponent from './activity-header-component'
 
 type IconAsset = {
   code: string
@@ -126,8 +111,6 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
     setData(tempAssetsIcon)
   }, [accounts, activeNetwork, enabledAssets])
 
-  const tapPaddingStyle = theme.spacing.m
-
   const handleChevronPress = React.useCallback(
     (historyItem: HistoryItem) => {
       if (historyItem.type === TransactionType.Swap) {
@@ -180,163 +163,16 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
     [chainCode],
   )
 
-  const ActivtyHeaderComponent = React.useCallback(() => {
-    const resultLength = 1
-    const resultString = I18n.t(resultLength > 1 ? 'nosResult' : 'oneResult', {
-      count: resultLength,
-    })
-    return (
-      <Box flexDirection={'row'} justifyContent="space-between">
-        <Box flexDirection={'row'}>
-          <Text variant={'h7'} lineHeight={scale(20)} color="black">
-            {resultString}
-          </Text>
-          <Box
-            width={1}
-            marginHorizontal="m"
-            height={scale(15)}
-            backgroundColor="inactiveText"
-          />
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => navigation.navigate('ActivityFilterModal', {})}>
-            <Text
-              variant={'h7'}
-              lineHeight={scale(20)}
-              color="defaultButton"
-              marginRight={'s'}
-              tx="sort"
-            />
-          </TouchableOpacity>
-          <Box marginTop={'s'}>
-            <ChevronDown width={scale(10)} />
-          </Box>
-        </Box>
-        <Box flexDirection={'row'}>
-          <Text
-            onPress={() =>
-              navigation.navigate('AdvancedFilterModal', {
-                code: chainCode,
-                network: activeNetwork,
-              })
-            }
-            variant={'h7'}
-            lineHeight={scale(20)}
-            color="defaultButton"
-            marginRight={'s'}
-            tx="advanced"
-          />
-          <Box
-            width={1}
-            marginHorizontal="m"
-            height={scale(15)}
-            backgroundColor="inactiveText"
-          />
-          <Text variant={'h7'} color={'darkGrey'} lineHeight={scale(20)}>
-            3
-          </Text>
-          <Box marginLeft={'s'} style={styles.iconAdjustment}>
-            <TouchableOpacity activeOpacity={0.7}>
-              <ResetIcon width={scale(20)} />
-            </TouchableOpacity>
-          </Box>
-        </Box>
-      </Box>
-    )
-  }, [navigation, chainCode, activeNetwork])
-
   const renderHistoryItem = React.useCallback(
     ({ item }: { item: HistoryItem }) => {
-      const { type, startTime, from, to, status, network } = item
-      let transactionLabel,
-        amount,
-        amountInUsd,
-        totalSteps = 1,
-        currentStep = 2
-      if (item.type === TransactionType.Swap) {
-        amount = unitToCurrency(
-          getAsset(activeNetwork, from),
-          new BigNumber(item.fromAmount),
-        ).toNumber()
-        amountInUsd = amount
-        const swapProvider = getSwapProvider(network, item.provider)
-        totalSteps = swapProvider.totalSteps
-        currentStep = swapProvider.statuses[status].step + 1
-      } else if (item.type === TransactionType.Send) {
-        amount = unitToCurrency(
-          getAsset(activeNetwork, from),
-          new BigNumber(item.amount),
-        ).toNumber()
-        amountInUsd = prettyFiatBalance(amount, item.fiatRate)
-      }
-
-      if (type === TransactionType.Send) {
-        transactionLabel = `Send ${from}`
-      } else if (type === TransactionType.Swap) {
-        transactionLabel = `${from} to ${to}`
-      }
-
       return (
-        <Box height={scale(77)} flexDirection="row" alignItems={'center'}>
-          {type === TransactionType.Swap ? (
-            ['SUCCESS', 'REFUNDED'].includes(status) ? (
-              <CompletedSwap width={23} height={24} />
-            ) : (
-              <PendingSwap width={23} height={24} />
-            )
-          ) : (
-            <Send width={16} height={18} />
-          )}
-          <Box flex={1} alignItems={'center'}>
-            <Box width={'90%'} alignItems={'center'}>
-              <Box alignSelf="flex-start">
-                <Text variant={'h6'} lineHeight={scale(20)} color="darkGrey">
-                  {transactionLabel}
-                </Text>
-              </Box>
-              <Box flexDirection={'row'} alignSelf="flex-start">
-                <Text variant={'h7'} lineHeight={scale(20)} color="greyMeta">
-                  {startTime && formatDate(startTime)}
-                </Text>
-                <Box
-                  width={1}
-                  marginHorizontal="m"
-                  height={scale(15)}
-                  backgroundColor="greyMeta"
-                />
-                <Box width={'35%'}>
-                  <Text
-                    variant={'h7'}
-                    lineHeight={scale(20)}
-                    color="greyMeta"
-                    numberOfLines={1}>
-                    {`$${amountInUsd}`}
-                  </Text>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-          <Box marginRight={'s'}>
-            {status === 'REFUNDED' && <RefundedIcon width={28} height={28} />}
-            {status === 'SUCCESS' && <SuccessIcon width={28} height={28} />}
-            {!['SUCCESS', 'REFUNDED'].includes(status) && (
-              <ProgressCircle
-                radius={14}
-                current={currentStep}
-                total={totalSteps}
-              />
-            )}
-          </Box>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => handleChevronPress(item)}
-            style={{ padding: tapPaddingStyle }}>
-            <ChevronRightIcon />
-          </TouchableOpacity>
-        </Box>
+        <HistoryItemComponent
+          onPress={() => handleChevronPress(item)}
+          item={item}
+        />
       )
     },
-    [activeNetwork, handleChevronPress, tapPaddingStyle],
+    [handleChevronPress],
   )
 
   const marginBottom = theme.spacing.m
@@ -360,7 +196,7 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
         </Box>
       </Card>
       <Box flex={1} marginTop="mxxl" paddingHorizontal="screenPadding">
-        <ActivtyHeaderComponent />
+        <ActivtyHeaderComponent chainCode={chainCode} network={activeNetwork} />
         <FlatList
           data={historyItems}
           renderItem={renderHistoryItem}

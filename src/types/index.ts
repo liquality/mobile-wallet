@@ -206,7 +206,7 @@ export type MainStackParamList = {
   SelectChainScreen: undefined
   SwapDetailsScreen: StackPayload
   ActivityFilterScreen: StackPayload
-  ActivityFilterModal: StackPayload
+  SortingModal: StackPayload
   AdvancedFilterModal: StackPayload
 }
 

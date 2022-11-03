@@ -202,7 +202,7 @@ const AdvancedFilterModal = (props: Props) => {
               </Text>
             </Box>
           ) : (
-            <Text paddingLeft={'m'} variant="chainLabel" color={'greyMeta'}>
+            <Text variant="chainLabel" color={'greyMeta'}>
               {code}
             </Text>
           )}

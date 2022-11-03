@@ -82,8 +82,8 @@ import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-pri
 import { useNavigation, NavigationProp } from '@react-navigation/core'
 import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
 import ActivityFilterScreen from '../screens/wallet-features/home/activity-filter-screen'
-import ActivityFilterModal from '../screens/wallet-features/home/activity-filter-modal'
 import AdvancedFilterModal from '../screens/wallet-features/home/advanced-filter-modal'
+import SortingModal from '../screens/wallet-features/home/sorting-modal'
 
 const {
   NetworkActiveDot,
@@ -928,8 +928,8 @@ export const StackMainNavigator = () => {
           }}
         />
         <MainStack.Screen
-          name="ActivityFilterModal"
-          component={ActivityFilterModal}
+          name="SortingModal"
+          component={SortingModal}
           options={{
             ...screenNavOptions,
             headerTransparent: true,
