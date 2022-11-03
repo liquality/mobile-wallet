@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
 import { Box, Text, Pressable } from '../../../theme'
@@ -8,10 +8,15 @@ import { scale } from 'react-native-size-matters'
 import { AppIcons } from '../../../assets'
 import { getAsset } from '@liquality/cryptoassets'
 import AssetIcon from '../../../components/asset-icon'
-import { statusFilterBtnState, transFilterBtnState } from '../../../atoms'
+import {
+  activityFilterState,
+  statusFilterBtnState,
+  transFilterBtnState,
+} from '../../../atoms'
 import { useRecoilState } from 'recoil'
-import { ButtonProps, SCREEN_HEIGHT } from '../../../utils'
+import { ButtonProps, labelTranslateFn, SCREEN_HEIGHT } from '../../../utils'
 import I18n from 'i18n-js'
+import DatePicker from '../../../components/activity-filter/date-picker'
 
 const { BuyCryptoCloseLight, ExportIcon } = AppIcons
 
@@ -58,13 +63,62 @@ const AdvancedFilterModal = (props: Props) => {
   const { code, network } = route.params
   const [transFilterBtn, setTransFilterBtn] =
     useRecoilState(transFilterBtnState)
-
   const [statusFilterBtn, setStatusFilterBtn] =
     useRecoilState(statusFilterBtnState)
-
+  const [assetFilter, setAssetFilter] = useRecoilState(activityFilterState)
   const assetInfo = getAsset(network!, code!)
-
   const headerHeight = useHeaderHeight()
+  const [startDatePickerVisible, setStartDatePickerVisible] =
+    React.useState(false)
+  const [endDatePickerVisible, setEndDatePickerVisible] = React.useState(false)
+  const handleOpenStartDate = React.useCallback(() => {
+    setStartDatePickerVisible(true)
+  }, [])
+  const handleCloseStartDate = React.useCallback(() => {
+    setStartDatePickerVisible(false)
+  }, [])
+  const handleOpenPickEndDate = React.useCallback(() => {
+    setEndDatePickerVisible(true)
+  }, [])
+  const handleCloseEndDate = React.useCallback(() => {
+    setEndDatePickerVisible(false)
+  }, [])
+
+  const handleUpdateFilter = React.useCallback(
+    (payload: any) => {
+      setAssetFilter((currVal) => ({ ...currVal, ...payload }))
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [assetFilter],
+  )
+
+  const handleChangeDateRange = React.useCallback(
+    (start: string, end: string) => {
+      handleUpdateFilter({
+        dateRange: {
+          start,
+          end,
+        },
+      })
+    },
+    [handleUpdateFilter],
+  )
+
+  const handleChangeStartDate = React.useCallback(
+    (date) => {
+      handleChangeDateRange(date, assetFilter?.dateRange?.end || '')
+      setStartDatePickerVisible(false)
+    },
+    [assetFilter?.dateRange?.end, handleChangeDateRange],
+  )
+
+  const handleChangeEndDate = React.useCallback(
+    (date) => {
+      handleChangeDateRange(assetFilter?.dateRange?.start || '', date)
+      setEndDatePickerVisible(false)
+    },
+    [assetFilter?.dateRange?.start, handleChangeDateRange],
+  )
 
   const onTransactionFilterButtonPress = (item: ButtonProps, index: number) => {
     const tempTransFilterBtnState = transFilterBtn.map(
@@ -177,11 +231,15 @@ const AdvancedFilterModal = (props: Props) => {
                 borderBottomColor="mediumGrey"
                 paddingTop="m"
                 paddingBottom="s">
-                <Text
-                  variant={'normalText'}
-                  color={'black2'}
-                  tx="common.start"
-                />
+                <TouchableOpacity
+                  onPress={handleOpenStartDate}
+                  activeOpacity={0.7}>
+                  <Text variant={'normalText'} color={'black2'}>
+                    {assetFilter?.dateRange?.start
+                      ? assetFilter?.dateRange?.start
+                      : labelTranslateFn('common.start')}
+                  </Text>
+                </TouchableOpacity>
               </Box>
               <Box
                 flex={0.48}
@@ -189,7 +247,15 @@ const AdvancedFilterModal = (props: Props) => {
                 borderBottomColor="mediumGrey"
                 paddingTop="m"
                 paddingBottom="s">
-                <Text variant={'normalText'} color={'black2'} tx="common.end" />
+                <TouchableOpacity
+                  onPress={handleOpenPickEndDate}
+                  activeOpacity={0.7}>
+                  <Text variant={'normalText'} color={'black2'}>
+                    {assetFilter?.dateRange?.end
+                      ? assetFilter?.dateRange?.end
+                      : labelTranslateFn('common.end')}
+                  </Text>
+                </TouchableOpacity>
               </Box>
             </Box>
           </Box>
@@ -259,6 +325,20 @@ const AdvancedFilterModal = (props: Props) => {
           />
         </Box>
       </Box>
+      <DatePicker
+        title={labelTranslateFn('common.startDate')!}
+        open={startDatePickerVisible}
+        onClose={handleCloseStartDate}
+        date={assetFilter?.dateRange?.start || ''}
+        onChange={handleChangeStartDate}
+      />
+      <DatePicker
+        title={labelTranslateFn('common.endDate')!}
+        open={endDatePickerVisible}
+        onClose={handleCloseEndDate}
+        date={assetFilter?.dateRange?.end || ''}
+        onChange={handleChangeEndDate}
+      />
     </Box>
   )
 }
