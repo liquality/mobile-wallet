@@ -774,7 +774,7 @@ export const StackMainNavigator = () => {
             headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
             headerRight: undefined,
-            headerLeft: undefined,
+            headerLeft: StackMainNavigatorHeaderLeft,
           })}
         />
         <MainStack.Screen

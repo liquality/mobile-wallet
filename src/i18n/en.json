@@ -145,7 +145,7 @@
     "availableGas": "Available Gas {{gas} {{token}}"
   },
   "receiveScreen": {
-    "yourCurrent": "YOUR CURRENT {{code}} ADDRESS",
+    "yourCurrent": "YOUR CURRENT {{code}}/{{chain}} ADDRESS",
     "scanORcode": "Scan QR code with a mobile wallet to send funds.",
     "done": "Done",
     "copied": "Address copied!",
