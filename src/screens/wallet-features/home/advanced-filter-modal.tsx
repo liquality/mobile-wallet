@@ -70,7 +70,7 @@ const FilterButton = (props: FilterButtonProps) => {
 type Props = NativeStackScreenProps<MainStackParamList, 'AdvancedFilterModal'>
 const AdvancedFilterModal = (props: Props) => {
   const { navigation, route } = props
-  const { code, network } = route.params
+  const { code, network, specificAsset } = route.params
   const historyItems = useFilteredHistory()
 
   const [transFilterBtn, setTransFilterBtn] =
@@ -78,7 +78,9 @@ const AdvancedFilterModal = (props: Props) => {
   const [statusFilterBtn, setStatusFilterBtn] =
     useRecoilState(statusFilterBtnState)
   const [assetFilter, setAssetFilter] = useRecoilState(activityFilterState)
-  const assetInfo = getAsset(network!, code!)
+  const assetInfo = specificAsset
+    ? getAsset(network!, specificAsset!)
+    : getAsset(network!, code!)
   const headerHeight = useHeaderHeight()
   const [startDatePickerVisible, setStartDatePickerVisible] =
     React.useState(false)
@@ -154,13 +156,18 @@ const AdvancedFilterModal = (props: Props) => {
     setStatusFilterBtn(
       statusFilterBtn.map((item) => ({ ...item, status: false })),
     )
-    handleUpdateFilter({ sorter: 'by_date' })
+    if (specificAsset) {
+      setAssetFilter({ codeSort: specificAsset })
+    } else {
+      setAssetFilter({ sorter: 'by_date' })
+    }
     navigation.goBack()
   }, [
-    handleUpdateFilter,
     navigation,
+    setAssetFilter,
     setStatusFilterBtn,
     setTransFilterBtn,
+    specificAsset,
     statusFilterBtn,
     transFilterBtn,
   ])
@@ -279,14 +286,14 @@ const AdvancedFilterModal = (props: Props) => {
         <Box flex={0.75}>
           {assetInfo ? (
             <Box flexDirection={'row'} alignItems="center">
-              <AssetIcon asset={code} size={scale(30)} />
+              <AssetIcon asset={specificAsset || code} size={scale(30)} />
               <Text paddingLeft={'m'} variant="chainLabel" color={'greyMeta'}>
-                {code}
+                {specificAsset || code}
               </Text>
             </Box>
           ) : (
             <Text variant="chainLabel" color={'greyMeta'}>
-              {code}
+              {specificAsset || code}
             </Text>
           )}
           <Box

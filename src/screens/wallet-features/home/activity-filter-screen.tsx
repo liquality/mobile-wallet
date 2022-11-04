@@ -4,6 +4,7 @@ import { scale } from 'react-native-size-matters'
 import { Box, Card, Text, ThemeType } from '../../../theme'
 import {
   HORIZONTAL_CONTENT_HEIGHT,
+  labelTranslateFn,
   LARGE_TITLE_HEADER_HEIGHT,
 } from '../../../utils'
 import { Asset, ChainId } from '@chainify/types'
@@ -38,7 +39,10 @@ type ActivityFilterScreenProps = NativeStackScreenProps<
   'ActivityFilterScreen'
 >
 
-const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
+const ActivityFilterScreen = ({
+  navigation,
+  route,
+}: ActivityFilterScreenProps) => {
   const [data, setData] = React.useState<IconAsset[]>([])
   const [chainCode, setChainCode] = React.useState('ALL')
   const historyItems = useFilteredHistory()
@@ -50,6 +54,7 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
     useRecoilState(transFilterBtnState)
   const [statusFilterBtn, setStatusFilterBtn] =
     useRecoilState(statusFilterBtnState)
+  const { code: assetName } = route.params
 
   const handleUpdateFilter = React.useCallback(
     (payload: any) => {
@@ -61,7 +66,11 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
 
   const resetFilterToByDate = React.useCallback(
     () => {
-      setAssetFilter({ sorter: 'by_date' })
+      if (assetName) {
+        setAssetFilter({ codeSort: assetName })
+      } else {
+        setAssetFilter({ sorter: 'by_date' })
+      }
       setTransFilterBtn(
         transFilterBtn.map((item) => ({ ...item, status: false })),
       )
@@ -118,7 +127,10 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
       }
     })
 
-    tempAssetsIcon.unshift({ code: 'ALL', chain: 'ALL' as ChainId })
+    tempAssetsIcon.unshift({
+      code: labelTranslateFn('all')!,
+      chain: 'ALL' as ChainId,
+    })
 
     setData(tempAssetsIcon)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -194,24 +206,31 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
 
   return (
     <Box flex={1} backgroundColor={'mainBackground'}>
-      <Card variant={'headerCard'} height={LARGE_TITLE_HEADER_HEIGHT}>
-        <Box flex={1} justifyContent={'flex-end'}>
-          <Box
-            width={'100%'}
-            height={HORIZONTAL_CONTENT_HEIGHT}
-            paddingHorizontal="screenPadding">
-            <FlatList
-              data={data}
-              renderItem={renderAssetIcon}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => `${item.code}+${index}`}
-            />
+      {!assetName ? (
+        <Card variant={'headerCard'} height={LARGE_TITLE_HEADER_HEIGHT}>
+          <Box flex={1} justifyContent={'flex-end'}>
+            <Box
+              width={'100%'}
+              height={HORIZONTAL_CONTENT_HEIGHT}
+              paddingHorizontal="screenPadding">
+              <FlatList
+                data={data}
+                renderItem={renderAssetIcon}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item, index) => `${item.code}+${index}`}
+              />
+            </Box>
           </Box>
-        </Box>
-      </Card>
+        </Card>
+      ) : null}
+
       <Box flex={1} marginTop="mxxl" paddingHorizontal="screenPadding">
-        <ActivtyHeaderComponent chainCode={chainCode} network={activeNetwork} />
+        <ActivtyHeaderComponent
+          assetName={assetName}
+          chainCode={chainCode}
+          network={activeNetwork}
+        />
         <FlatList
           data={historyItems}
           renderItem={renderHistoryItem}

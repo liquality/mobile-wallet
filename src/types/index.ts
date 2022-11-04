@@ -133,6 +133,7 @@ export type StackPayload = {
   showIntro?: boolean
   showProvideIcon?: boolean
   assetsAreSameChain?: boolean
+  specificAsset?: string
 }
 
 export type SettingStackParamList = {

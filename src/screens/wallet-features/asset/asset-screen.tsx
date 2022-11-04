@@ -30,8 +30,10 @@ import {
   balanceStateFamily,
   fiatRatesState,
   networkState,
+  statusFilterBtnState,
   swapPairState,
   totalFiatBalanceState,
+  transFilterBtnState,
 } from '../../../atoms'
 import { getAsset } from '@liquality/cryptoassets'
 import I18n from 'i18n-js'
@@ -75,10 +77,36 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const fiatRates = useRecoilValue(fiatRatesState)
   const historyItems = useFilteredHistory()
   const setAssetFilter = useSetRecoilState(activityFilterState)
+  const [transFilterBtn, setTransFilterBtn] =
+    useRecoilState(transFilterBtnState)
+  const [statusFilterBtn, setStatusFilterBtn] =
+    useRecoilState(statusFilterBtnState)
 
   React.useEffect(() => {
-    setAssetFilter({ codeSort: code })
+    setAssetFilter({ sorter: 'by_date', codeSort: code })
   }, [code, setAssetFilter])
+
+  const resetFilterToByDate = React.useCallback(
+    () => {
+      setAssetFilter({ sorter: 'by_date' })
+      setTransFilterBtn(
+        transFilterBtn.map((item) => ({ ...item, status: false })),
+      )
+      setStatusFilterBtn(
+        statusFilterBtn.map((item) => ({ ...item, status: false })),
+      )
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  )
+
+  React.useEffect(() => {
+    return () => {
+      // Cleanup and reset filter to old state
+      resetFilterToByDate()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const onExportIconPress = async () => {
     try {
@@ -177,7 +205,8 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             height={'100%'}
             width={'100%'}
             zIndex={3000}
-            style={{ top: scale(5), right: 0 }}
+            top={scale(5)}
+            right={0}
             onTouchStart={() => setAssetScreenPopuMenuVisible(false)}>
             <Box flex={1} alignItems={'flex-end'}>
               <Box height={scale(120)} width={scale(230)}>

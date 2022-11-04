@@ -20,11 +20,13 @@ const { ChevronDown, ResetIcon } = AppIcons
 type ActivityHeaderComponent = {
   chainCode: string
   network: Network
+  assetName?: string
 }
 
 const ActivtyHeaderComponent = ({
   chainCode,
   network,
+  assetName,
 }: ActivityHeaderComponent) => {
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   const historyItems = useFilteredHistory()
@@ -69,8 +71,10 @@ const ActivtyHeaderComponent = ({
     setStatusFilterBtn(
       statusFilterBtn.map((item) => ({ ...item, status: false })),
     )
-    handleUpdateFilter({ sorter: 'by_date' })
+    handleUpdateFilter({ sorter: 'by_date', codeSort: assetName || chainCode })
   }, [
+    assetName,
+    chainCode,
     handleUpdateFilter,
     setStatusFilterBtn,
     setTransFilterBtn,
@@ -110,6 +114,7 @@ const ActivtyHeaderComponent = ({
           onPress={() =>
             navigation.navigate('AdvancedFilterModal', {
               code: chainCode,
+              specificAsset: assetName,
               network,
             })
           }
