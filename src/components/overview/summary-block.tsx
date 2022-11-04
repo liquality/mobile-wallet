@@ -62,7 +62,7 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
       token: '',
       showIntro,
       screenTitle: labelTranslateFn(
-        showIntro ? 'gettingStartedWithCrypto' : 'buyCrypto',
+        showIntro ? 'gettingStartedTitle' : 'buyCrypto',
       )!,
     })
   }

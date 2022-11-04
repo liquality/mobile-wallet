@@ -445,7 +445,7 @@
     "speedFee": "Network/Speed Fee"
   },
   "letGetYouStarted": "Let’s Get You Started",
-  "buyCrypto": "Buy Crypto",
+  "buyCrypto": "BUY CRYPTO",
   "unlockWalletUpperCase": "UNLOCK YOUR WALLET",
   "wordsNotMatch": "Words don’t match. Try again.",
   "tabBarActivity": "Activity",
@@ -495,5 +495,6 @@
   "showMultipleResult": "Show {{count}} Results",
   "needsAttention": "Needs Attention",
   "failed": "Failed",
-  "all": "ALL"
+  "all": "ALL",
+  "gettingStartedTitle": "GETTING STARTED..."
 }
