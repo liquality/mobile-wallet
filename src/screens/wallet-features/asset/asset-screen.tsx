@@ -142,7 +142,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
       token: '',
       showIntro,
       screenTitle: labelTranslateFn(
-        showIntro ? 'gettingStartedWithCrypto' : 'buyCrypto',
+        showIntro ? 'gettingStartedTitle' : 'buyCrypto',
       )!,
     })
   }

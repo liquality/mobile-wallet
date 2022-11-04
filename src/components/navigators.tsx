@@ -72,11 +72,7 @@ import {
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
-import {
-  downloadAssetAcitivity,
-  labelTranslateFn,
-  SCREEN_WIDTH,
-} from '../utils'
+import { downloadAssetAcitivity, labelTranslateFn } from '../utils'
 import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-screen'
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
@@ -633,18 +629,6 @@ const CloseButton = () => {
   )
 }
 
-const BuyCryptoDrawerHeaderTitle = (title: string) => {
-  return (
-    <Box marginLeft={'l'} width={SCREEN_WIDTH} alignItems="flex-start">
-      <Box width={SCREEN_WIDTH / 1.4} alignItems="flex-start">
-        <Text variant={'buyCryptoHeader'} color="darkGrey" numberOfLines={1}>
-          {title}
-        </Text>
-      </Box>
-    </Box>
-  )
-}
-
 //If you dont want your screen to include tabbar, add it to StackMainNavigator obj
 export const StackMainNavigator = () => {
   const theme = useRecoilValue(themeMode)
@@ -903,9 +887,8 @@ export const StackMainNavigator = () => {
                   : faceliftPalette.transparent,
               },
               headerTransparent: !isScrolledUp,
-              headerTitle: isScrolledUp
-                ? () => BuyCryptoDrawerHeaderTitle(screenTitle)
-                : empty,
+              headerTitleStyle: NORMAL_HEADER,
+              headerTitle: isScrolledUp ? screenTitle : empty,
               headerLeft: undefined,
               headerRight: isScrolledUp ? CloseButton : undefined,
             }
