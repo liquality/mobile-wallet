@@ -57,20 +57,26 @@ const ActivtyHeaderComponent = ({
   const handleUpdateFilter = React.useCallback(
     (payload: any) => {
       setAssetFilter({ ...payload })
-      setTransFilterBtn(
-        transFilterBtn.map((item) => ({ ...item, status: false })),
-      )
-      setStatusFilterBtn(
-        statusFilterBtn.map((item) => ({ ...item, status: false })),
-      )
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [assetFilter],
   )
 
   const handleResetPress = React.useCallback(() => {
+    setTransFilterBtn(
+      transFilterBtn.map((item) => ({ ...item, status: false })),
+    )
+    setStatusFilterBtn(
+      statusFilterBtn.map((item) => ({ ...item, status: false })),
+    )
     handleUpdateFilter({ sorter: 'by_date' })
-  }, [handleUpdateFilter])
+  }, [
+    handleUpdateFilter,
+    setStatusFilterBtn,
+    setTransFilterBtn,
+    statusFilterBtn,
+    transFilterBtn,
+  ])
 
   return (
     <Box flexDirection={'row'} justifyContent="space-between">

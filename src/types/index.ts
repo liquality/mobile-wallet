@@ -267,6 +267,7 @@ export enum ActivityStatusEnum {
   REFUNDED = 'Refunded',
   NEEDS_ATTENTION = 'Needs Attention',
   FAILED = 'Failed',
+  WAITING_FOR_CONFIRMATIONS = 'WAITING_FOR_CONFIRMATIONS',
 }
 
 export type NetworkFeeType = {

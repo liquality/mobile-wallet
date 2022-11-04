@@ -1,6 +1,10 @@
 import * as React from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { MainStackParamList } from '../../../types'
+import {
+  ActionEnum,
+  ActivityStatusEnum,
+  MainStackParamList,
+} from '../../../types'
 import { Box, Text, Pressable } from '../../../theme'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { FlatList, TouchableOpacity } from 'react-native'
@@ -14,9 +18,15 @@ import {
   transFilterBtnState,
 } from '../../../atoms'
 import { useRecoilState } from 'recoil'
-import { ButtonProps, labelTranslateFn, SCREEN_HEIGHT } from '../../../utils'
+import {
+  ButtonProps,
+  downloadAssetAcitivity,
+  labelTranslateFn,
+  SCREEN_HEIGHT,
+} from '../../../utils'
 import I18n from 'i18n-js'
 import DatePicker from '../../../components/activity-filter/date-picker'
+import { useFilteredHistory } from '../../../custom-hooks'
 
 const { BuyCryptoCloseLight, ExportIcon } = AppIcons
 
@@ -61,6 +71,8 @@ type Props = NativeStackScreenProps<MainStackParamList, 'AdvancedFilterModal'>
 const AdvancedFilterModal = (props: Props) => {
   const { navigation, route } = props
   const { code, network } = route.params
+  const historyItems = useFilteredHistory()
+
   const [transFilterBtn, setTransFilterBtn] =
     useRecoilState(transFilterBtnState)
   const [statusFilterBtn, setStatusFilterBtn] =
@@ -83,6 +95,21 @@ const AdvancedFilterModal = (props: Props) => {
   const handleCloseEndDate = React.useCallback(() => {
     setEndDatePickerVisible(false)
   }, [])
+
+  let countOfTransFilterBtn = 0
+
+  for (let btn of transFilterBtn) {
+    if (btn.status) {
+      countOfTransFilterBtn += 1
+    }
+  }
+  let countOfStatusFilterBtn = 0
+
+  for (let btn of statusFilterBtn) {
+    if (btn.status) {
+      countOfStatusFilterBtn += 1
+    }
+  }
 
   const handleUpdateFilter = React.useCallback(
     (payload: any) => {
@@ -120,7 +147,46 @@ const AdvancedFilterModal = (props: Props) => {
     [assetFilter?.dateRange?.start, handleChangeDateRange],
   )
 
+  const handleResetPress = React.useCallback(() => {
+    setTransFilterBtn(
+      transFilterBtn.map((item) => ({ ...item, status: false })),
+    )
+    setStatusFilterBtn(
+      statusFilterBtn.map((item) => ({ ...item, status: false })),
+    )
+    handleUpdateFilter({ sorter: 'by_date' })
+    navigation.goBack()
+  }, [
+    handleUpdateFilter,
+    navigation,
+    setStatusFilterBtn,
+    setTransFilterBtn,
+    statusFilterBtn,
+    transFilterBtn,
+  ])
+
+  const handleChangeActionTypes = React.useCallback(
+    (value: ActionEnum[]) => {
+      handleUpdateFilter({ actionTypes: value })
+    },
+    [handleUpdateFilter],
+  )
+
+  const handleChangeActivityStatuses = React.useCallback(
+    (value: ActivityStatusEnum[]) => {
+      handleUpdateFilter({ activityStatuses: value })
+    },
+    [handleUpdateFilter],
+  )
+
+  const onExportIconPress = async () => {
+    try {
+      await downloadAssetAcitivity(historyItems)
+    } catch (error) {}
+  }
+
   const onTransactionFilterButtonPress = (item: ButtonProps, index: number) => {
+    let tempAction: ActionEnum[] = []
     const tempTransFilterBtnState = transFilterBtn.map(
       (transBtn, innerIndex) => {
         if (index === innerIndex) {
@@ -129,10 +195,18 @@ const AdvancedFilterModal = (props: Props) => {
         return transBtn
       },
     )
+    for (let transBtn of tempTransFilterBtnState) {
+      if (transBtn.status) {
+        tempAction.push(transBtn.key as ActionEnum)
+      }
+    }
+    handleChangeActionTypes(tempAction)
     setTransFilterBtn(tempTransFilterBtnState)
   }
 
   const onStatusFilterButtonPress = (item: ButtonProps, index: number) => {
+    let tempActivityStatus: ActivityStatusEnum[] = []
+
     const tempStatusFilterBtnState = statusFilterBtn.map(
       (transBtn, innerIndex) => {
         if (index === innerIndex) {
@@ -141,6 +215,15 @@ const AdvancedFilterModal = (props: Props) => {
         return transBtn
       },
     )
+    for (let transBtn of tempStatusFilterBtnState) {
+      if (transBtn.status) {
+        tempActivityStatus.push(transBtn.key as ActivityStatusEnum)
+        if (transBtn.key === ActivityStatusEnum.PENDING) {
+          tempActivityStatus.push(ActivityStatusEnum.WAITING_FOR_CONFIRMATIONS)
+        }
+      }
+    }
+    handleChangeActivityStatuses(tempActivityStatus)
     setStatusFilterBtn(tempStatusFilterBtnState)
   }
 
@@ -174,7 +257,7 @@ const AdvancedFilterModal = (props: Props) => {
     )
   }
 
-  const resultCount = 10
+  const resultCount = historyItems.length
 
   const addExtraheight = SCREEN_HEIGHT > 700 ? 40 : 0
 
@@ -216,7 +299,9 @@ const AdvancedFilterModal = (props: Props) => {
               color="darkGrey"
               tx="advancedFilter"
             />
-            <ExportIcon />
+            <TouchableOpacity activeOpacity={0.7} onPress={onExportIconPress}>
+              <ExportIcon />
+            </TouchableOpacity>
           </Box>
           <Box marginTop={'m'}>
             <Text
@@ -269,7 +354,7 @@ const AdvancedFilterModal = (props: Props) => {
               backgroundColor="inactiveText"
             />
             <Text variant={'transLink'} color={'black2'}>
-              0
+              {countOfTransFilterBtn}
             </Text>
           </Box>
           <Box marginTop={'s'}>
@@ -291,7 +376,7 @@ const AdvancedFilterModal = (props: Props) => {
               backgroundColor="inactiveText"
             />
             <Text variant={'transLink'} color={'black2'}>
-              0
+              {countOfStatusFilterBtn}
             </Text>
           </Box>
           <Box marginTop={'s'}>
@@ -311,12 +396,12 @@ const AdvancedFilterModal = (props: Props) => {
                 resultCount > 1 ? 'showOneResult' : 'showMultipleResult',
                 { count: resultCount },
               )}
-              onPress={() => {}}
+              onPress={navigation.goBack}
               variant="solid"
             />
           </Box>
           <Text
-            onPress={navigation.goBack}
+            onPress={handleResetPress}
             textAlign={'center'}
             variant="transLink"
             marginTop={'xl'}
