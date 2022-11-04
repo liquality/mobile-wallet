@@ -6,6 +6,7 @@ import { Box, Text, TextInput, Pressable, faceliftPalette } from '../../theme'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
 import { labelTranslateFn } from '../../utils'
+import { validateMnemonic } from 'bip39'
 
 type UnlockWalletScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -42,7 +43,9 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
   const isSeedPhrase12 = seedPhraseLength === 12
   const isSeedPhrase24 = seedPhraseLength === 24
 
-  let isDisabled = !chosenSeedWords.every((val) => !!val.trim())
+  let isDisabled =
+    !chosenSeedWords.every((val) => !!val.trim()) ||
+    !validateMnemonic(chosenSeedWords.join(' '))
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const renderSeedWord = ({ item, index }: { item: any; index: number }) => {
