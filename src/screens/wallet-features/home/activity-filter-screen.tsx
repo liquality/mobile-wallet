@@ -98,6 +98,7 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
 
   const handleChevronPress = React.useCallback(
     (historyItem: HistoryItem) => {
+      navigation.goBack()
       if (historyItem.type === TransactionType.Swap) {
         navigation.navigate('SwapDetailsScreen', {
           swapTransactionConfirmation: historyItem,
