@@ -16,6 +16,8 @@ import {
   activityFilterState,
   enabledAssetsState,
   networkState,
+  statusFilterBtnState,
+  transFilterBtnState,
 } from '../../../atoms'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { getAllAssets, getAsset } from '@liquality/cryptoassets'
@@ -44,6 +46,10 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
   const enabledAssets = useRecoilValue(enabledAssetsState)
   const theme = useTheme<ThemeType>()
+  const [transFilterBtn, setTransFilterBtn] =
+    useRecoilState(transFilterBtnState)
+  const [statusFilterBtn, setStatusFilterBtn] =
+    useRecoilState(statusFilterBtnState)
 
   const handleUpdateFilter = React.useCallback(
     (payload: any) => {
@@ -53,12 +59,34 @@ const ActivityFilterScreen = ({ navigation }: ActivityFilterScreenProps) => {
     [assetFilter],
   )
 
+  const resetFilterToByDate = React.useCallback(
+    () => {
+      setAssetFilter({ sorter: 'by_date' })
+      setTransFilterBtn(
+        transFilterBtn.map((item) => ({ ...item, status: false })),
+      )
+      setStatusFilterBtn(
+        statusFilterBtn.map((item) => ({ ...item, status: false })),
+      )
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  )
+
   const handleCodeSortFilter = React.useCallback(
     (value: string) => {
       handleUpdateFilter({ codeSort: value })
     },
     [handleUpdateFilter],
   )
+
+  React.useEffect(() => {
+    return () => {
+      // Cleanup and reset filter to old state
+      resetFilterToByDate()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   React.useEffect(() => {
     let myAssets =
