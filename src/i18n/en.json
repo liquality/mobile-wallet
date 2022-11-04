@@ -327,13 +327,13 @@
     "wallet": "Wallet"
   },
   "sortPicker": {
+    "by_date": "By date (newest first)",
     "needs_attention": "Needs attention",
     "pending": "Pending",
-    "canceled": "Canceled",
+    "canceled": "Cancelled",
     "refunded": "Refunded",
-    "completed": "Completed",
     "failed": "Failed",
-    "by_date": "By date (newest first)",
+    "completed": "Completed",
     "by_type": "By type (A to Z)",
     "by_token": "By Token (A to Z)"
   },
@@ -419,7 +419,6 @@
     "tabBarOverview": "Overview",
     "tabBarDetails": "Details",
     "description": "DESCRIPTION",
-
     "createdBy": "Created By:",
     "creator": "CREATOR",
     "unlockableContent": "Unlockable Content:",
@@ -483,5 +482,18 @@
   "oneProviderQuote": "{{quote}} PROVIDER QUOTE",
   "nosProviderQuote": "{{quote}} PROVIDER QUOTES",
   "bestRate": "BEST RATE",
-  "quotes": "Quotes"
+  "quotes": "Quotes",
+  "transferWithinAccs": "Transfer Within Accounts",
+  "activityFilter": "ACTIVITY FILTER",
+  "oneResult": "{{count}} Result",
+  "nosResult": "{{count}} Results",
+  "sort": "Sort",
+  "advanced": "Advanced",
+  "nfts": "NFTs",
+  "advancedFilter": "Advanced Filter",
+  "showOneResult": "Show {{count}} Result",
+  "showMultipleResult": "Show {{count}} Results",
+  "needsAttention": "Needs Attention",
+  "failed": "Failed",
+  "all": "ALL"
 }

@@ -89,15 +89,19 @@ const StandardRoute = ({
   amount,
   applyFee,
   applyNetworkSpeed,
+  networkSpeed,
 }: {
   selectedAsset: string
   amount: BigNumber
   applyFee: (fee: BigNumber, speed: FeeLabel) => void
   applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
+  networkSpeed?: ExtendedFeeLabel
 }) => {
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
-  const [speed, setSpeed] = useState<FeeLabel | undefined>()
+  const [speed, setSpeed] = useState<ExtendedFeeLabel | null>(
+    networkSpeed || null,
+  )
   const [gasFees, setGasFees] = useState<FDs>()
   const [totalFees, setTotalFees] = useState<TotalFees | undefined>()
   const nativeAssetCode = getNativeAsset(selectedAsset)
@@ -108,7 +112,7 @@ const StandardRoute = ({
     if (!speed || !totalFees || !gasFees) return
     const computed = computePreset(speed, totalFees, gasFees)?.amount
     if (computed) applyFee(new BigNumber(computed), speed)
-    if (applyNetworkSpeed && speed) {
+    if (applyNetworkSpeed) {
       applyNetworkSpeed(speed as ExtendedFeeLabel)
     }
   }
@@ -279,16 +283,20 @@ const CustomizeRoute = ({
   amount,
   applyFee,
   applyNetworkSpeed,
+  networkSpeed,
 }: {
   selectedAsset: string
   amount: BigNumber
   applyFee: (fee: BigNumber, speed: FeeLabel) => void
   applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
+  networkSpeed?: ExtendedFeeLabel
 }) => {
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
   const [unit, setUnit] = useState<string | undefined>()
-  const [speed, setSpeed] = useState<FeeLabel>(FeeLabel.Slow)
+  const [speed, setSpeed] = useState<ExtendedFeeLabel>(
+    networkSpeed || FeeLabel.Slow,
+  )
   const [, setError] = useState('')
   const [currentBaseFee, setCurrentBaseFee] = useState()
   const [gasFees, setGasFees] = useState<FDs>()
@@ -591,6 +599,7 @@ type FeeEditorScreenType = {
   amount: BigNumber
   selectedAsset: string
   applyFee: (fee: BigNumber, speed: FeeLabel) => void
+  networkSpeed?: ExtendedFeeLabel
   applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
 }
 
@@ -599,15 +608,20 @@ const FeeEditorScreen = ({
   selectedAsset,
   amount,
   applyFee,
+  networkSpeed,
   applyNetworkSpeed,
 }: FeeEditorScreenType) => {
   const layout = useWindowDimensions()
-  const [index, setIndex] = useState(0)
   const activeNetwork = useRecoilValue(networkState)
   const initialRoutes = [{ key: 'standard', title: 'Standard' }]
-  if (isEIP1559Fees(getAsset(activeNetwork, selectedAsset).chain)) {
+  let currentIndex = 0
+  if (!isEIP1559Fees(getAsset(activeNetwork, selectedAsset).chain)) {
     initialRoutes.push({ key: 'customize', title: 'Customize' })
+    if (networkSpeed === CustomFeeLabel.Custom) {
+      currentIndex = 1
+    }
   }
+  const [index, setIndex] = useState(currentIndex)
   const [routes] = useState(initialRoutes)
 
   const renderScene = ({ route }: { route: Route }) => {
@@ -618,6 +632,7 @@ const FeeEditorScreen = ({
             selectedAsset={selectedAsset}
             amount={amount}
             applyFee={applyFee}
+            networkSpeed={networkSpeed}
             applyNetworkSpeed={applyNetworkSpeed}
           />
         )
@@ -627,6 +642,7 @@ const FeeEditorScreen = ({
             selectedAsset={selectedAsset}
             amount={amount}
             applyFee={applyFee}
+            networkSpeed={networkSpeed}
             applyNetworkSpeed={applyNetworkSpeed}
           />
         )

@@ -5,6 +5,7 @@ import {
   View,
   ScrollView,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native'
 import {
   prettyBalance,
@@ -21,19 +22,22 @@ import {
   faceliftPalette,
   IMAGE_BACKGROUND_STYLE,
 } from '../../../theme'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
+  activityFilterState,
   addressStateFamily,
   assetScreenPopupMenuVisible,
   balanceStateFamily,
   fiatRatesState,
   networkState,
+  statusFilterBtnState,
   swapPairState,
   totalFiatBalanceState,
+  transFilterBtnState,
 } from '../../../atoms'
 import { getAsset } from '@liquality/cryptoassets'
 import I18n from 'i18n-js'
-import { labelTranslateFn } from '../../../utils'
+import { downloadAssetAcitivity, labelTranslateFn } from '../../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { AppIcons, Images } from '../../../assets'
 import AssetIcon from '../../../components/asset-icon'
@@ -41,10 +45,13 @@ const { Refresh } = AppIcons
 import { scale } from 'react-native-size-matters'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { populateWallet } from '../../../store/store'
+import { useFilteredHistory } from '../../../custom-hooks'
 const {
   Exchange: DoubleArrowThick,
   DownIcon,
   UpIcon,
+  Filter,
+  ExportIcon,
   DollarSign,
   ManageAssetsDarkIcon,
   AccountDetailsIcon,
@@ -67,6 +74,44 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
     useRecoilState(assetScreenPopupMenuVisible)
   const totalFiatBalance = useRecoilValue(totalFiatBalanceState)
   const fiatRates = useRecoilValue(fiatRatesState)
+  const historyItems = useFilteredHistory()
+  const setAssetFilter = useSetRecoilState(activityFilterState)
+  const [transFilterBtn, setTransFilterBtn] =
+    useRecoilState(transFilterBtnState)
+  const [statusFilterBtn, setStatusFilterBtn] =
+    useRecoilState(statusFilterBtnState)
+
+  React.useEffect(() => {
+    setAssetFilter({ sorter: 'by_date', codeSort: code })
+  }, [code, setAssetFilter])
+
+  const resetFilterToByDate = React.useCallback(
+    () => {
+      setAssetFilter({ sorter: 'by_date' })
+      setTransFilterBtn(
+        transFilterBtn.map((item) => ({ ...item, status: false })),
+      )
+      setStatusFilterBtn(
+        statusFilterBtn.map((item) => ({ ...item, status: false })),
+      )
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  )
+
+  React.useEffect(() => {
+    return () => {
+      // Cleanup and reset filter to old state
+      resetFilterToByDate()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const onExportIconPress = async () => {
+    try {
+      await downloadAssetAcitivity(historyItems)
+    } catch (error) {}
+  }
 
   const handleSendPress = useCallback(() => {
     navigation.navigate('SendScreen', {
@@ -159,7 +204,8 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             height={'100%'}
             width={'100%'}
             zIndex={3000}
-            style={{ top: scale(5), right: 0 }}
+            top={scale(5)}
+            right={0}
             onTouchStart={() => setAssetScreenPopuMenuVisible(false)}>
             <Box flex={1} alignItems={'flex-end'}>
               <Box height={scale(120)} width={scale(230)}>
@@ -292,24 +338,49 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             </Box>
           </Card>
 
-          <Box marginLeft={'xl'} marginBottom={'xl'}>
-            <Text
-              marginTop={'mxxl'}
-              variant={'tabLabel'}
-              color={'tablabelActiveColor'}
-              tx={'assetScreen.activity'}
-            />
+          <Box
+            marginHorizontal={'xl'}
+            marginBottom={'xl'}
+            justifyContent="space-between"
+            alignItems={'center'}
+            flexDirection="row">
+            <Box>
+              <Text
+                marginTop={'mxxl'}
+                variant={'tabLabel'}
+                color={'tablabelActiveColor'}
+                tx={'assetScreen.activity'}
+              />
+              <Box
+                borderBottomWidth={2}
+                borderBottomColor={'activeLink'}
+                width={scale(15)}
+              />
+            </Box>
             <Box
-              borderBottomWidth={2}
-              borderBottomColor={'activeLink'}
-              width={scale(15)}
-            />
+              flexDirection={'row'}
+              marginTop={'mxxl'}
+              width={scale(50)}
+              justifyContent="space-between"
+              alignItems="center">
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() =>
+                  navigation.navigate('ActivityFilterScreen', { code })
+                }>
+                <Filter />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => onExportIconPress()}>
+                <ExportIcon />
+              </TouchableOpacity>
+            </Box>
           </Box>
           {/* For some reason ActivityFlatList started throwing undefined errors upon SEND navigation and flow.
         Should be fixed, can be commented out to bypass that error for now */}
           <ScrollView
             contentContainerStyle={{
               paddingBottom: scale(20),
+              paddingHorizontal: scale(20),
             }}>
             <ActivityFlatList selectedAsset={code} />
           </ScrollView>

@@ -7,6 +7,7 @@ import {
   CONGRATULATIONS_MESSAGE_MARGIN_TOP,
   ONBOARDING_PADDING,
   SCREEN_PADDING,
+  DRAWER_PADDING,
 } from '../utils'
 
 export const theme = createTheme({
@@ -86,6 +87,7 @@ export const theme = createTheme({
     onboardingPadding: scale(ONBOARDING_PADDING),
     onboardingHeaderPadding: scale(25),
     screenPadding: scale(SCREEN_PADDING),
+    drawerPadding: scale(DRAWER_PADDING),
     congratsMarginTop: scale(CONGRATULATIONS_MESSAGE_MARGIN_TOP),
   },
   breakpoints: {
@@ -434,7 +436,7 @@ export const theme = createTheme({
     },
     radioText: {
       fontFamily: Fonts.Regular,
-      fontSize: scale(14),
+      fontSize: scale(15),
       fontWeight: '400',
     },
     listText: {
@@ -517,6 +519,11 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(13),
       fontWeight: '400',
+    },
+    chainLabel: {
+      fontFamily: Fonts.JetBrainsMono,
+      fontSize: scale(14),
+      fontWeight: '500',
     },
     warnHighlight: {
       fontFamily: Fonts.JetBrainsMono,

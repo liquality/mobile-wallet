@@ -8,18 +8,17 @@ import {
   totalFiatBalanceState,
 } from '../../atoms'
 import { ActionEnum } from '../../types'
-import { ImageBackground, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
-import { Box, Text, Card, IMAGE_BACKGROUND_STYLE } from '../../theme'
+import { Box, Text, Card } from '../../theme'
 import * as React from 'react'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
-import { labelTranslateFn } from '../../utils'
+import { labelTranslateFn, SCREEN_WIDTH } from '../../utils'
 import { Network } from '@liquality/cryptoassets/dist/src/types'
-import { Images, AppIcons } from '../../assets'
-import { scale } from 'react-native-size-matters'
+import { AppIcons } from '../../assets'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
-const { Exchange: DoubleArrowThick, DownIcon, UpIcon, DollarSign } = AppIcons
+const { SendHex, SwapHex, ReceiveHex, BuyHex } = AppIcons
 
 type SummaryBlockProps = {
   navigation: OverviewProps['navigation']
@@ -70,22 +69,22 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
 
   const appFeatures = [
     {
-      Icon: UpIcon,
+      Icon: SendHex,
       name: labelTranslateFn('summaryBlockComp.send'),
       navigateTo: handleSendBtnPress,
     },
     {
-      Icon: DoubleArrowThick,
+      Icon: SwapHex,
       name: labelTranslateFn('summaryBlockComp.swap'),
       navigateTo: handleSwapBtnPress,
     },
     {
-      Icon: DownIcon,
+      Icon: ReceiveHex,
       name: labelTranslateFn('summaryBlockComp.receive'),
       navigateTo: handleReceiveBtnPress,
     },
     {
-      Icon: DollarSign,
+      Icon: BuyHex,
       name: labelTranslateFn('summaryBlockComp.buy'),
       navigateTo: handleBuyPress,
     },
@@ -120,16 +119,9 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
       <Box>
         <Box flexDirection={'row'} justifyContent="space-evenly">
           {appFeatures.map((item, index) => (
-            <Box key={index} alignItems={'center'}>
+            <Box key={index} alignItems={'center'} width={SCREEN_WIDTH / 4.1}>
               <TouchableWithoutFeedback onPress={item.navigateTo}>
-                <ImageBackground
-                  style={IMAGE_BACKGROUND_STYLE}
-                  resizeMode="cover"
-                  source={Images.hexoNav}>
-                  <Box flex={1} justifyContent="center" alignItems={'center'}>
-                    <item.Icon height={scale(14)} />
-                  </Box>
-                </ImageBackground>
+                <item.Icon />
               </TouchableWithoutFeedback>
               <Text marginTop={'m'} variant="addressLabel" color={'darkGrey'}>
                 {item.name}

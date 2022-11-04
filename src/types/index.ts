@@ -133,6 +133,7 @@ export type StackPayload = {
   showIntro?: boolean
   showProvideIcon?: boolean
   assetsAreSameChain?: boolean
+  specificAsset?: string
 }
 
 export type SettingStackParamList = {
@@ -205,6 +206,9 @@ export type MainStackParamList = {
   SwapProviderModal: StackPayload
   SelectChainScreen: undefined
   SwapDetailsScreen: StackPayload
+  ActivityFilterScreen: StackPayload
+  SortingModal: StackPayload
+  AdvancedFilterModal: StackPayload
 }
 
 export type RootTabParamList = {
@@ -247,6 +251,7 @@ export enum ActionEnum {
   SEND = 'SEND',
   SWAP = 'SWAP',
   RECEIVE = 'RECEIVE',
+  NFT = 'NFT',
 }
 
 export enum TimeLimitEnum {
@@ -263,6 +268,7 @@ export enum ActivityStatusEnum {
   REFUNDED = 'Refunded',
   NEEDS_ATTENTION = 'Needs Attention',
   FAILED = 'Failed',
+  WAITING_FOR_CONFIRMATIONS = 'WAITING_FOR_CONFIRMATIONS',
 }
 
 export type NetworkFeeType = {
@@ -312,6 +318,7 @@ export interface CustomRootState extends RootState {
     activityStatuses?: string[]
     assetToggles?: string[]
     sorter?: string | undefined
+    codeSort?: string | undefined
   }
 }
 

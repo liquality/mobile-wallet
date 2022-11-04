@@ -6,6 +6,7 @@ import {
   ActionEnum,
   ErrorMessages,
   ErrorMsgAndType,
+  ExtendedFeeLabel,
   GasFees,
   MainStackParamList,
   NetworkFeeType,
@@ -74,7 +75,9 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const [amountInNative, setAmountInNative] = useState<number>(0)
   const [showAmountsInFiat, setShowAmountsInFiat] = useState<boolean>(false)
   const [isCameraVisible, setIsCameraVisible] = useState(false)
-  const [, setNetworkSpeed] = useState<FeeLabel>(FeeLabel.Average)
+  const [networkSpeed, setNetworkSpeed] = useState<ExtendedFeeLabel>(
+    FeeLabel.Average,
+  )
   const [error, setError] = useState('')
   const [errorMessage, setErrorMessage] = useState<ErrorMsgAndType>({
     msg: '',
@@ -363,6 +366,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                     value={amountInput.value}
                     autoCorrect={false}
                     returnKeyType="done"
+                    cursorColor={faceliftPalette.active}
                   />
                   <AssetIcon
                     size={scale(25)}
@@ -463,9 +467,9 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             <Text
               color={'textButtonFontColor'}
               fontSize={16}
-              style={styles.textRegular}>
-              Transfer Within Accounts
-            </Text>
+              style={styles.textRegular}
+              tx="transferWithinAccs"
+            />
           </Pressable>
           <Text color="darkGrey" fontSize={16} style={styles.textRegular}>
             {' | '}
@@ -474,16 +478,18 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             <Text
               color={'textButtonFontColor'}
               fontSize={16}
-              style={styles.textRegular}>
-              Network Speed
-            </Text>
+              style={styles.textRegular}
+              tx="common.networkSpeed"
+            />
           </Pressable>
           {showFeeEditorModal && (
             <FeeEditorScreen
               onClose={setShowFeeEditorModal}
               selectedAsset={code}
               amount={new BigNumber(amountInput.value)}
+              networkSpeed={networkSpeed}
               applyFee={applyFee}
+              applyNetworkSpeed={setNetworkSpeed}
             />
           )}
         </Box>

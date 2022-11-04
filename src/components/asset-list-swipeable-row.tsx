@@ -2,9 +2,10 @@ import React, { FC, memo, useCallback, useRef } from 'react'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { Animated, Dimensions } from 'react-native'
 import AnimatedBox from './animated-box'
-import { useNavigation } from '@react-navigation/core'
+import { NavigationProp, useNavigation } from '@react-navigation/core'
 import { Easing } from 'react-native-reanimated'
-import { AccountType } from '../types'
+import { AccountType, MainStackParamList } from '../types'
+import { labelTranslateFn } from '../utils'
 
 type renderActionsType = (
   progressAnimatedValue: Animated.AnimatedInterpolation,
@@ -21,7 +22,7 @@ const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
   const width = Dimensions.get('screen').width
   const { children, assetData, assetSymbol } = props
   const ref = useRef<Swipeable>()
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
 
   const close = () => {
     ref.current?.close()
@@ -37,7 +38,7 @@ const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
   const handleReceiveBtnPress = useCallback(() => {
     navigation.navigate('ReceiveScreen', {
       assetData,
-      screenTitle: `Receive ${assetSymbol}`,
+      screenTitle: `${labelTranslateFn('common.receive')} ${assetSymbol}`,
     })
   }, [assetData, assetSymbol, navigation])
 

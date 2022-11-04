@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import * as React from 'react'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   accountsIdsState,
   accountsIdsForMainnetState,
@@ -7,12 +7,11 @@ import {
   langSelected as LS,
   networkState,
   historyItemsState,
-  showFilterState,
+  activityFilterState,
 } from '../../atoms'
 import { getAllEnabledAccounts, populateWallet } from '../../store/store'
 import ActivityFlatList from '../activity-flat-list'
 import AssetFlatList from './asset-flat-list'
-import * as React from 'react'
 import { downloadAssetAcitivity, labelTranslateFn, Log } from '../../utils'
 import {
   ActivityIndicator,
@@ -36,6 +35,8 @@ import {
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { scale } from 'react-native-size-matters'
 import { AppIcons } from '../../assets'
+import { NavigationProp, useNavigation } from '@react-navigation/core'
+import { MainStackParamList } from '../../types'
 
 const { Filter, ExportIcon } = AppIcons
 
@@ -45,16 +46,31 @@ type RenderTabBar = SceneRendererProps & {
 
 const ContentBlock = () => {
   const network = useRecoilValue(networkState)
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+
   const accountsIds = useRecoilValue(
     network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
   )
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
   const [delayTabView, setDelayTabView] = React.useState(false)
   const langSelected = useRecoilValue(LS)
-  const setShowFilter = useSetRecoilState(showFilterState)
+  const [assetFilter, setAssetFilter] = useRecoilState(activityFilterState)
 
   i18n.locale = langSelected
-  useEffect(() => {
+
+  const handleUpdateFilter = React.useCallback(
+    (payload: any) => {
+      setAssetFilter((currVal) => ({ ...currVal, ...payload }))
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [assetFilter],
+  )
+
+  const handlePickSorter = React.useCallback(() => {
+    handleUpdateFilter({ sorter: 'by_date' })
+  }, [handleUpdateFilter])
+
+  React.useEffect(() => {
     setIsDoneFetchingData(false)
     const enabledAccountsToSendIn = getAllEnabledAccounts()
     const accIds = enabledAccountsToSendIn.map((account) => {
@@ -70,12 +86,14 @@ const ContentBlock = () => {
       })
   }, [setIsDoneFetchingData, accountsIds, network])
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Issue is if UI is not loaded completely and user tap on tabBar then the tabView get stuck
     // workaround to avoid tab view stuck issue,
     setTimeout(() => {
       setDelayTabView(true)
     }, 0)
+    handlePickSorter()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const historyItem = useRecoilValue(historyItemsState)
@@ -87,7 +105,7 @@ const ContentBlock = () => {
     { key: 'activity', title: labelTranslateFn('activity')! },
   ])
 
-  useEffect(() => {
+  React.useEffect(() => {
     setRoutes([
       { key: 'asset', title: labelTranslateFn('asset')! },
       { key: 'activity', title: labelTranslateFn('activity')! },
@@ -134,7 +152,7 @@ const ContentBlock = () => {
             alignItems="center">
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => setShowFilter((old) => !old)}>
+              onPress={() => navigation.navigate('ActivityFilterScreen', {})}>
               <Filter />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => onExportIconPress()}>

@@ -64,6 +64,7 @@ import SelectChainScreen from '../screens/wallet-features/settings/select-chain-
 import { AppIcons, Fonts } from '../assets'
 import {
   assetScreenPopupMenuVisible,
+  historyItemsState,
   networkState,
   showSearchBarInputState,
   themeMode,
@@ -71,11 +72,18 @@ import {
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
-import { labelTranslateFn, SCREEN_WIDTH } from '../utils'
+import {
+  downloadAssetAcitivity,
+  labelTranslateFn,
+  SCREEN_WIDTH,
+} from '../utils'
 import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-screen'
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
 import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
+import ActivityFilterScreen from '../screens/wallet-features/home/activity-filter-screen'
+import AdvancedFilterModal from '../screens/wallet-features/home/advanced-filter-modal'
+import SortingModal from '../screens/wallet-features/home/sorting-modal'
 
 const {
   NetworkActiveDot,
@@ -90,6 +98,7 @@ const {
   SearchIcon,
   BuyCryptoCloseDark,
   SwapQuotes,
+  ExportIcon,
   ConnectionIndicator,
 } = AppIcons
 
@@ -259,6 +268,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'BuyCryptoDrawer'
   | 'SwapScreen'
   | 'SwapProviderModal'
+  | 'ActivityFilterScreen'
   | 'CongratulationsScreen'
 >
 
@@ -311,6 +321,24 @@ const SwapHeaderRight = () => {
     <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
       <Box paddingHorizontal={'s'} paddingVertical="m">
         <SwapQuotes width={scale(25)} />
+      </Box>
+    </TouchableOpacity>
+  )
+}
+
+const ActivityFilterScreenHeaderRight = () => {
+  const historyItem = useRecoilValue(historyItemsState)
+
+  const onExportIconPress = async () => {
+    try {
+      await downloadAssetAcitivity(historyItem)
+    } catch (error) {}
+  }
+
+  return (
+    <TouchableOpacity activeOpacity={0.7} onPress={() => onExportIconPress()}>
+      <Box paddingHorizontal={'s'} paddingVertical="m">
+        <ExportIcon width={scale(25)} />
       </Box>
     </TouchableOpacity>
   )
@@ -407,30 +435,6 @@ export const AppStackNavigator = () => {
           {(props) => OverviewScreen(props)}
         </MainStack.Screen>
         <MainStack.Screen
-          name="AssetChooserScreen"
-          component={AssetChooserScreen}
-          options={({ navigation, route }: NavigationProps) => ({
-            headerBackVisible: false,
-            title: route.params.screenTitle || '',
-            headerTitleStyle: NORMAL_HEADER,
-            headerStyle: { backgroundColor },
-            headerRight: undefined,
-            headerLeft: () =>
-              AssetManageScreenHeaderLeft({ navigation, route }),
-          })}
-        />
-        <MainStack.Screen
-          name="SendScreen"
-          component={SendScreen}
-          options={({ route }: NavigationProps) => ({
-            title: route.params.screenTitle || '',
-            headerLeft: undefined,
-            headerBackVisible: false,
-            headerRight: undefined,
-            headerTitleStyle: HEADER_TITLE_STYLE,
-          })}
-        />
-        <MainStack.Screen
           name="CustomFeeScreen"
           component={CustomFeeScreen}
           options={() => ({
@@ -442,16 +446,6 @@ export const AppStackNavigator = () => {
           component={CustomFeeEIP1559Screen}
           options={() => ({
             headerRight: PlaceholderComp,
-          })}
-        />
-        <MainStack.Screen
-          name="SendConfirmationScreen"
-          component={SendConfirmationScreen}
-          options={({ navigation, route }: NavigationProps) => ({
-            headerRight: () => SwapCheckHeaderRight({ navigation, route }),
-            headerTitleStyle: NORMAL_HEADER,
-            title: route?.params?.screenTitle || 'Overview',
-            headerLeft: PlaceholderComp,
           })}
         />
         <MainStack.Screen
@@ -628,7 +622,7 @@ const StackMainNavigatorHeaderLeft = () => {
   )
 }
 
-const BuyCryptoDrawerHeaderRight = () => {
+const CloseButton = () => {
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   return (
     <Box paddingHorizontal={'m'}>
@@ -879,6 +873,17 @@ export const StackMainNavigator = () => {
             headerShown: false,
           })}
         />
+        <MainStack.Screen
+          name="SendConfirmationScreen"
+          component={SendConfirmationScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerShadowVisible: false,
+            headerRight: () => SwapCheckHeaderRight({ navigation, route }),
+            headerTitleStyle: NORMAL_HEADER,
+            title: route?.params?.screenTitle || 'Overview',
+            headerLeft: PlaceholderComp,
+          })}
+        />
       </MainStack.Group>
       <MainStack.Group>
         <MainStack.Screen
@@ -902,9 +907,7 @@ export const StackMainNavigator = () => {
                 ? () => BuyCryptoDrawerHeaderTitle(screenTitle)
                 : empty,
               headerLeft: undefined,
-              headerRight: isScrolledUp
-                ? BuyCryptoDrawerHeaderRight
-                : undefined,
+              headerRight: isScrolledUp ? CloseButton : undefined,
             }
           }}
         />
@@ -917,13 +920,53 @@ export const StackMainNavigator = () => {
               ...screenNavOptions,
               presentation: 'fullScreenModal',
               headerStyle: {
-                backgroundColor: faceliftPalette.white,
+                backgroundColor,
               },
               headerTitleStyle: NORMAL_HEADER,
               headerTitle: screenTitle,
-              headerLeft: BuyCryptoDrawerHeaderRight,
+              headerLeft: CloseButton,
               headerRight: SwapHeaderRight,
             }
+          }}
+        />
+        <MainStack.Screen
+          name="ActivityFilterScreen"
+          component={ActivityFilterScreen}
+          options={{
+            presentation: 'fullScreenModal',
+            ...screenNavOptions,
+            headerStyle: {
+              backgroundColor,
+            },
+            headerTitleStyle: NORMAL_HEADER,
+            headerTitle: labelTranslateFn('activityFilter')!,
+            headerLeft: CloseButton,
+            headerRight: ActivityFilterScreenHeaderRight,
+          }}
+        />
+        <MainStack.Screen
+          name="SortingModal"
+          component={SortingModal}
+          options={{
+            ...screenNavOptions,
+            headerTransparent: true,
+            animation: 'none',
+            presentation: 'transparentModal',
+          }}
+        />
+        <MainStack.Screen
+          name="AdvancedFilterModal"
+          component={AdvancedFilterModal}
+          options={{
+            ...screenNavOptions,
+            presentation: 'transparentModal',
+            headerStyle: {
+              backgroundColor: faceliftPalette.transparent,
+            },
+            headerTransparent: true,
+            headerTitle: '',
+            headerLeft: undefined,
+            headerRight: undefined,
           }}
         />
       </MainStack.Group>
