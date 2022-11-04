@@ -175,6 +175,7 @@ import BuyHex from '../assets/icons/buyHex.svg'
 import ReceiveHex from '../assets/icons/receiveHex.svg'
 import SwapHex from '../assets/icons/swapHex.svg'
 import SendHex from '../assets/icons/sendHex.svg'
+import OptimismChainIcon from '../assets/icons/crypto/optimism_chain.svg'
 
 export default {
   PendingSwap,
@@ -352,4 +353,5 @@ export default {
   ReceiveHex,
   SwapHex,
   SendHex,
+  OptimismChainIcon,
 }

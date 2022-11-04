@@ -13,11 +13,12 @@ export const LARGE_TITLE_HEADER_HEIGHT = scale(81)
 export const RECEIVE_HEADER_HEIGHT = scale(160)
 export const ICON_SIZE = scale(23)
 export const ONBOARDING_PADDING = 36
-export const SCREEN_PADDING = 20
 export const DRAWER_PADDING = 32
+export const SCREEN_PADDING = 40
 export const SCREEN_WIDTH = Dimensions.get('screen').width
 export const SCREEN_HEIGHT = Dimensions.get('screen').height
 export const INPUT_OPACITY_INACTIVE = 0.6
+export const CONGRATULATIONS_MESSAGE_MARGIN_TOP = 300
 export const INPUT_OPACITY_ACTIVE = 1
 export const HORIZONTAL_CONTENT_HEIGHT = scale(65)
 

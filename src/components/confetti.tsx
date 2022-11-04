@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
   confetti: {
     width: CONFETTI_SIZE,
     height: CONFETTI_SIZE,
+    opacity: 0.7,
   },
 })
 

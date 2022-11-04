@@ -3,7 +3,12 @@ import { Fonts } from '../assets'
 import { faceliftPalette } from './faceliftPalette'
 import { palette } from './palette'
 import { scale } from 'react-native-size-matters'
-import { DRAWER_PADDING, ONBOARDING_PADDING, SCREEN_PADDING } from '../utils'
+import {
+  CONGRATULATIONS_MESSAGE_MARGIN_TOP,
+  ONBOARDING_PADDING,
+  SCREEN_PADDING,
+  DRAWER_PADDING,
+} from '../utils'
 
 export const theme = createTheme({
   colors: {
@@ -83,6 +88,7 @@ export const theme = createTheme({
     onboardingHeaderPadding: scale(25),
     screenPadding: scale(SCREEN_PADDING),
     drawerPadding: scale(DRAWER_PADDING),
+    congratsMarginTop: scale(CONGRATULATIONS_MESSAGE_MARGIN_TOP),
   },
   breakpoints: {
     phone: 0,
@@ -154,9 +160,9 @@ export const theme = createTheme({
     },
     mainInputLabel: {
       fontFamily: Fonts.Regular,
-      fontWeight: '500',
       fontSize: scale(15),
-      lineHeight: scale(21),
+      lineHeight: scale(1.3 * 15),
+      height: scale(1.3 * 15),
       color: 'mainForeground',
     },
     secondaryInputLabel: {
@@ -245,7 +251,6 @@ export const theme = createTheme({
     },
     link: {
       fontFamily: Fonts.Regular,
-      fontWeight: '500',
       fontSize: scale(13),
       color: 'link',
     },
@@ -346,8 +351,8 @@ export const theme = createTheme({
     },
     whiteLabel: {
       fontFamily: Fonts.Regular,
-      fontWeight: '500',
-      fontSize: scale(13),
+      fontSize: scale(14),
+      lineHeight: scale(1.3 * 14),
       color: 'white',
     },
     hintLabel: {
@@ -389,12 +394,12 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
       fontWeight: '400',
+      lineHeight: scale(1.3 * 15),
     },
     h1: {
       fontFamily: Fonts.Regular,
       fontSize: scale(41),
-      fontWeight: '500',
-      lineHeight: scale(55),
+      lineHeight: scale(1.3 * 41),
     },
     h3: {
       fontFamily: Fonts.Regular,
@@ -414,8 +419,8 @@ export const theme = createTheme({
     h6: {
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
-      fontWeight: '500',
-      lineHeight: scale(20),
+      lineHeight: scale(1.5 * 15),
+      height: scale(1.3 * 15),
     },
     h7: {
       fontFamily: Fonts.Regular,
@@ -461,15 +466,12 @@ export const theme = createTheme({
       fontSize: scale(13),
       fontWeight: '400',
     },
-    totalBalance: {
-      fontFamily: Fonts.Regular,
-      fontSize: scale(37),
-      fontWeight: '600',
-    },
     totalAsset: {
       fontFamily: Fonts.Regular,
       fontSize: scale(36),
       fontWeight: '600',
+      height: scale(36),
+      lineHeight: scale(1.45 * 36),
     },
     tabLabel: {
       fontFamily: Fonts.Regular,
@@ -498,8 +500,9 @@ export const theme = createTheme({
     },
     headerTitle: {
       fontFamily: Fonts.Regular,
-      fontWeight: '600',
       fontSize: scale(16),
+      height: scale(1.45 * 16),
+      letterSpacing: 0.5,
       color: 'textColor',
     },
     gasIndicatorLabel: {
@@ -572,6 +575,13 @@ export const theme = createTheme({
       fontSize: scale(16),
       color: 'textColor',
     },
+    congratulationsMessage: {
+      fontFamily: Fonts.Regular,
+      color: 'white',
+      fontWeight: '300',
+      fontSize: 53,
+      opacity: 0.7,
+    },
   },
   pressableVariants: {
     outline: {
@@ -580,6 +590,7 @@ export const theme = createTheme({
     },
     solid: {
       backgroundColor: 'defaultButton',
+      borderRadius: 2,
     },
     defaultOutline: {
       borderColor: 'defaultButton',
@@ -726,8 +737,6 @@ export const theme = createTheme({
   },
   textInputVariants: {
     passwordInputs: {
-      paddingTop: 'm',
-      paddingBottom: 's',
       color: 'onboardInputColor',
       borderBottomColor: 'onboardInputBorder',
       borderBottomWidth: 1,
@@ -736,9 +745,8 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
     },
     seedPhraseInputs: {
-      paddingTop: 's',
-      color: 'textColor',
-      borderBottomColor: 'activeButton',
+      color: 'darkGrey',
+      borderBottomColor: 'mediumGrey',
       borderBottomWidth: 1,
       fontWeight: '400',
       fontSize: scale(16),

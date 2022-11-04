@@ -42,7 +42,6 @@ import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { AppIcons, Images } from '../../../assets'
 import AssetIcon from '../../../components/asset-icon'
 const { Refresh } = AppIcons
-const adjustLineHeight = -scale(30)
 import { scale } from 'react-native-size-matters'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { populateWallet } from '../../../store/store'
@@ -269,7 +268,10 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             variant={'headerCard'}
             paddingHorizontal="xl"
             paddingBottom={'mxxl'}>
-            <Box marginTop="mxxl" justifyContent="space-between">
+            <Box
+              marginTop="mxxl"
+              marginBottom={'xxl'}
+              justifyContent="space-between">
               <Box
                 marginBottom={'l'}
                 flexDirection={'row'}
@@ -287,7 +289,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
                   {shortenAddress(address)}{' '}
                 </Text>
               </Box>
-              <Text color={'darkGrey'} variant="totalBalance">
+              <Text color={'darkGrey'} variant="totalAsset">
                 {`${prettyBalance(
                   new BigNumber(balance),
                   code,
@@ -297,11 +299,8 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
                 flexDirection="row"
                 justifyContent={'space-between'}
                 alignItems={'center'}
-                paddingBottom={'m'}>
-                <Text
-                  style={{ marginTop: adjustLineHeight }}
-                  variant="totalAsset"
-                  color={'nestedColor'}>
+                marginBottom={'m'}>
+                <Text variant="totalAsset" color={'nestedColor'}>
                   {`$${prettyFiatBalance(
                     prettyBalance(new BigNumber(balance), code),
                     fiatRates[code],
@@ -396,9 +395,6 @@ const styles = StyleSheet.create({
     width: 37,
     height: 37,
     backgroundColor: faceliftPalette.mediumWhite,
-    marginBottom: 10,
-    position: 'relative',
-    bottom: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },

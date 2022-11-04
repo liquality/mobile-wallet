@@ -228,10 +228,16 @@ export const WalletCreationNavigator = () => {
         <WalletCreationStack.Screen
           name="LoadingScreen"
           component={LoadingScreen}
+          options={{
+            headerShown: false,
+          }}
         />
         <WalletCreationStack.Screen
           name="CongratulationsScreen"
           component={CongratulationsScreen}
+          options={{
+            headerShown: false,
+          }}
         />
         <WalletCreationStack.Screen
           name="UnlockWalletScreen"
@@ -263,6 +269,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'SwapScreen'
   | 'SwapProviderModal'
   | 'ActivityFilterScreen'
+  | 'CongratulationsScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -727,10 +734,19 @@ export const StackMainNavigator = () => {
           name="SeedPhraseConfirmationScreen"
           component={SeedPhraseConfirmationScreen}
         />
-        <MainStack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <MainStack.Screen
+          name="LoadingScreen"
+          component={LoadingScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
         <MainStack.Screen
           name="CongratulationsScreen"
           component={CongratulationsScreen}
+          options={{
+            headerShown: false,
+          }}
         />
         <MainStack.Screen
           name="UnlockWalletScreen"
@@ -752,7 +768,7 @@ export const StackMainNavigator = () => {
             headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
             headerRight: undefined,
-            headerLeft: undefined,
+            headerLeft: StackMainNavigatorHeaderLeft,
           })}
         />
         <MainStack.Screen
@@ -827,7 +843,7 @@ export const StackMainNavigator = () => {
                   paddingVertical={'s'}>
                   <Box
                     borderLeftWidth={3}
-                    height={scale(20)}
+                    height={scale(1.3 * 16)}
                     style={{
                       borderLeftColor: route.params.assetData?.color,
                     }}

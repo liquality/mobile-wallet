@@ -100,7 +100,10 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               autoCorrect={false}
               returnKeyType="done"
               onSubmitEditing={onUnlock}
-              style={{ opacity: passwordInputOpacity }}
+              style={{
+                opacity: passwordInputOpacity,
+                height: 28,
+              }}
             />
             {error.length ? (
               <Box
@@ -108,7 +111,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
                 borderRadius={5}
                 padding={'s'}
                 alignSelf="flex-start"
-                backgroundColor={'mainBackground'}>
+                backgroundColor={'semiTransparentWhite'}>
                 <Text
                   padding={'s'}
                   color={'danger'}
@@ -135,9 +138,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
           <Text
             opacity={0.8}
             variant={'whiteLabel'}
-            textDecorationLine={'underline'}
             tx="common.importWithSeedPhrase"
-            marginTop={'s'}
             onPress={() =>
               navigation.navigate('TermsScreen', {
                 previousScreen: 'LoginScreen',

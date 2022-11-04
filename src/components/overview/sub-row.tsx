@@ -153,17 +153,19 @@ const SubRow: FC<SubRowProps> = (props) => {
             address: address,
           }}
           assetSymbol={item.code}>
-          <Pressable onPress={handlePressOnRow} style={styles.row}>
+          <Pressable
+            onPress={handlePressOnRow}
+            style={[styles.row, styles.subElement]}>
             <Box
               height={scale(50)}
               width={scale(3)}
-              style={{ backgroundColor: item.color }}
+              style={{ borderLeftColor: item.color, borderLeftWidth: 3 }}
             />
             <Box paddingLeft={'m'}>
               <Box width={10} height={10} />
             </Box>
             <Box flex={0.1} paddingLeft={'m'} />
-            <Box flex={0.55} flexDirection="row" paddingLeft="m">
+            <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
               <AssetIcon asset={item.code} />
               <Box width={'80%'} paddingLeft="m">
                 <Text numberOfLines={1} variant={'listText'} color="darkGrey">
