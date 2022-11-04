@@ -5,6 +5,7 @@ import {
   View,
   ScrollView,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native'
 import {
   prettyBalance,
@@ -21,8 +22,9 @@ import {
   faceliftPalette,
   IMAGE_BACKGROUND_STYLE,
 } from '../../../theme'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
+  activityFilterState,
   addressStateFamily,
   assetScreenPopupMenuVisible,
   balanceStateFamily,
@@ -33,7 +35,7 @@ import {
 } from '../../../atoms'
 import { getAsset } from '@liquality/cryptoassets'
 import I18n from 'i18n-js'
-import { labelTranslateFn } from '../../../utils'
+import { downloadAssetAcitivity, labelTranslateFn } from '../../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { AppIcons, Images } from '../../../assets'
 import AssetIcon from '../../../components/asset-icon'
@@ -42,10 +44,13 @@ const adjustLineHeight = -scale(30)
 import { scale } from 'react-native-size-matters'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { populateWallet } from '../../../store/store'
+import { useFilteredHistory } from '../../../custom-hooks'
 const {
   Exchange: DoubleArrowThick,
   DownIcon,
   UpIcon,
+  Filter,
+  ExportIcon,
   DollarSign,
   ManageAssetsDarkIcon,
   AccountDetailsIcon,
@@ -68,6 +73,18 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
     useRecoilState(assetScreenPopupMenuVisible)
   const totalFiatBalance = useRecoilValue(totalFiatBalanceState)
   const fiatRates = useRecoilValue(fiatRatesState)
+  const historyItems = useFilteredHistory()
+  const setAssetFilter = useSetRecoilState(activityFilterState)
+
+  React.useEffect(() => {
+    setAssetFilter({ codeSort: code })
+  }, [code, setAssetFilter])
+
+  const onExportIconPress = async () => {
+    try {
+      await downloadAssetAcitivity(historyItems)
+    } catch (error) {}
+  }
 
   const handleSendPress = useCallback(() => {
     navigation.navigate('SendScreen', {
@@ -293,18 +310,42 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             </Box>
           </Card>
 
-          <Box marginLeft={'xl'} marginBottom={'xl'}>
-            <Text
-              marginTop={'mxxl'}
-              variant={'tabLabel'}
-              color={'tablabelActiveColor'}
-              tx={'assetScreen.activity'}
-            />
+          <Box
+            marginHorizontal={'xl'}
+            marginBottom={'xl'}
+            justifyContent="space-between"
+            alignItems={'center'}
+            flexDirection="row">
+            <Box>
+              <Text
+                marginTop={'mxxl'}
+                variant={'tabLabel'}
+                color={'tablabelActiveColor'}
+                tx={'assetScreen.activity'}
+              />
+              <Box
+                borderBottomWidth={2}
+                borderBottomColor={'activeLink'}
+                width={scale(15)}
+              />
+            </Box>
             <Box
-              borderBottomWidth={2}
-              borderBottomColor={'activeLink'}
-              width={scale(15)}
-            />
+              flexDirection={'row'}
+              marginTop={'mxxl'}
+              width={scale(50)}
+              justifyContent="space-between"
+              alignItems="center">
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() =>
+                  navigation.navigate('ActivityFilterScreen', { code })
+                }>
+                <Filter />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => onExportIconPress()}>
+                <ExportIcon />
+              </TouchableOpacity>
+            </Box>
           </Box>
           {/* For some reason ActivityFlatList started throwing undefined errors upon SEND navigation and flow.
         Should be fixed, can be commented out to bypass that error for now */}
