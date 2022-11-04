@@ -4,6 +4,7 @@ import { SvgProps } from 'react-native-svg'
 import { AppIcons } from '../assets'
 import { SortFunctionKeyType } from '../custom-hooks/use-filtered-history'
 import { TxKeyPath } from '../i18n'
+import { ActionEnum, ActivityStatusEnum } from '../types'
 
 export const COPY_BUTTON_TIMEOUT = 2000
 export const FADE_IN_OUT_DURATION = 400
@@ -36,6 +37,7 @@ const {
   PendingFilterIcon,
   CancelledFilterIcon,
   CompletedFilterIcon,
+  ReceiveIcon,
   RefundedFilterIcon,
   NeedsAttentionFilterIcon,
   FailedFilterIcon,
@@ -48,7 +50,7 @@ type IconType = React.FC<
 >
 
 export type ButtonProps = {
-  key: string
+  key: ActivityStatusEnum | ActionEnum
   value: TxKeyPath
   status: boolean
   icon: IconType
@@ -57,66 +59,74 @@ export type ButtonProps = {
 
 export const transFilterBtns: Array<ButtonProps> = [
   {
-    key: 'send',
+    key: ActionEnum.SEND,
     value: 'assetScreen.send',
     status: false,
     icon: SendFilterIcon,
     inactiveIcon: SendFilterIcon,
   },
   {
-    key: 'swap',
+    key: ActionEnum.SWAP,
     value: 'assetScreen.swap',
     status: false,
     icon: SwapFilterIcon,
     inactiveIcon: SwapFilterIcon,
   },
+  // advanced attributes
   {
-    key: 'nft',
+    key: ActionEnum.NFT,
     value: 'nfts',
     status: false,
     icon: NftFilterIcon,
     inactiveIcon: NftFilterInactiveIcon,
   },
+  {
+    key: ActionEnum.RECEIVE,
+    value: 'assetScreen.receive',
+    status: false,
+    icon: ReceiveIcon,
+    inactiveIcon: ReceiveIcon,
+  },
 ]
 
 export const statusFilterBtn: Array<ButtonProps> = [
   {
-    key: 'pending',
+    key: ActivityStatusEnum.PENDING,
     value: 'sortPicker.pending',
     status: false,
     icon: PendingFilterIcon,
     inactiveIcon: PendingFilterIcon,
   },
   {
-    key: 'completed',
+    key: ActivityStatusEnum.COMPLETED,
     value: 'sortPicker.completed',
     status: false,
     icon: CompletedFilterIcon,
     inactiveIcon: CompletedFilterIcon,
   },
   {
-    key: 'cancelled',
+    key: ActivityStatusEnum.CANCELLED,
     value: 'sortPicker.canceled',
     status: false,
     icon: CancelledFilterIcon,
     inactiveIcon: CancelledFilterIcon,
   },
   {
-    key: 'refunded',
+    key: ActivityStatusEnum.REFUNDED,
     value: 'sortPicker.refunded',
     status: false,
     icon: RefundedFilterIcon,
     inactiveIcon: RefundedFilterIcon,
   },
   {
-    key: 'needsAttention',
+    key: ActivityStatusEnum.NEEDS_ATTENTION,
     value: 'needsAttention',
     status: false,
     icon: NeedsAttentionFilterIcon,
     inactiveIcon: NeedsAttentionFilterIcon,
   },
   {
-    key: 'failed',
+    key: ActivityStatusEnum.FAILED,
     value: 'failed',
     status: false,
     icon: FailedFilterIcon,

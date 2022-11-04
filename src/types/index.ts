@@ -250,6 +250,7 @@ export enum ActionEnum {
   SEND = 'SEND',
   SWAP = 'SWAP',
   RECEIVE = 'RECEIVE',
+  NFT = 'NFT',
 }
 
 export enum TimeLimitEnum {
