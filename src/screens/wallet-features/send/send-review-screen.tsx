@@ -21,8 +21,8 @@ import {
 } from '@liquality/wallet-core/dist/src/store/types'
 import { sendTransaction } from '../../../store/store'
 import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
-import { useNavigation } from '@react-navigation/core'
-import { AccountType } from '../../../types'
+import { NavigationProp, useNavigation } from '@react-navigation/core'
+import { AccountType, MainStackParamList } from '../../../types'
 import CloseIcon from '../../../assets/icons/close.svg'
 
 type SendReviewDrawerScreenProps = {
@@ -58,7 +58,7 @@ const SendReviewScreen = (props: SendReviewDrawerScreenProps) => {
         set(historyStateFamily(transactionId), historyItem)
       },
   )
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
 
   const handleSendPress = async () => {
     setIsLoading(true)
@@ -84,6 +84,7 @@ const SendReviewScreen = (props: SendReviewDrawerScreenProps) => {
 
       addTransaction(transaction.id, transaction)
 
+      onClose()
       navigation.navigate('SendConfirmationScreen', {
         screenTitle: i18n.t('sendReviewScreen.sendTransDetails'),
         sendTransactionConfirmation: transaction,
