@@ -6,6 +6,7 @@ import {
   networkState,
   accountsIdsForMainnetState,
   totalFiatBalanceState,
+  totalEnabledAssetsWithBalance,
 } from '../../atoms'
 import { ActionEnum } from '../../types'
 import { Platform } from 'react-native'
@@ -30,6 +31,7 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
   const accountsIds = useRecoilValue(
     network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
   )
+  const totalAssets = useRecoilValue(totalEnabledAssetsWithBalance)
   const totalFiatBalance = useRecoilValue(totalFiatBalanceState)
   const setSwapPair = useSetRecoilState(swapPairState)
 
@@ -110,7 +112,7 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
           $ {totalFiatBalance}
         </Text>
         <Text variant="totalAsset" color={'nestedColor'}>
-          {accountsIds.length}
+          {totalAssets}
           {accountsIds.length === 1
             ? `${labelTranslateFn('summaryBlockComp.asset')}`
             : `${labelTranslateFn('summaryBlockComp.assets')}`}

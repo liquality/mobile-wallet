@@ -214,7 +214,12 @@ export const theme = createTheme({
       letterSpacing: 0.5,
       color: 'darkGrey',
     },
-
+    onboardingMessage: {
+      fontFamily: Fonts.Regular,
+      color: 'textColor',
+      fontSize: 17,
+      lineHeight: scale(1.3 * 17),
+    },
     sendNftCollectionNameHeader: {
       fontFamily: Fonts.JetBrainsMono,
       fontStyle: 'normal',
@@ -399,7 +404,7 @@ export const theme = createTheme({
     h1: {
       fontFamily: Fonts.Regular,
       fontSize: scale(41),
-      lineHeight: scale(1.3 * 41),
+      lineHeight: scale(1.4 * 41),
     },
     h3: {
       fontFamily: Fonts.Regular,
