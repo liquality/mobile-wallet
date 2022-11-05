@@ -1,13 +1,12 @@
 import * as React from 'react'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
-  accountsIdsState,
-  accountsIdsForMainnetState,
   isDoneFetchingData,
   langSelected as LS,
   networkState,
   historyItemsState,
   activityFilterState,
+  sortedAccountsIdsState,
 } from '../../atoms'
 import { getAllEnabledAccounts, populateWallet } from '../../store/store'
 import ActivityFlatList from '../activity-flat-list'
@@ -32,7 +31,6 @@ import {
   TabBar,
   Text,
 } from '../../theme'
-import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { scale } from 'react-native-size-matters'
 import { AppIcons } from '../../assets'
 import { NavigationProp, useNavigation } from '@react-navigation/core'
@@ -48,9 +46,7 @@ const ContentBlock = () => {
   const network = useRecoilValue(networkState)
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
 
-  const accountsIds = useRecoilValue(
-    network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
-  )
+  const accountsIds = useRecoilValue(sortedAccountsIdsState)
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
   const [delayTabView, setDelayTabView] = React.useState(false)
   const langSelected = useRecoilValue(LS)

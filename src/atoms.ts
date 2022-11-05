@@ -372,6 +372,59 @@ export const totalEnabledAssetsWithBalance = selector<number>({
   },
 })
 
+export const sortedAccountsIdsState = selector<{ id: string; name: Asset }[]>({
+  key: 'SortedAccountsIdsState',
+  get: ({ get }) => {
+    const activeNetwork = get(networkState)
+    const accountsIds =
+      activeNetwork === Network.Testnet
+        ? Array.from(get(accountsIdsState))
+        : Array.from(get(accountsIdsForMainnetState))
+
+    return accountsIds
+      .map(({ id }) => get(accountInfoState(id)))
+      .filter(
+        (account) =>
+          get(
+            balanceStateFamily({ asset: account.code, assetId: account.id }),
+          ) >= 0,
+      )
+      .sort((account1, account2) => {
+        const fiatRates = get(fiatRatesState)
+        const balance1 = get(
+          balanceStateFamily({
+            asset: account1.code,
+            assetId: account1.id,
+          }),
+        )
+        const fiatBalance1 = cryptoToFiat(
+          unitToCurrency(
+            getAsset(activeNetwork, getNativeAsset(account1.code)),
+            balance1,
+          ).toNumber(),
+          fiatRates[account1.code],
+        )
+
+        const balance2 = get(
+          balanceStateFamily({
+            asset: account2.code,
+            assetId: account2.id,
+          }),
+        )
+        const fiatBalance2 = cryptoToFiat(
+          unitToCurrency(
+            getAsset(activeNetwork, getNativeAsset(account2.code)),
+            balance2,
+          ).toNumber(),
+          fiatRates[account2.code],
+        )
+
+        return fiatBalance2.minus(fiatBalance1).toNumber()
+      })
+      .map((account) => ({ id: account.id, name: account.code }))
+  },
+})
+
 export const assetScreenPopupMenuVisible = atom<boolean>({
   key: 'AssetScreenPopupMenu',
   default: false,
