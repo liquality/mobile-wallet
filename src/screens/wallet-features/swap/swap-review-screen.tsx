@@ -1,13 +1,13 @@
 import React, { FC, useState } from 'react'
-import { Dimensions, StyleSheet, View, ScrollView, Alert } from 'react-native'
+import { StyleSheet, View, Alert, TouchableOpacity } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, MainStackParamList, SwapInfoType } from '../../../types'
 import Warning from '../../../components/ui/warning'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
-import { Button, palette } from '../../../theme'
+import { Box, Button, ScrollView } from '../../../theme'
 import { BigNumber } from '@liquality/types'
 import { performSwap } from '../../../store/store'
-import { labelTranslateFn, Log } from '../../../utils'
+import { labelTranslateFn, Log, SCREEN_WIDTH } from '../../../utils'
 import { useRecoilCallback, useRecoilValue } from 'recoil'
 import { SwapHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
 import {
@@ -20,8 +20,9 @@ import I18n from 'i18n-js'
 import { CommonActions } from '@react-navigation/native'
 import { AppIcons } from '../../../assets'
 import { getAsset } from '@liquality/cryptoassets'
+import { useHeaderHeight } from '@react-navigation/elements'
 
-const { Clock, Exchange } = AppIcons
+const { Clock, Exchange, BuyCryptoCloseLight } = AppIcons
 
 type SwapReviewScreenProps = NativeStackScreenProps<
   MainStackParamList,
@@ -30,6 +31,7 @@ type SwapReviewScreenProps = NativeStackScreenProps<
 
 const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   const { navigation, route } = props
+  const headerHeight = useHeaderHeight()
 
   const {
     params: { swapTransaction, assetsAreSameChain },
@@ -129,7 +131,13 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   }
 
   if (!swapTransaction) {
-    return <View style={styles.container} />
+    return (
+      <Box
+        width={SCREEN_WIDTH}
+        padding="xl"
+        backgroundColor={'mainBackground'}
+      />
+    )
   }
 
   const {
@@ -142,69 +150,83 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   }: SwapInfoType = swapTransaction
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <SwapReviewAssetSummary
-        type={'SEND'}
-        amount={new BigNumber(fromAmount)}
-        asset={fromAsset}
-        fiatRates={fiatRates}
-        networkFee={new BigNumber(fromNetworkFee.value)}
-      />
-      <SwapReviewAssetSummary
-        type={'RECEIVE'}
-        amount={new BigNumber(toAmount)}
-        asset={toAsset}
-        fiatRates={fiatRates}
-        networkFee={
-          assetsAreSameChain && !toNetworkFee
-            ? new BigNumber(fromNetworkFee.value)
-            : new BigNumber(toNetworkFee.value)
-        }
-      />
-      {/* <SwapRates
+    <Box
+      flex={1}
+      style={{ paddingTop: headerHeight }}
+      backgroundColor="semiTransparentGrey">
+      <Box
+        alignItems="flex-end"
+        paddingBottom={'l'}
+        paddingHorizontal={'drawerPadding'}>
+        <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
+          <BuyCryptoCloseLight />
+        </TouchableOpacity>
+      </Box>
+      <Box
+        flex={1}
+        backgroundColor="mainBackground"
+        paddingTop="mxxl"
+        paddingHorizontal={'drawerPadding'}>
+        <ScrollView>
+          <SwapReviewAssetSummary
+            type={'SEND'}
+            amount={new BigNumber(fromAmount)}
+            asset={fromAsset}
+            fiatRates={fiatRates}
+            networkFee={new BigNumber(fromNetworkFee.value)}
+          />
+          <SwapReviewAssetSummary
+            type={'RECEIVE'}
+            amount={new BigNumber(toAmount)}
+            asset={toAsset}
+            fiatRates={fiatRates}
+            networkFee={
+              assetsAreSameChain && !toNetworkFee
+                ? new BigNumber(fromNetworkFee.value)
+                : new BigNumber(toNetworkFee.value)
+            }
+          />
+          {/* <SwapRates
         fromAsset={fromAsset.code}
         toAsset={toAsset.code}
         selectQuote={handleSelectQuote}
       /> */}
-      <Warning
-        text1={{ tx1: 'common.maxSlippage' }}
-        text2={I18n.t('common.swapDoesnotComp', {
-          date: `${new Date(
-            new Date().getTime() + 3 * 60 * 60 * 1000,
-          ).toTimeString()}`,
-        })}>
-        <Clock width={15} height={15} style={styles.icon} />
-      </Warning>
-      <View style={styles.buttonWrapper}>
-        <Button
-          type="secondary"
-          variant="m"
-          label={{ tx: 'common.edit' }}
-          onPress={navigation.goBack}
-          isBorderless={false}
-          isActive={true}
-        />
-        <Button
-          type="primary"
-          variant="m"
-          label={{ tx: 'swapReviewScreen.initiateSwap' }}
-          onPress={handleInitiateSwap}
-          isBorderless={false}
-          isActive={true}
-          isLoading={isLoading}>
-          <Exchange style={styles.icon} />
-        </Button>
-      </View>
-    </ScrollView>
+          <Warning
+            text1={{ tx1: 'common.maxSlippage' }}
+            text2={I18n.t('common.swapDoesnotComp', {
+              date: `${new Date(
+                new Date().getTime() + 3 * 60 * 60 * 1000,
+              ).toTimeString()}`,
+            })}>
+            <Clock width={15} height={15} style={styles.icon} />
+          </Warning>
+          <View style={styles.buttonWrapper}>
+            <Button
+              type="secondary"
+              variant="m"
+              label={{ tx: 'common.edit' }}
+              onPress={navigation.goBack}
+              isBorderless={false}
+              isActive={true}
+            />
+            <Button
+              type="primary"
+              variant="m"
+              label={{ tx: 'swapReviewScreen.initiateSwap' }}
+              onPress={handleInitiateSwap}
+              isBorderless={false}
+              isActive={true}
+              isLoading={isLoading}>
+              <Exchange style={styles.icon} />
+            </Button>
+          </View>
+        </ScrollView>
+      </Box>
+    </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: Dimensions.get('screen').width,
-    backgroundColor: palette.white,
-    padding: 20,
-  },
   buttonWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-around',

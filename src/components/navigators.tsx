@@ -795,13 +795,6 @@ export const StackMainNavigator = () => {
           })}
         />
         <MainStack.Screen
-          name="SwapReviewScreen"
-          component={SwapReviewScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
-          })}
-        />
-        <MainStack.Screen
           name="SwapDetailsScreen"
           component={SwapDetailsScreen}
           options={{
@@ -940,6 +933,21 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="AdvancedFilterModal"
           component={AdvancedFilterModal}
+          options={{
+            ...screenNavOptions,
+            presentation: 'transparentModal',
+            headerStyle: {
+              backgroundColor: faceliftPalette.transparent,
+            },
+            headerTransparent: true,
+            headerTitle: '',
+            headerLeft: undefined,
+            headerRight: undefined,
+          }}
+        />
+        <MainStack.Screen
+          name="SwapReviewScreen"
+          component={SwapReviewScreen}
           options={{
             ...screenNavOptions,
             presentation: 'transparentModal',
