@@ -93,6 +93,7 @@ const {
   TabWalletInactive,
   SearchIcon,
   BuyCryptoCloseDark,
+  BuyCryptoCloseLight,
   SwapQuotes,
   ExportIcon,
   ConnectionIndicator,
@@ -629,6 +630,17 @@ const CloseButton = () => {
   )
 }
 
+const CloseButtonLight = () => {
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+  return (
+    <Box paddingHorizontal={'m'}>
+      <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
+        <BuyCryptoCloseLight />
+      </TouchableOpacity>
+    </Box>
+  )
+}
+
 //If you dont want your screen to include tabbar, add it to StackMainNavigator obj
 export const StackMainNavigator = () => {
   const theme = useRecoilValue(themeMode)
@@ -957,7 +969,7 @@ export const StackMainNavigator = () => {
             headerTransparent: true,
             headerTitle: '',
             headerLeft: undefined,
-            headerRight: undefined,
+            headerRight: CloseButtonLight,
           }}
         />
       </MainStack.Group>

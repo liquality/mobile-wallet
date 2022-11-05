@@ -1,10 +1,9 @@
 import React, { FC, useState } from 'react'
-import { StyleSheet, View, Alert, TouchableOpacity } from 'react-native'
+import { StyleSheet, Alert } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, MainStackParamList, SwapInfoType } from '../../../types'
-import Warning from '../../../components/ui/warning'
 import SwapReviewAssetSummary from '../../../components/swap/swap-review-asset-summary'
-import { Box, Button, ScrollView } from '../../../theme'
+import { Box, Pressable, Text } from '../../../theme'
 import { BigNumber } from '@liquality/types'
 import { performSwap } from '../../../store/store'
 import { labelTranslateFn, Log, SCREEN_WIDTH } from '../../../utils'
@@ -15,14 +14,18 @@ import {
   historyIdsState,
   historyStateFamily,
   networkState,
+  swapQuoteState,
 } from '../../../atoms'
-import I18n from 'i18n-js'
 import { CommonActions } from '@react-navigation/native'
 import { AppIcons } from '../../../assets'
 import { getAsset } from '@liquality/cryptoassets'
 import { useHeaderHeight } from '@react-navigation/elements'
+import { scale } from 'react-native-size-matters'
+import { dpUI } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
+import AssetIcon from '../../../components/asset-icon'
 
-const { Clock, Exchange, BuyCryptoCloseLight } = AppIcons
+const { Clock, DoubleArrowThick } = AppIcons
 
 type SwapReviewScreenProps = NativeStackScreenProps<
   MainStackParamList,
@@ -39,6 +42,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   const fiatRates = useRecoilValue(fiatRatesState)
   const ids = useRecoilValue(historyIdsState)
   const activeNetwork = useRecoilValue(networkState)
+  const quote = useRecoilValue(swapQuoteState)
 
   const addTransaction = useRecoilCallback(
     ({ set }) =>
@@ -48,7 +52,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
       },
   )
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleInitiateSwap = async () => {
     setIsLoading(true)
@@ -155,25 +159,29 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
       style={{ paddingTop: headerHeight }}
       backgroundColor="semiTransparentGrey">
       <Box
-        alignItems="flex-end"
-        paddingBottom={'l'}
-        paddingHorizontal={'drawerPadding'}>
-        <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
-          <BuyCryptoCloseLight />
-        </TouchableOpacity>
-      </Box>
-      <Box
         flex={1}
         backgroundColor="mainBackground"
-        paddingTop="mxxl"
+        paddingTop="xl"
         paddingHorizontal={'drawerPadding'}>
-        <ScrollView>
+        <Box flex={0.8}>
+          <Text
+            marginTop={'s'}
+            variant={'buyCryptoHeader'}
+            color="darkGrey"
+            tx="reviewSwap"
+          />
           <SwapReviewAssetSummary
             type={'SEND'}
             amount={new BigNumber(fromAmount)}
             asset={fromAsset}
             fiatRates={fiatRates}
             networkFee={new BigNumber(fromNetworkFee.value)}
+          />
+          <Box
+            height={1}
+            backgroundColor="mediumGrey"
+            marginTop="m"
+            marginBottom="l"
           />
           <SwapReviewAssetSummary
             type={'RECEIVE'}
@@ -186,51 +194,76 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
                 : new BigNumber(toNetworkFee.value)
             }
           />
-          {/* <SwapRates
-        fromAsset={fromAsset.code}
-        toAsset={toAsset.code}
-        selectQuote={handleSelectQuote}
-      /> */}
-          <Warning
-            text1={{ tx1: 'common.maxSlippage' }}
-            text2={I18n.t('common.swapDoesnotComp', {
-              date: `${new Date(
-                new Date().getTime() + 3 * 60 * 60 * 1000,
-              ).toTimeString()}`,
-            })}>
+          <Box
+            height={1}
+            backgroundColor="mediumGrey"
+            marginTop="m"
+            marginBottom="l"
+          />
+          {quote ? (
+            <Box flexDirection="row">
+              <Text variant={'addressLabel'} color="darkGrey">
+                1 {fromAsset.code} ={' '}
+                {dpUI(calculateQuoteRate(quote!), 5).toString()} {toAsset.code}
+              </Text>
+              <Box
+                alignSelf={'flex-start'}
+                width={1}
+                marginHorizontal="m"
+                height={scale(15)}
+                backgroundColor="inactiveText"
+              />
+              <Box flexDirection="row">
+                <AssetIcon asset={quote.provider} size={scale(15)} />
+                <Text
+                  marginLeft={'m'}
+                  lineHeight={scale(16)}
+                  variant={'addressLabel'}
+                  color="darkGrey">
+                  {quote.provider}
+                </Text>
+              </Box>
+            </Box>
+          ) : null}
+          <Box flexDirection={'row'} marginTop={'m'}>
             <Clock width={15} height={15} style={styles.icon} />
-          </Warning>
-          <View style={styles.buttonWrapper}>
-            <Button
-              type="secondary"
-              variant="m"
-              label={{ tx: 'common.edit' }}
-              onPress={navigation.goBack}
-              isBorderless={false}
-              isActive={true}
+            <Text
+              variant={'normalText'}
+              color="darkGrey"
+              lineHeight={scale(20)}
+              tx="common.maxSlippage"
             />
-            <Button
-              type="primary"
-              variant="m"
-              label={{ tx: 'swapReviewScreen.initiateSwap' }}
-              onPress={handleInitiateSwap}
-              isBorderless={false}
-              isActive={true}
-              isLoading={isLoading}>
-              <Exchange style={styles.icon} />
-            </Button>
-          </View>
-        </ScrollView>
+          </Box>
+        </Box>
+        <Box flex={0.2} justifyContent="center">
+          <Pressable
+            label={{ tx: 'swapReviewScreen.initiateSwap' }}
+            onPress={handleInitiateSwap}
+            variant="solid"
+            isLoading={isLoading}
+            customView={
+              <Box
+                flexDirection={'row'}
+                alignItems="center"
+                justifyContent={'center'}>
+                <DoubleArrowThick />
+                <Text
+                  marginLeft="m"
+                  color={'white'}
+                  variant={'h6'}
+                  lineHeight={scale(25)}
+                  tx="common.review"
+                />
+              </Box>
+            }
+          />
+        </Box>
       </Box>
     </Box>
   )
 }
 
 const styles = StyleSheet.create({
-  buttonWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
   icon: {
     marginRight: 5,
   },

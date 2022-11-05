@@ -28,7 +28,7 @@
     "max": "MAX",
     "available": "Available",
     "receive": "RECEIVE",
-    "maxSlippage": "Max slippage is 0.5%.",
+    "maxSlippage": "Max slippage is 3%.",
     "swapDoesnotComp": "If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at {{date}}",
     "initiateSwap": "Initiate Swap",
     "activities": "ACTIVITIES",
@@ -496,5 +496,6 @@
   "needsAttention": "Needs Attention",
   "failed": "Failed",
   "all": "ALL",
-  "gettingStartedTitle": "GETTING STARTED..."
+  "gettingStartedTitle": "GETTING STARTED...",
+  "reviewSwap": "Review Swap"
 }
