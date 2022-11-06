@@ -108,7 +108,6 @@ const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
             variant={'subListText'}
             tx="backupSeedScreen.hidden4Security"
             color={'greyBlack'}
-            textAlign="center"
           />
           <Box marginTop={'m'}>
             <FlatList
