@@ -1,12 +1,10 @@
 import { FC, useCallback, useEffect } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
-  accountsIdsState,
   swapPairState,
-  networkState,
-  accountsIdsForMainnetState,
   totalFiatBalanceState,
   totalEnabledAssetsWithBalance,
+  sortedAccountsIdsState,
 } from '../../atoms'
 import { ActionEnum } from '../../types'
 import { Platform } from 'react-native'
@@ -15,7 +13,6 @@ import { Box, Text, Card } from '../../theme'
 import * as React from 'react'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
 import { labelTranslateFn, SCREEN_WIDTH } from '../../utils'
-import { Network } from '@liquality/cryptoassets/dist/src/types'
 import { AppIcons } from '../../assets'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
@@ -27,10 +24,7 @@ type SummaryBlockProps = {
 
 const SummaryBlock: FC<SummaryBlockProps> = (props) => {
   const { navigation } = props
-  const network = useRecoilValue(networkState)
-  const accountsIds = useRecoilValue(
-    network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
-  )
+  const accountsIds = useRecoilValue(sortedAccountsIdsState)
   const totalAssets = useRecoilValue(totalEnabledAssetsWithBalance)
   const totalFiatBalance = useRecoilValue(totalFiatBalanceState)
   const setSwapPair = useSetRecoilState(swapPairState)

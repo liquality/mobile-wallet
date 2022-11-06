@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
-  accountsIdsState,
-  accountsIdsForMainnetState,
   isDoneFetchingData,
   langSelected as LS,
   networkState,
@@ -32,7 +30,6 @@ import {
   TabBar,
   Text,
 } from '../../theme'
-import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { scale } from 'react-native-size-matters'
 import { AppIcons } from '../../assets'
 import { NavigationProp, useNavigation } from '@react-navigation/core'
@@ -48,9 +45,6 @@ const ContentBlock = () => {
   const network = useRecoilValue(networkState)
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
 
-  const accountsIds = useRecoilValue(
-    network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
-  )
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
   const [delayTabView, setDelayTabView] = React.useState(false)
   const langSelected = useRecoilValue(LS)
@@ -84,7 +78,7 @@ const ContentBlock = () => {
         setIsDoneFetchingData(true)
         Log(`Failed to populateWallet: ${e}`, 'error')
       })
-  }, [setIsDoneFetchingData, accountsIds, network])
+  }, [setIsDoneFetchingData, network])
 
   React.useEffect(() => {
     // Issue is if UI is not loaded completely and user tap on tabBar then the tabView get stuck
@@ -171,7 +165,7 @@ const ContentBlock = () => {
       renderScene={({ route }) => {
         switch (route.key) {
           case 'asset':
-            return <AssetFlatList accounts={accountsIds} />
+            return <AssetFlatList />
           case 'activity':
             return <ActivityFlatList historyCount={historyItem.length} />
         }

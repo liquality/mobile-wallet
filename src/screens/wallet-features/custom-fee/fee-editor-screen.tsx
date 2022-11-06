@@ -34,7 +34,6 @@ import SlowIcon from '../../../assets/icons/slow.svg'
 import AverageIcon from '../../../assets/icons/average.svg'
 import FastIcon from '../../../assets/icons/fast.svg'
 import CloseIcon from '../../../assets/icons/close.svg'
-import SwapIcon from '../../../assets/icons/swap.svg'
 import SwapProviderInfoIcon from '../../../assets/icons/swapProviderInfo.svg'
 import { scale } from 'react-native-size-matters'
 import ButtonFooter from '../../../components/button-footer'
@@ -66,7 +65,12 @@ import { Fonts } from '../../../assets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import { CustomFeeLabel, ExtendedFeeLabel, TotalFees } from '../../../types'
+import {
+  ActionEnum,
+  CustomFeeLabel,
+  ExtendedFeeLabel,
+  TotalFees,
+} from '../../../types'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 
 type LikelyWaitObjType = {
@@ -268,11 +272,8 @@ const StandardRoute = ({
           label={{ tx: 'common.apply' }}
           onPress={handleApplyPress}
           isBorderless={true}
-          isActive={!!speed}>
-          <Box marginLeft="s">
-            <SwapIcon width={scale(20)} height={scale(15)} />
-          </Box>
-        </Button>
+          isActive={!!speed}
+        />
       </ButtonFooter>
     </Box>
   )
@@ -580,11 +581,8 @@ const CustomizeRoute = ({
           label={{ tx: 'common.apply' }}
           onPress={handleApplyPress}
           isBorderless={true}
-          isActive>
-          <Box marginLeft="s">
-            <SwapIcon width={scale(20)} height={scale(15)} />
-          </Box>
-        </Button>
+          isActive
+        />
       </ButtonFooter>
     </Box>
   )
@@ -601,6 +599,7 @@ type FeeEditorScreenType = {
   applyFee: (fee: BigNumber, speed: FeeLabel) => void
   networkSpeed?: ExtendedFeeLabel
   applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
+  transactionType: ActionEnum
 }
 
 const FeeEditorScreen = ({
@@ -610,6 +609,7 @@ const FeeEditorScreen = ({
   applyFee,
   networkSpeed,
   applyNetworkSpeed,
+  transactionType,
 }: FeeEditorScreenType) => {
   const layout = useWindowDimensions()
   const activeNetwork = useRecoilValue(networkState)
@@ -672,7 +672,7 @@ const FeeEditorScreen = ({
       <SafeAreaView style={{ flex: 1 }}>
         <Box
           flex={1}
-          paddingHorizontal="m"
+          paddingHorizontal="xl"
           paddingTop="xl"
           backgroundColor="mainBackground">
           <Box
@@ -687,9 +687,13 @@ const FeeEditorScreen = ({
               <AssetIcon size={20} asset={selectedAsset} />
               <Text>{labelTranslateFn('common.networkSpeed')}</Text>
             </Box>
-            <Pressable onPress={() => onClose(false)}>
-              <SwapProviderInfoIcon width={24} height={20} />
-            </Pressable>
+            {transactionType === ActionEnum.SWAP ? (
+              <Pressable onPress={() => onClose(false)}>
+                <SwapProviderInfoIcon width={24} height={20} />
+              </Pressable>
+            ) : (
+              <Box width={24} />
+            )}
           </Box>
           <TabView
             renderTabBar={renderTabBar}

@@ -15,13 +15,7 @@ import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, MainStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
-import {
-  Text,
-  Box,
-  Card,
-  faceliftPalette,
-  IMAGE_BACKGROUND_STYLE,
-} from '../../../theme'
+import { Text, Box, Card, faceliftPalette } from '../../../theme'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   activityFilterState,
@@ -37,7 +31,11 @@ import {
 } from '../../../atoms'
 import { getAsset } from '@liquality/cryptoassets'
 import I18n from 'i18n-js'
-import { downloadAssetAcitivity, labelTranslateFn } from '../../../utils'
+import {
+  downloadAssetAcitivity,
+  labelTranslateFn,
+  SCREEN_WIDTH,
+} from '../../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { AppIcons, Images } from '../../../assets'
 import AssetIcon from '../../../components/asset-icon'
@@ -47,14 +45,14 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { populateWallet } from '../../../store/store'
 import { useFilteredHistory } from '../../../custom-hooks'
 const {
-  Exchange: DoubleArrowThick,
-  DownIcon,
-  UpIcon,
   Filter,
   ExportIcon,
-  DollarSign,
   ManageAssetsDarkIcon,
   AccountDetailsIcon,
+  SendHex,
+  SwapHex,
+  ReceiveHex,
+  BuyHex,
 } = AppIcons
 
 type AssetScreenProps = NativeStackScreenProps<
@@ -157,22 +155,22 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
 
   const appFeatures = [
     {
-      Icon: UpIcon,
+      Icon: SendHex,
       name: labelTranslateFn('summaryBlockComp.send'),
       navigateTo: handleSendPress,
     },
     {
-      Icon: DoubleArrowThick,
+      Icon: SwapHex,
       name: labelTranslateFn('summaryBlockComp.swap'),
       navigateTo: handleSwapPress,
     },
     {
-      Icon: DownIcon,
+      Icon: ReceiveHex,
       name: labelTranslateFn('summaryBlockComp.receive'),
       navigateTo: handleReceivePress,
     },
     {
-      Icon: DollarSign,
+      Icon: BuyHex,
       name: labelTranslateFn('summaryBlockComp.buy'),
       navigateTo: handleBuyPress,
     },
@@ -313,19 +311,12 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             </Box>
             <Box flexDirection={'row'} justifyContent="space-evenly">
               {appFeatures.map((item, index) => (
-                <Box key={index} alignItems={'center'}>
+                <Box
+                  key={index}
+                  alignItems={'center'}
+                  width={SCREEN_WIDTH / 4.1}>
                   <TouchableWithoutFeedback onPress={item.navigateTo}>
-                    <ImageBackground
-                      style={IMAGE_BACKGROUND_STYLE}
-                      resizeMode="cover"
-                      source={Images.hexoNav}>
-                      <Box
-                        flex={1}
-                        justifyContent="center"
-                        alignItems={'center'}>
-                        <item.Icon height={scale(14)} />
-                      </Box>
-                    </ImageBackground>
+                    <item.Icon />
                   </TouchableWithoutFeedback>
                   <Text
                     marginTop={'m'}

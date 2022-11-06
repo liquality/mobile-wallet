@@ -1,4 +1,4 @@
-import { DarkModeEnum, LanguageEnum } from './types'
+import { AccountIdType, DarkModeEnum, LanguageEnum } from './types'
 import { atom, atomFamily, selector, selectorFamily } from 'recoil'
 import { AccountType, SwapAssetPairType, CustomRootState } from './types'
 import { BigNumber } from '@liquality/types'
@@ -18,7 +18,6 @@ import {
 } from './store/store'
 
 import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
-import { Asset } from '@liquality/wallet-core/dist/src/store/types'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import {
   FiatRates,
@@ -36,13 +35,13 @@ import * as Localization from 'expo-localization'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 
 //------------ATOMS---------------------
-export const accountsIdsState = atom<{ id: string; name: Asset }[]>({
+export const accountsIdsState = atom<AccountIdType[]>({
   key: KEYS.ACCOUNTS_IDS_FOR_TESTNET,
   default: [],
   effects: [localStorageEffect(KEYS.ACCOUNTS_IDS_FOR_TESTNET)],
 })
 
-export const accountsIdsForMainnetState = atom<{ id: string; name: Asset }[]>({
+export const accountsIdsForMainnetState = atom<AccountIdType[]>({
   key: KEYS.ACCOUNTS_IDS_FOR_MAINNET,
   default: [],
   effects: [localStorageEffect(KEYS.ACCOUNTS_IDS_FOR_MAINNET)],
@@ -369,6 +368,59 @@ export const totalEnabledAssetsWithBalance = selector<number>({
       ).length
     }
     return total
+  },
+})
+
+export const sortedAccountsIdsState = selector<AccountIdType[]>({
+  key: 'SortedAccountsIdsState',
+  get: ({ get }) => {
+    const activeNetwork = get(networkState)
+    const accountsIds =
+      activeNetwork === Network.Testnet
+        ? Array.from(get(accountsIdsState))
+        : Array.from(get(accountsIdsForMainnetState))
+
+    return accountsIds
+      .map(({ id }) => get(accountInfoState(id)))
+      .filter(
+        (account) =>
+          get(
+            balanceStateFamily({ asset: account.code, assetId: account.id }),
+          ) >= 0,
+      )
+      .sort((account1, account2) => {
+        const fiatRates = get(fiatRatesState)
+        const balance1 = get(
+          balanceStateFamily({
+            asset: account1.code,
+            assetId: account1.id,
+          }),
+        )
+        const fiatBalance1 = cryptoToFiat(
+          unitToCurrency(
+            getAsset(activeNetwork, getNativeAsset(account1.code)),
+            balance1,
+          ).toNumber(),
+          fiatRates[account1.code],
+        )
+
+        const balance2 = get(
+          balanceStateFamily({
+            asset: account2.code,
+            assetId: account2.id,
+          }),
+        )
+        const fiatBalance2 = cryptoToFiat(
+          unitToCurrency(
+            getAsset(activeNetwork, getNativeAsset(account2.code)),
+            balance2,
+          ).toNumber(),
+          fiatRates[account2.code],
+        )
+
+        return fiatBalance2.minus(fiatBalance1).toNumber()
+      })
+      .map((account) => ({ id: account.id, name: account.code }))
   },
 })
 
