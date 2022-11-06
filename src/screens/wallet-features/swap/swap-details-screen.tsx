@@ -481,16 +481,16 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
             <Box marginTop={'xl'}>
               <SwapPartitionRow
                 title={labelTranslateFn('swapConfirmationScreen.startedAt')!}
-                leftSubTitle={formatDate(startTime)}
-                subTitle="06:51:33 GMT-0400 (EST)"
+                subTitle={formatDate(startTime)}
+                showParitionLine={false}
               />
             </Box>
             {endTime ? (
               <Box marginTop={'xl'}>
                 <SwapPartitionRow
                   title={labelTranslateFn('swapConfirmationScreen.finishedAt')!}
-                  leftSubTitle={formatDate(endTime)}
-                  subTitle="06:51:33 GMT-0400 (EST)"
+                  subTitle={formatDate(endTime)}
+                  showParitionLine={false}
                 />
               </Box>
             ) : null}
