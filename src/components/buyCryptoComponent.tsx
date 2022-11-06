@@ -1,7 +1,7 @@
-import { ImageBackground, Linking, TouchableOpacity } from 'react-native'
+import { Linking, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { Box, IMAGE_BACKGROUND_STYLE, Text } from '../theme'
-import { AppIcons, Images } from '../assets'
+import { Box, Text } from '../theme'
+import { AppIcons } from '../assets'
 import I18n from 'i18n-js'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
 import { scale } from 'react-native-size-matters'
@@ -14,7 +14,7 @@ const {
   TransakIcon,
   TiltedArrow,
   OnRamperIcon,
-  DownIcon,
+  ReceiveHex,
 } = AppIcons
 
 const IntroComponent = ({
@@ -37,15 +37,8 @@ const IntroComponent = ({
       <Text marginVertical={'l'} tx="weRecommedToStart" variant={'h7'} />
 
       <Box width={SCREEN_WIDTH / 4.3} marginTop="s">
-        <TouchableOpacity onPress={onPress}>
-          <ImageBackground
-            style={IMAGE_BACKGROUND_STYLE}
-            resizeMode="cover"
-            source={Images.hexoNav}>
-            <Box flex={1} justifyContent="center" alignItems={'center'}>
-              <DownIcon height={scale(14)} />
-            </Box>
-          </ImageBackground>
+        <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
+          <ReceiveHex />
         </TouchableOpacity>
         <Text
           marginTop={'s'}
@@ -83,17 +76,22 @@ const BuyCryptoComponent: React.FC<BuyCryptoComponentProps> = ({
     })
   }
 
-  const handleReceiveBtnPress = React.useCallback(() => {
+  const handleReceiveBtnPress = () => {
+    navigation.goBack()
     navigation.navigate('AssetChooserScreen', {
       screenTitle: labelTranslateFn('summaryBlockComp.selectAssetReceive')!,
       action: ActionEnum.RECEIVE,
     })
-  }, [navigation])
+  }
 
   return (
     <>
       {!isScrolledUp ? (
-        <Box marginTop={'xl'} alignItems="flex-end" padding={'screenPadding'}>
+        <Box
+          marginTop={'xl'}
+          alignItems="flex-end"
+          paddingBottom={'l'}
+          paddingHorizontal={'screenPadding'}>
           <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
             <BuyCryptoCloseLight />
           </TouchableOpacity>
@@ -107,7 +105,7 @@ const BuyCryptoComponent: React.FC<BuyCryptoComponentProps> = ({
         {showIntro ? (
           <IntroComponent
             isScrolledUp={isScrolledUp}
-            onPress={handleReceiveBtnPress}
+            onPress={() => handleReceiveBtnPress()}
           />
         ) : null}
         {!isScrolledUp ? (

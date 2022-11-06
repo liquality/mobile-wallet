@@ -812,15 +812,15 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="SwapDetailsScreen"
           component={SwapDetailsScreen}
-          options={{
+          options={({ navigation, route }: NavigationProps) => ({
             headerShadowVisible: false,
             headerBackVisible: false,
             headerTitle: labelTranslateFn('swapDetails')!,
             headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
-            headerRight: undefined,
-            headerLeft: StackMainNavigatorHeaderLeft,
-          }}
+            headerRight: () => SwapCheckHeaderRight({ navigation, route }),
+            headerLeft: undefined,
+          })}
         />
         <MainStack.Screen
           name="AssetScreen"

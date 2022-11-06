@@ -52,7 +52,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
       },
   )
 
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleInitiateSwap = async () => {
     setIsLoading(true)
@@ -238,7 +238,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         <Box flex={0.2} justifyContent="center">
           <Pressable
             label={{ tx: 'swapReviewScreen.initiateSwap' }}
-            onPress={handleInitiateSwap}
+            onPress={() => handleInitiateSwap()}
             variant="solid"
             isLoading={isLoading}
             customView={

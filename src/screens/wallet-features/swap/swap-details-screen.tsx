@@ -219,10 +219,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   }
 
   return (
-    <Box
-      flex={1}
-      backgroundColor="mainBackground"
-      paddingHorizontal="screenPadding">
+    <Box flex={1} backgroundColor="mainBackground" paddingHorizontal="l">
       <ScrollView
         contentContainerStyle={{ paddingBottom: scale(30) }}
         showsVerticalScrollIndicator={false}
@@ -459,38 +456,38 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
             onPress={() => {}}
           />
         </Box>
-        <Box
-          flexDirection={'row'}
-          marginTop="xl"
-          justifyContent="space-between"
-          borderBottomWidth={1}
-          borderBottomColor={'greyBlack'}
-          paddingBottom="m"
-          alignItems={'center'}>
-          <Text
-            variant={'listText'}
-            color="greyBlack"
-            tx="swapConfirmationScreen.advanced"
-          />
-          <TouchableOpacity activeOpacity={0.7} onPress={onTogglePress}>
+        <TouchableOpacity activeOpacity={0.7} onPress={onTogglePress}>
+          <Box
+            flexDirection={'row'}
+            marginTop="xl"
+            justifyContent="space-between"
+            borderBottomWidth={1}
+            borderBottomColor={'greyBlack'}
+            paddingBottom="m"
+            alignItems={'center'}>
+            <Text
+              variant={'listText'}
+              color="greyBlack"
+              tx="swapConfirmationScreen.advanced"
+            />
             <DynamicIcon width={scale(15)} height={scale(15)} />
-          </TouchableOpacity>
-        </Box>
+          </Box>
+        </TouchableOpacity>
         {isExpanded ? (
           <>
             <Box marginTop={'xl'}>
               <SwapPartitionRow
                 title={labelTranslateFn('swapConfirmationScreen.startedAt')!}
-                leftSubTitle={formatDate(startTime)}
-                subTitle="06:51:33 GMT-0400 (EST)"
+                subTitle={formatDate(startTime)}
+                showParitionLine={false}
               />
             </Box>
             {endTime ? (
               <Box marginTop={'xl'}>
                 <SwapPartitionRow
                   title={labelTranslateFn('swapConfirmationScreen.finishedAt')!}
-                  leftSubTitle={formatDate(endTime)}
-                  subTitle="06:51:33 GMT-0400 (EST)"
+                  subTitle={formatDate(endTime)}
+                  showParitionLine={false}
                 />
               </Box>
             ) : null}
