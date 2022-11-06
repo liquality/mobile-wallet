@@ -50,7 +50,7 @@ const {
   SwapSuccess,
 } = AppIcons
 
-const svgCardWidth = scale(SCREEN_WIDTH)
+const svgCardWidth = scale(SCREEN_WIDTH * 0.65)
 const svgCardHeight = scale(120)
 
 type SwapDetailsScreenProps = NativeStackScreenProps<
@@ -459,23 +459,23 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
             onPress={() => {}}
           />
         </Box>
-        <Box
-          flexDirection={'row'}
-          marginTop="xl"
-          justifyContent="space-between"
-          borderBottomWidth={1}
-          borderBottomColor={'greyBlack'}
-          paddingBottom="m"
-          alignItems={'center'}>
-          <Text
-            variant={'listText'}
-            color="greyBlack"
-            tx="swapConfirmationScreen.advanced"
-          />
-          <TouchableOpacity activeOpacity={0.7} onPress={onTogglePress}>
+        <TouchableOpacity activeOpacity={0.7} onPress={onTogglePress}>
+          <Box
+            flexDirection={'row'}
+            marginTop="xl"
+            justifyContent="space-between"
+            borderBottomWidth={1}
+            borderBottomColor={'greyBlack'}
+            paddingBottom="m"
+            alignItems={'center'}>
+            <Text
+              variant={'listText'}
+              color="greyBlack"
+              tx="swapConfirmationScreen.advanced"
+            />
             <DynamicIcon width={scale(15)} height={scale(15)} />
-          </TouchableOpacity>
-        </Box>
+          </Box>
+        </TouchableOpacity>
         {isExpanded ? (
           <>
             <Box marginTop={'xl'}>
