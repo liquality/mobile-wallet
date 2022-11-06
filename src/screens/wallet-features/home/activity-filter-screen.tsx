@@ -147,7 +147,7 @@ const ActivityFilterScreen = ({
       } else if (historyItem.type === TransactionType.Send) {
         navigation.navigate('SendConfirmationScreen', {
           sendTransactionConfirmation: historyItem,
-          screenTitle: 'Send Details',
+          screenTitle: labelTranslateFn('sendDetails')!,
         })
       }
     },

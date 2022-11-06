@@ -86,7 +86,7 @@ const SendReviewScreen = (props: SendReviewDrawerScreenProps) => {
 
       onClose()
       navigation.navigate('SendConfirmationScreen', {
-        screenTitle: i18n.t('sendReviewScreen.sendTransDetails'),
+        screenTitle: labelTranslateFn('sendDetails')!,
         sendTransactionConfirmation: transaction,
         assetData,
         fee: gasFee,

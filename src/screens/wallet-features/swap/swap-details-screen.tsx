@@ -50,7 +50,7 @@ const {
   SwapSuccess,
 } = AppIcons
 
-const svgCardWidth = scale(SCREEN_WIDTH * 0.65)
+const svgCardWidth = scale(SCREEN_WIDTH)
 const svgCardHeight = scale(120)
 
 type SwapDetailsScreenProps = NativeStackScreenProps<
@@ -219,10 +219,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   }
 
   return (
-    <Box
-      flex={1}
-      backgroundColor="mainBackground"
-      paddingHorizontal="screenPadding">
+    <Box flex={1} backgroundColor="mainBackground" paddingHorizontal="l">
       <ScrollView
         contentContainerStyle={{ paddingBottom: scale(30) }}
         showsVerticalScrollIndicator={false}
