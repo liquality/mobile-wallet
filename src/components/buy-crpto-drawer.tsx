@@ -59,7 +59,7 @@ const BuyCryptoDrawer = (props: Props) => {
         {!isScrolledUp ? (
           <Box
             flex={1}
-            style={{ paddingTop: headerHeight }}
+            style={{ paddingTop: headerHeight * 0.8 }}
             backgroundColor="semiTransparentGrey">
             <BuyCryptoComponent
               token={route.params.token || ''}
