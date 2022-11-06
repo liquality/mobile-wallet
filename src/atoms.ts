@@ -1,4 +1,4 @@
-import { DarkModeEnum, LanguageEnum } from './types'
+import { AccountIdType, DarkModeEnum, LanguageEnum } from './types'
 import { atom, atomFamily, selector, selectorFamily } from 'recoil'
 import { AccountType, SwapAssetPairType, CustomRootState } from './types'
 import { BigNumber } from '@liquality/types'
@@ -18,7 +18,6 @@ import {
 } from './store/store'
 
 import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
-import { Asset } from '@liquality/wallet-core/dist/src/store/types'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import {
   FiatRates,
@@ -36,13 +35,13 @@ import * as Localization from 'expo-localization'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 
 //------------ATOMS---------------------
-export const accountsIdsState = atom<{ id: string; name: Asset }[]>({
+export const accountsIdsState = atom<AccountIdType[]>({
   key: KEYS.ACCOUNTS_IDS_FOR_TESTNET,
   default: [],
   effects: [localStorageEffect(KEYS.ACCOUNTS_IDS_FOR_TESTNET)],
 })
 
-export const accountsIdsForMainnetState = atom<{ id: string; name: Asset }[]>({
+export const accountsIdsForMainnetState = atom<AccountIdType[]>({
   key: KEYS.ACCOUNTS_IDS_FOR_MAINNET,
   default: [],
   effects: [localStorageEffect(KEYS.ACCOUNTS_IDS_FOR_MAINNET)],
@@ -372,7 +371,7 @@ export const totalEnabledAssetsWithBalance = selector<number>({
   },
 })
 
-export const sortedAccountsIdsState = selector<{ id: string; name: Asset }[]>({
+export const sortedAccountsIdsState = selector<AccountIdType[]>({
   key: 'SortedAccountsIdsState',
   get: ({ get }) => {
     const activeNetwork = get(networkState)

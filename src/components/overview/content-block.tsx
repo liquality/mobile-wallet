@@ -6,7 +6,6 @@ import {
   networkState,
   historyItemsState,
   activityFilterState,
-  sortedAccountsIdsState,
 } from '../../atoms'
 import { getAllEnabledAccounts, populateWallet } from '../../store/store'
 import ActivityFlatList from '../activity-flat-list'
@@ -46,7 +45,6 @@ const ContentBlock = () => {
   const network = useRecoilValue(networkState)
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
 
-  const accountsIds = useRecoilValue(sortedAccountsIdsState)
   const setIsDoneFetchingData = useSetRecoilState(isDoneFetchingData)
   const [delayTabView, setDelayTabView] = React.useState(false)
   const langSelected = useRecoilValue(LS)
@@ -80,7 +78,7 @@ const ContentBlock = () => {
         setIsDoneFetchingData(true)
         Log(`Failed to populateWallet: ${e}`, 'error')
       })
-  }, [setIsDoneFetchingData, accountsIds, network])
+  }, [setIsDoneFetchingData, network])
 
   React.useEffect(() => {
     // Issue is if UI is not loaded completely and user tap on tabBar then the tabView get stuck
@@ -167,7 +165,7 @@ const ContentBlock = () => {
       renderScene={({ route }) => {
         switch (route.key) {
           case 'asset':
-            return <AssetFlatList accounts={accountsIds} />
+            return <AssetFlatList />
           case 'activity':
             return <ActivityFlatList historyCount={historyItem.length} />
         }

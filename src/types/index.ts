@@ -13,20 +13,6 @@ import {
 } from '@liquality/wallet-core/dist/src/store/types'
 import { Asset } from '@liquality/wallet-core/dist/src/store/types'
 
-export type AssetDataElementType = {
-  id: string
-  name: string
-  code: string
-  chain: ChainId
-  address?: string
-  balance: number
-  balanceInUSD?: number
-  color?: string
-  assets?: Array<AssetDataElementType>
-  fees?: FeeDetails
-  activeNetwork?: any
-}
-
 export interface AccountType {
   id: string
   name: string
@@ -345,4 +331,9 @@ export type SendToastProps = {
   onGetPress: () => void
   onMaxPress: () => void
   resetMsg: () => void
+}
+
+export type AccountIdType = {
+  id: string
+  name: Asset
 }
