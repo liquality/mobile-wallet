@@ -205,7 +205,7 @@ export const theme = createTheme({
     amountLarge: {
       fontFamily: Fonts.Regular,
       fontWeight: '300',
-      fontSize: 28,
+      fontSize: scale(28),
     },
     sendNftNameHeader: {
       fontFamily: Fonts.Regular,
@@ -586,6 +586,11 @@ export const theme = createTheme({
       fontWeight: '300',
       fontSize: 53,
       opacity: 0.7,
+    },
+    reviewAmount: {
+      fontFamily: Fonts.Regular,
+      fontWeight: '300',
+      fontSize: scale(22),
     },
   },
   pressableVariants: {

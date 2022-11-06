@@ -966,7 +966,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                     marginLeft="m"
                     color={error.msg ? 'inactiveText' : 'white'}
                     variant={'h6'}
-                    lineHeight={scale(30)}
+                    lineHeight={scale(25)}
                     tx="common.review"
                   />
                 </Box>

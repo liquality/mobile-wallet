@@ -1,10 +1,7 @@
 import { BigNumber } from '@liquality/types'
 import { AccountType } from '../../types'
-import React, { FC, useState } from 'react'
-import Clipboard from '@react-native-clipboard/clipboard'
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
-import Label from '../ui/label'
-import { chainDefaultColors } from '../../core/config'
+import React, { FC } from 'react'
+import { View } from 'react-native'
 import { getChain, getAsset, unitToCurrency } from '@liquality/cryptoassets'
 import {
   cryptoToFiat,
@@ -13,12 +10,9 @@ import {
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import { useRecoilValue } from 'recoil'
-import { addressStateFamily, networkState } from '../../atoms'
-import { labelTranslateFn } from '../../utils'
-import { AppIcons, Fonts } from '../../assets'
-import { palette } from '../../theme'
-
-const { CopyIcon, SwapCheck: CheckIcon } = AppIcons
+import { networkState } from '../../atoms'
+import { Box, Text } from '../../theme'
+import { scale } from 'react-native-size-matters'
 
 type SwapReviewAssetSummaryProps = {
   type: 'SEND' | 'RECEIVE'
@@ -28,145 +22,114 @@ type SwapReviewAssetSummaryProps = {
   networkFee: BigNumber
 }
 
-const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
-  const { asset, fiatRates, networkFee, amount, type } = props
-  const [isCopied, setIsCopied] = useState(false)
-  const address = useRecoilValue(addressStateFamily(asset.id))
-  const activeNetwork = useRecoilValue(networkState)
-
-  const handleCopyPress = () => {
-    if (address) {
-      Clipboard.setString(address)
-      setIsCopied(true)
-    } else {
-      Alert.alert('Unable to copy address')
-    }
-  }
-
+const Separator = ({ height = 15 }) => {
   return (
-    <View>
-      <Label text={type} variant="strong" />
-      <View style={styles.row}>
-        <Text
-          style={[
-            styles.font,
-            styles.mainAmount,
-            {
-              color:
-                chainDefaultColors[getAsset(activeNetwork, asset.code)?.chain],
-            },
-          ]}>
-          {`${amount.dp(6)} ${asset.code}`}
-        </Text>
-        <Text style={[styles.font, styles.amount]}>
-          {amount &&
-            `$${formatFiat(
-              cryptoToFiat(
-                amount.toNumber(),
-                fiatRates[asset.code],
-              ) as BigNumber,
-            )}`}
-        </Text>
-      </View>
-      <Label text={{ tx: 'swapRevAstSumComp.networkFee' }} variant="light" />
-      <View style={styles.row}>
-        <Text style={[styles.font, styles.amount]}>{`${networkFee.toNumber()} ${
-          getChain(activeNetwork, getAsset(activeNetwork, asset.code)?.chain)
-            .fees.unit
-        }`}</Text>
-        <Text style={[styles.font, styles.amount]}>{`${prettyFiatBalance(
-          getSendFee(asset.code, networkFee.toNumber()).toNumber(),
-          fiatRates[asset.code],
-        ).toString()}`}</Text>
-      </View>
-      <Label text={{ tx: 'swapRevAstSumComp.amtFee' }} variant="light" />
-      <View style={styles.row}>
-        <Text style={[styles.font, styles.amountStrong]}>{`${amount.plus(
-          unitToCurrency(
-            getAsset(activeNetwork, asset.code),
-            networkFee.toNumber(),
-          ),
-        )} ${asset.code}`}</Text>
-        <Text style={[styles.font, styles.amountStrong]}>{`$${formatFiat(
-          cryptoToFiat(
-            amount
-              .plus(getSendFee(asset.code, networkFee.toNumber()))
-              .toNumber(),
-            fiatRates[asset.code],
-          ) as BigNumber,
-        )}`}</Text>
-      </View>
-      <Label
-        text={
-          type === 'SEND'
-            ? `${labelTranslateFn('swapRevAstSumComp.sendFrom')}`
-            : `${labelTranslateFn('swapRevAstSumComp.receiveAt')}`
-        }
-        variant="light"
-      />
-      <View style={styles.box}>
-        <Text style={[styles.font, styles.address]}>
-          External Wallet -{' '}
-          {`${address?.substring(0, 4)}...${address?.substring(
-            address?.length - 4,
-          )}`}
-        </Text>
-        <Pressable onPress={handleCopyPress}>
-          {isCopied ? (
-            <CheckIcon
-              width={15}
-              height={15}
-              stroke={palette.blueVioletPrimary}
-              style={styles.icon}
-            />
-          ) : (
-            <CopyIcon width={10} stroke={palette.blueVioletPrimary} />
-          )}
-        </Pressable>
-      </View>
-    </View>
+    <Box
+      alignSelf={'flex-start'}
+      width={1}
+      marginHorizontal="m"
+      height={scale(height)}
+      backgroundColor="inactiveText"
+    />
   )
 }
 
-const styles = StyleSheet.create({
-  font: {
-    fontFamily: Fonts.Regular,
-  },
-  mainAmount: {
-    fontWeight: '300',
-    fontSize: 28,
-    lineHeight: 42,
-  },
-  amount: {
-    fontWeight: '300',
-    fontSize: 12,
-    lineHeight: 24,
-  },
-  amountStrong: {
-    fontWeight: '600',
-    fontSize: 12,
-    lineHeight: 18,
-  },
-  address: {
-    fontWeight: '300',
-    fontSize: 12,
-    lineHeight: 18,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    marginBottom: 15,
-  },
-  box: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginBottom: 15,
-  },
-  icon: {
-    marginVertical: 5,
-    marginHorizontal: 5,
-  },
-})
+const SwapReviewAssetSummary: FC<SwapReviewAssetSummaryProps> = (props) => {
+  const { asset, fiatRates, networkFee, amount, type } = props
+  const activeNetwork = useRecoilValue(networkState)
+
+  return (
+    <View>
+      <Text variant={'speedUp'} color="darkGrey">
+        {type}
+      </Text>
+      <Box flexDirection={'row'} alignItems="center">
+        <Box flexShrink={0.1}>
+          <Text
+            variant={'reviewAmount'}
+            color={'darkGrey'}
+            numberOfLines={1}>{`${amount.dp(6)} ${asset.code}`}</Text>
+        </Box>
+        <Box
+          width={1}
+          marginHorizontal="m"
+          height={scale(25)}
+          backgroundColor="inactiveText"
+        />
+        <Box flexShrink={0.1}>
+          <Text variant={'reviewAmount'} color={'darkGrey'} numberOfLines={1}>
+            {amount &&
+              `$${formatFiat(
+                cryptoToFiat(
+                  amount.toNumber(),
+                  fiatRates[asset.code],
+                ) as BigNumber,
+              )}`}
+          </Text>
+        </Box>
+      </Box>
+      <Text
+        variant={'transLink'}
+        color="greyMeta"
+        fontWeight={'400'}
+        tx="swapRevAstSumComp.networkFee"
+      />
+      <Box flexDirection={'row'} alignItems="center">
+        <Text
+          variant={'h7'}
+          lineHeight={scale(20)}
+          color="greyBlack">{`~${networkFee.toNumber()} ${
+          getChain(activeNetwork, getAsset(activeNetwork, asset.code)?.chain)
+            .fees.unit
+        }`}</Text>
+        <Separator />
+        <Text
+          variant={'h7'}
+          lineHeight={scale(20)}
+          color="greyBlack">{`$${prettyFiatBalance(
+          getSendFee(asset.code, networkFee.toNumber()).toNumber(),
+          fiatRates[asset.code],
+        ).toString()}`}</Text>
+      </Box>
+      <Text
+        variant={'transLink'}
+        color="greyMeta"
+        fontWeight={'400'}
+        tx="swapRevAstSumComp.amtFee"
+      />
+      <Box flexDirection={'row'}>
+        <Box flexShrink={0.1}>
+          <Text
+            variant={'h7'}
+            lineHeight={scale(20)}
+            numberOfLines={1}
+            color="greyBlack">{`~${amount
+            .plus(
+              unitToCurrency(
+                getAsset(activeNetwork, asset.code),
+                networkFee.toNumber(),
+              ),
+            )
+            .dp(6)} ${asset.code}`}</Text>
+        </Box>
+        <Separator />
+        <Box flexShrink={0.1}>
+          <Text
+            numberOfLines={1}
+            variant={'h7'}
+            lineHeight={scale(20)}
+            color="greyBlack">{`$${formatFiat(
+            cryptoToFiat(
+              amount
+                .plus(getSendFee(asset.code, networkFee.toNumber()))
+                .toNumber(),
+              fiatRates[asset.code],
+            ) as BigNumber,
+          )}`}</Text>
+        </Box>
+      </Box>
+    </View>
+  )
+}
 
 export default SwapReviewAssetSummary

@@ -28,7 +28,7 @@
     "max": "Max",
     "available": "Available",
     "receive": "RECEIVE",
-    "maxSlippage": "Max slippage is 0.5%.",
+    "maxSlippage": "Max slippage is 3%",
     "swapDoesnotComp": "If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at {{date}}",
     "initiateSwap": "Initiate Swap",
     "activities": "ACTIVITIES",
@@ -122,7 +122,7 @@
   "backupSeedScreen": {
     "hej": "hej",
     "yourSeedPhrase": "Your Seed Phrase",
-    "writeItDown": "Write it down, verify it and store it securely. \n It is the only way to restore your wallet.",
+    "writeItDown": "Write it down, verify it and store it securely. It is the only way to restore your wallet.",
     "hidden4Security": "Hidden for security. Tap to reveal phrase.",
     "iSaveSeed": "I saved the seed"
   },
@@ -496,5 +496,6 @@
   "needsAttention": "Needs Attention",
   "failed": "Failed",
   "all": "ALL",
-  "gettingStartedTitle": "GETTING STARTED..."
+  "gettingStartedTitle": "GETTING STARTED...",
+  "reviewSwap": "Review Swap"
 }

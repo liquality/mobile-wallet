@@ -93,6 +93,7 @@ const {
   TabWalletInactive,
   SearchIcon,
   BuyCryptoCloseDark,
+  BuyCryptoCloseLight,
   SwapQuotes,
   ExportIcon,
   ConnectionIndicator,
@@ -629,6 +630,17 @@ const CloseButton = () => {
   )
 }
 
+const CloseButtonLight = () => {
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+  return (
+    <Box paddingHorizontal={'m'}>
+      <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
+        <BuyCryptoCloseLight />
+      </TouchableOpacity>
+    </Box>
+  )
+}
+
 //If you dont want your screen to include tabbar, add it to StackMainNavigator obj
 export const StackMainNavigator = () => {
   const theme = useRecoilValue(themeMode)
@@ -687,7 +699,10 @@ export const StackMainNavigator = () => {
           name="BackupSeedScreen"
           component={BackupSeedScreen}
           options={{
-            headerShown: false,
+            ...screenNavOptions,
+            headerTitleStyle: HEADER_TITLE_STYLE,
+            headerStyle: { backgroundColor },
+            headerLeft: LiqLogoHeaderLeft,
           }}
         />
         <MainStack.Screen
@@ -792,13 +807,6 @@ export const StackMainNavigator = () => {
             headerStyle: { backgroundColor },
             headerLeft: undefined,
             headerRight: SwapHeaderRight,
-          })}
-        />
-        <MainStack.Screen
-          name="SwapReviewScreen"
-          component={SwapReviewScreen}
-          options={() => ({
-            headerRight: PlaceholderComp,
           })}
         />
         <MainStack.Screen
@@ -950,6 +958,21 @@ export const StackMainNavigator = () => {
             headerTitle: '',
             headerLeft: undefined,
             headerRight: undefined,
+          }}
+        />
+        <MainStack.Screen
+          name="SwapReviewScreen"
+          component={SwapReviewScreen}
+          options={{
+            ...screenNavOptions,
+            presentation: 'transparentModal',
+            headerStyle: {
+              backgroundColor: faceliftPalette.transparent,
+            },
+            headerTransparent: true,
+            headerTitle: '',
+            headerLeft: undefined,
+            headerRight: CloseButtonLight,
           }}
         />
       </MainStack.Group>
