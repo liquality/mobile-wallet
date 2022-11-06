@@ -699,7 +699,10 @@ export const StackMainNavigator = () => {
           name="BackupSeedScreen"
           component={BackupSeedScreen}
           options={{
-            headerShown: false,
+            ...screenNavOptions,
+            headerTitleStyle: HEADER_TITLE_STYLE,
+            headerStyle: { backgroundColor },
+            headerLeft: LiqLogoHeaderLeft,
           }}
         />
         <MainStack.Screen

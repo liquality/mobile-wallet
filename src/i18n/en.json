@@ -122,7 +122,7 @@
   "backupSeedScreen": {
     "hej": "hej",
     "yourSeedPhrase": "Your Seed Phrase",
-    "writeItDown": "Write it down, verify it and store it securely. \n It is the only way to restore your wallet.",
+    "writeItDown": "Write it down, verify it and store it securely. It is the only way to restore your wallet.",
     "hidden4Security": "Hidden for security. Tap to reveal phrase.",
     "iSaveSeed": "I saved the seed"
   },
