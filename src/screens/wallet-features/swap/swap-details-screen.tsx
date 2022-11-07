@@ -167,7 +167,10 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
 
   const customComponent: Array<CustomComponentProps> = []
 
+  let isConfirmationZero = 0
+
   if (timeline?.length) {
+    isConfirmationZero = timeline[0].tx?.confirmations || 0
     let isFromIdAdded = false
     for (let item of timeline) {
       if (item.tx?.status === TxStatus.Failed) {
@@ -416,12 +419,14 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
                   }`}
               </Text>
             </Box>
-            <Text
-              onPress={handleSpeedUpTransaction}
-              variant={'speedUp'}
-              color={'link'}
-              tx="common.speedUp"
-            />
+            {isConfirmationZero === 0 ? (
+              <Text
+                onPress={handleSpeedUpTransaction}
+                variant={'speedUp'}
+                color={'link'}
+                tx="common.speedUp"
+              />
+            ) : null}
           </Box>
         </Box>
         {historyItem && timeline?.length ? (
