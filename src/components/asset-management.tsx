@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Alert, FlatList, StyleSheet } from 'react-native'
-import { getAllAssets, getAsset } from '@liquality/cryptoassets'
+import {
+  getAllAssets,
+  getAllEvmChains,
+  getAllSupportedChains,
+  getAsset,
+} from '@liquality/cryptoassets'
 import AssetIcon from './asset-icon'
 import SearchBox from './ui/search-box'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
@@ -15,6 +20,7 @@ import AssetRow from './asset-row'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { SCREEN_HEIGHT } from '../utils'
+import { ChainNetworks } from '@liquality/wallet-core/dist/src/utils/networks'
 
 const horizontalContentHeight = 60
 
@@ -163,6 +169,11 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
       const onItemPress = () => {
         setChainCode(code)
       }
+
+      let hej = Object.entries(getAllEvmChains().mainnet)
+      //Object.entries(getAllEvmChains().mainnet).find(([chainName, chain]) => chain.network.chainId === 137))
+
+      console.log(hej, 'CONSOLE LOG ENTRIEESS')
       return (
         <Box
           alignItems={'center'}

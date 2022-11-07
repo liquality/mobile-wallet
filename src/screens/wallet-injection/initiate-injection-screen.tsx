@@ -18,7 +18,7 @@ type NftDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'NftDetailScreen'
 >
-const { DottedLine, ChevronDown } = AppIcons
+const { DottedArrow, ChevronDown } = AppIcons
 
 const wallet = setupWallet({
   ...defaultOptions,
@@ -40,6 +40,7 @@ const InitInjectionScreen = ({ navigation, route }: NftDetailScreenProps) => {
   }, [])
 
   console.log(data, 'what is data?', data?.peerMeta.icons[0])
+
   const connect = () => {
     //TODO: make the wallet address come from getAddressByChainId(data.chainId) instead
     emitterController.emit(OFF_SESSION_REQUEST, [
@@ -69,27 +70,28 @@ const InitInjectionScreen = ({ navigation, route }: NftDetailScreenProps) => {
           />
         ) : null}
       </Box>
+      <DottedArrow />
+      {/*       <AssetIcon chain={} asset={code} />
+       */}
       <Text style={styles.permissionText}>
         By granting permission to {data?.peerMeta.name} they can read your
         public account addresses. Make sure you trust this site.
       </Text>
-      <ButtonFooter>
-        <Button
-          type="primary"
-          variant="l"
-          label={'Connect'}
-          onPress={connect}
-          isBorderless={true}
-          appendChildren={false}></Button>
-        <Button
-          type="secondary"
-          variant="l"
-          label={'Deny'}
-          onPress={reject}
-          isBorderless={true}
-          isActive={true}
-        />
-      </ButtonFooter>
+      <Button
+        type="primary"
+        variant="l"
+        label={'Connect'}
+        onPress={connect}
+        isBorderless={true}
+        appendChildren={false}></Button>
+      <Button
+        type="secondary"
+        variant="l"
+        label={'Deny'}
+        onPress={reject}
+        isBorderless={true}
+        isActive={true}
+      />
     </Box>
   )
 }

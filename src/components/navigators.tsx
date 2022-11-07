@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import {
   StyleSheet,
   Pressable,
@@ -84,6 +84,9 @@ import { RNCamera } from 'react-native-camera'
 import InitInjectionScreen from '../screens/wallet-injection/initiate-injection-screen'
 import WalletConnectController from '../controllers/walletConnectController'
 import ApproveTransactionInjectionScreen from '../screens/wallet-injection/approve-transaction-injection'
+import { emitterController } from '../controllers/emitterController'
+import { INJECTION_REQUESTS } from '../controllers/constants'
+const { ON_SESSION_REQUEST } = INJECTION_REQUESTS
 
 const {
   SwapCheck,
@@ -99,6 +102,7 @@ const {
   SearchIcon,
   BuyCryptoCloseDark,
   Connect,
+  ConnectSolid,
 } = AppIcons
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
@@ -334,6 +338,7 @@ const AssetManageScreenHeaderRight = () => {
 const AppStackHeaderRight = (navProps: NavigationProps) => {
   const { navigation } = navProps
   const activeNetwork = useRecoilValue(networkState)
+  const [walletConnectData, setWalletConnectData] = useState(null)
 
   const [showQRScanner, setShowQRScanner] = useState(false)
   const onSuccess = (e) => {
@@ -342,6 +347,16 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
     navigation.navigate('InitInjectionScreen', { uri: e.data })
     setShowQRScanner(false)
   }
+
+  //To check if there is a session connected or not
+  useEffect(() => {
+    emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
+      const [data] = params
+      setWalletConnectData(data)
+    })
+  }, [])
+
+  console.log(walletConnectData, 'WALLET CONNECT DATA????')
 
   return (
     <Box flexDirection={'row'} alignItems={'center'} padding="s">
@@ -378,7 +393,7 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
         ) : (
           <View style={styles.container}>
             <Pressable onPress={() => setShowQRScanner(true)}>
-              <Connect />
+              {walletConnectData ? <ConnectSolid /> : <Connect />}
             </Pressable>
           </View>
         )}

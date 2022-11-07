@@ -143,8 +143,10 @@ import SwapTknIcon from '../assets/icons/swapTknIcon.svg'
 import BuyCryptoCloseLight from '../assets/icons/buyCryptoCloseLight.svg'
 import BuyCryptoCloseDark from '../assets/icons/buyCryptoCloseDark.svg'
 import TiltedArrow from '../assets/icons/tiltedArrow.svg'
-import DottedLine from '../assets/icons/dottedLine.svg'
 import Connect from '../assets/icons/connect.svg'
+import ConnectSolid from '../assets/icons/connectSolid.svg'
+
+import DottedArrow from '../assets/icons/dottedArrow.svg'
 
 
 
@@ -295,6 +297,7 @@ export default {
   BuyCryptoCloseDark,
   OnRamperIcon,
   TiltedArrow,
-  DottedLine,
   Connect,
+  ConnectSolid,
+  DottedArrow,
 }
