@@ -53,6 +53,7 @@ import { TxStatus } from '@chainify/types'
 import SwapConfirmedBlock from './swap-confirmed-block'
 import { getTransactionExplorerLink } from '@liquality/wallet-core/dist/src/utils/asset'
 import FeeEditorScreen from '../custom-fee/fee-editor-screen'
+import SpeedUpModal from '../custom-fee/speed-up-modal'
 
 const {
   SwapDarkRect,
@@ -89,6 +90,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   const [isExpanded, setIsExpanded] = React.useState(false)
   const [swapProvider, setSwapProvider] = React.useState<SwapProvider>()
   const [showFeeEditorModal, setShowFeeEditorModal] = React.useState(false)
+  const [showSpeedUpModal, setShowSpeedUpModal] = React.useState(false)
   const [networkSpeed, setNetworkSpeed] = React.useState<ExtendedFeeLabel>(
     historyItem.feeLabel || FeeLabel.Average,
   )
@@ -611,8 +613,12 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
           amount={new BigNumber(historyItem.fromAmount)}
           applyFee={(fee) => {
             setShowFeeEditorModal(false)
-            if (confirmationNum && confirmationNum === 0) {
-              handleIntiatSpeedUpSwap(fee.toNumber())
+            if (confirmationNum) {
+              if (confirmationNum === 0) {
+                handleIntiatSpeedUpSwap(fee.toNumber())
+              } else {
+                setShowSpeedUpModal(true)
+              }
             }
           }}
           transactionType={ActionEnum.SWAP}
@@ -621,6 +627,10 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
           isSpeedUp={true}
         />
       )}
+      <SpeedUpModal
+        visible={showSpeedUpModal}
+        onClose={() => setShowSpeedUpModal(false)}
+      />
     </Box>
   )
 }

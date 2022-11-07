@@ -498,5 +498,8 @@
   "all": "ALL",
   "gettingStartedTitle": "GETTING STARTED...",
   "reviewSwap": "Review Swap",
-  "sendDetails": "SEND DETAILS"
+  "sendDetails": "SEND DETAILS",
+  "speedUpNoLonger": "Speed-up no longer possible",
+  "yourTranConfirmedMsg": "Your transaction was confirmed on the blockchain before changing speed and fee. It is moving along.",
+  "speedUpOptionMsg": "Speed-up options are only possible before the 1st confirmation and vary by network."
 }
