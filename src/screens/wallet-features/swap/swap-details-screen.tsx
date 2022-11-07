@@ -1,7 +1,12 @@
 import * as React from 'react'
 import { ScrollView, useColorScheme } from 'react-native'
 import { Box, Pressable, Text } from '../../../theme'
-import { AccountType, MainStackParamList } from '../../../types'
+import {
+  AccountType,
+  ActionEnum,
+  ExtendedFeeLabel,
+  MainStackParamList,
+} from '../../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { scale } from 'react-native-size-matters'
 import { AppIcons } from '../../../assets'
@@ -33,11 +38,15 @@ import { unitToCurrency, getAsset, getChain } from '@liquality/cryptoassets'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { TimelineStep } from '@liquality/wallet-core/dist/src/utils/timeline'
 import { getTimeline } from '../../../store/store'
-import { SwapHistoryItem } from '@liquality/wallet-core/dist/src/store/types'
+import {
+  FeeLabel,
+  SwapHistoryItem,
+} from '@liquality/wallet-core/dist/src/store/types'
 import { CustomComponentProps } from './transaction-timeline'
 import { TxStatus } from '@chainify/types'
 import SwapConfirmedBlock from './swap-confirmed-block'
 import { getTransactionExplorerLink } from '@liquality/wallet-core/dist/src/utils/asset'
+import FeeEditorScreen from '../custom-fee/fee-editor-screen'
 
 const {
   SwapDarkRect,
@@ -74,6 +83,10 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
 
   const [isExpanded, setIsExpanded] = React.useState(false)
   const [swapProvider, setSwapProvider] = React.useState<SwapProvider>()
+  const [showFeeEditorModal, setShowFeeEditorModal] = React.useState(false)
+  const [networkSpeed, setNetworkSpeed] = React.useState<ExtendedFeeLabel>(
+    historyItem.feeLabel || FeeLabel.Average,
+  )
 
   const {
     from,
@@ -112,10 +125,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   }
 
   const handleSpeedUpTransaction = () => {
-    navigation.navigate('CustomFeeScreen', {
-      assetData: route.params.assetData,
-      screenTitle: labelTranslateFn('swapConfirmationScreen.networkSpeed')!,
-    })
+    setShowFeeEditorModal(true)
   }
 
   const handleRetrySwapPress = async () => {
@@ -551,6 +561,20 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
           </>
         ) : null}
       </ScrollView>
+      {showFeeEditorModal && historyItem && (
+        <FeeEditorScreen
+          onClose={setShowFeeEditorModal}
+          selectedAsset={historyItem.from}
+          amount={new BigNumber(historyItem.fromAmount)}
+          applyFee={() => {
+            // setCustomFee(fee.toNumber())
+            setShowFeeEditorModal(false)
+          }}
+          transactionType={ActionEnum.SWAP}
+          applyNetworkSpeed={setNetworkSpeed}
+          networkSpeed={networkSpeed}
+        />
+      )}
     </Box>
   )
 }

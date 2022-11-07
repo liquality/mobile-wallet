@@ -992,6 +992,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           }}
           transactionType={ActionEnum.SWAP}
           applyNetworkSpeed={setNetworkSpeed}
+          networkSpeed={networkSpeed}
         />
       )}
     </Box>

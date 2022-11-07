@@ -597,7 +597,7 @@ type FeeEditorScreenType = {
   amount: BigNumber
   selectedAsset: string
   applyFee: (fee: BigNumber, speed: FeeLabel) => void
-  networkSpeed?: ExtendedFeeLabel
+  networkSpeed: ExtendedFeeLabel
   applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
   transactionType: ActionEnum
 }
@@ -615,7 +615,7 @@ const FeeEditorScreen = ({
   const activeNetwork = useRecoilValue(networkState)
   const initialRoutes = [{ key: 'standard', title: 'Standard' }]
   let currentIndex = 0
-  if (!isEIP1559Fees(getAsset(activeNetwork, selectedAsset).chain)) {
+  if (isEIP1559Fees(getAsset(activeNetwork, selectedAsset).chain)) {
     initialRoutes.push({ key: 'customize', title: 'Customize' })
     if (networkSpeed === CustomFeeLabel.Custom) {
       currentIndex = 1
