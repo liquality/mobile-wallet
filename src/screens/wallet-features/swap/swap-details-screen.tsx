@@ -1,6 +1,11 @@
 import * as React from 'react'
-import { ScrollView, useColorScheme } from 'react-native'
-import { Box, Pressable, Text } from '../../../theme'
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  useColorScheme,
+} from 'react-native'
+import { Box, faceliftPalette, Pressable, Text } from '../../../theme'
 import {
   AccountType,
   ActionEnum,
@@ -12,6 +17,7 @@ import { scale } from 'react-native-size-matters'
 import { AppIcons } from '../../../assets'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
+  balanceStateFamily,
   fiatRatesState,
   historyStateFamily,
   networkState,
@@ -20,7 +26,7 @@ import {
 } from '../../../atoms'
 import AssetIcon from '../../../components/asset-icon'
 import { BigNumber } from '@liquality/types'
-import { formatDate, labelTranslateFn, SCREEN_WIDTH } from '../../../utils'
+import { formatDate, labelTranslateFn, Log, SCREEN_WIDTH } from '../../../utils'
 import SwapPartitionRow from './swap-partition-row'
 import SwapThreeRow from './swap-three-row'
 import TransactionTimeline from './transaction-timeline'
@@ -37,7 +43,7 @@ import { getSwapProvider } from '@liquality/wallet-core/dist/src/factory/swap'
 import { unitToCurrency, getAsset, getChain } from '@liquality/cryptoassets'
 import { SwapQuote } from '@liquality/wallet-core/dist/src/swaps/types'
 import { TimelineStep } from '@liquality/wallet-core/dist/src/utils/timeline'
-import { getTimeline } from '../../../store/store'
+import { getTimeline, speedUpTransaction } from '../../../store/store'
 import {
   FeeLabel,
   SwapHistoryItem,
@@ -80,15 +86,19 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   const endTime = historyItem ? historyItem.endTime : 0
   const [timeline, setTimeline] = React.useState<TimelineStep[]>()
   const setSwapPair = useSetRecoilState(swapPairState)
-  const [, setCustomFee] = React.useState<number>(0)
-
   const [isExpanded, setIsExpanded] = React.useState(false)
   const [swapProvider, setSwapProvider] = React.useState<SwapProvider>()
   const [showFeeEditorModal, setShowFeeEditorModal] = React.useState(false)
   const [networkSpeed, setNetworkSpeed] = React.useState<ExtendedFeeLabel>(
     historyItem.feeLabel || FeeLabel.Average,
   )
-
+  const [isLoading, setIsLoading] = React.useState(false)
+  const fromBalance = useRecoilValue(
+    balanceStateFamily({
+      asset: historyItem.from || '',
+      assetId: historyItem.fromAccountId,
+    }),
+  )
   const {
     from,
     to,
@@ -150,6 +160,34 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
     })
   }
 
+  const handleIntiatSpeedUpSwap = async (fee: number) => {
+    try {
+      const amount = unitToCurrency(
+        getAsset(activeNetwork, historyItem.from),
+        fromBalance || 0,
+      )
+      if (amount.minus(fee).gte(0)) {
+        setIsLoading(true)
+        await speedUpTransaction(
+          historyItem.id,
+          historyItem.swapTx.hash, // swapTx key is missing for SwapHistoryItem interface
+          historyItem.from,
+          activeNetwork,
+          fee,
+        )
+      } else {
+        Alert.alert('Unable to Speed up the transaction because of low balance')
+      }
+      setIsLoading(false)
+      setNetworkSpeed(networkSpeed)
+    } catch (error) {
+      setIsLoading(false)
+      setNetworkSpeed(historyItem.feeLabel)
+      Log(`Failed to perform swap: ${error}`, 'error')
+      Alert.alert(labelTranslateFn('swapReviewScreen.failedToPerfSwap')!)
+    }
+  }
+
   const computeRate = React.useCallback((swapQuote: SwapQuote) => {
     return dpUI(calculateQuoteRate(swapQuote))
   }, [])
@@ -178,10 +216,10 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
 
   const customComponent: Array<CustomComponentProps> = []
 
-  let confirmationNum = 0
+  let confirmationNum: any
 
   if (timeline?.length) {
-    confirmationNum = timeline[0].tx?.confirmations || 0
+    confirmationNum = timeline[0].tx?.confirmations
     let isFromIdAdded = false
     for (let item of timeline) {
       if (item.tx?.status === TxStatus.Failed) {
@@ -430,13 +468,17 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
                   }`}
               </Text>
             </Box>
-            {confirmationNum === 0 ? (
-              <Text
-                onPress={handleSpeedUpTransaction}
-                variant={'speedUp'}
-                color={'link'}
-                tx="common.speedUp"
-              />
+            {confirmationNum && confirmationNum === 0 ? (
+              isLoading ? (
+                <ActivityIndicator color={faceliftPalette.buttonActive} />
+              ) : (
+                <Text
+                  onPress={handleSpeedUpTransaction}
+                  variant={'speedUp'}
+                  color={'link'}
+                  tx="common.speedUp"
+                />
+              )
             ) : null}
           </Box>
         </Box>
@@ -568,8 +610,10 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
           selectedAsset={historyItem.from}
           amount={new BigNumber(historyItem.fromAmount)}
           applyFee={(fee) => {
-            setCustomFee(fee.toNumber())
             setShowFeeEditorModal(false)
+            if (confirmationNum && confirmationNum === 0) {
+              handleIntiatSpeedUpSwap(fee.toNumber())
+            }
           }}
           transactionType={ActionEnum.SWAP}
           applyNetworkSpeed={setNetworkSpeed}
