@@ -91,29 +91,31 @@ const TransactionTimeline = ({
             </Box>
           </Box>
         ))}
-        <Box flexDirection={'row'} alignItems="flex-end">
-          <Box
-            width={dotAndCircleWidth}
-            borderBottomColor="greyMeta"
-            borderBottomWidth={1}
-          />
-          <Text
-            marginLeft={'xl'}
-            variant="normalText"
-            style={styles.marginBottomAdjust}
-            color={'greyMeta'}>{`${labelTranslateFn(
-            'common.completed',
-          )} ${completed}`}</Text>
-          <Box position={'absolute'} zIndex={-1} bottom={0}>
-            <Box width={dotAndCircleWidth} alignItems="center">
-              <Box
-                height={scale(25)}
-                width={scale(1)}
-                backgroundColor="greyMeta"
-              />
+        {completed ? (
+          <Box flexDirection={'row'} alignItems="flex-end">
+            <Box
+              width={dotAndCircleWidth}
+              borderBottomColor="greyMeta"
+              borderBottomWidth={1}
+            />
+            <Text
+              marginLeft={'xl'}
+              variant="normalText"
+              style={styles.marginBottomAdjust}
+              color={'greyMeta'}>{`${labelTranslateFn(
+              'common.completed',
+            )} ${completed}`}</Text>
+            <Box position={'absolute'} zIndex={-1} bottom={0}>
+              <Box width={dotAndCircleWidth} alignItems="center">
+                <Box
+                  height={scale(25)}
+                  width={scale(1)}
+                  backgroundColor="greyMeta"
+                />
+              </Box>
             </Box>
           </Box>
-        </Box>
+        ) : null}
       </Box>
     </Box>
   )
