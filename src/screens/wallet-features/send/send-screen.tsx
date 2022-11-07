@@ -490,6 +490,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               networkSpeed={networkSpeed}
               applyFee={applyFee}
               applyNetworkSpeed={setNetworkSpeed}
+              transactionType={ActionEnum.SEND}
             />
           )}
         </Box>
