@@ -1,7 +1,9 @@
 import React, { FC } from 'react'
 import { useTheme } from '@shopify/restyle'
-import { ThemeType as Theme, Box, RoundButton } from '../theme'
-import { Animated, StyleSheet } from 'react-native'
+import { ThemeType as Theme, Box, faceliftPalette } from '../theme'
+import { Animated, Pressable, StyleSheet } from 'react-native'
+import { AppIcons } from '../assets'
+import { scale } from 'react-native-size-matters'
 
 type AnimatedBoxProps = {
   translateX: any
@@ -11,6 +13,7 @@ type AnimatedBoxProps = {
   handleReceiveBtnPress: () => void
 }
 
+const { SwapIconGrey, SendIcon, ReceiveIcon, DollarSign } = AppIcons
 const AnimatedBox: FC<AnimatedBoxProps> = (props) => {
   const {
     close,
@@ -25,12 +28,11 @@ const AnimatedBox: FC<AnimatedBoxProps> = (props) => {
     <Box
       justifyContent="center"
       alignItems="center"
-      borderBottomWidth={1}
-      onPress={close}
+      onTouchStart={close}
       style={[
         styles.box,
         {
-          borderBottomColor: theme.colors.mainBorderColor,
+          borderColor: theme.colors.mainBorderColor,
         },
       ]}>
       <Animated.View
@@ -40,21 +42,36 @@ const AnimatedBox: FC<AnimatedBoxProps> = (props) => {
             transform: [{ translateX }],
           },
         ]}>
-        <RoundButton
-          onPress={handleSendBtnPress}
-          type="SEND"
-          variant="secondary"
-        />
-        <RoundButton
-          onPress={handleSwapBtnPress}
-          type="SWAP"
-          variant="secondary"
-        />
-        <RoundButton
-          onPress={handleReceiveBtnPress}
-          type="RECEIVE"
-          variant="secondary"
-        />
+        <Pressable onPress={handleSendBtnPress} style={styles.button}>
+          <SendIcon
+            width={scale(12)}
+            height={scale(23)}
+            strokeWidth={0.7}
+            stroke={faceliftPalette.active}
+            fill={faceliftPalette.active}
+          />
+        </Pressable>
+        <Pressable onPress={handleSwapBtnPress} style={styles.button}>
+          <SwapIconGrey
+            width={scale(14)}
+            height={scale(16)}
+            strokeWidth={0.7}
+            stroke={faceliftPalette.active}
+            fill={faceliftPalette.active}
+          />
+        </Pressable>
+        <Pressable onPress={handleReceiveBtnPress} style={styles.button}>
+          <ReceiveIcon
+            width={scale(12)}
+            height={scale(23)}
+            strokeWidth={0.7}
+            stroke={faceliftPalette.active}
+            fill={faceliftPalette.active}
+          />
+        </Pressable>
+        <Pressable onPress={handleReceiveBtnPress} style={styles.button}>
+          <DollarSign fill={faceliftPalette.active} />
+        </Pressable>
       </Animated.View>
     </Box>
   )
@@ -62,14 +79,19 @@ const AnimatedBox: FC<AnimatedBoxProps> = (props) => {
 
 const styles = StyleSheet.create({
   animatedView: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
     flex: 1,
+    flexDirection: 'row',
+    backgroundColor: faceliftPalette.selectedBackground,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   box: {
-    flex: 0.5,
+    backgroundColor: faceliftPalette.selectedBackground,
+    flex: 0.6,
     height: '100%',
+  },
+  button: {
+    marginLeft: scale(30),
   },
 })
 
