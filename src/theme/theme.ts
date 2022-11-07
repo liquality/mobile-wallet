@@ -73,6 +73,7 @@ export const theme = createTheme({
     sectionTitleColor: palette.sectionTitleColor,
     warningButton: faceliftPalette.warningButton,
     lightInputActiveColor: faceliftPalette.lightInputActiveColor,
+    lightWhite: faceliftPalette.lightWhite,
   },
   spacing: {
     vs: scale(2),

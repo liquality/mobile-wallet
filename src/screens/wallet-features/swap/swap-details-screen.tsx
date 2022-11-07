@@ -80,6 +80,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
   const endTime = historyItem ? historyItem.endTime : 0
   const [timeline, setTimeline] = React.useState<TimelineStep[]>()
   const setSwapPair = useSetRecoilState(swapPairState)
+  const [, setCustomFee] = React.useState<number>(0)
 
   const [isExpanded, setIsExpanded] = React.useState(false)
   const [swapProvider, setSwapProvider] = React.useState<SwapProvider>()
@@ -177,10 +178,10 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
 
   const customComponent: Array<CustomComponentProps> = []
 
-  let isConfirmationZero = 0
+  let confirmationNum = 0
 
   if (timeline?.length) {
-    isConfirmationZero = timeline[0].tx?.confirmations || 0
+    confirmationNum = timeline[0].tx?.confirmations || 0
     let isFromIdAdded = false
     for (let item of timeline) {
       if (item.tx?.status === TxStatus.Failed) {
@@ -429,7 +430,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
                   }`}
               </Text>
             </Box>
-            {isConfirmationZero === 0 ? (
+            {confirmationNum === 0 ? (
               <Text
                 onPress={handleSpeedUpTransaction}
                 variant={'speedUp'}
@@ -566,13 +567,14 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
           onClose={setShowFeeEditorModal}
           selectedAsset={historyItem.from}
           amount={new BigNumber(historyItem.fromAmount)}
-          applyFee={() => {
-            // setCustomFee(fee.toNumber())
+          applyFee={(fee) => {
+            setCustomFee(fee.toNumber())
             setShowFeeEditorModal(false)
           }}
           transactionType={ActionEnum.SWAP}
           applyNetworkSpeed={setNetworkSpeed}
           networkSpeed={networkSpeed}
+          isSpeedUp={true}
         />
       )}
     </Box>

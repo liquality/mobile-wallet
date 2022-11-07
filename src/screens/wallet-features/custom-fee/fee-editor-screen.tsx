@@ -29,6 +29,7 @@ import {
   OVERVIEW_TAB_STYLE,
   TabBar,
   Text,
+  ColorType,
 } from '../../../theme'
 import SlowIcon from '../../../assets/icons/slow.svg'
 import AverageIcon from '../../../assets/icons/average.svg'
@@ -88,18 +89,26 @@ type PresetObjectType = {
   [K in FeeLabel]?: PresetType
 }
 
+const feelabelInNum = {
+  [`${FeeLabel.Slow}`]: 0,
+  [`${FeeLabel.Average}`]: 1,
+  [`${FeeLabel.Fast}`]: 2,
+}
+
 const StandardRoute = ({
   selectedAsset,
   amount,
   applyFee,
   applyNetworkSpeed,
   networkSpeed,
+  isSpeedUp = false,
 }: {
   selectedAsset: string
   amount: BigNumber
   applyFee: (fee: BigNumber, speed: FeeLabel) => void
   applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
   networkSpeed?: ExtendedFeeLabel
+  isSpeedUp?: boolean
 }) => {
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
@@ -111,6 +120,12 @@ const StandardRoute = ({
   const nativeAssetCode = getNativeAsset(selectedAsset)
   const accountForAsset = useRecoilValue(accountForAssetState(nativeAssetCode))
   const [presets, setPresets] = useState<PresetObjectType>({})
+
+  let disabledSpeed = 0
+
+  if (networkSpeed && isSpeedUp) {
+    disabledSpeed = feelabelInNum[networkSpeed]
+  }
 
   const handleApplyPress = () => {
     if (!speed || !totalFees || !gasFees) return
@@ -193,6 +208,14 @@ const StandardRoute = ({
     fetchFeeDetailsForAsset(selectedAsset).then(setGasFees)
   }, [activeNetwork, selectedAsset])
 
+  let buttonActiveState = true
+
+  if (isSpeedUp) {
+    buttonActiveState = networkSpeed !== speed
+  } else {
+    buttonActiveState = !!speed
+  }
+
   return (
     <Box flex={1}>
       <Box
@@ -201,68 +224,92 @@ const StandardRoute = ({
         justifyContent="space-between"
         marginTop="xl">
         {Array.of<FeeLabel>(FeeLabel.Slow, FeeLabel.Average, FeeLabel.Fast).map(
-          (feeLabel) => (
-            <Pressable
-              key={uuidv4()}
-              onPress={() => {
-                setSpeed(feeLabel)
-              }}>
-              <Box
-                backgroundColor={
-                  speed === feeLabel
-                    ? 'selectedBackgroundColor'
-                    : 'blockBackgroundColor'
-                }
-                padding="l"
-                width={scale(108)}
-                height={scale(274)}
-                borderRadius={3}>
-                {feeLabel === FeeLabel.Slow ? (
-                  <SlowIcon />
-                ) : feeLabel === FeeLabel.Average ? (
-                  <AverageIcon />
-                ) : (
-                  <FastIcon />
-                )}
-                <Text
-                  variant="gasIndicatorLabel"
-                  color="slowColor"
-                  marginTop="xl">
-                  {feeLabel.toUpperCase()}
-                </Text>
-                <Text variant="normalText" color="slowColor">
-                  {gasFees?.[feeLabel]?.wait
-                    ? `~ ${gasFees[feeLabel].wait / 1000}s`
-                    : ''}
-                </Text>
-                {gasFees?.[feeLabel]?.fee && (
-                  <Text
-                    variant="normalText"
-                    color="textColor"
-                    lineBreakMode={'middle'}
-                    numberOfLines={2}
-                    marginTop="l">
-                    ~ {`${selectedAsset} ${presets[feeLabel]?.amount}`}
-                  </Text>
-                )}
-
-                <Text variant="normalText" color="textColor">
-                  {`$${presets[feeLabel]?.fiat}`}
-                </Text>
-                {isEIP1559Fees(getAsset(activeNetwork, selectedAsset).chain) &&
-                  gasFees?.[feeLabel].fee && (
-                    <Fragment>
-                      <Text variant="normalText" color="greyMeta" marginTop="l">
-                        {labelTranslateFn('customFeeScreen.max')}
-                      </Text>
-                      <Text variant="normalText" color="greyMeta">
-                        {`$${presets[feeLabel]?.max}`}
-                      </Text>
-                    </Fragment>
+          (feeLabel, index) => {
+            let backgroundColor: keyof ColorType
+            let disabledTapEvent = false
+            if (disabledSpeed - 1 >= index) {
+              disabledTapEvent = true
+            }
+            backgroundColor =
+              speed === feeLabel
+                ? 'selectedBackgroundColor'
+                : 'blockBackgroundColor'
+            return (
+              <Pressable
+                key={uuidv4()}
+                onPress={() => {
+                  if (disabledTapEvent) return
+                  setSpeed(feeLabel)
+                }}>
+                <Box
+                  backgroundColor={backgroundColor}
+                  padding="l"
+                  width={scale(108)}
+                  height={scale(274)}
+                  borderRadius={3}>
+                  {feeLabel === FeeLabel.Slow ? (
+                    <SlowIcon />
+                  ) : feeLabel === FeeLabel.Average ? (
+                    <AverageIcon />
+                  ) : (
+                    <FastIcon />
                   )}
-              </Box>
-            </Pressable>
-          ),
+                  <Text
+                    variant="gasIndicatorLabel"
+                    color="slowColor"
+                    marginTop="xl">
+                    {feeLabel.toUpperCase()}
+                  </Text>
+                  <Text variant="normalText" color="slowColor">
+                    {gasFees?.[feeLabel]?.wait
+                      ? `~ ${gasFees[feeLabel].wait / 1000}s`
+                      : ''}
+                  </Text>
+                  {gasFees?.[feeLabel]?.fee && (
+                    <Text
+                      variant="normalText"
+                      color="textColor"
+                      lineBreakMode={'middle'}
+                      numberOfLines={2}
+                      marginTop="l">
+                      ~ {`${selectedAsset} ${presets[feeLabel]?.amount}`}
+                    </Text>
+                  )}
+
+                  <Text variant="normalText" color="textColor">
+                    {`$${presets[feeLabel]?.fiat}`}
+                  </Text>
+                  {isEIP1559Fees(
+                    getAsset(activeNetwork, selectedAsset).chain,
+                  ) &&
+                    gasFees?.[feeLabel].fee && (
+                      <Fragment>
+                        <Text
+                          variant="normalText"
+                          color="greyMeta"
+                          marginTop="l">
+                          {labelTranslateFn('customFeeScreen.max')}
+                        </Text>
+                        <Text variant="normalText" color="greyMeta">
+                          {`$${presets[feeLabel]?.max}`}
+                        </Text>
+                      </Fragment>
+                    )}
+                  {disabledTapEvent ? (
+                    <Box
+                      position={'absolute'}
+                      top={0}
+                      left={0}
+                      right={0}
+                      bottom={0}
+                      zIndex={10}
+                      backgroundColor={'semiTransparentWhite'}
+                    />
+                  ) : null}
+                </Box>
+              </Pressable>
+            )
+          },
         )}
       </Box>
       <ButtonFooter>
@@ -272,7 +319,7 @@ const StandardRoute = ({
           label={{ tx: 'common.apply' }}
           onPress={handleApplyPress}
           isBorderless={true}
-          isActive={!!speed}
+          isActive={buttonActiveState}
         />
       </ButtonFooter>
     </Box>
@@ -291,6 +338,7 @@ const CustomizeRoute = ({
   applyFee: (fee: BigNumber, speed: FeeLabel) => void
   applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
   networkSpeed?: ExtendedFeeLabel
+  isSpeedUp?: boolean
 }) => {
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
@@ -600,6 +648,7 @@ type FeeEditorScreenType = {
   networkSpeed: ExtendedFeeLabel
   applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
   transactionType: ActionEnum
+  isSpeedUp?: boolean
 }
 
 const FeeEditorScreen = ({
@@ -610,6 +659,7 @@ const FeeEditorScreen = ({
   networkSpeed,
   applyNetworkSpeed,
   transactionType,
+  isSpeedUp = false,
 }: FeeEditorScreenType) => {
   const layout = useWindowDimensions()
   const activeNetwork = useRecoilValue(networkState)
@@ -634,6 +684,7 @@ const FeeEditorScreen = ({
             applyFee={applyFee}
             networkSpeed={networkSpeed}
             applyNetworkSpeed={applyNetworkSpeed}
+            isSpeedUp={isSpeedUp}
           />
         )
       case 'customize':
@@ -644,6 +695,7 @@ const FeeEditorScreen = ({
             applyFee={applyFee}
             networkSpeed={networkSpeed}
             applyNetworkSpeed={applyNetworkSpeed}
+            isSpeedUp={isSpeedUp}
           />
         )
     }
