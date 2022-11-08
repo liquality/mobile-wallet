@@ -195,6 +195,7 @@ export type MainStackParamList = {
   ActivityFilterScreen: StackPayload
   SortingModal: StackPayload
   AdvancedFilterModal: StackPayload
+  AccountManagementScreen: StackPayload
 }
 
 export type RootTabParamList = {
