@@ -78,3 +78,7 @@ export const IMAGE_BACKGROUND_STYLE: ViewStyle = {
   height: scale(30),
   width: SCREEN_WIDTH / 4.6,
 }
+
+export const ALIGN_ITEM_FLEX_END: ViewStyle = {
+  alignItems: 'flex-end',
+}

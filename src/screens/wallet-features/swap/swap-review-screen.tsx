@@ -62,7 +62,6 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         toAsset,
         fromAmount,
         toAmount,
-        quote,
         fromNetworkFee,
         toNetworkFee,
       }: SwapInfoType = swapTransaction
