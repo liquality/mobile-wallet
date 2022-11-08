@@ -104,7 +104,7 @@ const PasswordCreationScreen = ({
   }
 
   return (
-    <KeyboardAvoidingView>
+    <KeyboardAvoidingView enabled={false}>
       <LinearGradient
         colors={GRADIENT_COLORS}
         style={[GRADIENT_STYLE, { paddingTop: headerHeight }]}>

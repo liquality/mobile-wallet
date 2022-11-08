@@ -78,7 +78,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       : INPUT_OPACITY_ACTIVE
 
   return (
-    <KeyboardAvoidingView>
+    <KeyboardAvoidingView enabled={false}>
       <LinearGradient
         colors={GRADIENT_COLORS}
         style={[GRADIENT_STYLE, { paddingTop: headerHeight }]}>
