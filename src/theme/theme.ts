@@ -73,6 +73,7 @@ export const theme = createTheme({
     sectionTitleColor: palette.sectionTitleColor,
     warningButton: faceliftPalette.warningButton,
     lightInputActiveColor: faceliftPalette.lightInputActiveColor,
+    lightWhite: faceliftPalette.lightWhite,
   },
   spacing: {
     vs: scale(2),
@@ -433,6 +434,11 @@ export const theme = createTheme({
       fontWeight: '400',
       lineHeight: scale(19),
     },
+    h8: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(13),
+      fontWeight: '400',
+    },
     h10: {
       fontFamily: Fonts.Regular,
       fontSize: scale(12),
@@ -613,6 +619,7 @@ export const theme = createTheme({
       backgroundColor: 'yellow',
     },
   },
+  touchableOpacityVariants: {},
   buttonVariants: {
     l: {
       flexDirection: 'row',

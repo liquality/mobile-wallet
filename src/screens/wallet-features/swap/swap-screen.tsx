@@ -990,7 +990,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             setCustomFee(fee.toNumber())
             setShowFeeEditorModal(false)
           }}
+          transactionType={ActionEnum.SWAP}
           applyNetworkSpeed={setNetworkSpeed}
+          networkSpeed={networkSpeed}
         />
       )}
     </Box>
