@@ -78,16 +78,16 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       : INPUT_OPACITY_ACTIVE
 
   return (
-    <KeyboardAvoidingView>
+    <KeyboardAvoidingView enabled={false}>
       <LinearGradient
         colors={GRADIENT_COLORS}
         style={[GRADIENT_STYLE, { paddingTop: headerHeight }]}>
         <LogoFull width={scale(100)} />
         <Box flex={0.9}>
-          <Box marginTop="xl">
-            <OneWalletAllChains width={scale(175)} />
+          <Box marginTop="m">
+            <OneWalletAllChains width={scale(165)} />
           </Box>
-          <Box flex={0.5} justifyContent="center">
+          <Box flex={0.5} justifyContent="center" marginTop={'m'}>
             <Text variant="mainInputLabel" tx="loginScreen.password" />
             <TextInput
               variant={'passwordInputs'}
@@ -102,7 +102,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               onSubmitEditing={onUnlock}
               style={{
                 opacity: passwordInputOpacity,
-                height: 28,
               }}
             />
             {error.length ? (
@@ -118,7 +117,11 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
                   tx="loginScreen.passwordError"
                 />
               </Box>
-            ) : null}
+            ) : (
+              <Box marginTop={'m'} padding={'s'} alignSelf="flex-start">
+                <Text padding={'s'} />
+              </Box>
+            )}
           </Box>
         </Box>
         <Pressable

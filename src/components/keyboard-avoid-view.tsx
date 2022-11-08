@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {
   KeyboardAvoidingView as KAV,
+  KeyboardAvoidingViewProps,
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
@@ -9,14 +10,14 @@ import { FLEX_1 } from '../theme'
 
 export const KeyboardAvoidingView = ({
   children,
-}: {
-  children: React.ReactNode
-}) => {
+  ...rest
+}: KeyboardAvoidingViewProps) => {
   return (
     <KAV
       behavior={Platform.OS === 'ios' ? 'position' : 'height'}
       style={FLEX_1}
-      contentContainerStyle={FLEX_1}>
+      contentContainerStyle={FLEX_1}
+      {...rest}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         {children}
       </TouchableWithoutFeedback>
