@@ -35,7 +35,7 @@ const SwitchChainScreen = ({
 
   console.log(
     route.params,
-    'approve route params',
+    'SWITCH CHAIN PARAMOOS',
     route.params.walletConnectData.chainId,
   )
 
@@ -45,9 +45,9 @@ const SwitchChainScreen = ({
 
     emitterController.emit(OFF_SWITCH_CHAIN, {
       address: [accountForConnectedChain?.address],
-      chainId: data.chainId,
+      chainId: parseInt(route.params.walletConnectData.chainId),
     })
-    //setIsOpen(false)
+    navigation.navigate('OverviewScreen')
   }
 
   const reject = () => {}

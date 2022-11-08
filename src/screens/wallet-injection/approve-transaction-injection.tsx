@@ -31,47 +31,21 @@ const ApproveTransactionInjectionScreen = ({
 }: ApproveTransactionInjectionScreenProps) => {
   const { activeWalletId } = wallet.state
   const activeNetwork = useRecoilValue(networkState)
+  const { chainId, walletConnectData } = route.params
 
   console.log(route.params, 'approve route params')
 
   const send = async () => {
-    const {
-      data: txData,
-      value,
-      to,
-      gasPrice,
-      chainId,
-    } = route.params.walletConnectData.data
-
-    /*   const hash = await sendTransaction(chainId, {
-      to,
-      value,
-      data: txData,
-      maxPriorityFeePerGas: gasPrice,
-      maxFeePerGas: gasPrice,
-    }) */
     let asset = getNativeAssetCode(activeNetwork, 'polygon')
 
-    console.log(
-      {
-        asset,
-        activeNetwork,
-        to: to,
-        value: value,
-        fee: 0.1,
-        feeLabel: 'average',
-        memo: '',
-      },
-      'SEND TRANSACTION PARAMS',
-    )
     const hash = await sendTransaction({
       asset,
       activeNetwork,
-      to: to,
-      value: value,
-      fee: 0.1,
+      to: walletConnectData.to,
+      value: walletConnectData.value,
+      fee: walletConnectData.gas,
       feeLabel: 'average',
-      memo: txData,
+      memo: walletConnectData.data,
     })
 
     emitterController.emit(OFF_SEND_TRANSACTION, hash)
