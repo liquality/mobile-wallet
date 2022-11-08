@@ -3,7 +3,6 @@ import { Alert, FlatList, StyleSheet } from 'react-native'
 import { getAllAssets, getAsset } from '@liquality/cryptoassets'
 import AssetIcon from './asset-icon'
 import SearchBox from './ui/search-box'
-import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import { networkState, showSearchBarInputState } from '../atoms'
 import { Box, faceliftPalette, Text } from '../theme'
@@ -93,7 +92,7 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
     //TODO we still need to handle custom tokens
     let myAssets: Asset[] = []
 
-    if (activeNetwork === Network.Testnet && enabledAssets) {
+    if (enabledAssets) {
       myAssets =
         enabledAssets.reduce((assetList: Asset[], asset) => {
           if (getAllAssets().testnet.hasOwnProperty(asset)) {
