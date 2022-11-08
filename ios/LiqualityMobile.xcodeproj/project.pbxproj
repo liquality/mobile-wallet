@@ -25,7 +25,7 @@
 		640CEDF0FE9E3CD8A30E2882 /* libPods-Liquality.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AD160C3FEA18A1F049FA716 /* libPods-Liquality.a */; };
 		69F0F60CC3F14C998DFE233B /* AnekBangla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0066BB11984F4D07B9A64C1E /* AnekBangla-Regular.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		E4F616E72916097700F571BA /* OpenSSL.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E8680628B55955003EACCC /* OpenSSL.xcframework */; };
+		E4AE4848291975ED0083534D /* OpenSSL.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E8680628B55955003EACCC /* OpenSSL.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4F616E72916097700F571BA /* OpenSSL.xcframework in Frameworks */,
+				E4AE4848291975ED0083534D /* OpenSSL.xcframework in Frameworks */,
 				0C80B921A6F3F58F76C31292 /* (null) in Frameworks */,
 				640CEDF0FE9E3CD8A30E2882 /* libPods-Liquality.a in Frameworks */,
 			);
@@ -495,7 +495,7 @@
 				CODE_SIGN_ENTITLEMENTS = Liquality.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = 5K4FAG7NH8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = LiqualityMobile/Info.plist;
@@ -584,7 +584,7 @@
 				CODE_SIGN_ENTITLEMENTS = Liquality.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = 5K4FAG7NH8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = LiqualityMobile/Info.plist;

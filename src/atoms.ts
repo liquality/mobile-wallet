@@ -418,9 +418,13 @@ export const sortedAccountsIdsState = selector<AccountIdType[]>({
           fiatRates[account2.code],
         )
 
-        if (fiatBalance2 !== '--') {
-          return fiatBalance2.minus(fiatBalance1).toNumber()
+        if (!BigNumber.isBigNumber(fiatBalance1)) {
+          return -1
+        } else if (!BigNumber.isBigNumber(fiatBalance2)) {
+          return 1
         }
+
+        return fiatBalance2.minus(fiatBalance1).toNumber()
       })
       .map((account) => ({ id: account.id, name: account.code }))
   },

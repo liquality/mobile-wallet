@@ -27,6 +27,8 @@ const AssetFlatList = (props: AssetFlatListPropsType) => {
 
   return (
     <FlatList
+      showsVerticalScrollIndicator={false}
+      alwaysBounceVertical={true}
       data={filteredAccounts || accounts}
       renderItem={renderAsset}
       keyExtractor={(item) => item.id}
