@@ -82,16 +82,19 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: faceliftPalette.selectedBackground,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-around',
     alignItems: 'center',
   },
   box: {
     backgroundColor: faceliftPalette.selectedBackground,
-    flex: 0.6,
+    flex: 0.55,
     height: '100%',
   },
   button: {
-    marginLeft: scale(30),
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    height: '100%',
+    marginHorizontal: scale(5),
   },
 })
 

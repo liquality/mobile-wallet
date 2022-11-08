@@ -16,11 +16,14 @@ type AssetListSwipeableRowProps = {
   children: React.ReactElement
   assetSymbol: string
   assetData: AccountType
+  isNested: boolean
+  onOpen: () => void
+  onClose: () => void
 }
 
 const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
   const width = Dimensions.get('screen').width
-  const { children, assetData, assetSymbol } = props
+  const { children, assetData, assetSymbol, onClose, onOpen, isNested } = props
   const ref = useRef<Swipeable>()
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
 
@@ -87,9 +90,12 @@ const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
 
   return (
     <Swipeable
+      enabled={!isNested}
       renderLeftActions={renderLeftActions}
       renderRightActions={renderRightActions}
       ref={ref}
+      onSwipeableWillOpen={onOpen}
+      onSwipeableWillClose={onClose}
       friction={2}
       leftThreshold={50}
       rightThreshold={50}
