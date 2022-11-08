@@ -30,6 +30,7 @@ const AssetFlatList = (props: AssetFlatListPropsType) => {
       data={filteredAccounts || accounts}
       renderItem={renderAsset}
       keyExtractor={(item) => item.id}
+      showsVerticalScrollIndicator={false}
     />
   )
 }
