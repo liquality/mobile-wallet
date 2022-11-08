@@ -89,7 +89,15 @@ const InitInjectionScreen = ({ navigation, route }: NftDetailScreenProps) => {
       <Text style={styles.subheadingText}>{data?.peerMeta.name}</Text>
 
       <DottedArrow style={styles.dottedArrow} />
-      <AssetIcon size={60} chain={'ethereum'} asset={'ETH'} />
+
+      {connectedChain[0] ? (
+        <AssetIcon
+          size={60}
+          chain={connectedChain[0]}
+          asset={getNativeAssetCode(activeNetwork, connectedChain[0])}
+        />
+      ) : null}
+
       <BlueLine style={styles.dottedArrow} />
       {connectedChain[0] ? (
         <Text style={styles.subheadingText}>
