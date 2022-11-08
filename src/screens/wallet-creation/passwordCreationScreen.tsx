@@ -51,14 +51,6 @@ const PasswordCreationScreen = ({
   const passwordConfirmationInput = useInputState('')
   const [error, setError] = useState('')
 
-  const resetInput = () => {
-    if (error) {
-      setError('')
-      passwordInput.reset('')
-      passwordConfirmationInput.reset('')
-    }
-  }
-
   const arePasswordsValid = () => {
     const isError =
       !!passwordConfirmationInput.value &&
@@ -97,8 +89,7 @@ const PasswordCreationScreen = ({
 
   if (
     passValue.trim().length >= PASSWORD_LENGTH &&
-    passConfirmValue.trim().length >= PASSWORD_LENGTH &&
-    passValue === passConfirmValue
+    passConfirmValue.trim().length >= PASSWORD_LENGTH
   ) {
     disabled = false
   }
@@ -122,7 +113,6 @@ const PasswordCreationScreen = ({
             <TextInput
               variant={'passwordInputs'}
               onChangeText={passwordInput.onChangeText}
-              onFocus={resetInput}
               value={passwordInput.value}
               secureTextEntry
               autoCorrect={false}
@@ -141,7 +131,10 @@ const PasswordCreationScreen = ({
             <TextInput
               variant={'passwordInputs'}
               onChangeText={passwordConfirmationInput.onChangeText}
-              onFocus={resetInput}
+              onFocus={() => {
+                setError('')
+                passwordConfirmationInput.reset('')
+              }}
               value={passwordConfirmationInput.value}
               secureTextEntry
               autoCorrect={false}
@@ -162,15 +155,7 @@ const PasswordCreationScreen = ({
                 backgroundColor={'mainBackground'}>
                 <Text color={'danger'} tx="loginScreen.passwordError" />
               </Box>
-            ) : (
-              <Box
-                marginTop="m"
-                borderRadius={5}
-                padding={'s'}
-                alignSelf="flex-start">
-                <Text color={'danger'} />
-              </Box>
-            )}
+            ) : null}
           </Box>
           {!error.length ? (
             <Text
@@ -179,9 +164,7 @@ const PasswordCreationScreen = ({
               variant={'hintLabel'}
               tx="passwordCreationScreen.password8char"
             />
-          ) : (
-            <Text marginTop={'s'} opacity={0.6} variant={'hintLabel'} />
-          )}
+          ) : null}
         </Box>
         <Pressable
           label={{ tx: 'common.next' }}
