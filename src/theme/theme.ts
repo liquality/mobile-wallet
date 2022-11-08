@@ -760,6 +760,7 @@ export const theme = createTheme({
       fontWeight: '500',
       fontSize: scale(15),
       fontFamily: Fonts.Regular,
+      height: 28,
     },
     seedPhraseInputs: {
       color: 'darkGrey',

@@ -102,7 +102,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
               onSubmitEditing={onUnlock}
               style={{
                 opacity: passwordInputOpacity,
-                height: 28,
               }}
             />
             {error.length ? (
