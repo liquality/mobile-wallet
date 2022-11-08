@@ -162,7 +162,15 @@ const PasswordCreationScreen = ({
                 backgroundColor={'mainBackground'}>
                 <Text color={'danger'} tx="loginScreen.passwordError" />
               </Box>
-            ) : null}
+            ) : (
+              <Box
+                marginTop="m"
+                borderRadius={5}
+                padding={'s'}
+                alignSelf="flex-start">
+                <Text color={'danger'} />
+              </Box>
+            )}
           </Box>
           {!error.length ? (
             <Text
@@ -171,7 +179,9 @@ const PasswordCreationScreen = ({
               variant={'hintLabel'}
               tx="passwordCreationScreen.password8char"
             />
-          ) : null}
+          ) : (
+            <Text marginTop={'s'} opacity={0.6} variant={'hintLabel'} />
+          )}
         </Box>
         <Pressable
           label={{ tx: 'common.next' }}

@@ -691,9 +691,7 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="BackupLoginScreen"
           component={BackupLoginScreen}
-          options={{
-            headerShown: false,
-          }}
+          options={{ ...screenNavOptions, headerTransparent: true }}
         />
         <MainStack.Screen
           name="BackupSeedScreen"
