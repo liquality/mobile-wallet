@@ -41,6 +41,20 @@ const ApproveTransactionInjectionScreen = ({
     //TODO: uniswap wants u to sign a transaction without a value
     //before you sign the actual swap transaction, how would I do that using wallet core
     //when sendTransaction() function expects a value param?
+    //TODO IN THIS CASE MAKE VALUE BE 0
+
+    //TODO: Value data type might be wrong, sent in as a hex
+    //invalid hash (argument="value", value={"id":"34
+    //TODO: MAKE VALUE BE A BIG NUMBER, NOT A HEX, look at param types below:
+    /*    export declare type TransactionRequest = {
+      asset?: Asset;
+      feeAsset?: Asset;
+      to?: AddressType;
+      data?: string;
+      value?: BigNumber;
+      fee?: FeeType;
+      gasLimit?: number;
+  }; */
     const hash = await sendTransaction({
       asset,
       activeNetwork,
