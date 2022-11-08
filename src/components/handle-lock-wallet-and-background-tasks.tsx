@@ -60,6 +60,7 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
   useEffect(() => {
     emitterController.once(ON_SEND_TRANSACTION, async ({ params, chainId }) => {
       const [data] = params
+      console.log(data, 'ON SEND TRANSACTION DATA')
       navigation.navigate('ApproveTransactionInjectionScreen', {
         chainId,
         walletConnectData: { ...data },

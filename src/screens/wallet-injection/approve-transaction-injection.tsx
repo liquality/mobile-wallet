@@ -38,6 +38,9 @@ const ApproveTransactionInjectionScreen = ({
   const send = async () => {
     let asset = getNativeAssetCode(activeNetwork, 'polygon')
 
+    //TODO: uniswap wants u to sign a transaction without a value
+    //before you sign the actual swap transaction, how would I do that using wallet core
+    //when sendTransaction() function expects a value param?
     const hash = await sendTransaction({
       asset,
       activeNetwork,
