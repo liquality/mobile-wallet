@@ -434,3 +434,11 @@ export const assetScreenPopupMenuVisible = atom<boolean>({
   key: 'AssetScreenPopupMenu',
   default: false,
 })
+
+/*
+Used to indicate which row in the asset list is toggled
+ */
+export const accountToggled = atom<string | undefined>({
+  key: 'AccountToggled',
+  default: null,
+})
