@@ -86,6 +86,7 @@ import WalletConnectController from '../controllers/walletConnectController'
 import ApproveTransactionInjectionScreen from '../screens/wallet-injection/approve-transaction-injection'
 import { emitterController } from '../controllers/emitterController'
 import { INJECTION_REQUESTS } from '../controllers/constants'
+import SwitchChainScreen from '../screens/wallet-injection/switch-chain-screen'
 const { ON_SESSION_REQUEST } = INJECTION_REQUESTS
 
 const {
@@ -938,6 +939,16 @@ export const StackMainNavigator = () => {
             headerLeft: () => GoBackHeader({ navigation, route }),
           })}
         />
+        <MainStack.Screen
+          name="SwitchChainScreen"
+          component={SwitchChainScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            ...screenNavOptions,
+            headerRight: () => WalletConnectHeader({ navigation, route }),
+            headerLeft: () => GoBackHeader({ navigation, route }),
+          })}
+        />
+
         <MainStack.Screen
           name="ApproveTransactionInjectionScreen"
           component={ApproveTransactionInjectionScreen}

@@ -8,7 +8,7 @@ import BackgroundService from 'react-native-background-actions'
 import { checkPendingActionsInBackground } from '../store/store'
 import { emitterController } from '../controllers/emitterController'
 import { INJECTION_REQUESTS } from '../controllers/constants'
-const { ON_SEND_TRANSACTION, OFF_SEND_TRANSACTION } = INJECTION_REQUESTS
+const { ON_SEND_TRANSACTION, ON_SWITCH_CHAIN } = INJECTION_REQUESTS
 
 //BackgroundService.start() expect these options
 const options = {
@@ -32,6 +32,7 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
   const [isOpen, setIsOpen] = useState(false)
   //const [data, setData] = useState()
   const [chainId, setChainId] = useState()
+  const [switchChainId, setSwitchChainId] = useState()
 
   const handleLockPress = useCallback(() => {
     //For some reason there is unexpected behaviour when navigating to loginscreen directly
@@ -59,13 +60,18 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
   useEffect(() => {
     emitterController.once(ON_SEND_TRANSACTION, async ({ params, chainId }) => {
       const [data] = params
-      //const gasPrice = await getGasPrice(CHAIN_CONFIG[chainId].gasPrices)
-      //const fee = parseInt(data.gas, 16) * gasPrice
-
-      console.log('params, chainid:', params, chainId, 'IN BACKGROUND TASK')
       navigation.navigate('ApproveTransactionInjectionScreen', {
         chainId,
-        //walletConnectData: { ...data, gasPrice, fee },
+        walletConnectData: { ...data },
+      })
+    })
+  }, [navigation])
+
+  useEffect(() => {
+    emitterController.on(ON_SWITCH_CHAIN, ({ params }) => {
+      console.log(params, 'Switch CHAIN PARAMS')
+      const [data] = params
+      navigation.navigate('SwitchChainScreen', {
         walletConnectData: { ...data },
       })
     })

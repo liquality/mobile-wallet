@@ -10,13 +10,12 @@ import { INJECTION_REQUESTS } from '../../controllers/constants'
 import ButtonFooter from '../../components/button-footer'
 import { Box, Button, faceliftPalette, Text } from '../../theme'
 import { RootStackParamList } from '../../types'
-import { networkState } from '../../atoms'
+import { accountForAssetState, networkState } from '../../atoms'
 import { Fonts, AppIcons } from '../../assets'
-import { sendTransaction } from '../../store/store'
-import { getNativeAssetCode } from '@liquality/cryptoassets'
-const { OFF_SEND_TRANSACTION } = INJECTION_REQUESTS
 
-type ApproveTransactionInjectionScreenProps = NativeStackScreenProps<
+const { OFF_SWITCH_CHAIN } = INJECTION_REQUESTS
+
+type SwitchChainScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'ApproveTransactionInjectionScreen'
 >
@@ -25,56 +24,30 @@ const { DottedLine, ChevronDown } = AppIcons
 const wallet = setupWallet({
   ...defaultOptions,
 })
-const ApproveTransactionInjectionScreen = ({
+const SwitchChainScreen = ({
   navigation,
   route,
-}: ApproveTransactionInjectionScreenProps) => {
+  walletConnectData,
+}: SwitchChainScreenProps) => {
   const { activeWalletId } = wallet.state
   const activeNetwork = useRecoilValue(networkState)
+  const accountForConnectedChain = useRecoilValue(accountForAssetState('ETH'))
 
-  console.log(route.params, 'approve route params')
+  console.log(
+    route.params,
+    'approve route params',
+    route.params.walletConnectData.chainId,
+  )
 
-  const send = async () => {
-    const {
-      data: txData,
-      value,
-      to,
-      gasPrice,
-      chainId,
-    } = route.params.walletConnectData.data
+  //TODO: move this into SwitchChainScreen
+  const switchChain = () => {
+    //const wallet = walletController.getWallet(data.chainId)
 
-    /*   const hash = await sendTransaction(chainId, {
-      to,
-      value,
-      data: txData,
-      maxPriorityFeePerGas: gasPrice,
-      maxFeePerGas: gasPrice,
-    }) */
-    let asset = getNativeAssetCode(activeNetwork, 'polygon')
-
-    console.log(
-      {
-        asset,
-        activeNetwork,
-        to: to,
-        value: value,
-        fee: 0.1,
-        feeLabel: 'average',
-        memo: '',
-      },
-      'SEND TRANSACTION PARAMS',
-    )
-    const hash = await sendTransaction({
-      asset,
-      activeNetwork,
-      to: to,
-      value: value,
-      fee: 0.1,
-      feeLabel: 'average',
-      memo: txData,
+    emitterController.emit(OFF_SWITCH_CHAIN, {
+      address: [accountForConnectedChain?.address],
+      chainId: data.chainId,
     })
-
-    emitterController.emit(OFF_SEND_TRANSACTION, hash)
+    //setIsOpen(false)
   }
 
   const reject = () => {}
@@ -87,7 +60,7 @@ const ApproveTransactionInjectionScreen = ({
       padding={'xl'}
       justifyContent={'center'}
       alignItems={'center'}>
-      <Text style={styles.headerText}>Approve</Text>
+      <Text style={styles.headerText}>SWITCH CHAIN</Text>
 
       <Text style={styles.permissionText}>
         By granting permission to they can read your public account addresses.
@@ -98,7 +71,7 @@ const ApproveTransactionInjectionScreen = ({
           type="primary"
           variant="l"
           label={'Approve'}
-          onPress={send}
+          onPress={switchChain}
           isBorderless={true}
           appendChildren={false}
         />
@@ -141,4 +114,4 @@ const styles = StyleSheet.create({
   imgLogo: { width: 65, height: 65 },
 })
 
-export default ApproveTransactionInjectionScreen
+export default SwitchChainScreen

@@ -49,6 +49,9 @@ export default class WalletConnectController {
       })
     })
 
+    //TODO: use this bool function to check if session is currently connected
+    //connector.connected()
+
     connector.on('call_request', (error, payload) => {
       console.log('call request payload: ', payload)
 

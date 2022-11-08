@@ -43,7 +43,7 @@ const InitInjectionScreen = ({ navigation, route }: NftDetailScreenProps) => {
   //TODO, if WalletConnect supports solana and not only EVM soon
   //we need to get the asset code from something like this: getNativeAssetCode(activeNetwork, chainConnected[0]) instead of 'ETH'
   const accountForConnectedChain = useRecoilValue(accountForAssetState('ETH'))
-  console.log(accountForConnectedChain?.balance, 'acc?')
+  console.log(accountForConnectedChain, 'Account for connected chain')
   useEffect(() => {
     emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
       const [data] = params
