@@ -160,6 +160,8 @@ const ContentBlock = () => {
 
   return (
     <TabView
+      swipeEnabled={false}
+      lazy
       renderTabBar={renderTabBar}
       navigationState={{ index, routes }}
       renderScene={({ route }) => {
