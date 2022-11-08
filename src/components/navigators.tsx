@@ -103,6 +103,7 @@ const {
   BuyCryptoCloseDark,
   Connect,
   ConnectSolid,
+  XIcon,
 } = AppIcons
 
 const WalletCreationStack = createNativeStackNavigator<RootStackParamList>()
@@ -355,7 +356,6 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
       setWalletConnectData(data)
     })
   }, [])
-
   console.log(walletConnectData, 'WALLET CONNECT DATA????')
 
   return (
@@ -406,6 +406,61 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
           <Ellipses width={20} height={20} />
         </Box>
       </TouchableWithoutFeedback>
+    </Box>
+  )
+}
+
+const WalletConnectHeader = (navProps: NavigationProps) => {
+  const { navigation } = navProps
+  const activeNetwork = useRecoilValue(networkState)
+  const [walletConnectData, setWalletConnectData] = useState(null)
+
+  const [showQRScanner, setShowQRScanner] = useState(false)
+  const onSuccess = (e) => {
+    console.log(e, 'SUCCESS READING QR')
+    new WalletConnectController(e.data)
+    navigation.navigate('InitInjectionScreen', { uri: e.data })
+    setShowQRScanner(false)
+  }
+
+  //To check if there is a session connected or not
+  useEffect(() => {
+    emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
+      const [data] = params
+      setWalletConnectData(data)
+    })
+  }, [])
+  console.log(walletConnectData, 'WALLET CONNECT DATA????')
+
+  return (
+    <Box
+      flexDirection={'row'}
+      alignItems={'center'}
+      padding="s"
+      justifyContent={'space-between'}>
+      <Box>
+        <View style={styles.container}>
+          <Pressable onPress={() => setShowQRScanner(true)}>
+            {walletConnectData ? <ConnectSolid /> : <Connect />}
+          </Pressable>
+        </View>
+      </Box>
+    </Box>
+  )
+}
+
+const GoBackHeader = (navProps: NavigationProps) => {
+  const { navigation } = navProps
+  return (
+    <Box>
+      <Box>
+        <Pressable
+          onPress={() => {
+            navigation.goBack()
+          }}>
+          <XIcon />
+        </Pressable>
+      </Box>
     </Box>
   )
 }
@@ -877,8 +932,10 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="InitInjectionScreen"
           component={InitInjectionScreen}
-          options={() => ({
-            headerShown: false,
+          options={({ navigation, route }: NavigationProps) => ({
+            ...screenNavOptions,
+            headerRight: () => WalletConnectHeader({ navigation, route }),
+            headerLeft: () => GoBackHeader({ navigation, route }),
           })}
         />
         <MainStack.Screen

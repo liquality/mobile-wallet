@@ -22,6 +22,7 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import AssetIcon from '../../components/asset-icon'
 import { scale } from 'react-native-size-matters'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
+import { ScrollView } from 'react-native-gesture-handler'
 const { ON_SESSION_REQUEST, OFF_SESSION_REQUEST } = INJECTION_REQUESTS
 
 type NftDetailScreenProps = NativeStackScreenProps<
@@ -71,88 +72,74 @@ const InitInjectionScreen = ({ navigation, route }: NftDetailScreenProps) => {
 
   console.log(connectedChain[0], 'connected CHAIN?')
   return (
-    <Box
-      flex={1}
-      backgroundColor="mainBackground"
-      paddingHorizontal={'screenPadding'}
-      justifyContent={'center'}
-      alignItems={'center'}>
-      <Text style={styles.headerText}>Connect Request</Text>
-      <Box marginBottom={'l'}>
-        {data ? (
-          <Image
-            style={styles.imgLogo}
-            source={{ uri: data.peerMeta.icons[0] }}
+    <ScrollView backgroundColor="white">
+      <Box
+        flex={1}
+        backgroundColor="mainBackground"
+        paddingHorizontal={'screenPadding'}
+        justifyContent={'center'}
+        alignItems={'center'}>
+        <Text style={styles.headerText}>Connect Request</Text>
+        <Box marginBottom={'m'}>
+          {data ? (
+            <Image
+              style={styles.imgLogo}
+              source={{ uri: data.peerMeta.icons[0] }}
+            />
+          ) : null}
+        </Box>
+        <Text style={styles.subheadingText}>{data?.peerMeta.name}</Text>
+
+        <DottedArrow style={styles.dottedArrow} />
+
+        {connectedChain[0] ? (
+          <AssetIcon
+            size={60}
+            chain={connectedChain[0]}
+            asset={getNativeAssetCode(activeNetwork, connectedChain[0])}
           />
         ) : null}
-      </Box>
-      <Text style={styles.subheadingText}>{data?.peerMeta.name}</Text>
 
-      <DottedArrow style={styles.dottedArrow} />
+        <BlueLine style={styles.blueLine} />
+        {connectedChain[0] ? (
+          <Text style={styles.subheadingText}>
+            {getNativeAssetCode(activeNetwork, connectedChain[0])} Account
+          </Text>
+        ) : null}
 
-      {connectedChain[0] ? (
-        <AssetIcon
-          size={60}
-          chain={connectedChain[0]}
-          asset={getNativeAssetCode(activeNetwork, connectedChain[0])}
-        />
-      ) : null}
-
-      <BlueLine style={styles.dottedArrow} />
-      {connectedChain[0] ? (
-        <Text style={styles.subheadingText}>
-          {getNativeAssetCode(activeNetwork, connectedChain[0])} Account
-        </Text>
-      ) : null}
-
-      <Text style={styles.permissionText}>
-        {shortenAddress(accountForConnectedChain.address)} | $
-        {accountForConnectedChain?.balance}
-      </Text>
-      <Box marginTop={'xl'}>
         <Text style={styles.permissionText}>
-          By granting permission to {data?.peerMeta.name} they can read your
-          public account addresses. Make sure you trust this site.
+          {shortenAddress(accountForConnectedChain.address)} | $
+          {accountForConnectedChain?.balance}
         </Text>
-      </Box>
+        <Box marginTop={'xxl'}>
+          <Text style={styles.permissionText}>
+            By granting permission to {data?.peerMeta.name} they can read your
+            public account addresses. Make sure you trust this site.
+          </Text>
+        </Box>
 
-      {/* <Box flex={0.5}>
-        <Box marginVertical={'xl'}>
-          <Pressable
-            label={{ tx: 'walletConnect.connect' }}
+        <Box width={'100%'}>
+          <Button
+            type="primary"
+            variant="l"
+            label={{
+              tx: 'walletConnect.connect',
+            }}
             onPress={connect}
-            variant="solid"
+            isBorderless={true}
+            appendChildren={false}
+          />
+          <Button
+            type="secondary"
+            variant="l"
+            label={{ tx: 'common.cancel' }}
+            onPress={reject}
+            isBorderless={true}
+            isActive={true}
           />
         </Box>
-        <Text
-          onPress={reject}
-          textAlign={'center'}
-          variant="link"
-          color={'black'}
-          tx="termsScreen.cancel"
-        />
-      </Box> */}
-
-      <ButtonFooter>
-        <Button
-          type="primary"
-          variant="l"
-          label={{
-            tx: 'walletConnect.connect',
-          }}
-          onPress={connect}
-          isBorderless={true}
-          appendChildren={false}></Button>
-        <Button
-          type="secondary"
-          variant="l"
-          label={{ tx: 'common.cancel' }}
-          onPress={navigation.goBack}
-          isBorderless={true}
-          isActive={true}
-        />
-      </ButtonFooter>
-    </Box>
+      </Box>
+    </ScrollView>
   )
 }
 
@@ -180,6 +167,7 @@ const styles = StyleSheet.create({
   },
   imgLogo: { width: 65, height: 65 },
   dottedArrow: { marginTop: scale(20), marginBottom: scale(20) },
+  blueLine: { marginBottom: scale(10), marginTop: scale(10) },
   subheadingText: {
     fontFamily: Fonts.Regular,
     fontStyle: 'normal',
