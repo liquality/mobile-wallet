@@ -5,6 +5,7 @@ import {
   getAllEvmChains,
   getAllSupportedChains,
   getAsset,
+  getNativeAssetCode,
 } from '@liquality/cryptoassets'
 import AssetIcon from './asset-icon'
 import SearchBox from './ui/search-box'
@@ -21,6 +22,7 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { SCREEN_HEIGHT } from '../utils'
 import { ChainNetworks } from '@liquality/wallet-core/dist/src/utils/networks'
+import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 
 const horizontalContentHeight = 60
 
@@ -78,6 +80,10 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
   useEffect(() => {
     if (chainCode !== 'ALL') {
       const chain = getAsset(activeNetwork, chainCode).chain
+      //console.log(chain, 'wat is chain and wat is chainCODE', chainCode)
+      let hej = getNativeAsset(activeNetwork, chain)
+      let bu = getNativeAssetCode(activeNetwork, 'polygon')
+      console.log(hej, 'WATS HEJEJ', bu)
       const result = mainAssets.filter((item) => item.chain === chain)
       setChainAssets(result)
       setAssets(result)
@@ -170,10 +176,13 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
         setChainCode(code)
       }
 
-      let hej = Object.entries(getAllEvmChains().mainnet)
+      //let hej = Object.entries(getAllEvmChains())
       //Object.entries(getAllEvmChains().mainnet).find(([chainName, chain]) => chain.network.chainId === 137))
 
-      console.log(hej, 'CONSOLE LOG ENTRIEESS')
+      let hej = Object.entries(getAllEvmChains().mainnet).find(
+        (chainName) => chainName[1].network.chainId === 137,
+      )
+
       return (
         <Box
           alignItems={'center'}
