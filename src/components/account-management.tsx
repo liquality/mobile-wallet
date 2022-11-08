@@ -22,7 +22,7 @@ type IconAsset = {
   chain: ChainId
 }
 
-type AssetManagementProps = {
+type AccountManagementProps = {
   enabledAssets: string[] | undefined
   accounts: { id: string; name: string }[]
 }
@@ -48,7 +48,10 @@ const EmptyComponent = () => {
   )
 }
 
-const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
+const AccountManagement = ({
+  enabledAssets,
+  accounts,
+}: AccountManagementProps) => {
   const [data, setData] = useState<IconAsset[]>([])
   const [assets, setAssets] = useState<CustomAsset[]>([])
   const [mainAssets, setMainAssets] = useState<CustomAsset[]>([])
@@ -245,4 +248,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default AssetManagement
+export default AccountManagement

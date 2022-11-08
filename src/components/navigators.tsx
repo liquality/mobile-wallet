@@ -69,7 +69,7 @@ import {
   showSearchBarInputState,
   themeMode,
 } from '../atoms'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
 import { downloadAssetAcitivity, labelTranslateFn } from '../utils'
@@ -80,6 +80,7 @@ import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-scre
 import ActivityFilterScreen from '../screens/wallet-features/home/activity-filter-screen'
 import AdvancedFilterModal from '../screens/wallet-features/home/advanced-filter-modal'
 import SortingModal from '../screens/wallet-features/home/sorting-modal'
+import AccountManagementScreen from '../screens/wallet-features/asset/account-management-screen'
 
 const {
   NetworkActiveDot,
@@ -267,6 +268,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'SwapProviderModal'
   | 'ActivityFilterScreen'
   | 'CongratulationsScreen'
+  | 'AccountManagementScreen'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -299,7 +301,7 @@ const AppStackHeaderLeft = (navProps: NavigationProps) => {
   )
 }
 
-const AssetManageScreenHeaderLeft = (navProps: NavigationProps) => {
+const ManageScreenHeaderLeft = (navProps: NavigationProps) => {
   const { navigation } = navProps
 
   return (
@@ -341,8 +343,8 @@ const ActivityFilterScreenHeaderRight = () => {
   )
 }
 
-const AssetManageScreenHeaderRight = () => {
-  const setShowSearchBar = useSetRecoilState(showSearchBarInputState)
+const ManageScreenHeaderRight = () => {
+  const [showSearch, setShowSearchBar] = useRecoilState(showSearchBarInputState)
 
   const setNavigationOpt = () => {
     setShowSearchBar((prev) => !prev)
@@ -351,7 +353,11 @@ const AssetManageScreenHeaderRight = () => {
   return (
     <Box paddingHorizontal={'s'} paddingVertical="m">
       <TouchableOpacity activeOpacity={0.7} onPress={setNavigationOpt}>
-        <SearchIcon width={scale(15)} height={scale(15)} />
+        {showSearch ? (
+          <BuyCryptoCloseDark width={scale(15)} height={scale(15)} />
+        ) : (
+          <SearchIcon width={scale(15)} height={scale(15)} />
+        )}
       </TouchableOpacity>
     </Box>
   )
@@ -404,7 +410,6 @@ export const AppStackNavigator = () => {
   }
   const backgroundColor =
     currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
-  const showSearchBar = useRecoilValue(showSearchBarInputState)
 
   return (
     <MainStack.Navigator
@@ -443,20 +448,6 @@ export const AppStackNavigator = () => {
           component={CustomFeeEIP1559Screen}
           options={() => ({
             headerRight: PlaceholderComp,
-          })}
-        />
-        <MainStack.Screen
-          name="AssetManagementScreen"
-          component={AssetManagementScreen}
-          options={({ navigation, route }: NavigationProps) => ({
-            headerBackVisible: false,
-            title: showSearchBar ? '' : labelTranslateFn('manageAssetsCaps')!,
-            headerTitleStyle: NORMAL_HEADER,
-            headerStyle: { backgroundColor },
-            headerRight: () => AssetManageScreenHeaderRight(),
-            headerLeft: showSearchBar
-              ? undefined
-              : () => AssetManageScreenHeaderLeft({ navigation, route }),
           })}
         />
         <MainStack.Screen
@@ -650,6 +641,7 @@ export const StackMainNavigator = () => {
   }
   const backgroundColor =
     currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
+  const showSearchBar = useRecoilValue(showSearchBarInputState)
 
   return (
     <MainStack.Navigator initialRouteName="LoginScreen">
@@ -769,6 +761,34 @@ export const StackMainNavigator = () => {
           })}
         />
         <MainStack.Screen
+          name="AssetManagementScreen"
+          component={AssetManagementScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerBackVisible: false,
+            title: showSearchBar ? '' : labelTranslateFn('manageAssetsCaps')!,
+            headerTitleStyle: NORMAL_HEADER,
+            headerStyle: { backgroundColor },
+            headerShadowVisible: false,
+            headerRight: ManageScreenHeaderRight,
+            headerLeft: showSearchBar
+              ? undefined
+              : () => ManageScreenHeaderLeft({ navigation, route }),
+          })}
+        />
+        <MainStack.Screen
+          name="AccountManagementScreen"
+          component={AccountManagementScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerBackVisible: false,
+            title: labelTranslateFn('manageChainAcc')!,
+            headerTitleStyle: NORMAL_HEADER,
+            headerStyle: { backgroundColor },
+            headerShadowVisible: false,
+            headerRight: undefined,
+            headerLeft: () => ManageScreenHeaderLeft({ navigation, route }),
+          })}
+        />
+        <MainStack.Screen
           name="AssetChooserScreen"
           component={AssetChooserScreen}
           options={({ navigation, route }: NavigationProps) => ({
@@ -778,8 +798,7 @@ export const StackMainNavigator = () => {
             headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
             headerRight: undefined,
-            headerLeft: () =>
-              AssetManageScreenHeaderLeft({ navigation, route }),
+            headerLeft: () => ManageScreenHeaderLeft({ navigation, route }),
           })}
         />
         <MainStack.Screen
