@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useCallback, useState } from 'react'
+import React, { FC, Fragment, useCallback } from 'react'
 import { AccountType, ActionEnum, MainStackParamList } from '../../types'
 import Row from './row'
 import SubRow from './sub-row'
@@ -11,6 +11,7 @@ import {
   enabledAssetsStateFamily,
   isDoneFetchingData,
   networkState,
+  accountToggled,
   swapPairState,
 } from '../../atoms'
 import { useNavigation, NavigationProp, useRoute } from '@react-navigation/core'
@@ -24,7 +25,6 @@ const WrappedRow: FC<{
 }> = (props) => {
   const { item } = props
 
-  const [isExpanded, setIsExpanded] = useState(false)
   const ethAccount = useRecoilValue(accountForAssetState('ETH'))
   const btcAccount = useRecoilValue(accountForAssetState('BTC'))
   const address = useRecoilValue(addressStateFamily(item.id))
@@ -32,7 +32,7 @@ const WrappedRow: FC<{
     balanceStateFamily({ asset: item.name, assetId: item.id }),
   )
   const activeNetwork = useRecoilValue(networkState)
-
+  const [rowExpanded, setRowExpanded] = useRecoilState(accountToggled)
   const account = useRecoilValue(accountInfoStateFamily(item.id))
   const isDoneFetching = useRecoilValue(isDoneFetchingData)
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
@@ -43,8 +43,8 @@ const WrappedRow: FC<{
   const route = useRoute<OverviewProps['route']>()
 
   const toggleRow = useCallback(() => {
-    setIsExpanded(!isExpanded)
-  }, [isExpanded])
+    setRowExpanded(rowExpanded === account?.id ? undefined : account?.id)
+  }, [account?.id, rowExpanded, setRowExpanded])
 
   const onNFTPress = () => {
     if (account.id) {
@@ -153,9 +153,9 @@ const WrappedRow: FC<{
         toggleRow={toggleRow}
         onAssetSelected={() => onAssetSelected(account)}
         isNested={isNested}
-        isExpanded={isExpanded}
+        isExpanded={rowExpanded === account.id}
       />
-      {isNested && isExpanded && (
+      {isNested && rowExpanded === account.id && (
         <SubRow
           key={1}
           parentItem={account}
@@ -165,7 +165,7 @@ const WrappedRow: FC<{
         />
       )}
       {isNested &&
-        isExpanded &&
+        rowExpanded === account.id &&
         assets?.map((subItem) => {
           return (
             <SubRow

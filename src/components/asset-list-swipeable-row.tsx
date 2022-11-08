@@ -52,24 +52,6 @@ const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
     })
   }, [assetData, navigation])
 
-  const renderLeftActions: renderActionsType = (progress, dragX) => {
-    const trans = dragX.interpolate({
-      inputRange: [0, 100],
-      outputRange: [-width, 0],
-      extrapolate: 'clamp',
-    })
-
-    return (
-      <AnimatedBox
-        translateX={trans}
-        close={close}
-        handleSendBtnPress={handleSendBtnPress}
-        handleSwapBtnPress={handleSwapBtnPress}
-        handleReceiveBtnPress={handleReceiveBtnPress}
-      />
-    )
-  }
-
   const renderRightActions: renderActionsType = (progress, dragX) => {
     const trans = dragX.interpolate({
       inputRange: [-100, 0],
@@ -91,7 +73,7 @@ const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
   return (
     <Swipeable
       enabled={!isNested}
-      renderLeftActions={renderLeftActions}
+      renderLeftActions={undefined}
       renderRightActions={renderRightActions}
       ref={ref}
       onSwipeableWillOpen={onOpen}
