@@ -2,21 +2,27 @@ import { StyleSheet } from 'react-native'
 import React from 'react'
 import { Box, ColorType, Text, TouchableOpacity } from '../theme'
 import { scale, ScaledSheet } from 'react-native-size-matters'
-import { assetRowTiles, SCREEN_WIDTH, AssetRowProp } from '../utils'
+import {
+  assetRowTiles,
+  SCREEN_WIDTH,
+  AssetRowProp,
+  SCREEN_HEIGHT,
+} from '../utils'
+import { TabView } from 'react-native-tab-view'
 
 const Aggregators = ({
   onPress,
   selectedItem,
   item,
 }: {
-  onPress: (item: AssetRowProp) => void
+  onPress: () => void
   selectedItem: AssetRowProp
   item: AssetRowProp
 }) => {
   const borderLeftColorStatus = selectedItem.name === item.name
   const backgroundColor = selectedItem.name === item.name
   return (
-    <TouchableOpacity onPress={() => onPress(item)} key={item.name}>
+    <TouchableOpacity onPress={onPress} key={item.name}>
       <Box
         paddingLeft={'m'}
         width={SCREEN_WIDTH / 4.55}
@@ -39,139 +45,9 @@ const Aggregators = ({
   )
 }
 
-const ProsOrConsComponent = ({
-  title,
-  list,
-  titleColor,
-}: {
-  title: string
-  list: Array<string>
-  titleColor: keyof ColorType
-}) => {
+const TabContent = ({ selectedItem }: { selectedItem: AssetRowProp }) => {
   return (
-    <Box
-      width={'49%'}
-      backgroundColor="greyBackground"
-      paddingHorizontal={'l'}
-      paddingVertical="xl">
-      <Text color={titleColor} variant="gasIndicatorLabel" marginLeft={'m'}>
-        {title}
-      </Text>
-      <Box marginTop={'s'}>
-        {list.map((item, index) => (
-          <Box flexDirection={'row'} key={`${index}`}>
-            <Text marginTop={'m'} fontSize={scale(3)} color="darkGrey">
-              {'\u2B24'}
-            </Text>
-            <Text
-              variant={'listText'}
-              marginTop="s"
-              marginLeft={'m'}
-              fontWeight="400"
-              color={'darkGrey'}>
-              {item}
-            </Text>
-          </Box>
-        ))}
-      </Box>
-    </Box>
-  )
-}
-
-type Props = {
-  headerHeight: number
-  isScrolledUp: boolean
-}
-
-const SwapProviderInfoComponent: React.FC<Props> = ({
-  headerHeight,
-  isScrolledUp,
-}) => {
-  const [selectedItem, setSelectedItem] = React.useState<AssetRowProp>(
-    assetRowTiles[0],
-  )
-
-  const onPress = (item: AssetRowProp) => {
-    setSelectedItem(item)
-  }
-
-  const renderItem = ({ item }: { item: AssetRowProp }) => {
-    return (
-      <Aggregators
-        selectedItem={selectedItem}
-        item={item}
-        onPress={onPress}
-        key={item.name}
-      />
-    )
-  }
-
-  return (
-    <Box
-      flex={1}
-      backgroundColor="mainBackground"
-      style={{ paddingTop: isScrolledUp ? scale(10) : headerHeight / 2 }}
-      paddingHorizontal={'screenPadding'}>
-      {!isScrolledUp ? (
-        <Box>
-          <Text
-            marginTop={'s'}
-            variant={'onScreenHeader'}
-            color="darkGrey"
-            lineHeight={scale(38)}
-            fontWeight="400"
-            tx="learnAboutSwapProviders"
-          />
-          <Text variant={'termsBody'} color="black2" tx="thereAreTradeoff" />
-          <Box marginTop={'xl'}>
-            <Box>
-              <Text
-                tx="aggregators"
-                variant={'h5'}
-                fontWeight="400"
-                color="activeButton"
-              />
-              <Box
-                marginTop={'s'}
-                backgroundColor={'activeButton'}
-                width={scale(15)}
-                height={scale(2)}
-              />
-            </Box>
-            <Box marginTop={'m'}>
-              <Box flexWrap={'wrap'} flexDirection="row">
-                {assetRowTiles.map((item) => renderItem({ item }))}
-              </Box>
-            </Box>
-          </Box>
-          <Box
-            height={1}
-            backgroundColor="whiteLightGrey"
-            style={styles.columnWrapperStyle}
-          />
-        </Box>
-      ) : null}
-      <Box
-        flexDirection={'row'}
-        alignItems="center"
-        height={scale(40)}
-        justifyContent={'space-between'}>
-        <selectedItem.icon width={scale(40)} height={scale(40)} />
-        <Box flexDirection={'row'} alignItems="center">
-          {assetRowTiles.map((item) => (
-            <Box
-              marginTop={'m'}
-              backgroundColor={
-                item.name === selectedItem.name ? 'activeButton' : 'mediumGrey'
-              }
-              width={scale(10)}
-              height={scale(2)}
-              marginLeft="s"
-              key={item.name}
-            />
-          ))}
-        </Box>
-      </Box>
+    <Box>
       <Text
         variant={'warnText'}
         lineHeight={scale(30)}
@@ -230,6 +106,186 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
             </Box>
           ))}
         </Box>
+      </Box>
+    </Box>
+  )
+}
+
+const ProsOrConsComponent = ({
+  title,
+  list,
+  titleColor,
+}: {
+  title: string
+  list: Array<string>
+  titleColor: keyof ColorType
+}) => {
+  return (
+    <Box
+      width={'49%'}
+      backgroundColor="greyBackground"
+      paddingHorizontal={'l'}
+      paddingVertical="xl">
+      <Text color={titleColor} variant="gasIndicatorLabel" marginLeft={'m'}>
+        {title}
+      </Text>
+      <Box marginTop={'s'}>
+        {list.map((item, index) => (
+          <Box flexDirection={'row'} key={`${index}`}>
+            <Text marginTop={'m'} fontSize={scale(3)} color="darkGrey">
+              {'\u2B24'}
+            </Text>
+            <Text
+              variant={'listText'}
+              marginTop="s"
+              marginLeft={'m'}
+              fontWeight="400"
+              color={'darkGrey'}>
+              {item}
+            </Text>
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  )
+}
+
+type Props = {
+  headerHeight: number
+  isScrolledUp: boolean
+}
+
+const SwapProviderInfoComponent: React.FC<Props> = ({
+  headerHeight,
+  isScrolledUp,
+}) => {
+  const [selectedItem, setSelectedItem] = React.useState<AssetRowProp>(
+    assetRowTiles[0],
+  )
+  const [index, setIndex] = React.useState(0)
+  const routes = assetRowTiles.map((item) => ({
+    key: item.name,
+    title: item.name,
+  }))
+
+  const onIndexChange = (itemNum: number) => {
+    setSelectedItem(assetRowTiles[itemNum])
+    setIndex(itemNum)
+  }
+
+  const renderItem = ({
+    item,
+    renderItemIndex,
+  }: {
+    item: AssetRowProp
+    renderItemIndex: number
+  }) => {
+    return (
+      <Aggregators
+        selectedItem={selectedItem}
+        item={item}
+        onPress={() => onIndexChange(renderItemIndex)}
+        key={item.name}
+      />
+    )
+  }
+
+  return (
+    <Box
+      flex={1}
+      backgroundColor="mainBackground"
+      paddingTop={'xl'}
+      paddingHorizontal={'screenPadding'}>
+      {!isScrolledUp ? (
+        <Box>
+          <Text
+            marginTop={'s'}
+            variant={'onScreenHeader'}
+            color="darkGrey"
+            lineHeight={scale(38)}
+            fontWeight="400"
+            tx="learnAboutSwapProviders"
+          />
+          <Text variant={'termsBody'} color="black2" tx="thereAreTradeoff" />
+          <Box marginTop={'xl'}>
+            <Box>
+              <Text
+                tx="aggregators"
+                variant={'h5'}
+                fontWeight="400"
+                color="activeButton"
+              />
+              <Box
+                marginTop={'s'}
+                backgroundColor={'activeButton'}
+                width={scale(15)}
+                height={scale(2)}
+              />
+            </Box>
+            <Box marginTop={'m'}>
+              <Box flexWrap={'wrap'} flexDirection="row">
+                {assetRowTiles.map((item, renderItemIndex) =>
+                  renderItem({ item, renderItemIndex }),
+                )}
+              </Box>
+            </Box>
+          </Box>
+          <Box
+            height={1}
+            backgroundColor="whiteLightGrey"
+            style={styles.columnWrapperStyle}
+          />
+        </Box>
+      ) : null}
+      <Box height={SCREEN_HEIGHT - headerHeight - scale(20)}>
+        <Box
+          flexDirection={'row'}
+          alignItems="center"
+          height={scale(40)}
+          justifyContent={'space-between'}>
+          <selectedItem.icon width={scale(40)} height={scale(40)} />
+          <Box flexDirection={'row'} alignItems="center">
+            {assetRowTiles.map((item) => (
+              <Box
+                marginTop={'m'}
+                backgroundColor={
+                  item.name === selectedItem.name
+                    ? 'activeButton'
+                    : 'mediumGrey'
+                }
+                width={scale(10)}
+                height={scale(2)}
+                marginLeft="s"
+                key={item.name}
+              />
+            ))}
+          </Box>
+        </Box>
+        <TabView
+          renderTabBar={() => null}
+          navigationState={{ index, routes }}
+          renderScene={({ route }) => {
+            switch (route.key) {
+              case routes[0].key:
+                return <TabContent selectedItem={assetRowTiles[0]} />
+              case routes[1].key:
+                return <TabContent selectedItem={assetRowTiles[1]} />
+              case routes[2].key:
+                return <TabContent selectedItem={assetRowTiles[2]} />
+              case routes[3].key:
+                return <TabContent selectedItem={assetRowTiles[3]} />
+              case routes[4].key:
+                return <TabContent selectedItem={assetRowTiles[4]} />
+              case routes[5].key:
+                return <TabContent selectedItem={assetRowTiles[5]} />
+              case routes[6].key:
+                return <TabContent selectedItem={assetRowTiles[6]} />
+            }
+          }}
+          swipeEnabled
+          onIndexChange={onIndexChange}
+          initialLayout={{ width: SCREEN_WIDTH - scale(30) }} //approx to horizontal patting
+        />
       </Box>
     </Box>
   )
