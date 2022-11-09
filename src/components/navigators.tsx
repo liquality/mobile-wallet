@@ -4,6 +4,7 @@ import {
   useColorScheme,
   TouchableOpacity,
   Alert,
+  StyleSheet,
 } from 'react-native'
 import {
   createNativeStackNavigator,
