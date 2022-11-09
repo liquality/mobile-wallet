@@ -43,10 +43,6 @@ const SwapProviderInfoDrawer = (props: Props) => {
 
   const { isScrolledUp } = route.params
 
-  const calculatedHeight = isScrolledUp
-    ? SCREEN_HEIGHT - scale(20)
-    : SCREEN_HEIGHT + headerHeight
-
   return (
     <Box
       flex={1}
@@ -57,7 +53,6 @@ const SwapProviderInfoDrawer = (props: Props) => {
         onScroll={isScrolledUpEvent}
         contentContainerStyle={{
           paddingBottom: scale(20),
-          height: calculatedHeight,
         }}>
         {isScrolledUp ? (
           <Box flex={1} backgroundColor="mainBackground">

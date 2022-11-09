@@ -42,6 +42,13 @@ const {
   RefundedFilterIcon,
   NeedsAttentionFilterIcon,
   FailedFilterIcon,
+  Uniswap,
+  OneInch,
+  FastBTC,
+  Sovryn,
+  Thorchain,
+  Astroport,
+  Jupiter,
 } = AppIcons
 
 type IconType = React.FC<
@@ -168,5 +175,118 @@ export const sortRadioButtons: Array<SortRadioButtonProp> = [
   {
     key: 'completed',
     value: 'sortPicker.completed',
+  },
+]
+
+export type AssetRowProp = {
+  icon: IconType
+  name: string
+  heading: string
+  description: string
+  pros: Array<string>
+  cons: Array<string>
+  feeStructure: Array<string>
+}
+
+export const assetRowTiles: Array<AssetRowProp> = [
+  {
+    icon: Uniswap,
+    name: 'Uniswap',
+    heading: '1 Inch DEX Aggregator Swaps',
+    description: 'Aggregate of popular DEXes',
+    pros: [
+      'Ethereum, Polygon, Binance, Smart Chain, Avalanche',
+      'Best exchange rates',
+      'High liquidity',
+      'Many pairs',
+      'Fast',
+    ],
+    cons: ['Slippage'],
+    feeStructure: ['Additional aggregator fees', 'Slippage (up to 0.5%)'],
+  },
+  {
+    icon: OneInch,
+    name: '1 inch',
+    heading: '1 Inch DEX Aggregator Swaps',
+    description: 'Aggregate of popular DEXes',
+    pros: [
+      'Ethereum, Polygon, Binance, Smart Chain, Avalanche',
+      'Best exchange rates',
+      'High liquidity',
+      'Many pairs',
+      'Fast',
+    ],
+    cons: ['Slippage'],
+    feeStructure: ['Additional aggregator fees', 'Slippage (up to 0.5%)'],
+  },
+  {
+    icon: FastBTC,
+    name: 'Fast BTC',
+    heading: '1 Inch DEX Aggregator Swaps',
+    description: 'Aggregate of popular DEXes',
+    pros: [
+      'Ethereum, Polygon, Binance, Smart Chain, Avalanche',
+      'Best exchange rates',
+      'High liquidity',
+      'Many pairs',
+      'Fast',
+    ],
+    cons: ['Slippage'],
+    feeStructure: ['Additional aggregator fees', 'Slippage (up to 0.5%)'],
+  },
+  {
+    icon: Sovryn,
+    name: 'Sovryn',
+    heading: 'Sovryn AMM Swaps',
+    description:
+      'Non-custodial and permissionless smart contract based system for Bitcoin lending, borrowing and margin trading',
+    pros: ['Low liquidity provider fee'],
+    cons: ['Slippage'],
+    feeStructure: ['0.15% liquidity provider fee'],
+  },
+  {
+    icon: Thorchain,
+    name: 'Thorchain',
+    heading: '1 Inch DEX Aggregator Swaps',
+    description: 'Aggregate of popular DEXes',
+    pros: [
+      'Ethereum, Polygon, Binance, Smart Chain, Avalanche',
+      'Best exchange rates',
+      'High liquidity',
+      'Many pairs',
+      'Fast',
+    ],
+    cons: ['Slippage'],
+    feeStructure: ['Additional aggregator fees', 'Slippage (up to 0.5%)'],
+  },
+  {
+    icon: Astroport,
+    name: 'Astroport',
+    heading: '1 Inch DEX Aggregator Swaps',
+    description: 'Aggregate of popular DEXes',
+    pros: [
+      'Ethereum, Polygon, Binance, Smart Chain, Avalanche',
+      'Best exchange rates',
+      'High liquidity',
+      'Many pairs',
+      'Fast',
+    ],
+    cons: ['Slippage'],
+    feeStructure: ['Additional aggregator fees', 'Slippage (up to 0.5%)'],
+  },
+  {
+    icon: Jupiter,
+    name: 'Jupiter',
+    heading: '1 Inch DEX Aggregator Swaps',
+    description: 'Aggregate of popular DEXes',
+    pros: [
+      'Ethereum, Polygon, Binance, Smart Chain, Avalanche',
+      'Best exchange rates',
+      'High liquidity',
+      'Many pairs',
+      'Fast',
+    ],
+    cons: ['Slippage'],
+    feeStructure: ['Additional aggregator fees', 'Slippage (up to 0.5%)'],
   },
 ]

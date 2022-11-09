@@ -177,6 +177,9 @@ import SwapHex from '../assets/icons/swapHex.svg'
 import SendHex from '../assets/icons/sendHex.svg'
 import OptimismChainIcon from '../assets/icons/crypto/optimism_chain.svg'
 import WhiteCheckMark from '../assets/icons/checkMark.svg'
+import Astroport from '../assets/icons/swap-providers/astroport.svg'
+import FastBTC from '../assets/icons/swap-providers/fastBTC.svg'
+import Jupiter from '../assets/icons/swap-providers/jupiter.svg'
 
 export default {
   PendingSwap,
@@ -356,4 +359,7 @@ export default {
   SendHex,
   OptimismChainIcon,
   WhiteCheckMark,
+  Astroport,
+  FastBTC,
+  Jupiter,
 }
