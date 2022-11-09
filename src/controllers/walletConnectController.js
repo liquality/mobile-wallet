@@ -1,9 +1,8 @@
 import WalletConnect from '@walletconnect/client'
 import { INJECTION_REQUESTS } from './constants'
-
 import { emitterController } from './emitterController'
 
-/*TODO: Below notes are things that need further investigation/implementation and logic
+/*TODO: Below notes are things that need further investigation/implementation and logic for walletconnect stuff
  ---Method to check if there is an ongoing session, connector.connected() 
 should be available to the components so I can display to the user 
  ---Value param is not always sent in from payload, how can I get the transaction details 
@@ -12,6 +11,8 @@ should be available to the components so I can display to the user
  ---May be missing some translations
  ---Review Drawer needs styling for SEND transaction, use component as needed
  ---Add custom network/speed fee link and apply that to dapp transaction
+ ---Missing some types and type declarations
+ ---QR Code library is temporary, there is a bug in the other library we used which causes the qr scanner not the give me the URI string
  */
 const {
   ON_SESSION_REQUEST,

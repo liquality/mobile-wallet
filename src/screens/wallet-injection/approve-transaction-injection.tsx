@@ -1,5 +1,3 @@
-import { setupWallet } from '@liquality/wallet-core'
-import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import { Alert, StyleSheet } from 'react-native'
@@ -27,9 +25,6 @@ type ApproveTransactionInjectionScreenProps = NativeStackScreenProps<
   'ApproveTransactionInjectionScreen'
 >
 
-const wallet = setupWallet({
-  ...defaultOptions,
-})
 const ApproveTransactionInjectionScreen = ({
   navigation,
   route,
@@ -94,7 +89,7 @@ const ApproveTransactionInjectionScreen = ({
         valueInNative: new BigNumber(parseInt(walletConnectData.value, 10)),
         valueAmountInDollars: prettyFiatBalance(
           new BigNumber(parseInt(walletConnectData.value, 10)),
-          fiatRates['MATIC'],
+          fiatRates.MATIC,
         ).toString(),
       }
     }

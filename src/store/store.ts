@@ -748,22 +748,11 @@ export const sendTransaction = async (options: {
     throw new Error(`Failed to send transaction: ${options}`)
   }
 
-  console.log(options, 'wats optons??')
   const { activeWalletId, activeNetwork, fiatRates } = wallet.state
   const { asset, to, value, fee, feeLabel, memo } = options
   const toAccount = wallet.getters.networkAccounts.find(
     (account) => account.assets && account.assets.includes(asset),
   )
-
-  let optionsE = {
-    activeNetwork: 'mainnet',
-    asset: 'MATIC',
-    fee: 31.49459276,
-    feeLabel: 'average',
-    memo: '',
-    to: '0xb81B9B88e764cb6b4E02c5D0F6D6D9051A61E020',
-    value: '8000000000000000000',
-  }
 
   if (!toAccount) {
     throw new Error('Invalid account')

@@ -70,7 +70,6 @@ const ReviewComponent = ({ navigation, route }: SendReviewScreenProps) => {
         feeLabel: speedLabel,
         memo: '',
       })
-      console.log(transaction, 'TRANSACTION OBJJ')
 
       delete transaction.tx._raw
 

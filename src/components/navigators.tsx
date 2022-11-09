@@ -344,7 +344,6 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
 
   const [showQRScanner, setShowQRScanner] = useState(false)
   const onSuccess = (e) => {
-    console.log(e, 'SUCCESS READING QR')
     new WalletConnectController(e.data)
     navigation.navigate('InitInjectionScreen', { uri: e.data })
     setShowQRScanner(false)
@@ -357,7 +356,6 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
       setWalletConnectData(data)
     })
   }, [])
-  console.log(walletConnectData, 'WALLET CONNECT DATA????')
 
   return (
     <Box flexDirection={'row'} alignItems={'center'} padding="s">
@@ -411,19 +409,9 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
   )
 }
 
-const WalletConnectHeader = (navProps: NavigationProps) => {
-  const { navigation } = navProps
-  const activeNetwork = useRecoilValue(networkState)
+const WalletConnectHeader = () => {
   const [walletConnectData, setWalletConnectData] = useState(null)
-
-  const [showQRScanner, setShowQRScanner] = useState(false)
-  const onSuccess = (e) => {
-    console.log(e, 'SUCCESS READING QR')
-    new WalletConnectController(e.data)
-    navigation.navigate('InitInjectionScreen', { uri: e.data })
-    setShowQRScanner(false)
-  }
-
+  const [, setShowQRScanner] = useState(false)
   //To check if there is a session connected or not
   useEffect(() => {
     emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
@@ -431,8 +419,6 @@ const WalletConnectHeader = (navProps: NavigationProps) => {
       setWalletConnectData(data)
     })
   }, [])
-  console.log(walletConnectData, 'WALLET CONNECT DATA????')
-
   return (
     <Box
       flexDirection={'row'}

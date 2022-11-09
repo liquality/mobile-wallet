@@ -16,14 +16,10 @@ import {
 import { runOnJS } from 'react-native-reanimated'
 import { labelTranslateFn } from '../utils'
 import { useRecoilValue } from 'recoil'
-import { networkState, accountForAssetState } from '../atoms'
+import { networkState } from '../atoms'
 import { AppIcons } from '../assets'
 import { palette } from '../theme'
 const { TimesIcon } = AppIcons
-import WalletConnectController, {
-  initWalletConnect,
-} from '../controllers/walletConnectController'
-import { useNavigation } from '@react-navigation/native'
 
 type QrCodeScannerPropsType = {
   onClose: (address: string) => void
@@ -33,30 +29,26 @@ type QrCodeScannerPropsType = {
 const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
   const [hasPermission, setHasPermission] = React.useState(false)
   const { onClose, chain } = props
-  const navigation = useNavigation()
 
   const [error, setError] = useState('')
   const activeNetwork = useRecoilValue(networkState)
-  const [showInjectionFlow, setShowInjectionFlow] = useState(false)
-  const [walletConnectPayload, setWalletConnectPayload] = useState({})
+  //TODO: Keep this here as we want to use this QR component instead, but there is a bug in the library
+  /*   const [showInjectionFlow, setShowInjectionFlow] = useState(false)
+  const [walletConnectPayload, setWalletConnectPayload] = useState({}) */
 
   const devices = useCameraDevices()
   const device = devices.back
-  console.log('Do i even get in the qr comp???')
   const onQRCodeDetected = useCallback(
     async (qrCode: Barcode) => {
       if (error) {
         setError('')
       }
       const address = qrCode.displayValue?.split(':')?.[1]
-      console.log(qrCode, 'QR STRING')
       if (address && getChain(activeNetwork, chain).isValidAddress(address)) {
         onClose(address)
       } else if (qrCode.displayValue?.startsWith('wc')) {
-        console.log('inside if WC')
-
+        //TODO: Keep this here as we want to use this QR component instead, but there is a bug in the library
         //new WalletConnectController(qrCode.displayValue)
-
         /*    await initWalletConnect(qrCode.displayValue, function (wcPayload) {
           console.log(wcPayload, 'wcPayload IN CALLBACKKK')
           setWalletConnectPayload({
@@ -67,7 +59,6 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
           setError('Wallet connect connected')
           setShowInjectionFlow(true)
         }) */
-
         /*  navigation.navigate('InitInjectionScreen', {
           someVal: 'someval',
         }) */
@@ -75,7 +66,7 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
         setError(labelTranslateFn('invalidQRCode')!)
       }
     },
-    [activeNetwork, chain, error, navigation, onClose],
+    [activeNetwork, chain, error, onClose],
   )
 
   const frameProcessor = useFrameProcessor(
@@ -100,6 +91,7 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
     })()
   }, [])
 
+  //TODO: Keep this here as we want to use this QR component instead, but there is a bug in the library
   /*   useEffect(() => {
     async function fetchData() {
       if (showInjectionFlow && Object.keys(walletConnectPayload).length !== 0) {

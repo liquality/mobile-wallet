@@ -149,10 +149,6 @@ import ConnectSolid from '../assets/icons/connectSolid.svg'
 import DottedArrow from '../assets/icons/dottedArrow.svg'
 import BlueLine from '../assets/icons/blueLine.svg'
 
-
-
-
-
 export default {
   PendingSwap,
   CompletedSwap,

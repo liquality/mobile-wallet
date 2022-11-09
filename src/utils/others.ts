@@ -235,6 +235,5 @@ export const getChainNameByChainIdNumber = async (chainIdNumber: number) => {
   let chainConnected = Object.entries(getAllEvmChains().mainnet).find(
     (chainName) => chainName[1].network.chainId === chainIdNumber,
   )
-  console.log(chainConnected, 'INSIDE THE OOOOTHERS UTLLLS')
   return chainConnected
 }
