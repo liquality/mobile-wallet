@@ -2,15 +2,14 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Dimensions, Image } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 import { useRecoilValue } from 'recoil'
 
 import { emitterController } from '../../controllers/emitterController'
 import { INJECTION_REQUESTS } from '../../controllers/constants'
-import ButtonFooter from '../../components/button-footer'
 import { Box, Button, faceliftPalette, Text } from '../../theme'
 import { RootStackParamList } from '../../types'
-import { accountForAssetState, networkState } from '../../atoms'
+import { accountForAssetState, fiatRatesState, networkState } from '../../atoms'
 import { Fonts, AppIcons } from '../../assets'
 import { sendTransaction } from '../../store/store'
 import { getNativeAssetCode, IChain } from '@liquality/cryptoassets'
@@ -19,7 +18,8 @@ import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import { scale } from 'react-native-size-matters'
 import ReviewDrawer from '../../components/review-drawer'
 import { getChainNameByChainIdNumber } from '../../utils/others'
-import { ChainId } from '@chainify/types'
+import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+
 const { OFF_SEND_TRANSACTION } = INJECTION_REQUESTS
 
 type ApproveTransactionInjectionScreenProps = NativeStackScreenProps<
@@ -47,6 +47,7 @@ const ApproveTransactionInjectionScreen = ({
         : getNativeAssetCode(activeNetwork, connectedChain[0]),
     ),
   )
+  const fiatRates = useRecoilValue(fiatRatesState)
 
   useEffect(() => {
     async function fetchData() {
@@ -67,20 +68,25 @@ const ApproveTransactionInjectionScreen = ({
     //when sendTransaction() function expects a value param?
     //TODO IN THIS CASE MAKE VALUE BE 0
 
-    const hash = await sendTransaction({
-      asset,
-      activeNetwork,
-      to: walletConnectData.to,
-      value: walletConnectData.value
-        ? new BigNumber(parseInt(walletConnectData.value, 10))
-        : new BigNumber(0),
-      fee: walletConnectData.gas,
-      feeLabel: FeeLabel.Average,
-      memo: walletConnectData.data,
-    })
+    try {
+      const hash = await sendTransaction({
+        asset,
+        activeNetwork,
+        to: walletConnectData.to,
+        value: walletConnectData.value
+          ? new BigNumber(parseInt(walletConnectData.value, 10))
+          : new BigNumber(0),
+        fee: walletConnectData.gas,
+        feeLabel: FeeLabel.Average,
+        memo: walletConnectData.data,
+      })
 
-    emitterController.emit(OFF_SEND_TRANSACTION, hash)
-    navigation.navigate('OverviewScreen')
+      emitterController.emit(OFF_SEND_TRANSACTION, hash)
+      navigation.navigate('OverviewScreen')
+    } catch (_error) {
+      Alert.alert('Transaction failed', _error)
+      console.log(_error, 'watserr?')
+    }
   }
 
   const reject = () => {
@@ -88,19 +94,20 @@ const ApproveTransactionInjectionScreen = ({
   }
 
   const renderBalancesAndAmounts = () => {
-    if (connectedChain && accountForConnectedChain) {
+    if (connectedChain) {
       return {
         totalNativeBalance:
           accountForConnectedChain?.assets[
             getNativeAssetCode(activeNetwork, connectedChain[0])
           ].balance,
-        valueInNative: parseInt(walletConnectData.value, 10),
-        valueAmountInDollars: 1,
+        valueInNative: new BigNumber(parseInt(walletConnectData.value, 10)),
+        valueAmountInDollars: prettyFiatBalance(
+          new BigNumber(parseInt(walletConnectData.value, 10)),
+          fiatRates['MATIC'],
+        ).toString(),
       }
     }
   }
-
-  console.log(accountForConnectedChain, 'ACC FOR CONNECTED CHAIN')
 
   return (
     <Box flex={1} backgroundColor={'white'} paddingHorizontal={'screenPadding'}>
@@ -126,13 +133,13 @@ const ApproveTransactionInjectionScreen = ({
             <Text fontWeight={'700'}>
               SEND {getNativeAssetCode(activeNetwork, connectedChain[0])}
             </Text>{' '}
-            0.077973 Balance
+            {renderBalancesAndAmounts()?.totalNativeBalance} Balance
           </Text>
         </Box>
       ) : null}
 
-      <Text style={(styles.text, styles.balanceText)}>0.067113 | $109.5</Text>
-      <Text style={styles.purpleLink}>Network Speed/Fee</Text>
+      <Text style={(styles.text, styles.balanceText)}>0.000 | $0</Text>
+      <Text style={styles.purpleLink} tx={'common.networkSpeed'} />
       <Box height={scale(170)} />
 
       <Box width={'100%'}>
@@ -148,7 +155,7 @@ const ApproveTransactionInjectionScreen = ({
           type="secondary"
           variant="l"
           label={'Deny'}
-          onPress={() => navigation.goBack()}
+          onPress={reject}
           isBorderless={true}
           isActive={true}
         />

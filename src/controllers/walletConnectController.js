@@ -3,6 +3,15 @@ import { INJECTION_REQUESTS } from './constants'
 
 import { emitterController } from './emitterController'
 
+/*TODO: Below notes are things that need further investigation/implementation and logic
+ ---Method to check if there is an ongoing session, connector.connected() 
+should be available to the components so I can display to the user 
+ ---Value param is not always sent in from payload, how can I get the transaction details 
+ (amount sent/swapped etc) from dapp to component to show the user if walletconnect does not give me it in the payload?
+ ---Switch network design needs review, there is currently no screen in figma for this
+ ---May be missing some translations
+ ---Review Drawer needs styling for SEND transaction, use component as needed
+ */
 const {
   ON_SESSION_REQUEST,
   OFF_SESSION_REQUEST,
@@ -16,7 +25,6 @@ const {
 
 export default class WalletConnectController {
   constructor(uri) {
-    console.log(uri, 'URI in NEW walletcontroller ')
     const connector = new WalletConnect({
       uri,
       clientMeta: {
@@ -28,8 +36,6 @@ export default class WalletConnectController {
     })
 
     connector.on('session_request', (error, payload) => {
-      console.log('session_request payload: ', payload)
-
       if (error) {
         throw error
       }
@@ -51,17 +57,12 @@ export default class WalletConnectController {
 
     //TODO: use this bool function to check if session is currently connected
     //connector.connected()
-
     connector.on('call_request', (error, payload) => {
-      console.log('call request payload: ', payload)
-
       if (error) {
         throw error
       }
 
       const { id: requestId, method } = payload
-
-      console.log(method, 'METHOD in switch case')
 
       switch (method) {
         case 'eth_sendTransaction': {
@@ -101,7 +102,6 @@ export default class WalletConnectController {
           })
 
           emitterController.on(OFF_SWITCH_CHAIN, (payload) => {
-            console.log('called: ', OFF_SWITCH_CHAIN)
             connector.approveRequest({
               id: requestId,
               result: null,
@@ -130,8 +130,6 @@ export default class WalletConnectController {
       }
 
       // Delete connector
-
-      console.log('disconnect called', payload)
     })
   }
 }
