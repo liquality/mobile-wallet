@@ -14,6 +14,8 @@ import { networkState } from '../../atoms'
 import { Fonts, AppIcons } from '../../assets'
 import { sendTransaction } from '../../store/store'
 import { getNativeAssetCode } from '@liquality/cryptoassets'
+import { BigNumber } from '@liquality/types'
+import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 const { OFF_SEND_TRANSACTION } = INJECTION_REQUESTS
 
 type ApproveTransactionInjectionScreenProps = NativeStackScreenProps<
@@ -33,8 +35,6 @@ const ApproveTransactionInjectionScreen = ({
   const activeNetwork = useRecoilValue(networkState)
   const { chainId, walletConnectData } = route.params
 
-  console.log(route.params, 'approve route params')
-
   const send = async () => {
     let asset = getNativeAssetCode(activeNetwork, 'polygon')
 
@@ -43,34 +43,24 @@ const ApproveTransactionInjectionScreen = ({
     //when sendTransaction() function expects a value param?
     //TODO IN THIS CASE MAKE VALUE BE 0
 
-    //TODO: Value data type might be wrong, sent in as a hex
-    //invalid hash (argument="value", value={"id":"34
-    //TODO: MAKE VALUE BE A BIG NUMBER, NOT A HEX, look at param types below:
-    /*    export declare type TransactionRequest = {
-      asset?: Asset;
-      feeAsset?: Asset;
-      to?: AddressType;
-      data?: string;
-      value?: BigNumber;
-      fee?: FeeType;
-      gasLimit?: number;
-  }; */
     const hash = await sendTransaction({
       asset,
       activeNetwork,
       to: walletConnectData.to,
-      value: walletConnectData.value,
+      value: walletConnectData.value
+        ? new BigNumber(parseInt(walletConnectData.value, 10))
+        : new BigNumber(0),
       fee: walletConnectData.gas,
-      feeLabel: 'average',
+      feeLabel: FeeLabel.Average,
       memo: walletConnectData.data,
     })
 
     emitterController.emit(OFF_SEND_TRANSACTION, hash)
+    navigation.navigate('OverviewScreen')
   }
 
   const reject = () => {}
 
-  console.log(route.params, 'ROUTE PARAMS SHOULD BE WC DATA')
   return (
     <Box
       flex={1}
