@@ -1,13 +1,8 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
 import { Box, ColorType, Text, TouchableOpacity } from '../theme'
-import { AppIcons } from '../assets'
-import { useNavigation, NavigationProp } from '@react-navigation/core'
 import { scale, ScaledSheet } from 'react-native-size-matters'
-import { MainStackParamList } from '../types'
 import { assetRowTiles, SCREEN_WIDTH, AssetRowProp } from '../utils'
-
-const { BuyCryptoCloseLight } = AppIcons
 
 const Aggregators = ({
   onPress,
@@ -92,7 +87,6 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
   headerHeight,
   isScrolledUp,
 }) => {
-  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   const [selectedItem, setSelectedItem] = React.useState<AssetRowProp>(
     assetRowTiles[0],
   )
@@ -113,142 +107,131 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
   }
 
   return (
-    <>
+    <Box
+      flex={1}
+      backgroundColor="mainBackground"
+      style={{ paddingTop: isScrolledUp ? scale(10) : headerHeight / 2 }}
+      paddingHorizontal={'screenPadding'}>
       {!isScrolledUp ? (
-        <Box
-          marginTop={'xl'}
-          alignItems="flex-end"
-          paddingBottom={'l'}
-          paddingHorizontal={'screenPadding'}>
-          <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
-            <BuyCryptoCloseLight />
-          </TouchableOpacity>
+        <Box>
+          <Text
+            marginTop={'s'}
+            variant={'onScreenHeader'}
+            color="darkGrey"
+            lineHeight={scale(38)}
+            fontWeight="400"
+            tx="learnAboutSwapProviders"
+          />
+          <Text variant={'termsBody'} color="black2" tx="thereAreTradeoff" />
+          <Box marginTop={'xl'}>
+            <Box>
+              <Text
+                tx="aggregators"
+                variant={'h5'}
+                fontWeight="400"
+                color="activeButton"
+              />
+              <Box
+                marginTop={'s'}
+                backgroundColor={'activeButton'}
+                width={scale(15)}
+                height={scale(2)}
+              />
+            </Box>
+            <Box marginTop={'m'}>
+              <Box flexWrap={'wrap'} flexDirection="row">
+                {assetRowTiles.map((item) => renderItem({ item }))}
+              </Box>
+            </Box>
+          </Box>
+          <Box
+            height={1}
+            backgroundColor="whiteLightGrey"
+            style={styles.columnWrapperStyle}
+          />
         </Box>
       ) : null}
       <Box
-        flex={1}
-        backgroundColor="mainBackground"
-        style={{ paddingTop: isScrolledUp ? scale(10) : headerHeight / 2 }}
-        paddingHorizontal={'screenPadding'}>
-        <Text
-          marginTop={'s'}
-          variant={'onScreenHeader'}
-          color="darkGrey"
-          lineHeight={scale(38)}
-          fontWeight="400"
-          tx="learnAboutSwapProviders"
-        />
-        <Text variant={'termsBody'} color="black2" tx="thereAreTradeoff" />
-        <Box marginTop={'xl'}>
-          <Box>
-            <Text
-              tx="aggregators"
-              variant={'h5'}
-              fontWeight="400"
-              color="activeButton"
-            />
+        flexDirection={'row'}
+        alignItems="center"
+        height={scale(40)}
+        justifyContent={'space-between'}>
+        <selectedItem.icon width={scale(40)} height={scale(40)} />
+        <Box flexDirection={'row'} alignItems="center">
+          {assetRowTiles.map((item) => (
             <Box
-              marginTop={'s'}
-              backgroundColor={'activeButton'}
-              width={scale(15)}
+              marginTop={'m'}
+              backgroundColor={
+                item.name === selectedItem.name ? 'activeButton' : 'mediumGrey'
+              }
+              width={scale(10)}
               height={scale(2)}
+              marginLeft="s"
+              key={item.name}
             />
-          </Box>
-          <Box marginTop={'m'}>
-            <Box flexWrap={'wrap'} flexDirection="row">
-              {assetRowTiles.map((item) => renderItem({ item }))}
-            </Box>
-          </Box>
-        </Box>
-        <Box
-          height={1}
-          backgroundColor="whiteLightGrey"
-          style={styles.columnWrapperStyle}
-        />
-        <Box
-          flexDirection={'row'}
-          alignItems="center"
-          height={scale(40)}
-          justifyContent={'space-between'}>
-          <selectedItem.icon width={scale(40)} height={scale(40)} />
-          <Box flexDirection={'row'} alignItems="center">
-            {assetRowTiles.map((item) => (
-              <Box
-                marginTop={'m'}
-                backgroundColor={
-                  item.name === selectedItem.name
-                    ? 'activeButton'
-                    : 'mediumGrey'
-                }
-                width={scale(10)}
-                height={scale(2)}
-                marginLeft="s"
-                key={item.name}
-              />
-            ))}
-          </Box>
-        </Box>
-        <Text
-          variant={'warnText'}
-          lineHeight={scale(30)}
-          color="darkGrey"
-          fontWeight={'400'}
-          marginTop={'l'}>
-          {selectedItem.heading}
-        </Text>
-        <Text
-          variant={'h6'}
-          lineHeight={scale(20)}
-          color="darkGrey"
-          marginTop={'s'}>
-          {selectedItem.description}
-        </Text>
-        <Box
-          flexDirection={'row'}
-          marginTop="xl"
-          justifyContent={'space-between'}>
-          {selectedItem.pros.length ? (
-            <ProsOrConsComponent
-              titleColor="fastColor"
-              title="PROS"
-              list={selectedItem.pros}
-            />
-          ) : null}
-          {selectedItem.cons.length ? (
-            <ProsOrConsComponent
-              titleColor="consColor"
-              title="CONS"
-              list={selectedItem.cons}
-            />
-          ) : null}
-        </Box>
-        <Box marginTop={'xl'}>
-          <Text
-            variant={'listText'}
-            tx="feeStructure"
-            color={'darkGrey'}
-            fontWeight="400"
-          />
-          <Box marginTop={'s'}>
-            {selectedItem.feeStructure.map((item, index) => (
-              <Box flexDirection={'row'} key={`${index}`}>
-                <Text marginTop={'m'} fontSize={scale(3)} color="darkGrey">
-                  {'\u2B24'}
-                </Text>
-                <Text
-                  variant={'listText'}
-                  marginTop="s"
-                  marginLeft={'m'}
-                  fontWeight="400"
-                  color={'darkGrey'}>
-                  {item}
-                </Text>
-              </Box>
-            ))}
-          </Box>
+          ))}
         </Box>
       </Box>
-    </>
+      <Text
+        variant={'warnText'}
+        lineHeight={scale(30)}
+        color="darkGrey"
+        fontWeight={'400'}
+        marginTop={'l'}>
+        {selectedItem.heading}
+      </Text>
+      <Text
+        variant={'h6'}
+        lineHeight={scale(20)}
+        color="darkGrey"
+        marginTop={'s'}>
+        {selectedItem.description}
+      </Text>
+      <Box
+        flexDirection={'row'}
+        marginTop="xl"
+        justifyContent={'space-between'}>
+        {selectedItem.pros.length ? (
+          <ProsOrConsComponent
+            titleColor="fastColor"
+            title="PROS"
+            list={selectedItem.pros}
+          />
+        ) : null}
+        {selectedItem.cons.length ? (
+          <ProsOrConsComponent
+            titleColor="consColor"
+            title="CONS"
+            list={selectedItem.cons}
+          />
+        ) : null}
+      </Box>
+      <Box marginTop={'xl'}>
+        <Text
+          variant={'listText'}
+          tx="feeStructure"
+          color={'darkGrey'}
+          fontWeight="400"
+        />
+        <Box marginTop={'s'}>
+          {selectedItem.feeStructure.map((item, index) => (
+            <Box flexDirection={'row'} key={`${index}`}>
+              <Text marginTop={'m'} fontSize={scale(3)} color="darkGrey">
+                {'\u2B24'}
+              </Text>
+              <Text
+                variant={'listText'}
+                marginTop="s"
+                marginLeft={'m'}
+                fontWeight="400"
+                color={'darkGrey'}>
+                {item}
+              </Text>
+            </Box>
+          ))}
+        </Box>
+      </Box>
+    </Box>
   )
 }
 

@@ -927,6 +927,25 @@ export const StackMainNavigator = () => {
             headerLeft: PlaceholderComp,
           })}
         />
+        <MainStack.Screen
+          name="SwapProviderInfoDrawer"
+          component={SwapProviderInfoDrawer}
+          options={({ route }: NavigationProps) => {
+            const { isScrolledUp = false } = route.params
+            const empty = ''
+            return {
+              ...screenNavOptions,
+              headerStyle: {
+                backgroundColor: faceliftPalette.white,
+              },
+              headerTitleStyle: NORMAL_HEADER,
+              headerTitle: isScrolledUp
+                ? labelTranslateFn('swapProviders')!
+                : empty,
+              headerLeft: StackMainNavigatorHeaderLeft,
+            }
+          }}
+        />
       </MainStack.Group>
       <MainStack.Group>
         <MainStack.Screen
@@ -936,19 +955,6 @@ export const StackMainNavigator = () => {
             const { isScrolledUp = false, screenTitle = '' } = route.params
             const empty = ''
             return semiTransparentDrawerStyle(isScrolledUp, screenTitle, empty)
-          }}
-        />
-        <MainStack.Screen
-          name="SwapProviderInfoDrawer"
-          component={SwapProviderInfoDrawer}
-          options={({ route }: NavigationProps) => {
-            const { isScrolledUp = false } = route.params
-            const empty = ''
-            return semiTransparentDrawerStyle(
-              isScrolledUp,
-              labelTranslateFn('swapProviders')!,
-              empty,
-            )
           }}
         />
         <MainStack.Screen

@@ -26,14 +26,14 @@ const SwapProviderInfoDrawer = (props: Props) => {
   ) => {
     const { contentOffset } = event.nativeEvent
 
-    if (contentOffset.y > headerHeight - 10) {
+    if (contentOffset.y > headerHeight + 100) {
       navigation.setParams({
         screenTitle: route.params.screenTitle,
         isScrolledUp: true,
       })
     }
 
-    if (contentOffset.y + headerHeight - 10 < 0) {
+    if (contentOffset.y + headerHeight < 0) {
       navigation.setParams({
         screenTitle: route.params.screenTitle,
         isScrolledUp: false,
@@ -54,14 +54,14 @@ const SwapProviderInfoDrawer = (props: Props) => {
         contentContainerStyle={{
           paddingBottom: scale(20),
         }}>
-        {isScrolledUp ? (
-          <Box flex={1} backgroundColor="mainBackground">
-            <SwapProviderInfoComponent
-              headerHeight={headerHeight}
-              isScrolledUp={isScrolledUp || false}
-            />
-          </Box>
-        ) : (
+        {/* {isScrolledUp ? ( */}
+        <Box flex={1} backgroundColor="mainBackground">
+          <SwapProviderInfoComponent
+            headerHeight={headerHeight}
+            isScrolledUp={isScrolledUp || false}
+          />
+        </Box>
+        {/* ) : (
           <Box
             flex={1}
             style={{ paddingTop: headerHeight * 0.8 }}
@@ -71,7 +71,7 @@ const SwapProviderInfoDrawer = (props: Props) => {
               isScrolledUp={isScrolledUp || false}
             />
           </Box>
-        )}
+        )} */}
       </ScrollView>
     </Box>
   )
