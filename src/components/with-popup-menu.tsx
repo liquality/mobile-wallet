@@ -8,12 +8,15 @@ import { AppIcons, Images } from '../assets'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 
-const { LockIcon, ManageAssetsDarkIcon, SettingsActive } = AppIcons
+const { LockIcon, ManageAssetsDarkIcon, Settings } = AppIcons
 
-type Props = NativeStackScreenProps<
-  MainStackParamList,
-  'AssetManagementScreen' | 'LoginScreen' | 'WithPopupMenu'
->
+type RouteName =
+  | 'AssetManagementScreen'
+  | 'LoginScreen'
+  | 'WithPopupMenu'
+  | 'AccountManagementScreen'
+
+type Props = NativeStackScreenProps<MainStackParamList, RouteName>
 const WithPopupMenu = (props: Props) => {
   const { navigation } = props
 
@@ -30,10 +33,18 @@ const WithPopupMenu = (props: Props) => {
 
   const handleManageAssetsBtnPress = () => {
     navigation.goBack()
-    navigation.navigate('AssetManagementScreen', {
-      screenTitle: 'Manage Assets',
-      includeBackBtn: true,
-    })
+    // added setTimeout to avoid back arrow get render
+    setTimeout(() => {
+      navigation.navigate('AssetManagementScreen', {})
+    }, 0)
+  }
+
+  const handleManageAccountBtnPress = () => {
+    navigation.goBack()
+    // added setTimeout to avoid back arrow get render
+    setTimeout(() => {
+      navigation.navigate('AccountManagementScreen', {})
+    }, 0)
   }
 
   return (
@@ -72,13 +83,14 @@ const WithPopupMenu = (props: Props) => {
                       />
                     </Box>
                   </TouchableWithoutFeedback>
-                  <TouchableWithoutFeedback onPress={navigation.goBack}>
+                  <TouchableWithoutFeedback
+                    onPress={handleManageAccountBtnPress}>
                     <Box flexDirection={'row'} marginTop="l">
-                      <SettingsActive height={scale(20)} width={scale(20)} />
+                      <Settings height={scale(20)} width={scale(20)} />
                       <Text
                         variant={'radioText'}
                         paddingLeft={'l'}
-                        color="activeButton"
+                        color="textColor"
                         tx="manageAccs"
                       />
                     </Box>

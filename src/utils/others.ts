@@ -15,12 +15,11 @@ import {
 import dayjs from 'dayjs'
 import { Buffer } from '@craftzdog/react-native-buffer'
 import QuickCrypto from 'react-native-quick-crypto'
-
 import { translate, TxKeyPath } from '../i18n'
 import { Images } from '../assets'
 
 export const sortQuotes = (
-  network: string,
+  network: Network,
   quotes: SwapQuote[],
 ): SwapQuote[] => {
   if (!quotes) {
@@ -52,7 +51,7 @@ export const sortQuotes = (
 }
 
 export const formatDate = (ms: number): string => {
-  return dayjs(ms).format('DD/MM/YYYY, HH:mm a')
+  return dayjs(ms).format('MM.DD.YYYY, HH:mm a')
 }
 
 export const pbkdf2 = async (

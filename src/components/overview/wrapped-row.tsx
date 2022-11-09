@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useCallback, useState } from 'react'
+import React, { FC, Fragment, useCallback } from 'react'
 import { AccountType, ActionEnum, MainStackParamList } from '../../types'
 import Row from './row'
 import SubRow from './sub-row'
@@ -11,6 +11,7 @@ import {
   enabledAssetsStateFamily,
   isDoneFetchingData,
   networkState,
+  accountToggled,
   swapPairState,
 } from '../../atoms'
 import { useNavigation, NavigationProp, useRoute } from '@react-navigation/core'
@@ -24,7 +25,6 @@ const WrappedRow: FC<{
 }> = (props) => {
   const { item } = props
 
-  const [isExpanded, setIsExpanded] = useState(false)
   const ethAccount = useRecoilValue(accountForAssetState('ETH'))
   const btcAccount = useRecoilValue(accountForAssetState('BTC'))
   const address = useRecoilValue(addressStateFamily(item.id))
@@ -32,7 +32,7 @@ const WrappedRow: FC<{
     balanceStateFamily({ asset: item.name, assetId: item.id }),
   )
   const activeNetwork = useRecoilValue(networkState)
-
+  const [rowExpanded, setRowExpanded] = useRecoilState(accountToggled)
   const account = useRecoilValue(accountInfoStateFamily(item.id))
   const isDoneFetching = useRecoilValue(isDoneFetchingData)
   const [swapPair, setSwapPair] = useRecoilState(swapPairState)
@@ -43,8 +43,8 @@ const WrappedRow: FC<{
   const route = useRoute<OverviewProps['route']>()
 
   const toggleRow = useCallback(() => {
-    setIsExpanded(!isExpanded)
-  }, [isExpanded])
+    setRowExpanded(rowExpanded === account?.id ? undefined : account?.id)
+  }, [account?.id, rowExpanded, setRowExpanded])
 
   const onNFTPress = () => {
     if (account.id) {
@@ -56,7 +56,7 @@ const WrappedRow: FC<{
   }
 
   const onAssetSelected = useCallback(
-    (currentAccount: AccountType) => {
+    (currentAccount: AccountType, parentAccount?: AccountType) => {
       // Make sure account assets have the same id (account id) as their parent
       const selectedAccount: AccountType = {
         ...currentAccount,
@@ -74,7 +74,10 @@ const WrappedRow: FC<{
           if (toAsset) {
             setSwapPair({ fromAsset, toAsset })
           }
-        } else if (!swapPair.fromAsset) {
+        } else if (
+          !swapPair.fromAsset ||
+          !route.params.swapAssetPair?.fromAsset
+        ) {
           setSwapPair((previousValue) => ({
             ...previousValue,
             fromAsset: selectedAccount,
@@ -107,6 +110,7 @@ const WrappedRow: FC<{
           params: {
             ...route.params,
             assetData: selectedAccount,
+            screenTitle: parentAccount?.name || selectedAccount.name,
             includeBackBtn: true,
           },
         })
@@ -149,9 +153,9 @@ const WrappedRow: FC<{
         toggleRow={toggleRow}
         onAssetSelected={() => onAssetSelected(account)}
         isNested={isNested}
-        isExpanded={isExpanded}
+        isExpanded={rowExpanded === account.id}
       />
-      {isNested && isExpanded && (
+      {isNested && rowExpanded === account.id && (
         <SubRow
           key={1}
           parentItem={account}
@@ -161,14 +165,14 @@ const WrappedRow: FC<{
         />
       )}
       {isNested &&
-        isExpanded &&
+        rowExpanded === account.id &&
         assets?.map((subItem) => {
           return (
             <SubRow
               key={subItem.id}
               parentItem={account}
               item={subItem}
-              onAssetSelected={() => onAssetSelected(subItem)}
+              onAssetSelected={() => onAssetSelected(subItem, account)}
             />
           )
         })}

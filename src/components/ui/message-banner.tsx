@@ -1,11 +1,5 @@
 import React, { FC } from 'react'
-import {
-  Dimensions,
-  StyleSheet,
-  View,
-  StyleProp,
-  ViewStyle,
-} from 'react-native'
+import { StyleSheet, View, StyleProp, ViewStyle } from 'react-native'
 import { Text, Button, palette } from '../../theme'
 import { TxKeyPath, translate } from '../../i18n'
 import i18n from 'i18n-js'
@@ -92,7 +86,7 @@ const MessageBanner: FC<MessageBannerProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: palette.yellowBar,
-    width: Dimensions.get('screen').width,
+    width: '100%',
     padding: 20,
   },
   row: {

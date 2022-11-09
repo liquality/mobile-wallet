@@ -19,6 +19,7 @@ const {
   AvalancheChainIcon,
   AvalancheChainIcon: AvalancheIcon,
   SolanaChainIcon,
+  OptimismChainIcon,
   ETHIcon,
   RBTCIcon,
   SovrynIcon,
@@ -33,6 +34,12 @@ const {
   SolanaIcon,
   BlankIcon,
   AllChainIndicator,
+  // swapProvider
+  HopProviderIcon,
+  OneInch,
+  Sovryn,
+  Thorchain,
+  Uniswap,
 } = AppIcons
 
 type AssetIconType = {
@@ -87,7 +94,15 @@ const extractSpecificIcon = {
     assetName: SolanaChainIcon,
     viewBoxValue: '',
   },
+  [`${ChainId.Optimism}`]: {
+    assetName: OptimismChainIcon,
+    viewBoxValue: '',
+  },
   eth: {
+    assetName: ETHIcon,
+    viewBoxValue: '',
+  },
+  optimism: {
     assetName: ETHIcon,
     viewBoxValue: '',
   },
@@ -145,6 +160,26 @@ const extractSpecificIcon = {
   },
   all: {
     assetName: AllChainIndicator,
+    viewBoxValue: '',
+  },
+  hop: {
+    assetName: HopProviderIcon,
+    viewBoxValue: '',
+  },
+  ['oneinchV4']: {
+    assetName: OneInch,
+    viewBoxValue: '',
+  },
+  sovryn: {
+    assetName: Sovryn,
+    viewBoxValue: '',
+  },
+  thorchain: {
+    assetName: Thorchain,
+    viewBoxValue: '',
+  },
+  uniswap: {
+    assetName: Uniswap,
     viewBoxValue: '',
   },
 }

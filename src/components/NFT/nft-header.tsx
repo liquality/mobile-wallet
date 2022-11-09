@@ -9,7 +9,6 @@ import { AccountType } from '../../types'
 import { addressStateFamily } from '../../atoms'
 import { useRecoilValue } from 'recoil'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
-const adjustLineHeight = -scale(30)
 
 const { Eye, Refresh, NftChain } = AppIcons
 
@@ -54,15 +53,12 @@ const NftHeader: React.FC<NftHeaderProps> = (props) => {
             </Box>
           ) : null}
 
-          <Text color={'darkGrey'} variant="totalBalance">
+          <Text color={'darkGrey'} variant="totalAsset">
             {blackText}
           </Text>
 
           <Box style={styles.textContainer}>
-            <Text
-              style={{ marginTop: adjustLineHeight }}
-              variant="totalAsset"
-              color={'nestedColor'}>
+            <Text variant="totalAsset" color={'nestedColor'}>
               {greyText}
             </Text>
             {isSpecificChain ? (

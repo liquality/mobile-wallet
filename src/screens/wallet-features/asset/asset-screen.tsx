@@ -5,31 +5,55 @@ import {
   View,
   ScrollView,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native'
-import { prettyBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import {
+  prettyBalance,
+  prettyFiatBalance,
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, MainStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
-import { Text, Box, palette, Card, faceliftPalette } from '../../../theme'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { Text, Box, Card, faceliftPalette } from '../../../theme'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
+  activityFilterState,
   addressStateFamily,
   assetScreenPopupMenuVisible,
   balanceStateFamily,
+  fiatRatesState,
   networkState,
+  statusFilterBtnState,
   swapPairState,
+  totalFiatBalanceState,
+  transFilterBtnState,
 } from '../../../atoms'
 import { getAsset } from '@liquality/cryptoassets'
 import I18n from 'i18n-js'
-import { GRADIENT_BACKGROUND_HEIGHT, labelTranslateFn } from '../../../utils'
+import {
+  downloadAssetAcitivity,
+  labelTranslateFn,
+  SCREEN_WIDTH,
+} from '../../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
-import { AppIcons, Fonts, Images } from '../../../assets'
+import { AppIcons, Images } from '../../../assets'
 import AssetIcon from '../../../components/asset-icon'
-const { Eye, Refresh } = AppIcons
-const adjustLineHeight = -scale(30)
+const { Refresh } = AppIcons
 import { scale } from 'react-native-size-matters'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import { populateWallet } from '../../../store/store'
+import { useFilteredHistory } from '../../../custom-hooks'
+const {
+  Filter,
+  ExportIcon,
+  ManageAssetsDarkIcon,
+  AccountDetailsIcon,
+  SendHex,
+  SwapHex,
+  ReceiveHex,
+  BuyHex,
+} = AppIcons
 
 type AssetScreenProps = NativeStackScreenProps<
   MainStackParamList,
@@ -46,6 +70,46 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
   const [isAssetScreenPopupMenuVisible, setAssetScreenPopuMenuVisible] =
     useRecoilState(assetScreenPopupMenuVisible)
+  const totalFiatBalance = useRecoilValue(totalFiatBalanceState)
+  const fiatRates = useRecoilValue(fiatRatesState)
+  const historyItems = useFilteredHistory()
+  const setAssetFilter = useSetRecoilState(activityFilterState)
+  const [transFilterBtn, setTransFilterBtn] =
+    useRecoilState(transFilterBtnState)
+  const [statusFilterBtn, setStatusFilterBtn] =
+    useRecoilState(statusFilterBtnState)
+
+  React.useEffect(() => {
+    setAssetFilter({ sorter: 'by_date', codeSort: code })
+  }, [code, setAssetFilter])
+
+  const resetFilterToByDate = React.useCallback(
+    () => {
+      setAssetFilter({ sorter: 'by_date' })
+      setTransFilterBtn(
+        transFilterBtn.map((item) => ({ ...item, status: false })),
+      )
+      setStatusFilterBtn(
+        statusFilterBtn.map((item) => ({ ...item, status: false })),
+      )
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  )
+
+  React.useEffect(() => {
+    return () => {
+      // Cleanup and reset filter to old state
+      resetFilterToByDate()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const onExportIconPress = async () => {
+    try {
+      await downloadAssetAcitivity(historyItems)
+    } catch (error) {}
+  }
 
   const handleSendPress = useCallback(() => {
     navigation.navigate('SendScreen', {
@@ -69,9 +133,57 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
     })
   }, [navigation, swapPair])
 
+  const handleBuyPress = () => {
+    const showIntro = Number(totalFiatBalance) <= 0
+    navigation.navigate('BuyCryptoDrawer', {
+      isScrolledUp: false,
+      token: '',
+      showIntro,
+      screenTitle: labelTranslateFn(
+        showIntro ? 'gettingStartedTitle' : 'buyCrypto',
+      )!,
+    })
+  }
+
+  const handleManageAssetsBtnPress = () => {
+    navigation.goBack()
+    navigation.navigate('AssetManagementScreen', {
+      screenTitle: 'Manage Assets',
+      includeBackBtn: true,
+    })
+  }
+
+  const appFeatures = [
+    {
+      Icon: SendHex,
+      name: labelTranslateFn('summaryBlockComp.send'),
+      navigateTo: handleSendPress,
+    },
+    {
+      Icon: SwapHex,
+      name: labelTranslateFn('summaryBlockComp.swap'),
+      navigateTo: handleSwapPress,
+    },
+    {
+      Icon: ReceiveHex,
+      name: labelTranslateFn('summaryBlockComp.receive'),
+      navigateTo: handleReceivePress,
+    },
+    {
+      Icon: BuyHex,
+      name: labelTranslateFn('summaryBlockComp.buy'),
+      navigateTo: handleBuyPress,
+    },
+  ]
+
   useEffect(() => {
     setAssetScreenPopuMenuVisible(false)
   }, [setAssetScreenPopuMenuVisible])
+
+  const refreshAssetData = async () => {
+    if (route.params.assetData?.id)
+      await populateWallet([route.params.assetData.id])
+  }
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
@@ -87,10 +199,14 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             backgroundColor={'popMenuColor'}
             paddingHorizontal={'xl'}
             position="absolute"
+            height={'100%'}
+            width={'100%'}
             zIndex={3000}
-            style={{ top: 5, right: 0 }}>
+            top={scale(5)}
+            right={0}
+            onTouchStart={() => setAssetScreenPopuMenuVisible(false)}>
             <Box flex={1} alignItems={'flex-end'}>
-              <Box height={scale(100)} width={scale(180)}>
+              <Box height={scale(120)} width={scale(230)}>
                 <ImageBackground
                   style={styles.lowerBgImg}
                   resizeMode="contain"
@@ -102,27 +218,41 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
                     <Box
                       flex={1}
                       justifyContent="center"
-                      padding={'onboardingPadding'}>
-                      <TouchableWithoutFeedback onPress={handleSendPress}>
-                        <Text
-                          variant={'normalText'}
-                          color="textColor"
-                          tx="assetScreen.send"
-                        />
+                      padding={'onboardingPadding'}
+                      onTouchStart={(evt) => {
+                        evt.stopPropagation()
+                      }}>
+                      <TouchableWithoutFeedback
+                        onPress={handleManageAssetsBtnPress}>
+                        <Box
+                          flexDirection="row"
+                          justifyContent="center"
+                          alignItems="center"
+                          height={scale(20)}
+                          marginBottom={'xl'}>
+                          <ManageAssetsDarkIcon />
+                          <Text
+                            variant={'normalText'}
+                            color="textColor"
+                            tx="manageAssets"
+                            marginLeft={'l'}
+                          />
+                        </Box>
                       </TouchableWithoutFeedback>
                       <TouchableWithoutFeedback onPress={handleSwapPress}>
-                        <Text
-                          variant={'normalText'}
-                          color="textColor"
-                          tx="assetScreen.swap"
-                        />
-                      </TouchableWithoutFeedback>
-                      <TouchableWithoutFeedback onPress={handleReceivePress}>
-                        <Text
-                          variant={'normalText'}
-                          color="textColor"
-                          tx="assetScreen.receive"
-                        />
+                        <Box
+                          flexDirection="row"
+                          justifyContent="center"
+                          alignItems="center"
+                          height={scale(20)}>
+                          <AccountDetailsIcon />
+                          <Text
+                            variant={'normalText'}
+                            color="textColor"
+                            tx="accountDetails"
+                            marginLeft={'l'}
+                          />
+                        </Box>
                       </TouchableWithoutFeedback>
                     </Box>
                   </ImageBackground>
@@ -131,13 +261,19 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
             </Box>
           </Box>
         )}
-        <Box flex={1} onTouchStart={() => setAssetScreenPopuMenuVisible(false)}>
+        <Box flex={1}>
           <Card
             variant={'headerCard'}
-            height={GRADIENT_BACKGROUND_HEIGHT}
-            paddingHorizontal="xl">
-            <Box marginTop="xl" justifyContent="space-between">
-              <Box marginBottom={'xl'} flexDirection={'row'}>
+            paddingHorizontal="xl"
+            paddingBottom={'mxxl'}>
+            <Box
+              marginTop="mxxl"
+              marginBottom={'xxl'}
+              justifyContent="space-between">
+              <Box
+                marginBottom={'l'}
+                flexDirection={'row'}
+                alignItems={'center'}>
                 <AssetIcon
                   size={scale(25)}
                   chain={getAsset(activeNetwork, code).chain}
@@ -147,40 +283,95 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
                   styles={{ right: scale(10) }}
                   asset={code}
                 />
-                <Text style={styles.addressText}>
+                <Text variant={'addressLabel'} color={'greyMeta'}>
                   {shortenAddress(address)}{' '}
                 </Text>
-                <Eye width={scale(20)} height={scale(10)} style={styles.eye} />
               </Box>
-              <Text color={'darkGrey'} variant="totalBalance">
-                {getAsset(activeNetwork, code).chain.toUpperCase()}
+              <Text color={'darkGrey'} variant="totalAsset">
+                {`${prettyBalance(
+                  new BigNumber(balance),
+                  code,
+                ).toString()} ${code}`}
               </Text>
-              <Box style={styles.textContainer}>
-                <Text
-                  style={{ marginTop: adjustLineHeight }}
-                  variant="totalAsset"
-                  color={'nestedColor'}>
-                  {`${prettyBalance(
-                    new BigNumber(balance),
-                    code,
-                  ).toString()} ${code}`}
+              <Box
+                flexDirection="row"
+                justifyContent={'space-between'}
+                alignItems={'center'}
+                marginBottom={'m'}>
+                <Text variant="totalAsset" color={'nestedColor'}>
+                  {`$${prettyFiatBalance(
+                    prettyBalance(new BigNumber(balance), code),
+                    fiatRates[code],
+                  ).toString()}`}
                 </Text>
-                <Pressable onPress={() => ({})} style={styles.refreshBtn}>
+                <Pressable onPress={refreshAssetData} style={styles.refreshBtn}>
                   <Refresh />
                 </Pressable>
               </Box>
             </Box>
+            <Box flexDirection={'row'} justifyContent="space-evenly">
+              {appFeatures.map((item, index) => (
+                <Box
+                  key={index}
+                  alignItems={'center'}
+                  width={SCREEN_WIDTH / 4.1}>
+                  <TouchableWithoutFeedback onPress={item.navigateTo}>
+                    <item.Icon />
+                  </TouchableWithoutFeedback>
+                  <Text
+                    marginTop={'m'}
+                    variant="addressLabel"
+                    color={'darkGrey'}>
+                    {item.name}
+                  </Text>
+                </Box>
+              ))}
+            </Box>
           </Card>
-          <View style={styles.tabBlack}>
-            <Pressable style={[styles.leftHeader, styles.headerFocused]}>
-              <Text variant="tabHeader" tx="assetScreen.activity" />
-            </Pressable>
-          </View>
+
+          <Box
+            marginHorizontal={'xl'}
+            marginBottom={'xl'}
+            justifyContent="space-between"
+            alignItems={'center'}
+            flexDirection="row">
+            <Box>
+              <Text
+                marginTop={'mxxl'}
+                variant={'tabLabel'}
+                color={'tablabelActiveColor'}
+                tx={'assetScreen.activity'}
+              />
+              <Box
+                borderBottomWidth={2}
+                borderBottomColor={'activeLink'}
+                width={scale(15)}
+              />
+            </Box>
+            <Box
+              flexDirection={'row'}
+              marginTop={'mxxl'}
+              width={scale(50)}
+              justifyContent="space-between"
+              alignItems="center">
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() =>
+                  navigation.navigate('ActivityFilterScreen', { code })
+                }>
+                <Filter />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => onExportIconPress()}>
+                <ExportIcon />
+              </TouchableOpacity>
+            </Box>
+          </Box>
           {/* For some reason ActivityFlatList started throwing undefined errors upon SEND navigation and flow.
         Should be fixed, can be commented out to bypass that error for now */}
           <ScrollView
             contentContainerStyle={{
               paddingBottom: scale(20),
+              paddingHorizontal: scale(20),
             }}>
             <ActivityFlatList selectedAsset={code} />
           </ScrollView>
@@ -191,49 +382,12 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
 }
 
 const styles = StyleSheet.create({
-  tabBlack: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    alignContent: 'stretch',
-    width: '50%',
-    borderBottomWidth: 1,
-    borderBottomColor: palette.gray,
-  },
-  leftHeader: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  headerFocused: {
-    borderBottomWidth: 1,
-    borderBottomColor: palette.black,
-  },
   refreshBtn: {
     width: 37,
     height: 37,
     backgroundColor: faceliftPalette.mediumWhite,
-    marginBottom: 10,
-    position: 'relative',
-    bottom: 20,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  eye: { marginTop: 10 },
-  addressText: {
-    fontFamily: Fonts.JetBrainsMono,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 20,
-    letterSpacing: 0.5,
-    marginTop: 7,
-    color: faceliftPalette.greyMeta,
-  },
-  textContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingBottom: 10,
   },
   lowerBgImg: {
     height: '100%',

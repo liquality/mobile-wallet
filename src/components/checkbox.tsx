@@ -1,13 +1,14 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import i18n from 'i18n-js'
 import { TxKeyPath, translate } from '../i18n'
 import { langSelected as LS } from '../../src/atoms'
 import { useRecoilValue } from 'recoil'
 import { AppIcons } from '../assets'
-import { palette } from '../theme'
+import { Box, Text, TouchableOpacity } from '../theme'
+import { scale } from 'react-native-size-matters'
 
-const { SwapCheck: CheckIcon } = AppIcons
+const { WhiteCheckMark } = AppIcons
 
 type CheckBoxProps = {
   chi?: React.ReactElement[]
@@ -25,9 +26,6 @@ const CheckBox: React.FC<CheckBoxProps> = ({
   selected,
   onPress,
   style,
-  textStyle,
-  size = 20,
-  color = palette.white,
   text = '',
   txOptions,
   ...props
@@ -48,16 +46,30 @@ const CheckBox: React.FC<CheckBoxProps> = ({
       onPress={onPress}
       {...props}>
       {selected ? (
-        <CheckIcon
-          width={size}
-          height={size}
-          color={color}
-          style={styles.icon}
-        />
+        <Box
+          borderWidth={1}
+          width={scale(20)}
+          height={scale(20)}
+          justifyContent="center"
+          alignItems="center"
+          borderColor="white">
+          <WhiteCheckMark />
+        </Box>
       ) : (
-        <View style={styles.icon} />
+        <Box
+          borderWidth={1}
+          width={scale(20)}
+          height={scale(20)}
+          borderColor="white"
+        />
       )}
-      <Text style={textStyle}> {content} </Text>
+      <Text
+        opacity={0.8}
+        variant={'whiteLabel'}
+        lineHeight={scale(30)}
+        marginLeft="m">
+        {content}
+      </Text>
     </TouchableOpacity>
   )
 }
@@ -66,11 +78,6 @@ const styles = StyleSheet.create({
   checkBox: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  icon: {
-    borderWidth: 1,
-    width: 20,
-    height: 20,
   },
 })
 

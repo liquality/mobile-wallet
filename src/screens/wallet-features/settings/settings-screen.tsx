@@ -15,11 +15,7 @@ import {
   SettingStackParamList,
 } from '../../../types'
 import WhatsNew from '../../../components/ui/whats-new'
-import {
-  downloadWalletLogs,
-  labelTranslateFn,
-  SCREEN_PADDING,
-} from '../../../utils'
+import { downloadWalletLogs, labelTranslateFn } from '../../../utils'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import {
   networkState,
@@ -150,8 +146,8 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
       <CustomHeaderBar title={{ tx: 'settings' }} />
       <ScrollView
         contentContainerStyle={{
-          paddingHorizontal: scale(SCREEN_PADDING),
-          paddingBottom: scale(SCREEN_PADDING),
+          paddingHorizontal: scale(20),
+          paddingBottom: scale(20),
         }}>
         <Box
           borderBottomWidth={1}

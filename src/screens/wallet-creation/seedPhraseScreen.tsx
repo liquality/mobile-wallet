@@ -36,7 +36,7 @@ const SeedPhraseScreen = ({ navigation, route }: SeedPhraseScreenProps) => {
     const { id, word } = item
 
     return (
-      <Box width={'27%'} borderBottomColor="textColor" borderBottomWidth={1}>
+      <Box width={'27%'} marginBottom={'l'}>
         <Text variant={'numberLabel'} color="greyBlack">
           {id}
         </Text>
@@ -64,8 +64,7 @@ const SeedPhraseScreen = ({ navigation, route }: SeedPhraseScreenProps) => {
           />
         </Box>
         <Text
-          variant={'normalText'}
-          color={'textColor'}
+          variant={'onboardingMessage'}
           tx="seedPhraseScreen.restoreYourWallet"
         />
         <Box marginTop={'xl'} flex={1}>

@@ -1,28 +1,26 @@
 import { FC, useCallback, useEffect } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
-  accountsIdsState,
   swapPairState,
-  networkState,
-  accountsIdsForMainnetState,
   totalFiatBalanceState,
+  totalEnabledAssetsWithBalance,
+  sortedAccountsIdsState,
 } from '../../atoms'
 import { ActionEnum } from '../../types'
-import { ImageBackground, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
-import { Box, Text, Card, IMAGE_BACKGROUND_STYLE } from '../../theme'
+import { Box, Text, Card } from '../../theme'
 import * as React from 'react'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
-import { GRADIENT_BACKGROUND_HEIGHT, labelTranslateFn } from '../../utils'
-import { Network } from '@liquality/cryptoassets/dist/src/types'
-import { Images, AppIcons } from '../../assets'
-import { scale } from 'react-native-size-matters'
+import {
+  GRADIENT_BACKGROUND_HEIGHT,
+  labelTranslateFn,
+  SCREEN_WIDTH,
+} from '../../utils'
+import { AppIcons } from '../../assets'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
-const { Exchange: DoubleArrowThick, DownIcon, UpIcon, DollarSign } = AppIcons
-
-//Line height issue with Anek Kannada font
-const adjustLineHeight = -scale(30)
+const { SendHex, SwapHex, ReceiveHex, BuyHex } = AppIcons
 
 type SummaryBlockProps = {
   navigation: OverviewProps['navigation']
@@ -30,10 +28,8 @@ type SummaryBlockProps = {
 
 const SummaryBlock: FC<SummaryBlockProps> = (props) => {
   const { navigation } = props
-  const network = useRecoilValue(networkState)
-  const accountsIds = useRecoilValue(
-    network === Network.Testnet ? accountsIdsState : accountsIdsForMainnetState,
-  )
+  const accountsIds = useRecoilValue(sortedAccountsIdsState)
+  const totalAssets = useRecoilValue(totalEnabledAssetsWithBalance)
   const totalFiatBalance = useRecoilValue(totalFiatBalanceState)
   const setSwapPair = useSetRecoilState(swapPairState)
 
@@ -66,29 +62,29 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
       token: '',
       showIntro,
       screenTitle: labelTranslateFn(
-        showIntro ? 'gettingStartedWithCrypto' : 'buyCrypto',
+        showIntro ? 'gettingStartedTitle' : 'buyCrypto',
       )!,
     })
   }
 
   const appFeatures = [
     {
-      Icon: UpIcon,
+      Icon: SendHex,
       name: labelTranslateFn('summaryBlockComp.send'),
       navigateTo: handleSendBtnPress,
     },
     {
-      Icon: DoubleArrowThick,
+      Icon: SwapHex,
       name: labelTranslateFn('summaryBlockComp.swap'),
       navigateTo: handleSwapBtnPress,
     },
     {
-      Icon: DownIcon,
+      Icon: ReceiveHex,
       name: labelTranslateFn('summaryBlockComp.receive'),
       navigateTo: handleReceiveBtnPress,
     },
     {
-      Icon: DollarSign,
+      Icon: BuyHex,
       name: labelTranslateFn('summaryBlockComp.buy'),
       navigateTo: handleBuyPress,
     },
@@ -110,35 +106,25 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
   return (
     <Card
       variant={'headerCard'}
-      height={GRADIENT_BACKGROUND_HEIGHT}
-      paddingHorizontal="xl">
-      <Box flex={0.65} justifyContent="center">
-        <Text color={'darkGrey'} variant="totalBalance">
+      paddingHorizontal="xl"
+      height={GRADIENT_BACKGROUND_HEIGHT}>
+      <Box justifyContent="center" flex={0.6}>
+        <Text color={'darkGrey'} variant="totalAsset">
           $ {totalFiatBalance}
         </Text>
-        <Text
-          style={{ marginTop: adjustLineHeight }}
-          variant="totalAsset"
-          color={'nestedColor'}>
-          {accountsIds.length}
+        <Text variant="totalAsset" color={'nestedColor'}>
+          {totalAssets}
           {accountsIds.length === 1
             ? `${labelTranslateFn('summaryBlockComp.asset')}`
             : `${labelTranslateFn('summaryBlockComp.assets')}`}
         </Text>
       </Box>
-      <Box flex={0.35}>
+      <Box flex={0.4}>
         <Box flexDirection={'row'} justifyContent="space-evenly">
           {appFeatures.map((item, index) => (
-            <Box key={index} alignItems={'center'}>
+            <Box key={index} alignItems={'center'} width={SCREEN_WIDTH / 4.1}>
               <TouchableWithoutFeedback onPress={item.navigateTo}>
-                <ImageBackground
-                  style={IMAGE_BACKGROUND_STYLE}
-                  resizeMode="cover"
-                  source={Images.hexoNav}>
-                  <Box flex={1} justifyContent="center" alignItems={'center'}>
-                    <item.Icon height={scale(14)} />
-                  </Box>
-                </ImageBackground>
+                <item.Icon />
               </TouchableWithoutFeedback>
               <Text marginTop={'m'} variant="addressLabel" color={'darkGrey'}>
                 {item.name}

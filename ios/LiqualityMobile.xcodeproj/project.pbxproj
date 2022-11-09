@@ -21,10 +21,10 @@
 		4713194B28DC47ED00EC7E40 /* AnekKannada-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713193F28DC47EC00EC7E40 /* AnekKannada-Medium.ttf */; };
 		4713194C28DC47ED00EC7E40 /* AnekKannada-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713194028DC47EC00EC7E40 /* AnekKannada-Regular.ttf */; };
 		4713194D28DC47ED00EC7E40 /* AnekKannada-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4713194128DC47EC00EC7E40 /* AnekKannada-Bold.ttf */; };
+		640CEDF0FE9E3CD8A30E2882 /* libPods-Liquality.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AD160C3FEA18A1F049FA716 /* libPods-Liquality.a */; };
 		69F0F60CC3F14C998DFE233B /* AnekBangla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0066BB11984F4D07B9A64C1E /* AnekBangla-Regular.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		E4E1F79229059A05006BC4D4 /* OpenSSL.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E8680628B55955003EACCC /* OpenSSL.xcframework */; };
-		F58D9D5746CCAAB445D386EF /* libPods-Liquality.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BCA2845EB0005B8022CBCA5 /* libPods-Liquality.a */; };
+		E4AE4848291975ED0083534D /* OpenSSL.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E8680628B55955003EACCC /* OpenSSL.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,13 +42,13 @@
 		00E356EE1AD99517003FC87E /* LiqualityMobileTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiqualityMobileTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* LiqualityMobileTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LiqualityMobileTests.m; sourceTree = "<group>"; };
+		0AD160C3FEA18A1F049FA716 /* libPods-Liquality.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Liquality.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* LiqualityMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiqualityMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = LiqualityMobile/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = LiqualityMobile/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = LiqualityMobile/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = LiqualityMobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = LiqualityMobile/main.m; sourceTree = "<group>"; };
-		3BCA2845EB0005B8022CBCA5 /* libPods-Liquality.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Liquality.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E9338FEEC88A9F62261AAD3 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Liquality/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		4713193628DC47EC00EC7E40 /* AnekKannada-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AnekKannada-Thin.ttf"; path = "../src/assets/fonts/AnekKannada-Thin.ttf"; sourceTree = "<group>"; };
 		4713193828DC47EC00EC7E40 /* AnekKannada-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AnekKannada-Light.ttf"; path = "../src/assets/fonts/AnekKannada-Light.ttf"; sourceTree = "<group>"; };
@@ -61,9 +61,9 @@
 		4713194128DC47EC00EC7E40 /* AnekKannada-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AnekKannada-Bold.ttf"; path = "../src/assets/fonts/AnekKannada-Bold.ttf"; sourceTree = "<group>"; };
 		647ABD422844BEB300D6E4C8 /* Liquality.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Liquality.entitlements; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = LiqualityMobile/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		D5AA02B2D4541695C802CFC5 /* Pods-Liquality.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Liquality.release.xcconfig"; path = "Target Support Files/Pods-Liquality/Pods-Liquality.release.xcconfig"; sourceTree = "<group>"; };
+		866BE6C02EFBCE64B3CC3935 /* Pods-Liquality.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Liquality.release.xcconfig"; path = "Target Support Files/Pods-Liquality/Pods-Liquality.release.xcconfig"; sourceTree = "<group>"; };
 		E4E8680628B55955003EACCC /* OpenSSL.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OpenSSL.xcframework; path = "Pods/OpenSSL-Universal/Frameworks/OpenSSL.xcframework"; sourceTree = "<group>"; };
-		E5FCD498E8A681CBBE6C0490 /* Pods-Liquality.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Liquality.debug.xcconfig"; path = "Target Support Files/Pods-Liquality/Pods-Liquality.debug.xcconfig"; sourceTree = "<group>"; };
+		EC9569BBAEE51522825026F9 /* Pods-Liquality.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Liquality.debug.xcconfig"; path = "Target Support Files/Pods-Liquality/Pods-Liquality.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -79,8 +79,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4E1F79229059A05006BC4D4 /* OpenSSL.xcframework in Frameworks */,
-				F58D9D5746CCAAB445D386EF /* libPods-Liquality.a in Frameworks */,
+				E4AE4848291975ED0083534D /* OpenSSL.xcframework in Frameworks */,
+				0C80B921A6F3F58F76C31292 /* BuildFile in Frameworks */,
+				640CEDF0FE9E3CD8A30E2882 /* libPods-Liquality.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,7 +131,7 @@
 			children = (
 				E4E8680628B55955003EACCC /* OpenSSL.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				3BCA2845EB0005B8022CBCA5 /* libPods-Liquality.a */,
+				0AD160C3FEA18A1F049FA716 /* libPods-Liquality.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -138,8 +139,8 @@
 		7FCAB7E7B11B9AF80CE31952 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				E5FCD498E8A681CBBE6C0490 /* Pods-Liquality.debug.xcconfig */,
-				D5AA02B2D4541695C802CFC5 /* Pods-Liquality.release.xcconfig */,
+				EC9569BBAEE51522825026F9 /* Pods-Liquality.debug.xcconfig */,
+				866BE6C02EFBCE64B3CC3935 /* Pods-Liquality.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -228,14 +229,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Liquality" */;
 			buildPhases = (
-				6D48ACF0EEAC5FCAFA08311B /* [CP] Check Pods Manifest.lock */,
+				6329FD041720CC102E06992D /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				D02DDDAC1FD8F32F507D7387 /* [CP] Embed Pods Frameworks */,
-				E929ACE69488CF2D75903D46 /* [CP] Copy Pods Resources */,
+				52350F1AB6DBDAA05D883C4F /* [CP] Embed Pods Frameworks */,
+				FE5C8AAF6033941C2951BC9C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -326,7 +327,24 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		6D48ACF0EEAC5FCAFA08311B /* [CP] Check Pods Manifest.lock */ = {
+		52350F1AB6DBDAA05D883C4F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6329FD041720CC102E06992D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -348,40 +366,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D02DDDAC1FD8F32F507D7387 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E929ACE69488CF2D75903D46 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -399,6 +383,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		FE5C8AAF6033941C2951BC9C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Liquality/Pods-Liquality-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -486,14 +487,14 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E5FCD498E8A681CBBE6C0490 /* Pods-Liquality.debug.xcconfig */;
+			baseConfigurationReference = EC9569BBAEE51522825026F9 /* Pods-Liquality.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Liquality.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = 5K4FAG7NH8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = LiqualityMobile/Info.plist;
@@ -575,14 +576,14 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D5AA02B2D4541695C802CFC5 /* Pods-Liquality.release.xcconfig */;
+			baseConfigurationReference = 866BE6C02EFBCE64B3CC3935 /* Pods-Liquality.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Liquality.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = 5K4FAG7NH8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = LiqualityMobile/Info.plist;

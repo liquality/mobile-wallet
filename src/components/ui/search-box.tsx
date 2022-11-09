@@ -48,7 +48,10 @@ const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
       alignItems="center"
       height={scale(46)}
       width={'100%'}>
-      <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
+      <TouchableOpacity
+        style={{ paddingTop: scale(5) }}
+        activeOpacity={0.7}
+        onPress={navigation.goBack}>
         <ChevronLeft width={scale(15)} height={scale(15)} />
       </TouchableOpacity>
       <Box marginLeft={'m'} width={'95%'}>

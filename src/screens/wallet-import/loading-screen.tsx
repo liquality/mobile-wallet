@@ -90,7 +90,7 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
             Alert.alert(labelTranslateFn('loadingScreen.failedImport')!)
             return
           }
-          navigation.navigate('CongratulationsScreen')
+          navigation.navigate('CongratulationsScreen', { screenTitle: '' })
         }
       },
     )

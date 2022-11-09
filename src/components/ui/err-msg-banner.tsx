@@ -12,16 +12,14 @@ type ErrorBtnProps = {
 export const ErrorBtn: FC<ErrorBtnProps> = (props) => {
   const { label, onPress } = props
   return (
-    <Box padding={'vs'}>
-      <Button
-        type="tertiary"
-        variant="s"
-        label={label}
-        onPress={onPress}
-        isBorderless={false}
-        isActive={true}
-      />
-    </Box>
+    <Button
+      type="tertiary"
+      variant="s"
+      label={label}
+      onPress={onPress}
+      isBorderless={false}
+      isActive={true}
+    />
   )
 }
 

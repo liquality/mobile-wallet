@@ -24,11 +24,11 @@
     "edit": "Edit",
     "error": "Error",
     "addLiquidity": "Add Liquidity",
-    "min": "Min",
-    "max": "Max",
+    "min": "MIN",
+    "max": "MAX",
     "available": "Available",
     "receive": "RECEIVE",
-    "maxSlippage": "Max slippage is 0.5%.",
+    "maxSlippage": "Max slippage is 3%.",
     "swapDoesnotComp": "If the swap doesn’t complete within 3 hours, you will be refunded in 6 hours at {{date}}",
     "initiateSwap": "Initiate Swap",
     "activities": "ACTIVITIES",
@@ -51,7 +51,8 @@
     "totalPrettyFiatBal": "{{prettyFiatBalance}}",
     "started": "Started",
     "completed": "Completed",
-    "custom": "Custom"
+    "custom": "Custom",
+    "done": "Done"
   },
   "congratulationsScreen": {
     "congrats": "Congrats!"
@@ -66,7 +67,7 @@
     "passwordError": "Passwords do not match. Try again."
   },
   "optInAnalyticsModal": {
-    "helpUsToImprove": "Help Us Improve Liquality.",
+    "helpUsToImprove": "Help Us Improve Liquality",
     "shareWhereYouClick": "We want to better serve you. Share where you click. There is no identifying data. This permission can be revoked any time.",
     "shareMyClicks": "Sure, I’ll share my clicks",
     "notToday": "Not today, ask me later"
@@ -92,7 +93,7 @@
   },
 
   "termsScreen": {
-    "termPrivacy": "Terms & Privacy",
+    "termPrivacy": "Terms & \nPrivacy",
     "termCopy": "THIS IS THE BETA VERSION OF THE LIQUALITY PLATFORM WHICH IS STILL BEING ACTIVELY DEVELOPED. YOU ACKNOWLEDGE THE INFORMATION AVAILABLE IS NOT INTENDED TO BE RELIED ON OR USED IN A PRODUCTION ENVIRONMENT. YOU ACKNOWLEDGE AND ACCEPT THAT THE SITE OR SERVICES \n (A) MAY CONTAIN BUGS, ERRORS, AND DEFECTS, \n (B) MAY FUNCTION IMPROPERLY OR BE SUBJECT TO PERIODS OF DOWNTIME AN UNAVAILABILITY, \n (C) MAY RESULT IN TOTAL OR PARTIAL LOSS OR CORRUPTION OF DATA USED IN THE SITE, AND \n (D) MAY BE MODIFIED AT ANY TIME, INCLUDING THROUGH THE RELEASE OF SUBSEQUENT VERSIONS, \n\nALL WITH OR WITHOUT NOTICE. THE ALPHA PLATFORM IS AVAILABLE ON AN “AS IS” AND “AS AVAILABLE” BASIS FOR THE SOLE PURPOSE OF COLLECTING FEEDBACK ON QUALITY, USABILITY, PERFORMANCE AND ANY DEFECTS. THANK YOU FOR YOUR SUPPORT WHILE WE CONTINUE TO WORK ON DELIVERING A PERFECT PRODUCT.",
     "iAgree:": "I Agree",
     "cancel": "Cancel"
@@ -112,7 +113,7 @@
   },
   "assetToggleScreen": {},
   "backupLoginScreen": {
-    "signInToSeedPhrase": "Sign-in \n to see Seed Phrase",
+    "signInToSeedPhrase": "Sign-in to see Seed Phrase",
     "password": "PASSWORD",
     "iHavePrivacyUnderstand": "I have privacy and understand the risk.",
     "pleaseCheckRisk": "Please check that you understand the risks",
@@ -121,7 +122,7 @@
   "backupSeedScreen": {
     "hej": "hej",
     "yourSeedPhrase": "Your Seed Phrase",
-    "writeItDown": "Write it down, verify it and store it securely. \n It is the only way to restore your wallet.",
+    "writeItDown": "Write it down, verify it and store it securely. It is the only way to restore your wallet.",
     "hidden4Security": "Hidden for security. Tap to reveal phrase.",
     "iSaveSeed": "I saved the seed"
   },
@@ -144,7 +145,7 @@
     "availableGas": "Available Gas {{gas} {{token}}"
   },
   "receiveScreen": {
-    "yourCurrent": "YOUR CURRENT {{code}} ADDRESS",
+    "yourCurrent": "YOUR CURRENT {{code}}/{{chain}} ADDRESS",
     "scanORcode": "Scan QR code with a mobile wallet to send funds.",
     "done": "Done",
     "copied": "Address copied!",
@@ -158,18 +159,19 @@
   },
   "sendConfirmationScreeen": {
     "status": "STATUS",
-    "time": "TIME",
+    "initiated": "Initiated",
     "sent": "SENT",
+    "completed": "Completed",
     "networkSpeed": "NETWORK SPEED/FEE",
     "speedUp": "Speed Up",
     "load": "Loading..."
   },
   "sendReviewScreen": {
     "inputDataInvalid": "Input data invalid",
-    "sendTransDetails": "SEND {{asset}} Transaction Details",
+    "sendTransDetails": "SEND Details",
     "failedTrans": "Failed to send transaction: ",
     "rateNotAvail": "Rates not available",
-    "send": "Send",
+    "send": "SEND",
     "netFee": "NETWORK FEE",
     "amtFee": "AMOUNT + FEES",
     "sendTo": "SEND TO",
@@ -325,13 +327,13 @@
     "wallet": "Wallet"
   },
   "sortPicker": {
+    "by_date": "By date (newest first)",
     "needs_attention": "Needs attention",
     "pending": "Pending",
-    "canceled": "Canceled",
+    "canceled": "Cancelled",
     "refunded": "Refunded",
-    "completed": "Completed",
     "failed": "Failed",
-    "by_date": "By date (newest first)",
+    "completed": "Completed",
     "by_type": "By type (A to Z)",
     "by_token": "By Token (A to Z)"
   },
@@ -347,9 +349,9 @@
     "buy": "Buy"
   },
   "sendTranDetailComp": {
-    "transId": "TRANSACTION ID",
+    "transaction": "TRANSACTION",
     "sent": "Sent",
-    "completed": "Completed"
+    "received": "Received"
   },
   "confirmationBlockComp": {
     "fee": "Fee",
@@ -417,7 +419,6 @@
     "tabBarOverview": "Overview",
     "tabBarDetails": "Details",
     "description": "DESCRIPTION",
-
     "createdBy": "Created By:",
     "creator": "CREATOR",
     "unlockableContent": "Unlockable Content:",
@@ -446,7 +447,7 @@
     "connect": "Connect"
   },
   "letGetYouStarted": "Let’s Get You Started",
-  "buyCrypto": "Buy Crypto",
+  "buyCrypto": "BUY CRYPTO",
   "unlockWalletUpperCase": "UNLOCK YOUR WALLET",
   "wordsNotMatch": "Words don’t match. Try again.",
   "tabBarActivity": "Activity",
@@ -479,5 +480,30 @@
   "buyTknWithTransak": "Buy {{token}} with Transak",
   "buyTknWithOnramper": "Buy {{token}} with Onramper",
   "weRecommedToStart": "We recommend to start with sending ETH to your Liquality wallet because that fuels many transactions. Or you can also buy crypto at our trusted partners.",
-  "gettingStartedWithCrypto": "Getting Started with Crypto is Easy"
+  "gettingStartedWithCrypto": "Getting Started with Crypto is Easy",
+  "balance": "Balance",
+  "oneProviderQuote": "{{quote}} PROVIDER QUOTE",
+  "nosProviderQuote": "{{quote}} PROVIDER QUOTES",
+  "bestRate": "BEST RATE",
+  "quotes": "Quotes",
+  "transferWithinAccs": "Transfer Within Accounts",
+  "activityFilter": "ACTIVITY FILTER",
+  "oneResult": "{{count}} Result",
+  "nosResult": "{{count}} Results",
+  "sort": "Sort",
+  "advanced": "Advanced",
+  "nfts": "NFTs",
+  "advancedFilter": "Advanced Filter",
+  "showOneResult": "Show {{count}} Result",
+  "showMultipleResult": "Show {{count}} Results",
+  "needsAttention": "Needs Attention",
+  "failed": "Failed",
+  "all": "ALL",
+  "gettingStartedTitle": "GETTING STARTED...",
+  "reviewSwap": "Review Swap",
+  "sendDetails": "SEND DETAILS",
+  "speedUpNoLonger": "Speed-up no longer possible",
+  "yourTranConfirmedMsg": "Your transaction was confirmed on the blockchain before changing speed and fee. It is moving along.",
+  "speedUpOptionMsg": "Speed-up options are only possible before the 1st confirmation and vary by network.",
+  "manageChainAcc": "MANAGE CHAINS/ACCOUNTS"
 }

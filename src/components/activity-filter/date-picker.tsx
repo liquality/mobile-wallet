@@ -3,7 +3,7 @@ import { Modal, View, Pressable, StyleSheet, Dimensions } from 'react-native'
 import { Calendar, DateData } from 'react-native-calendars'
 import { Theme } from 'react-native-calendars/src/types'
 import { AppIcons, Fonts } from '../../assets'
-import { palette } from '../../theme'
+import { faceliftPalette, palette } from '../../theme'
 import Label from '../ui/label'
 
 const { TimesIcon } = AppIcons
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: palette.black2,
+    backgroundColor: faceliftPalette.semiTransparentGrey,
   },
   modalContent: {
     backgroundColor: palette.white,

@@ -6,6 +6,7 @@ import { Box, faceliftPalette, Pressable, Text } from '../../theme'
 import { labelTranslateFn, SCREEN_HEIGHT } from '../../utils'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import { CommonActions } from '@react-navigation/native'
+import { Fonts } from '../../assets'
 
 type SeedPhraseConfirmationProps = NativeStackScreenProps<
   RootStackParamList,
@@ -128,7 +129,7 @@ const SeedPhraseConfirmationScreen = ({
     }
   }
 
-  let isDisabled = !words.every((item) => !!item.value)
+  let isDisabled = !words.every((item) => !!item.value) || !confirmSeedPhrase()
 
   const enableScroll = SCREEN_HEIGHT < 700
 
@@ -146,8 +147,7 @@ const SeedPhraseConfirmationScreen = ({
           />
         </Box>
         <Text
-          variant={'normalText'}
-          color={'textColor'}
+          variant={'onboardingMessage'}
           tx="seedPhraseConfirmationScreen.tap3wordMatching"
         />
         <Box marginTop={'xl'} marginBottom={'m'}>
@@ -181,12 +181,19 @@ const SeedPhraseConfirmationScreen = ({
           ) : null}
         </Box>
         <ScrollView scrollEnabled={enableScroll}>
-          <Box height={200} flexDirection="row" flexWrap="wrap">
+          <Box
+            height={200}
+            flexDirection="row"
+            flexWrap="wrap"
+            marginTop={'mxxl'}>
             {shuffledSeedWords.map((item: CustomSeedWordType, index) => (
               <TouchableWithoutFeedback
                 onPress={() => onWordPress(item, index)}
                 key={item.id}>
                 <Box
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                  height={scale(31)}
                   style={
                     item.selected
                       ? styles.inactiveButtonStyle
@@ -235,17 +242,31 @@ const styles = ScaledSheet.create({
     margin: '3@ms0.1',
   },
   textStyle: {
-    padding: '12@ms0.1',
+    fontFamily: Fonts.Regular,
+    fontSize: 15,
+    lineHeight: scale(1.3 * 15),
+    paddingHorizontal: '16@ms0.1',
+    paddingVertical: '8@ms0.1',
     color: faceliftPalette.active,
+    letterSpacing: 0.5,
+    textAlign: 'center',
   },
   inactiveButtonStyle: {
-    backgroundColor: faceliftPalette.whiteGrey,
+    borderWidth: '1@s',
+    borderColor: faceliftPalette.active,
+    backgroundColor: faceliftPalette.selectedBackground,
     margin: '3@ms0.1',
     borderRadius: '15@s',
   },
   inactiveTextStyle: {
-    padding: '12@ms0.1',
-    color: faceliftPalette.grey,
+    fontFamily: Fonts.Regular,
+    fontSize: 15,
+    lineHeight: scale(1.3 * 15),
+    paddingHorizontal: '16@ms0.1',
+    paddingVertical: '8@ms0.1',
+    letterSpacing: 0.5,
+    textAlign: 'center',
+    color: faceliftPalette.active,
   },
 })
 

@@ -94,6 +94,7 @@ const SwapConfirmedBlock = ({
               tx="confirmationBlockComp.confirmations"
             />
             <Text variant={'subListText'} color="darkGrey">
+              {' '}
               {confirmations}
             </Text>
           </Box>

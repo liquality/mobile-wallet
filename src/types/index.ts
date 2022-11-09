@@ -13,20 +13,6 @@ import {
 } from '@liquality/wallet-core/dist/src/store/types'
 import { Asset } from '@liquality/wallet-core/dist/src/store/types'
 
-export type AssetDataElementType = {
-  id: string
-  name: string
-  code: string
-  chain: ChainId
-  address?: string
-  balance: number
-  balanceInUSD?: number
-  color?: string
-  assets?: Array<AssetDataElementType>
-  fees?: FeeDetails
-  activeNetwork?: any
-}
-
 export interface AccountType {
   id: string
   name: string
@@ -83,8 +69,8 @@ export type SwapInfoType = {
   fromAmount: number
   toAmount: number
   quote: any
-  fromNetworkFee: NetworkFeeType
-  toNetworkFee: NetworkFeeType
+  fromNetworkFee: CustomNetworkFeeType
+  toNetworkFee: CustomNetworkFeeType
 }
 
 export type StackPayload = {
@@ -131,6 +117,9 @@ export type StackPayload = {
   isScrolledUp?: boolean
   token?: string
   showIntro?: boolean
+  showProvideIcon?: boolean
+  assetsAreSameChain?: boolean
+  specificAsset?: string
 }
 
 export type SettingStackParamList = {
@@ -143,7 +132,7 @@ export type RootStackParamList = {
   PasswordCreationScreen: StackPayload
   SeedPhraseScreen: StackPayload
   SeedPhraseConfirmationScreen: StackPayload
-  CongratulationsScreen: undefined
+  CongratulationsScreen: StackPayload
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   LoadingScreen: StackPayload
@@ -156,7 +145,7 @@ export type MainStackParamList = {
   PasswordCreationScreen: StackPayload
   SeedPhraseScreen: StackPayload
   SeedPhraseConfirmationScreen: StackPayload
-  CongratulationsScreen: undefined
+  CongratulationsScreen: StackPayload
   UnlockWalletScreen: StackPayload
   LoginScreen: undefined
   LoadingScreen: StackPayload
@@ -200,8 +189,13 @@ export type MainStackParamList = {
   SettingsScreen: { shouldLogOut?: boolean }
   WithPopupMenu: undefined
   BuyCryptoDrawer: StackPayload
+  SwapProviderModal: StackPayload
   SelectChainScreen: undefined
   SwapDetailsScreen: StackPayload
+  ActivityFilterScreen: StackPayload
+  SortingModal: StackPayload
+  AdvancedFilterModal: StackPayload
+  AccountManagementScreen: StackPayload
 }
 
 export type RootTabParamList = {
@@ -244,6 +238,7 @@ export enum ActionEnum {
   SEND = 'SEND',
   SWAP = 'SWAP',
   RECEIVE = 'RECEIVE',
+  NFT = 'NFT',
 }
 
 export enum TimeLimitEnum {
@@ -260,10 +255,22 @@ export enum ActivityStatusEnum {
   REFUNDED = 'Refunded',
   NEEDS_ATTENTION = 'Needs Attention',
   FAILED = 'Failed',
+  WAITING_FOR_CONFIRMATIONS = 'WAITING_FOR_CONFIRMATIONS',
 }
 
 export type NetworkFeeType = {
   speed: FeeLabel
+  value: number
+}
+
+export enum CustomFeeLabel {
+  Custom = 'custom',
+}
+
+export type ExtendedFeeLabel = CustomFeeLabel | FeeLabel
+
+export type CustomNetworkFeeType = {
+  speed: FeeLabel | CustomFeeLabel
   value: number
 }
 
@@ -298,5 +305,36 @@ export interface CustomRootState extends RootState {
     activityStatuses?: string[]
     assetToggles?: string[]
     sorter?: string | undefined
+    codeSort?: string | undefined
   }
+}
+
+export enum ErrorMessages {
+  NotEnoughToken,
+  NotEnoughTokenSelectMax,
+  NotEnoughCoverFees,
+  NotEnoughGas,
+  AdjustSending,
+}
+
+export interface ErrorMsgAndType {
+  msg: string
+  type: ErrorMessages | null
+}
+
+export type SendToastProps = {
+  errorMessage: {
+    msg: string
+    type: ErrorMessages
+  }
+  code: string
+  amount: string
+  onGetPress: () => void
+  onMaxPress: () => void
+  resetMsg: () => void
+}
+
+export type AccountIdType = {
+  id: string
+  name: Asset
 }
