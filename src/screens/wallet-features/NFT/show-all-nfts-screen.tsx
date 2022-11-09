@@ -89,7 +89,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
         <Box>
           <NftHeader
             blackText={`${numberOfNfts} ${labelTranslateFn('nft.nfts')}`}
-            greyText={`${numberOfAccountsWithNfts}  ${labelTranslateFn(
+            greyText={`${numberOfAccountsWithNfts} ${labelTranslateFn(
               'nft.accounts',
             )}`}
             width={Dimensions.get('screen').width}

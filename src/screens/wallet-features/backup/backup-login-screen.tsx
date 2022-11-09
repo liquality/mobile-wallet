@@ -1,23 +1,30 @@
 import React, { useState } from 'react'
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  Platform,
-  KeyboardAvoidingView,
-  Dimensions,
-} from 'react-native'
+import { Keyboard, StyleSheet } from 'react-native'
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList, UseInputStateReturnType } from '../../../types'
-import Header from '../../header'
-import { createWallet, restoreWallet } from '../../../store/store'
-import { Box, Button, palette, Text } from '../../../theme'
-import { MNEMONIC, PASSWORD } from '@env'
+import { restoreWallet } from '../../../store/store'
+import {
+  Box,
+  Pressable,
+  Text,
+  GRADIENT_COLORS,
+  GRADIENT_STYLE,
+  TextInput,
+} from '../../../theme'
+import {
+  INPUT_OPACITY_ACTIVE,
+  INPUT_OPACITY_INACTIVE,
+  labelTranslateFn,
+} from '../../../utils'
+import { AppIcons, Fonts } from '../../../assets'
+import { KeyboardAvoidingView } from '../../../components/keyboard-avoid-view'
+import LinearGradient from 'react-native-linear-gradient'
+import { useHeaderHeight } from '@react-navigation/elements'
+import { scale } from 'react-native-size-matters'
 import CheckBox from '../../../components/checkbox'
-import GradientBackground from '../../../components/gradient-background'
-import { labelTranslateFn } from '../../../utils'
-import { Fonts } from '../../../assets'
+
+const { LogoFull } = AppIcons
 
 type BackupLoginScreenProps = NativeStackScreenProps<
   MainStackParamList,
@@ -37,15 +44,15 @@ const BackupLoginScreen = ({ navigation }: BackupLoginScreenProps) => {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [userHasChecked, setUserHasChecked] = useState<boolean>(false)
-
-  const textInputRef = React.useRef<TextInput>(null)
+  const headerHeight = useHeaderHeight()
 
   const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
-      setError('Passwords must be at least 8 characters')
+      setError(labelTranslateFn('passwordCreationScreen.password8char')!)
     } else if (!userHasChecked) {
-      setError('Please check that you understand the risks')
+      setError(labelTranslateFn('backupLoginScreen.pleaseCheckRisk')!)
     } else {
+      Keyboard.dismiss()
       try {
         setLoading(true)
         await restoreWallet(passwordInput.value)
@@ -55,7 +62,6 @@ const BackupLoginScreen = ({ navigation }: BackupLoginScreenProps) => {
       } catch (_error) {
         passwordInput.onChangeText('')
         setError(labelTranslateFn('loginScreen.invalidPassword')!)
-        textInputRef.current?.blur()
         setLoading(false)
       }
     }
@@ -64,129 +70,91 @@ const BackupLoginScreen = ({ navigation }: BackupLoginScreenProps) => {
   const handleCheckBox = () => {
     setUserHasChecked(!userHasChecked)
   }
+  const passwordInputOpacity =
+    error || passwordInput.value.length === 0
+      ? INPUT_OPACITY_INACTIVE
+      : INPUT_OPACITY_ACTIVE
 
   return (
-    <Box style={styles.container}>
-      <GradientBackground
-        width={Dimensions.get('screen').width}
-        height={Dimensions.get('screen').height}
-        isFullPage
-      />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-        style={styles.keyboard}>
-        <Box
-          flex={1}
-          justifyContent="center"
-          alignItems="center"
-          width={Dimensions.get('window').width}>
-          <Header showText={true} />
-          <Box flex={0.6} justifyContent="space-around" width="100%">
-            <Box alignItems="center">
-              <Text
-                variant="loginToSeePhraseTitle"
-                tx="backupLoginScreen.signInToSeedPhrase"
-              />
-            </Box>
-
-            <View style={styles.inputWrapper}>
-              <Text variant="mainInputLabel" tx="backupLoginScreen.password" />
-              <TextInput
-                style={styles.input}
-                onChangeText={passwordInput.onChangeText}
-                onFocus={() => setError('')}
-                value={passwordInput.value}
-                secureTextEntry
-                autoCorrect={false}
-                returnKeyType="done"
-                ref={textInputRef}
-              />
-            </View>
-            {!!error && <Text variant="error">{error}</Text>}
-          </Box>
-          <CheckBox
-            selected={userHasChecked}
-            onPress={handleCheckBox}
-            textStyle={styles.checkBoxText}
-            style={styles.checkBoxStyle}
-            text={{ tx: 'backupLoginScreen.iHavePrivacyUnderstand' }}
+    <KeyboardAvoidingView enabled={false}>
+      <LinearGradient
+        colors={GRADIENT_COLORS}
+        style={[GRADIENT_STYLE, { paddingTop: headerHeight }]}>
+        <LogoFull width={scale(100)} />
+        <Box marginTop="xl">
+          <Text
+            variant="h1"
+            color={'white'}
+            tx="backupLoginScreen.signInToSeedPhrase"
           />
-          <Box flex={0.3} width="90%" justifyContent="flex-end">
-            <View style={styles.actionBlock}>
-              <Button
-                type="secondary"
-                variant="m"
-                label={{ tx: 'common.cancel' }}
-                onPress={navigation.goBack}
-                isBorderless={false}
-                isActive={true}
-              />
-              <Button
-                type="primary"
-                variant="m"
-                label={{ tx: 'common.continue' }}
-                isLoading={loading}
-                onPress={onUnlock}
-                isBorderless={false}
-                isActive={!!passwordInput.value}
-              />
-            </View>
-            <Button
-              type="primary"
-              variant="l"
-              label={{ tx: 'common.openSesame' }}
-              isLoading={loading}
-              onPress={async () => {
-                if (userHasChecked) {
-                  setLoading(true)
-                  await createWallet(PASSWORD, MNEMONIC)
-                  navigation.navigate('BackupSeedScreen', {
-                    screenTitle: labelTranslateFn(
-                      'backupLoginScreen.seedPhrase',
-                    )!,
-                  })
-                } else
-                  setError(
-                    labelTranslateFn('backupLoginScreen.pleaseCheckRisk')!,
-                  )
+        </Box>
+        <Box flex={0.9} marginTop={'xxl'}>
+          <Box flex={0.5} justifyContent="center">
+            <Text variant="mainInputLabel" tx="backupLoginScreen.password" />
+            <TextInput
+              variant={'passwordInputs'}
+              onChangeText={passwordInput.onChangeText}
+              onFocus={() => {
+                setError('')
               }}
-              isBorderless
-              isActive={true}
+              value={passwordInput.value}
+              autoCorrect={false}
+              secureTextEntry
+              returnKeyType="done"
+              onSubmitEditing={onUnlock}
+              style={{
+                opacity: passwordInputOpacity,
+              }}
             />
+            {error ? (
+              <Box
+                marginTop="m"
+                borderRadius={5}
+                padding={'s'}
+                alignSelf="flex-start"
+                backgroundColor={'semiTransparentWhite'}>
+                <Text padding={'s'} color={'danger'}>
+                  {error}
+                </Text>
+              </Box>
+            ) : (
+              <Box marginTop={'m'} padding={'s'} alignSelf="flex-start">
+                <Text padding={'s'} />
+              </Box>
+            )}
           </Box>
         </Box>
-      </KeyboardAvoidingView>
-    </Box>
+        <CheckBox
+          selected={userHasChecked}
+          onPress={handleCheckBox}
+          textStyle={styles.checkBoxText}
+          style={styles.checkBoxStyle}
+          text={{ tx: 'backupLoginScreen.iHavePrivacyUnderstand' }}
+        />
+        <Box marginTop={'l'}>
+          <Pressable
+            label={{ tx: 'common.continue' }}
+            onPress={onUnlock}
+            isLoading={loading}
+            variant="outline"
+            icon
+            disabled={passwordInput.value.trim().length < 8}
+          />
+        </Box>
+        <Box marginTop={'xl'} alignItems="center">
+          <Text
+            opacity={0.8}
+            variant={'whiteLabel'}
+            tx="common.cancel"
+            onPress={navigation.goBack}
+          />
+        </Box>
+      </LinearGradient>
+    </KeyboardAvoidingView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  inputWrapper: {
-    width: '90%',
-    marginHorizontal: 20,
-  },
-  input: {
-    marginTop: 5,
-    padding: 10,
-    color: palette.white,
-    borderBottomColor: palette.mediumGreen,
-    borderBottomWidth: 1,
-  },
-  keyboard: {
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  actionBlock: {
-    flex: 0.3,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    paddingBottom: 20,
-  },
   checkBoxText: {
     fontFamily: Fonts.Regular,
     fontWeight: '600',

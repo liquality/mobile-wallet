@@ -19,6 +19,7 @@ const {
   AvalancheChainIcon,
   AvalancheChainIcon: AvalancheIcon,
   SolanaChainIcon,
+  OptimismChainIcon,
   ETHIcon,
   RBTCIcon,
   SovrynIcon,
@@ -93,7 +94,15 @@ const extractSpecificIcon = {
     assetName: SolanaChainIcon,
     viewBoxValue: '',
   },
+  [`${ChainId.Optimism}`]: {
+    assetName: OptimismChainIcon,
+    viewBoxValue: '',
+  },
   eth: {
+    assetName: ETHIcon,
+    viewBoxValue: '',
+  },
+  optimism: {
     assetName: ETHIcon,
     viewBoxValue: '',
   },

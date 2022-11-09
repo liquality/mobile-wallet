@@ -14,7 +14,7 @@ export const GRADIENT_STYLE: ViewStyle = {
 }
 
 export const OVERVIEW_TAB_BAR_STYLE: ViewStyle = {
-  width: scale(90),
+  width: scale(70),
   padding: 0,
   alignItems: 'flex-start',
 }
@@ -44,13 +44,14 @@ export const APP_HALF_BUTTON_STYLE: ViewStyle = {
 
 export const APP_BUTTON_TEXT_STYLE: TextStyle = {
   fontFamily: Fonts.Regular,
-  fontWeight: '500',
   fontSize: scale(15),
+  letterSpacing: 0.5,
 }
 
 export const APP_HALF_BUTTON_TEXT_STYLE: TextStyle = {
   ...APP_BUTTON_TEXT_STYLE,
   fontSize: scale(13),
+  letterSpacing: 0.5,
 }
 
 export const HEADER_TITLE_STYLE: StyleProp<
@@ -59,8 +60,8 @@ export const HEADER_TITLE_STYLE: StyleProp<
   }
 > = {
   fontFamily: Fonts.Regular,
-  fontWeight: '500',
-  fontSize: scale(14),
+  fontWeight: '400',
+  fontSize: scale(16),
   color: faceliftPalette.black,
 }
 
@@ -76,4 +77,8 @@ export const NORMAL_HEADER: StyleProp<
 export const IMAGE_BACKGROUND_STYLE: ViewStyle = {
   height: scale(30),
   width: SCREEN_WIDTH / 4.6,
+}
+
+export const ALIGN_ITEM_FLEX_END: ViewStyle = {
+  alignItems: 'flex-end',
 }

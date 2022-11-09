@@ -2,9 +2,10 @@ import React, { FC, memo, useCallback, useRef } from 'react'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { Animated, Dimensions } from 'react-native'
 import AnimatedBox from './animated-box'
-import { useNavigation } from '@react-navigation/core'
+import { NavigationProp, useNavigation } from '@react-navigation/core'
 import { Easing } from 'react-native-reanimated'
-import { AccountType } from '../types'
+import { AccountType, MainStackParamList } from '../types'
+import { labelTranslateFn } from '../utils'
 
 type renderActionsType = (
   progressAnimatedValue: Animated.AnimatedInterpolation,
@@ -15,13 +16,16 @@ type AssetListSwipeableRowProps = {
   children: React.ReactElement
   assetSymbol: string
   assetData: AccountType
+  isNested: boolean
+  onOpen: () => void
+  onClose: () => void
 }
 
 const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
   const width = Dimensions.get('screen').width
-  const { children, assetData, assetSymbol } = props
+  const { children, assetData, assetSymbol, onClose, onOpen, isNested } = props
   const ref = useRef<Swipeable>()
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
 
   const close = () => {
     ref.current?.close()
@@ -37,7 +41,7 @@ const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
   const handleReceiveBtnPress = useCallback(() => {
     navigation.navigate('ReceiveScreen', {
       assetData,
-      screenTitle: `Receive ${assetSymbol}`,
+      screenTitle: `${labelTranslateFn('common.receive')} ${assetSymbol}`,
     })
   }, [assetData, assetSymbol, navigation])
 
@@ -47,24 +51,6 @@ const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
       screenTitle: 'Swap',
     })
   }, [assetData, navigation])
-
-  const renderLeftActions: renderActionsType = (progress, dragX) => {
-    const trans = dragX.interpolate({
-      inputRange: [0, 100],
-      outputRange: [-width, 0],
-      extrapolate: 'clamp',
-    })
-
-    return (
-      <AnimatedBox
-        translateX={trans}
-        close={close}
-        handleSendBtnPress={handleSendBtnPress}
-        handleSwapBtnPress={handleSwapBtnPress}
-        handleReceiveBtnPress={handleReceiveBtnPress}
-      />
-    )
-  }
 
   const renderRightActions: renderActionsType = (progress, dragX) => {
     const trans = dragX.interpolate({
@@ -86,9 +72,12 @@ const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
 
   return (
     <Swipeable
-      renderLeftActions={renderLeftActions}
+      enabled={!isNested}
+      renderLeftActions={undefined}
       renderRightActions={renderRightActions}
       ref={ref}
+      onSwipeableWillOpen={onOpen}
+      onSwipeableWillClose={onClose}
       friction={2}
       leftThreshold={50}
       rightThreshold={50}

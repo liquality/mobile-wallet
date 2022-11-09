@@ -51,14 +51,6 @@ const PasswordCreationScreen = ({
   const passwordConfirmationInput = useInputState('')
   const [error, setError] = useState('')
 
-  const resetInput = () => {
-    if (error) {
-      setError('')
-      passwordInput.reset('')
-      passwordConfirmationInput.reset('')
-    }
-  }
-
   const arePasswordsValid = () => {
     const isError =
       !!passwordConfirmationInput.value &&
@@ -95,12 +87,15 @@ const PasswordCreationScreen = ({
       ? INPUT_OPACITY_INACTIVE
       : INPUT_OPACITY_ACTIVE
 
-  if (passValue.trim().length >= 8 && passConfirmValue.trim().length >= 8) {
+  if (
+    passValue.trim().length >= PASSWORD_LENGTH &&
+    passConfirmValue.trim().length >= PASSWORD_LENGTH
+  ) {
     disabled = false
   }
 
   return (
-    <KeyboardAvoidingView>
+    <KeyboardAvoidingView enabled={false}>
       <LinearGradient
         colors={GRADIENT_COLORS}
         style={[GRADIENT_STYLE, { paddingTop: headerHeight }]}>
@@ -118,14 +113,17 @@ const PasswordCreationScreen = ({
             <TextInput
               variant={'passwordInputs'}
               onChangeText={passwordInput.onChangeText}
-              onFocus={resetInput}
               value={passwordInput.value}
               secureTextEntry
               autoCorrect={false}
-              style={{ opacity: passwordInputOpacity }}
+              style={{
+                opacity: passwordInputOpacity,
+                lineHeight: scale(1.3 * 15),
+                height: scale(1.3 * 15),
+              }}
             />
           </Box>
-          <Box marginTop={'xl'}>
+          <Box marginTop={'xxl'}>
             <Text
               variant="mainInputLabel"
               tx="passwordCreationScreen.confirmPassword"
@@ -133,12 +131,19 @@ const PasswordCreationScreen = ({
             <TextInput
               variant={'passwordInputs'}
               onChangeText={passwordConfirmationInput.onChangeText}
-              onFocus={resetInput}
+              onFocus={() => {
+                setError('')
+                passwordConfirmationInput.reset('')
+              }}
               value={passwordConfirmationInput.value}
               secureTextEntry
               autoCorrect={false}
               returnKeyType="done"
-              style={{ opacity: passwordConfirmationInputOpacity }}
+              style={{
+                opacity: passwordConfirmationInputOpacity,
+                lineHeight: scale(1.3 * 15),
+                height: scale(1.3 * 15),
+              }}
               onSubmitEditing={onPress}
             />
             {error.length ? (
@@ -176,9 +181,8 @@ const PasswordCreationScreen = ({
             opacity={0.8}
             textAlign={'center'}
             variant={'whiteLabel'}
-            textDecorationLine={'underline'}
             tx="passwordCreationScreen.orImportWallet"
-            marginTop={'s'}
+            marginTop={'m'}
             onPress={() =>
               navigation.navigate('TermsScreen', {
                 previousScreen: 'PasswordCreationScreen',

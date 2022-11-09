@@ -83,9 +83,9 @@ const App: FC = () => {
               <AppNavigator initialRouteName={initialRouteName} />
             </NavigationContainer>
           </GestureHandlerRootView>
+          <Toast config={toastConfig} />
         </ThemeProvider>
       </SafeAreaProvider>
-      <Toast config={toastConfig} />
     </RecoilRoot>
   )
 }

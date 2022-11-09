@@ -1,35 +1,24 @@
-import React, { useRef, useState } from 'react'
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  Dimensions,
-  TouchableOpacity,
-  Animated,
-} from 'react-native'
+import React, { useState, useRef } from 'react'
+import { FlatList, Animated } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { MainStackParamList } from '../../../types'
-import ButtonFooter from '../../../components/button-footer'
-import { setupWallet } from '@liquality/wallet-core'
+import { MainStackParamList, SeedWordType } from '../../../types'
+import { Box, Text, Pressable } from '../../../theme'
+import { scale, ScaledSheet } from 'react-native-size-matters'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import GradientBackground from '../../../components/gradient-background'
-import { Text, Box, Button, palette } from '../../../theme'
-import { AppIcons, Fonts } from '../../../assets'
-import OverlayTutorial from './overlay-tutorial'
-
-const { Eye } = AppIcons
+import { setupWallet } from '@liquality/wallet-core'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 type BackupSeedScreenProps = NativeStackScreenProps<
   MainStackParamList,
   'BackupSeedScreen'
 >
 
-const BackupSeedScreen = ({ route, navigation }: BackupSeedScreenProps) => {
-  const [revealedWord, setRevealedWord] = useState(0)
-
+const BackupSeedScreen = ({ navigation }: BackupSeedScreenProps) => {
   const wallet = setupWallet({
     ...defaultOptions,
   })
+  const seedList = wallet.state.wallets[0].mnemonic.split(' ')
+  const [revealedWord, setRevealedWord] = useState(0)
 
   const fadeAnim = useRef(new Animated.Value(0)).current
   const fadeIn = () => {
@@ -49,35 +38,6 @@ const BackupSeedScreen = ({ route, navigation }: BackupSeedScreenProps) => {
     }).start()
   }
 
-  const renderSeedWord = ({ item }: { item: { id: number; word: string } }) => {
-    return (
-      <TouchableOpacity
-        onPressOut={() => setRevealedWord(0)}
-        onPress={() => onClickToRevealWord(item.id)}
-        activeOpacity={1}
-        style={styles.missingWordView}>
-        <Text style={styles.wordOrderText}>{Number(item.id)}</Text>
-
-        <View style={styles.missingWordText}>
-          {revealedWord === item.id ? (
-            <Animated.Text
-              style={[
-                styles.missingWordText,
-                {
-                  // Bind opacity to animated value
-                  opacity: fadeAnim,
-                },
-              ]}>
-              {item.word}
-            </Animated.Text>
-          ) : (
-            <Text style={styles.placeHolderText} tx="backupSeedScreen.hej" />
-          )}
-        </View>
-      </TouchableOpacity>
-    )
-  }
-
   const onClickToRevealWord = (wordId: number) => {
     setRevealedWord(wordId)
     fadeIn()
@@ -86,199 +46,107 @@ const BackupSeedScreen = ({ route, navigation }: BackupSeedScreenProps) => {
     }, 2000)
   }
 
-  const seedList = wallet.state.wallets[0].mnemonic.split(' ')
-  return (
-    <Box style={styles.container}>
-      {route.params.quitOverlay ? null : <OverlayTutorial />}
+  const renderSeedWord = ({ item }: { item: SeedWordType }) => {
+    const { id, word } = item
 
-      <GradientBackground
-        width={Dimensions.get('screen').width}
-        height={Dimensions.get('screen').height}
-        isFullPage
-      />
-
-      <View style={styles.eyeIcon}>
-        <Eye width={150} height={150} />
-      </View>
-
-      <View style={styles.prompt}>
-        <Text style={styles.promptText} tx="backupSeedScreen.yourSeedPhrase" />
-        <Text style={styles.description} tx="backupSeedScreen.writeItDown" />
-      </View>
-      <View style={styles.main}>
-        <View style={styles.seedPhrase}>
-          <Box flex={1}>
-            <View style={styles.seedWordLengthOptions}>
+    return (
+      <Box width={'27%'} marginBottom={'l'}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPressOut={() => setRevealedWord(0)}
+          onPress={() => onClickToRevealWord(item.id)}>
+          <Text variant={'numberLabel'} color="greyBlack">
+            {id}
+          </Text>
+          {revealedWord === item.id ? (
+            <Animated.View style={{ opacity: fadeAnim }}>
               <Text
-                style={styles.explainHidden}
-                tx="backupSeedScreen.hidden4Security"
-              />
+                lineHeight={scale(20)}
+                variant={'seedPhraseLabel'}
+                color="textColor">
+                {word}
+              </Text>
+            </Animated.View>
+          ) : (
+            <Text
+              lineHeight={scale(20)}
+              variant={'seedPhraseLabel'}
+              color="white"
+              tx="backupSeedScreen.hej"
+            />
+          )}
+        </TouchableOpacity>
+      </Box>
+    )
+  }
 
-              {/*  
-              We might want to implement toggle between 12-24 words in the future, so keeping this code here  
-              <Pressable
-                onPress={() => setPhraseLength(12)}
-                style={[
-                  styles.seedWordOptionAction,
-                  styles.btnLeftSide,
-                  seedPhraseLength === 12 && styles.optionActive,
-                ]}>
-                <Text style={styles.seedWordOptionText}>12 words</Text>
-              </Pressable>
-              <Pressable
-                onPress={() => setPhraseLength(24)}
-                style={[
-                  styles.seedWordOptionAction,
-                  styles.btnRightSide,
-                  seedPhraseLength === 24 && styles.optionActive,
-                ]}>
-                <Text style={styles.seedWordOptionText}>24 words</Text>
-              </Pressable>*/}
-            </View>
+  const onNextPress = () => {
+    navigation.navigate('OverviewScreen', {})
+  }
+
+  return (
+    <Box
+      flex={1}
+      backgroundColor="mainBackground"
+      paddingHorizontal={'onboardingPadding'}>
+      <Box flex={0.75}>
+        <Box marginTop={'xl'}>
+          <Text
+            color={'textColor'}
+            variant="h1"
+            lineHeight={scale(55)}
+            tx="backupSeedScreen.yourSeedPhrase"
+          />
+        </Box>
+        <Text
+          variant={'onboardingMessage'}
+          tx="backupSeedScreen.writeItDown"
+          color={'greyBlack'}
+        />
+        <Box marginTop={'m'} flex={1}>
+          <Text
+            variant={'subListText'}
+            tx="backupSeedScreen.hidden4Security"
+            color={'greyBlack'}
+          />
+          <Box marginTop={'m'}>
             <FlatList
-              style={styles.flatList}
-              numColumns={3}
-              showsVerticalScrollIndicator={true}
               data={seedList.map((item, index) => ({
                 id: index + 1,
                 word: item,
               }))}
-              renderItem={renderSeedWord}
-              keyExtractor={(item) => `${item.id}`}
               columnWrapperStyle={styles.columnWrapperStyle}
+              renderItem={renderSeedWord}
+              numColumns={3}
+              showsVerticalScrollIndicator={false}
             />
           </Box>
-          <Box>
-            <ButtonFooter unpositioned>
-              <Button
-                type="secondary"
-                variant="m"
-                label={{ tx: 'common.cancel' }}
-                onPress={() => navigation.navigate('OverviewScreen', {})}
-                isBorderless={false}
-                isActive={true}
-              />
-              <Button
-                type="primary"
-                variant="m"
-                label={{ tx: 'backupSeedScreen.iSaveSeed' }}
-                onPress={() => navigation.navigate('OverviewScreen', {})}
-                isBorderless={false}
-              />
-            </ButtonFooter>
-          </Box>
-        </View>
-      </View>
+        </Box>
+      </Box>
+      <Box flex={0.25}>
+        <Box marginVertical={'xl'}>
+          <Pressable
+            label={{ tx: 'common.next' }}
+            onPress={onNextPress}
+            variant="solid"
+            icon
+          />
+        </Box>
+        <Text
+          onPress={navigation.popToTop}
+          textAlign={'center'}
+          variant="link"
+          tx="termsScreen.cancel"
+        />
+      </Box>
     </Box>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  main: {
-    flex: 1,
-    alignItems: 'center',
-    width: Dimensions.get('window').width,
-    backgroundColor: palette.white,
-  },
-  eyeIcon: { marginTop: 50, alignItems: 'center' },
-  explainHidden: {
-    fontFamily: Fonts.Regular,
-    marginTop: 10,
-    marginBottom: 10,
-    fontSize: 13,
-    fontWeight: '500',
-  },
-  prompt: {
-    flex: 0.3,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingHorizontal: 10,
-  },
-  promptText: {
-    fontFamily: Fonts.Regular,
-    color: palette.white,
-    fontSize: 30,
-    // lineHeight: 28,
-  },
-  description: {
-    fontFamily: Fonts.SemiBold,
-    marginTop: 10,
-    marginBottom: 18,
-    alignSelf: 'center',
-    textAlign: 'center',
-    color: palette.white,
-    fontSize: 15,
-    fontWeight: '600',
-    lineHeight: 24,
-  },
-  seedPhrase: {
-    width: Dimensions.get('window').width,
-    flex: 1,
-  },
-  flatList: {
-    marginTop: 5,
-    marginHorizontal: 20,
-  },
+const styles = ScaledSheet.create({
   columnWrapperStyle: {
-    marginBottom: 50,
-    marginTop: 0,
+    marginBottom: '20@s',
     justifyContent: 'space-between',
-  },
-  seedWordLengthOptions: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    margin: 5,
-  },
-  /* We might want to implement toggle between 12-24 words in the future, so keeping these styles here   
-  seedWordOptionAction: {
-    borderColor: '#D9DFE5',
-    borderWidth: 1,
-  },
-  btnLeftSide: {
-    borderBottomLeftRadius: 50,
-    borderTopLeftRadius: 50,
-    borderRightWidth: 0,
-  },
-  btnRightSide: {
-    borderBottomRightRadius: 50,
-    borderTopRightRadius: 50,
-  },
-  optionActive: {
-    backgroundColor: '#F0F7F9',
-  },
-  seedWordOptionText: {
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-  }, */
-  missingWordView: {
-    flex: 1,
-    marginRight: 20,
-  },
-  placeHolderText: {
-    color: 'white',
-    fontFamily: Fonts.Regular,
-    fontSize: 8,
-    lineHeight: 17,
-    borderBottomWidth: 1,
-    borderBottomColor: palette.turquoise,
-    width: '100%',
-  },
-  wordOrderText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: palette.sectionTitleColor,
-    marginBottom: 3,
-  },
-  missingWordText: {
-    fontFamily: Fonts.Regular,
-    fontSize: 16,
-    lineHeight: 21,
-    borderBottomWidth: 1,
-    borderBottomColor: palette.turquoise,
-    width: '100%',
   },
 })
 

@@ -55,7 +55,6 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
               variant={'termsBody'}
               color={'textColor'}
               tx="termsScreen.termCopy"
-              lineHeight={scale(20)}
             />
           </ScrollView>
         </Box>

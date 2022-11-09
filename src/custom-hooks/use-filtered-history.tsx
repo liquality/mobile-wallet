@@ -59,7 +59,7 @@ const sortFunctions = {
   by_token: sortFunctionByField(FUSE_OPTIONS.keys.indexOf('from')),
 }
 
-type SortFunctionKeyType =
+export type SortFunctionKeyType =
   | 'needs_attention'
   | 'pending'
   | 'canceled'
@@ -98,6 +98,7 @@ const useFilteredHistory = () => {
     activityStatuses,
     assetToggles,
     sorter,
+    codeSort,
   } = activityFilter || {}
   const { start: startDate, end: endDate } = dateRange || {}
   const sortFn = sortFunctions[
@@ -174,6 +175,12 @@ const useFilteredHistory = () => {
 
       return !(endDate && moment(item.startTime).format('YYYY-MM-DD') > endDate)
     })
+  }
+
+  if (codeSort) {
+    if (codeSort !== 'ALL') {
+      results = results.filter((history) => history.from === codeSort)
+    }
   }
 
   return results

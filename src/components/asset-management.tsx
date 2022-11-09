@@ -3,7 +3,6 @@ import { Alert, FlatList, StyleSheet } from 'react-native'
 import { getAllAssets, getAsset } from '@liquality/cryptoassets'
 import AssetIcon from './asset-icon'
 import SearchBox from './ui/search-box'
-import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import { networkState, showSearchBarInputState } from '../atoms'
 import { Box, faceliftPalette, Text } from '../theme'
@@ -12,7 +11,6 @@ import { Asset, ChainId } from '@chainify/types'
 import GasModal from '../screens/wallet-features/asset/gas-modal'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import AssetRow from './asset-row'
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { SCREEN_HEIGHT } from '../utils'
 
@@ -34,15 +32,11 @@ interface CustomAsset extends Asset {
 }
 
 const EmptyComponent = () => {
-  const tabBarBottomHeight = useBottomTabBarHeight()
   const headerHeight = useHeaderHeight()
   return (
     <Box
       height={
-        SCREEN_HEIGHT -
-        tabBarBottomHeight -
-        headerHeight -
-        2 * horizontalContentHeight // textinput height
+        SCREEN_HEIGHT - headerHeight - 2 * horizontalContentHeight // textinput height
       }
       justifyContent="center"
       alignItems={'center'}
@@ -98,7 +92,7 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
     //TODO we still need to handle custom tokens
     let myAssets: Asset[] = []
 
-    if (activeNetwork === Network.Testnet && enabledAssets) {
+    if (enabledAssets) {
       myAssets =
         enabledAssets.reduce((assetList: Asset[], asset) => {
           if (getAllAssets().testnet.hasOwnProperty(asset)) {

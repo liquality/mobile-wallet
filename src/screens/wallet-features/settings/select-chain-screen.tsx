@@ -2,13 +2,8 @@ import React from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MainStackParamList } from '../../../types'
 import { useRecoilValue } from 'recoil'
-import {
-  accountsIdsState,
-  networkState,
-  accountsIdsForMainnetState,
-} from '../../../atoms'
+import { sortedAccountsIdsState } from '../../../atoms'
 import { Box } from '../../../theme'
-import { Network } from '@liquality/wallet-core/dist/src/store/types'
 import { FlatList, StyleSheet } from 'react-native'
 import ChainRow from './chain-row'
 import { scale } from 'react-native-size-matters'
@@ -19,10 +14,7 @@ type SelectChainScreenProps = NativeStackScreenProps<
 >
 
 const SelectChainScreen: React.FC<SelectChainScreenProps> = () => {
-  const network = useRecoilValue(networkState)
-  const accountIds = useRecoilValue(
-    Network.Testnet === network ? accountsIdsState : accountsIdsForMainnetState,
-  )
+  const accountIds = useRecoilValue(sortedAccountsIdsState)
 
   const renderItem = ({ item }: { item: { id: string; name: string } }) => {
     return <ChainRow item={item} />
