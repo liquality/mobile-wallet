@@ -17,7 +17,7 @@ const { OFF_SWITCH_CHAIN } = INJECTION_REQUESTS
 
 type SwitchChainScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'ApproveTransactionInjectionScreen'
+  'SwitchChainScreen'
 >
 const { DottedLine, ChevronDown } = AppIcons
 

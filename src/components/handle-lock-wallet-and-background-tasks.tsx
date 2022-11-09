@@ -29,8 +29,6 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
   const appState = useRef(AppState.currentState)
   const [, setAppStateVisible] = useState(appState.current)
   const [isRunning] = useState(true)
-  const [isOpen, setIsOpen] = useState(false)
-  //const [data, setData] = useState()
   const [chainId, setChainId] = useState()
   const [switchChainId, setSwitchChainId] = useState()
 

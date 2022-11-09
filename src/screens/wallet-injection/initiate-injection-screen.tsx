@@ -23,6 +23,7 @@ import AssetIcon from '../../components/asset-icon'
 import { scale } from 'react-native-size-matters'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { ScrollView } from 'react-native-gesture-handler'
+import { getChainNameByChainIdNumber } from '../../utils/others'
 const { ON_SESSION_REQUEST, OFF_SESSION_REQUEST } = INJECTION_REQUESTS
 
 type NftDetailScreenProps = NativeStackScreenProps<
@@ -43,19 +44,19 @@ const InitInjectionScreen = ({ navigation, route }: NftDetailScreenProps) => {
   //TODO, if WalletConnect supports solana and not only EVM soon
   //we need to get the asset code from something like this: getNativeAssetCode(activeNetwork, chainConnected[0]) instead of 'ETH'
   const accountForConnectedChain = useRecoilValue(accountForAssetState('ETH'))
-  console.log(accountForConnectedChain, 'Account for connected chain')
   useEffect(() => {
-    emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
-      const [data] = params
-      setData(data)
-    })
+    async function fetchData() {
+      emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
+        const [data] = params
+        setData(data)
+      })
 
-    if (data) {
-      let chainConnected = Object.entries(getAllEvmChains().mainnet).find(
-        (chainName) => chainName[1].network.chainId === data.chainId,
-      )
-      setConnectedChain(chainConnected)
+      if (data) {
+        let chainConnected = await getChainNameByChainIdNumber(data.chainId)
+        setConnectedChain(chainConnected)
+      }
     }
+    fetchData()
   }, [activeNetwork, data])
 
   const connect = () => {

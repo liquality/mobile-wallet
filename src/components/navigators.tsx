@@ -952,8 +952,10 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="ApproveTransactionInjectionScreen"
           component={ApproveTransactionInjectionScreen}
-          options={() => ({
-            headerShown: false,
+          options={({ navigation, route }: NavigationProps) => ({
+            ...screenNavOptions,
+            headerRight: () => WalletConnectHeader({ navigation, route }),
+            headerLeft: () => GoBackHeader({ navigation, route }),
           })}
         />
       </MainStack.Group>
