@@ -10,7 +10,7 @@ import { INJECTION_REQUESTS } from '../../controllers/constants'
 import { Box, Button, faceliftPalette, Text } from '../../theme'
 import { RootStackParamList } from '../../types'
 import { accountForAssetState, fiatRatesState, networkState } from '../../atoms'
-import { Fonts, AppIcons } from '../../assets'
+import { Fonts } from '../../assets'
 import { sendTransaction } from '../../store/store'
 import { getNativeAssetCode, IChain } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
@@ -26,7 +26,6 @@ type ApproveTransactionInjectionScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'ApproveTransactionInjectionScreen'
 >
-const { DottedLine, ChevronDown } = AppIcons
 
 const wallet = setupWallet({
   ...defaultOptions,
@@ -35,7 +34,6 @@ const ApproveTransactionInjectionScreen = ({
   navigation,
   route,
 }: ApproveTransactionInjectionScreenProps) => {
-  const { activeWalletId } = wallet.state
   const activeNetwork = useRecoilValue(networkState)
   const { chainId, walletConnectData } = route.params
   const [showReviewDrawer, setShowReviewDrawer] = useState(false)
@@ -59,14 +57,8 @@ const ApproveTransactionInjectionScreen = ({
     fetchData()
   }, [activeNetwork, chainId])
 
-  console.log(connectedChain, 'WAT IS CONNECTED CHAIN IN APPROVE')
   const send = async () => {
     let asset = getNativeAssetCode(activeNetwork, connectedChain[0])
-
-    //TODO: uniswap wants u to sign a transaction without a value
-    //before you sign the actual swap transaction, how would I do that using wallet core
-    //when sendTransaction() function expects a value param?
-    //TODO IN THIS CASE MAKE VALUE BE 0
 
     try {
       const hash = await sendTransaction({
@@ -85,7 +77,6 @@ const ApproveTransactionInjectionScreen = ({
       navigation.navigate('OverviewScreen')
     } catch (_error) {
       Alert.alert('Transaction failed', _error)
-      console.log(_error, 'watserr?')
     }
   }
 
@@ -184,7 +175,6 @@ const styles = StyleSheet.create({
 
     color: faceliftPalette.black,
   },
-  imgLogo: { width: 65, height: 65 },
 
   text: {
     fontFamily: Fonts.Regular,

@@ -11,6 +11,7 @@ should be available to the components so I can display to the user
  ---Switch network design needs review, there is currently no screen in figma for this
  ---May be missing some translations
  ---Review Drawer needs styling for SEND transaction, use component as needed
+ ---Add custom network/speed fee link and apply that to dapp transaction
  */
 const {
   ON_SESSION_REQUEST,
@@ -46,7 +47,6 @@ export default class WalletConnectController {
         if (!address) {
           connector.rejectSession()
         } else {
-          console.log('SESSION APPROVED!')
           connector.approveSession({
             accounts: address,
             chainId: payload.params[0].chainId,
@@ -55,8 +55,7 @@ export default class WalletConnectController {
       })
     })
 
-    //TODO: use this bool function to check if session is currently connected
-    //connector.connected()
+    //TODO: use this bool function 'connector.connected()' to check if session is currently connected
     connector.on('call_request', (error, payload) => {
       if (error) {
         throw error

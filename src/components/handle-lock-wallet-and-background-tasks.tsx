@@ -29,9 +29,8 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
   const appState = useRef(AppState.currentState)
   const [, setAppStateVisible] = useState(appState.current)
   const [isRunning] = useState(true)
-  const [chainId, setChainId] = useState()
-  const [switchChainId, setSwitchChainId] = useState()
 
+  /* AUTOMATICALLY SIGN USER OUT OF WALLET WHEN INACTIVE FOR 30 SEC IN BACKGROUND MODE */
   const handleLockPress = useCallback(() => {
     //For some reason there is unexpected behaviour when navigating to loginscreen directly
     //Therefore first navigating to settings and handling case in settings-screen solved this issue
@@ -41,8 +40,8 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
     })
   }, [navigation])
 
+  /* UPDATE BALANCES, RATES AND MARKET DATA EVERY 2 MIN */
   //TODO we need to agree on this value with the business team
-  //Update balances, rates and market data every 2 minutes
   const interval = 120000
   useInterval(
     () => {
@@ -55,10 +54,10 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
     isRunning ? interval : null,
   )
 
+  /* START OF WALLET CONNECT EVENTS LISTENING */
   useEffect(() => {
     emitterController.once(ON_SEND_TRANSACTION, async ({ params, chainId }) => {
       const [data] = params
-      console.log(data, 'ON SEND TRANSACTION DATA')
       navigation.navigate('ApproveTransactionInjectionScreen', {
         chainId,
         walletConnectData: { ...data },
@@ -68,14 +67,16 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
 
   useEffect(() => {
     emitterController.on(ON_SWITCH_CHAIN, ({ params }) => {
-      console.log(params, 'Switch CHAIN PARAMS')
       const [data] = params
       navigation.navigate('SwitchChainScreen', {
         walletConnectData: { ...data },
       })
     })
   }, [navigation])
+  /* END OF WALLET CONNECT EVENTS LISTENING */
 
+  /* CHECK AND TIME IF USER HAS BEEN IN BACKGROUND MODE */
+  /* START BACKGROUND TASKS WHEN BACKGROUND MODE ACTIVATED SO SWAPS AND PENDING ACTIONS CAN CONTINUE RUNNING IN APP */
   useEffect(() => {
     const subscription = AppState.addEventListener(
       'change',

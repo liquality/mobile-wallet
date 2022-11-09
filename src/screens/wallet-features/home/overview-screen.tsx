@@ -22,8 +22,6 @@ import RefreshIndicator from '../../../components/refresh-indicator'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
-import { useEffect } from 'react'
-import ApproveInjectionModal from '../approve-injection-modal'
 
 import { scale } from 'react-native-size-matters'
 import { setupWallet } from '@liquality/wallet-core'
@@ -39,10 +37,9 @@ export type OverviewProps = NativeStackScreenProps<
 const wallet = setupWallet({
   ...defaultOptions,
 })
-const OverviewScreen = ({ route, navigation }: OverviewProps) => {
+const OverviewScreen = ({ navigation }: OverviewProps) => {
   const [refreshing, setRefreshing] = React.useState(false)
   const [accountIds, setAccountIds] = React.useState<string[]>([])
-  const [showInjectionModal, setShowInjectionModal] = React.useState(false)
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
@@ -82,12 +79,6 @@ const OverviewScreen = ({ route, navigation }: OverviewProps) => {
           variant={'refreshContainer'}
         />
       )}
-      {showInjectionModal ? (
-        <ApproveInjectionModal
-          payload={route.params.walletConnectPayload}
-          setShowInjectionModal={setShowInjectionModal}
-        />
-      ) : null}
       <ScrollView
         scrollEnabled
         refreshControl={

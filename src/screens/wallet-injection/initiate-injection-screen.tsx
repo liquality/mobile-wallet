@@ -1,24 +1,14 @@
-import { setupWallet } from '@liquality/wallet-core'
-import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Dimensions, Image } from 'react-native'
+import { StyleSheet, Image } from 'react-native'
 import { useRecoilValue } from 'recoil'
-
 import { emitterController } from '../../controllers/emitterController'
 import { INJECTION_REQUESTS } from '../../controllers/constants'
-import ButtonFooter from '../../components/button-footer'
-import { Box, Button, faceliftPalette, Pressable, Text } from '../../theme'
+import { Box, Button, faceliftPalette, Text } from '../../theme'
 import { RootStackParamList } from '../../types'
 import { accountForAssetState, networkState } from '../../atoms'
 import { Fonts, AppIcons } from '../../assets'
-import {
-  getAllEvmChains,
-  getAsset,
-  getChain,
-  getNativeAssetCode,
-} from '@liquality/cryptoassets'
-import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
+import { getNativeAssetCode } from '@liquality/cryptoassets'
 import AssetIcon from '../../components/asset-icon'
 import { scale } from 'react-native-size-matters'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
@@ -26,23 +16,20 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { getChainNameByChainIdNumber } from '../../utils/others'
 const { ON_SESSION_REQUEST, OFF_SESSION_REQUEST } = INJECTION_REQUESTS
 
-type NftDetailScreenProps = NativeStackScreenProps<
+type InitInjectionScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'NftDetailScreen'
+  'InitInjectionScreen'
 >
-const { DottedArrow, ChevronDown, BlueLine } = AppIcons
+const { DottedArrow, BlueLine } = AppIcons
 
-const wallet = setupWallet({
-  ...defaultOptions,
-})
-const InitInjectionScreen = ({ navigation, route }: NftDetailScreenProps) => {
-  const { activeWalletId } = wallet.state
+const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
 
   const [data, setData] = useState()
   const [connectedChain, setConnectedChain] = useState([])
   //TODO, if WalletConnect supports solana and not only EVM soon
   //we need to get the asset code from something like this: getNativeAssetCode(activeNetwork, chainConnected[0]) instead of 'ETH'
+  //for now any evm wallet address works
   const accountForConnectedChain = useRecoilValue(accountForAssetState('ETH'))
   useEffect(() => {
     async function fetchData() {
@@ -71,7 +58,6 @@ const InitInjectionScreen = ({ navigation, route }: NftDetailScreenProps) => {
     navigation.navigate('OverviewScreen')
   }
 
-  console.log(connectedChain[0], 'connected CHAIN?')
   return (
     <ScrollView backgroundColor="white">
       <Box
