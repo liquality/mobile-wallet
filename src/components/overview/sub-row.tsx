@@ -11,7 +11,6 @@ import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
-  addressStateFamily,
   balanceStateFamily,
   doubleOrLongTapSelectedAsset,
   fiatRatesState,
@@ -46,7 +45,6 @@ const SubRow: FC<SubRowProps> = (props) => {
   const balance = useRecoilValue(
     balanceStateFamily({ asset: item.code, assetId: parentItem.id }),
   )
-  const address = useRecoilValue(addressStateFamily(item.id))
   const fiatRates = useRecoilValue(fiatRatesState)
   const activeNetwork = useRecoilValue(networkState)
   const [chainSpecificNfts, setChainSpecificNfts] = useState({})
@@ -150,7 +148,8 @@ const SubRow: FC<SubRowProps> = (props) => {
         <AssetListSwipeableRow
           assetData={{
             ...item,
-            address: address,
+            id: parentItem.id,
+            balance,
           }}
           assetSymbol={item.code}>
           <Pressable

@@ -6,6 +6,8 @@ import { NavigationProp, useNavigation } from '@react-navigation/core'
 import { Easing } from 'react-native-reanimated'
 import { AccountType, MainStackParamList } from '../types'
 import { labelTranslateFn } from '../utils'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { accountForAssetState, swapPairState } from '../atoms'
 
 type renderActionsType = (
   progressAnimatedValue: Animated.AnimatedInterpolation,
@@ -26,6 +28,9 @@ const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
   const { children, assetData, assetSymbol, onClose, onOpen, isNested } = props
   const ref = useRef<Swipeable>()
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+  const ethAccount = useRecoilValue(accountForAssetState('ETH'))
+  const btcAccount = useRecoilValue(accountForAssetState('BTC'))
+  const setSwapPair = useSetRecoilState(swapPairState)
 
   const close = () => {
     ref.current?.close()
@@ -46,11 +51,14 @@ const AssetListSwipeableRow: FC<AssetListSwipeableRowProps> = (props) => {
   }, [assetData, assetSymbol, navigation])
 
   const handleSwapBtnPress = useCallback(() => {
+    setSwapPair({
+      fromAsset: assetData,
+      toAsset: assetData.code === 'ETH' ? btcAccount : ethAccount,
+    })
     navigation.navigate('SwapScreen', {
-      assetData,
       screenTitle: 'Swap',
     })
-  }, [assetData, navigation])
+  }, [assetData, btcAccount, ethAccount, navigation, setSwapPair])
 
   const renderRightActions: renderActionsType = (progress, dragX) => {
     const trans = dragX.interpolate({

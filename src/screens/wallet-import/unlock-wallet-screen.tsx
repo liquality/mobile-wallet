@@ -2,11 +2,19 @@ import React, { useState } from 'react'
 import { FlatList, TouchableWithoutFeedback } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
-import { Box, Text, TextInput, Pressable, faceliftPalette } from '../../theme'
+import {
+  Box,
+  Text,
+  TextInput,
+  Pressable,
+  faceliftPalette,
+  theme,
+} from '../../theme'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
 import { labelTranslateFn } from '../../utils'
 import { validateMnemonic } from 'bip39'
+import { Fonts } from '../../assets'
 
 type UnlockWalletScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -50,8 +58,20 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const renderSeedWord = ({ item, index }: { item: any; index: number }) => {
     return (
-      <Box width={'27%'}>
-        <Text variant={'numberLabel'} color="greyBlack">{`${index + 1}`}</Text>
+      <Box
+        width={'27%'}
+        borderBottomWidth={1}
+        borderBottomColor={
+          index === indexOfFocusedText
+            ? 'activeButton'
+            : chosenSeedWords[index].length
+            ? 'textColor'
+            : 'mediumGrey'
+        }>
+        <Text
+          fontFamily={Fonts.SemiBold}
+          fontSize={scale(12)}
+          color="greyBlack">{`${index + 1}`}</Text>
         <TextInput
           variant={'seedPhraseInputs'}
           autoCorrect={false}
@@ -65,14 +85,9 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
           returnKeyType="done"
           cursorColor={faceliftPalette.buttonActive}
           style={{
-            lineHeight: scale(1.5 * 16),
-            height: scale(1.5 * 16),
-            borderBottomColor:
-              index === indexOfFocusedText
-                ? faceliftPalette.buttonActive
-                : chosenSeedWords[index].length
-                ? faceliftPalette.lightText
-                : faceliftPalette.mediumGrey,
+            lineHeight: scale(1.7 * 16),
+            height: scale(1.3 * 16),
+            paddingBottom: theme.spacing.s,
           }}
         />
       </Box>
@@ -89,10 +104,11 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
           {isSeedPhrase12 ? (
             <Box marginTop={'xl'}>
               <Text
-                color={'textColor'}
+                style={{ height: scale(39) }}
                 variant="h1"
-                tx="unlockWalletScreen.unlockWallet"
+                tx="unlockWalletScreen.unlock"
               />
+              <Text variant="h1" tx="unlockWalletScreen.yourWallet" />
             </Box>
           ) : null}
           {isSeedPhrase12 ? (
@@ -109,8 +125,6 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
               flexDirection={'row'}
               alignItems="center"
               height={scale(30)}
-              borderWidth={scale(1)}
-              borderRadius={scale(15)}
               borderColor={'activeButton'}
               width={scale(81)}>
               <TouchableWithoutFeedback onPress={() => onToggleNumber(12)}>
@@ -120,22 +134,21 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
                   height={'100%'}
                   borderTopLeftRadius={scale(15)}
                   borderBottomLeftRadius={scale(15)}
+                  borderColor={'activeButton'}
+                  borderWidth={1}
                   backgroundColor={
                     isSeedPhrase12 ? 'activeButton' : 'transparent'
                   }
-                  width={'50%'}>
+                  width={scale(40.5)}>
                   <Text
+                    textAlign={'center'}
                     variant={'normalText'}
+                    style={{ height: scale(1.3 * 14) }}
                     color={isSeedPhrase12 ? 'white' : 'activeButton'}
                     tx={'unlockWalletScreen.12words'}
                   />
                 </Box>
               </TouchableWithoutFeedback>
-              <Box
-                height={'100%'}
-                width={'1%'}
-                backgroundColor={'activeButton'}
-              />
               <TouchableWithoutFeedback onPress={() => onToggleNumber(24)}>
                 <Box
                   justifyContent={'center'}
@@ -143,11 +156,16 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
                   height={'100%'}
                   borderTopRightRadius={scale(15)}
                   borderBottomRightRadius={scale(15)}
+                  borderColor={'activeButton'}
+                  borderWidth={1}
                   backgroundColor={
                     isSeedPhrase24 ? 'activeButton' : 'transparent'
                   }
-                  width={'50%'}>
+                  width={scale(40.5)}>
                   <Text
+                    textAlign={'center'}
+                    variant={'normalText'}
+                    style={{ height: scale(1.3 * 14) }}
                     color={isSeedPhrase24 ? 'white' : 'activeButton'}
                     tx={'unlockWalletScreen.24words'}
                   />
@@ -155,6 +173,11 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
               </TouchableWithoutFeedback>
             </Box>
             <Text
+              style={{ height: scale(1.2 * 14) }}
+              fontFamily={Fonts.Regular}
+              fontSize={scale(14)}
+              lineHeight={scale(1.7 * 14)}
+              letterSpacing={0.5}
               marginLeft={'m'}
               color={'textColor'}
               tx={'unlockWalletScreen.wordCount'}
@@ -183,6 +206,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
             onPress={navigation.goBack}
             textAlign={'center'}
             variant="link"
+            letterSpacing={0.5}
             tx="termsScreen.cancel"
           />
         </Box>

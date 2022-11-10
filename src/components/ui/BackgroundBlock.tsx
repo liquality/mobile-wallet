@@ -10,16 +10,14 @@ type BackgroundBlockProps = {
 
 const BackgroundBlock = (props: BackgroundBlockProps) => {
   const { width, height } = props
-  const flatRadius = 60
+  const flatRadius = 50
+  const SHADOW_WIDTH = 6
+
   return (
     <Box
       alignItems="center"
       justifyContent="center"
-      shadowColor={'darkGrey'}
-      shadowOffset={{ width: 4, height: 6 }}
-      shadowOpacity={1}
-      shadowRadius={0}
-      elevation={2}
+      paddingRight={'s'}
       style={StyleSheet.absoluteFillObject}>
       <Svg
         width={`${width}`}
@@ -27,9 +25,17 @@ const BackgroundBlock = (props: BackgroundBlockProps) => {
         viewBox={`0 0 ${width} ${height}`}
         fill="none">
         <Path
-          d={`M0 0 H ${
-            width - flatRadius
-          } L ${width} ${flatRadius} V ${height} H ${0} V ${0} Z`}
+          d={`M10 70 H ${width} V ${height} H ${10} V ${70} Z`}
+          fill={faceliftPalette.darkGrey}
+          strokeWidth={4}
+          stroke={faceliftPalette.darkGrey}
+          strokeLinejoin={'round'}
+          strokeLinecap={'round'}
+        />
+        <Path
+          d={`M0 0 H ${width - flatRadius} L ${
+            width - SHADOW_WIDTH
+          } ${flatRadius} V ${height - SHADOW_WIDTH} H ${0} V ${0} Z`}
           fill={faceliftPalette.white}
           strokeWidth={4}
           stroke={faceliftPalette.darkGrey}

@@ -44,7 +44,12 @@ const TermsScreen = ({ navigation, route }: TermsProps) => {
       backgroundColor="mainBackground"
       paddingHorizontal={'onboardingPadding'}>
       <Box marginTop={'xl'}>
-        <Text color={'textColor'} variant="h1" tx="termsScreen.termPrivacy" />
+        <Text
+          style={{ height: scale(39) }}
+          variant="h1"
+          tx="termsScreen.terms"
+        />
+        <Text variant="h1" tx="termsScreen.privacy" />
       </Box>
       <Box flex={1}>
         <Box flex={0.7}>
