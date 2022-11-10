@@ -113,7 +113,7 @@
   },
   "assetToggleScreen": {},
   "backupLoginScreen": {
-    "signInToSeedPhrase": "Sign-in to see Seed Phrase",
+    "signInToSeedPhrase": "Seed Phrase \nSign In",
     "password": "PASSWORD",
     "iHavePrivacyUnderstand": "I have privacy and understand the risk.",
     "pleaseCheckRisk": "Please check that you understand the risks",

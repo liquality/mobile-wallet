@@ -88,8 +88,8 @@ const BackupLoginScreen = ({ navigation }: BackupLoginScreenProps) => {
             tx="backupLoginScreen.signInToSeedPhrase"
           />
         </Box>
-        <Box flex={0.9} marginTop={'xxl'}>
-          <Box flex={0.5} justifyContent="center">
+        <Box flex={0.8} marginTop={'xxl'}>
+          <Box flex={0.4} justifyContent="center">
             <Text variant="mainInputLabel" tx="backupLoginScreen.password" />
             <TextInput
               variant={'passwordInputs'}

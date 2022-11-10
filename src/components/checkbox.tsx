@@ -5,10 +5,10 @@ import { TxKeyPath, translate } from '../i18n'
 import { langSelected as LS } from '../../src/atoms'
 import { useRecoilValue } from 'recoil'
 import { AppIcons } from '../assets'
-import { Box, Text, TouchableOpacity } from '../theme'
+import { Text, TouchableOpacity } from '../theme'
 import { scale } from 'react-native-size-matters'
 
-const { WhiteCheckMark } = AppIcons
+const { UncheckedWhiteBox, CheckedWhiteBox } = AppIcons
 
 type CheckBoxProps = {
   chi?: React.ReactElement[]
@@ -45,24 +45,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
       style={[styles.checkBox, style]}
       onPress={onPress}
       {...props}>
-      {selected ? (
-        <Box
-          borderWidth={1}
-          width={scale(20)}
-          height={scale(20)}
-          justifyContent="center"
-          alignItems="center"
-          borderColor="white">
-          <WhiteCheckMark />
-        </Box>
-      ) : (
-        <Box
-          borderWidth={1}
-          width={scale(20)}
-          height={scale(20)}
-          borderColor="white"
-        />
-      )}
+      {selected ? <CheckedWhiteBox /> : <UncheckedWhiteBox />}
       <Text
         opacity={0.8}
         variant={'whiteLabel'}
