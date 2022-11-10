@@ -8,9 +8,9 @@ should be available to the components so I can display to the user
  ---Value param is not always sent in from payload, how can I get the transaction details 
  (amount sent/swapped etc) from dapp to component to show the user if walletconnect does not give me it in the payload?
  ---Switch network design needs review, there is currently no screen in figma for this
- ---May be missing some translations
  ---Review Drawer needs styling for SEND transaction, use component as needed
  ---Add custom network/speed fee link and apply that to dapp transaction
+ ---May be missing some translations
  ---Missing some types and type declarations
  ---QR Code library is temporary, there is a bug in the other library we used which causes the qr scanner not the give me the URI string
  */

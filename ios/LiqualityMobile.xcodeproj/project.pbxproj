@@ -80,7 +80,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4AE4848291975ED0083534D /* OpenSSL.xcframework in Frameworks */,
-				0C80B921A6F3F58F76C31292 /* BuildFile in Frameworks */,
 				640CEDF0FE9E3CD8A30E2882 /* libPods-Liquality.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
