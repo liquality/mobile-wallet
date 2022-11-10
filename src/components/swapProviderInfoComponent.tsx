@@ -239,9 +239,12 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
       }))
 
   const onIndexChange = (itemNum: number) => {
-    setSelectedItem(
-      tabTileIndex ? bridgesTile[itemNum] : swapProviderTiles[itemNum],
-    )
+    setSelectedItem(swapProviderTiles[itemNum])
+    setIndex(itemNum)
+  }
+
+  const onSecondIndexChange = (itemNum: number) => {
+    setSelectedItem(bridgesTile[itemNum])
     setIndex(itemNum)
   }
 
@@ -310,7 +313,7 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
                     return (
                       <TabTileContent
                         selectedItem={selectedItem}
-                        onPress={onIndexChange}
+                        onPress={onSecondIndexChange}
                         tiles={bridgesTile}
                       />
                     )
@@ -370,7 +373,7 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
               }
             }}
             swipeEnabled
-            onIndexChange={onIndexChange}
+            onIndexChange={onSecondIndexChange}
             initialLayout={{ width: SCREEN_WIDTH - scale(30) }} //approx to horizontal patting
           />
         ) : (
