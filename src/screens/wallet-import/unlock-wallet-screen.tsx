@@ -105,19 +105,10 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
             <Box marginTop={'xl'}>
               <Text
                 style={{ height: scale(39) }}
-                color={'textColor'}
-                fontFamily={Fonts.Regular}
-                fontSize={scale(41)}
-                lineHeight={scale(1.3 * 41)}>
-                Unlock
-              </Text>
-              <Text
-                color={'textColor'}
-                fontFamily={Fonts.Regular}
-                fontSize={scale(41)}
-                lineHeight={scale(1.3 * 41)}>
-                your Wallet
-              </Text>
+                variant="h1"
+                tx="unlockWalletScreen.unlock"
+              />
+              <Text variant="h1" tx="unlockWalletScreen.yourWallet" />
             </Box>
           ) : null}
           {isSeedPhrase12 ? (

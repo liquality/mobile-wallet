@@ -107,7 +107,9 @@ export const Pressable: FC<Props> = (props) => {
               style={[textStyle, overrideTextStyle]}>
               {content}
             </Text>
-            <ArrowLeft fill={disabled ? faceliftPalette.grey : ''} />
+            <ArrowLeft
+              fill={disabled ? faceliftPalette.grey : faceliftPalette.white}
+            />
           </Box>
         )
       ) : (
