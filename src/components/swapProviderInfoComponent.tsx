@@ -3,9 +3,9 @@ import React from 'react'
 import { Box, ColorType, Text, TouchableOpacity } from '../theme'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import {
-  assetRowTiles,
+  swapProviderTiles,
   SCREEN_WIDTH,
-  AssetRowProp,
+  SwapProviderRowProp,
   SCREEN_HEIGHT,
 } from '../utils'
 import { TabView } from 'react-native-tab-view'
@@ -16,8 +16,8 @@ const Aggregators = ({
   item,
 }: {
   onPress: () => void
-  selectedItem: AssetRowProp
-  item: AssetRowProp
+  selectedItem: SwapProviderRowProp
+  item: SwapProviderRowProp
 }) => {
   const borderLeftColorStatus = selectedItem.name === item.name
   const backgroundColor = selectedItem.name === item.name
@@ -45,7 +45,11 @@ const Aggregators = ({
   )
 }
 
-const TabContent = ({ selectedItem }: { selectedItem: AssetRowProp }) => {
+const TabContent = ({
+  selectedItem,
+}: {
+  selectedItem: SwapProviderRowProp
+}) => {
   return (
     <Box>
       <Text
@@ -111,6 +115,29 @@ const TabContent = ({ selectedItem }: { selectedItem: AssetRowProp }) => {
   )
 }
 
+const TabTileContent = ({
+  tiles,
+  selectedItem,
+  onPress,
+}: {
+  tiles: Array<SwapProviderRowProp>
+  onPress: (renderItemIndex: number) => void
+  selectedItem: SwapProviderRowProp
+}) => {
+  return (
+    <Box flexWrap={'wrap'} flexDirection="row">
+      {tiles.map((item, renderItemIndex) => (
+        <Aggregators
+          selectedItem={selectedItem}
+          item={item}
+          onPress={() => onPress(renderItemIndex)}
+          key={item.name}
+        />
+      ))}
+    </Box>
+  )
+}
+
 const ProsOrConsComponent = ({
   title,
   list,
@@ -159,35 +186,18 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
   headerHeight,
   isScrolledUp,
 }) => {
-  const [selectedItem, setSelectedItem] = React.useState<AssetRowProp>(
-    assetRowTiles[0],
+  const [selectedItem, setSelectedItem] = React.useState<SwapProviderRowProp>(
+    swapProviderTiles[0],
   )
   const [index, setIndex] = React.useState(0)
-  const routes = assetRowTiles.map((item) => ({
+  const routes = swapProviderTiles.map((item) => ({
     key: item.name,
     title: item.name,
   }))
 
   const onIndexChange = (itemNum: number) => {
-    setSelectedItem(assetRowTiles[itemNum])
+    setSelectedItem(swapProviderTiles[itemNum])
     setIndex(itemNum)
-  }
-
-  const renderItem = ({
-    item,
-    renderItemIndex,
-  }: {
-    item: AssetRowProp
-    renderItemIndex: number
-  }) => {
-    return (
-      <Aggregators
-        selectedItem={selectedItem}
-        item={item}
-        onPress={() => onIndexChange(renderItemIndex)}
-        key={item.name}
-      />
-    )
   }
 
   return (
@@ -222,12 +232,12 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
                 height={scale(2)}
               />
             </Box>
-            <Box marginTop={'m'}>
-              <Box flexWrap={'wrap'} flexDirection="row">
-                {assetRowTiles.map((item, renderItemIndex) =>
-                  renderItem({ item, renderItemIndex }),
-                )}
-              </Box>
+            <Box marginTop={'xl'}>
+              <TabTileContent
+                selectedItem={selectedItem}
+                onPress={onIndexChange}
+                tiles={swapProviderTiles}
+              />
             </Box>
           </Box>
           <Box
@@ -245,7 +255,7 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
           justifyContent={'space-between'}>
           <selectedItem.icon width={scale(40)} height={scale(40)} />
           <Box flexDirection={'row'} alignItems="center">
-            {assetRowTiles.map((item) => (
+            {swapProviderTiles.map((item) => (
               <Box
                 marginTop={'m'}
                 backgroundColor={
@@ -267,19 +277,19 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
           renderScene={({ route }) => {
             switch (route.key) {
               case routes[0].key:
-                return <TabContent selectedItem={assetRowTiles[0]} />
+                return <TabContent selectedItem={swapProviderTiles[0]} />
               case routes[1].key:
-                return <TabContent selectedItem={assetRowTiles[1]} />
+                return <TabContent selectedItem={swapProviderTiles[1]} />
               case routes[2].key:
-                return <TabContent selectedItem={assetRowTiles[2]} />
+                return <TabContent selectedItem={swapProviderTiles[2]} />
               case routes[3].key:
-                return <TabContent selectedItem={assetRowTiles[3]} />
+                return <TabContent selectedItem={swapProviderTiles[3]} />
               case routes[4].key:
-                return <TabContent selectedItem={assetRowTiles[4]} />
+                return <TabContent selectedItem={swapProviderTiles[4]} />
               case routes[5].key:
-                return <TabContent selectedItem={assetRowTiles[5]} />
+                return <TabContent selectedItem={swapProviderTiles[5]} />
               case routes[6].key:
-                return <TabContent selectedItem={assetRowTiles[6]} />
+                return <TabContent selectedItem={swapProviderTiles[6]} />
             }
           }}
           swipeEnabled

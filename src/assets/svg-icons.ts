@@ -153,6 +153,8 @@ import NetworkSpeedEdit from '../assets/icons/networkSpeedEdit.svg'
 import DoubleArrowThick from '../assets/icons/doubleArrowThick.svg'
 import DoubleArrowThickDisabled from '../assets/icons/doubleArrowThickDisabled.svg'
 import HopProviderIcon from '../assets/icons/swap-providers/hop.svg'
+import LiFiProviderIcon from '../assets/icons/swap-providers/lifi.svg'
+import DebridgeProviderIcon from '../assets/icons/swap-providers/debrige.svg'
 import OneInch from '../assets/icons/swap-providers/oneInch.svg'
 import AccountDetailsIcon from '../assets/icons/accountDetails.svg'
 import ConnectionIndicator from '../assets/icons/connectionIndicator.svg'
@@ -362,4 +364,6 @@ export default {
   Astroport,
   FastBTC,
   Jupiter,
+  LiFiProviderIcon,
+  DebridgeProviderIcon,
 }

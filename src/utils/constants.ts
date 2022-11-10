@@ -49,6 +49,9 @@ const {
   Thorchain,
   Astroport,
   Jupiter,
+  HopProviderIcon,
+  LiFiProviderIcon,
+  DebridgeProviderIcon,
 } = AppIcons
 
 type IconType = React.FC<
@@ -178,7 +181,7 @@ export const sortRadioButtons: Array<SortRadioButtonProp> = [
   },
 ]
 
-export type AssetRowProp = {
+export type SwapProviderRowProp = {
   icon: IconType
   name: string
   heading: string
@@ -188,7 +191,7 @@ export type AssetRowProp = {
   feeStructure: Array<string>
 }
 
-export const assetRowTiles: Array<AssetRowProp> = [
+export const swapProviderTiles: Array<SwapProviderRowProp> = [
   {
     icon: Uniswap,
     name: 'Uniswap',
@@ -288,5 +291,46 @@ export const assetRowTiles: Array<AssetRowProp> = [
     ],
     cons: ['Slippage'],
     feeStructure: ['Additional aggregator fees', 'Slippage (up to 0.5%)'],
+  },
+]
+
+export const bridgesTile: Array<SwapProviderRowProp> = [
+  {
+    icon: LiFiProviderIcon,
+    name: 'Li.Fi',
+    heading: 'Li.Fi',
+    description: 'Advanced Bridge & DEX Aggregation Protocol',
+    pros: ['Cross-chain bridging'],
+    cons: ['Slippage'],
+    feeStructure: ['0.003% fee', 'Slippage (up to 0.5%)'],
+  },
+  {
+    icon: DebridgeProviderIcon,
+    name: 'DeBridge',
+    heading: 'DeBridge Cross-Chain Swaps',
+    description: 'deSwap — cross-chain swaps between any assets',
+    pros: [
+      'Ethereum, Polygon, Binance, Smart Chain, Avalanche',
+      'Best exchange rates',
+      'High liquidity',
+      'Many pairs',
+      'Fast',
+    ],
+    cons: ['Slippage'],
+    feeStructure: ['Additional aggregator fees', 'Slippage (up to 3%)'],
+  },
+  {
+    icon: HopProviderIcon,
+    name: 'Hop',
+    heading: 'Hop Exchange Cross-chain Swaps',
+    description: 'Hop Exchange Cross-chain Swaps',
+    pros: [
+      'Ethereum, Polygon, Binance Smart Chain, Arbitrum, Optimism',
+      'Best exchange rates',
+      'High liquidity',
+      'Fast',
+    ],
+    cons: ['Slippage'],
+    feeStructure: ['Additional aggregator fees', 'Slippage (up to 3%)'],
   },
 ]
