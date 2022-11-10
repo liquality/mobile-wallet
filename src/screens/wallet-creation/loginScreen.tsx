@@ -143,7 +143,7 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             variant={'whiteLabel'}
             tx="common.importWithSeedPhrase"
             onPress={() =>
-              navigation.navigate('SwapProviderInfoDrawer', {
+              navigation.navigate('TermsScreen', {
                 previousScreen: 'LoginScreen',
                 nextScreen: 'UnlockWalletScreen',
               })
