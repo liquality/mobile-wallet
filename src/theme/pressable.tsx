@@ -85,12 +85,14 @@ export const Pressable: FC<Props> = (props) => {
   const textStyle =
     buttonSize === 'full' ? APP_BUTTON_TEXT_STYLE : APP_HALF_BUTTON_TEXT_STYLE
 
+  const borderColor = disabled ? faceliftPalette.grey : faceliftPalette.white
+
   return (
     <BaseButton
       {...rest}
       variant={currentVariant}
       disabled={disabled}
-      style={[buttonStyle, styles]}>
+      style={[buttonStyle, styles, { borderColor }]}>
       {isLoading ? (
         <ActivityIndicator color={theme.colors.spinner} />
       ) : icon ? (
@@ -104,7 +106,15 @@ export const Pressable: FC<Props> = (props) => {
             justifyContent="space-between">
             <Text
               variant={currentVariant}
-              style={[textStyle, overrideTextStyle]}>
+              style={[
+                textStyle,
+                overrideTextStyle,
+                {
+                  color: disabled
+                    ? faceliftPalette.grey
+                    : faceliftPalette.white,
+                },
+              ]}>
               {content}
             </Text>
             <ArrowLeft
