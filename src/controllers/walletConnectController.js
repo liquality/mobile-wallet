@@ -43,7 +43,6 @@ export default class WalletConnectController {
       }
 
       emitterController.emit(ON_SESSION_REQUEST, payload)
-
       emitterController.on(OFF_SESSION_REQUEST, (address) => {
         if (!address) {
           connector.rejectSession()
