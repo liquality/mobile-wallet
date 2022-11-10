@@ -166,7 +166,6 @@ const AmountTextInputBlock: ForwardRefRenderFunction<
         <View style={[styles.inputWrapper, styles.md3]}>
           <TextInput
             style={[styles.font, styles.input, { color }]}
-            keyboardType={'numeric'}
             onChangeText={handleTextChange}
             value={formattedValue}
             placeholder={'0'}

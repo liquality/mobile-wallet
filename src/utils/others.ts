@@ -1,4 +1,4 @@
-import { getAsset } from '@liquality/cryptoassets'
+import { getAllEvmChains, getAsset } from '@liquality/cryptoassets'
 import { AES } from 'crypto-js'
 import { fetchFeesForAsset, fetchSwapProvider } from '../store/store'
 import { BigNumber } from '@liquality/types'
@@ -228,4 +228,11 @@ export const calculateNrOfAccsWithNfts = async (accountsData: Account[]) => {
   return accountsData.filter(
     (account: Account) => account.nfts && account.nfts.length > 0,
   ).length
+}
+
+export const getChainNameByChainIdNumber = async (chainIdNumber: number) => {
+  let chainConnected = Object.entries(getAllEvmChains().mainnet).find(
+    (chainName) => chainName[1].network.chainId === chainIdNumber,
+  )
+  return chainConnected
 }

@@ -39,8 +39,9 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Needs camera access to scan QR code addresses</string>
+<key>NSCameraUsageDescription</key>
+<string>Needs camera access to scan QR code addresses</string>
+
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
 	<key>UIAppFonts</key>

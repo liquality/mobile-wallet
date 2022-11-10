@@ -38,7 +38,6 @@ const useInputState = (
   const [value, setValue] = useState<string>(initialValue)
   return { value, onChangeText: setValue }
 }
-
 const PASSWORD_LENGTH = 8
 
 const LoginScreen = ({ navigation }: LoginScreenProps) => {
