@@ -5,7 +5,15 @@ import mockClipboard from '@react-native-clipboard/clipboard/jest/clipboard-mock
 import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock'
 
 jest.mock('@react-native-clipboard/clipboard', () => mockClipboard)
+
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
+jest.mock('react-native-qrcode-scanner', () => jest.fn())
+jest.mock('react-native-camera', () => jest.fn())
+
+jest.mock('react-native-permissions', () =>
+  require('react-native-permissions/mock'),
+)
+
 jest.mock('react-native-qrcode-svg', () => {
   const RN = require('react-native')
   return RN.View
