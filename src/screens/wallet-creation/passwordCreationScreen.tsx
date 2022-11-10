@@ -89,7 +89,8 @@ const PasswordCreationScreen = ({
 
   if (
     passValue.trim().length >= PASSWORD_LENGTH &&
-    passConfirmValue.trim().length >= PASSWORD_LENGTH
+    passConfirmValue.trim().length >= PASSWORD_LENGTH &&
+    passValue === passConfirmValue
   ) {
     disabled = false
   }
@@ -104,7 +105,13 @@ const PasswordCreationScreen = ({
           <Text
             variant="h1"
             color={'white'}
-            tx="passwordCreationScreen.createPassword"
+            style={{ height: scale(39) }}
+            tx="passwordCreationScreen.create"
+          />
+          <Text
+            variant="h1"
+            color={'white'}
+            tx="passwordCreationScreen.password"
           />
         </Box>
         <Box flex={0.9} marginTop={'xxl'}>

@@ -14,16 +14,14 @@ type CongratulationsProps = NativeStackScreenProps<
 
 const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
   useEffect(() => {
-    setTimeout(
-      () =>
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{ name: 'StackMainNavigator' }],
-          }),
-        ),
-      3000,
-    )
+    setTimeout(() => {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'MainNavigator' }],
+        }),
+      )
+    }, 3000)
   })
 
   return (

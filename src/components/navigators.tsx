@@ -7,7 +7,6 @@ import {
 } from 'react-native'
 import {
   createNativeStackNavigator,
-  NativeStackScreenProps,
   NativeStackNavigationOptions,
 } from '@react-navigation/native-stack'
 import Entry from '../screens/wallet-creation/entryScreen'
@@ -28,6 +27,7 @@ import CustomFeeScreen from '../screens/wallet-features/custom-fee/custom-fee-sc
 import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
 import {
   MainStackParamList,
+  NavigationProps,
   RootStackParamList,
   RootTabParamList,
   SettingStackParamList,
@@ -78,7 +78,6 @@ import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-scree
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
 import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
-//import QrCodeScanner from './qr-code-scanner'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import { RNCamera } from 'react-native-camera'
 import InitInjectionScreen from '../screens/wallet-injection/initiate-injection-screen'
@@ -266,26 +265,6 @@ export const WalletCreationNavigator = () => {
     </OnboardingContext.Provider>
   )
 }
-
-type NavigationProps = NativeStackScreenProps<
-  MainStackParamList,
-  | 'OverviewScreen'
-  | 'SendConfirmationScreen'
-  | 'BackupWarningScreen'
-  | 'AssetManagementScreen'
-  | 'AssetChooserScreen'
-  | 'ReceiveScreen'
-  | 'SwapDetailsScreen'
-  | 'AssetScreen'
-  | 'SendScreen'
-  | 'BuyCryptoDrawer'
-  | 'SwapScreen'
-  | 'SwapProviderModal'
-  | 'ActivityFilterScreen'
-  | 'CongratulationsScreen'
-  | 'AccountManagementScreen'
-  | 'SwapProviderInfoDrawer'
->
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
   const { navigation } = navProps
@@ -1168,10 +1147,6 @@ export const StackMainNavigator = () => {
 }
 
 const styles = StyleSheet.create({
-  checkIcon: {
-    marginRight: 20,
-  },
-
   container: {
     flexDirection: 'row',
     justifyContent: 'center',

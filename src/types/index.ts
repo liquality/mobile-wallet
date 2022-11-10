@@ -12,6 +12,7 @@ import {
   SwapHistoryItem,
 } from '@liquality/wallet-core/dist/src/store/types'
 import { Asset } from '@liquality/wallet-core/dist/src/store/types'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 export interface AccountType {
   id: string
@@ -339,3 +340,23 @@ export type AccountIdType = {
   id: string
   name: Asset
 }
+
+export type NavigationProps = NativeStackScreenProps<
+  MainStackParamList,
+  | 'OverviewScreen'
+  | 'SendConfirmationScreen'
+  | 'BackupWarningScreen'
+  | 'AssetManagementScreen'
+  | 'AssetChooserScreen'
+  | 'ReceiveScreen'
+  | 'SwapDetailsScreen'
+  | 'AssetScreen'
+  | 'SendScreen'
+  | 'BuyCryptoDrawer'
+  | 'SwapScreen'
+  | 'SwapProviderModal'
+  | 'ActivityFilterScreen'
+  | 'CongratulationsScreen'
+  | 'AccountManagementScreen'
+  | 'SwapProviderInfoDrawer'
+>
