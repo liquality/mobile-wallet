@@ -193,7 +193,7 @@ export type SwapProviderRowProp = {
 
 export const swapProviderTiles: Array<SwapProviderRowProp> = [
   {
-    icon: Uniswap,
+    icon: Uniswap, // basic info from SwapBuildConfig is available for testnet and mainnet
     name: 'Uniswap V2',
     heading: 'Uniswap AMM Swaps',
     description: 'Popular DEX for Ethereum tokens only.',
@@ -205,7 +205,7 @@ export const swapProviderTiles: Array<SwapProviderRowProp> = [
     ],
   },
   {
-    icon: OneInch,
+    icon: OneInch, // basic info from SwapBuildConfig is available for mainnet
     name: '1 inch v4',
     heading: '1 Inch DEX Aggregator Swaps',
     description: 'Aggregate of popular DEXes',
@@ -220,7 +220,7 @@ export const swapProviderTiles: Array<SwapProviderRowProp> = [
     feeStructure: ['Additional aggregator fees', 'Slippage (up to 0.5%)'],
   },
   {
-    icon: FastBTC,
+    icon: FastBTC, // FastBTCDeposit only available for mainnet and FastBTCWithdrawal available for testnet and mainnet
     name: 'Fast BTC',
     heading: 'Sovryn FastBTC Relay',
     description: 'BTC to RBTC swaps up to 1 BTC',
@@ -233,7 +233,7 @@ export const swapProviderTiles: Array<SwapProviderRowProp> = [
     ],
   },
   {
-    icon: Sovryn,
+    icon: Sovryn, // basic info from SwapBuildConfig is available for testnet and mainnet
     name: 'Sovryn',
     heading: 'Sovryn AMM Swaps',
     description:
@@ -246,7 +246,7 @@ export const swapProviderTiles: Array<SwapProviderRowProp> = [
     ],
   },
   {
-    icon: Thorchain,
+    icon: Thorchain, // basic info from SwapBuildConfig is available for testnet and mainnet
     name: 'Thorchain',
     heading: 'Thorchain AMM Swaps',
     description: 'Swap tokens across blockchains through liquidity pools.',
@@ -264,7 +264,7 @@ export const swapProviderTiles: Array<SwapProviderRowProp> = [
     feeStructure: ['Outbound Fee', 'Slippage'],
   },
   {
-    icon: Astroport,
+    icon: Astroport, // basic info from SwapBuildConfig is available for mainnet
     name: 'Astroport',
     heading: 'Astroport AMM Swaps',
     description:
@@ -277,7 +277,7 @@ export const swapProviderTiles: Array<SwapProviderRowProp> = [
     ],
   },
   {
-    icon: Jupiter,
+    icon: Jupiter, // basic info from SwapBuildConfig is available for mainnet
     name: 'Jupiter',
     heading: 'Jupiter AMM Swaps',
     description:
