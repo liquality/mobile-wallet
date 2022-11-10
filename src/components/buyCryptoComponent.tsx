@@ -111,7 +111,7 @@ const BuyCryptoComponent: React.FC<BuyCryptoComponentProps> = ({
         {!isScrolledUp ? (
           <Text
             marginTop={'s'}
-            variant={'buyCryptoHeader'}
+            variant={'onScreenHeader'}
             color="darkGrey"
             tx="buyCrypto"
           />

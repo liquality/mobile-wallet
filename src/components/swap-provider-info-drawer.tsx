@@ -8,12 +8,15 @@ import {
   NativeSyntheticEvent,
   ScrollView,
 } from 'react-native'
-import BuyCryptoComponent from './buyCryptoComponent'
 import { scale } from 'react-native-size-matters'
 import { SCREEN_HEIGHT } from '../utils'
+import SwapProviderInfoComponent from './swapProviderInfoComponent'
 
-type Props = NativeStackScreenProps<MainStackParamList, 'BuyCryptoDrawer'>
-const BuyCryptoDrawer = (props: Props) => {
+type Props = NativeStackScreenProps<
+  MainStackParamList,
+  'SwapProviderInfoDrawer'
+>
+const SwapProviderInfoDrawer = (props: Props) => {
   const { navigation, route } = props
 
   const headerHeight = useHeaderHeight()
@@ -23,14 +26,14 @@ const BuyCryptoDrawer = (props: Props) => {
   ) => {
     const { contentOffset } = event.nativeEvent
 
-    if (contentOffset.y > headerHeight - 10) {
+    if (contentOffset.y > headerHeight + 50) {
       navigation.setParams({
         screenTitle: route.params.screenTitle,
         isScrolledUp: true,
       })
     }
 
-    if (contentOffset.y + headerHeight - 10 < 0) {
+    if (contentOffset.y + headerHeight < 0) {
       navigation.setParams({
         screenTitle: route.params.screenTitle,
         isScrolledUp: false,
@@ -48,34 +51,19 @@ const BuyCryptoDrawer = (props: Props) => {
         style={{ height: SCREEN_HEIGHT }}
         scrollEventThrottle={400}
         onScroll={isScrolledUpEvent}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingBottom: scale(20),
         }}>
-        {!isScrolledUp ? (
-          <Box
-            flex={1}
-            style={{ paddingTop: headerHeight * 0.8 }}
-            backgroundColor="semiTransparentGrey">
-            <BuyCryptoComponent
-              token={route.params.token || ''}
-              headerHeight={headerHeight}
-              isScrolledUp={isScrolledUp || false}
-              showIntro={route.params.showIntro || false}
-            />
-          </Box>
-        ) : (
-          <Box flex={1} backgroundColor="mainBackground">
-            <BuyCryptoComponent
-              token={route.params.token || ''}
-              headerHeight={0}
-              isScrolledUp={isScrolledUp}
-              showIntro={route.params.showIntro || false}
-            />
-          </Box>
-        )}
+        <Box flex={1} backgroundColor="mainBackground">
+          <SwapProviderInfoComponent
+            headerHeight={headerHeight}
+            isScrolledUp={isScrolledUp || false}
+          />
+        </Box>
       </ScrollView>
     </Box>
   )
 }
 
-export default BuyCryptoDrawer
+export default SwapProviderInfoDrawer

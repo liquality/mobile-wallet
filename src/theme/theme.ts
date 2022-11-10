@@ -74,6 +74,8 @@ export const theme = createTheme({
     warningButton: faceliftPalette.warningButton,
     lightInputActiveColor: faceliftPalette.lightInputActiveColor,
     lightWhite: faceliftPalette.lightWhite,
+    whiteLightGrey: faceliftPalette.whiteLightGrey,
+    consColor: faceliftPalette.slow,
   },
   spacing: {
     vs: scale(2),
@@ -569,10 +571,10 @@ export const theme = createTheme({
       fontWeight: '400',
       lineHeight: scale(20),
     },
-    buyCryptoHeader: {
+    onScreenHeader: {
       fontFamily: Fonts.Regular,
       fontWeight: '500',
-      fontSize: scale(27),
+      fontSize: scale(28),
     },
     gettingStartHeader: {
       fontFamily: Fonts.Regular,

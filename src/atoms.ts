@@ -107,7 +107,7 @@ export const showSearchBarInputState = atom<boolean>({
 
 export const themeMode = atom<DarkModeEnum>({
   key: 'ThemeMode',
-  default: DarkModeEnum.Null,
+  default: DarkModeEnum.Light,
   effects: [localStorageEffect<DarkModeEnum>(KEYS.ACTIVE_THEME)],
 })
 

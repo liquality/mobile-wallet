@@ -196,6 +196,7 @@ export type MainStackParamList = {
   SortingModal: StackPayload
   AdvancedFilterModal: StackPayload
   AccountManagementScreen: StackPayload
+  SwapProviderInfoDrawer: StackPayload
 }
 
 export type RootTabParamList = {

@@ -302,7 +302,7 @@ const AdvancedFilterModal = (props: Props) => {
             alignItems={'center'}
             paddingTop={'s'}>
             <Text
-              variant={'buyCryptoHeader'}
+              variant={'onScreenHeader'}
               color="darkGrey"
               tx="advancedFilter"
             />

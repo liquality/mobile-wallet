@@ -42,6 +42,16 @@ const {
   RefundedFilterIcon,
   NeedsAttentionFilterIcon,
   FailedFilterIcon,
+  Uniswap,
+  OneInch,
+  FastBTC,
+  Sovryn,
+  Thorchain,
+  Astroport,
+  Jupiter,
+  HopProviderIcon,
+  LiFiProviderIcon,
+  DebridgeProviderIcon,
 } = AppIcons
 
 type IconType = React.FC<
@@ -168,5 +178,156 @@ export const sortRadioButtons: Array<SortRadioButtonProp> = [
   {
     key: 'completed',
     value: 'sortPicker.completed',
+  },
+]
+
+export type SwapProviderRowProp = {
+  icon: IconType
+  name: string
+  heading: string
+  description: string
+  pros: Array<string>
+  cons: Array<string>
+  feeStructure: Array<string>
+}
+
+export const swapProviderTiles: Array<SwapProviderRowProp> = [
+  {
+    icon: Uniswap, // basic info from SwapBuildConfig is available for testnet and mainnet
+    name: 'Uniswap V2',
+    heading: 'Uniswap AMM Swaps',
+    description: 'Popular DEX for Ethereum tokens only.',
+    pros: ['High liquidity', 'Many pairs', 'Fast'],
+    cons: ['Slippage', 'Ethereum tokens only', 'Few pairs'],
+    feeStructure: [
+      '0.3% liquidity provider fee',
+      'Slippage (up to 0.5% in Liquality)',
+    ],
+  },
+  {
+    icon: OneInch, // basic info from SwapBuildConfig is available for mainnet
+    name: '1 inch v4',
+    heading: '1 Inch DEX Aggregator Swaps',
+    description: 'Aggregate of popular DEXes',
+    pros: [
+      'Ethereum, Polygon, Binance, Smart Chain, Avalanche',
+      'Best exchange rates',
+      'High liquidity',
+      'Many pairs',
+      'Fast',
+    ],
+    cons: ['Slippage'],
+    feeStructure: ['Additional aggregator fees', 'Slippage (up to 0.5%)'],
+  },
+  {
+    icon: FastBTC, // FastBTCDeposit only available for mainnet and FastBTCWithdrawal available for testnet and mainnet
+    name: 'Fast BTC',
+    heading: 'Sovryn FastBTC Relay',
+    description: 'BTC to RBTC swaps up to 1 BTC',
+    pros: ['Convenient for BTC --> RBTC'],
+    cons: ['Custodial when depositing into RBTC'],
+    feeStructure: [
+      'To RBTC: 5000 sats + 0.2% per transaction',
+      'MIN Transaction: 0.0005 BTC',
+      'MAX Transaction: 1.00 BTC',
+    ],
+  },
+  {
+    icon: Sovryn, // basic info from SwapBuildConfig is available for testnet and mainnet
+    name: 'Sovryn',
+    heading: 'Sovryn AMM Swaps',
+    description:
+      'Non-custodial and permissionless smart contract based system for Bitcoin lending, borrowing and margin trading',
+    pros: ['Low liquidity provider fee', 'Margin Trading'],
+    cons: ['Slippage'],
+    feeStructure: [
+      '0.15% liquidity provider fee',
+      'Slippage (up to 0.5% in Liquality)',
+    ],
+  },
+  {
+    icon: Thorchain, // basic info from SwapBuildConfig is available for testnet and mainnet
+    name: 'Thorchain',
+    heading: 'Thorchain AMM Swaps',
+    description: 'Swap tokens across blockchains through liquidity pools.',
+    pros: [
+      'Cross-chain',
+      'High liquidity',
+      'Native assets',
+      'Fee on destination chain not required',
+    ],
+    cons: [
+      'Beta Software (chaosnet)',
+      'Swaps executed on intermediary',
+      'Few pairs',
+    ],
+    feeStructure: ['Outbound Fee', 'Slippage'],
+  },
+  {
+    icon: Astroport, // basic info from SwapBuildConfig is available for mainnet
+    name: 'Astroport',
+    heading: 'Astroport AMM Swaps',
+    description:
+      "Decentralized, permissionless and open-source. Astroport's marketplace is a public good governed by its community of token holders",
+    pros: ['Low liquidity', 'Margin Trading'],
+    cons: ['Slippage'],
+    feeStructure: [
+      '0.15% liquidity provider fee',
+      'Slippage (up to 0.5% in Liquality)',
+    ],
+  },
+  {
+    icon: Jupiter, // basic info from SwapBuildConfig is available for mainnet
+    name: 'Jupiter',
+    heading: 'Jupiter AMM Swaps',
+    description:
+      'Decentralized, permissionless and open-source. Jupiter marketplace is a public good governed by its community of token holders',
+    pros: ['Low liquidity', 'Margin Trading'],
+    cons: ['Slippage'],
+    feeStructure: [
+      '0.15% liquidity provider fee',
+      'Slippage (up to 0.5% in Liquality)',
+    ],
+  },
+]
+
+export const bridgesTile: Array<SwapProviderRowProp> = [
+  {
+    icon: LiFiProviderIcon,
+    name: 'Li.Fi',
+    heading: 'Li.Fi',
+    description: 'Advanced Bridge & DEX Aggregation Protocol',
+    pros: ['Cross-chain bridging'],
+    cons: ['Slippage'],
+    feeStructure: ['0.003% fee', 'Slippage (up to 0.5%)'],
+  },
+  {
+    icon: DebridgeProviderIcon,
+    name: 'DeBridge',
+    heading: 'DeBridge Cross-Chain Swaps',
+    description: 'deSwap — cross-chain swaps between any assets',
+    pros: [
+      'Ethereum, Polygon, Binance, Smart Chain, Avalanche',
+      'Best exchange rates',
+      'High liquidity',
+      'Many pairs',
+      'Fast',
+    ],
+    cons: ['Slippage'],
+    feeStructure: ['Additional aggregator fees', 'Slippage (up to 3%)'],
+  },
+  {
+    icon: HopProviderIcon,
+    name: 'Hop',
+    heading: 'Hop Exchange Cross-chain Swaps',
+    description: 'Hop Exchange Cross-chain Swaps',
+    pros: [
+      'Ethereum, Polygon, Binance Smart Chain, Arbitrum, Optimism',
+      'Best exchange rates',
+      'High liquidity',
+      'Fast',
+    ],
+    cons: ['Slippage'],
+    feeStructure: ['Additional aggregator fees', 'Slippage (up to 3%)'],
   },
 ]

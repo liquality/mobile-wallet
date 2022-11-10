@@ -3,7 +3,6 @@ import {
   Pressable,
   useColorScheme,
   TouchableOpacity,
-  Alert,
   StyleSheet,
 } from 'react-native'
 import {
@@ -93,6 +92,7 @@ import ActivityFilterScreen from '../screens/wallet-features/home/activity-filte
 import AdvancedFilterModal from '../screens/wallet-features/home/advanced-filter-modal'
 import SortingModal from '../screens/wallet-features/home/sorting-modal'
 import AccountManagementScreen from '../screens/wallet-features/asset/account-management-screen'
+import SwapProviderInfoDrawer from './swap-provider-info-drawer'
 
 const {
   NetworkActiveDot,
@@ -284,6 +284,7 @@ type NavigationProps = NativeStackScreenProps<
   | 'ActivityFilterScreen'
   | 'CongratulationsScreen'
   | 'AccountManagementScreen'
+  | 'SwapProviderInfoDrawer'
 >
 
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
@@ -329,7 +330,10 @@ const ManageScreenHeaderLeft = (navProps: NavigationProps) => {
 }
 
 const SwapHeaderRight = () => {
-  const onPress = () => Alert.alert('Work in Progress')
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+
+  const onPress = () =>
+    navigation.navigate('SwapProviderInfoDrawer', { isScrolledUp: false })
 
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
@@ -710,6 +714,19 @@ const StackMainNavigatorHeaderLeft = () => {
   )
 }
 
+const CloseButtonPlaceholder = () => {
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+  return (
+    <Box paddingHorizontal={'m'}>
+      <TouchableOpacity
+        disabled
+        activeOpacity={0.7}
+        onPress={navigation.goBack}
+      />
+    </Box>
+  )
+}
+
 const CloseButton = () => {
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   return (
@@ -730,6 +747,45 @@ const CloseButtonLight = () => {
       </TouchableOpacity>
     </Box>
   )
+}
+
+const AssetScreenHeaderTitle = (navProps: NavigationProps) => {
+  const { route } = navProps
+  return (
+    <Box flexDirection={'row'} alignItems={'center'} paddingVertical={'s'}>
+      <Box
+        borderLeftWidth={3}
+        height={scale(1.3 * 16)}
+        style={{
+          borderLeftColor: route.params.assetData?.color,
+        }}
+      />
+      <Text variant={'headerTitle'} marginLeft={'m'}>
+        {route.params.screenTitle?.toUpperCase()}
+      </Text>
+    </Box>
+  )
+}
+
+const semiTransparentDrawerStyle = (
+  isScrolledUp: boolean,
+  activeScreenTitle: string,
+  inactiveScreenTitle: string,
+): NativeStackNavigationOptions => {
+  return {
+    ...screenNavOptions,
+    presentation: isScrolledUp ? 'fullScreenModal' : 'transparentModal',
+    headerStyle: {
+      backgroundColor: isScrolledUp
+        ? faceliftPalette.white
+        : faceliftPalette.transparent,
+    },
+    headerTransparent: !isScrolledUp,
+    headerTitleStyle: NORMAL_HEADER,
+    headerTitle: isScrolledUp ? activeScreenTitle : inactiveScreenTitle,
+    headerLeft: undefined,
+    headerRight: isScrolledUp ? CloseButton : CloseButtonPlaceholder,
+  }
 }
 
 //If you dont want your screen to include tabbar, add it to StackMainNavigator obj
@@ -942,27 +998,9 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="AssetScreen"
           component={AssetScreen}
-          options={({ route }: NavigationProps) => ({
+          options={({ route, navigation }: NavigationProps) => ({
             ...screenNavOptions,
-            headerTitle: () => {
-              return (
-                <Box
-                  flexDirection={'row'}
-                  alignItems={'center'}
-                  paddingVertical={'s'}>
-                  <Box
-                    borderLeftWidth={3}
-                    height={scale(1.3 * 16)}
-                    style={{
-                      borderLeftColor: route.params.assetData?.color,
-                    }}
-                  />
-                  <Text variant={'headerTitle'} marginLeft={'m'}>
-                    {route.params.screenTitle?.toUpperCase()}
-                  </Text>
-                </Box>
-              )
-            },
+            headerTitle: () => AssetScreenHeaderTitle({ route, navigation }),
             headerStyle: { backgroundColor },
             headerRight: AssetScreenHeaderRight,
             headerLeft: StackMainNavigatorHeaderLeft,
@@ -1021,6 +1059,25 @@ export const StackMainNavigator = () => {
             headerLeft: PlaceholderComp,
           })}
         />
+        <MainStack.Screen
+          name="SwapProviderInfoDrawer"
+          component={SwapProviderInfoDrawer}
+          options={({ route }: NavigationProps) => {
+            const { isScrolledUp = false } = route.params
+            const empty = ''
+            return {
+              ...screenNavOptions,
+              headerStyle: {
+                backgroundColor: faceliftPalette.white,
+              },
+              headerTitleStyle: NORMAL_HEADER,
+              headerTitle: isScrolledUp
+                ? labelTranslateFn('swapProviders')!
+                : empty,
+              headerLeft: StackMainNavigatorHeaderLeft,
+            }
+          }}
+        />
       </MainStack.Group>
       <MainStack.Group>
         <MainStack.Screen
@@ -1029,22 +1086,7 @@ export const StackMainNavigator = () => {
           options={({ route }: NavigationProps) => {
             const { isScrolledUp = false, screenTitle = '' } = route.params
             const empty = ''
-            return {
-              ...screenNavOptions,
-              presentation: isScrolledUp
-                ? 'fullScreenModal'
-                : 'transparentModal',
-              headerStyle: {
-                backgroundColor: isScrolledUp
-                  ? faceliftPalette.white
-                  : faceliftPalette.transparent,
-              },
-              headerTransparent: !isScrolledUp,
-              headerTitleStyle: NORMAL_HEADER,
-              headerTitle: isScrolledUp ? screenTitle : empty,
-              headerLeft: undefined,
-              headerRight: isScrolledUp ? CloseButton : undefined,
-            }
+            return semiTransparentDrawerStyle(isScrolledUp, screenTitle, empty)
           }}
         />
         <MainStack.Screen

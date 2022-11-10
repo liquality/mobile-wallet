@@ -165,7 +165,7 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
         <Box flex={0.8}>
           <Text
             marginTop={'s'}
-            variant={'buyCryptoHeader'}
+            variant={'onScreenHeader'}
             color="darkGrey"
             tx="reviewSwap"
           />

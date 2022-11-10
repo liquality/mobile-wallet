@@ -113,7 +113,7 @@
   },
   "assetToggleScreen": {},
   "backupLoginScreen": {
-    "signInToSeedPhrase": "Sign-in to see Seed Phrase",
+    "signInToSeedPhrase": "Seed Phrase \nSign In",
     "password": "PASSWORD",
     "iHavePrivacyUnderstand": "I have privacy and understand the risk.",
     "pleaseCheckRisk": "Please check that you understand the risks",
@@ -505,5 +505,11 @@
   "speedUpNoLonger": "Speed-up no longer possible",
   "yourTranConfirmedMsg": "Your transaction was confirmed on the blockchain before changing speed and fee. It is moving along.",
   "speedUpOptionMsg": "Speed-up options are only possible before the 1st confirmation and vary by network.",
-  "manageChainAcc": "MANAGE CHAINS/ACCOUNTS"
+  "manageChainAcc": "MANAGE CHAINS/ACCOUNTS",
+  "swapProviders": "SWAP PROVIDERS",
+  "learnAboutSwapProviders": "Learn About Swap Providers",
+  "thereAreTradeoff": "There are tradeoffs different swap providers make across factors like convenience, security, liquidity, and fees. At a glance:",
+  "aggregators": "Aggregators",
+  "bridges": "Bridges",
+  "feeStructure": "FEE STRUCTURE"
 }
