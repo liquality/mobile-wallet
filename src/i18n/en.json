@@ -445,6 +445,9 @@
     "sendTo": "Send To",
     "speedFee": "Network/Speed Fee"
   },
+  "walletConnect": {
+    "connect": "Connect"
+  },
   "letGetYouStarted": "Let’s Get You Started",
   "buyCrypto": "BUY CRYPTO",
   "unlockWalletUpperCase": "UNLOCK YOUR WALLET",

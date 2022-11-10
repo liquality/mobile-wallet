@@ -66,6 +66,7 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
   useEffect(() => {
     if (chainCode !== 'ALL') {
       const chain = getAsset(activeNetwork, chainCode).chain
+
       const result = mainAssets.filter((item) => item.chain === chain)
       setChainAssets(result)
       setAssets(result)
@@ -157,6 +158,7 @@ const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
       const onItemPress = () => {
         setChainCode(code)
       }
+
       return (
         <Box
           alignItems={'center'}

@@ -176,7 +176,6 @@ const ContentBlock = () => {
       sceneContainerStyle={{
         marginTop: scale(15),
       }}
-      swipeEnabled
     />
   )
 }
