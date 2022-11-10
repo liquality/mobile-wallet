@@ -153,6 +153,8 @@ import NetworkSpeedEdit from '../assets/icons/networkSpeedEdit.svg'
 import DoubleArrowThick from '../assets/icons/doubleArrowThick.svg'
 import DoubleArrowThickDisabled from '../assets/icons/doubleArrowThickDisabled.svg'
 import HopProviderIcon from '../assets/icons/swap-providers/hop.svg'
+import LiFiProviderIcon from '../assets/icons/swap-providers/lifi.svg'
+import DebridgeProviderIcon from '../assets/icons/swap-providers/debrige.svg'
 import OneInch from '../assets/icons/swap-providers/oneInch.svg'
 import AccountDetailsIcon from '../assets/icons/accountDetails.svg'
 import ConnectionIndicator from '../assets/icons/connectionIndicator.svg'
@@ -177,6 +179,11 @@ import SwapHex from '../assets/icons/swapHex.svg'
 import SendHex from '../assets/icons/sendHex.svg'
 import OptimismChainIcon from '../assets/icons/crypto/optimism_chain.svg'
 import WhiteCheckMark from '../assets/icons/checkMark.svg'
+import Astroport from '../assets/icons/swap-providers/astroport.svg'
+import FastBTC from '../assets/icons/swap-providers/fastBTC.svg'
+import Jupiter from '../assets/icons/swap-providers/jupiter.svg'
+import UncheckedWhiteBox from '../assets/icons/uncheckedWhite.svg'
+import CheckedWhiteBox from '../assets/icons/checkedWhite.svg'
 
 export default {
   PendingSwap,
@@ -356,4 +363,11 @@ export default {
   SendHex,
   OptimismChainIcon,
   WhiteCheckMark,
+  Astroport,
+  FastBTC,
+  Jupiter,
+  LiFiProviderIcon,
+  DebridgeProviderIcon,
+  UncheckedWhiteBox,
+  CheckedWhiteBox,
 }

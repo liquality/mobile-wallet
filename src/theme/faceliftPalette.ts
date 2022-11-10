@@ -43,4 +43,5 @@ export const faceliftPalette = {
   semiTransparentGrey: 'rgba(61, 71,103, 0.8)',
   warningButton: '#DBAEFF',
   lightInputActiveColor: '#F8F0FF',
+  whiteLightGrey: '#E0E0E0',
 }

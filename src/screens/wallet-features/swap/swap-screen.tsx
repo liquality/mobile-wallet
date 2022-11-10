@@ -760,7 +760,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                         asset={swapPair.fromAsset?.code}
                         chain={swapPair.fromAsset?.chain}
                       />
-                      <ChevronRightIcon width={scale(15)} height={scale(15)} />
+                      <Box marginLeft={'s'}>
+                        <ChevronRightIcon
+                          width={scale(15)}
+                          height={scale(15)}
+                        />
+                      </Box>
                     </Box>
                   </TouchableWithoutFeedback>
                 </Box>
@@ -859,7 +864,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                         asset={swapPair.toAsset?.code}
                         chain={swapPair.toAsset?.chain}
                       />
-                      <ChevronRightIcon width={scale(15)} height={scale(15)} />
+                      <Box marginLeft={'s'}>
+                        <ChevronRightIcon
+                          width={scale(15)}
+                          height={scale(15)}
+                        />
+                      </Box>
                     </Box>
                   </TouchableWithoutFeedback>
                 </Box>
@@ -881,12 +891,16 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                   </Text>
                 </Box>
               </Box>
-              <Box position={'absolute'} height="100%" right={0} zIndex={0}>
+              <Box
+                position={'absolute'}
+                top={'50%'}
+                bottom={'50%'}
+                right={0}
+                zIndex={0}>
                 <Box
-                  position={'relative'}
-                  flex={1}
                   justifyContent="center"
-                  alignItems={'flex-end'}>
+                  alignItems={'flex-end'}
+                  zIndex={100}>
                   <Box style={styles.arrowLeft} />
                   <Box position={'absolute'} right={-scale(5)}>
                     <TouchableOpacity

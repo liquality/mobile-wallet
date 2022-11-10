@@ -258,21 +258,23 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
             }}
           />
         </Box>
-        <SettingListComponent
-          mainLabel={labelTranslateFn('settingsScreen.screenMode')!}
-          sublabel={labelTranslateFn('settingsScreen.screenModeInfo')!}
-          reactElementPlusOnPress={
-            <CustomSwitch
-              width={80}
-              firstItemValue={enableLight}
-              firstItemPress={() => setTheme(DarkModeEnum.Light)}
-              firstItemElement={enableLight ? <LightSun /> : <DarkSun />}
-              secondItemValue={enableDark}
-              secondItemPress={() => setTheme(DarkModeEnum.Dark)}
-              secondItemElement={enableDark ? <DarkMoon /> : <LightMoon />}
-            />
-          }
-        />
+        <Box style={{ display: 'none' }}>
+          <SettingListComponent
+            mainLabel={labelTranslateFn('settingsScreen.screenMode')!}
+            sublabel={labelTranslateFn('settingsScreen.screenModeInfo')!}
+            reactElementPlusOnPress={
+              <CustomSwitch
+                width={80}
+                firstItemValue={enableLight}
+                firstItemPress={() => setTheme(DarkModeEnum.Light)}
+                firstItemElement={enableLight ? <LightSun /> : <DarkSun />}
+                secondItemValue={enableDark}
+                secondItemPress={() => setTheme(DarkModeEnum.Dark)}
+                secondItemElement={enableDark ? <DarkMoon /> : <LightMoon />}
+              />
+            }
+          />
+        </Box>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => Linking.openURL('https://liquality.io/')}>
