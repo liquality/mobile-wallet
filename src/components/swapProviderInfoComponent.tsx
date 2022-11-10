@@ -1,14 +1,36 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
-import { Box, ColorType, Text, TouchableOpacity } from '../theme'
+import {
+  Box,
+  ColorType,
+  OVERVIEW_TAB_BAR_STYLE,
+  OVERVIEW_TAB_STYLE,
+  Text,
+  TabBar,
+  TouchableOpacity,
+} from '../theme'
 import { scale, ScaledSheet } from 'react-native-size-matters'
 import {
   swapProviderTiles,
   SCREEN_WIDTH,
   SwapProviderRowProp,
   SCREEN_HEIGHT,
+  labelTranslateFn,
+  bridgesTile,
 } from '../utils'
-import { TabView } from 'react-native-tab-view'
+import {
+  TabView,
+  SceneRendererProps,
+  NavigationState,
+  Route,
+} from 'react-native-tab-view'
+import { useRecoilValue } from 'recoil'
+import { langSelected as LS } from '../atoms'
+import I18n from 'i18n-js'
+
+type RenderTabBar = SceneRendererProps & {
+  navigationState: NavigationState<Route>
+}
 
 const Aggregators = ({
   onPress,
@@ -189,16 +211,73 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
   const [selectedItem, setSelectedItem] = React.useState<SwapProviderRowProp>(
     swapProviderTiles[0],
   )
+  const langSelected = useRecoilValue(LS)
+  I18n.locale = langSelected
+
+  const [tabTileIndex, setTabTileIndex] = React.useState(0)
+  const [tabTileRoutes, setTabTileRoutes] = React.useState([
+    { key: 'aggregators', title: labelTranslateFn('aggregators')! },
+    { key: 'bridges', title: labelTranslateFn('bridges')! },
+  ])
+
+  React.useEffect(() => {
+    setTabTileRoutes([
+      { key: 'aggregators', title: labelTranslateFn('aggregators')! },
+      { key: 'bridges', title: labelTranslateFn('bridges')! },
+    ])
+  }, [langSelected])
+
   const [index, setIndex] = React.useState(0)
-  const routes = swapProviderTiles.map((item) => ({
-    key: item.name,
-    title: item.name,
-  }))
+  const routes = tabTileIndex
+    ? bridgesTile.map((item) => ({
+        key: item.name,
+        title: item.name,
+      }))
+    : swapProviderTiles.map((item) => ({
+        key: item.name,
+        title: item.name,
+      }))
 
   const onIndexChange = (itemNum: number) => {
-    setSelectedItem(swapProviderTiles[itemNum])
+    setSelectedItem(
+      tabTileIndex ? bridgesTile[itemNum] : swapProviderTiles[itemNum],
+    )
     setIndex(itemNum)
   }
+
+  const onTilePress = (itemNum: number) => {
+    setSelectedItem(bridgesTile[itemNum])
+    setIndex(itemNum)
+  }
+
+  const onTabTileIndexChange = (itemNum: number) => {
+    setSelectedItem(itemNum ? bridgesTile[0] : swapProviderTiles[0])
+    setTabTileIndex(itemNum)
+  }
+
+  const renderTabBar = (props: RenderTabBar) => (
+    // Redline because of theme issue with TabBar props
+    <Box>
+      <TabBar
+        {...props}
+        renderLabel={({ route, focused }) => (
+          <Text
+            variant={'h5'}
+            fontWeight="400"
+            color={focused ? 'tablabelActiveColor' : 'tablabelInactiveColor'}>
+            {route.title}
+          </Text>
+        )}
+        tabStyle={{ ...OVERVIEW_TAB_BAR_STYLE, width: scale(100) }}
+        variant="light"
+        style={OVERVIEW_TAB_STYLE}
+      />
+    </Box>
+  )
+
+  const renderDashedArray = tabTileIndex === 0 ? swapProviderTiles : bridgesTile
+
+  const calculateHeight = tabTileIndex ? 3 : 2
 
   return (
     <Box
@@ -217,28 +296,37 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
             tx="learnAboutSwapProviders"
           />
           <Text variant={'termsBody'} color="black2" tx="thereAreTradeoff" />
-          <Box marginTop={'xl'}>
-            <Box>
-              <Text
-                tx="aggregators"
-                variant={'h5'}
-                fontWeight="400"
-                color="activeButton"
-              />
-              <Box
-                marginTop={'s'}
-                backgroundColor={'activeButton'}
-                width={scale(15)}
-                height={scale(2)}
-              />
-            </Box>
-            <Box marginTop={'xl'}>
-              <TabTileContent
-                selectedItem={selectedItem}
-                onPress={onIndexChange}
-                tiles={swapProviderTiles}
-              />
-            </Box>
+          <Box marginTop={'l'} height={(SCREEN_WIDTH / calculateHeight) * 1.5}>
+            <TabView
+              renderTabBar={renderTabBar}
+              navigationState={{ index: tabTileIndex, routes: tabTileRoutes }}
+              renderScene={({ route }) => {
+                switch (route.key) {
+                  case 'aggregators':
+                    return (
+                      <TabTileContent
+                        selectedItem={selectedItem}
+                        onPress={onIndexChange}
+                        tiles={swapProviderTiles}
+                      />
+                    )
+                  case 'bridges':
+                    return (
+                      <TabTileContent
+                        selectedItem={selectedItem}
+                        onPress={onTilePress}
+                        tiles={bridgesTile}
+                      />
+                    )
+                }
+              }}
+              onIndexChange={onTabTileIndexChange}
+              initialLayout={{ width: SCREEN_WIDTH - scale(30) }} //approx to horizontal patting
+              sceneContainerStyle={{
+                marginTop: scale(15),
+              }}
+              swipeEnabled
+            />
           </Box>
           <Box
             height={1}
@@ -255,7 +343,7 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
           justifyContent={'space-between'}>
           <selectedItem.icon width={scale(40)} height={scale(40)} />
           <Box flexDirection={'row'} alignItems="center">
-            {swapProviderTiles.map((item) => (
+            {renderDashedArray.map((item) => (
               <Box
                 marginTop={'m'}
                 backgroundColor={
@@ -271,31 +359,51 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
             ))}
           </Box>
         </Box>
-        <TabView
-          renderTabBar={() => null}
-          navigationState={{ index, routes }}
-          renderScene={({ route }) => {
-            switch (route.key) {
-              case routes[0].key:
-                return <TabContent selectedItem={swapProviderTiles[0]} />
-              case routes[1].key:
-                return <TabContent selectedItem={swapProviderTiles[1]} />
-              case routes[2].key:
-                return <TabContent selectedItem={swapProviderTiles[2]} />
-              case routes[3].key:
-                return <TabContent selectedItem={swapProviderTiles[3]} />
-              case routes[4].key:
-                return <TabContent selectedItem={swapProviderTiles[4]} />
-              case routes[5].key:
-                return <TabContent selectedItem={swapProviderTiles[5]} />
-              case routes[6].key:
-                return <TabContent selectedItem={swapProviderTiles[6]} />
-            }
-          }}
-          swipeEnabled
-          onIndexChange={onIndexChange}
-          initialLayout={{ width: SCREEN_WIDTH - scale(30) }} //approx to horizontal patting
-        />
+        {tabTileIndex ? (
+          <TabView
+            renderTabBar={() => null}
+            navigationState={{ index, routes }}
+            renderScene={({ route }) => {
+              switch (route.key) {
+                case routes[0].key:
+                  return <TabContent selectedItem={bridgesTile[0]} />
+                case routes[1].key:
+                  return <TabContent selectedItem={bridgesTile[1]} />
+                case routes[2].key:
+                  return <TabContent selectedItem={bridgesTile[2]} />
+              }
+            }}
+            swipeEnabled
+            onIndexChange={onIndexChange}
+            initialLayout={{ width: SCREEN_WIDTH - scale(30) }} //approx to horizontal patting
+          />
+        ) : (
+          <TabView
+            renderTabBar={() => null}
+            navigationState={{ index, routes }}
+            renderScene={({ route }) => {
+              switch (route.key) {
+                case routes[0].key:
+                  return <TabContent selectedItem={swapProviderTiles[0]} />
+                case routes[1].key:
+                  return <TabContent selectedItem={swapProviderTiles[1]} />
+                case routes[2].key:
+                  return <TabContent selectedItem={swapProviderTiles[2]} />
+                case routes[3].key:
+                  return <TabContent selectedItem={swapProviderTiles[3]} />
+                case routes[4].key:
+                  return <TabContent selectedItem={swapProviderTiles[4]} />
+                case routes[5].key:
+                  return <TabContent selectedItem={swapProviderTiles[5]} />
+                case routes[6].key:
+                  return <TabContent selectedItem={swapProviderTiles[6]} />
+              }
+            }}
+            swipeEnabled
+            onIndexChange={onIndexChange}
+            initialLayout={{ width: SCREEN_WIDTH - scale(30) }} //approx to horizontal patting
+          />
+        )}
       </Box>
     </Box>
   )
