@@ -245,14 +245,10 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
     setIndex(itemNum)
   }
 
-  const onTilePress = (itemNum: number) => {
-    setSelectedItem(bridgesTile[itemNum])
-    setIndex(itemNum)
-  }
-
   const onTabTileIndexChange = (itemNum: number) => {
     setSelectedItem(itemNum ? bridgesTile[0] : swapProviderTiles[0])
     setTabTileIndex(itemNum)
+    setIndex(0)
   }
 
   const renderTabBar = (props: RenderTabBar) => (
@@ -314,7 +310,7 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
                     return (
                       <TabTileContent
                         selectedItem={selectedItem}
-                        onPress={onTilePress}
+                        onPress={onIndexChange}
                         tiles={bridgesTile}
                       />
                     )

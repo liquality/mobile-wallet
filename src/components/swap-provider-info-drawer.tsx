@@ -51,6 +51,7 @@ const SwapProviderInfoDrawer = (props: Props) => {
         style={{ height: SCREEN_HEIGHT }}
         scrollEventThrottle={400}
         onScroll={isScrolledUpEvent}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingBottom: scale(20),
         }}>
