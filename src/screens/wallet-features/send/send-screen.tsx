@@ -84,7 +84,9 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     type: null,
   })
   const amountInput = useInputState('0')
-  const addressInput = useInputState('')
+  const addressInput = useInputState(
+    '0x9d952801256812e6defc6615c0790dBcE9C3Afa3',
+  )
   const networkFee = useRef<NetworkFeeType>()
   const activeNetwork = useRecoilValue(networkState)
   const [showFeeEditorModal, setShowFeeEditorModal] = useState<boolean>(false)

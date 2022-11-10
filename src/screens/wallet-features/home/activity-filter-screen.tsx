@@ -111,9 +111,11 @@ const ActivityFilterScreen = ({
 
     let customArray: IconAsset[] = []
 
+    const createUniqueHistItem = new Set(historyItems.map((item) => item.from))
+
     for (let asset of myAssets) {
-      for (let item of historyItems) {
-        if (item.from === asset.code) {
+      for (let item of createUniqueHistItem) {
+        if (item === asset.code) {
           customArray.push({ code: asset.code, chain: asset.chain })
         }
       }
