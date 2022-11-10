@@ -108,7 +108,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
           <Text
             color={'textColor'}
             paddingTop="m"
-            fontFamily={Fonts.Regular}
+            fontFamily={Fonts.SemiBold}
             fontSize={scale(27)}
             lineHeight={scale(30)}
             letterSpacing={0.5}
@@ -177,7 +177,7 @@ const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
               style={styles.okButton}
             />
           </Box>
-          <Box position={'absolute'} zIndex={100} right={scale(-8)}>
+          <Box position={'absolute'} zIndex={100} top={-5} right={scale(-8)}>
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() => onAction(false)}>

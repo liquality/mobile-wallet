@@ -137,6 +137,12 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             opacity={0.8}
             variant={'whiteLabel'}
             tx="common.forgotPassword"
+            onPress={() =>
+              navigation.navigate('TermsScreen', {
+                previousScreen: 'LoginScreen',
+                nextScreen: 'UnlockWalletScreen',
+              })
+            }
           />
           <Text
             opacity={0.8}

@@ -76,8 +76,6 @@ export const Pressable: FC<Props> = (props) => {
 
   const theme = useTheme<Theme>()
 
-  const opacity = disabled ? 0.4 : 1
-
   const currentVariant =
     disabled && variant === 'solid' ? 'solidDisabled' : variant
 
@@ -92,7 +90,7 @@ export const Pressable: FC<Props> = (props) => {
       {...rest}
       variant={currentVariant}
       disabled={disabled}
-      style={[buttonStyle, styles, { opacity }]}>
+      style={[buttonStyle, styles]}>
       {isLoading ? (
         <ActivityIndicator color={theme.colors.spinner} />
       ) : icon ? (
@@ -109,7 +107,7 @@ export const Pressable: FC<Props> = (props) => {
               style={[textStyle, overrideTextStyle]}>
               {content}
             </Text>
-            <ArrowLeft stroke={disabled ? faceliftPalette.grey : ''} />
+            <ArrowLeft fill={disabled ? faceliftPalette.grey : ''} />
           </Box>
         )
       ) : (

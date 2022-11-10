@@ -42,7 +42,7 @@ export const theme = createTheme({
     mediumWhite: faceliftPalette.mediumWhite,
     darkGrey: faceliftPalette.darkGrey,
     activeButton: faceliftPalette.buttonActive,
-    inactiveButton: faceliftPalette.buttonInactive,
+    inactiveButton: faceliftPalette.whiteGrey,
     defaultButton: faceliftPalette.active,
     inactiveText: faceliftPalette.grey,
     semiTransparentWhite: faceliftPalette.semiTransparentWhite,
@@ -76,6 +76,7 @@ export const theme = createTheme({
     lightWhite: faceliftPalette.lightWhite,
     whiteLightGrey: faceliftPalette.whiteLightGrey,
     consColor: faceliftPalette.slow,
+    whiteGrey: faceliftPalette.whiteGrey,
   },
   spacing: {
     vs: scale(2),
@@ -261,6 +262,7 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(13),
       color: 'link',
+      letterSpacing: 0.5,
     },
     speedUp: {
       fontFamily: Fonts.Regular,
@@ -370,10 +372,9 @@ export const theme = createTheme({
       fontWeight: '400',
     },
     numberLabel: {
-      fontFamily: Fonts.Regular,
+      fontFamily: Fonts.SemiBold,
       fontSize: scale(12),
       color: 'white',
-      fontWeight: '600',
     },
     normalText: {
       fontFamily: Fonts.Regular,
@@ -766,8 +767,6 @@ export const theme = createTheme({
     },
     seedPhraseInputs: {
       color: 'darkGrey',
-      borderBottomColor: 'mediumGrey',
-      borderBottomWidth: 1,
       fontWeight: '400',
       fontSize: scale(16),
       fontFamily: Fonts.Regular,
