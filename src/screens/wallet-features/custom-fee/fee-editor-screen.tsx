@@ -73,6 +73,7 @@ import {
   TotalFees,
 } from '../../../types'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
+import { FeeDetail } from '@chainify/types'
 
 type LikelyWaitObjType = {
   slow: number | undefined
@@ -136,21 +137,34 @@ const StandardRoute = ({
     }
   }
 
+  const extractFee = (feeDetail: FeeDetail): number => {
+    if (typeof feeDetail.fee === 'number') {
+      return feeDetail.fee
+    } else {
+      const { suggestedBaseFeePerGas, maxPriorityFeePerGas } = feeDetail.fee
+      return suggestedBaseFeePerGas
+        ? maxPriorityFeePerGas + suggestedBaseFeePerGas
+        : maxPriorityFeePerGas
+    }
+  }
+
   const computePreset = useCallback(
     (speedValue: FeeLabel, tf: TotalFees): PresetType | undefined => {
       if (!gasFees) return undefined
       let totalFeesSpeed = tf?.[speedValue] || null
-      let feeInSatOrGwei = gasFees?.[speedValue].fee
-
-      if (
-        feeInSatOrGwei &&
-        totalFeesSpeed &&
-        isEIP1559Fees(getAsset(activeNetwork, selectedAsset).chain)
-      ) {
+      let feeInSatOrGwei = extractFee(gasFees?.[speedValue])
+      const asset = getAsset(activeNetwork, selectedAsset)
+      if (feeInSatOrGwei && totalFeesSpeed && isEIP1559Fees(asset.chain)) {
         //TODO How to calculate maxSendFee
-        const maxSendFee = maxFeePerUnitEIP1559(feeInSatOrGwei)
+        const maxSendFee = getSendFee(
+          selectedAsset,
+          maxFeePerUnitEIP1559(gasFees?.[speedValue].fee),
+        )
         let amountInNative = dpUI(feeInSatOrGwei, 6).toString()
-        let fiat = prettyFiatBalance(feeInSatOrGwei, fiatRates[selectedAsset])
+        let fiat = prettyFiatBalance(
+          unitToCurrency(asset, feeInSatOrGwei),
+          fiatRates[selectedAsset],
+        )
 
         return {
           amount: amountInNative,
@@ -265,14 +279,21 @@ const StandardRoute = ({
                       ? `~ ${gasFees[feeLabel].wait / 1000}s`
                       : ''}
                   </Text>
-                  {gasFees?.[feeLabel]?.fee && (
+                  {presets[feeLabel] && (
                     <Text
                       variant="normalText"
                       color="textColor"
+                      textTransform={'uppercase'}
                       lineBreakMode={'middle'}
                       numberOfLines={2}
                       marginTop="l">
-                      ~ {`${selectedAsset} ${presets[feeLabel]?.amount}`}
+                      ~{' '}
+                      {`${
+                        getChain(
+                          activeNetwork,
+                          getAsset(activeNetwork, selectedAsset).chain,
+                        ).fees.unit
+                      } ${presets[feeLabel]?.amount}`}
                     </Text>
                   )}
 
@@ -282,7 +303,7 @@ const StandardRoute = ({
                   {isEIP1559Fees(
                     getAsset(activeNetwork, selectedAsset).chain,
                   ) &&
-                    gasFees?.[feeLabel].fee && (
+                    presets[feeLabel] && (
                       <Fragment>
                         <Text
                           variant="normalText"
@@ -735,9 +756,11 @@ const FeeEditorScreen = ({
             <Pressable onPress={() => onClose(false)}>
               <CloseIcon width={15} height={15} />
             </Pressable>
-            <Box flex={0.5} flexDirection="row" alignItems={'center'}>
-              <AssetIcon size={20} asset={selectedAsset} />
-              <Text>{labelTranslateFn('common.networkSpeed')}</Text>
+            <Box flexDirection="row" alignItems={'center'}>
+              <AssetIcon size={scale(1.45 * 16)} asset={selectedAsset} />
+              <Text variant={'headerTitle'} marginLeft={'s'}>
+                {labelTranslateFn('common.networkSpeed')}
+              </Text>
             </Box>
             {transactionType === ActionEnum.SWAP ? (
               <Pressable onPress={() => onClose(false)}>
@@ -748,6 +771,8 @@ const FeeEditorScreen = ({
             )}
           </Box>
           <TabView
+            swipeEnabled={false}
+            lazy
             renderTabBar={renderTabBar}
             onIndexChange={setIndex}
             navigationState={{ index, routes }}
