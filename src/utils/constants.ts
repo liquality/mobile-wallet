@@ -207,7 +207,7 @@ export const swapProviderTiles: Array<SwapProviderRowProp> = [
   {
     icon: OneInch,
     name: '1 inch v4',
-    heading: '1Inch DEX Aggregator Swaps',
+    heading: '1 Inch DEX Aggregator Swaps',
     description: 'Aggregate of popular DEXes',
     pros: [
       'Ethereum, Polygon, Binance, Smart Chain, Avalanche',
@@ -268,7 +268,7 @@ export const swapProviderTiles: Array<SwapProviderRowProp> = [
     name: 'Astroport',
     heading: 'Astroport AMM Swaps',
     description:
-      "Decentralized, permissionless and open-source, Astroport's marketplace is a public good governed by its community of token holders",
+      "Decentralized, permissionless and open-source. Astroport's marketplace is a public good governed by its community of token holders",
     pros: ['Low liquidity', 'Margin Trading'],
     cons: ['Slippage'],
     feeStructure: [
@@ -281,7 +281,7 @@ export const swapProviderTiles: Array<SwapProviderRowProp> = [
     name: 'Jupiter',
     heading: 'Jupiter AMM Swaps',
     description:
-      "Decentralized, permissionless and open-source, Jupiter's marketplace is a public good governed by its community of token holders",
+      'Decentralized, permissionless and open-source. Jupiter marketplace is a public good governed by its community of token holders',
     pros: ['Low liquidity', 'Margin Trading'],
     cons: ['Slippage'],
     feeStructure: [

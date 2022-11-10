@@ -83,7 +83,7 @@ const TabContent = ({
         {selectedItem.heading}
       </Text>
       <Text
-        variant={'h6'}
+        variant={'h7'}
         lineHeight={scale(20)}
         color="darkGrey"
         marginTop={'s'}>
