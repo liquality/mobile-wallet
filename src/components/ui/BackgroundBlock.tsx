@@ -25,7 +25,17 @@ const BackgroundBlock = (props: BackgroundBlockProps) => {
         viewBox={`0 0 ${width} ${height}`}
         fill="none">
         <Path
-          d={`M10 70 H ${width} V ${height} H ${10} V ${70} Z`}
+          d={`
+          M10 70 
+          H ${width - 5}
+          Q ${width},70 ${width},79 
+          V ${height - 9} 
+          Q ${width},${height} ${width - 9},${height} 
+          H ${19} 
+          Q ${10}, ${height} 
+            ${10}, ${height - 9}
+          V ${70} 
+          Z`}
           fill={faceliftPalette.darkGrey}
           strokeWidth={4}
           stroke={faceliftPalette.darkGrey}
@@ -33,14 +43,24 @@ const BackgroundBlock = (props: BackgroundBlockProps) => {
           strokeLinecap={'round'}
         />
         <Path
-          d={`M0 0 H ${width - flatRadius} L ${
-            width - SHADOW_WIDTH
-          } ${flatRadius} V ${height - SHADOW_WIDTH} H ${0} V ${0} Z`}
+          d={`
+          M10 0 
+          H ${width - flatRadius} 
+          L ${width - SHADOW_WIDTH} ${flatRadius} 
+          V ${height - SHADOW_WIDTH - 9}
+          Q ${width - SHADOW_WIDTH}, ${height - SHADOW_WIDTH} 
+            ${width - SHADOW_WIDTH - 9}, ${height - SHADOW_WIDTH} 
+          H ${9} 
+          Q ${0}, ${height - SHADOW_WIDTH} 
+            ${0}, ${height - SHADOW_WIDTH - 9}
+          V ${9} 
+          Q ${0}, ${0} 
+            ${9}, ${0}
+          Z
+          `}
           fill={faceliftPalette.white}
-          strokeWidth={4}
+          strokeWidth={3}
           stroke={faceliftPalette.darkGrey}
-          strokeLinejoin={'round'}
-          strokeLinecap={'round'}
         />
       </Svg>
     </Box>

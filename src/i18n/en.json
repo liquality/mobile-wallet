@@ -73,7 +73,8 @@
     "notToday": "Not today, ask me later"
   },
   "passwordCreationScreen": {
-    "createPassword": "Create Password",
+    "create": "Create",
+    "password": "Password",
     "confirmPassword": "CONFIRM PASSWORD",
     "passwordDontMatch": "Passwords don't match",
     "password8char": "Passwords must be at least 8 characters.",
