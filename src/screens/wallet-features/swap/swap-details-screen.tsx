@@ -625,6 +625,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
           transactionType={ActionEnum.SWAP}
           networkSpeed={networkSpeed}
           isSpeedUp={true}
+          claimFee={historyItem.claimFee}
         />
       )}
       <SpeedUpModal

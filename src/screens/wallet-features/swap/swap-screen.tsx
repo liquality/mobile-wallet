@@ -1000,12 +1000,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
           onClose={setShowFeeEditorModal}
           selectedAsset={swapPair.fromAsset?.code}
           amount={new BigNumber(fromBalance)}
-          applyFee={(fee) => {
+          applyFee={(fee, speed) => {
             setCustomFee(fee.toNumber())
+            setNetworkSpeed(speed)
             setShowFeeEditorModal(false)
           }}
           transactionType={ActionEnum.SWAP}
-          applyNetworkSpeed={setNetworkSpeed}
           networkSpeed={networkSpeed}
         />
       )}

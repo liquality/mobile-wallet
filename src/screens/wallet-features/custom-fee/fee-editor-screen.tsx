@@ -346,12 +346,15 @@ const CustomizeRoute = ({
   amount,
   applyFee,
   networkSpeed,
+  isSpeedUp,
+  claimFee = 0,
 }: {
   selectedAsset: string
   amount: BigNumber
   applyFee: (fee: BigNumber, speed: ExtendedFeeLabel) => void
   networkSpeed?: ExtendedFeeLabel
   isSpeedUp?: boolean
+  claimFee?: number // to speed up user should enter higher fee than claimFee
 }) => {
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
@@ -370,10 +373,10 @@ const CustomizeRoute = ({
   })
   const { activeWalletId } = wallet.state
   const [likelyWaitObj, setLikelyWaitObj] = useState<LikelyWaitObjType>()
-  // const minerTipInput = useInputState('0')
-  // const maxFeeInput = useInputState('0')
   const [minerTipInput, setMinerTipInput] = useState('0')
-  const [maxFeeInput, setMaxTipInput] = useState('0')
+  const [maxFeeInput, setMaxTipInput] = useState(
+    isSpeedUp ? claimFee.toString() : '0',
+  )
 
   const handleApplyPress = () => {
     applyFee(
@@ -490,6 +493,14 @@ const CustomizeRoute = ({
     selectedAsset,
     speed,
   ])
+
+  let buttonActiveState = true
+
+  if (isSpeedUp) {
+    // buttonActiveState = networkSpeed !== speed
+  } else {
+    buttonActiveState = !!maxFeeInput
+  }
 
   return (
     <Box flex={1}>
@@ -647,7 +658,7 @@ const CustomizeRoute = ({
           label={{ tx: 'common.apply' }}
           onPress={handleApplyPress}
           isBorderless={true}
-          isActive
+          isActive={buttonActiveState}
         />
       </ButtonFooter>
     </Box>
@@ -666,6 +677,7 @@ type FeeEditorScreenType = {
   networkSpeed: ExtendedFeeLabel
   transactionType: ActionEnum
   isSpeedUp?: boolean
+  claimFee?: number // to speed up user should enter higher fee than claimFee
 }
 
 const FeeEditorScreen = ({
@@ -676,6 +688,7 @@ const FeeEditorScreen = ({
   networkSpeed,
   transactionType,
   isSpeedUp = false,
+  claimFee = 0,
 }: FeeEditorScreenType) => {
   const layout = useWindowDimensions()
   const activeNetwork = useRecoilValue(networkState)
@@ -710,6 +723,7 @@ const FeeEditorScreen = ({
             applyFee={applyFee}
             networkSpeed={networkSpeed}
             isSpeedUp={isSpeedUp}
+            claimFee={claimFee}
           />
         )
     }
