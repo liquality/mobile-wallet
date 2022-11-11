@@ -143,6 +143,11 @@ import SwapTknIcon from '../assets/icons/swapTknIcon.svg'
 import BuyCryptoCloseLight from '../assets/icons/buyCryptoCloseLight.svg'
 import BuyCryptoCloseDark from '../assets/icons/buyCryptoCloseDark.svg'
 import TiltedArrow from '../assets/icons/tiltedArrow.svg'
+import Connect from '../assets/icons/connect.svg'
+import ConnectSolid from '../assets/icons/connectSolid.svg'
+
+import DottedArrow from '../assets/icons/dottedArrow.svg'
+import BlueLine from '../assets/icons/blueLine.svg'
 import SwapQuotes from '../assets/icons/swapQuotes.svg'
 import ThinDownArrowActive from '../assets/icons/thinDownArrowActive.svg'
 import ThinDoubleArrowActive from '../assets/icons/thinDoubleArrowActive.svg'
@@ -331,6 +336,10 @@ export default {
   BuyCryptoCloseDark,
   OnRamperIcon,
   TiltedArrow,
+  Connect,
+  ConnectSolid,
+  DottedArrow,
+  BlueLine,
   ThinDownArrowActive,
   MaticNewIcon,
   PwEthNewIcon,

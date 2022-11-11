@@ -73,7 +73,8 @@
     "notToday": "Not today, ask me later"
   },
   "passwordCreationScreen": {
-    "createPassword": "Create Password",
+    "create": "Create",
+    "password": "Password",
     "confirmPassword": "CONFIRM PASSWORD",
     "passwordDontMatch": "Passwords don't match",
     "password8char": "Passwords must be at least 8 characters.",
@@ -93,7 +94,8 @@
   },
 
   "termsScreen": {
-    "termPrivacy": "Terms & \nPrivacy",
+    "terms": "Terms &",
+    "privacy": "Privacy",
     "termCopy": "THIS IS THE BETA VERSION OF THE LIQUALITY PLATFORM WHICH IS STILL BEING ACTIVELY DEVELOPED. YOU ACKNOWLEDGE THE INFORMATION AVAILABLE IS NOT INTENDED TO BE RELIED ON OR USED IN A PRODUCTION ENVIRONMENT. YOU ACKNOWLEDGE AND ACCEPT THAT THE SITE OR SERVICES \n (A) MAY CONTAIN BUGS, ERRORS, AND DEFECTS, \n (B) MAY FUNCTION IMPROPERLY OR BE SUBJECT TO PERIODS OF DOWNTIME AN UNAVAILABILITY, \n (C) MAY RESULT IN TOTAL OR PARTIAL LOSS OR CORRUPTION OF DATA USED IN THE SITE, AND \n (D) MAY BE MODIFIED AT ANY TIME, INCLUDING THROUGH THE RELEASE OF SUBSEQUENT VERSIONS, \n\nALL WITH OR WITHOUT NOTICE. THE ALPHA PLATFORM IS AVAILABLE ON AN “AS IS” AND “AS AVAILABLE” BASIS FOR THE SOLE PURPOSE OF COLLECTING FEEDBACK ON QUALITY, USABILITY, PERFORMANCE AND ANY DEFECTS. THANK YOU FOR YOUR SUPPORT WHILE WE CONTINUE TO WORK ON DELIVERING A PERFECT PRODUCT.",
     "iAgree:": "I Agree",
     "cancel": "Cancel"
@@ -317,8 +319,9 @@
   },
   "unlockWalletScreen": {
     "invalidSeedPhrase": "Your seed phrase is invalid', 'Please try again",
-    "unlockWallet": "Unlock your Wallet",
-    "enterSeedPhrase": "Enter the seed phrase in the same order saved when creating your wallet.",
+    "unlock": "Unlock",
+    "yourWallet": "your Wallet",
+    "enterSeedPhrase": "Enter the seed phrase in the same order saved when creating your wallet",
     "12words": "12",
     "24words": "24",
     "wordCount": "WORD COUNT"
@@ -442,6 +445,9 @@
     "sendNft": "Send NFT",
     "sendTo": "Send To",
     "speedFee": "Network/Speed Fee"
+  },
+  "walletConnect": {
+    "connect": "Connect"
   },
   "letGetYouStarted": "Let’s Get You Started",
   "buyCrypto": "BUY CRYPTO",

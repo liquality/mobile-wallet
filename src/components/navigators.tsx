@@ -1,8 +1,12 @@
-import React, { createContext } from 'react'
-import { Pressable, useColorScheme, TouchableOpacity } from 'react-native'
+import React, { createContext, useEffect, useState } from 'react'
+import {
+  Pressable,
+  useColorScheme,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native'
 import {
   createNativeStackNavigator,
-  NativeStackScreenProps,
   NativeStackNavigationOptions,
 } from '@react-navigation/native-stack'
 import Entry from '../screens/wallet-creation/entryScreen'
@@ -23,6 +27,7 @@ import CustomFeeScreen from '../screens/wallet-features/custom-fee/custom-fee-sc
 import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
 import {
   MainStackParamList,
+  NavigationProps,
   RootStackParamList,
   RootTabParamList,
   SettingStackParamList,
@@ -54,6 +59,7 @@ import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-scre
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
 import NftSendScreen from '../screens/wallet-features/NFT/nft-send-screen'
 import NftForSpecificChainScreen from '../screens/wallet-features/NFT/nft-for-specific-chain-screen'
+
 import NftCollectionScreen from '../screens/wallet-features/NFT/nft-collection-screen'
 import SelectChainScreen from '../screens/wallet-features/settings/select-chain-screen'
 import { AppIcons, Fonts } from '../assets'
@@ -72,6 +78,15 @@ import NftOverviewScreen from '../screens/wallet-features/NFT/nft-overview-scree
 import BackupPrivateKeyScreen from '../screens/wallet-features/backup/backup-private-key-screen'
 import { useNavigation, NavigationProp } from '@react-navigation/core'
 import SwapDetailsScreen from '../screens/wallet-features/swap/swap-details-screen'
+import QRCodeScanner from 'react-native-qrcode-scanner'
+import { RNCamera } from 'react-native-camera'
+import InitInjectionScreen from '../screens/wallet-injection/initiate-injection-screen'
+import WalletConnectController from '../controllers/walletConnectController'
+import ApproveTransactionInjectionScreen from '../screens/wallet-injection/approve-transaction-injection'
+import { emitterController } from '../controllers/emitterController'
+import { INJECTION_REQUESTS } from '../controllers/constants'
+import SwitchChainScreen from '../screens/wallet-injection/switch-chain-screen'
+const { ON_SESSION_REQUEST } = INJECTION_REQUESTS
 import ActivityFilterScreen from '../screens/wallet-features/home/activity-filter-screen'
 import AdvancedFilterModal from '../screens/wallet-features/home/advanced-filter-modal'
 import SortingModal from '../screens/wallet-features/home/sorting-modal'
@@ -90,6 +105,9 @@ const {
   TabWalletInactive,
   SearchIcon,
   BuyCryptoCloseDark,
+  Connect,
+  ConnectSolid,
+  XIcon,
   BuyCryptoCloseLight,
   SwapQuotes,
   ExportIcon,
@@ -248,26 +266,6 @@ export const WalletCreationNavigator = () => {
   )
 }
 
-type NavigationProps = NativeStackScreenProps<
-  MainStackParamList,
-  | 'OverviewScreen'
-  | 'SendConfirmationScreen'
-  | 'BackupWarningScreen'
-  | 'AssetManagementScreen'
-  | 'AssetChooserScreen'
-  | 'ReceiveScreen'
-  | 'SwapDetailsScreen'
-  | 'AssetScreen'
-  | 'SendScreen'
-  | 'BuyCryptoDrawer'
-  | 'SwapScreen'
-  | 'SwapProviderModal'
-  | 'ActivityFilterScreen'
-  | 'CongratulationsScreen'
-  | 'AccountManagementScreen'
-  | 'SwapProviderInfoDrawer'
->
-
 const SwapCheckHeaderRight = (navProps: NavigationProps) => {
   const { navigation } = navProps
   return (
@@ -366,6 +364,22 @@ const ManageScreenHeaderRight = () => {
 const AppStackHeaderRight = (navProps: NavigationProps) => {
   const { navigation } = navProps
   const activeNetwork = useRecoilValue(networkState)
+  const [walletConnectData, setWalletConnectData] = useState(null)
+
+  const [showQRScanner, setShowQRScanner] = useState(false)
+  const onSuccess = (e) => {
+    new WalletConnectController(e.data)
+    navigation.navigate('InitInjectionScreen', { uri: e.data })
+    setShowQRScanner(false)
+  }
+
+  //To check if there is a session connected or not
+  useEffect(() => {
+    emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
+      const [data] = params
+      setWalletConnectData(data)
+    })
+  }, [])
 
   return (
     <Box flexDirection={'row'} alignItems={'center'} padding="s">
@@ -381,6 +395,32 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
           {`${activeNetwork}`.toUpperCase()}
         </Text>
       </Box>
+      <Box>
+        {showQRScanner ? (
+          <QRCodeScanner
+            onRead={onSuccess}
+            flashMode={RNCamera.Constants.FlashMode.torch}
+            topContent={
+              <Text style={styles.centerText}>
+                Go to{' '}
+                <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text>{' '}
+                on your computer and scan the QR code.
+              </Text>
+            }
+            bottomContent={
+              <TouchableOpacity style={styles.buttonTouchable}>
+                <Text style={styles.buttonText}>OK. Got it!</Text>
+              </TouchableOpacity>
+            }
+          />
+        ) : (
+          <Box style={styles.container}>
+            <Pressable onPress={() => setShowQRScanner(true)}>
+              {walletConnectData ? <ConnectSolid /> : <Connect />}
+            </Pressable>
+          </Box>
+        )}
+      </Box>
       <TouchableWithoutFeedback
         onPress={() => {
           navigation.navigate('WithPopupMenu')
@@ -389,6 +429,49 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
           <Ellipses width={20} height={20} />
         </Box>
       </TouchableWithoutFeedback>
+    </Box>
+  )
+}
+
+const WalletConnectHeader = () => {
+  const [walletConnectData, setWalletConnectData] = useState(null)
+  const [, setShowQRScanner] = useState(false)
+  //To check if there is a session connected or not
+  useEffect(() => {
+    emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
+      const [data] = params
+      setWalletConnectData(data)
+    })
+  }, [])
+  return (
+    <Box
+      flexDirection={'row'}
+      alignItems={'center'}
+      padding="s"
+      justifyContent={'space-between'}>
+      <Box>
+        <Box style={styles.container}>
+          <Pressable onPress={() => setShowQRScanner(true)}>
+            {walletConnectData ? <ConnectSolid /> : <Connect />}
+          </Pressable>
+        </Box>
+      </Box>
+    </Box>
+  )
+}
+
+const GoBackHeader = (navProps: NavigationProps) => {
+  const { navigation } = navProps
+  return (
+    <Box>
+      <Box>
+        <Pressable
+          onPress={() => {
+            navigation.goBack()
+          }}>
+          <XIcon />
+        </Pressable>
+      </Box>
     </Box>
   )
 }
@@ -917,6 +1000,34 @@ export const StackMainNavigator = () => {
           })}
         />
         <MainStack.Screen
+          name="InitInjectionScreen"
+          component={InitInjectionScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            ...screenNavOptions,
+            headerRight: () => WalletConnectHeader({ navigation, route }),
+            headerLeft: () => GoBackHeader({ navigation, route }),
+          })}
+        />
+        <MainStack.Screen
+          name="SwitchChainScreen"
+          component={SwitchChainScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            ...screenNavOptions,
+            headerRight: () => WalletConnectHeader({ navigation, route }),
+            headerLeft: () => GoBackHeader({ navigation, route }),
+          })}
+        />
+
+        <MainStack.Screen
+          name="ApproveTransactionInjectionScreen"
+          component={ApproveTransactionInjectionScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            ...screenNavOptions,
+            headerRight: () => WalletConnectHeader({ navigation, route }),
+            headerLeft: () => GoBackHeader({ navigation, route }),
+          })}
+        />
+        <MainStack.Screen
           name="SendConfirmationScreen"
           component={SendConfirmationScreen}
           options={({ navigation, route }: NavigationProps) => ({
@@ -1034,3 +1145,29 @@ export const StackMainNavigator = () => {
     </MainStack.Navigator>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  centerText: {
+    flex: 1,
+    fontSize: 18,
+    padding: 32,
+    color: '#777',
+  },
+  textBold: {
+    fontWeight: '500',
+    color: '#000',
+  },
+  buttonText: {
+    fontSize: 21,
+    color: 'rgb(0,122,255)',
+  },
+  buttonTouchable: {
+    padding: 16,
+  },
+})

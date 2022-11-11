@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react'
-import { Image, Pressable, StyleSheet } from 'react-native'
+import { Image, LayoutChangeEvent, Pressable, StyleSheet } from 'react-native'
 import {
   cryptoToFiat,
   formatFiat,
@@ -11,7 +11,6 @@ import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
-  addressStateFamily,
   balanceStateFamily,
   doubleOrLongTapSelectedAsset,
   fiatRatesState,
@@ -22,10 +21,11 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { getNftsForAccount, updateNFTs } from '../../store/store'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import { Box, Text } from '../../theme'
+import { Box, faceliftPalette, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
 import { checkImgUrlExists } from '../../utils'
 import { AppIcons } from '../../assets'
+import { Path, Svg } from 'react-native-svg'
 
 const { ChevronRightIcon: ChevronRight } = AppIcons
 
@@ -46,19 +46,54 @@ const SubRow: FC<SubRowProps> = (props) => {
   const balance = useRecoilValue(
     balanceStateFamily({ asset: item.code, assetId: parentItem.id }),
   )
-  const address = useRecoilValue(addressStateFamily(item.id))
   const fiatRates = useRecoilValue(fiatRatesState)
   const activeNetwork = useRecoilValue(networkState)
   const [chainSpecificNfts, setChainSpecificNfts] = useState({})
   const [accountIdsToSendIn] = useState<string[]>([])
   const [imgError] = useState<string[]>([])
   const [numberOfNfts, setNumberOfNfts] = useState<number>()
+  const [borderWidth, setBorderWidth] = useState(0)
+  const [rowWidth, setRowWidth] = useState(0)
+  const [rowHeight, setRowHeight] = useState(0)
 
   const { activeWalletId } = wallet.state
 
   const clearDoubleOrLongTapSelectedAsset = useSetRecoilState(
     doubleOrLongTapSelectedAsset,
   )
+
+  const getBackgroundBox = () => {
+    const width = rowWidth
+    const height = rowHeight
+    const flatRadius = 20
+    return (
+      <Box
+        alignItems="center"
+        justifyContent="center"
+        style={StyleSheet.absoluteFillObject}>
+        <Svg
+          width={`${width}`}
+          height={`${height}`}
+          viewBox={`0 0 ${width} ${height}`}
+          fill={faceliftPalette.white}>
+          <Path
+            d={`M0 0 H ${
+              width - flatRadius
+            } L ${width} ${flatRadius} V ${height} H ${0} V ${0} Z`}
+            strokeWidth={2}
+            stroke={faceliftPalette.whiteGrey}
+            strokeLinejoin={'round'}
+            strokeLinecap={'round'}
+          />
+        </Svg>
+      </Box>
+    )
+  }
+
+  const onLayout = (event: LayoutChangeEvent) => {
+    setRowHeight(event.nativeEvent.layout.height)
+    setRowWidth(event.nativeEvent.layout.width)
+  }
 
   const handlePressOnRow = useCallback(() => {
     clearDoubleOrLongTapSelectedAsset('')
@@ -150,43 +185,61 @@ const SubRow: FC<SubRowProps> = (props) => {
         <AssetListSwipeableRow
           assetData={{
             ...item,
-            address: address,
+            id: parentItem.id,
+            balance,
           }}
-          assetSymbol={item.code}>
-          <Pressable
-            onPress={handlePressOnRow}
-            style={[styles.row, styles.subElement]}>
+          assetSymbol={item.code}
+          onOpen={() => setBorderWidth(2)}
+          onClose={() => setBorderWidth(0)}>
+          <Pressable onPress={handlePressOnRow}>
             <Box
-              height={scale(50)}
-              width={scale(3)}
-              style={{ borderLeftColor: item.color, borderLeftWidth: 3 }}
-            />
-            <Box paddingLeft={'m'}>
-              <Box width={10} height={10} />
-            </Box>
-            <Box flex={0.1} paddingLeft={'m'} />
-            <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
-              <AssetIcon asset={item.code} />
-              <Box width={'80%'} paddingLeft="m">
-                <Text numberOfLines={1} variant={'listText'} color="darkGrey">
-                  {item.name}
+              flexDirection={'row'}
+              justifyContent="space-around"
+              paddingVertical={'m'}
+              height={70}
+              backgroundColor={
+                borderWidth ? 'selectedBackgroundColor' : 'white'
+              }
+              paddingRight={borderWidth ? 'mxxl' : 's'}
+              onLayout={onLayout}>
+              {borderWidth ? getBackgroundBox() : null}
+              <Box
+                height={scale(50)}
+                width={scale(3)}
+                style={{ borderLeftColor: item.color, borderLeftWidth: 3 }}
+              />
+              <Box paddingLeft={'m'}>
+                <Box width={10} height={10} />
+              </Box>
+              <Box flex={0.1} paddingLeft={'m'} />
+              <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
+                <AssetIcon asset={item.code} />
+                <Box width={'80%'} paddingLeft="m">
+                  <Text numberOfLines={1} variant={'listText'} color="darkGrey">
+                    {item.name}
+                  </Text>
+                </Box>
+              </Box>
+              <Box
+                flex={0.45}
+                alignItems="flex-end"
+                justifyContent="flex-end"
+                paddingRight={'s'}>
+                <Text variant={'listText'} color="darkGrey" numberOfLines={1}>
+                  {prettyNativeBalance}
+                </Text>
+
+                <Text
+                  variant={'subListText'}
+                  color="greyMeta"
+                  numberOfLines={1}>
+                  {prettyFiatBalance}
                 </Text>
               </Box>
+              {!borderWidth ? (
+                <ChevronRight style={(styles.chevronNft, styles.chevronRow)} />
+              ) : null}
             </Box>
-            <Box
-              flex={0.45}
-              alignItems="flex-end"
-              justifyContent="flex-end"
-              paddingRight={'s'}>
-              <Text variant={'listText'} color="darkGrey" numberOfLines={1}>
-                {prettyNativeBalance}
-              </Text>
-
-              <Text variant={'subListText'} color="greyMeta" numberOfLines={1}>
-                {prettyFiatBalance}
-              </Text>
-            </Box>
-            <ChevronRight style={(styles.chevronNft, styles.chevronRow)} />
           </Pressable>
         </AssetListSwipeableRow>
       )}

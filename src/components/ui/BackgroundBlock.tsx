@@ -10,16 +10,14 @@ type BackgroundBlockProps = {
 
 const BackgroundBlock = (props: BackgroundBlockProps) => {
   const { width, height } = props
-  const flatRadius = 60
+  const flatRadius = 50
+  const SHADOW_WIDTH = 6
+
   return (
     <Box
       alignItems="center"
       justifyContent="center"
-      shadowColor={'darkGrey'}
-      shadowOffset={{ width: 4, height: 6 }}
-      shadowOpacity={1}
-      shadowRadius={0}
-      elevation={2}
+      paddingRight={'s'}
       style={StyleSheet.absoluteFillObject}>
       <Svg
         width={`${width}`}
@@ -27,14 +25,42 @@ const BackgroundBlock = (props: BackgroundBlockProps) => {
         viewBox={`0 0 ${width} ${height}`}
         fill="none">
         <Path
-          d={`M0 0 H ${
-            width - flatRadius
-          } L ${width} ${flatRadius} V ${height} H ${0} V ${0} Z`}
-          fill={faceliftPalette.white}
+          d={`
+          M10 70 
+          H ${width - 5}
+          Q ${width},70 ${width},79 
+          V ${height - 9} 
+          Q ${width},${height} ${width - 9},${height} 
+          H ${19} 
+          Q ${10}, ${height} 
+            ${10}, ${height - 9}
+          V ${70} 
+          Z`}
+          fill={faceliftPalette.darkGrey}
           strokeWidth={4}
           stroke={faceliftPalette.darkGrey}
           strokeLinejoin={'round'}
           strokeLinecap={'round'}
+        />
+        <Path
+          d={`
+          M10 0 
+          H ${width - flatRadius} 
+          L ${width - SHADOW_WIDTH} ${flatRadius} 
+          V ${height - SHADOW_WIDTH - 9}
+          Q ${width - SHADOW_WIDTH}, ${height - SHADOW_WIDTH} 
+            ${width - SHADOW_WIDTH - 9}, ${height - SHADOW_WIDTH} 
+          H ${9} 
+          Q ${0}, ${height - SHADOW_WIDTH} 
+            ${0}, ${height - SHADOW_WIDTH - 9}
+          V ${9} 
+          Q ${0}, ${0} 
+            ${9}, ${0}
+          Z
+          `}
+          fill={faceliftPalette.white}
+          strokeWidth={3}
+          stroke={faceliftPalette.darkGrey}
         />
       </Svg>
     </Box>

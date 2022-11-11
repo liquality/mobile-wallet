@@ -22,6 +22,7 @@ import RefreshIndicator from '../../../components/refresh-indicator'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
+
 import { scale } from 'react-native-size-matters'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
@@ -91,6 +92,7 @@ const OverviewScreen = ({ navigation }: OverviewProps) => {
         }>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <HandleLockWalletAndBackgroundTasks />
+
           <React.Suspense
             fallback={
               <Box style={styles.overviewBlock}>

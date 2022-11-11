@@ -29,20 +29,39 @@ type QrCodeScannerPropsType = {
 const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
   const [hasPermission, setHasPermission] = React.useState(false)
   const { onClose, chain } = props
+
   const [error, setError] = useState('')
   const activeNetwork = useRecoilValue(networkState)
+  //TODO: Keep this here as we want to use this QR component instead, but there is a bug in the library
+  /*   const [showInjectionFlow, setShowInjectionFlow] = useState(false)
+  const [walletConnectPayload, setWalletConnectPayload] = useState({}) */
 
   const devices = useCameraDevices()
   const device = devices.back
-
   const onQRCodeDetected = useCallback(
-    (qrCode: Barcode) => {
+    async (qrCode: Barcode) => {
       if (error) {
         setError('')
       }
       const address = qrCode.displayValue?.split(':')?.[1]
       if (address && getChain(activeNetwork, chain).isValidAddress(address)) {
         onClose(address)
+      } else if (qrCode.displayValue?.startsWith('wc')) {
+        //TODO: Keep this here as we want to use this QR component instead, but there is a bug in the library
+        //new WalletConnectController(qrCode.displayValue)
+        /*    await initWalletConnect(qrCode.displayValue, function (wcPayload) {
+          console.log(wcPayload, 'wcPayload IN CALLBACKKK')
+          setWalletConnectPayload({
+            payload: wcPayload.payload,
+            uri: qrCode.displayValue,
+            connector: wcPayload.connector,
+          })
+          setError('Wallet connect connected')
+          setShowInjectionFlow(true)
+        }) */
+        /*  navigation.navigate('InitInjectionScreen', {
+          someVal: 'someval',
+        }) */
       } else {
         setError(labelTranslateFn('invalidQRCode')!)
       }
@@ -71,6 +90,21 @@ const QrCodeScanner: FC<QrCodeScannerPropsType> = (props) => {
       setHasPermission(status === 'authorized')
     })()
   }, [])
+
+  //TODO: Keep this here as we want to use this QR component instead, but there is a bug in the library
+  /*   useEffect(() => {
+    async function fetchData() {
+      if (showInjectionFlow && Object.keys(walletConnectPayload).length !== 0) {
+        console.log(walletConnectPayload, 'WC payload')
+        await navigation.navigate('OverviewScreen', {
+          walletConnectPayload,
+        })
+        onClose(walletConnectPayload.uri)
+      }
+    }
+    fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showInjectionFlow, navigation, walletConnectPayload]) */
 
   return (
     <Modal style={styles.modalView}>

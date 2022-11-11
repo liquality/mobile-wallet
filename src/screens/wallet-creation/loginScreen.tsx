@@ -38,7 +38,6 @@ const useInputState = (
   const [value, setValue] = useState<string>(initialValue)
   return { value, onChangeText: setValue }
 }
-
 const PASSWORD_LENGTH = 8
 
 const LoginScreen = ({ navigation }: LoginScreenProps) => {
@@ -137,6 +136,12 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             opacity={0.8}
             variant={'whiteLabel'}
             tx="common.forgotPassword"
+            onPress={() =>
+              navigation.navigate('TermsScreen', {
+                previousScreen: 'LoginScreen',
+                nextScreen: 'UnlockWalletScreen',
+              })
+            }
           />
           <Text
             opacity={0.8}
