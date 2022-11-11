@@ -100,14 +100,12 @@ const StandardRoute = ({
   selectedAsset,
   amount,
   applyFee,
-  applyNetworkSpeed,
   networkSpeed,
   isSpeedUp = false,
 }: {
   selectedAsset: string
   amount: BigNumber
-  applyFee: (fee: BigNumber, speed: FeeLabel) => void
-  applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
+  applyFee: (fee: BigNumber, speed: ExtendedFeeLabel) => void
   networkSpeed?: ExtendedFeeLabel
   isSpeedUp?: boolean
 }) => {
@@ -132,9 +130,6 @@ const StandardRoute = ({
     if (!speed || !totalFees || !gasFees) return
     const computed = computePreset(speed, totalFees, gasFees)?.amount
     if (computed) applyFee(new BigNumber(computed), speed)
-    if (applyNetworkSpeed) {
-      applyNetworkSpeed(speed as ExtendedFeeLabel)
-    }
   }
 
   const extractFee = (feeDetail: FeeDetail): number => {
@@ -351,13 +346,11 @@ const CustomizeRoute = ({
   selectedAsset,
   amount,
   applyFee,
-  applyNetworkSpeed,
   networkSpeed,
 }: {
   selectedAsset: string
   amount: BigNumber
-  applyFee: (fee: BigNumber, speed: FeeLabel) => void
-  applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
+  applyFee: (fee: BigNumber, speed: ExtendedFeeLabel) => void
   networkSpeed?: ExtendedFeeLabel
   isSpeedUp?: boolean
 }) => {
@@ -384,11 +377,8 @@ const CustomizeRoute = ({
   const handleApplyPress = () => {
     applyFee(
       new BigNumber(minerTipInput.value).plus(new BigNumber(maxFeeInput.value)),
-      speed,
+      CustomFeeLabel.Custom,
     )
-    if (applyNetworkSpeed && speed) {
-      applyNetworkSpeed(CustomFeeLabel.Custom)
-    }
   }
 
   const handleMinerTip = useCallback(
@@ -665,9 +655,8 @@ type FeeEditorScreenType = {
   onClose: Dispatch<SetStateAction<boolean>>
   amount: BigNumber
   selectedAsset: string
-  applyFee: (fee: BigNumber, speed: FeeLabel) => void
+  applyFee: (fee: BigNumber, speed: ExtendedFeeLabel) => void
   networkSpeed: ExtendedFeeLabel
-  applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
   transactionType: ActionEnum
   isSpeedUp?: boolean
 }
@@ -678,7 +667,6 @@ const FeeEditorScreen = ({
   amount,
   applyFee,
   networkSpeed,
-  applyNetworkSpeed,
   transactionType,
   isSpeedUp = false,
 }: FeeEditorScreenType) => {
@@ -704,7 +692,6 @@ const FeeEditorScreen = ({
             amount={amount}
             applyFee={applyFee}
             networkSpeed={networkSpeed}
-            applyNetworkSpeed={applyNetworkSpeed}
             isSpeedUp={isSpeedUp}
           />
         )
@@ -715,7 +702,6 @@ const FeeEditorScreen = ({
             amount={amount}
             applyFee={applyFee}
             networkSpeed={networkSpeed}
-            applyNetworkSpeed={applyNetworkSpeed}
             isSpeedUp={isSpeedUp}
           />
         )

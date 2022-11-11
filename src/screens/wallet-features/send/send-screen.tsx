@@ -84,9 +84,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     type: null,
   })
   const amountInput = useInputState('0')
-  const addressInput = useInputState(
-    '0x9d952801256812e6defc6615c0790dBcE9C3Afa3',
-  )
+  const addressInput = useInputState('')
   const networkFee = useRef<NetworkFeeType>()
   const activeNetwork = useRecoilValue(networkState)
   const [showFeeEditorModal, setShowFeeEditorModal] = useState<boolean>(false)
@@ -277,7 +275,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     })
   }, [code, chain, balance, activeNetwork])
 
-  const applyFee = (fee: BigNumber, speed: FeeLabel) => {
+  const applyFee = (fee: BigNumber, speed: ExtendedFeeLabel) => {
     if (!fee) return
     const calculatedAmt = calculateAvailableAmnt(
       activeNetwork,
@@ -491,7 +489,6 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               amount={new BigNumber(amountInput.value)}
               networkSpeed={networkSpeed}
               applyFee={applyFee}
-              applyNetworkSpeed={setNetworkSpeed}
               transactionType={ActionEnum.SEND}
             />
           )}
