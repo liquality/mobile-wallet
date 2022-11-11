@@ -17,7 +17,7 @@ type SwapConfirmedBlockProps = {
   address?: string
   status: string
   fee?: number
-  confirmations: number
+  confirmations: number | undefined
   asset: string
   fiatRates: FiatRates
   fiatRate: number
@@ -87,17 +87,19 @@ const SwapConfirmedBlock = ({
                 : ''}
             </Text>
           </Box>
-          <Box flexDirection={'row'}>
-            <Text
-              variant={'subListText'}
-              color="darkGrey"
-              tx="confirmationBlockComp.confirmations"
-            />
-            <Text variant={'subListText'} color="darkGrey">
-              {' '}
-              {confirmations}
-            </Text>
-          </Box>
+          {confirmations ? (
+            <Box flexDirection={'row'}>
+              <Text
+                variant={'subListText'}
+                color="darkGrey"
+                tx="confirmationBlockComp.confirmations"
+              />
+              <Text variant={'subListText'} color="darkGrey">
+                {' '}
+                {confirmations}
+              </Text>
+            </Box>
+          ) : null}
         </>
       ) : null}
     </Box>

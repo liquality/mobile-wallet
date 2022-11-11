@@ -255,7 +255,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
                   : historyItem.fromAccountId
               }
               status={item.title}
-              confirmations={item.tx?.confirmations || 0}
+              confirmations={item.tx?.confirmations}
               fee={item.tx?.fee}
               asset={historyItem.from}
               fiatRates={fiatRates}
@@ -611,8 +611,9 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
           onClose={setShowFeeEditorModal}
           selectedAsset={historyItem.from}
           amount={new BigNumber(historyItem.fromAmount)}
-          applyFee={(fee) => {
+          applyFee={(fee, speed: ExtendedFeeLabel) => {
             setShowFeeEditorModal(false)
+            setNetworkSpeed(speed)
             if (confirmationNum) {
               if (confirmationNum === 0) {
                 handleIntiatSpeedUpSwap(fee.toNumber())
@@ -622,9 +623,10 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
             }
           }}
           transactionType={ActionEnum.SWAP}
-          applyNetworkSpeed={setNetworkSpeed}
           networkSpeed={networkSpeed}
           isSpeedUp={true}
+          claimFee={historyItem.claimFee}
+          maxBalance={fromBalance}
         />
       )}
       <SpeedUpModal

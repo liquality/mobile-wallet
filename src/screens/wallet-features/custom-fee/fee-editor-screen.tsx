@@ -30,6 +30,8 @@ import {
   TabBar,
   Text,
   ColorType,
+  ScrollView,
+  FLEX_1,
 } from '../../../theme'
 import SlowIcon from '../../../assets/icons/slow.svg'
 import AverageIcon from '../../../assets/icons/average.svg'
@@ -57,11 +59,11 @@ import { v4 as uuidv4 } from 'uuid'
 import { fetchFeeDetailsForAsset } from '../../../store/store'
 import {
   dpUI,
+  prettyBalance,
   prettyFiatBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { labelTranslateFn } from '../../../utils'
-import { useInputState } from '../../../hooks'
 import { Fonts } from '../../../assets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { setupWallet } from '@liquality/wallet-core'
@@ -74,6 +76,7 @@ import {
 } from '../../../types'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import { FeeDetail } from '@chainify/types'
+import I18n from 'i18n-js'
 
 type LikelyWaitObjType = {
   slow: number | undefined
@@ -100,14 +103,12 @@ const StandardRoute = ({
   selectedAsset,
   amount,
   applyFee,
-  applyNetworkSpeed,
   networkSpeed,
   isSpeedUp = false,
 }: {
   selectedAsset: string
   amount: BigNumber
-  applyFee: (fee: BigNumber, speed: FeeLabel) => void
-  applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
+  applyFee: (fee: BigNumber, speed: ExtendedFeeLabel) => void
   networkSpeed?: ExtendedFeeLabel
   isSpeedUp?: boolean
 }) => {
@@ -132,9 +133,6 @@ const StandardRoute = ({
     if (!speed || !totalFees || !gasFees) return
     const computed = computePreset(speed, totalFees, gasFees)?.amount
     if (computed) applyFee(new BigNumber(computed), speed)
-    if (applyNetworkSpeed) {
-      applyNetworkSpeed(speed as ExtendedFeeLabel)
-    }
   }
 
   const extractFee = (feeDetail: FeeDetail): number => {
@@ -351,15 +349,18 @@ const CustomizeRoute = ({
   selectedAsset,
   amount,
   applyFee,
-  applyNetworkSpeed,
   networkSpeed,
+  isSpeedUp,
+  claimFee = 0,
+  maxBalance = 0,
 }: {
   selectedAsset: string
   amount: BigNumber
-  applyFee: (fee: BigNumber, speed: FeeLabel) => void
-  applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
+  applyFee: (fee: BigNumber, speed: ExtendedFeeLabel) => void
   networkSpeed?: ExtendedFeeLabel
   isSpeedUp?: boolean
+  claimFee?: number // to speed up user should enter higher fee than claimFee
+  maxBalance?: number
 }) => {
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
@@ -378,31 +379,36 @@ const CustomizeRoute = ({
   })
   const { activeWalletId } = wallet.state
   const [likelyWaitObj, setLikelyWaitObj] = useState<LikelyWaitObjType>()
-  const minerTipInput = useInputState('0')
-  const maxFeeInput = useInputState('0')
+  const [minerTipInput, setMinerTipInput] = useState('0')
+  const [maxFeeInput, setMaxTipInput] = useState(
+    isSpeedUp ? claimFee.toString() : '0',
+  )
 
   const handleApplyPress = () => {
     applyFee(
-      new BigNumber(minerTipInput.value).plus(new BigNumber(maxFeeInput.value)),
-      speed,
+      new BigNumber(minerTipInput).plus(new BigNumber(maxFeeInput)),
+      CustomFeeLabel.Custom,
     )
-    if (applyNetworkSpeed && speed) {
-      applyNetworkSpeed(CustomFeeLabel.Custom)
-    }
   }
 
   const handleMinerTip = useCallback(
     (text: string) => {
-      minerTipInput.onChangeText(text)
+      const validated = text.match(/^(\d*\.{0,1}\d{0,20}$)/)
+      if (validated) {
+        setMinerTipInput(text)
+      }
     },
-    [minerTipInput],
+    [setMinerTipInput],
   )
 
   const handleMaxFee = useCallback(
     (text: string) => {
-      maxFeeInput.onChangeText(text)
+      const validated = text.match(/^(\d*\.{0,1}\d{0,20}$)/)
+      if (validated) {
+        setMaxTipInput(text)
+      }
     },
-    [maxFeeInput],
+    [setMaxTipInput],
   )
 
   const getSummaryMaximum = () => {
@@ -427,7 +433,7 @@ const CustomizeRoute = ({
 
   const getMinerTipFiat = () => {
     const fiat = prettyFiatBalance(
-      getSendFee(nativeAssetCode, Number(minerTipInput.value) || 0),
+      getSendFee(nativeAssetCode, Number(minerTipInput) || 0),
       fiatRates[nativeAssetCode],
     )
     return isNaN(Number(fiat)) ? 0 : fiat
@@ -435,7 +441,7 @@ const CustomizeRoute = ({
 
   const getMaxFiat = () => {
     const fiat = prettyFiatBalance(
-      getSendFee(nativeAssetCode, Number(maxFeeInput.value)),
+      getSendFee(nativeAssetCode, Number(maxFeeInput)),
       fiatRates[nativeAssetCode],
     )
     return isNaN(Number(fiat)) ? 0 : fiat
@@ -494,164 +500,193 @@ const CustomizeRoute = ({
     speed,
   ])
 
+  let buttonActiveState = true
+  let showSpeedError = false
+  let maxPrettyBalance
+  if (isSpeedUp) {
+    maxPrettyBalance = prettyBalance(new BigNumber(maxBalance), selectedAsset)
+    buttonActiveState =
+      new BigNumber(maxFeeInput).gt(claimFee) &&
+      new BigNumber(maxFeeInput).lt(maxPrettyBalance)
+    showSpeedError = !buttonActiveState
+  } else {
+    buttonActiveState = !!maxFeeInput
+  }
+
   return (
     <Box flex={1}>
       <Box flex={1} marginTop="m">
-        <Text variant="normalText" color="greyMeta" marginTop="l">
-          {labelTranslateFn('customFeeScreen.perGas')}
-        </Text>
-        <Box flexDirection="row" marginVertical={'m'}>
-          <Text variant="normalText" marginRight={'m'}>
-            {labelTranslateFn('customFeeScreen.currentBaseFee')}
+        <ScrollView
+          style={FLEX_1}
+          contentContainerStyle={{ paddingBottom: scale(70) }}>
+          <Text variant="normalText" color="greyMeta" marginTop="l">
+            {labelTranslateFn('customFeeScreen.perGas')}
           </Text>
-          <Text variant="normalText" marginRight={'m'}>
-            {'|'}
-          </Text>
-          <Text variant="normalText">{`${unit?.toUpperCase()} ${currentBaseFee}`}</Text>
-        </Box>
-        <Box marginTop="s" backgroundColor="blockBackgroundColor" padding="l">
-          <Box flexDirection="row">
+          <Box flexDirection="row" marginVertical={'m'}>
             <Text variant="normalText" marginRight={'m'}>
-              {unit?.toUpperCase()}
+              {labelTranslateFn('customFeeScreen.currentBaseFee')}
             </Text>
-            <Text variant="normalText" marginRight={'m'} color="greyMeta">
+            <Text variant="normalText" marginRight={'m'}>
               {'|'}
             </Text>
-            <Text variant="normalText" marginRight={'m'}>
-              {labelTranslateFn('customFeeScreen.minerTip')}
-            </Text>
-            <Text variant="normalText" color="greyMeta">
-              {labelTranslateFn('customFeeScreen.toSpeedUp')}
-            </Text>
+            <Text variant="normalText">{`${unit?.toUpperCase()} ${currentBaseFee}`}</Text>
           </Box>
-          <TextInput
-            keyboardType={'numeric'}
-            onChangeText={handleMinerTip}
-            value={minerTipInput.value}
-            autoCorrect={false}
-            autoCapitalize={'none'}
-            returnKeyType="done"
-            style={styles.amountLarge}
-          />
-          <Box flexDirection="row" marginTop="s" alignItems={'flex-end'}>
-            <Text
-              variant="normalText"
-              marginRight={'m'}
-              style={styles.transparentBottomBorder}>
-              {`$${getMinerTipFiat()}`}
-            </Text>
-            <Text
-              variant="normalText"
-              marginRight={'m'}
-              color="greyMeta"
-              style={styles.transparentBottomBorder}>
-              {'|'}
-            </Text>
-            {Array.of<FeeLabel>(
-              FeeLabel.Slow,
-              FeeLabel.Average,
-              FeeLabel.Fast,
-            ).map((speedValue) => (
-              <Box marginRight="m" key={uuidv4()}>
-                <Pressable
-                  style={
-                    speedValue === speed
-                      ? styles.activeBottomBorder
-                      : styles.transparentBottomBorder
-                  }
-                  onPress={() => setSpeed(speedValue)}>
-                  <Text
-                    variant={speedValue === speed ? 'activeLink' : 'normalText'}
-                    marginRight="s">
-                    {speedValue.toUpperCase()}
-                  </Text>
-                </Pressable>
-              </Box>
-            ))}
-          </Box>
-          <Box
-            borderColor="secondaryButtonBorderColor"
-            borderWidth={1}
-            marginVertical="xl"
-            borderRadius={3}
-          />
-          <Box flexDirection="row">
-            <Text variant="normalText" marginRight={'m'}>
-              {unit?.toLocaleUpperCase()}
-            </Text>
-            <Text color={'greyMeta'} variant="normalText" marginRight={'m'}>
-              {'|'}
-            </Text>
-            <Text variant="normalText" marginRight={'m'}>
-              {`${labelTranslateFn('customFeeScreen.maxFee')}`}
-            </Text>
-            <Text color={'greyMeta'} variant="normalText" marginRight={'m'}>
-              {`${labelTranslateFn('customFeeScreen.perGas')}`}
-            </Text>
-          </Box>
-          <TextInput
-            keyboardType={'numeric'}
-            onChangeText={handleMaxFee}
-            value={maxFeeInput.value}
-            autoCorrect={false}
-            autoCapitalize={'none'}
-            returnKeyType="done"
-            style={styles.amountLarge}
-          />
-          <Text variant="normalText" color="greyMeta">
-            {`$${getMaxFiat()}`}
-          </Text>
-        </Box>
-
-        <Box flexDirection="row" marginVertical="xl">
-          {speed === FeeLabel.Slow ? (
-            <SlowIcon width={scale(20)} height={scale(20)} />
-          ) : speed === FeeLabel.Average ? (
-            <AverageIcon width={scale(20)} height={scale(20)} />
-          ) : (
-            <FastIcon width={scale(20)} height={scale(20)} />
-          )}
-          <Box marginLeft={'m'}>
+          <Box marginTop="s" backgroundColor="blockBackgroundColor" padding="l">
             <Box flexDirection="row">
-              <Text variant="normalText">{`${labelTranslateFn(
-                'customFeeScreen.custom',
-              )}`}</Text>
-              {likelyWaitObj?.[speed] && (
-                <Text variant="normalText" marginLeft={'m'}>
-                  {`${likelyWaitObj?.[speed]} sec`}
-                </Text>
-              )}
+              <Text variant="normalText" marginRight={'m'}>
+                {unit?.toUpperCase()}
+              </Text>
+              <Text variant="normalText" marginRight={'m'} color="greyMeta">
+                {'|'}
+              </Text>
+              <Text variant="normalText" marginRight={'m'}>
+                {labelTranslateFn('customFeeScreen.minerTip')}
+              </Text>
+              <Text variant="normalText" color="greyMeta">
+                {labelTranslateFn('customFeeScreen.toSpeedUp')}
+              </Text>
             </Box>
+            <TextInput
+              keyboardType={'numeric'}
+              onChangeText={handleMinerTip}
+              value={minerTipInput}
+              autoCorrect={false}
+              autoCapitalize={'none'}
+              returnKeyType="done"
+              style={styles.amountLarge}
+            />
+            <Box flexDirection="row" marginTop="s" alignItems={'flex-end'}>
+              <Text
+                variant="normalText"
+                marginRight={'m'}
+                style={styles.transparentBottomBorder}>
+                {`$${getMinerTipFiat()}`}
+              </Text>
+              <Text
+                variant="normalText"
+                marginRight={'m'}
+                color="greyMeta"
+                style={styles.transparentBottomBorder}>
+                {'|'}
+              </Text>
+              {Array.of<FeeLabel>(
+                FeeLabel.Slow,
+                FeeLabel.Average,
+                FeeLabel.Fast,
+              ).map((speedValue) => (
+                <Box marginRight="m" key={uuidv4()}>
+                  <Pressable
+                    style={
+                      speedValue === speed
+                        ? styles.activeBottomBorder
+                        : styles.transparentBottomBorder
+                    }
+                    onPress={() => setSpeed(speedValue)}>
+                    <Text
+                      variant={
+                        speedValue === speed ? 'activeLink' : 'normalText'
+                      }
+                      marginRight="s">
+                      {speedValue.toUpperCase()}
+                    </Text>
+                  </Pressable>
+                </Box>
+              ))}
+            </Box>
+            <Box
+              borderColor="secondaryButtonBorderColor"
+              borderWidth={1}
+              marginVertical="xl"
+              borderRadius={3}
+            />
+            <Box flexDirection="row">
+              <Text variant="normalText" marginRight={'m'}>
+                {unit?.toLocaleUpperCase()}
+              </Text>
+              <Text color={'greyMeta'} variant="normalText" marginRight={'m'}>
+                {'|'}
+              </Text>
+              <Text variant="normalText" marginRight={'m'}>
+                {`${labelTranslateFn('customFeeScreen.maxFee')}`}
+              </Text>
+              <Text color={'greyMeta'} variant="normalText" marginRight={'m'}>
+                {`${labelTranslateFn('customFeeScreen.perGas')}`}
+              </Text>
+            </Box>
+            <TextInput
+              keyboardType={'numeric'}
+              onChangeText={handleMaxFee}
+              value={maxFeeInput}
+              autoCorrect={false}
+              autoCapitalize={'none'}
+              returnKeyType="done"
+              style={styles.amountLarge}
+            />
             <Text variant="normalText" color="greyMeta">
-              {`~ ${getSummaryMaximum()?.amount} ${nativeAssetCode}`}
+              {`$${getMaxFiat()}`}
             </Text>
-            <Text variant="normalText" color="greyMeta">
-              {`~ $${getSummaryMaximum()?.fiat}`}
-            </Text>
-            <Text variant="normalText" color="greyMeta">
-              {gasFees?.[speed].fee &&
-                `${labelTranslateFn(
-                  'customFeeScreen.max',
-                )} $${prettyFiatBalance(
-                  getSendFee(
-                    selectedAsset,
-                    maxFeePerUnitEIP1559(gasFees[speed].fee),
-                  ),
-                  fiatRates[selectedAsset],
-                )}`}
-            </Text>
+            {showSpeedError && maxPrettyBalance ? (
+              <Text padding={'s'} color={'danger'}>
+                {I18n.t('validInputForSpeedUp', {
+                  min: claimFee,
+                  max: maxPrettyBalance,
+                })}
+              </Text>
+            ) : null}
           </Box>
-        </Box>
+
+          <Box flexDirection="row" marginVertical="xl">
+            {speed === FeeLabel.Slow ? (
+              <SlowIcon width={scale(20)} height={scale(20)} />
+            ) : speed === FeeLabel.Average ? (
+              <AverageIcon width={scale(20)} height={scale(20)} />
+            ) : (
+              <FastIcon width={scale(20)} height={scale(20)} />
+            )}
+            <Box marginLeft={'m'}>
+              <Box flexDirection="row">
+                <Text variant="normalText">{`${labelTranslateFn(
+                  'customFeeScreen.custom',
+                )}`}</Text>
+                {likelyWaitObj?.[speed] && (
+                  <Text variant="normalText" marginLeft={'m'}>
+                    {`${likelyWaitObj?.[speed]} sec`}
+                  </Text>
+                )}
+              </Box>
+              <Text variant="normalText" color="greyMeta">
+                {`~ ${getSummaryMaximum()?.amount} ${nativeAssetCode}`}
+              </Text>
+              <Text variant="normalText" color="greyMeta">
+                {`~ $${getSummaryMaximum()?.fiat}`}
+              </Text>
+              <Text variant="normalText" color="greyMeta">
+                {gasFees?.[speed].fee &&
+                  `${labelTranslateFn(
+                    'customFeeScreen.max',
+                  )} $${prettyFiatBalance(
+                    getSendFee(
+                      selectedAsset,
+                      maxFeePerUnitEIP1559(gasFees[speed].fee),
+                    ),
+                    fiatRates[selectedAsset],
+                  )}`}
+              </Text>
+            </Box>
+          </Box>
+        </ScrollView>
       </Box>
       <ButtonFooter>
-        <Button
-          type="primary"
-          variant="l"
-          label={{ tx: 'common.apply' }}
-          onPress={handleApplyPress}
-          isBorderless={true}
-          isActive
-        />
+        <Box backgroundColor={'white'}>
+          <Button
+            type="primary"
+            variant="l"
+            label={{ tx: 'common.apply' }}
+            onPress={handleApplyPress}
+            isBorderless={true}
+            isActive={buttonActiveState}
+          />
+        </Box>
       </ButtonFooter>
     </Box>
   )
@@ -665,11 +700,12 @@ type FeeEditorScreenType = {
   onClose: Dispatch<SetStateAction<boolean>>
   amount: BigNumber
   selectedAsset: string
-  applyFee: (fee: BigNumber, speed: FeeLabel) => void
+  applyFee: (fee: BigNumber, speed: ExtendedFeeLabel) => void
   networkSpeed: ExtendedFeeLabel
-  applyNetworkSpeed?: (speedType: ExtendedFeeLabel) => void
   transactionType: ActionEnum
   isSpeedUp?: boolean
+  claimFee?: number // to speed up user should enter higher fee than claimFee
+  maxBalance?: number
 }
 
 const FeeEditorScreen = ({
@@ -678,9 +714,10 @@ const FeeEditorScreen = ({
   amount,
   applyFee,
   networkSpeed,
-  applyNetworkSpeed,
   transactionType,
   isSpeedUp = false,
+  claimFee = 0,
+  maxBalance = 0,
 }: FeeEditorScreenType) => {
   const layout = useWindowDimensions()
   const activeNetwork = useRecoilValue(networkState)
@@ -704,7 +741,6 @@ const FeeEditorScreen = ({
             amount={amount}
             applyFee={applyFee}
             networkSpeed={networkSpeed}
-            applyNetworkSpeed={applyNetworkSpeed}
             isSpeedUp={isSpeedUp}
           />
         )
@@ -715,8 +751,9 @@ const FeeEditorScreen = ({
             amount={amount}
             applyFee={applyFee}
             networkSpeed={networkSpeed}
-            applyNetworkSpeed={applyNetworkSpeed}
             isSpeedUp={isSpeedUp}
+            claimFee={claimFee}
+            maxBalance={maxBalance}
           />
         )
     }
@@ -742,7 +779,7 @@ const FeeEditorScreen = ({
 
   return (
     <Modal visible>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={FLEX_1}>
         <Box
           flex={1}
           paddingHorizontal="xl"

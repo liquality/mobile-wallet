@@ -840,8 +840,7 @@ export const darkTheme: ThemeType = {
 }
 
 export const GRADIENT_COLORS = [
-  faceliftPalette.gradientEndColor,
-  faceliftPalette.gradientMiddeColor,
-  faceliftPalette.gradientMiddeColor,
   faceliftPalette.gradientStartColor,
+  faceliftPalette.gradientMiddeColor,
+  faceliftPalette.gradientEndColor,
 ]
