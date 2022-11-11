@@ -508,5 +508,6 @@
   "thereAreTradeoff": "There are tradeoffs different swap providers make across factors like convenience, security, liquidity, and fees. At a glance:",
   "aggregators": "Aggregators",
   "bridges": "Bridges",
-  "feeStructure": "FEE STRUCTURE"
+  "feeStructure": "FEE STRUCTURE",
+  "validInputForSpeedUp": "Valid input range is > {{min}} and < {{max}}"
 }

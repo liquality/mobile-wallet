@@ -255,7 +255,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
                   : historyItem.fromAccountId
               }
               status={item.title}
-              confirmations={item.tx?.confirmations || 0}
+              confirmations={item.tx?.confirmations}
               fee={item.tx?.fee}
               asset={historyItem.from}
               fiatRates={fiatRates}
@@ -626,6 +626,7 @@ const SwapDetailsScreen = ({ navigation, route }: SwapDetailsScreenProps) => {
           networkSpeed={networkSpeed}
           isSpeedUp={true}
           claimFee={historyItem.claimFee}
+          maxBalance={fromBalance}
         />
       )}
       <SpeedUpModal

@@ -329,13 +329,14 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     async function getQuoteList() {
       if (swapPair.fromAsset?.code && swapPair.toAsset?.code) {
         try {
-          const quoteList = await getQuotes(
+          const quotesRequest = await getQuotes(
             swapPair.fromAsset.code,
             swapPair.toAsset.code,
             new BigNumber(1),
           )
 
-          if (quoteList && quoteList?.length) {
+          if (quotesRequest && quotesRequest.quotes?.length) {
+            const { quotes: quoteList } = quotesRequest
             const sortedQuotes = sortQuotes(activeNetwork, quoteList)
             const swapProvider = getSwapProvider(
               activeNetwork,

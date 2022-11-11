@@ -35,6 +35,7 @@ import {
 import { AtomEffect, DefaultValue } from 'recoil'
 import dayjs from 'dayjs'
 import { showNotification } from './pushNotification'
+import { GetQuotesResult } from '@liquality/wallet-core/dist/src/store/actions'
 
 export const allNfts = {
   'The Merge: Regenesis': [
@@ -826,7 +827,7 @@ export const getQuotes = async (
   from: string,
   to: string,
   amount: BigNumber,
-): Promise<SwapQuote[] | void> => {
+): Promise<GetQuotesResult | void> => {
   const { activeNetwork } = wallet.state
   const networkAccounts = wallet.getters.networkAccounts
 
