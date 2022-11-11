@@ -61,7 +61,6 @@ import {
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { BigNumber } from '@liquality/types'
 import { labelTranslateFn } from '../../../utils'
-import { useInputState } from '../../../hooks'
 import { Fonts } from '../../../assets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { setupWallet } from '@liquality/wallet-core'
@@ -371,28 +370,36 @@ const CustomizeRoute = ({
   })
   const { activeWalletId } = wallet.state
   const [likelyWaitObj, setLikelyWaitObj] = useState<LikelyWaitObjType>()
-  const minerTipInput = useInputState('0')
-  const maxFeeInput = useInputState('0')
+  // const minerTipInput = useInputState('0')
+  // const maxFeeInput = useInputState('0')
+  const [minerTipInput, setMinerTipInput] = useState('0')
+  const [maxFeeInput, setMaxTipInput] = useState('0')
 
   const handleApplyPress = () => {
     applyFee(
-      new BigNumber(minerTipInput.value).plus(new BigNumber(maxFeeInput.value)),
+      new BigNumber(minerTipInput).plus(new BigNumber(maxFeeInput)),
       CustomFeeLabel.Custom,
     )
   }
 
   const handleMinerTip = useCallback(
     (text: string) => {
-      minerTipInput.onChangeText(text)
+      const validated = text.match(/^(\d*\.{0,1}\d{0,20}$)/)
+      if (validated) {
+        setMinerTipInput(text)
+      }
     },
-    [minerTipInput],
+    [setMinerTipInput],
   )
 
   const handleMaxFee = useCallback(
     (text: string) => {
-      maxFeeInput.onChangeText(text)
+      const validated = text.match(/^(\d*\.{0,1}\d{0,20}$)/)
+      if (validated) {
+        setMaxTipInput(text)
+      }
     },
-    [maxFeeInput],
+    [setMaxTipInput],
   )
 
   const getSummaryMaximum = () => {
@@ -417,7 +424,7 @@ const CustomizeRoute = ({
 
   const getMinerTipFiat = () => {
     const fiat = prettyFiatBalance(
-      getSendFee(nativeAssetCode, Number(minerTipInput.value) || 0),
+      getSendFee(nativeAssetCode, Number(minerTipInput) || 0),
       fiatRates[nativeAssetCode],
     )
     return isNaN(Number(fiat)) ? 0 : fiat
@@ -425,7 +432,7 @@ const CustomizeRoute = ({
 
   const getMaxFiat = () => {
     const fiat = prettyFiatBalance(
-      getSendFee(nativeAssetCode, Number(maxFeeInput.value)),
+      getSendFee(nativeAssetCode, Number(maxFeeInput)),
       fiatRates[nativeAssetCode],
     )
     return isNaN(Number(fiat)) ? 0 : fiat
@@ -517,7 +524,7 @@ const CustomizeRoute = ({
           <TextInput
             keyboardType={'numeric'}
             onChangeText={handleMinerTip}
-            value={minerTipInput.value}
+            value={minerTipInput}
             autoCorrect={false}
             autoCapitalize={'none'}
             returnKeyType="done"
@@ -582,7 +589,7 @@ const CustomizeRoute = ({
           <TextInput
             keyboardType={'numeric'}
             onChangeText={handleMaxFee}
-            value={maxFeeInput.value}
+            value={maxFeeInput}
             autoCorrect={false}
             autoCapitalize={'none'}
             returnKeyType="done"
