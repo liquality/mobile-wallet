@@ -1,13 +1,12 @@
 import * as React from 'react'
+import { FC } from 'react'
 import { AppIcons } from '../assets'
 import { ChainId } from '@liquality/cryptoassets/dist/src/types'
-import { FC } from 'react'
 import { ICON_SIZE } from '../utils'
 import { StyleProp, ViewStyle } from 'react-native'
 
 const {
   BitcoinChainIcon,
-  BitcoinChainIcon: BTCIcon,
   EthereumChainIcon,
   RootstockChainIcon,
   BinanceSmartChainIcon,
@@ -17,9 +16,10 @@ const {
   TerraChainIcon,
   FuseChainIcon,
   AvalancheChainIcon,
-  AvalancheChainIcon: AvalancheIcon,
+  AvalancheIcon,
   SolanaChainIcon,
   OptimismChainIcon,
+  BTCIcon,
   ETHIcon,
   RBTCIcon,
   SovrynIcon,
@@ -27,7 +27,7 @@ const {
   LunaIcon,
   TerraIcon,
   BNBIcon,
-  Nearcon,
+  NearIcon,
   MaticIcon,
   PwethIcon,
   ArbitrumIcon,
@@ -40,6 +40,7 @@ const {
   Sovryn,
   Thorchain,
   Uniswap,
+  OptimismIcon,
 } = AppIcons
 
 type AssetIconType = {
@@ -98,63 +99,63 @@ const extractSpecificIcon = {
     assetName: OptimismChainIcon,
     viewBoxValue: '',
   },
-  eth: {
+  ETH: {
     assetName: ETHIcon,
     viewBoxValue: '',
   },
-  optimism: {
-    assetName: ETHIcon,
+  OP: {
+    assetName: OptimismIcon,
     viewBoxValue: '',
   },
-  rbtc: {
+  RBTC: {
     assetName: RBTCIcon,
     viewBoxValue: '',
   },
-  dai: {
+  DAI: {
     assetName: DAIIcon,
     viewBoxValue: '',
   },
-  sov: {
+  SOV: {
     assetName: SovrynIcon,
     viewBoxValue: '',
   },
-  btc: {
+  BTC: {
     assetName: BTCIcon,
     viewBoxValue: '',
   },
-  luna: {
+  LUNA: {
     assetName: LunaIcon,
     viewBoxValue: '',
   },
-  ust: {
+  UST: {
     assetName: TerraIcon,
     viewBoxValue: '',
   },
-  bnb: {
+  BNB: {
     assetName: BNBIcon,
     viewBoxValue: '0 0 32 32',
   },
-  near: {
-    assetName: Nearcon,
+  NEAR: {
+    assetName: NearIcon,
     viewBoxValue: '',
   },
-  matic: {
+  MATIC: {
     assetName: MaticIcon,
     viewBoxValue: '',
   },
-  pweth: {
+  PWETH: {
     assetName: PwethIcon,
     viewBoxValue: '0 0 32 32',
   },
-  arbeth: {
+  ARBETH: {
     assetName: ArbitrumIcon,
     viewBoxValue: '0 0 32 32',
   },
-  avax: {
+  AVAX: {
     assetName: AvalancheIcon,
     viewBoxValue: '0 0 32 32',
   },
-  sol: {
+  SOL: {
     assetName: SolanaIcon,
     viewBoxValue: '0 0 32 32',
   },
@@ -162,7 +163,7 @@ const extractSpecificIcon = {
     assetName: AllChainIndicator,
     viewBoxValue: '',
   },
-  hop: {
+  HOP: {
     assetName: HopProviderIcon,
     viewBoxValue: '',
   },
@@ -187,9 +188,9 @@ const extractSpecificIcon = {
 const AssetIcon: FC<AssetIconType> = (props) => {
   const { chain, asset, size = ICON_SIZE, styles } = props
   const extractedIcon = chain
-    ? extractSpecificIcon[chain.toLowerCase()]
+    ? extractSpecificIcon[chain]
     : asset
-    ? extractSpecificIcon[asset.toLowerCase()]
+    ? extractSpecificIcon[asset]
     : null
   if (extractedIcon) {
     const AssetName = extractedIcon.assetName

@@ -6,7 +6,6 @@ import {
   prettyBalance,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { AccountType } from '../../types'
-import AssetIcon from '../asset-icon'
 import AssetListSwipeableRow from '../asset-list-swipeable-row'
 import { BigNumber } from '@liquality/types'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
@@ -26,6 +25,7 @@ import { scale } from 'react-native-size-matters'
 import { checkImgUrlExists } from '../../utils'
 import { AppIcons } from '../../assets'
 import { Path, Svg } from 'react-native-svg'
+import CombinedChainAssetIcons from '../ui/CombinedChainAssetIcons'
 
 const { ChevronRightIcon: ChevronRight } = AppIcons
 
@@ -212,9 +212,13 @@ const SubRow: FC<SubRowProps> = (props) => {
                 <Box width={10} height={10} />
               </Box>
               <Box flex={0.1} paddingLeft={'m'} />
-              <Box flex={0.6} flexDirection="row" paddingLeft={'m'}>
-                <AssetIcon asset={item.code} />
-                <Box width={'80%'} paddingLeft="m">
+              <Box
+                flex={0.6}
+                flexDirection="row"
+                paddingLeft={'m'}
+                alignItems={'flex-start'}>
+                <CombinedChainAssetIcons chain={item.chain} code={item.code} />
+                <Box width={'80%'}>
                   <Text numberOfLines={1} variant={'listText'} color="darkGrey">
                     {item.name}
                   </Text>

@@ -7,22 +7,24 @@ import RootstockChainIcon from '../assets/icons/crypto/rsk_chain.svg'
 import BinanceSmartChainIcon from '../assets/icons/crypto/bsc_chain.svg'
 import NearChainIcon from '../assets/icons/crypto/near_chain.svg'
 import PolygonChainIcon from '../assets/icons/crypto/polygon_chain.svg'
-import ArbitrumChainIcon from '../assets/icons/crypto/arbitrum.svg'
+import ArbitrumChainIcon from '../assets/icons/crypto/arbitrum_chain.svg'
 import TerraChainIcon from '../assets/icons/crypto/terra_chain.svg'
 import FuseChainIcon from '../assets/icons/crypto/fuse.svg'
-import AvalancheChainIcon from '../assets/icons/crypto/avax.svg'
+import AvalancheChainIcon from '../assets/icons/crypto/avalanche_chain.svg'
 import SolanaChainIcon from '../assets/icons/crypto/sol_account.svg'
 import ETHIcon from '../assets/icons/crypto/eth.svg'
+import BTCIcon from '../assets/icons/crypto/btc.svg'
 import RBTCIcon from '../assets/icons/crypto/rbtc.svg'
 import SovrynIcon from '../assets/icons/crypto/sov.svg'
 import DAIIcon from '../assets/icons/crypto/dai.svg'
 import LunaIcon from '../assets/icons/crypto/luna.svg'
 import TerraIcon from '../assets/icons/crypto/terra.svg'
 import BNBIcon from '../assets/icons/crypto/bnb.svg'
-import Nearcon from '../assets/icons/crypto/near.svg'
+import NearIcon from '../assets/icons/crypto/near.svg'
 import MaticIcon from '../assets/icons/crypto/matic.svg'
 import PwethIcon from '../assets/icons/crypto/pweth.svg'
 import ArbitrumIcon from '../assets/icons/crypto/arbeth.svg'
+import AvalancheIcon from '../assets/icons/crypto/avax.svg'
 import SolanaIcon from '../assets/icons/crypto/sol.svg'
 import BlankIcon from '../assets/icons/crypto/blank.svg'
 import UserCog from '../assets/icons/user-cog.svg'
@@ -183,6 +185,7 @@ import ReceiveHex from '../assets/icons/receiveHex.svg'
 import SwapHex from '../assets/icons/swapHex.svg'
 import SendHex from '../assets/icons/sendHex.svg'
 import OptimismChainIcon from '../assets/icons/crypto/optimism_chain.svg'
+import OptimismIcon from '../assets/icons/crypto/op.svg'
 import WhiteCheckMark from '../assets/icons/checkMark.svg'
 import Astroport from '../assets/icons/swap-providers/astroport.svg'
 import FastBTC from '../assets/icons/swap-providers/fastBTC.svg'
@@ -205,6 +208,8 @@ export default {
   FuseChainIcon,
   AvalancheChainIcon,
   SolanaChainIcon,
+  AvalancheIcon,
+  BTCIcon,
   ETHIcon,
   RBTCIcon,
   SovrynIcon,
@@ -212,7 +217,7 @@ export default {
   LunaIcon,
   TerraIcon,
   BNBIcon,
-  Nearcon,
+  NearIcon,
   MaticIcon,
   PwethIcon,
   ArbitrumIcon,
@@ -371,6 +376,7 @@ export default {
   SwapHex,
   SendHex,
   OptimismChainIcon,
+  OptimismIcon,
   WhiteCheckMark,
   Astroport,
   FastBTC,
