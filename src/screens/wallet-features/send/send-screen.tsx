@@ -538,7 +538,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       </Box>
       {showReviewScreen && (
         <SendReviewScreen
-          assetData={assetData}
+          assetData={assetData!}
           asset={code}
           amount={amountInNative}
           destinationAddress={addressInput.value}
