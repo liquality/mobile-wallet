@@ -56,6 +56,7 @@ import ChevronLeft from '../assets/icons/chevronLeft.svg'
 import Bars from '../assets/icons/hamburger.svg'
 import SignOut from '../assets/icons/logout.svg'
 import CopyIcon from '../assets/icons/copy.svg'
+import ShareIcon from '../assets/icons/share.svg'
 import LiqualityBoost from '../assets/icons/swap-providers/liqualityboost.svg'
 import Sovryn from '../assets/icons/swap-providers/sovryn.svg'
 import Thorchain from '../assets/icons/swap-providers/thorchain.svg'
@@ -379,4 +380,5 @@ export default {
   DebridgeProviderIcon,
   UncheckedWhiteBox,
   CheckedWhiteBox,
+  ShareIcon,
 }

@@ -516,5 +516,6 @@
   "bridges": "Bridges",
   "feeStructure": "FEE STRUCTURE",
   "validInputForSpeedUp": "Valid input range is > {{min}} and < {{max}}",
-  "details": "DETAILS"
+  "details": "DETAILS",
+  "account": "ACCOUNT"
 }
