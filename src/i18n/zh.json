@@ -517,5 +517,12 @@
   "feeStructure": "FEE STRUCTURE",
   "validInputForSpeedUp": "Valid input range is > {{min}} and < {{max}}",
   "details": "DETAILS",
-  "account": "ACCOUNT"
+  "account": "ACCOUNT",
+  "cautionPrivateKey": "Caution - everyone with your private key will have full access to your account.",
+  "exportOrShow": "Export Private Key | Show Private KeyExport Private Key | Show Private Key",
+  "exportPrivateKey": "Export Private Key ",
+  "showPrivateKey": "Show Private Key",
+  "historyTransactions": "History of Transactions (Activities)",
+  "seeAccountRelated": "See the account related public history on the explorer.",
+  "hideAccount": "Hide Account"
 }

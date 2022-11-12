@@ -13,8 +13,51 @@ import { StyleSheet } from 'react-native'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { AppIcons } from '../../../assets'
 import { useTheme } from '@shopify/restyle'
+import { labelTranslateFn } from '../../../utils'
 
-const { CopyIcon, ShareIcon, GasIcon } = AppIcons
+const { CopyIcon, ShareIcon, GasIcon, ChevronRightIcon, TiltedArrow } = AppIcons
+
+const RowComponent = ({
+  title,
+  subtitle,
+  onPress,
+}: {
+  title: string
+  subtitle?: string
+  onPress: () => void
+}) => {
+  return (
+    <Box
+      borderTopWidth={1}
+      borderTopColor={'whiteLightGrey'}
+      borderBottomWidth={1}
+      borderBottomColor={'whiteLightGrey'}
+      height={scale(50)}
+      justifyContent="center"
+      marginTop={'xl'}>
+      <Box
+        flexDirection={'row'}
+        alignItems="center"
+        justifyContent={'space-between'}>
+        <Box flexDirection={'row'} alignItems="center">
+          <Text variant={'headerLink'}>{title}</Text>
+          {subtitle && (
+            <Box
+              width={1}
+              marginHorizontal="l"
+              height={scale(20)}
+              backgroundColor="inactiveText"
+            />
+          )}
+          {subtitle && <Text variant={'headerLink'}>{subtitle}</Text>}
+        </Box>
+        <TouchableOpacity onPress={onPress}>
+          <ChevronRightIcon width={scale(15)} height={scale(15)} />
+        </TouchableOpacity>
+      </Box>
+    </Box>
+  )
+}
 
 type ScreenProps = NativeStackScreenProps<
   MainStackParamList,
@@ -25,8 +68,11 @@ const AccountDetailScreen: FC<ScreenProps> = ({ route }) => {
   const { assetData } = route.params
   const theme = useTheme<ThemeType>()
 
-  const onCopyPress = () => {}
-  const onSharePress = () => {}
+  const onCopyBtnPress = () => {}
+  const onShareBtnPress = () => {}
+  const onGasBtnPress = () => {}
+  const onManageAssetRightIconPress = () => {}
+  const onHideAccRightIconPress = () => {}
 
   return (
     <Box
@@ -89,23 +135,76 @@ const AccountDetailScreen: FC<ScreenProps> = ({ route }) => {
             />
             <TouchableOpacity
               style={{ marginHorizontal: theme.spacing.l }}
-              onPress={onCopyPress}>
+              onPress={onCopyBtnPress}>
               <CopyIcon
                 width={scale(15)}
                 height={scale(15)}
                 onPress={() => {}}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={onSharePress}>
+            <TouchableOpacity onPress={onShareBtnPress}>
               <ShareIcon />
             </TouchableOpacity>
           </Box>
-          <Box flexDirection={'row'} alignItems="center">
+          <TouchableOpacity onPress={onGasBtnPress} style={styles.rowCenter}>
             <GasIcon width={scale(20)} height={scale(20)} />
             <Text marginLeft={'s'} variant={'addressLabel'} tx="gas" />
-          </Box>
+          </TouchableOpacity>
         </Box>
       )}
+      <RowComponent
+        title={labelTranslateFn('manageAssets')!}
+        subtitle={'1'}
+        onPress={onManageAssetRightIconPress}
+      />
+      <Text
+        variant={'transLink'}
+        fontWeight="500"
+        marginTop={'xl'}
+        tx="privateKey"
+        color={'greyMeta'}
+      />
+      <Text
+        variant={'listText'}
+        fontWeight="400"
+        lineHeight={scale(18)}
+        color="black2"
+        tx="cautionPrivateKey"
+      />
+      <TouchableOpacity onPress={onGasBtnPress} style={styles.rowCenter}>
+        <Text variant={'headerLink'} tx="exportPrivateKey" />
+        <Box
+          width={1}
+          marginHorizontal="m"
+          height={scale(15)}
+          backgroundColor="inactiveText"
+        />
+        <Text variant={'headerLink'} tx="showPrivateKey" />
+      </TouchableOpacity>
+      <Text
+        variant={'transLink'}
+        fontWeight="500"
+        marginTop={'xl'}
+        tx="historyTransactions"
+        color={'greyMeta'}
+      />
+      <Text
+        variant={'listText'}
+        fontWeight="400"
+        lineHeight={scale(18)}
+        color="black2"
+        tx="seeAccountRelated"
+      />
+      <TouchableOpacity style={styles.rowCenter}>
+        <Text variant={'headerLink'} marginRight="m" paddingTop={'s'}>
+          Go to Etherscan
+        </Text>
+        <TiltedArrow />
+      </TouchableOpacity>
+      <RowComponent
+        title={labelTranslateFn('hideAccount')!}
+        onPress={onHideAccRightIconPress}
+      />
     </Box>
   )
 }
@@ -119,6 +218,10 @@ const styles = StyleSheet.create({
     borderBottomColor: faceliftPalette.greyBackground,
     borderLeftWidth: scale(40),
     borderLeftColor: faceliftPalette.greyBackground,
+  },
+  rowCenter: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })
 
