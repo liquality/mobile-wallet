@@ -515,5 +515,6 @@
   "aggregators": "Aggregators",
   "bridges": "Bridges",
   "feeStructure": "FEE STRUCTURE",
-  "validInputForSpeedUp": "Valid input range is > {{min}} and < {{max}}"
+  "validInputForSpeedUp": "Valid input range is > {{min}} and < {{max}}",
+  "details": "DETAILS"
 }

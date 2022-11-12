@@ -176,6 +176,12 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
     },
   ]
 
+  const handleAccountDetailsPress = () => {
+    navigation.navigate('AccountDetailScreen', {
+      assetData: route.params.assetData,
+    })
+  }
+
   useEffect(() => {
     setAssetScreenPopuMenuVisible(false)
   }, [setAssetScreenPopuMenuVisible])
@@ -239,7 +245,8 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
                           />
                         </Box>
                       </TouchableWithoutFeedback>
-                      <TouchableWithoutFeedback onPress={handleSwapPress}>
+                      <TouchableWithoutFeedback
+                        onPress={handleAccountDetailsPress}>
                         <Box
                           flexDirection="row"
                           justifyContent="center"
