@@ -774,22 +774,6 @@ export const sendTransaction = async (options: {
   })
 }
 
-export const fetchConfirmationByHash = async (
-  asset: string,
-  hash: string,
-): Promise<number | undefined> => {
-  const { activeWalletId, activeNetwork } = wallet.state
-  const transaction = await wallet.getters
-    .client({
-      network: activeNetwork,
-      walletId: activeWalletId,
-      asset,
-    })
-    .chain.getTransactionByHash(hash)
-
-  return transaction.confirmations
-}
-
 /**
  * Speeds up an already submitted transaction
  * @param id
@@ -946,15 +930,9 @@ export const transactionHistoryEffect: (
           )
           if (historyItem) {
             if (historyItem.type === 'SEND' || historyItem.type === 'NFT') {
-              fetchConfirmationByHash(
-                historyItem.from,
-                historyItem.txHash,
-              ).then((confirmations) => {
-                setSelf({
-                  ...historyItem,
-                  tx: { ...historyItem.tx, confirmations },
-                  ...updates,
-                })
+              setSelf({
+                ...historyItem,
+                ...updates,
               })
             } else {
               setSelf({

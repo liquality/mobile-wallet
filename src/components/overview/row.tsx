@@ -29,6 +29,7 @@ import { FADE_IN_OUT_DURATION } from '../../utils'
 import { AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
 import { Path, Svg } from 'react-native-svg'
+import CombinedChainAssetIcons from '../ui/CombinedChainAssetIcons'
 
 const { MinusSign, PlusSign } = AppIcons
 
@@ -186,7 +187,11 @@ const Row = (props: RowProps) => {
             </Box>
           )}
           <Box flex={0.1} paddingLeft={'m'}>
-            <AssetIcon chain={item.chain} />
+            {isNested ? (
+              <AssetIcon chain={item.chain} size={scale(30)} />
+            ) : (
+              <CombinedChainAssetIcons chain={item.chain} code={item.code} />
+            )}
           </Box>
           <Box flex={0.5} paddingLeft={'m'}>
             <Text variant={'listText'} color="darkGrey">
