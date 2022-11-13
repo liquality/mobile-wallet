@@ -6,15 +6,23 @@ import {
   faceliftPalette,
   Text,
   ThemeType,
+  showCopyToast,
   TouchableOpacity,
 } from '../../../theme'
 import { scale } from 'react-native-size-matters'
-import { StyleSheet } from 'react-native'
+import { Alert, Linking, StyleSheet } from 'react-native'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { AppIcons } from '../../../assets'
 import { useTheme } from '@shopify/restyle'
 import { labelTranslateFn } from '../../../utils'
-
+import Clipboard from '@react-native-clipboard/clipboard'
+import Share from 'react-native-share'
+import I18n from 'i18n-js'
+import { networkState, walletState } from '../../../atoms'
+import { useRecoilValue } from 'recoil'
+import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
+import { getAddressExplorerLink } from '@liquality/wallet-core/dist/src/utils/asset'
+import { getAsset } from '@liquality/cryptoassets'
 const { CopyIcon, ShareIcon, GasIcon, ChevronRightIcon, TiltedArrow } = AppIcons
 
 const RowComponent = ({
@@ -23,7 +31,7 @@ const RowComponent = ({
   onPress,
 }: {
   title: string
-  subtitle?: string
+  subtitle?: number
   onPress: () => void
 }) => {
   return (
@@ -35,26 +43,23 @@ const RowComponent = ({
       height={scale(50)}
       justifyContent="center"
       marginTop={'xl'}>
-      <Box
-        flexDirection={'row'}
-        alignItems="center"
-        justifyContent={'space-between'}>
+      <TouchableOpacity
+        onPress={onPress}
+        style={[styles.rowCenter, styles.spaceBetween]}>
         <Box flexDirection={'row'} alignItems="center">
           <Text variant={'headerLink'}>{title}</Text>
-          {subtitle && (
+          {subtitle ? (
             <Box
               width={1}
               marginHorizontal="l"
               height={scale(20)}
               backgroundColor="inactiveText"
             />
-          )}
-          {subtitle && <Text variant={'headerLink'}>{subtitle}</Text>}
+          ) : null}
+          {subtitle ? <Text variant={'headerLink'}>{subtitle}</Text> : null}
         </Box>
-        <TouchableOpacity onPress={onPress}>
-          <ChevronRightIcon width={scale(15)} height={scale(15)} />
-        </TouchableOpacity>
-      </Box>
+        <ChevronRightIcon width={scale(15)} height={scale(15)} />
+      </TouchableOpacity>
     </Box>
   )
 }
@@ -64,15 +69,79 @@ type ScreenProps = NativeStackScreenProps<
   'AccountDetailScreen'
 >
 
-const AccountDetailScreen: FC<ScreenProps> = ({ route }) => {
+const AccountDetailScreen: FC<ScreenProps> = ({ navigation, route }) => {
   const { assetData } = route.params
   const theme = useTheme<ThemeType>()
+  const activeNetwork = useRecoilValue(networkState)
+  const wallet = useRecoilValue(walletState)
 
-  const onCopyBtnPress = () => {}
-  const onShareBtnPress = () => {}
-  const onGasBtnPress = () => {}
-  const onManageAssetRightIconPress = () => {}
-  const onHideAccRightIconPress = () => {}
+  let nativeCode = ''
+  let nativeName = ''
+  if (assetData && assetData.code) {
+    const asset = getNativeAsset(assetData?.code, activeNetwork)
+    const nativeData = getAsset(activeNetwork, asset)
+    nativeCode = nativeData.code
+    nativeName = nativeData.name
+  }
+
+  const onCopyBtnPress = () => {
+    if (assetData && assetData?.address) {
+      showCopyToast('copyToast', labelTranslateFn('receiveScreen.copied')!)
+      Clipboard.setString(assetData.address)
+    } else {
+      Alert.alert(labelTranslateFn('receiveScreen.addressEmpty')!)
+    }
+  }
+  const onShareBtnPress = () => {
+    if (assetData && assetData?.address) {
+      Share.open({ message: assetData.address })
+    } else {
+      Alert.alert(labelTranslateFn('receiveScreen.addressEmpty')!)
+    }
+  }
+  const onGasBtnPress = () => {
+    navigation.navigate('ReceiveScreen', {
+      assetData,
+      screenTitle: I18n.t('assetScreen.receiveCode', { code: assetData?.name }),
+    })
+  }
+  const onManageAssetRightIconPress = () => {
+    if (nativeCode) {
+      navigation.navigate('AssetManagementScreen', { code: nativeCode })
+    } else {
+      navigation.navigate('AssetManagementScreen', {})
+    }
+  }
+  const onHideAccRightIconPress = () => {
+    navigation.navigate('AccountManagementScreen', {})
+  }
+
+  const onShowOrExportPrivateKeyBtnPress = () => {
+    if (assetData && assetData.address) {
+      navigation.navigate('BackupWarningScreen', {
+        isPrivateKey: true,
+        walletId: wallet.activeWalletId,
+        accountId: assetData.id,
+        network: activeNetwork,
+        chain: assetData.chain,
+        shortenAddress: shortenAddress(assetData?.address),
+        accountName: assetData.name,
+      })
+    }
+  }
+
+  const onExplorerLinkPress = () => {
+    if (assetData && assetData.address) {
+      const link = getAddressExplorerLink(
+        assetData?.address,
+        assetData?.code,
+        activeNetwork,
+      )
+      Linking.openURL(link)
+    } else {
+      Alert.alert('link not found') // error handling work is pending
+    }
+  }
 
   return (
     <Box
@@ -154,7 +223,6 @@ const AccountDetailScreen: FC<ScreenProps> = ({ route }) => {
       )}
       <RowComponent
         title={labelTranslateFn('manageAssets')!}
-        subtitle={'1'}
         onPress={onManageAssetRightIconPress}
       />
       <Text
@@ -171,7 +239,9 @@ const AccountDetailScreen: FC<ScreenProps> = ({ route }) => {
         color="black2"
         tx="cautionPrivateKey"
       />
-      <TouchableOpacity onPress={onGasBtnPress} style={styles.rowCenter}>
+      <TouchableOpacity
+        onPress={onShowOrExportPrivateKeyBtnPress}
+        style={styles.rowCenter}>
         <Text variant={'headerLink'} tx="exportPrivateKey" />
         <Box
           width={1}
@@ -195,12 +265,16 @@ const AccountDetailScreen: FC<ScreenProps> = ({ route }) => {
         color="black2"
         tx="seeAccountRelated"
       />
-      <TouchableOpacity style={styles.rowCenter}>
-        <Text variant={'headerLink'} marginRight="m" paddingTop={'s'}>
-          Go to Etherscan
-        </Text>
-        <TiltedArrow />
-      </TouchableOpacity>
+      {nativeName ? (
+        <TouchableOpacity
+          style={styles.rowCenter}
+          onPress={onExplorerLinkPress}>
+          <Text variant={'headerLink'} marginRight="m" paddingTop={'s'}>
+            {I18n.t('goTo', { name: nativeName })}
+          </Text>
+          <TiltedArrow />
+        </TouchableOpacity>
+      ) : null}
       <RowComponent
         title={labelTranslateFn('hideAccount')!}
         onPress={onHideAccRightIconPress}
@@ -222,6 +296,9 @@ const styles = StyleSheet.create({
   rowCenter: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  spaceBetween: {
+    justifyContent: 'space-between',
   },
 })
 

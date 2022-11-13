@@ -24,6 +24,7 @@ type IconAsset = {
 type AssetManagementProps = {
   enabledAssets: string[] | undefined
   accounts: { id: string; name: string }[]
+  selectedAsset?: string
 }
 
 interface CustomAsset extends Asset {
@@ -47,12 +48,16 @@ const EmptyComponent = () => {
   )
 }
 
-const AssetManagement = ({ enabledAssets, accounts }: AssetManagementProps) => {
+const AssetManagement = ({
+  enabledAssets,
+  accounts,
+  selectedAsset,
+}: AssetManagementProps) => {
   const [data, setData] = useState<IconAsset[]>([])
   const [assets, setAssets] = useState<CustomAsset[]>([])
   const [mainAssets, setMainAssets] = useState<CustomAsset[]>([])
   const [chainAssets, setChainAssets] = useState<CustomAsset[]>([])
-  const [chainCode, setChainCode] = useState('ALL')
+  const [chainCode, setChainCode] = useState(selectedAsset || 'ALL')
   const activeNetwork = useRecoilValue(networkState)
   const [showSearchBox, setShowSearchBox] = useRecoilState(
     showSearchBarInputState,

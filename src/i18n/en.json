@@ -523,5 +523,6 @@
   "showPrivateKey": "Show Private Key",
   "historyTransactions": "History of Transactions (Activities)",
   "seeAccountRelated": "See the account related public history on the explorer.",
-  "hideAccount": "Hide Account"
+  "hideAccount": "Hide Account",
+  "goTo": "Go to {{name}} explorer"
 }
