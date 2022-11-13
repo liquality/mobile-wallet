@@ -10,11 +10,15 @@ export type OverviewProps = NativeStackScreenProps<
   'AssetManagementScreen'
 >
 
-const AssetManagementScreen: FC<OverviewProps> = () => {
+const AssetManagementScreen: FC<OverviewProps> = ({ route }) => {
   const enabledAssets = useRecoilValue(enabledAssetsState)
   const accountsIds = useRecoilValue(sortedAccountsIdsState)
   return (
-    <AssetManagement enabledAssets={enabledAssets} accounts={accountsIds} />
+    <AssetManagement
+      enabledAssets={enabledAssets}
+      accounts={accountsIds}
+      selectedAsset={route.params.code}
+    />
   )
 }
 

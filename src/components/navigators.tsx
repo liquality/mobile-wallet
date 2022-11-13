@@ -92,6 +92,8 @@ import AdvancedFilterModal from '../screens/wallet-features/home/advanced-filter
 import SortingModal from '../screens/wallet-features/home/sorting-modal'
 import AccountManagementScreen from '../screens/wallet-features/asset/account-management-screen'
 import SwapProviderInfoDrawer from './swap-provider-info-drawer'
+import AccountDetailScreen from '../screens/wallet-features/asset/account-detail-screen'
+import AssetIcon from './asset-icon'
 
 const {
   NetworkActiveDot,
@@ -746,6 +748,39 @@ const AssetScreenHeaderTitle = (navProps: NavigationProps) => {
   )
 }
 
+const AccountDetailScreenHeaderRight = () => {
+  const activeNetwork = useRecoilValue(networkState)
+  return (
+    <Box
+      backgroundColor={'mediumWhite'}
+      flexDirection={'row'}
+      alignItems={'center'}
+      paddingVertical={'s'}
+      paddingHorizontal={'m'}
+      marginRight="s">
+      <NetworkActiveDot />
+      <Text paddingLeft={'s'} color="darkGrey" variant="networkStatus">
+        {`${activeNetwork}`.toUpperCase()}
+      </Text>
+    </Box>
+  )
+}
+
+const AccountDetailScreenHeaderTitle = (navProps: NavigationProps) => {
+  const { route } = navProps
+  const { assetData } = route.params
+  return (
+    <Box flexDirection={'row'}>
+      {assetData && assetData.chain ? (
+        <Box height={scale(1.3 * 16)}>
+          <AssetIcon chain={assetData?.chain} />
+        </Box>
+      ) : null}
+      <Text variant={'headerTitle'} marginLeft={'m'} tx="details" />
+    </Box>
+  )
+}
+
 const semiTransparentDrawerStyle = (
   isScrolledUp: boolean,
   activeScreenTitle: string,
@@ -982,6 +1017,18 @@ export const StackMainNavigator = () => {
             headerTitle: () => AssetScreenHeaderTitle({ route, navigation }),
             headerStyle: { backgroundColor },
             headerRight: AssetScreenHeaderRight,
+            headerLeft: StackMainNavigatorHeaderLeft,
+          })}
+        />
+        <MainStack.Screen
+          name="AccountDetailScreen"
+          component={AccountDetailScreen}
+          options={({ route, navigation }: NavigationProps) => ({
+            ...screenNavOptions,
+            headerTitle: () =>
+              AccountDetailScreenHeaderTitle({ route, navigation }),
+            headerStyle: { backgroundColor },
+            headerRight: AccountDetailScreenHeaderRight,
             headerLeft: StackMainNavigatorHeaderLeft,
           })}
         />

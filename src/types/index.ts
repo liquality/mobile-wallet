@@ -198,6 +198,7 @@ export type MainStackParamList = {
   AdvancedFilterModal: StackPayload
   AccountManagementScreen: StackPayload
   SwapProviderInfoDrawer: StackPayload
+  AccountDetailScreen: StackPayload
 }
 
 export type RootTabParamList = {
@@ -359,4 +360,5 @@ export type NavigationProps = NativeStackScreenProps<
   | 'CongratulationsScreen'
   | 'AccountManagementScreen'
   | 'SwapProviderInfoDrawer'
+  | 'AccountDetailScreen'
 >

@@ -146,7 +146,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   }
 
   const handleManageAssetsBtnPress = () => {
-    navigation.goBack()
+    setAssetScreenPopuMenuVisible(false)
     navigation.navigate('AssetManagementScreen', {
       screenTitle: 'Manage Assets',
       includeBackBtn: true,
@@ -175,6 +175,13 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
       navigateTo: handleBuyPress,
     },
   ]
+
+  const handleAccountDetailsPress = () => {
+    setAssetScreenPopuMenuVisible(false)
+    navigation.navigate('AccountDetailScreen', {
+      assetData: route.params.assetData,
+    })
+  }
 
   useEffect(() => {
     setAssetScreenPopuMenuVisible(false)
@@ -239,7 +246,8 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
                           />
                         </Box>
                       </TouchableWithoutFeedback>
-                      <TouchableWithoutFeedback onPress={handleSwapPress}>
+                      <TouchableWithoutFeedback
+                        onPress={handleAccountDetailsPress}>
                         <Box
                           flexDirection="row"
                           justifyContent="center"
