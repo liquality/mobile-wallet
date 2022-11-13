@@ -146,7 +146,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   }
 
   const handleManageAssetsBtnPress = () => {
-    navigation.goBack()
+    setAssetScreenPopuMenuVisible(false)
     navigation.navigate('AssetManagementScreen', {
       screenTitle: 'Manage Assets',
       includeBackBtn: true,
@@ -177,6 +177,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   ]
 
   const handleAccountDetailsPress = () => {
+    setAssetScreenPopuMenuVisible(false)
     navigation.navigate('AccountDetailScreen', {
       assetData: route.params.assetData,
     })
