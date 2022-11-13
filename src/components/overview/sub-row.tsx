@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import React, { FC, Fragment, useCallback, useEffect, useState } from 'react'
 import { Image, LayoutChangeEvent, Pressable, StyleSheet } from 'react-native'
 import {
   cryptoToFiat,
@@ -20,12 +20,18 @@ import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import { getNftsForAccount, updateNFTs } from '../../store/store'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import { Box, faceliftPalette, Text } from '../../theme'
+import { Box, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
 import { checkImgUrlExists } from '../../utils'
 import { AppIcons } from '../../assets'
-import { Path, Svg } from 'react-native-svg'
 import CombinedChainAssetIcons from '../ui/CombinedChainAssetIcons'
+import RowBackgroundBox from './RowBackgroundBox'
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 
 const { ChevronRightIcon: ChevronRight } = AppIcons
 
@@ -55,40 +61,12 @@ const SubRow: FC<SubRowProps> = (props) => {
   const [borderWidth, setBorderWidth] = useState(0)
   const [rowWidth, setRowWidth] = useState(0)
   const [rowHeight, setRowHeight] = useState(0)
-
   const { activeWalletId } = wallet.state
-
   const clearDoubleOrLongTapSelectedAsset = useSetRecoilState(
     doubleOrLongTapSelectedAsset,
   )
-
-  const getBackgroundBox = () => {
-    const width = rowWidth
-    const height = rowHeight
-    const flatRadius = 20
-    return (
-      <Box
-        alignItems="center"
-        justifyContent="center"
-        style={StyleSheet.absoluteFillObject}>
-        <Svg
-          width={`${width}`}
-          height={`${height}`}
-          viewBox={`0 0 ${width} ${height}`}
-          fill={faceliftPalette.white}>
-          <Path
-            d={`M0 0 H ${
-              width - flatRadius
-            } L ${width} ${flatRadius} V ${height} H ${0} V ${0} Z`}
-            strokeWidth={2}
-            stroke={faceliftPalette.whiteGrey}
-            strokeLinejoin={'round'}
-            strokeLinecap={'round'}
-          />
-        </Svg>
-      </Box>
-    )
-  }
+  const ROW_HEIGHT = scale(70)
+  const height = useSharedValue(0)
 
   const onLayout = (event: LayoutChangeEvent) => {
     setRowHeight(event.nativeEvent.layout.height)
@@ -100,6 +78,19 @@ const SubRow: FC<SubRowProps> = (props) => {
 
     onAssetSelected()
   }, [clearDoubleOrLongTapSelectedAsset, onAssetSelected])
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      height: height.value,
+    }
+  })
+
+  useEffect(() => {
+    height.value = withTiming(ROW_HEIGHT, {
+      duration: 1000,
+      easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+    })
+  }, [ROW_HEIGHT, height])
 
   useEffect(() => {
     async function fetchData() {
@@ -138,135 +129,150 @@ const SubRow: FC<SubRowProps> = (props) => {
     if (Object.keys(chainSpecificNfts).length > 0) {
       let firstNftItem = chainSpecificNfts[Object.keys(chainSpecificNfts)[0]][0]
       return (
-        <Pressable onPress={handlePressOnRow} style={styles.row}>
-          <Box
-            height={scale(50)}
-            width={scale(3)}
-            style={{ backgroundColor: item.color }}
-          />
-          <Box paddingLeft={'m'}>
-            <Box width={10} height={10} />
-          </Box>
-          <Box flex={0.1} paddingLeft={'m'} />
-          <Box flex={0.55} flexDirection="row" paddingLeft="m">
-            <Image
-              source={checkImgUrlExists(
-                firstNftItem.image_original_url,
-                imgError,
-              )}
-              style={styles.nftImg}
-              onError={() => imgError.push(firstNftItem.image_original_url)}
+        <Animated.View style={animatedStyle}>
+          <Pressable onPress={handlePressOnRow} style={styles.row}>
+            <Box
+              height={scale(50)}
+              width={scale(3)}
+              style={{ borderLeftColor: parentItem.color, borderLeftWidth: 3 }}
             />
-            <Box width={'80%'} paddingLeft="m">
-              <Text numberOfLines={1} variant={'listText'} color="darkGrey">
-                NFT <Text color="mediumGrey">|</Text> {numberOfNfts}{' '}
-              </Text>
+            <Box paddingLeft={'m'}>
+              <Box width={10} height={10} />
             </Box>
-          </Box>
-          <Box
-            flex={0.45}
-            alignItems={'flex-end'}
-            justifyContent="flex-end"
-            paddingLeft={'s'}>
-            <Text variant={'listText'} color="darkGrey" numberOfLines={1}>
-              See All <ChevronRight style={styles.chevronNft} />
-            </Text>
-          </Box>
-        </Pressable>
+            <Box flex={0.1} paddingLeft={'m'} />
+            <Box flex={0.55} flexDirection="row" paddingLeft="m">
+              <Image
+                source={checkImgUrlExists(
+                  firstNftItem.image_original_url,
+                  imgError,
+                )}
+                style={styles.nftImg}
+                onError={() => imgError.push(firstNftItem.image_original_url)}
+              />
+              <Box width={'80%'} paddingLeft="m">
+                <Text numberOfLines={1} variant={'listText'} color="darkGrey">
+                  NFT <Text color="mediumGrey">|</Text> {numberOfNfts}{' '}
+                </Text>
+              </Box>
+            </Box>
+            <Box
+              flex={0.45}
+              flexDirection={'row'}
+              justifyContent="flex-end"
+              alignItems={'center'}
+              paddingLeft={'s'}>
+              <Text
+                variant={'listText'}
+                color="darkGrey"
+                numberOfLines={1}
+                lineHeight={scale(1.5 * 14)}
+                marginRight={'m'}
+                style={{ height: scale(1.2 * 13) }}>
+                See All
+              </Text>
+              <ChevronRight />
+            </Box>
+          </Pressable>
+        </Animated.View>
       )
     } else return null
   }
 
   return (
-    <Box>
+    <Fragment>
       {nft ? (
         renderNFTRow()
       ) : (
-        <AssetListSwipeableRow
-          assetData={{
-            ...item,
-            id: parentItem.id,
-            balance,
-          }}
-          assetSymbol={item.code}
-          onOpen={() => setBorderWidth(2)}
-          onClose={() => setBorderWidth(0)}>
-          <Pressable onPress={handlePressOnRow}>
-            <Box
-              flexDirection={'row'}
-              justifyContent="space-around"
-              paddingVertical={'m'}
-              height={70}
-              backgroundColor={
-                borderWidth ? 'selectedBackgroundColor' : 'white'
-              }
-              paddingRight={borderWidth ? 'mxxl' : 's'}
-              onLayout={onLayout}>
-              {borderWidth ? getBackgroundBox() : null}
+        <Animated.View style={animatedStyle}>
+          <AssetListSwipeableRow
+            assetData={{
+              ...item,
+              id: parentItem.id,
+              balance,
+            }}
+            assetSymbol={item.code}
+            onOpen={() => setBorderWidth(2)}
+            onClose={() => setBorderWidth(0)}>
+            <Pressable onPress={handlePressOnRow}>
               <Box
-                height={scale(50)}
-                width={scale(3)}
-                style={{ borderLeftColor: item.color, borderLeftWidth: 3 }}
-              />
-              <Box paddingLeft={'m'}>
-                <Box width={10} height={10} />
-              </Box>
-              <Box flex={0.1} paddingLeft={'m'} />
-              <Box
-                flex={0.6}
-                flexDirection="row"
-                paddingLeft={'m'}
-                alignItems={'flex-start'}>
-                <CombinedChainAssetIcons chain={item.chain} code={item.code} />
-                <Box width={'80%'}>
-                  <Text numberOfLines={1} variant={'listText'} color="darkGrey">
-                    {item.name}
+                flexDirection={'row'}
+                justifyContent="space-around"
+                paddingVertical={'m'}
+                height={ROW_HEIGHT}
+                backgroundColor={
+                  borderWidth ? 'selectedBackgroundColor' : 'white'
+                }
+                paddingRight={borderWidth ? 'mxxl' : 's'}
+                onLayout={onLayout}>
+                {borderWidth ? (
+                  <RowBackgroundBox width={rowWidth} height={rowHeight} />
+                ) : null}
+                <Box
+                  height={scale(50)}
+                  width={scale(3)}
+                  style={{ borderLeftColor: item.color, borderLeftWidth: 3 }}
+                />
+                <Box paddingLeft={'m'}>
+                  <Box width={10} height={10} />
+                </Box>
+                <Box flex={0.1} paddingLeft={'m'} />
+                <Box
+                  flex={0.6}
+                  flexDirection="row"
+                  paddingLeft={'m'}
+                  alignItems={'flex-start'}>
+                  <CombinedChainAssetIcons
+                    chain={item.chain}
+                    code={item.code}
+                  />
+                  <Box width={'80%'}>
+                    <Text
+                      numberOfLines={1}
+                      variant={'listText'}
+                      color="darkGrey">
+                      {item.name}
+                    </Text>
+                  </Box>
+                </Box>
+                <Box
+                  flex={0.45}
+                  alignItems="flex-end"
+                  justifyContent="flex-end"
+                  paddingRight={'s'}>
+                  <Text variant={'listText'} color="darkGrey" numberOfLines={1}>
+                    {prettyNativeBalance}
+                  </Text>
+                  <Text
+                    variant={'subListText'}
+                    color="greyMeta"
+                    numberOfLines={1}>
+                    {prettyFiatBalance}
                   </Text>
                 </Box>
+                {!borderWidth ? (
+                  <ChevronRight style={styles.chevronRow} />
+                ) : null}
               </Box>
-              <Box
-                flex={0.45}
-                alignItems="flex-end"
-                justifyContent="flex-end"
-                paddingRight={'s'}>
-                <Text variant={'listText'} color="darkGrey" numberOfLines={1}>
-                  {prettyNativeBalance}
-                </Text>
-
-                <Text
-                  variant={'subListText'}
-                  color="greyMeta"
-                  numberOfLines={1}>
-                  {prettyFiatBalance}
-                </Text>
-              </Box>
-              {!borderWidth ? (
-                <ChevronRight style={(styles.chevronNft, styles.chevronRow)} />
-              ) : null}
-            </Box>
-          </Pressable>
-        </AssetListSwipeableRow>
+            </Pressable>
+          </AssetListSwipeableRow>
+        </Animated.View>
       )}
-    </Box>
+    </Fragment>
   )
 }
 
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    paddingVertical: 10,
-    height: scale(60),
+    alignItems: 'center',
+    height: scale(70),
   },
   nftImg: {
     marginLeft: scale(3),
     marginRight: scale(5),
-
     width: scale(25),
     height: scale(25),
     borderRadius: 4,
-  },
-  chevronNft: {
-    marginTop: scale(13),
   },
   chevronRow: {
     marginTop: scale(13),
