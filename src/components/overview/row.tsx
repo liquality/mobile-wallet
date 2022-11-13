@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import { LayoutChangeEvent, Platform, StyleSheet } from 'react-native'
+import { LayoutChangeEvent, Platform } from 'react-native'
 import { AccountType } from '../../types'
 import AssetIcon from '../asset-icon'
 import {
@@ -22,14 +22,14 @@ import { unitToCurrency, getAsset } from '@liquality/cryptoassets'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
 import I18n from 'i18n-js'
 import GestureDetector from '../gesture-detector/gesture-detector'
-import { Text, Box, Card, palette, faceliftPalette } from '../../theme'
+import { Text, Box, Card, palette } from '../../theme'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { fetchFeesForAsset } from '../../store/store'
 import { FADE_IN_OUT_DURATION } from '../../utils'
 import { AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
-import { Path, Svg } from 'react-native-svg'
 import CombinedChainAssetIcons from '../ui/CombinedChainAssetIcons'
+import RowBackgroundBox from './RowBackgroundBox'
 
 const { MinusSign, PlusSign } = AppIcons
 
@@ -67,7 +67,7 @@ const Row = (props: RowProps) => {
     } else {
       onAssetSelected()
     }
-  }, [isNested, onAssetSelected, toggleRow, setDoubleOrLongTapSelectedAsset])
+  }, [setDoubleOrLongTapSelectedAsset, isNested, toggleRow, onAssetSelected])
 
   const handleDoubleOrLongPress = useCallback(() => {
     setDoubleOrLongTapSelectedAsset(item.id)
@@ -106,34 +106,6 @@ const Row = (props: RowProps) => {
     token: item.code,
   })
 
-  const getBackgroundBox = () => {
-    const width = rowWidth
-    const height = rowHeight
-    const flatRadius = 20
-    return (
-      <Box
-        alignItems="center"
-        justifyContent="center"
-        style={StyleSheet.absoluteFillObject}>
-        <Svg
-          width={`${width}`}
-          height={`${height}`}
-          viewBox={`0 0 ${width} ${height}`}
-          fill={faceliftPalette.white}>
-          <Path
-            d={`M0 0 H ${
-              width - flatRadius
-            } L ${width} ${flatRadius} V ${height} H ${0} V ${0} Z`}
-            strokeWidth={2}
-            stroke={faceliftPalette.whiteGrey}
-            strokeLinejoin={'round'}
-            strokeLinecap={'round'}
-          />
-        </Svg>
-      </Box>
-    )
-  }
-
   const onLayout = (event: LayoutChangeEvent) => {
     setRowHeight(event.nativeEvent.layout.height)
     setRowWidth(event.nativeEvent.layout.width)
@@ -154,10 +126,18 @@ const Row = (props: RowProps) => {
           justifyContent="space-around"
           paddingVertical={'m'}
           height={70}
-          backgroundColor={borderWidth ? 'selectedBackgroundColor' : 'white'}
+          backgroundColor={
+            borderWidth
+              ? 'selectedBackgroundColor'
+              : isExpanded
+              ? 'greyBackground'
+              : 'white'
+          }
           paddingRight={borderWidth ? 'mxxl' : 's'}
           onLayout={onLayout}>
-          {borderWidth ? getBackgroundBox() : null}
+          {borderWidth ? (
+            <RowBackgroundBox width={rowWidth} height={rowHeight} />
+          ) : null}
           <Box
             height={scale(50)}
             width={scale(3)}

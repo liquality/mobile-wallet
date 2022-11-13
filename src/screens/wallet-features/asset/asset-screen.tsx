@@ -38,12 +38,12 @@ import {
 } from '../../../utils'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { AppIcons, Images } from '../../../assets'
-import AssetIcon from '../../../components/asset-icon'
 const { Refresh } = AppIcons
 import { scale } from 'react-native-size-matters'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { populateWallet } from '../../../store/store'
 import { useFilteredHistory } from '../../../custom-hooks'
+import CombinedChainAssetIcons from '../../../components/ui/CombinedChainAssetIcons'
 const {
   Filter,
   ExportIcon,
@@ -282,14 +282,9 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
                 marginBottom={'l'}
                 flexDirection={'row'}
                 alignItems={'center'}>
-                <AssetIcon
-                  size={scale(25)}
+                <CombinedChainAssetIcons
                   chain={getAsset(activeNetwork, code).chain}
-                />
-                <AssetIcon
-                  size={scale(25)}
-                  styles={{ right: scale(10) }}
-                  asset={code}
+                  code={code}
                 />
                 <Text variant={'addressLabel'} color={'greyMeta'}>
                   {shortenAddress(address)}{' '}
