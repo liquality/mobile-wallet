@@ -197,6 +197,7 @@ const SubRow: FC<SubRowProps> = (props) => {
               <Box
                 flexDirection={'row'}
                 justifyContent="space-around"
+                alignItems={'center'}
                 paddingVertical={'m'}
                 height={ROW_HEIGHT}
                 backgroundColor={
@@ -220,7 +221,7 @@ const SubRow: FC<SubRowProps> = (props) => {
                   flex={0.6}
                   flexDirection="row"
                   paddingLeft={'m'}
-                  alignItems={'flex-start'}>
+                  alignItems={'center'}>
                   <CombinedChainAssetIcons
                     chain={item.chain}
                     code={item.code}
@@ -275,7 +276,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   chevronRow: {
-    marginTop: scale(13),
     marginLeft: scale(5),
   },
 })
