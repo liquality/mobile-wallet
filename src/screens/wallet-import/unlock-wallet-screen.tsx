@@ -15,7 +15,6 @@ import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
 import { labelTranslateFn } from '../../utils'
 import { validateMnemonic } from 'bip39'
 import { Fonts } from '../../assets'
-import { useHeaderHeight } from '@react-navigation/elements'
 
 type UnlockWalletScreenProps = NativeStackScreenProps<
   LoginStackParamList,
@@ -36,8 +35,6 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
       imported: true,
     })
   }
-  const headerHeight = useHeaderHeight()
-
   const onToggleNumber = (num: 12 | 24) => {
     navigation.setOptions({
       headerTitle: num === 24 ? labelTranslateFn('unlockWalletUpperCase')! : '',
@@ -102,7 +99,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
         flex={1}
         backgroundColor="mainBackground"
         paddingHorizontal={'onboardingPadding'}>
-        <Box flex={0.75} style={{ paddingTop: headerHeight }}>
+        <Box flex={0.75}>
           {isSeedPhrase12 ? (
             <Box>
               <Text
