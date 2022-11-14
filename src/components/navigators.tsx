@@ -977,10 +977,10 @@ export const StackMainNavigator = () => {
           options={({ route }: NavigationProps) => ({
             headerShadowVisible: false,
             title: route.params.screenTitle || '',
-            headerLeft: undefined,
             headerBackVisible: false,
             headerRight: undefined,
             headerTitleStyle: HEADER_TITLE_STYLE,
+            headerLeft: StackMainNavigatorHeaderLeft,
           })}
         />
         <MainStack.Screen
