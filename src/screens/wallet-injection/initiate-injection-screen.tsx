@@ -77,12 +77,12 @@ const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
           {walletConnectData ? (
             <Image
               style={styles.imgLogo}
-              source={{ uri: walletConnectData.peerMeta.icons[0] }}
+              source={{ uri: walletConnectData?.peerMeta?.icons[0] }}
             />
           ) : null}
         </Box>
         <Text style={styles.subheadingText}>
-          {walletConnectData?.peerMeta.name}
+          {walletConnectData?.peerMeta?.name}
         </Text>
 
         <DottedArrow style={styles.dottedArrow} />
@@ -104,13 +104,13 @@ const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
         ) : null}
 
         <Text style={styles.permissionText}>
-          {shortenAddress(accountForConnectedChain.address)} | $
+          {shortenAddress(accountForConnectedChain?.address as string)} | $
           {accountForConnectedChain?.balance}
         </Text>
         <Box marginTop={'xxl'}>
           <Text style={styles.permissionText}>
             {labelTranslateFn('walletConnect.grantPermission')}
-            {walletConnectData?.peerMeta.name}{' '}
+            {walletConnectData?.peerMeta?.name}{' '}
             {labelTranslateFn('walletConnect.theyCan')}
           </Text>
         </Box>
