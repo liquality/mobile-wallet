@@ -452,7 +452,9 @@
     "connectRequest": "Connect Request",
     "account": "Account",
     "grantPermission": "By granting permission to ",
-    "theyCan": " they can read your public account addresses. Make sure you trust this site."
+    "theyCan": " they can read your public account addresses. Make sure you trust this site.",
+    "transactionRequest": "Transaction Request",
+    "isAsking": "is asking to spend your money."
   },
   "letGetYouStarted": "Let’s Get You Started",
   "buyCrypto": "BUY CRYPTO",

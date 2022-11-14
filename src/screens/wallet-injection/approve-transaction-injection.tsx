@@ -10,12 +10,15 @@ import { RootStackParamList } from '../../types'
 import { accountForAssetState, fiatRatesState, networkState } from '../../atoms'
 import { Fonts } from '../../assets'
 import { sendTransaction } from '../../store/store'
-import { getNativeAssetCode, IChain } from '@liquality/cryptoassets'
+import { ChainId, getNativeAssetCode, IChain } from '@liquality/cryptoassets'
 import { BigNumber } from '@liquality/types'
 import { FeeLabel } from '@liquality/wallet-core/dist/src/store/types'
 import { scale } from 'react-native-size-matters'
 import ReviewDrawer from '../../components/review-drawer'
-import { getChainNameByChainIdNumber } from '../../utils/others'
+import {
+  getChainNameByChainIdNumber,
+  labelTranslateFn,
+} from '../../utils/others'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 
 const { OFF_SEND_TRANSACTION } = INJECTION_REQUESTS
@@ -37,7 +40,7 @@ const ApproveTransactionInjectionScreen = ({
     accountForAssetState(
       !connectedChain
         ? 'ETH'
-        : getNativeAssetCode(activeNetwork, connectedChain[0]),
+        : getNativeAssetCode(activeNetwork, connectedChain[0] as ChainId),
     ),
   )
   const fiatRates = useRecoilValue(fiatRatesState)
@@ -53,7 +56,10 @@ const ApproveTransactionInjectionScreen = ({
   }, [activeNetwork, chainId])
 
   const send = async () => {
-    let asset = getNativeAssetCode(activeNetwork, connectedChain[0])
+    let asset
+    if (connectedChain) {
+      asset = getNativeAssetCode(activeNetwork, connectedChain[0] as ChainId)
+    } else asset = 'ETH'
 
     try {
       const hash = await sendTransaction({
@@ -108,18 +114,20 @@ const ApproveTransactionInjectionScreen = ({
         />
       ) : null}
       <Box>
-        <Text style={styles.headerText}>Transaction Request</Text>
+        <Text style={styles.headerText} tx="walletConnect.transactionRequest" />
       </Box>
       <Text style={styles.permissionText}>
-        [dApp] is asking to spend your money. [transaction type]
+        [dApp] {labelTranslateFn('walletConnect.isAsking')} [transaction type]
       </Text>
       {connectedChain ? (
         <Box flexDirection={'row'}>
           <Text style={(styles.text, styles.subheadingInfo)}>
             <Text fontWeight={'700'}>
-              SEND {getNativeAssetCode(activeNetwork, connectedChain[0])}
+              {labelTranslateFn('common.send')}{' '}
+              {getNativeAssetCode(activeNetwork, connectedChain[0] as ChainId)}
             </Text>{' '}
-            {renderBalancesAndAmounts()?.totalNativeBalance} Balance
+            {renderBalancesAndAmounts()?.totalNativeBalance}{' '}
+            {labelTranslateFn('sendScreen.balance')}
           </Text>
         </Box>
       ) : null}
