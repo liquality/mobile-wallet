@@ -184,7 +184,7 @@ export type RootStackParamList = {
   UnlockWalletScreen: StackPayload
   LoadingScreen: StackPayload
   LoginScreen: undefined
-  CongratulationsScreen: StackPayload
+  CongratulationsScreen: undefined
 }
 
 export type LoginStackParamList = {
@@ -193,7 +193,7 @@ export type LoginStackParamList = {
   UnlockWalletScreen: StackPayload
   PasswordCreationScreen: StackPayload
   LoadingScreen: StackPayload
-  CongratulationsScreen: StackPayload
+  CongratulationsScreen: undefined
 }
 
 export type MainStackParamList = {
