@@ -320,9 +320,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   ])
 
   useEffect(() => {
-    fetchFeesForAsset(swapPair.fromAsset?.code || '').then((result) =>
-      setGasFees(result),
-    )
+    fetchFeesForAsset(swapPair.fromAsset?.code || '')
+      .then((result) => {
+        setGasFees(result)
+        setCustomFee(result.average.toNumber())
+      })
+      .catch()
   }, [swapPair.fromAsset])
 
   useEffect(() => {
@@ -419,8 +422,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
         getAsset(activeNetwork, swapPair.fromAsset.code),
         fromBalance || 0,
       )
-
-      const maximumValue = amount.minus(gasFees.average)
+      const maximumValue = amount.minus(customFee)
       if (maximumValue.lte(0)) {
         setError({
           msg: labelTranslateFn('swapScreen.notEnoughLiquidityTryAgain')!,
