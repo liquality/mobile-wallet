@@ -34,7 +34,6 @@
     "@react-native-clipboard/clipboard": "^1.9.0",
     "@react-native-community/push-notification-ios": "^1.10.1",
     "@react-navigation/bottom-tabs": "^6.2.0",
-    "@react-navigation/compat": "^5.3.20",
     "@react-navigation/core": "^6.2.1",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.2",

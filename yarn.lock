@@ -3049,15 +3049,9 @@
     ethers "^5.6.9"
 
 "@lifi/types@^1.1.0":
-<<<<<<< Updated upstream
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/@lifi/types/-/types-1.12.0.tgz#ae4cf83101c6e8e410e8a901077a22963bce669e"
-  integrity sha512-qqpESVpNPn66go7w+Br53uHCESE9KaHwrT5GvOjq4GNz9EuyMlLrpVyQV8uMvQYTwV8HhzGz7pKTGdeZNcryjg==
-=======
   version "1.16.0"
   resolved "https://registry.yarnpkg.com/@lifi/types/-/types-1.16.0.tgz#d738a8f2053134d546f26598ef6bc7af3bdd17ac"
   integrity sha512-pngYZqvXtBELw9BCSgu0biAN8FO0jgjZWcIn/5QNXNB8PTKe0Y3ZdmMrY4ofXCWounC4reNSjKxnObF0/5dqNw==
->>>>>>> Stashed changes
   dependencies:
     ethers "^5.7.2"
 
@@ -3554,11 +3548,6 @@
     color "^4.2.3"
     warn-once "^0.1.0"
 
-"@react-navigation/compat@^5.3.20":
-  version "5.3.20"
-  resolved "https://registry.yarnpkg.com/@react-navigation/compat/-/compat-5.3.20.tgz#96cc6995f4bd40f70958b420735a189a87b22a0e"
-  integrity sha512-4CDw3QRN2zKj2L1Fxjq6ZOK95EW8UOnW3Par1o+P07qc+dZTAL1poKeRx74yqGLQyGVawozTHOgyE8/XWjdDvg==
-
 "@react-navigation/core@^6.2.1", "@react-navigation/core@^6.4.0":
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-6.4.0.tgz#c44d33a8d8ef010a102c7f831fc8add772678509"
@@ -3611,15 +3600,9 @@
     warn-once "^0.1.0"
 
 "@rnx-kit/dep-check@^1.12.7":
-<<<<<<< Updated upstream
-  version "1.13.3"
-  resolved "https://registry.yarnpkg.com/@rnx-kit/dep-check/-/dep-check-1.13.3.tgz#0d963b33ffd6b380037fbec34b37b727811cd43e"
-  integrity sha512-gVVCFKFNCGWxDaZGBi2t80Lr5h3kNyLBRmXhMZVd5EVaWkPdCjWzeS2P8XfBTFGZJbCgen/LK+qYVCc0JJHeGw==
-=======
   version "1.14.0"
   resolved "https://registry.yarnpkg.com/@rnx-kit/dep-check/-/dep-check-1.14.0.tgz#208f8695616179a2042c87096d9eca17db1f0a74"
   integrity sha512-NGlSI+AEYcrzmCcwjUbtrsWTp9RR16sReq7jEjKblv1o/XgmOMXA6MZ87lj6VL28EUorbBXebQnRrA8E9Hza4A==
->>>>>>> Stashed changes
 
 "@segment/loosely-validate-event@^2.0.0":
   version "2.0.0"
@@ -8869,15 +8852,9 @@ flatted@^3.1.0:
   integrity sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==
 
 flow-parser@0.*:
-<<<<<<< Updated upstream
-  version "0.191.0"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.191.0.tgz#0fe7eb4be505f443c067c47f795153bf3b87c7d7"
-  integrity sha512-/5Gv9zY+Mg58ubzzwNz4I29uYHDpBFR5F5ohyVsb+SxW2R8S4s1qCBRtgiTAsujsC6qmQlrsOn2DBlK4m7SQTQ==
-=======
   version "0.193.0"
   resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.193.0.tgz#8d705fc2d6b378a24bae189014f6f0320d040c4f"
   integrity sha512-x7ZoArE1UO3Nk2rkq/KK/Tkp714QDMVzEsxIyK2+p7Alx+88LY7KgqmeQZuiAG8TCHucmYuHefbk3KsVFVjouA==
->>>>>>> Stashed changes
 
 flow-parser@^0.121.0:
   version "0.121.0"
