@@ -6,7 +6,7 @@ import { useRecoilValue } from 'recoil'
 import { emitterController } from '../../controllers/emitterController'
 import { INJECTION_REQUESTS } from '../../controllers/constants'
 import { Box, Button, faceliftPalette, Text } from '../../theme'
-import { RootStackParamList } from '../../types'
+import { MainStackParamList } from '../../types'
 import { accountForAssetState, fiatRatesState, networkState } from '../../atoms'
 import { Fonts } from '../../assets'
 import { sendTransaction } from '../../store/store'
@@ -21,7 +21,7 @@ import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFor
 const { OFF_SEND_TRANSACTION } = INJECTION_REQUESTS
 
 type ApproveTransactionInjectionScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'ApproveTransactionInjectionScreen'
 >
 

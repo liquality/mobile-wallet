@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil'
 import { emitterController } from '../../controllers/emitterController'
 import { INJECTION_REQUESTS } from '../../controllers/constants'
 import { Box, Button, faceliftPalette, Text } from '../../theme'
-import { RootStackParamList } from '../../types'
+import { MainStackParamList } from '../../types'
 import { accountForAssetState, networkState } from '../../atoms'
 import { Fonts, AppIcons } from '../../assets'
 import { getNativeAssetCode } from '@liquality/cryptoassets'
@@ -17,7 +17,7 @@ import { getChainNameByChainIdNumber } from '../../utils/others'
 const { ON_SESSION_REQUEST, OFF_SESSION_REQUEST } = INJECTION_REQUESTS
 
 type InitInjectionScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'InitInjectionScreen'
 >
 const { DottedArrow, BlueLine } = AppIcons

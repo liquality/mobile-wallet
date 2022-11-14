@@ -26,8 +26,10 @@ import SendScreen from '../screens/wallet-features/send/send-screen'
 import CustomFeeScreen from '../screens/wallet-features/custom-fee/custom-fee-screen'
 import SendConfirmationScreen from '../screens/wallet-features/send/send-confirmation-screen'
 import {
+  LoginStackParamList,
   MainStackParamList,
   NavigationProps,
+  RootParentStackList,
   RootStackParamList,
   RootTabParamList,
   SettingStackParamList,
@@ -515,12 +517,12 @@ export const AppStackNavigator = () => {
       <MainStack.Group>
         <MainStack.Screen
           name="OverviewScreen"
+          component={OverviewScreen}
           options={{
             headerStyle: { backgroundColor },
             ...appStackScreenNavOptions(),
-          }}>
-          {(props) => OverviewScreen(props)}
-        </MainStack.Screen>
+          }}
+        />
         <MainStack.Screen
           name="CustomFeeScreen"
           component={CustomFeeScreen}
@@ -814,13 +816,8 @@ export const StackMainNavigator = () => {
   const showSearchBar = useRecoilValue(showSearchBarInputState)
 
   return (
-    <MainStack.Navigator initialRouteName="LoginScreen">
+    <MainStack.Navigator>
       <MainStack.Group>
-        <MainStack.Screen
-          name="LoginScreen"
-          component={LoginScreen}
-          options={{ ...screenNavOptions, headerTransparent: true }}
-        />
         <MainStack.Screen
           name="MainNavigator"
           component={MainNavigator}
@@ -858,58 +855,6 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="BackupSeedScreen"
           component={BackupSeedScreen}
-          options={{
-            ...screenNavOptions,
-            headerTitleStyle: HEADER_TITLE_STYLE,
-            headerStyle: { backgroundColor },
-            headerLeft: LiqLogoHeaderLeft,
-          }}
-        />
-        <MainStack.Screen
-          name="TermsScreen"
-          component={TermsScreen}
-          options={{
-            ...screenNavOptions,
-            headerStyle: { backgroundColor },
-            headerLeft: LiqLogoHeaderLeft,
-          }}
-        />
-        <MainStack.Screen
-          name="PasswordCreationScreen"
-          component={PasswordCreationScreen}
-          options={{ ...screenNavOptions, headerTransparent: true }}
-        />
-        <MainStack.Screen
-          name="SeedPhraseScreen"
-          component={SeedPhraseScreen}
-          options={{
-            ...screenNavOptions,
-            headerTitleStyle: HEADER_TITLE_STYLE,
-            headerStyle: { backgroundColor },
-            headerLeft: LiqLogoHeaderLeft,
-          }}
-        />
-        <MainStack.Screen
-          name="SeedPhraseConfirmationScreen"
-          component={SeedPhraseConfirmationScreen}
-        />
-        <MainStack.Screen
-          name="LoadingScreen"
-          component={LoadingScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <MainStack.Screen
-          name="CongratulationsScreen"
-          component={CongratulationsScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <MainStack.Screen
-          name="UnlockWalletScreen"
-          component={UnlockWalletScreen}
           options={{
             ...screenNavOptions,
             headerTitleStyle: HEADER_TITLE_STYLE,
@@ -1051,7 +996,7 @@ export const StackMainNavigator = () => {
           component={InitInjectionScreen}
           options={({ navigation, route }: NavigationProps) => ({
             ...screenNavOptions,
-            headerRight: () => WalletConnectHeader({ navigation, route }),
+            headerRight: () => WalletConnectHeader(),
             headerLeft: () => GoBackHeader({ navigation, route }),
           })}
         />
@@ -1060,7 +1005,7 @@ export const StackMainNavigator = () => {
           component={SwitchChainScreen}
           options={({ navigation, route }: NavigationProps) => ({
             ...screenNavOptions,
-            headerRight: () => WalletConnectHeader({ navigation, route }),
+            headerRight: () => WalletConnectHeader(),
             headerLeft: () => GoBackHeader({ navigation, route }),
           })}
         />
@@ -1070,7 +1015,7 @@ export const StackMainNavigator = () => {
           component={ApproveTransactionInjectionScreen}
           options={({ navigation, route }: NavigationProps) => ({
             ...screenNavOptions,
-            headerRight: () => WalletConnectHeader({ navigation, route }),
+            headerRight: () => WalletConnectHeader(),
             headerLeft: () => GoBackHeader({ navigation, route }),
           })}
         />
@@ -1084,25 +1029,6 @@ export const StackMainNavigator = () => {
             title: route?.params?.screenTitle || 'Overview',
             headerLeft: PlaceholderComp,
           })}
-        />
-        <MainStack.Screen
-          name="SwapProviderInfoDrawer"
-          component={SwapProviderInfoDrawer}
-          options={({ route }: NavigationProps) => {
-            const { isScrolledUp = false } = route.params
-            const empty = ''
-            return {
-              ...screenNavOptions,
-              headerStyle: {
-                backgroundColor: faceliftPalette.white,
-              },
-              headerTitleStyle: NORMAL_HEADER,
-              headerTitle: isScrolledUp
-                ? labelTranslateFn('swapProviders')!
-                : empty,
-              headerLeft: StackMainNavigatorHeaderLeft,
-            }
-          }}
         />
       </MainStack.Group>
       <MainStack.Group>
@@ -1130,6 +1056,26 @@ export const StackMainNavigator = () => {
               headerTitle: screenTitle,
               headerLeft: CloseButton,
               headerRight: SwapHeaderRight,
+            }
+          }}
+        />
+        <MainStack.Screen
+          name="SwapProviderInfoDrawer"
+          component={SwapProviderInfoDrawer}
+          options={({ route }: NavigationProps) => {
+            const { isScrolledUp = false } = route.params
+            const empty = ''
+            return {
+              ...screenNavOptions,
+              presentation: 'fullScreenModal',
+              headerStyle: {
+                backgroundColor: faceliftPalette.white,
+              },
+              headerTitleStyle: NORMAL_HEADER,
+              headerTitle: isScrolledUp
+                ? labelTranslateFn('swapProviders')!
+                : empty,
+              headerLeft: CloseButton,
             }
           }}
         />
@@ -1190,6 +1136,87 @@ export const StackMainNavigator = () => {
         />
       </MainStack.Group>
     </MainStack.Navigator>
+  )
+}
+
+const LoginStackCreation = createNativeStackNavigator<LoginStackParamList>()
+
+export const LoginStack = () => {
+  const theme = useRecoilValue(themeMode)
+  let currentTheme = useColorScheme() as string
+  if (theme) {
+    currentTheme = theme
+  }
+  const backgroundColor =
+    currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
+  return (
+    <LoginStackCreation.Navigator
+      screenOptions={{ ...screenNavOptions, headerTransparent: true }}>
+      <LoginStackCreation.Screen component={LoginScreen} name={'LoginScreen'} />
+      <LoginStackCreation.Screen
+        name="TermsScreen"
+        component={TermsScreen}
+        options={{
+          ...screenNavOptions,
+          headerStyle: { backgroundColor },
+          headerLeft: LiqLogoHeaderLeft,
+        }}
+      />
+      <LoginStackCreation.Screen
+        name="UnlockWalletScreen"
+        component={UnlockWalletScreen}
+        options={{
+          ...screenNavOptions,
+          headerTitleStyle: HEADER_TITLE_STYLE,
+          headerStyle: { backgroundColor },
+          headerLeft: LiqLogoHeaderLeft,
+        }}
+      />
+      <LoginStackCreation.Screen
+        name="PasswordCreationScreen"
+        component={PasswordCreationScreen}
+        options={{ ...screenNavOptions, headerTransparent: true }}
+      />
+      <LoginStackCreation.Screen
+        name="LoadingScreen"
+        component={LoadingScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <LoginStackCreation.Screen
+        name="CongratulationsScreen"
+        component={CongratulationsScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </LoginStackCreation.Navigator>
+  )
+}
+const ParentStackCreation = createNativeStackNavigator<RootParentStackList>()
+
+export const ParentStack = ({
+  initialRouteName,
+}: {
+  initialRouteName: keyof RootParentStackList
+}) => {
+  return (
+    <ParentStackCreation.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      initialRouteName={initialRouteName}>
+      <ParentStackCreation.Screen
+        component={WalletCreationNavigator}
+        name={'WalletCreationNavigator'}
+      />
+      <ParentStackCreation.Screen
+        component={StackMainNavigator}
+        name={'StackMainNavigator'}
+      />
+      <ParentStackCreation.Screen component={LoginStack} name={'LoginStack'} />
+    </ParentStackCreation.Navigator>
   )
 }
 

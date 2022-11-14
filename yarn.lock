@@ -3553,11 +3553,6 @@
     color "^4.2.3"
     warn-once "^0.1.0"
 
-"@react-navigation/compat@^5.3.20":
-  version "5.3.20"
-  resolved "https://registry.yarnpkg.com/@react-navigation/compat/-/compat-5.3.20.tgz#96cc6995f4bd40f70958b420735a189a87b22a0e"
-  integrity sha512-4CDw3QRN2zKj2L1Fxjq6ZOK95EW8UOnW3Par1o+P07qc+dZTAL1poKeRx74yqGLQyGVawozTHOgyE8/XWjdDvg==
-
 "@react-navigation/core@^6.2.1", "@react-navigation/core@^6.4.0":
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-6.4.0.tgz#c44d33a8d8ef010a102c7f831fc8add772678509"
@@ -4607,9 +4602,9 @@
   integrity sha512-Cn+3I0V0vT9ghMuzh1KzZvCkiAxTq+1TR2eSqw5E5AVWfmCtECFkVZBP6uUJZ8YjwLqXheI+rnjqPy7sVM4Fyg==
 
 "@walletconnect/types@^2.1.1":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-2.1.2.tgz#46ddc07596b1d223eebe161f5d730d3b10e5f071"
-  integrity sha512-VwwoOf7LkjaRZE6dz4o53WUQ6BidbV/VNjYtJveAUGmRsfb5Wss+Yfva+d+cgTts5nMUpP0YCoo4xeklFRvT0w==
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-2.1.3.tgz#a225b860cdf166e9453849b2d01e5b48f1ecb065"
+  integrity sha512-HItCM50xzMclFIpEsNX6WxMsZCKK+gUmInodTmuSJhJEy4Dc3/77bHJu3TSv/Ql4eNDcDFQ7GAIuXhn2rBGaHw==
   dependencies:
     "@walletconnect/events" "1.0.0"
     "@walletconnect/heartbeat" "1.0.0"

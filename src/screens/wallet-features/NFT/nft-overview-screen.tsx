@@ -15,13 +15,13 @@ import { themeMode } from '../../../atoms'
 
 import { Text, Box, faceliftPalette } from '../../../theme'
 import { showCopyToast } from '../../../theme/toastConfig'
-import { RootStackParamList } from '../../../types'
+import { MainStackParamList } from '../../../types'
 import { checkIfCollectionNameExists, labelTranslateFn } from '../../../utils'
 
 const { NftCard, AngleDownIcon, AngleUpIcon, Line, PurpleCopy } = AppIcons
 
 type NftOverviewScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'NftOverviewScreen'
 >
 

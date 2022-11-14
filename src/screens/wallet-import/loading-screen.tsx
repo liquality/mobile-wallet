@@ -16,6 +16,7 @@ import { getAsset, getChain } from '@liquality/cryptoassets'
 import { Alert } from 'react-native'
 import { labelTranslateFn } from '../../utils'
 import { Network } from '@liquality/cryptoassets/dist/src/types'
+import { CommonActions } from '@react-navigation/native'
 
 type LoadingScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -90,7 +91,13 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
             Alert.alert(labelTranslateFn('loadingScreen.failedImport')!)
             return
           }
-          navigation.navigate('CongratulationsScreen', { screenTitle: '' })
+          // to avoid back from congratulation screen
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'CongratulationsScreen' }],
+            }),
+          )
         }
       },
     )
