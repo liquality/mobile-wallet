@@ -14,6 +14,52 @@ import {
 import { Asset } from '@liquality/wallet-core/dist/src/store/types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
+export interface IClientMeta {
+  description: string
+  url: string
+  icons: string[]
+  name: string
+}
+
+export interface IWalletConnectSession {
+  connected: boolean
+  accounts: string[]
+  chainId: number
+  bridge: string
+  key: string
+  clientId: string
+  clientMeta: IClientMeta | null
+  peerId: string
+  peerMeta: IClientMeta | null
+  handshakeId: number
+  handshakeTopic: string
+}
+
+export interface ISessionParams {
+  approved: boolean
+  chainId: number | null
+  networkId: number | null
+  accounts: string[] | null
+  rpcUrl?: string | null
+  peerId?: string | null
+  peerMeta?: IClientMeta | null
+}
+
+export interface ICallTxData {
+  type?: string
+  to?: string
+  value?: number | string
+  gas?: number | string
+  gasLimit?: number | string
+  gasPrice?: number | string
+  nonce?: number | string
+  data?: string
+}
+
+export interface ITxData extends ICallTxData {
+  from: string
+}
+
 export interface AccountType {
   id: string
   name: string
@@ -121,6 +167,8 @@ export type StackPayload = {
   showProvideIcon?: boolean
   assetsAreSameChain?: boolean
   specificAsset?: string
+  chainId: number
+  walletConnectData: ICallTxData
 }
 
 export type SettingStackParamList = {

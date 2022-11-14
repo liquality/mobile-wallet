@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil'
 import { emitterController } from '../../controllers/emitterController'
 import { INJECTION_REQUESTS } from '../../controllers/constants'
 import { Box, Button, faceliftPalette, Text } from '../../theme'
-import { MainStackParamList } from '../../types'
+import { ISessionParams, MainStackParamList } from '../../types'
 import { accountForAssetState, networkState } from '../../atoms'
 import { Fonts, AppIcons } from '../../assets'
 import { getNativeAssetCode } from '@liquality/cryptoassets'
@@ -13,19 +13,23 @@ import AssetIcon from '../../components/asset-icon'
 import { scale } from 'react-native-size-matters'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { ScrollView } from 'react-native-gesture-handler'
-import { getChainNameByChainIdNumber } from '../../utils/others'
+import {
+  getChainNameByChainIdNumber,
+  labelTranslateFn,
+} from '../../utils/others'
 const { ON_SESSION_REQUEST, OFF_SESSION_REQUEST } = INJECTION_REQUESTS
 
 type InitInjectionScreenProps = NativeStackScreenProps<
   MainStackParamList,
   'InitInjectionScreen'
 >
+
 const { DottedArrow, BlueLine } = AppIcons
 
 const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
 
-  const [data, setData] = useState()
+  const [walletConnectData, setWalletConnectData] = useState<ISessionParams>()
   const [connectedChain, setConnectedChain] = useState([])
   //TODO, if WalletConnect supports solana and not only EVM soon
   //we need to get the asset code from something like this: getNativeAssetCode(activeNetwork, chainConnected[0]) instead of 'ETH'
@@ -33,18 +37,20 @@ const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
   const accountForConnectedChain = useRecoilValue(accountForAssetState('ETH'))
   useEffect(() => {
     async function fetchData() {
-      emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
+      emitterController.on(ON_SESSION_REQUEST, ({ params }: any) => {
         const [data] = params
-        setData(data)
+        setWalletConnectData(data)
       })
 
-      if (data) {
-        let chainConnected = await getChainNameByChainIdNumber(data.chainId)
+      if (walletConnectData) {
+        let chainConnected = await getChainNameByChainIdNumber(
+          walletConnectData.chainId as number,
+        )
         setConnectedChain(chainConnected)
       }
     }
     fetchData()
-  }, [activeNetwork, data])
+  }, [activeNetwork, walletConnectData])
 
   const connect = () => {
     emitterController.emit(OFF_SESSION_REQUEST, [
@@ -66,16 +72,18 @@ const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
         paddingHorizontal={'screenPadding'}
         justifyContent={'center'}
         alignItems={'center'}>
-        <Text style={styles.headerText}>Connect Request</Text>
+        <Text style={styles.headerText} tx="walletConnect.connectRequest" />
         <Box marginBottom={'m'}>
-          {data ? (
+          {walletConnectData ? (
             <Image
               style={styles.imgLogo}
-              source={{ uri: data.peerMeta.icons[0] }}
+              source={{ uri: walletConnectData?.peerMeta?.icons[0] }}
             />
           ) : null}
         </Box>
-        <Text style={styles.subheadingText}>{data?.peerMeta.name}</Text>
+        <Text style={styles.subheadingText}>
+          {walletConnectData?.peerMeta?.name}
+        </Text>
 
         <DottedArrow style={styles.dottedArrow} />
 
@@ -90,18 +98,20 @@ const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
         <BlueLine style={styles.blueLine} />
         {connectedChain[0] ? (
           <Text style={styles.subheadingText}>
-            {getNativeAssetCode(activeNetwork, connectedChain[0])} Account
+            {getNativeAssetCode(activeNetwork, connectedChain[0])}{' '}
+            {labelTranslateFn('walletConnect.account')}
           </Text>
         ) : null}
 
         <Text style={styles.permissionText}>
-          {shortenAddress(accountForConnectedChain.address)} | $
+          {shortenAddress(accountForConnectedChain?.address as string)} | $
           {accountForConnectedChain?.balance}
         </Text>
         <Box marginTop={'xxl'}>
           <Text style={styles.permissionText}>
-            By granting permission to {data?.peerMeta.name} they can read your
-            public account addresses. Make sure you trust this site.
+            {labelTranslateFn('walletConnect.grantPermission')}
+            {walletConnectData?.peerMeta?.name}{' '}
+            {labelTranslateFn('walletConnect.theyCan')}
           </Text>
         </Box>
 
