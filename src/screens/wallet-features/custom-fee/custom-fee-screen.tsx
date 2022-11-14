@@ -9,7 +9,7 @@ import {
 import { FeeDetails } from '@liquality/types/lib/fees'
 import AssetIcon from '../../../components/asset-icon'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList, TotalFees } from '../../../types'
+import { MainStackParamList, TotalFees } from '../../../types'
 import { Box, Text, Button, palette } from '../../../theme'
 import Preset from './preset'
 import { useRecoilValue } from 'recoil'
@@ -39,7 +39,7 @@ const scrollViewStyle: ViewStyle = {
 }
 
 type CustomFeeScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'CustomFeeScreen'
 >
 type SpeedMode = keyof FeeDetails

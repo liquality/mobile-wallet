@@ -517,12 +517,12 @@ export const AppStackNavigator = () => {
       <MainStack.Group>
         <MainStack.Screen
           name="OverviewScreen"
+          component={OverviewScreen}
           options={{
             headerStyle: { backgroundColor },
             ...appStackScreenNavOptions(),
-          }}>
-          {(props) => OverviewScreen(props)}
-        </MainStack.Screen>
+          }}
+        />
         <MainStack.Screen
           name="CustomFeeScreen"
           component={CustomFeeScreen}
