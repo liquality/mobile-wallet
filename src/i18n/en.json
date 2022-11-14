@@ -447,7 +447,11 @@
     "speedFee": "Network/Speed Fee"
   },
   "walletConnect": {
-    "connect": "Connect"
+    "connect": "Connect",
+    "connectRequest": "Connect Request",
+    "account": "Account",
+    "grantPermission": "By granting permission to ",
+    "theyCan": " they can read your public account addresses. Make sure you trust this site."
   },
   "letGetYouStarted": "Let’s Get You Started",
   "buyCrypto": "BUY CRYPTO",

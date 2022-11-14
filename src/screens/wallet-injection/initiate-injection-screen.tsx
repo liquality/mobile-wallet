@@ -13,7 +13,10 @@ import AssetIcon from '../../components/asset-icon'
 import { scale } from 'react-native-size-matters'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { ScrollView } from 'react-native-gesture-handler'
-import { getChainNameByChainIdNumber } from '../../utils/others'
+import {
+  getChainNameByChainIdNumber,
+  labelTranslateFn,
+} from '../../utils/others'
 const { ON_SESSION_REQUEST, OFF_SESSION_REQUEST } = INJECTION_REQUESTS
 
 type InitInjectionScreenProps = NativeStackScreenProps<
@@ -66,7 +69,7 @@ const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
         paddingHorizontal={'screenPadding'}
         justifyContent={'center'}
         alignItems={'center'}>
-        <Text style={styles.headerText}>Connect Request</Text>
+        <Text style={styles.headerText} tx="walletConnect.connectRequest" />
         <Box marginBottom={'m'}>
           {data ? (
             <Image
@@ -90,7 +93,8 @@ const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
         <BlueLine style={styles.blueLine} />
         {connectedChain[0] ? (
           <Text style={styles.subheadingText}>
-            {getNativeAssetCode(activeNetwork, connectedChain[0])} Account
+            {getNativeAssetCode(activeNetwork, connectedChain[0])}{' '}
+            {labelTranslateFn('walletConnect.account')}
           </Text>
         ) : null}
 
@@ -100,8 +104,8 @@ const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
         </Text>
         <Box marginTop={'xxl'}>
           <Text style={styles.permissionText}>
-            By granting permission to {data?.peerMeta.name} they can read your
-            public account addresses. Make sure you trust this site.
+            {labelTranslateFn('walletConnect.grantPermission')}
+            {data?.peerMeta.name} {labelTranslateFn('walletConnect.theyCan')}
           </Text>
         </Box>
 
