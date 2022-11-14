@@ -1,20 +1,25 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import { Alert, FlatList, StyleSheet } from 'react-native'
 import { getAllAssets, getAsset } from '@liquality/cryptoassets'
 import AssetIcon from './asset-icon'
 import SearchBox from './ui/search-box'
-import { useRecoilValue, useRecoilState } from 'recoil'
-import { networkState, showSearchBarInputState } from '../atoms'
-import { Box, faceliftPalette, Text } from '../theme'
+import { useRecoilValue } from 'recoil'
+import { networkState } from '../atoms'
+import { Box, faceliftPalette, HEADER_TITLE_STYLE, Text } from '../theme'
 import { scale } from 'react-native-size-matters'
 import { Asset, ChainId } from '@chainify/types'
 import GasModal from '../screens/wallet-features/asset/gas-modal'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler'
 import AssetRow from './asset-row'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { SCREEN_HEIGHT } from '../utils'
+import { AppIcons } from '../assets'
 
 const horizontalContentHeight = 60
+const { ChevronLeft } = AppIcons
 
 type IconAsset = {
   code: string
@@ -48,21 +53,17 @@ const EmptyComponent = () => {
   )
 }
 
-const AssetManagement = ({
-  enabledAssets,
-  accounts,
-  selectedAsset,
-}: AssetManagementProps) => {
+const AssetManagement: FC<AssetManagementProps> = (props) => {
+  const { enabledAssets, accounts, selectedAsset, onClose } = props
   const [data, setData] = useState<IconAsset[]>([])
   const [assets, setAssets] = useState<CustomAsset[]>([])
   const [mainAssets, setMainAssets] = useState<CustomAsset[]>([])
   const [chainAssets, setChainAssets] = useState<CustomAsset[]>([])
   const [chainCode, setChainCode] = useState(selectedAsset || 'ALL')
   const activeNetwork = useRecoilValue(networkState)
-  const [showSearchBox, setShowSearchBox] = useRecoilState(
-    showSearchBarInputState,
-  )
+  const [showSearchBox, setShowSearchBox] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
+  const { BuyCryptoCloseDark, SearchIcon } = AppIcons
 
   const showModal = () => {
     setModalVisible(true)
@@ -86,7 +87,6 @@ const AssetManagement = ({
       // unmount and reset search input box
       setShowSearchBox(false)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -197,12 +197,49 @@ const AssetManagement = ({
       backgroundColor={'mainBackground'}
       paddingHorizontal="screenPadding">
       {showSearchBox ? (
-        <SearchBox
-          mainItems={chainAssets}
-          items={assets}
-          updateData={setAssets}
-        />
-      ) : null}
+        <Box
+          flexDirection={'row'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
+          height={scale(50)}>
+          <SearchBox
+            mainItems={chainAssets}
+            items={assets}
+            updateData={setAssets}
+          />
+          <TouchableWithoutFeedback onPress={() => setShowSearchBox(false)}>
+            <BuyCryptoCloseDark
+              fill={'#646F85'}
+              width={scale(15)}
+              height={scale(15)}
+            />
+          </TouchableWithoutFeedback>
+        </Box>
+      ) : (
+        <Box
+          flexDirection={'row'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
+          height={scale(50)}>
+          <TouchableWithoutFeedback onPress={onClose}>
+            <ChevronLeft width={scale(10)} height={scale(10)} />
+          </TouchableWithoutFeedback>
+          <Text
+            style={[
+              HEADER_TITLE_STYLE,
+              { lineHeight: scale(1.6 * 16), height: scale(1.3 * 16) },
+            ]}
+            tx="manageAssets"
+          />
+          <Box paddingHorizontal={'s'} paddingVertical="m">
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => setShowSearchBox(true)}>
+              <SearchIcon width={scale(15)} height={scale(15)} />
+            </TouchableOpacity>
+          </Box>
+        </Box>
+      )}
       <Box
         width={'100%'}
         marginTop={'l'}

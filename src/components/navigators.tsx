@@ -107,7 +107,6 @@ const {
   TabNFTInactive,
   TabSettingInactive,
   TabWalletInactive,
-  SearchIcon,
   BuyCryptoCloseDark,
   Connect,
   ConnectSolid,
@@ -342,26 +341,6 @@ const ActivityFilterScreenHeaderRight = () => {
         <ExportIcon width={scale(25)} />
       </Box>
     </TouchableOpacity>
-  )
-}
-
-const ManageScreenHeaderRight = () => {
-  const [showSearch, setShowSearchBar] = useRecoilState(showSearchBarInputState)
-
-  const setNavigationOpt = () => {
-    setShowSearchBar((prev) => !prev)
-  }
-
-  return (
-    <Box paddingHorizontal={'s'} paddingVertical="m">
-      <TouchableOpacity activeOpacity={0.7} onPress={setNavigationOpt}>
-        {showSearch ? (
-          <BuyCryptoCloseDark width={scale(15)} height={scale(15)} />
-        ) : (
-          <SearchIcon width={scale(15)} height={scale(15)} />
-        )}
-      </TouchableOpacity>
-    </Box>
   )
 }
 
@@ -878,16 +857,13 @@ export const StackMainNavigator = () => {
         <MainStack.Screen
           name="AssetManagementScreen"
           component={AssetManagementScreen}
-          options={({ navigation, route }: NavigationProps) => ({
+          options={() => ({
             headerBackVisible: false,
             title: showSearchBar ? '' : labelTranslateFn('manageAssetsCaps')!,
             headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
             headerShadowVisible: false,
-            headerRight: ManageScreenHeaderRight,
-            headerLeft: showSearchBar
-              ? undefined
-              : () => ManageScreenHeaderLeft({ navigation, route }),
+            headerShown: false,
           })}
         />
         <MainStack.Screen
