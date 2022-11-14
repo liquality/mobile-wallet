@@ -1151,8 +1151,14 @@ export const LoginStack = () => {
     currentTheme === 'dark' ? faceliftPalette.darkGrey : faceliftPalette.white
   return (
     <LoginStackCreation.Navigator
-      screenOptions={{ ...screenNavOptions, headerTransparent: true }}>
-      <LoginStackCreation.Screen component={LoginScreen} name={'LoginScreen'} />
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <LoginStackCreation.Screen
+        component={LoginScreen}
+        name={'LoginScreen'}
+        options={{ ...screenNavOptions, headerTransparent: true }}
+      />
       <LoginStackCreation.Screen
         name="TermsScreen"
         component={TermsScreen}
