@@ -379,7 +379,7 @@ const AppStackHeaderRight = (navProps: NavigationProps) => {
 
   //To check if there is a session connected or not
   useEffect(() => {
-    emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
+    emitterController.on(ON_SESSION_REQUEST, ({ params }: any) => {
       const [data] = params
       setWalletConnectData(data)
     })
@@ -442,7 +442,7 @@ const WalletConnectHeader = () => {
   const [, setShowQRScanner] = useState(false)
   //To check if there is a session connected or not
   useEffect(() => {
-    emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
+    emitterController.on(ON_SESSION_REQUEST, ({ params }: any) => {
       const [data] = params
       setWalletConnectData(data)
     })
