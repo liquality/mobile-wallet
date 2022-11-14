@@ -43,20 +43,14 @@ const SearchBox = <T extends { code: string; name: string; items?: T[] }>(
   )
 
   return (
-    <Box
-      flexDirection={'row'}
-      alignItems="center"
-      height={scale(46)}
-      width={'100%'}>
-      <TouchableOpacity
-        style={{ paddingTop: scale(5) }}
-        activeOpacity={0.7}
-        onPress={navigation.goBack}>
-        <ChevronLeft width={scale(15)} height={scale(15)} />
+    <Box flexDirection={'row'} alignItems="center" width={'100%'}>
+      <TouchableOpacity activeOpacity={0.7} onPress={navigation.goBack}>
+        <ChevronLeft width={scale(10)} height={scale(10)} />
       </TouchableOpacity>
       <Box marginLeft={'m'} width={'95%'}>
         <TextInput
           variant={'searchBoxInput'}
+          style={{ height: scale(1.3 * 16), lineHeight: scale(16) }}
           placeholderTx="searchAsset"
           onChangeText={(text) => filterItems(text)}
           autoFocus={true}
