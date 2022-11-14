@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { getAsset, unitToCurrency } from '@liquality/cryptoassets'
-import AssetIcon from './asset-icon'
 import Switch from './ui/switch'
 import { useRecoilValue } from 'recoil'
-import { balanceStateFamily, fiatRatesState, networkState } from '../atoms'
+import {
+  accountInfoStateFamily,
+  balanceStateFamily,
+  fiatRatesState,
+  networkState,
+} from '../atoms'
 import { Box, Text } from '../theme'
 import { Asset, BigNumber } from '@chainify/types'
 import {
@@ -11,6 +15,7 @@ import {
   formatFiat,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { getNativeAsset } from '@liquality/wallet-core/dist/src/utils/asset'
+import CombinedChainAssetIcons from './ui/CombinedChainAssetIcons'
 
 interface CustomAsset extends Asset {
   id: string
@@ -24,7 +29,9 @@ const AssetRow = ({
   assetItems: CustomAsset
   showModal: () => void
 }) => {
-  const { name, code, chain, id } = assetItems
+  const { code, chain, id } = assetItems
+  const accountInfo = useRecoilValue(accountInfoStateFamily(id))
+  const { name } = accountInfo
   const [prettyFiatBalance, setPrettyFiatBalance] = useState('0')
   const activeNetwork = useRecoilValue(networkState)
   const fiatRates = useRecoilValue(fiatRatesState)
@@ -50,7 +57,7 @@ const AssetRow = ({
 
   return (
     <Box flexDirection={'row'} alignItems="center" marginTop={'xl'}>
-      <AssetIcon chain={chain} asset={code} />
+      <CombinedChainAssetIcons chain={chain} code={code} />
       <Box flex={1} marginLeft="m">
         <Text variant={'listText'} color="darkGrey">
           {name} ({code})
