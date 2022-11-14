@@ -280,9 +280,9 @@ const SwapCheckHeaderRight = (navProps: NavigationProps) => {
 }
 
 const AppStackHeaderLeft = (navProps: NavigationProps) => {
-  const { navigation } = navProps
+  const { navigation, route } = navProps
 
-  const canGoBack = navigation.canGoBack()
+  const canGoBack = route.name !== 'OverviewScreen' && navigation.canGoBack()
 
   return (
     <Box flexDirection={'row'} alignItems="center">
@@ -922,10 +922,10 @@ export const StackMainNavigator = () => {
           options={({ route }: NavigationProps) => ({
             headerShadowVisible: false,
             title: route.params.screenTitle || '',
-            headerLeft: undefined,
             headerBackVisible: false,
             headerRight: undefined,
             headerTitleStyle: HEADER_TITLE_STYLE,
+            headerLeft: StackMainNavigatorHeaderLeft,
           })}
         />
         <MainStack.Screen
