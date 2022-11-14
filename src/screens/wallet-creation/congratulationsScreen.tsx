@@ -22,7 +22,8 @@ const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
         }),
       )
     }, 3000)
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Box flex={1} justifyContent={'space-between'} paddingVertical={'xl'}>
