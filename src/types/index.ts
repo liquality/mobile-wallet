@@ -130,26 +130,25 @@ export type SettingStackParamList = {
 export type RootStackParamList = {
   Entry: undefined
   TermsScreen: StackPayload
-  PasswordCreationScreen: StackPayload
   SeedPhraseScreen: StackPayload
   SeedPhraseConfirmationScreen: StackPayload
-  CongratulationsScreen: StackPayload
+  PasswordCreationScreen: StackPayload
   UnlockWalletScreen: StackPayload
-  LoginScreen: undefined
   LoadingScreen: StackPayload
-  BackupWarningScreen: StackPayload
-  SelectChainScreen: undefined
+  LoginScreen: undefined
+  CongratulationsScreen: StackPayload
+}
+
+export type LoginStackParamList = {
+  LoginScreen: undefined
+  TermsScreen: StackPayload
+  UnlockWalletScreen: StackPayload
+  PasswordCreationScreen: StackPayload
+  LoadingScreen: StackPayload
+  CongratulationsScreen: StackPayload
 }
 
 export type MainStackParamList = {
-  TermsScreen: StackPayload
-  PasswordCreationScreen: StackPayload
-  SeedPhraseScreen: StackPayload
-  SeedPhraseConfirmationScreen: StackPayload
-  CongratulationsScreen: StackPayload
-  UnlockWalletScreen: StackPayload
-  LoginScreen: undefined
-  LoadingScreen: StackPayload
   OverviewScreen: StackPayload
   AssetChooserScreen: StackPayload
   AssetScreen: StackPayload
@@ -199,12 +198,22 @@ export type MainStackParamList = {
   AccountManagementScreen: StackPayload
   SwapProviderInfoDrawer: StackPayload
   AccountDetailScreen: StackPayload
+  InitInjectionScreen: StackPayload
+  SwitchChainScreen: StackPayload
+  ApproveTransactionInjectionScreen: StackPayload
+  NftOverviewScreen: StackPayload
 }
 
 export type RootTabParamList = {
   AppStackNavigator: undefined
   SettingsScreen: { shouldLogOut?: boolean }
   ShowAllNftsScreen: undefined
+}
+
+export type RootParentStackList = {
+  WalletCreationNavigator: undefined
+  StackMainNavigator: undefined
+  LoginStack: undefined
 }
 
 export interface UseInputStateReturnType<T> {
@@ -357,8 +366,10 @@ export type NavigationProps = NativeStackScreenProps<
   | 'SwapScreen'
   | 'SwapProviderModal'
   | 'ActivityFilterScreen'
-  | 'CongratulationsScreen'
   | 'AccountManagementScreen'
   | 'SwapProviderInfoDrawer'
   | 'AccountDetailScreen'
+  | 'InitInjectionScreen'
+  | 'SwitchChainScreen'
+  | 'ApproveTransactionInjectionScreen'
 >

@@ -5,6 +5,7 @@ import { RootStackParamList } from '../../types'
 import Confetti from '../../components/confetti'
 import { Box, Text } from '../../theme'
 import GradientBackground from '../../components/gradient-background'
+import { CommonActions } from '@react-navigation/native'
 
 type CongratulationsProps = NativeStackScreenProps<
   RootStackParamList,
@@ -14,7 +15,12 @@ type CongratulationsProps = NativeStackScreenProps<
 const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.popToTop()
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'StackMainNavigator' }],
+        }),
+      )
     }, 3000)
   })
 

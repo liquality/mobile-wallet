@@ -91,14 +91,11 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
             Alert.alert(labelTranslateFn('loadingScreen.failedImport')!)
             return
           }
-          // navigation.navigate('CongratulationsScreen', { screenTitle: '' })
+          // to avoid back from congratulation screen
           navigation.dispatch(
             CommonActions.reset({
-              index: 1,
-              routes: [
-                { name: 'MainNavigator' },
-                { name: 'CongratulationsScreen' },
-              ],
+              index: 0,
+              routes: [{ name: 'CongratulationsScreen' }],
             }),
           )
         }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FlatList, TouchableWithoutFeedback } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../types'
+import { LoginStackParamList } from '../../types'
 import {
   Box,
   Text,
@@ -17,7 +17,7 @@ import { validateMnemonic } from 'bip39'
 import { Fonts } from '../../assets'
 
 type UnlockWalletScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  LoginStackParamList,
   'UnlockWalletScreen'
 >
 

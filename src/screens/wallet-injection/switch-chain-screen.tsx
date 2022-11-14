@@ -6,14 +6,14 @@ import { emitterController } from '../../controllers/emitterController'
 import { INJECTION_REQUESTS } from '../../controllers/constants'
 import ButtonFooter from '../../components/button-footer'
 import { Box, Button, faceliftPalette, Text } from '../../theme'
-import { RootStackParamList } from '../../types'
+import { MainStackParamList } from '../../types'
 import { accountForAssetState } from '../../atoms'
 import { Fonts } from '../../assets'
 
 const { OFF_SWITCH_CHAIN } = INJECTION_REQUESTS
 
 type SwitchChainScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'SwitchChainScreen'
 >
 
