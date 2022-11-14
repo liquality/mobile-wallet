@@ -91,7 +91,7 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
             return
           }
 
-          navigation.navigate('CongratulationsScreen', {})
+          navigation.navigate('CongratulationsScreen')
         }
       },
     )
