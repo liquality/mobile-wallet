@@ -103,7 +103,11 @@ const extractSpecificIcon = {
     assetName: ETHIcon,
     viewBoxValue: '',
   },
-  OP: {
+  OPTETH: {
+    assetName: OptimismIcon,
+    viewBoxValue: '',
+  },
+  OPTUSC: {
     assetName: OptimismIcon,
     viewBoxValue: '',
   },

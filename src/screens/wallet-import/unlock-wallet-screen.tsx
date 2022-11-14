@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FlatList, TouchableWithoutFeedback } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../types'
+import { LoginStackParamList } from '../../types'
 import {
   Box,
   Text,
@@ -15,9 +15,10 @@ import { KeyboardAvoidingView } from '../../components/keyboard-avoid-view'
 import { labelTranslateFn } from '../../utils'
 import { validateMnemonic } from 'bip39'
 import { Fonts } from '../../assets'
+import { useHeaderHeight } from '@react-navigation/elements'
 
 type UnlockWalletScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  LoginStackParamList,
   'UnlockWalletScreen'
 >
 
@@ -35,6 +36,7 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
       imported: true,
     })
   }
+  const headerHeight = useHeaderHeight()
 
   const onToggleNumber = (num: 12 | 24) => {
     navigation.setOptions({
@@ -95,16 +97,16 @@ const UnlockWalletScreen = ({ navigation }: UnlockWalletScreenProps) => {
   }
 
   return (
-    <KeyboardAvoidingView>
+    <KeyboardAvoidingView behavior={isSeedPhrase12 ? 'position' : 'padding'}>
       <Box
         flex={1}
         backgroundColor="mainBackground"
         paddingHorizontal={'onboardingPadding'}>
-        <Box flex={0.75}>
+        <Box flex={0.75} style={{ paddingTop: headerHeight }}>
           {isSeedPhrase12 ? (
-            <Box marginTop={'xl'}>
+            <Box>
               <Text
-                style={{ height: scale(39) }}
+                style={{ height: scale(45) }}
                 variant="h1"
                 tx="unlockWalletScreen.unlock"
               />

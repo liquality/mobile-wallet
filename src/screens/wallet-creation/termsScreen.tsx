@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { ScrollView, useColorScheme, View } from 'react-native'
-import { RootStackParamList } from '../../types'
+import { LoginStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Box, faceliftPalette, Text, Pressable } from '../../theme'
 import { scale, ScaledSheet } from 'react-native-size-matters'
@@ -25,7 +25,7 @@ const darkGradient = [
   faceliftPalette.darkGrey,
 ]
 
-type TermsProps = NativeStackScreenProps<RootStackParamList, 'TermsScreen'>
+type TermsProps = NativeStackScreenProps<LoginStackParamList, 'TermsScreen'>
 
 const TermsScreen = ({ navigation, route }: TermsProps) => {
   const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)

@@ -18,7 +18,7 @@ const CongratulationsScreen = ({ navigation }: CongratulationsProps) => {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: 'MainNavigator' }],
+          routes: [{ name: 'StackMainNavigator' }],
         }),
       )
     }, 3000)

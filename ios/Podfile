@@ -58,6 +58,9 @@ target 'Liquality' do
       target.build_configurations.each do |config|
         config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = "arm64"
       end
+      if target.name == "React-Core-AccessibilityResources"
+        target.remove_from_project
+      end
     end
   end
 end
