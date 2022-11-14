@@ -56,17 +56,20 @@ const HandleLockWalletAndBackgroundTasks = ({}) => {
 
   /* START OF WALLET CONNECT EVENTS LISTENING */
   useEffect(() => {
-    emitterController.once(ON_SEND_TRANSACTION, async ({ params, chainId }) => {
-      const [data] = params
-      navigation.navigate('ApproveTransactionInjectionScreen', {
-        chainId,
-        walletConnectData: { ...data },
-      })
-    })
+    emitterController.once(
+      ON_SEND_TRANSACTION,
+      async ({ params, chainId }: any) => {
+        const [data] = params
+        navigation.navigate('ApproveTransactionInjectionScreen', {
+          chainId,
+          walletConnectData: { ...data },
+        })
+      },
+    )
   }, [navigation])
 
   useEffect(() => {
-    emitterController.on(ON_SWITCH_CHAIN, ({ params }) => {
+    emitterController.on(ON_SWITCH_CHAIN, ({ params }: any) => {
       const [data] = params
       navigation.navigate('SwitchChainScreen', {
         walletConnectData: { ...data },

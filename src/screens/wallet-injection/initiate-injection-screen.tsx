@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil'
 import { emitterController } from '../../controllers/emitterController'
 import { INJECTION_REQUESTS } from '../../controllers/constants'
 import { Box, Button, faceliftPalette, Text } from '../../theme'
-import { RootStackParamList } from '../../types'
+import { ISessionParams, MainStackParamList } from '../../types'
 import { accountForAssetState, networkState } from '../../atoms'
 import { Fonts, AppIcons } from '../../assets'
 import { getNativeAssetCode } from '@liquality/cryptoassets'
@@ -20,15 +20,16 @@ import {
 const { ON_SESSION_REQUEST, OFF_SESSION_REQUEST } = INJECTION_REQUESTS
 
 type InitInjectionScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  MainStackParamList,
   'InitInjectionScreen'
 >
+
 const { DottedArrow, BlueLine } = AppIcons
 
 const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
 
-  const [data, setData] = useState()
+  const [walletConnectData, setWalletConnectData] = useState<ISessionParams>()
   const [connectedChain, setConnectedChain] = useState([])
   //TODO, if WalletConnect supports solana and not only EVM soon
   //we need to get the asset code from something like this: getNativeAssetCode(activeNetwork, chainConnected[0]) instead of 'ETH'
@@ -36,18 +37,20 @@ const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
   const accountForConnectedChain = useRecoilValue(accountForAssetState('ETH'))
   useEffect(() => {
     async function fetchData() {
-      emitterController.on(ON_SESSION_REQUEST, ({ params }) => {
+      emitterController.on(ON_SESSION_REQUEST, ({ params }: any) => {
         const [data] = params
-        setData(data)
+        setWalletConnectData(data)
       })
 
-      if (data) {
-        let chainConnected = await getChainNameByChainIdNumber(data.chainId)
+      if (walletConnectData) {
+        let chainConnected = await getChainNameByChainIdNumber(
+          walletConnectData.chainId as number,
+        )
         setConnectedChain(chainConnected)
       }
     }
     fetchData()
-  }, [activeNetwork, data])
+  }, [activeNetwork, walletConnectData])
 
   const connect = () => {
     emitterController.emit(OFF_SESSION_REQUEST, [
@@ -71,14 +74,16 @@ const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
         alignItems={'center'}>
         <Text style={styles.headerText} tx="walletConnect.connectRequest" />
         <Box marginBottom={'m'}>
-          {data ? (
+          {walletConnectData ? (
             <Image
               style={styles.imgLogo}
-              source={{ uri: data.peerMeta.icons[0] }}
+              source={{ uri: walletConnectData.peerMeta.icons[0] }}
             />
           ) : null}
         </Box>
-        <Text style={styles.subheadingText}>{data?.peerMeta.name}</Text>
+        <Text style={styles.subheadingText}>
+          {walletConnectData?.peerMeta.name}
+        </Text>
 
         <DottedArrow style={styles.dottedArrow} />
 
@@ -105,7 +110,8 @@ const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
         <Box marginTop={'xxl'}>
           <Text style={styles.permissionText}>
             {labelTranslateFn('walletConnect.grantPermission')}
-            {data?.peerMeta.name} {labelTranslateFn('walletConnect.theyCan')}
+            {walletConnectData?.peerMeta.name}{' '}
+            {labelTranslateFn('walletConnect.theyCan')}
           </Text>
         </Box>
 

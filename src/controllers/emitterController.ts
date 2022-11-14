@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
 
-let emitterController
+let emitterController: any
 
 if (!emitterController) {
   emitterController = new EventEmitter()
