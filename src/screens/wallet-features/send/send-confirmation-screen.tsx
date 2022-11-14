@@ -17,9 +17,9 @@ import {
 import { AppIcons, Fonts } from '../../../assets'
 import { prettyFiatBalance } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { Path, Svg } from 'react-native-svg'
-import AssetIcon from '../../../components/asset-icon'
 import { scale } from 'react-native-size-matters'
 import { getTransactionExplorerLink } from '@liquality/wallet-core/dist/src/utils/asset'
+import CombinedChainAssetIcons from '../../../components/ui/CombinedChainAssetIcons'
 
 const { CompletedIcon: SuccessIcon } = AppIcons
 
@@ -79,15 +79,12 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
     const getBackgroundBox = (height: number) => {
       const width = Dimensions.get('screen').width - theme.spacing.xl
       const flatRadius = 30
+      const SHADOW_WIDTH = 6
+
       return (
         <Box
           alignItems="center"
           justifyContent="center"
-          shadowColor={'darkGrey'}
-          shadowOffset={{ width: 4, height: 6 }}
-          shadowOpacity={1}
-          shadowRadius={2}
-          elevation={2}
           style={StyleSheet.absoluteFillObject}>
           <Svg
             width={`${width}`}
@@ -95,14 +92,42 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
             viewBox={`0 0 ${width} ${height}`}
             fill="none">
             <Path
-              d={`M0 0 H ${
-                width - flatRadius
-              } L ${width} ${flatRadius} V ${height} H ${0} V ${0} Z`}
+              d={`
+              M10 40 
+              H ${width - 5}
+              Q ${width},40 ${width},49 
+              V ${height - 9} 
+              Q ${width},${height} ${width - 9},${height} 
+              H ${19} 
+              Q ${10}, ${height} 
+                ${10}, ${height - 9}
+              V ${70} 
+              Z`}
+              fill={faceliftPalette.darkGrey}
+              strokeWidth={4}
+              stroke={faceliftPalette.darkGrey}
+              strokeLinejoin={'round'}
+              strokeLinecap={'round'}
+            />
+            <Path
+              d={`
+                  M10 0 
+                  H ${width - flatRadius} 
+                  L ${width - SHADOW_WIDTH} ${flatRadius} 
+                  V ${height - SHADOW_WIDTH - 9}
+                  Q ${width - SHADOW_WIDTH}, ${height - SHADOW_WIDTH} 
+                    ${width - SHADOW_WIDTH - 9}, ${height - SHADOW_WIDTH} 
+                  H ${9} 
+                  Q ${0}, ${height - SHADOW_WIDTH} 
+                    ${0}, ${height - SHADOW_WIDTH - 9}
+                  V ${9} 
+                  Q ${0}, ${0} 
+                    ${9}, ${0}
+                  Z
+                  `}
               fill={faceliftPalette.white}
               strokeWidth={3}
               stroke={faceliftPalette.darkGrey}
-              strokeLinejoin={'bevel'}
-              strokeLinecap={'round'}
             />
           </Svg>
         </Box>
@@ -118,17 +143,12 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
           alignItems={'center'}>
           {getBackgroundBox(scale(135))}
           <Box flexDirection={'row'} alignItems={'flex-end'}>
-            <AssetIcon
-              size={scale(60)}
+            <CombinedChainAssetIcons
               chain={getAsset(activeNetwork, historyItem.from).chain}
-            />
-            <AssetIcon
-              size={scale(30)}
-              styles={{ left: -10 }}
-              asset={historyItem.from}
+              code={historyItem.from}
+              scaleMultiplier={2}
             />
           </Box>
-
           <Box marginLeft={'mxxl'}>
             <Text
               fontFamily={Fonts.JetBrainsMono}

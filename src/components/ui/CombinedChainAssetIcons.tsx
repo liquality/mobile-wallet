@@ -7,13 +7,18 @@ import { ChainId } from '@chainify/types'
 type CombinedChainAssetIconsProps = {
   code: string
   chain: ChainId
+  scaleMultiplier?: number
 }
 const CombinedChainAssetIcons = (props: CombinedChainAssetIconsProps) => {
-  const { code, chain } = props
+  const { code, chain, scaleMultiplier = 1 } = props
   return (
     <Box flexDirection={'row'} alignItems={'flex-end'}>
-      <AssetIcon asset={code} size={scale(30)} />
-      <AssetIcon chain={chain} size={scale(15)} styles={{ left: -10 }} />
+      <AssetIcon asset={code} size={scale(scaleMultiplier * 30)} />
+      <AssetIcon
+        chain={chain}
+        size={scale(scaleMultiplier * 15)}
+        styles={{ left: -10 * scaleMultiplier }}
+      />
     </Box>
   )
 }
