@@ -412,10 +412,10 @@ const CustomizeRoute = ({
   )
 
   const getSummaryMaximum = () => {
-    if (totalFees && gasFees?.[speed]?.fee) {
+    if (totalFees && gasFees && gasFees?.[speed]?.fee) {
       const maximumFee = maxFeePerUnitEIP1559({
-        maxFeePerGas: Number(maxFeeInput.value),
-        maxPriorityFeePerGas: Number(minerTipInput.value),
+        maxFeePerGas: Number(maxFeeInput),
+        maxPriorityFeePerGas: Number(minerTipInput),
         suggestedBaseFeePerGas: Number(
           gasFees[speed].fee.suggestedBaseFeePerGas,
         ),
@@ -424,6 +424,7 @@ const CustomizeRoute = ({
       const totalMaxFee = getSendFee(nativeAssetCode, Number(maximumFee)).plus(
         totalFees.fast,
       )
+
       return {
         amount: new BigNumber(totalMaxFee).dp(6),
         fiat: prettyFiatBalance(totalFees.fast, fiatRates[nativeAssetCode]),
