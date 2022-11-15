@@ -707,6 +707,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     }
   }, [error, swapPair.fromAsset?.code])
 
+  // Avoid NaN if user enters only decimal points
+  let formattedValueForFrom = state.fromAmount
+  if (state.fromAmount.length === 1 && state.fromAmount === '.') {
+    formattedValueForFrom = '0'
+  }
+
   return (
     <Box flex={1} backgroundColor="mainBackground" paddingHorizontal={'xl'}>
       <Box flex={1}>
@@ -740,7 +746,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                   justifyContent="space-between"
                   height={scale(36)}
                   width={'100%'}>
-                  <Box flex={0.8}>
+                  <Box flex={1}>
                     <TextInput
                       cursorColor={faceliftPalette.active}
                       variant={'swapInput'}
@@ -749,7 +755,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                       onFocus={fromFocused}
                       onBlur={onBlur}
                       maxLength={15}
-                      value={state.fromAmount}
+                      value={formattedValueForFrom}
                       keyboardType="numeric"
                     />
                   </Box>
@@ -785,8 +791,14 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                     paddingLeft="s"
                     paddingTop="s">
                     {isFromAmountNative
-                      ? `$${fromFormatedFiat}`
-                      : `${swapPair.fromAsset?.code} ${fromFiatToCrypto}`}
+                      ? isNaN(Number(fromCryptoToFiat))
+                        ? '$0.00'
+                        : `$${fromFormatedFiat}`
+                      : `${swapPair.fromAsset?.code} ${
+                          isNaN(Number(fromFiatToCrypto))
+                            ? 0.0
+                            : fromFiatToCrypto
+                        }`}
                   </Text>
                 </Box>
                 <Box flexDirection={'row'} alignItems="center" marginTop={'m'}>
@@ -846,7 +858,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                   justifyContent="space-between"
                   height={scale(36)}
                   width={'100%'}>
-                  <Box flex={0.8}>
+                  <Box flex={1}>
                     <TextInput
                       cursorColor={faceliftPalette.active}
                       variant={'swapInput'}
@@ -889,8 +901,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                     paddingLeft="s"
                     paddingTop="s">
                     {isToAmountNative
-                      ? `$${toFormatedFiat}`
-                      : `${swapPair.toAsset?.code} ${toFiatToCrypto}`}
+                      ? isNaN(Number(toCryptoToFiat))
+                        ? '0'
+                        : `$${toFormatedFiat}`
+                      : `${swapPair.toAsset?.code} ${
+                          isNaN(Number(toFiatToCrypto)) ? 0.0 : toFiatToCrypto
+                        }`}
                   </Text>
                 </Box>
               </Box>
