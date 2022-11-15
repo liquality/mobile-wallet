@@ -23,6 +23,7 @@ const {
   OFF_SWITCH_CHAIN,
   ON_SIGNED_TYPED_DATA,
   OFF_SIGNED_TYPED_DATA,
+  DISCONNECT_SESSION,
 } = INJECTION_REQUESTS
 
 export default class WalletConnectController {
@@ -111,6 +112,25 @@ export default class WalletConnectController {
             connector.updateSession({
               chainId: Number(chainId),
               accounts: address,
+            })
+          })
+
+          break
+        }
+
+        //TODO: implement disconnect from wallet-connect
+        case 'disconnect': {
+          emitterController.emit(DISCONNECT_SESSION, {
+            ...payload,
+            chainId: connector.chainId,
+          })
+
+          emitterController.on(OFF_SIGNED_TYPED_DATA, (result) => {
+            connector.on('disconnect', (error, payload) => {
+              if (error) {
+                throw error
+              }
+              // Delete connector
             })
           })
 

@@ -7,4 +7,5 @@ export const INJECTION_REQUESTS = {
   OFF_SWITCH_CHAIN: 'off_wallet_switchEthereumChain_request',
   ON_SIGNED_TYPED_DATA: 'on_eth_signTypedData_request',
   OFF_SIGNED_TYPED_DATA: 'off_eth_signTypedData_request',
+  DISCONNECT_SESSION: 'disconnect',
 }
