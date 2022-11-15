@@ -54,7 +54,7 @@ const {
   DebridgeProviderIcon,
 } = AppIcons
 
-type IconType = React.FC<
+export type IconType = React.FC<
   SvgProps & {
     fillSecondary?: string | undefined
   }

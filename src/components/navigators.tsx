@@ -286,20 +286,14 @@ export const WalletCreationNavigator = () => {
           <WalletCreationStack.Screen
             name="AboutLiqualityDrawer"
             component={AboutLiqualityDrawer}
-            options={({ route }: NavigationProps) => {
-              const { isScrolledUp = false } = route.params
-              const empty = ''
-              return {
-                ...screenNavOptions,
-                headerTransparent: true,
-                presentation: 'fullScreenModal',
-                headerTitleStyle: WHITE_HEADER,
-                headerTitle: isScrolledUp
-                  ? labelTranslateFn('aboutLiquality')!
-                  : empty,
-                headerLeft: undefined,
-                headerRight: SkipButton,
-              }
+            options={{
+              ...screenNavOptions,
+              headerTransparent: true,
+              presentation: 'fullScreenModal',
+              headerTitleStyle: WHITE_HEADER,
+              headerTitle: labelTranslateFn('aboutLiquality')!,
+              headerLeft: undefined,
+              headerRight: SkipButton,
             }}
           />
         </WalletCreationStack.Group>

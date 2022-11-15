@@ -844,3 +844,10 @@ export const GRADIENT_COLORS = [
   faceliftPalette.gradientMiddeColor,
   faceliftPalette.gradientEndColor,
 ]
+
+export const ABOUT_GRADIETN_COLORS = [
+  '#C0AAFF',
+  '#7D47EF',
+  '#7D47EF',
+  '#00C8A7',
+]
