@@ -56,6 +56,8 @@ import {
   palette,
   Text,
   ThemeIcon,
+  ThemeType,
+  WHITE_HEADER,
 } from '../theme'
 import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-screen'
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
@@ -66,13 +68,14 @@ import NftCollectionScreen from '../screens/wallet-features/NFT/nft-collection-s
 import SelectChainScreen from '../screens/wallet-features/settings/select-chain-screen'
 import { AppIcons, Fonts } from '../assets'
 import {
+  aboutVisitedState,
   assetScreenPopupMenuVisible,
   historyItemsState,
   networkState,
   showSearchBarInputState,
   themeMode,
 } from '../atoms'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
 import { downloadAssetAcitivity, labelTranslateFn } from '../utils'
@@ -96,6 +99,8 @@ import AccountManagementScreen from '../screens/wallet-features/asset/account-ma
 import SwapProviderInfoDrawer from './swap-provider-info-drawer'
 import AccountDetailScreen from '../screens/wallet-features/asset/account-detail-screen'
 import AssetIcon from './asset-icon'
+import AboutLiqualityDrawer from './about-liquality-drawer'
+import { useTheme } from '@shopify/restyle'
 
 const {
   NetworkActiveDot,
@@ -138,6 +143,31 @@ const LiqLogoHeaderLeft = () => {
     <Box marginLeft={'onboardingHeaderPadding'}>
       <ThemeIcon iconName="OnlyLqLogo" />
     </Box>
+  )
+}
+
+const AboutScreenRightBtn = (showDoneBtn: boolean) => {
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+  const theme = useTheme<ThemeType>()
+
+  const setAboutVisited = useSetRecoilState(aboutVisitedState)
+
+  const onPress = () => {
+    setAboutVisited(true)
+    navigation.goBack()
+  }
+
+  return (
+    <TouchableOpacity
+      style={{ paddingHorizontal: theme.spacing.l }}
+      onPress={onPress}>
+      <Text
+        variant={'listText'}
+        color="white"
+        tx={showDoneBtn ? 'common.done' : 'skip'}
+        marginTop={'s'}
+      />
+    </TouchableOpacity>
   )
 }
 
@@ -202,68 +232,88 @@ export const WalletCreationNavigator = () => {
           gestureEnabled: true,
           ...TransitionPresets.SlideFromRightIOS,
         }}>
-        <WalletCreationStack.Screen
-          name="Entry"
-          component={Entry}
-          options={{ ...screenNavOptions, headerTransparent: true }}
-        />
-        <WalletCreationStack.Screen
-          name="TermsScreen"
-          component={TermsScreen}
-          options={{
-            ...screenNavOptions,
-            headerStyle: { backgroundColor },
-            headerLeft: LiqLogoHeaderLeft,
-          }}
-        />
-        <WalletCreationStack.Screen
-          name="PasswordCreationScreen"
-          component={PasswordCreationScreen}
-          options={{ ...screenNavOptions, headerTransparent: true }}
-        />
-        <WalletCreationStack.Screen
-          name="SeedPhraseScreen"
-          component={SeedPhraseScreen}
-          options={{
-            ...screenNavOptions,
-            headerTitleStyle: HEADER_TITLE_STYLE,
-            headerStyle: { backgroundColor },
-            headerLeft: LiqLogoHeaderLeft,
-          }}
-        />
-        <WalletCreationStack.Screen
-          name="SeedPhraseConfirmationScreen"
-          component={SeedPhraseConfirmationScreen}
-          options={{
-            ...screenNavOptions,
-            headerStyle: { backgroundColor },
-            headerLeft: LiqLogoHeaderLeft,
-          }}
-        />
-        <WalletCreationStack.Screen
-          name="LoadingScreen"
-          component={LoadingScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <WalletCreationStack.Screen
-          name="CongratulationsScreen"
-          component={CongratulationsScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <WalletCreationStack.Screen
-          name="UnlockWalletScreen"
-          component={UnlockWalletScreen}
-          options={{
-            ...screenNavOptions,
-            headerTitleStyle: HEADER_TITLE_STYLE,
-            headerStyle: { backgroundColor },
-            headerLeft: LiqLogoHeaderLeft,
-          }}
-        />
+        <WalletCreationStack.Group>
+          <WalletCreationStack.Screen
+            name="Entry"
+            component={Entry}
+            options={{ ...screenNavOptions, headerTransparent: true }}
+          />
+          <WalletCreationStack.Screen
+            name="TermsScreen"
+            component={TermsScreen}
+            options={{
+              ...screenNavOptions,
+              headerStyle: { backgroundColor },
+              headerLeft: LiqLogoHeaderLeft,
+            }}
+          />
+          <WalletCreationStack.Screen
+            name="PasswordCreationScreen"
+            component={PasswordCreationScreen}
+            options={{ ...screenNavOptions, headerTransparent: true }}
+          />
+          <WalletCreationStack.Screen
+            name="SeedPhraseScreen"
+            component={SeedPhraseScreen}
+            options={{
+              ...screenNavOptions,
+              headerTitleStyle: HEADER_TITLE_STYLE,
+              headerStyle: { backgroundColor },
+              headerLeft: LiqLogoHeaderLeft,
+            }}
+          />
+          <WalletCreationStack.Screen
+            name="SeedPhraseConfirmationScreen"
+            component={SeedPhraseConfirmationScreen}
+            options={{
+              ...screenNavOptions,
+              headerStyle: { backgroundColor },
+              headerLeft: LiqLogoHeaderLeft,
+            }}
+          />
+          <WalletCreationStack.Screen
+            name="LoadingScreen"
+            component={LoadingScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <WalletCreationStack.Screen
+            name="CongratulationsScreen"
+            component={CongratulationsScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <WalletCreationStack.Screen
+            name="UnlockWalletScreen"
+            component={UnlockWalletScreen}
+            options={{
+              ...screenNavOptions,
+              headerTitleStyle: HEADER_TITLE_STYLE,
+              headerStyle: { backgroundColor },
+              headerLeft: LiqLogoHeaderLeft,
+            }}
+          />
+        </WalletCreationStack.Group>
+        <WalletCreationStack.Group>
+          <WalletCreationStack.Screen
+            name="AboutLiqualityDrawer"
+            component={AboutLiqualityDrawer}
+            options={({ route }: NavigationProps) => {
+              const { showDoneBtn = false } = route.params
+              return {
+                ...screenNavOptions,
+                headerTransparent: true,
+                presentation: 'fullScreenModal',
+                headerTitleStyle: WHITE_HEADER,
+                headerTitle: labelTranslateFn('aboutLiquality')!,
+                headerLeft: undefined,
+                headerRight: () => AboutScreenRightBtn(showDoneBtn),
+              }
+            }}
+          />
+        </WalletCreationStack.Group>
       </WalletCreationStack.Navigator>
     </OnboardingContext.Provider>
   )

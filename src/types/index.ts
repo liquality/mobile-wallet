@@ -169,10 +169,12 @@ export type StackPayload = {
   specificAsset?: string
   chainId?: number
   walletConnectData?: ICallTxData
+  showDoneBtn?: boolean
+  shouldLogOut?: boolean
 }
 
 export type SettingStackParamList = {
-  Settings: { shouldLogOut?: boolean }
+  Settings: StackPayload
 }
 
 export type RootStackParamList = {
@@ -185,6 +187,7 @@ export type RootStackParamList = {
   LoadingScreen: StackPayload
   LoginScreen: undefined
   CongratulationsScreen: undefined
+  AboutLiqualityDrawer: StackPayload
 }
 
 export type LoginStackParamList = {
@@ -238,7 +241,7 @@ export type MainStackParamList = {
   WithPopupMenu: undefined
   BuyCryptoDrawer: StackPayload
   SwapProviderModal: StackPayload
-  SelectChainScreen: undefined
+  SelectChainScreen: StackPayload
   SwapDetailsScreen: StackPayload
   ActivityFilterScreen: StackPayload
   SortingModal: StackPayload
@@ -250,6 +253,8 @@ export type MainStackParamList = {
   SwitchChainScreen: StackPayload
   ApproveTransactionInjectionScreen: StackPayload
   NftOverviewScreen: StackPayload
+  AboutLiqualityDrawer: StackPayload
+  Settings: StackPayload
 }
 
 export type RootTabParamList = {
@@ -420,4 +425,5 @@ export type NavigationProps = NativeStackScreenProps<
   | 'InitInjectionScreen'
   | 'SwitchChainScreen'
   | 'ApproveTransactionInjectionScreen'
+  | 'AboutLiqualityDrawer'
 >

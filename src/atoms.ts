@@ -147,6 +147,12 @@ export const langSelected = atom<LanguageEnum | string>({
   effects: [localStorageLangEffect(KEYS.ACTIVE_LANG)],
 })
 
+export const aboutVisitedState = atom<boolean>({
+  key: KEYS.ABOUT_SCREEN_VISITED,
+  default: false,
+  effects: [localStorageAssetEffect(KEYS.ABOUT_SCREEN_VISITED)],
+})
+
 export const doubleOrLongTapSelectedAsset = atom<string>({
   key: 'doubleOrLongTapSelectedAsset',
   default: '',
