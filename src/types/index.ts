@@ -170,10 +170,11 @@ export type StackPayload = {
   chainId?: number
   walletConnectData?: ICallTxData
   showDoneBtn?: boolean
+  shouldLogOut?: boolean
 }
 
 export type SettingStackParamList = {
-  Settings: { shouldLogOut?: boolean }
+  Settings: StackPayload
 }
 
 export type RootStackParamList = {
@@ -240,7 +241,7 @@ export type MainStackParamList = {
   WithPopupMenu: undefined
   BuyCryptoDrawer: StackPayload
   SwapProviderModal: StackPayload
-  SelectChainScreen: undefined
+  SelectChainScreen: StackPayload
   SwapDetailsScreen: StackPayload
   ActivityFilterScreen: StackPayload
   SortingModal: StackPayload
@@ -253,6 +254,7 @@ export type MainStackParamList = {
   ApproveTransactionInjectionScreen: StackPayload
   NftOverviewScreen: StackPayload
   AboutLiqualityDrawer: StackPayload
+  Settings: StackPayload
 }
 
 export type RootTabParamList = {
