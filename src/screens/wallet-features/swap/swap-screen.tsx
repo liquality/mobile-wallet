@@ -716,7 +716,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
   return (
     <Box flex={1} backgroundColor="mainBackground" paddingHorizontal={'xl'}>
       <Box flex={1}>
-        <Box flex={0.75}>
+        <Box flex={0.9}>
           <ScrollView
             style={FLEX_1}
             scrollEnabled={!!error.msg}
@@ -724,9 +724,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             {error.msg ? (
               <Box paddingVertical={'xl'}>{getCompatibleErrorMsg()}</Box>
             ) : null}
-            <Box height={scale(355)} width="100%">
+            <Box height={scale(305)} width="100%">
               <Box
-                height={scale(175)}
+                height={scale(150)}
                 width={'100%'}
                 backgroundColor={fromBackgroundColor}
                 padding={'xl'}>
@@ -744,7 +744,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                   flexDirection={'row'}
                   marginTop={'s'}
                   justifyContent="space-between"
-                  height={scale(36)}
+                  height={scale(30)}
                   width={'100%'}>
                   <Box flex={1}>
                     <TextInput
@@ -801,7 +801,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                         }`}
                   </Text>
                 </Box>
-                <Box flexDirection={'row'} alignItems="center" marginTop={'m'}>
+                <Box flexDirection={'row'} alignItems="center" marginTop={'s'}>
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => {
@@ -843,7 +843,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               </Box>
               <Box height={scale(5)} width={'100%'} />
               <Box
-                height={scale(175)}
+                height={scale(150)}
                 width={'100%'}
                 backgroundColor={'mediumWhite'}
                 padding={'xl'}>
@@ -856,7 +856,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                   flexDirection={'row'}
                   marginTop={'s'}
                   justifyContent="space-between"
-                  height={scale(36)}
+                  height={scale(30)}
                   width={'100%'}>
                   <Box flex={1}>
                     <TextInput
@@ -963,7 +963,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             ) : null}
             <Box
               flexDirection={'row'}
-              marginTop="xxl"
+              marginTop="xl"
               alignItems="center"
               justifyContent={'center'}>
               <Text
@@ -978,8 +978,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             </Box>
           </ScrollView>
         </Box>
-        <Box flex={0.25}>
-          <Box marginVertical={'xl'}>
+        <Box flex={0.2}>
+          <Box marginVertical={'s'}>
             <Pressable
               label={{ tx: 'common.next' }}
               onPress={handleReviewBtnPress}
@@ -1010,6 +1010,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             onPress={navigation.goBack}
             textAlign={'center'}
             variant="link"
+            marginTop={'m'}
             tx="termsScreen.cancel"
           />
         </Box>
