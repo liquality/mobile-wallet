@@ -127,7 +127,7 @@ const SendReviewScreen = (props: SendReviewDrawerScreenProps) => {
         </Box>
 
         <Box
-          flex={0.6}
+          flex={0.7}
           backgroundColor="mainBackground"
           paddingHorizontal={'xl'}>
           <Text
