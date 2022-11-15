@@ -33,7 +33,7 @@ import {
   FLEX_1,
 } from '../../../theme'
 import { AppIcons } from '../../../assets'
-import { scale } from 'react-native-size-matters'
+import { moderateScale, scale } from 'react-native-size-matters'
 import {
   balanceStateFamily,
   fiatRatesState,
@@ -724,9 +724,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             {error.msg ? (
               <Box paddingVertical={'xl'}>{getCompatibleErrorMsg()}</Box>
             ) : null}
-            <Box height={scale(305)} width="100%">
+            <Box height={moderateScale(305, 1.5)} width="100%">
               <Box
-                height={scale(150)}
+                height={moderateScale(150, 1.5)}
                 width={'100%'}
                 backgroundColor={fromBackgroundColor}
                 padding={'xl'}>
@@ -843,7 +843,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               </Box>
               <Box height={scale(5)} width={'100%'} />
               <Box
-                height={scale(150)}
+                height={moderateScale(150, 1.5)}
                 width={'100%'}
                 backgroundColor={'mediumWhite'}
                 padding={'xl'}>
