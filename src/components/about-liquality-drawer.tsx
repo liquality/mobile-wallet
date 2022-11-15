@@ -112,7 +112,7 @@ const TransferNFT = () => {
 }
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AboutLiqualityDrawer'>
-const AboutLiqualityDrawer: FC<Props> = () => {
+const AboutLiqualityDrawer: FC<Props> = ({ navigation }) => {
   const headerHeight = useHeaderHeight()
   const [index, setIndex] = React.useState(0)
 
@@ -121,6 +121,11 @@ const AboutLiqualityDrawer: FC<Props> = () => {
     { key: 'swap', title: 'Swap' },
     { key: 'transfer', title: 'Transfer' },
   ]
+
+  const onIndexChange = (num: number) => {
+    setIndex(num)
+    navigation.setParams({ showDoneBtn: num === 2 })
+  }
 
   return (
     <LinearGradient
@@ -176,7 +181,7 @@ const AboutLiqualityDrawer: FC<Props> = () => {
               }
             }}
             swipeEnabled
-            onIndexChange={setIndex}
+            onIndexChange={onIndexChange}
             initialLayout={{ width: SCREEN_WIDTH - scale(30) }} //approx to horizontal patting
           />
         </Box>

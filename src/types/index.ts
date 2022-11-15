@@ -169,6 +169,7 @@ export type StackPayload = {
   specificAsset?: string
   chainId?: number
   walletConnectData?: ICallTxData
+  showDoneBtn?: boolean
 }
 
 export type SettingStackParamList = {

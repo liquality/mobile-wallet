@@ -145,14 +145,19 @@ const LiqLogoHeaderLeft = () => {
   )
 }
 
-const SkipButton = () => {
+const AboutScreenRightBtn = (showDoneBtn: boolean) => {
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   const theme = useTheme<ThemeType>()
   return (
     <TouchableOpacity
       style={{ paddingHorizontal: theme.spacing.l }}
       onPress={navigation.goBack}>
-      <Text variant={'listText'} color="white" tx="skip" marginTop={'s'} />
+      <Text
+        variant={'listText'}
+        color="white"
+        tx={showDoneBtn ? 'common.done' : 'skip'}
+        marginTop={'s'}
+      />
     </TouchableOpacity>
   )
 }
@@ -286,14 +291,17 @@ export const WalletCreationNavigator = () => {
           <WalletCreationStack.Screen
             name="AboutLiqualityDrawer"
             component={AboutLiqualityDrawer}
-            options={{
-              ...screenNavOptions,
-              headerTransparent: true,
-              presentation: 'fullScreenModal',
-              headerTitleStyle: WHITE_HEADER,
-              headerTitle: labelTranslateFn('aboutLiquality')!,
-              headerLeft: undefined,
-              headerRight: SkipButton,
+            options={({ route }: NavigationProps) => {
+              const { showDoneBtn = false } = route.params
+              return {
+                ...screenNavOptions,
+                headerTransparent: true,
+                presentation: 'fullScreenModal',
+                headerTitleStyle: WHITE_HEADER,
+                headerTitle: labelTranslateFn('aboutLiquality')!,
+                headerLeft: undefined,
+                headerRight: () => AboutScreenRightBtn(showDoneBtn),
+              }
             }}
           />
         </WalletCreationStack.Group>
