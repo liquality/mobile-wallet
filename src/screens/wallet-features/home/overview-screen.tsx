@@ -26,8 +26,8 @@ import { GRADIENT_BACKGROUND_HEIGHT } from '../../../utils'
 import { scale } from 'react-native-size-matters'
 import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
-import { useRecoilValue } from 'recoil'
-import { networkState } from '../../../atoms'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { networkState, walletConnectSessionState } from '../../../atoms'
 
 export type OverviewProps = NativeStackScreenProps<
   MainStackParamList,
@@ -40,6 +40,13 @@ const wallet = setupWallet({
 const OverviewScreen = ({ navigation }: OverviewProps) => {
   const [refreshing, setRefreshing] = React.useState(false)
   const [accountIds, setAccountIds] = React.useState<string[]>([])
+  const [walletConnectSession, setWalletConnectSession] = useRecoilState(
+    walletConnectSessionState,
+  )
+  console.log(
+    walletConnectSession,
+    'RECOIL WALLET CONNECT SESSION OVERVIEW SCREEN',
+  )
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)

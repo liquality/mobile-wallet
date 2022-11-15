@@ -1,12 +1,16 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Image } from 'react-native'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { emitterController } from '../../controllers/emitterController'
 import { INJECTION_REQUESTS } from '../../controllers/constants'
 import { Box, Button, faceliftPalette, Text } from '../../theme'
 import { ISessionParams, MainStackParamList } from '../../types'
-import { accountForAssetState, networkState } from '../../atoms'
+import {
+  accountForAssetState,
+  networkState,
+  walletConnectSessionState,
+} from '../../atoms'
 import { Fonts, AppIcons } from '../../assets'
 import { getNativeAssetCode } from '@liquality/cryptoassets'
 import AssetIcon from '../../components/asset-icon'
@@ -28,9 +32,12 @@ const { DottedArrow, BlueLine } = AppIcons
 
 const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
   const activeNetwork = useRecoilValue(networkState)
-
   const [walletConnectData, setWalletConnectData] = useState<ISessionParams>()
   const [connectedChain, setConnectedChain] = useState([])
+  const [walletConnectSession, setWalletConnectSession] = useRecoilState(
+    walletConnectSessionState,
+  )
+
   //TODO, if WalletConnect supports solana and not only EVM soon
   //we need to get the asset code from something like this: getNativeAssetCode(activeNetwork, chainConnected[0]) instead of 'ETH'
   //for now any evm wallet address works
@@ -56,6 +63,12 @@ const InitInjectionScreen = ({ navigation }: InitInjectionScreenProps) => {
     emitterController.emit(OFF_SESSION_REQUEST, [
       accountForConnectedChain?.address,
     ])
+    console.log(
+      walletConnectData,
+      'walletconnectdata before setting recoil value INIT INJECTION SCREEN',
+    )
+    setWalletConnectSession(walletConnectData)
+
     navigation.navigate('OverviewScreen')
   }
 

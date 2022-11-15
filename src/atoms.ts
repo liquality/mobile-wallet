@@ -147,6 +147,11 @@ export const langSelected = atom<LanguageEnum | string>({
   effects: [localStorageLangEffect(KEYS.ACTIVE_LANG)],
 })
 
+export const walletConnectSessionState = atom<any>({
+  key: 'WalletConnectSession',
+  default: '',
+})
+
 export const doubleOrLongTapSelectedAsset = atom<string>({
   key: 'doubleOrLongTapSelectedAsset',
   default: '',
@@ -241,20 +246,20 @@ export const accountInfoState = selectorFamily<Partial<AccountType>, string>({
   key: 'AccountInfoState',
   get:
     (accountId) =>
-    ({ get }) => {
-      const address = get(addressStateFamily(accountId))
-      const account = get(accountInfoStateFamily(accountId))
-      if (account?.code) {
-        account.balance = get(
-          balanceStateFamily({ asset: account.code, assetId: accountId }),
-        )
-      }
-      account.address = address
-      for (let assetsKey in account.assets) {
-        account.assets[assetsKey].address = address
-      }
-      return account
-    },
+      ({ get }) => {
+        const address = get(addressStateFamily(accountId))
+        const account = get(accountInfoStateFamily(accountId))
+        if (account?.code) {
+          account.balance = get(
+            balanceStateFamily({ asset: account.code, assetId: accountId }),
+          )
+        }
+        account.address = address
+        for (let assetsKey in account.assets) {
+          account.assets[assetsKey].address = address
+        }
+        return account
+      },
 })
 export const accountListState = selector<Partial<AccountType>[]>({
   key: 'AccountList',
@@ -281,26 +286,26 @@ export const accountForAssetState = selectorFamily<
   key: 'AccountForAsset',
   get:
     (asset) =>
-    ({ get }) => {
-      const accountsIds = get(accountsIdsState)
-      const filteredAccounts = accountsIds
-        .map((item) => get(accountInfoStateFamily(item.id)))
-        .filter((account) => account.code === asset)
-      const account =
-        filteredAccounts.length > 0 ? filteredAccounts[0] : undefined
-      if (!account?.id) return account
-      return {
-        ...account,
-        address: get(addressStateFamily(account.id)),
-        assets: {
-          ...account.assets,
-          [asset]: {
-            ...account.assets[asset],
-            balance: get(balanceStateFamily({ asset, assetId: account.id })),
+      ({ get }) => {
+        const accountsIds = get(accountsIdsState)
+        const filteredAccounts = accountsIds
+          .map((item) => get(accountInfoStateFamily(item.id)))
+          .filter((account) => account.code === asset)
+        const account =
+          filteredAccounts.length > 0 ? filteredAccounts[0] : undefined
+        if (!account?.id) return account
+        return {
+          ...account,
+          address: get(addressStateFamily(account.id)),
+          assets: {
+            ...account.assets,
+            [asset]: {
+              ...account.assets[asset],
+              balance: get(balanceStateFamily({ asset, assetId: account.id })),
+            },
           },
-        },
-      }
-    },
+        }
+      },
 })
 
 export const historyItemsState = selector<HistoryItem[]>({
@@ -335,14 +340,14 @@ export const totalFiatBalanceState = selector<string>({
       const balance =
         assetBalance > 0 && fiatRates[account.name] > 0
           ? new BigNumber(
-              cryptoToFiat(
-                unitToCurrency(
-                  getAsset(activeNetwork, getNativeAsset(account.name)),
-                  assetBalance,
-                ).toNumber(),
-                fiatRates[account.name],
-              ),
-            )
+            cryptoToFiat(
+              unitToCurrency(
+                getAsset(activeNetwork, getNativeAsset(account.name)),
+                assetBalance,
+              ).toNumber(),
+              fiatRates[account.name],
+            ),
+          )
           : 0
       return BigNumber.sum(acc, balance)
     }, new BigNumber(0))
@@ -364,7 +369,7 @@ export const totalEnabledAssetsWithBalance = selector<number>({
           account.id &&
           enabledAssets.includes(asset.code) &&
           get(balanceStateFamily({ asset: asset.code, assetId: account.id })) >
-            0,
+          0,
       ).length
     }
     return total
