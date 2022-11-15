@@ -541,5 +541,7 @@
   "swapNativeAssets": "Swap native assets like BTC and RBTC cross-chain using the wallet's swap feature; or swap assets like SOV and RBTC or PUSDC and MATIC using the wallet's built-in integrations with Sovryn, Uniswap, 1inch, and Thorchain.",
   "viewAnd": "View and",
   "transferNFTs": "Transfer NFTs",
-  "seeAllYourValued": "See all your valued Ethereum, Polygon and Arbitrum  NFT’s in one place. Soon to be followed by Solana. Explore your collections across accounts. Easily send and use marketplaces to connect with."
+  "seeAllYourValued": "See all your valued Ethereum, Polygon and Arbitrum  NFT’s in one place. Soon to be followed by Solana. Explore your collections across accounts. Easily send and use marketplaces to connect with.",
+  "aboutLiquality": "ABOUT LIQUALITY",
+  "skip": "Skip"
 }

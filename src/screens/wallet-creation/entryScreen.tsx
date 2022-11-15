@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../types'
 import {
@@ -20,6 +20,10 @@ type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 const Entry: FC<EntryProps> = (props): JSX.Element => {
   const { navigation } = props
   const headerHeight = useHeaderHeight()
+
+  useEffect(() => {
+    navigation.navigate('AboutLiqualityDrawer', {})
+  }, [navigation])
 
   const handleImportPress = () =>
     navigation.navigate('TermsScreen', {

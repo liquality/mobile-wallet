@@ -56,6 +56,8 @@ import {
   palette,
   Text,
   ThemeIcon,
+  ThemeType,
+  WHITE_HEADER,
 } from '../theme'
 import ShowAllNftsScreen from '../screens/wallet-features/NFT/show-all-nfts-screen'
 import NftDetailScreen from '../screens/wallet-features/NFT/nft-detail-screen'
@@ -96,6 +98,8 @@ import AccountManagementScreen from '../screens/wallet-features/asset/account-ma
 import SwapProviderInfoDrawer from './swap-provider-info-drawer'
 import AccountDetailScreen from '../screens/wallet-features/asset/account-detail-screen'
 import AssetIcon from './asset-icon'
+import AboutLiqualityDrawer from './about-liquality-drawer'
+import { useTheme } from '@shopify/restyle'
 
 const {
   NetworkActiveDot,
@@ -138,6 +142,18 @@ const LiqLogoHeaderLeft = () => {
     <Box marginLeft={'onboardingHeaderPadding'}>
       <ThemeIcon iconName="OnlyLqLogo" />
     </Box>
+  )
+}
+
+const SkipButton = () => {
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
+  const theme = useTheme<ThemeType>()
+  return (
+    <TouchableOpacity
+      style={{ paddingHorizontal: theme.spacing.l }}
+      onPress={navigation.goBack}>
+      <Text variant={'listText'} color="white" tx="skip" marginTop={'s'} />
+    </TouchableOpacity>
   )
 }
 
@@ -202,68 +218,91 @@ export const WalletCreationNavigator = () => {
           gestureEnabled: true,
           ...TransitionPresets.SlideFromRightIOS,
         }}>
-        <WalletCreationStack.Screen
-          name="Entry"
-          component={Entry}
-          options={{ ...screenNavOptions, headerTransparent: true }}
-        />
-        <WalletCreationStack.Screen
-          name="TermsScreen"
-          component={TermsScreen}
-          options={{
-            ...screenNavOptions,
-            headerStyle: { backgroundColor },
-            headerLeft: LiqLogoHeaderLeft,
-          }}
-        />
-        <WalletCreationStack.Screen
-          name="PasswordCreationScreen"
-          component={PasswordCreationScreen}
-          options={{ ...screenNavOptions, headerTransparent: true }}
-        />
-        <WalletCreationStack.Screen
-          name="SeedPhraseScreen"
-          component={SeedPhraseScreen}
-          options={{
-            ...screenNavOptions,
-            headerTitleStyle: HEADER_TITLE_STYLE,
-            headerStyle: { backgroundColor },
-            headerLeft: LiqLogoHeaderLeft,
-          }}
-        />
-        <WalletCreationStack.Screen
-          name="SeedPhraseConfirmationScreen"
-          component={SeedPhraseConfirmationScreen}
-          options={{
-            ...screenNavOptions,
-            headerStyle: { backgroundColor },
-            headerLeft: LiqLogoHeaderLeft,
-          }}
-        />
-        <WalletCreationStack.Screen
-          name="LoadingScreen"
-          component={LoadingScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <WalletCreationStack.Screen
-          name="CongratulationsScreen"
-          component={CongratulationsScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <WalletCreationStack.Screen
-          name="UnlockWalletScreen"
-          component={UnlockWalletScreen}
-          options={{
-            ...screenNavOptions,
-            headerTitleStyle: HEADER_TITLE_STYLE,
-            headerStyle: { backgroundColor },
-            headerLeft: LiqLogoHeaderLeft,
-          }}
-        />
+        <WalletCreationStack.Group>
+          <WalletCreationStack.Screen
+            name="Entry"
+            component={Entry}
+            options={{ ...screenNavOptions, headerTransparent: true }}
+          />
+          <WalletCreationStack.Screen
+            name="TermsScreen"
+            component={TermsScreen}
+            options={{
+              ...screenNavOptions,
+              headerStyle: { backgroundColor },
+              headerLeft: LiqLogoHeaderLeft,
+            }}
+          />
+          <WalletCreationStack.Screen
+            name="PasswordCreationScreen"
+            component={PasswordCreationScreen}
+            options={{ ...screenNavOptions, headerTransparent: true }}
+          />
+          <WalletCreationStack.Screen
+            name="SeedPhraseScreen"
+            component={SeedPhraseScreen}
+            options={{
+              ...screenNavOptions,
+              headerTitleStyle: HEADER_TITLE_STYLE,
+              headerStyle: { backgroundColor },
+              headerLeft: LiqLogoHeaderLeft,
+            }}
+          />
+          <WalletCreationStack.Screen
+            name="SeedPhraseConfirmationScreen"
+            component={SeedPhraseConfirmationScreen}
+            options={{
+              ...screenNavOptions,
+              headerStyle: { backgroundColor },
+              headerLeft: LiqLogoHeaderLeft,
+            }}
+          />
+          <WalletCreationStack.Screen
+            name="LoadingScreen"
+            component={LoadingScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <WalletCreationStack.Screen
+            name="CongratulationsScreen"
+            component={CongratulationsScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <WalletCreationStack.Screen
+            name="UnlockWalletScreen"
+            component={UnlockWalletScreen}
+            options={{
+              ...screenNavOptions,
+              headerTitleStyle: HEADER_TITLE_STYLE,
+              headerStyle: { backgroundColor },
+              headerLeft: LiqLogoHeaderLeft,
+            }}
+          />
+        </WalletCreationStack.Group>
+        <WalletCreationStack.Group>
+          <WalletCreationStack.Screen
+            name="AboutLiqualityDrawer"
+            component={AboutLiqualityDrawer}
+            options={({ route }: NavigationProps) => {
+              const { isScrolledUp = false } = route.params
+              const empty = ''
+              return {
+                ...screenNavOptions,
+                headerTransparent: true,
+                presentation: 'fullScreenModal',
+                headerTitleStyle: WHITE_HEADER,
+                headerTitle: isScrolledUp
+                  ? labelTranslateFn('aboutLiquality')!
+                  : empty,
+                headerLeft: undefined,
+                headerRight: SkipButton,
+              }
+            }}
+          />
+        </WalletCreationStack.Group>
       </WalletCreationStack.Navigator>
     </OnboardingContext.Provider>
   )

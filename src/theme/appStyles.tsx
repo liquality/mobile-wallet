@@ -74,6 +74,15 @@ export const NORMAL_HEADER: StyleProp<
   color: faceliftPalette.darkGrey,
 }
 
+export const WHITE_HEADER: StyleProp<
+  Pick<TextStyle, 'fontFamily' | 'fontWeight' | 'fontSize'> & {
+    color?: string | undefined
+  }
+> = {
+  ...HEADER_TITLE_STYLE,
+  color: faceliftPalette.white,
+}
+
 export const IMAGE_BACKGROUND_STYLE: ViewStyle = {
   height: scale(30),
   width: SCREEN_WIDTH / 4.6,

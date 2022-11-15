@@ -185,6 +185,7 @@ export type RootStackParamList = {
   LoadingScreen: StackPayload
   LoginScreen: undefined
   CongratulationsScreen: undefined
+  AboutLiqualityDrawer: StackPayload
 }
 
 export type LoginStackParamList = {
@@ -250,6 +251,7 @@ export type MainStackParamList = {
   SwitchChainScreen: StackPayload
   ApproveTransactionInjectionScreen: StackPayload
   NftOverviewScreen: StackPayload
+  AboutLiqualityDrawer: StackPayload
 }
 
 export type RootTabParamList = {
@@ -420,4 +422,5 @@ export type NavigationProps = NativeStackScreenProps<
   | 'InitInjectionScreen'
   | 'SwitchChainScreen'
   | 'ApproveTransactionInjectionScreen'
+  | 'AboutLiqualityDrawer'
 >
