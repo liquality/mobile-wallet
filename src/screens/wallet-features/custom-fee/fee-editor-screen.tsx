@@ -369,7 +369,7 @@ const CustomizeRoute = ({
     networkSpeed || FeeLabel.Slow,
   )
   const [, setError] = useState('')
-  const [currentBaseFee, setCurrentBaseFee] = useState()
+  const [currentBaseFee, setCurrentBaseFee] = useState('')
   const [gasFees, setGasFees] = useState<FDs>()
   const nativeAssetCode = getNativeAsset(selectedAsset)
   const accountForAsset = useRecoilValue(accountForAssetState(nativeAssetCode))
@@ -512,6 +512,15 @@ const CustomizeRoute = ({
     showSpeedError = !buttonActiveState
   } else {
     buttonActiveState = !!maxFeeInput
+  }
+
+  let maxFee = ''
+
+  if (gasFees && speed) {
+    maxFee = prettyFiatBalance(
+      getSendFee(selectedAsset, maxFeePerUnitEIP1559(gasFees[speed].fee)),
+      fiatRates[selectedAsset],
+    ).toString()
   }
 
   return (
@@ -661,18 +670,12 @@ const CustomizeRoute = ({
               <Text variant="normalText" color="greyMeta">
                 {`~ $${getSummaryMaximum()?.fiat}`}
               </Text>
-              <Text variant="normalText" color="greyMeta">
-                {gasFees?.[speed].fee &&
-                  `${labelTranslateFn(
-                    'customFeeScreen.max',
-                  )} $${prettyFiatBalance(
-                    getSendFee(
-                      selectedAsset,
-                      maxFeePerUnitEIP1559(gasFees[speed].fee),
-                    ),
-                    fiatRates[selectedAsset],
-                  )}`}
-              </Text>
+              {!isNaN(Number(maxFee)) ? (
+                <Text variant="normalText" color="greyMeta">
+                  {gasFees?.[speed].fee &&
+                    `${labelTranslateFn('customFeeScreen.max')} $${maxFee}`}
+                </Text>
+              ) : null}
             </Box>
           </Box>
         </ScrollView>
