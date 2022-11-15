@@ -24,7 +24,8 @@
 		640CEDF0FE9E3CD8A30E2882 /* libPods-Liquality.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AD160C3FEA18A1F049FA716 /* libPods-Liquality.a */; };
 		69F0F60CC3F14C998DFE233B /* AnekBangla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0066BB11984F4D07B9A64C1E /* AnekBangla-Regular.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		E4731BB52922F2B500AC9026 /* OpenSSL.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E8680628B55955003EACCC /* OpenSSL.xcframework */; };
+		E4D2FA4A2923C2A1000DC587 /* OpenSSL.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E8680628B55955003EACCC /* OpenSSL.xcframework */; };
+		E4D2FA4B2923C2A1000DC587 /* OpenSSL.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E4E8680628B55955003EACCC /* OpenSSL.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,20 @@
 			remoteInfo = LiqualityMobile;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E4D2FA4C2923C2A1000DC587 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E4D2FA4B2923C2A1000DC587 /* OpenSSL.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0066BB11984F4D07B9A64C1E /* AnekBangla-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AnekBangla-Regular.ttf"; path = "../src/assets/fonts/AnekBangla-Regular.ttf"; sourceTree = "<group>"; };
@@ -79,7 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4731BB52922F2B500AC9026 /* OpenSSL.xcframework in Frameworks */,
+				E4D2FA4A2923C2A1000DC587 /* OpenSSL.xcframework in Frameworks */,
 				640CEDF0FE9E3CD8A30E2882 /* libPods-Liquality.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -236,6 +251,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				52350F1AB6DBDAA05D883C4F /* [CP] Embed Pods Frameworks */,
 				FE5C8AAF6033941C2951BC9C /* [CP] Copy Pods Resources */,
+				E4D2FA4C2923C2A1000DC587 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -493,7 +509,7 @@
 				CODE_SIGN_ENTITLEMENTS = Liquality.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 37;
 				DEVELOPMENT_TEAM = 5K4FAG7NH8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = LiqualityMobile/Info.plist;
@@ -582,7 +598,7 @@
 				CODE_SIGN_ENTITLEMENTS = Liquality.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 37;
 				DEVELOPMENT_TEAM = 5K4FAG7NH8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = LiqualityMobile/Info.plist;
