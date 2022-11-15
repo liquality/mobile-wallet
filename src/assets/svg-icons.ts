@@ -193,6 +193,9 @@ import FastBTC from '../assets/icons/swap-providers/fastBTC.svg'
 import Jupiter from '../assets/icons/swap-providers/jupiter.svg'
 import UncheckedWhiteBox from '../assets/icons/uncheckedWhite.svg'
 import CheckedWhiteBox from '../assets/icons/checkedWhite.svg'
+import FirstMultichainWalletIcon from '../assets/icons/firstWallet.svg'
+import SwapAcrossIcon from '../assets/icons/swapAccross.svg'
+import TrasnferNFT from '../assets/icons/transferNFT.svg'
 
 export default {
   PendingSwap,
@@ -387,4 +390,7 @@ export default {
   UncheckedWhiteBox,
   CheckedWhiteBox,
   ShareIcon,
+  FirstMultichainWalletIcon,
+  SwapAcrossIcon,
+  TrasnferNFT,
 }
