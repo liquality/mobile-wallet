@@ -28,6 +28,7 @@ export const KEYS = {
   ACTIVE_LANG: 'activeLang',
   ACCOUNTS_IDS_FOR_TESTNET: 'accountsIdsForTestnet',
   ACCOUNTS_IDS_FOR_MAINNET: 'accountsIdsForMainnet',
+  ABOUT_SCREEN_VISITED: 'aboutScreenVistited',
 }
 
 const {

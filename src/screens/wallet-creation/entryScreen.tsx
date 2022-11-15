@@ -12,6 +12,8 @@ import { AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
 import LinearGradient from 'react-native-linear-gradient'
 import { useHeaderHeight } from '@react-navigation/elements'
+import { useRecoilValue } from 'recoil'
+import { aboutVisitedState } from '../../atoms'
 
 const { LogoFull, OneWalletAllChains } = AppIcons
 
@@ -20,10 +22,14 @@ type EntryProps = NativeStackScreenProps<RootStackParamList, 'Entry'>
 const Entry: FC<EntryProps> = (props): JSX.Element => {
   const { navigation } = props
   const headerHeight = useHeaderHeight()
+  const visited = useRecoilValue(aboutVisitedState)
 
   useEffect(() => {
-    navigation.navigate('AboutLiqualityDrawer', {})
-  }, [navigation])
+    if (!visited) {
+      navigation.navigate('AboutLiqualityDrawer', {})
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleImportPress = () =>
     navigation.navigate('TermsScreen', {

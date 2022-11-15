@@ -68,13 +68,14 @@ import NftCollectionScreen from '../screens/wallet-features/NFT/nft-collection-s
 import SelectChainScreen from '../screens/wallet-features/settings/select-chain-screen'
 import { AppIcons, Fonts } from '../assets'
 import {
+  aboutVisitedState,
   assetScreenPopupMenuVisible,
   historyItemsState,
   networkState,
   showSearchBarInputState,
   themeMode,
 } from '../atoms'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { scale } from 'react-native-size-matters'
 import { downloadAssetAcitivity, labelTranslateFn } from '../utils'
@@ -148,10 +149,18 @@ const LiqLogoHeaderLeft = () => {
 const AboutScreenRightBtn = (showDoneBtn: boolean) => {
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   const theme = useTheme<ThemeType>()
+
+  const setAboutVisited = useSetRecoilState(aboutVisitedState)
+
+  const onPress = () => {
+    setAboutVisited(true)
+    navigation.goBack()
+  }
+
   return (
     <TouchableOpacity
       style={{ paddingHorizontal: theme.spacing.l }}
-      onPress={navigation.goBack}>
+      onPress={onPress}>
       <Text
         variant={'listText'}
         color="white"
