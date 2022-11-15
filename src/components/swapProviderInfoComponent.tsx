@@ -360,6 +360,7 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
         </Box>
         {tabTileIndex ? (
           <TabView
+            key={1}
             renderTabBar={() => null}
             navigationState={{ index, routes }}
             renderScene={({ route }) => {
@@ -378,6 +379,7 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
           />
         ) : (
           <TabView
+            key={2}
             renderTabBar={() => null}
             navigationState={{ index, routes }}
             renderScene={({ route }) => {
