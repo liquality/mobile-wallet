@@ -18,7 +18,6 @@ import {
   cryptoToFiat,
   fiatToCrypto,
 } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
-import AssetIcon from '../../../components/asset-icon'
 import QrCodeScanner from '../../../components/qr-code-scanner'
 import {
   Box,
@@ -48,6 +47,7 @@ import ChevronRight from '../../../assets/icons/chevronRight.svg'
 import ArrowUp from '../../../assets/icons/arrowUp.svg'
 import { Path, Svg } from 'react-native-svg'
 import SendReviewScreen from './send-review-screen'
+import CombinedChainAssetIcons from '../../../components/ui/CombinedChainAssetIcons'
 
 const { QRCode } = AppIcons
 
@@ -368,14 +368,9 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                     returnKeyType="done"
                     cursorColor={faceliftPalette.active}
                   />
-                  <AssetIcon
-                    size={scale(25)}
+                  <CombinedChainAssetIcons
                     chain={getAsset(activeNetwork, code).chain}
-                  />
-                  <AssetIcon
-                    size={scale(25)}
-                    styles={{ right: scale(10), top: scale(5) }}
-                    asset={code}
+                    code={code}
                   />
                   <Pressable onPress={handleChevronRightPress}>
                     <ChevronRight />
