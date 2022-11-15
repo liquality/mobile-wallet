@@ -32,6 +32,7 @@ import {
 import { getAsset } from '@liquality/cryptoassets'
 import I18n from 'i18n-js'
 import {
+  ASSET_SCREEN_HEIGHT,
   downloadAssetAcitivity,
   labelTranslateFn,
   SCREEN_WIDTH,
@@ -273,15 +274,9 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
           <Card
             variant={'headerCard'}
             paddingHorizontal="xl"
-            paddingBottom={'mxxl'}>
-            <Box
-              marginTop="mxxl"
-              marginBottom={'xxl'}
-              justifyContent="space-between">
-              <Box
-                marginBottom={'l'}
-                flexDirection={'row'}
-                alignItems={'center'}>
+            height={ASSET_SCREEN_HEIGHT}>
+            <Box justifyContent="center" flex={0.6} paddingTop="l">
+              <Box flexDirection={'row'} alignItems={'center'}>
                 <CombinedChainAssetIcons
                   chain={getAsset(activeNetwork, code).chain}
                   code={code}
@@ -290,7 +285,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
                   {shortenAddress(address)}{' '}
                 </Text>
               </Box>
-              <Text color={'darkGrey'} variant="totalAsset">
+              <Text color={'darkGrey'} variant="totalAsset" marginTop={'l'}>
                 {`${prettyBalance(
                   new BigNumber(balance),
                   code,
@@ -299,8 +294,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
               <Box
                 flexDirection="row"
                 justifyContent={'space-between'}
-                alignItems={'center'}
-                marginBottom={'m'}>
+                alignItems={'center'}>
                 <Text variant="totalAsset" color={'nestedColor'}>
                   {`$${prettyFiatBalance(
                     prettyBalance(new BigNumber(balance), code),
@@ -312,23 +306,25 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
                 </Pressable>
               </Box>
             </Box>
-            <Box flexDirection={'row'} justifyContent="space-evenly">
-              {appFeatures.map((item, index) => (
-                <Box
-                  key={index}
-                  alignItems={'center'}
-                  width={SCREEN_WIDTH / 4.1}>
-                  <TouchableWithoutFeedback onPress={item.navigateTo}>
-                    <item.Icon />
-                  </TouchableWithoutFeedback>
-                  <Text
-                    marginTop={'m'}
-                    variant="addressLabel"
-                    color={'darkGrey'}>
-                    {item.name}
-                  </Text>
-                </Box>
-              ))}
+            <Box flex={0.4} marginTop="l">
+              <Box flexDirection={'row'} justifyContent="space-evenly">
+                {appFeatures.map((item, index) => (
+                  <Box
+                    key={index}
+                    alignItems={'center'}
+                    width={SCREEN_WIDTH / 4.1}>
+                    <TouchableWithoutFeedback onPress={item.navigateTo}>
+                      <item.Icon />
+                    </TouchableWithoutFeedback>
+                    <Text
+                      marginTop={'m'}
+                      variant="addressLabel"
+                      color={'darkGrey'}>
+                      {item.name}
+                    </Text>
+                  </Box>
+                ))}
+              </Box>
             </Box>
           </Card>
 
