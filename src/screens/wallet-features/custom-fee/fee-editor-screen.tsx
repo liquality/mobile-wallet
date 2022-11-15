@@ -37,7 +37,7 @@ import SlowIcon from '../../../assets/icons/slow.svg'
 import AverageIcon from '../../../assets/icons/average.svg'
 import FastIcon from '../../../assets/icons/fast.svg'
 import CloseIcon from '../../../assets/icons/close.svg'
-import SwapProviderInfoIcon from '../../../assets/icons/swapProviderInfo.svg'
+// import SwapProviderInfoIcon from '../../../assets/icons/swapProviderInfo.svg'
 import { scale } from 'react-native-size-matters'
 import ButtonFooter from '../../../components/button-footer'
 import AssetIcon from '../../../components/asset-icon'
@@ -714,12 +714,13 @@ const FeeEditorScreen = ({
   amount,
   applyFee,
   networkSpeed,
-  transactionType,
+  // transactionType,
   isSpeedUp = false,
   claimFee = 0,
   maxBalance = 0,
 }: FeeEditorScreenType) => {
   const layout = useWindowDimensions()
+
   const activeNetwork = useRecoilValue(networkState)
   const initialRoutes = [{ key: 'standard', title: 'Standard' }]
   let currentIndex = 0
@@ -731,6 +732,10 @@ const FeeEditorScreen = ({
   }
   const [index, setIndex] = useState(currentIndex)
   const [routes] = useState(initialRoutes)
+
+  // const onSwapProviderIconPress = () => {
+  //   navigation.navigate('SwapProviderInfoDrawer', { isScrolledUp: false })
+  // }
 
   const renderScene = ({ route }: { route: Route }) => {
     switch (route.key) {
@@ -799,13 +804,14 @@ const FeeEditorScreen = ({
                 {labelTranslateFn('common.networkSpeed')}
               </Text>
             </Box>
-            {transactionType === ActionEnum.SWAP ? (
-              <Pressable onPress={() => onClose(false)}>
+            {/* {transactionType === ActionEnum.SWAP ? (
+              <Pressable onPress={onSwapProviderIconPress}>
                 <SwapProviderInfoIcon width={24} height={20} />
               </Pressable>
             ) : (
               <Box width={24} />
-            )}
+            )} */}
+            <Box width={24} />
           </Box>
           <TabView
             swipeEnabled={false}

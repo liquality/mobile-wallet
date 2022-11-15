@@ -228,15 +228,16 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
   }, [langSelected])
 
   const [index, setIndex] = React.useState(0)
-  const routes = tabTileIndex
-    ? bridgesTile.map((item) => ({
-        key: item.name,
-        title: item.name,
-      }))
-    : swapProviderTiles.map((item) => ({
-        key: item.name,
-        title: item.name,
-      }))
+
+  const swapRoutes = swapProviderTiles.map((item) => ({
+    key: item.name,
+    title: item.name,
+  }))
+
+  const bridgeRoutes = bridgesTile.map((item) => ({
+    key: item.name,
+    title: item.name,
+  }))
 
   const onIndexChange = (itemNum: number) => {
     setSelectedItem(swapProviderTiles[itemNum])
@@ -360,15 +361,16 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
         </Box>
         {tabTileIndex ? (
           <TabView
+            key={1}
             renderTabBar={() => null}
-            navigationState={{ index, routes }}
+            navigationState={{ index, routes: bridgeRoutes }}
             renderScene={({ route }) => {
               switch (route.key) {
-                case routes[0].key:
+                case bridgeRoutes[0].key:
                   return <TabContent selectedItem={bridgesTile[0]} />
-                case routes[1].key:
+                case bridgeRoutes[1].key:
                   return <TabContent selectedItem={bridgesTile[1]} />
-                case routes[2].key:
+                case bridgeRoutes[2].key:
                   return <TabContent selectedItem={bridgesTile[2]} />
               }
             }}
@@ -378,23 +380,24 @@ const SwapProviderInfoComponent: React.FC<Props> = ({
           />
         ) : (
           <TabView
+            key={2}
             renderTabBar={() => null}
-            navigationState={{ index, routes }}
+            navigationState={{ index, routes: swapRoutes }}
             renderScene={({ route }) => {
               switch (route.key) {
-                case routes[0].key:
+                case swapRoutes[0].key:
                   return <TabContent selectedItem={swapProviderTiles[0]} />
-                case routes[1].key:
+                case swapRoutes[1].key:
                   return <TabContent selectedItem={swapProviderTiles[1]} />
-                case routes[2].key:
+                case swapRoutes[2].key:
                   return <TabContent selectedItem={swapProviderTiles[2]} />
-                case routes[3].key:
+                case swapRoutes[3].key:
                   return <TabContent selectedItem={swapProviderTiles[3]} />
-                case routes[4].key:
+                case swapRoutes[4].key:
                   return <TabContent selectedItem={swapProviderTiles[4]} />
-                case routes[5].key:
+                case swapRoutes[5].key:
                   return <TabContent selectedItem={swapProviderTiles[5]} />
-                case routes[6].key:
+                case swapRoutes[6].key:
                   return <TabContent selectedItem={swapProviderTiles[6]} />
               }
             }}
