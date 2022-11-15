@@ -33,7 +33,7 @@ import {
   FLEX_1,
 } from '../../../theme'
 import { AppIcons } from '../../../assets'
-import { scale } from 'react-native-size-matters'
+import { moderateScale, scale } from 'react-native-size-matters'
 import {
   balanceStateFamily,
   fiatRatesState,
@@ -707,10 +707,16 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
     }
   }, [error, swapPair.fromAsset?.code])
 
+  // Avoid NaN if user enters only decimal points
+  let formattedValueForFrom = state.fromAmount
+  if (state.fromAmount.length === 1 && state.fromAmount === '.') {
+    formattedValueForFrom = '0'
+  }
+
   return (
     <Box flex={1} backgroundColor="mainBackground" paddingHorizontal={'xl'}>
       <Box flex={1}>
-        <Box flex={0.75}>
+        <Box flex={0.9}>
           <ScrollView
             style={FLEX_1}
             scrollEnabled={!!error.msg}
@@ -718,9 +724,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             {error.msg ? (
               <Box paddingVertical={'xl'}>{getCompatibleErrorMsg()}</Box>
             ) : null}
-            <Box height={scale(355)} width="100%">
+            <Box height={moderateScale(305, 1.5)} width="100%">
               <Box
-                height={scale(175)}
+                height={moderateScale(150, 1.5)}
                 width={'100%'}
                 backgroundColor={fromBackgroundColor}
                 padding={'xl'}>
@@ -738,9 +744,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                   flexDirection={'row'}
                   marginTop={'s'}
                   justifyContent="space-between"
-                  height={scale(36)}
+                  height={scale(30)}
                   width={'100%'}>
-                  <Box flex={0.8}>
+                  <Box flex={1}>
                     <TextInput
                       cursorColor={faceliftPalette.active}
                       variant={'swapInput'}
@@ -749,7 +755,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                       onFocus={fromFocused}
                       onBlur={onBlur}
                       maxLength={15}
-                      value={state.fromAmount}
+                      value={formattedValueForFrom}
                       keyboardType="numeric"
                     />
                   </Box>
@@ -785,11 +791,17 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                     paddingLeft="s"
                     paddingTop="s">
                     {isFromAmountNative
-                      ? `$${fromFormatedFiat}`
-                      : `${swapPair.fromAsset?.code} ${fromFiatToCrypto}`}
+                      ? isNaN(Number(fromCryptoToFiat))
+                        ? '$0.00'
+                        : `$${fromFormatedFiat}`
+                      : `${swapPair.fromAsset?.code} ${
+                          isNaN(Number(fromFiatToCrypto))
+                            ? 0.0
+                            : fromFiatToCrypto
+                        }`}
                   </Text>
                 </Box>
-                <Box flexDirection={'row'} alignItems="center" marginTop={'m'}>
+                <Box flexDirection={'row'} alignItems="center" marginTop={'s'}>
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => {
@@ -831,7 +843,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
               </Box>
               <Box height={scale(5)} width={'100%'} />
               <Box
-                height={scale(175)}
+                height={moderateScale(150, 1.5)}
                 width={'100%'}
                 backgroundColor={'mediumWhite'}
                 padding={'xl'}>
@@ -844,9 +856,9 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                   flexDirection={'row'}
                   marginTop={'s'}
                   justifyContent="space-between"
-                  height={scale(36)}
+                  height={scale(30)}
                   width={'100%'}>
-                  <Box flex={0.8}>
+                  <Box flex={1}>
                     <TextInput
                       cursorColor={faceliftPalette.active}
                       variant={'swapInput'}
@@ -889,8 +901,12 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
                     paddingLeft="s"
                     paddingTop="s">
                     {isToAmountNative
-                      ? `$${toFormatedFiat}`
-                      : `${swapPair.toAsset?.code} ${toFiatToCrypto}`}
+                      ? isNaN(Number(toCryptoToFiat))
+                        ? '0'
+                        : `$${toFormatedFiat}`
+                      : `${swapPair.toAsset?.code} ${
+                          isNaN(Number(toFiatToCrypto)) ? 0.0 : toFiatToCrypto
+                        }`}
                   </Text>
                 </Box>
               </Box>
@@ -947,7 +963,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             ) : null}
             <Box
               flexDirection={'row'}
-              marginTop="xxl"
+              marginTop="xl"
               alignItems="center"
               justifyContent={'center'}>
               <Text
@@ -962,8 +978,8 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             </Box>
           </ScrollView>
         </Box>
-        <Box flex={0.25}>
-          <Box marginVertical={'xl'}>
+        <Box flex={0.2}>
+          <Box marginVertical={'s'}>
             <Pressable
               label={{ tx: 'common.next' }}
               onPress={handleReviewBtnPress}
@@ -994,6 +1010,7 @@ const SwapScreen: FC<SwapScreenProps> = (props) => {
             onPress={navigation.goBack}
             textAlign={'center'}
             variant="link"
+            marginTop={'m'}
             tx="termsScreen.cancel"
           />
         </Box>

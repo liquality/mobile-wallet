@@ -37,7 +37,7 @@ import SlowIcon from '../../../assets/icons/slow.svg'
 import AverageIcon from '../../../assets/icons/average.svg'
 import FastIcon from '../../../assets/icons/fast.svg'
 import CloseIcon from '../../../assets/icons/close.svg'
-import SwapProviderInfoIcon from '../../../assets/icons/swapProviderInfo.svg'
+// import SwapProviderInfoIcon from '../../../assets/icons/swapProviderInfo.svg'
 import { scale } from 'react-native-size-matters'
 import ButtonFooter from '../../../components/button-footer'
 import AssetIcon from '../../../components/asset-icon'
@@ -369,7 +369,7 @@ const CustomizeRoute = ({
     networkSpeed || FeeLabel.Slow,
   )
   const [, setError] = useState('')
-  const [currentBaseFee, setCurrentBaseFee] = useState()
+  const [currentBaseFee, setCurrentBaseFee] = useState('')
   const [gasFees, setGasFees] = useState<FDs>()
   const nativeAssetCode = getNativeAsset(selectedAsset)
   const accountForAsset = useRecoilValue(accountForAssetState(nativeAssetCode))
@@ -412,10 +412,10 @@ const CustomizeRoute = ({
   )
 
   const getSummaryMaximum = () => {
-    if (totalFees && gasFees?.[speed]?.fee) {
+    if (totalFees && gasFees && gasFees?.[speed]?.fee) {
       const maximumFee = maxFeePerUnitEIP1559({
-        maxFeePerGas: Number(maxFeeInput.value),
-        maxPriorityFeePerGas: Number(minerTipInput.value),
+        maxFeePerGas: Number(maxFeeInput),
+        maxPriorityFeePerGas: Number(minerTipInput),
         suggestedBaseFeePerGas: Number(
           gasFees[speed].fee.suggestedBaseFeePerGas,
         ),
@@ -424,6 +424,7 @@ const CustomizeRoute = ({
       const totalMaxFee = getSendFee(nativeAssetCode, Number(maximumFee)).plus(
         totalFees.fast,
       )
+
       return {
         amount: new BigNumber(totalMaxFee).dp(6),
         fiat: prettyFiatBalance(totalFees.fast, fiatRates[nativeAssetCode]),
@@ -511,6 +512,15 @@ const CustomizeRoute = ({
     showSpeedError = !buttonActiveState
   } else {
     buttonActiveState = !!maxFeeInput
+  }
+
+  let maxFee = ''
+
+  if (gasFees && speed) {
+    maxFee = prettyFiatBalance(
+      getSendFee(selectedAsset, maxFeePerUnitEIP1559(gasFees[speed].fee)),
+      fiatRates[selectedAsset],
+    ).toString()
   }
 
   return (
@@ -660,18 +670,12 @@ const CustomizeRoute = ({
               <Text variant="normalText" color="greyMeta">
                 {`~ $${getSummaryMaximum()?.fiat}`}
               </Text>
-              <Text variant="normalText" color="greyMeta">
-                {gasFees?.[speed].fee &&
-                  `${labelTranslateFn(
-                    'customFeeScreen.max',
-                  )} $${prettyFiatBalance(
-                    getSendFee(
-                      selectedAsset,
-                      maxFeePerUnitEIP1559(gasFees[speed].fee),
-                    ),
-                    fiatRates[selectedAsset],
-                  )}`}
-              </Text>
+              {!isNaN(Number(maxFee)) ? (
+                <Text variant="normalText" color="greyMeta">
+                  {gasFees?.[speed].fee &&
+                    `${labelTranslateFn('customFeeScreen.max')} $${maxFee}`}
+                </Text>
+              ) : null}
             </Box>
           </Box>
         </ScrollView>
@@ -714,12 +718,13 @@ const FeeEditorScreen = ({
   amount,
   applyFee,
   networkSpeed,
-  transactionType,
+  // transactionType,
   isSpeedUp = false,
   claimFee = 0,
   maxBalance = 0,
 }: FeeEditorScreenType) => {
   const layout = useWindowDimensions()
+
   const activeNetwork = useRecoilValue(networkState)
   const initialRoutes = [{ key: 'standard', title: 'Standard' }]
   let currentIndex = 0
@@ -731,6 +736,10 @@ const FeeEditorScreen = ({
   }
   const [index, setIndex] = useState(currentIndex)
   const [routes] = useState(initialRoutes)
+
+  // const onSwapProviderIconPress = () => {
+  //   navigation.navigate('SwapProviderInfoDrawer', { isScrolledUp: false })
+  // }
 
   const renderScene = ({ route }: { route: Route }) => {
     switch (route.key) {
@@ -799,13 +808,14 @@ const FeeEditorScreen = ({
                 {labelTranslateFn('common.networkSpeed')}
               </Text>
             </Box>
-            {transactionType === ActionEnum.SWAP ? (
-              <Pressable onPress={() => onClose(false)}>
+            {/* {transactionType === ActionEnum.SWAP ? (
+              <Pressable onPress={onSwapProviderIconPress}>
                 <SwapProviderInfoIcon width={24} height={20} />
               </Pressable>
             ) : (
               <Box width={24} />
-            )}
+            )} */}
+            <Box width={24} />
           </Box>
           <TabView
             swipeEnabled={false}
