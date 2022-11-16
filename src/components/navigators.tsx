@@ -960,7 +960,7 @@ export const StackMainNavigator = () => {
           options={() => ({
             headerBackVisible: false,
             headerShadowVisible: false,
-            title: labelTranslateFn('assetScreen.swap') || '',
+            title: labelTranslateFn('swap')!,
             headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
             headerLeft: undefined,
