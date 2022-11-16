@@ -351,22 +351,24 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
                 backgroundColor={'activeLink'}
               />
             </Box>
-            <Box
-              flexDirection={'row'}
-              marginTop={'mxxl'}
-              height={scale(40)}
-              width={'20%'}
-              justifyContent="space-between">
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('ActivityFilterScreen', { code })
-                }>
-                <Filter />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => onExportIconPress()}>
-                <ExportIcon height={scale(25)} />
-              </TouchableOpacity>
-            </Box>
+            {historyItems.length ? (
+              <Box
+                flexDirection={'row'}
+                marginTop={'mxxl'}
+                height={scale(40)}
+                width={'20%'}
+                justifyContent="space-between">
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('ActivityFilterScreen', { code })
+                  }>
+                  <Filter />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => onExportIconPress()}>
+                  <ExportIcon height={scale(25)} />
+                </TouchableOpacity>
+              </Box>
+            ) : null}
           </Box>
           {/* For some reason ActivityFlatList started throwing undefined errors upon SEND navigation and flow.
         Should be fixed, can be commented out to bypass that error for now */}

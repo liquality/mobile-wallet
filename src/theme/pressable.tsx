@@ -92,7 +92,7 @@ export const Pressable: FC<Props> = (props) => {
       {...rest}
       variant={currentVariant}
       disabled={disabled}
-      style={[buttonStyle, styles, { borderColor }]}>
+      style={[buttonStyle, { borderColor }, styles]}>
       {isLoading ? (
         <ActivityIndicator color={theme.colors.spinner} />
       ) : icon ? (

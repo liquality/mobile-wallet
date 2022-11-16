@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/core'
 import { OverviewProps } from '../screens/wallet-features/home/overview-screen'
 import { useRecoilValue } from 'recoil'
 import { showFilterState } from '../atoms'
-import { Text, Box, Pressable } from '../theme'
+import { Text, Box, Pressable, faceliftPalette } from '../theme'
 import HistoryItemComponent from './overview/history-item-component'
 
 const ActivityFlatList = ({
@@ -92,6 +92,7 @@ const ActivityFlatList = ({
             onPress={onBuyCryptoPress}
             variant="defaultOutline"
             buttonSize={'half'}
+            style={{ borderColor: faceliftPalette.buttonActive }}
           />
         </Box>
       )}
