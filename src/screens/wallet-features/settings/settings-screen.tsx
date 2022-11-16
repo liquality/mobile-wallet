@@ -10,9 +10,8 @@ import {
 import GeneralSwitch from '../../../components/ui/general-switch'
 import {
   DarkModeEnum,
-  RootStackParamList,
   CustomRootState,
-  SettingStackParamList,
+  MainStackParamList,
 } from '../../../types'
 import WhatsNew from '../../../components/ui/whats-new'
 import { downloadWalletLogs, labelTranslateFn } from '../../../utils'
@@ -25,7 +24,6 @@ import {
   langSelected,
 } from '../../../atoms'
 import DeviceInfo from 'react-native-device-info'
-import { NavigationProp, useNavigation } from '@react-navigation/core'
 import i18n from 'i18n-js'
 import { toggleNetwork } from '../../../store/store'
 import { Network } from '@liquality/wallet-core/dist/src/store/types'
@@ -50,18 +48,14 @@ const {
   LockIcon,
 } = AppIcons
 
-type SettingsScreenProps = BottomTabScreenProps<
-  SettingStackParamList,
-  'Settings'
->
+type SettingsScreenProps = BottomTabScreenProps<MainStackParamList, 'Settings'>
 
-const SettingsScreen = ({ route }: SettingsScreenProps) => {
+const SettingsScreen = ({ route, navigation }: SettingsScreenProps) => {
   const walletStateCopy = useRecoilValue(walletState)
   const [analytics, setAnalytics] = useRecoilState(optInAnalyticsState)
   const [activeNetwork, setActiveNetwork] = useRecoilState(networkState)
   const [theme, setTheme] = useRecoilState(themeMode)
   const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>()
   const [lang, setLangSelected] = useRecoilState(langSelected)
 
   const toggleAnalyticsOptin = () => {
@@ -85,7 +79,7 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
   }, [navigation])
 
   const handleBackupPrivateKeyPress = useCallback(() => {
-    navigation.navigate('SelectChainScreen')
+    navigation.navigate('SelectChainScreen', {})
   }, [navigation])
 
   const handNetworkPress = useCallback(
@@ -275,25 +269,6 @@ const SettingsScreen = ({ route }: SettingsScreenProps) => {
             }
           />
         </Box>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => Linking.openURL('https://liquality.io/')}>
-          <Box
-            flexDirection={'row'}
-            justifyContent="space-between"
-            alignItems={'center'}
-            marginTop={'l'}
-            borderBottomColor={'mediumGrey'}
-            borderBottomWidth={1}
-            height={scale(50)}>
-            <Text
-              variant={'listText'}
-              color={'defaultButton'}
-              tx="settingsScreen.aboutLiquality"
-            />
-            <ChevronRightIcon height={scale(15)} width={scale(15)} />
-          </Box>
-        </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.7} onPress={handleLockPress}>
           <Box
             flexDirection={'row'}
