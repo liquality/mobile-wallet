@@ -5,7 +5,6 @@ import {
   View,
   ScrollView,
   ImageBackground,
-  TouchableOpacity,
 } from 'react-native'
 import {
   prettyBalance,
@@ -15,7 +14,13 @@ import ActivityFlatList from '../../../components/activity-flat-list'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, MainStackParamList } from '../../../types'
 import { BigNumber } from '@liquality/types'
-import { Text, Box, Card, faceliftPalette } from '../../../theme'
+import {
+  Text,
+  Box,
+  Card,
+  faceliftPalette,
+  TouchableOpacity,
+} from '../../../theme'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   activityFilterState,
@@ -327,41 +332,39 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
               </Box>
             </Box>
           </Card>
-
           <Box
             marginHorizontal={'xl'}
             marginBottom={'xl'}
             justifyContent="space-between"
-            alignItems={'center'}
             flexDirection="row">
             <Box>
               <Text
                 marginTop={'mxxl'}
                 variant={'tabLabel'}
                 color={'tablabelActiveColor'}
-                tx={'assetScreen.activity'}
+                tx={'activity'}
               />
               <Box
-                borderBottomWidth={2}
-                borderBottomColor={'activeLink'}
-                width={scale(15)}
+                height={scale(2)}
+                width={scale(20)}
+                marginTop="m"
+                backgroundColor={'activeLink'}
               />
             </Box>
             <Box
               flexDirection={'row'}
               marginTop={'mxxl'}
-              width={scale(50)}
-              justifyContent="space-between"
-              alignItems="center">
+              height={scale(40)}
+              width={'20%'}
+              justifyContent="space-between">
               <TouchableOpacity
-                activeOpacity={0.7}
                 onPress={() =>
                   navigation.navigate('ActivityFilterScreen', { code })
                 }>
                 <Filter />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => onExportIconPress()}>
-                <ExportIcon />
+                <ExportIcon height={scale(25)} />
               </TouchableOpacity>
             </Box>
           </Box>
