@@ -7,6 +7,8 @@ install! 'cocoapods', :deterministic_uuids => false
 
 permissions_path = '../node_modules/react-native-permissions/ios'
 pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+pod 'FirebaseCore', :modular_headers => true
+pod 'GoogleUtilities', :modular_headers => true
 
 target 'Liquality' do
   use_expo_modules!
