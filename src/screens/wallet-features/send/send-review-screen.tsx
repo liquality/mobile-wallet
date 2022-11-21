@@ -14,6 +14,8 @@ import {
   historyIdsState,
   historyStateFamily,
   networkState,
+  optInAnalyticsState,
+  walletState,
 } from '../../../atoms'
 import {
   FeeLabel,
@@ -24,6 +26,9 @@ import { currencyToUnit, getAsset } from '@liquality/cryptoassets'
 import { NavigationProp, useNavigation } from '@react-navigation/core'
 import { AccountType, MainStackParamList } from '../../../types'
 import CloseIcon from '../../../assets/icons/close.svg'
+import analytics from '@react-native-firebase/analytics'
+import cryptoassets from '@liquality/wallet-core/dist/src/utils/cryptoassets'
+import DeviceInfo from 'react-native-device-info'
 
 type SendReviewDrawerScreenProps = {
   amount: number
@@ -58,6 +63,9 @@ const SendReviewScreen = (props: SendReviewDrawerScreenProps) => {
         set(historyStateFamily(transactionId), historyItem)
       },
   )
+  const optinAnalytics = useRecoilValue(optInAnalyticsState)
+  const wallet = useRecoilValue(walletState)
+  const walletVersion = DeviceInfo.getVersion()
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
 
   const handleSendPress = async () => {
@@ -79,6 +87,24 @@ const SendReviewScreen = (props: SendReviewDrawerScreenProps) => {
         feeLabel: speedLabel,
         memo: '',
       })
+
+      if (optinAnalytics?.acceptedDate) {
+        const { activeWalletId, version } = wallet
+        await analytics().logEvent('SendScreen', {
+          category: 'Send/Receive',
+          action: 'Funds sent',
+          fiatRate: prettyFiatBalance(amount, fiatRates[transaction.from]),
+          fromAsset: cryptoassets[transaction.from],
+          toAsset: cryptoassets[transaction.to],
+          fee: `${transaction.feeLabel}`,
+          typeOfAccount: assetData.type,
+          nameOfAccount: assetData.name,
+          network: activeNetwork,
+          walletId: activeWalletId,
+          migrationVersion: version,
+          walletVersion,
+        })
+      }
 
       delete transaction.tx._raw
 

@@ -4,18 +4,21 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, RootStackParamList } from '../../types'
 import { useEffect } from 'react'
 import { createWallet } from '../../store/store'
-import { useRecoilCallback, useSetRecoilState } from 'recoil'
+import { useRecoilCallback, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   accountInfoStateFamily,
   accountsIdsState,
   accountsIdsForMainnetState,
   addressStateFamily,
   balanceStateFamily,
+  optInAnalyticsState,
 } from '../../atoms'
 import { getAsset, getChain } from '@liquality/cryptoassets'
 import { Alert } from 'react-native'
 import { labelTranslateFn } from '../../utils'
 import { Network } from '@liquality/cryptoassets/dist/src/types'
+import analytics from '@react-native-firebase/analytics'
+import DeviceInfo from 'react-native-device-info'
 
 type LoadingScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -25,6 +28,8 @@ type LoadingScreenProps = NativeStackScreenProps<
 const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
   const setAccountsIds = useSetRecoilState(accountsIdsState)
   const setAccountsIdsForMainnet = useSetRecoilState(accountsIdsForMainnetState)
+  const optinAnalytics = useRecoilValue(optInAnalyticsState)
+  const walletVersion = DeviceInfo.getVersion()
   const addAssetBalance = useRecoilCallback(
     ({ set }) =>
       (accountId: string, accountCode: string) => {
@@ -43,7 +48,7 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
   useEffect(() => {
     createWallet(route.params.password || '', route.params.mnemonic || '').then(
       (wallet) => {
-        const { activeWalletId } = wallet
+        const { activeWalletId, activeNetwork } = wallet
         let supportedNetWorks = [Network.Mainnet, Network.Testnet]
 
         for (let network of supportedNetWorks) {
@@ -65,6 +70,7 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
                 color: account.color,
                 assets: {},
                 balance: 0,
+                type: account.type,
               }
 
               for (const asset of account.assets) {
@@ -76,6 +82,7 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
                   color: account.color,
                   balance: 0,
                   assets: {},
+                  type: account.type,
                 }
                 addAssetBalance(account.id, asset)
               }
@@ -89,6 +96,18 @@ const LoadingScreen = ({ route, navigation }: LoadingScreenProps) => {
           } else {
             Alert.alert(labelTranslateFn('loadingScreen.failedImport')!)
             return
+          }
+
+          if (optinAnalytics?.acceptedDate) {
+            const { version } = wallet
+            analytics().logEvent('Onboarding', {
+              category: 'Onboarding',
+              action: 'User Onboarded',
+              network: activeNetwork,
+              walletId: activeWalletId,
+              migrationVersion: version,
+              walletVersion,
+            })
           }
 
           navigation.navigate('CongratulationsScreen')

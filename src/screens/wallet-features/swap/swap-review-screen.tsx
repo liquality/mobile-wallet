@@ -14,16 +14,23 @@ import {
   historyIdsState,
   historyStateFamily,
   networkState,
+  optInAnalyticsState,
   swapQuoteState,
+  walletState,
 } from '../../../atoms'
 import { CommonActions } from '@react-navigation/native'
 import { AppIcons } from '../../../assets'
 import { getAsset } from '@liquality/cryptoassets'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { scale } from 'react-native-size-matters'
-import { dpUI } from '@liquality/wallet-core/dist/src/utils/coinFormatter'
+import {
+  dpUI,
+  prettyFiatBalance,
+} from '@liquality/wallet-core/dist/src/utils/coinFormatter'
 import { calculateQuoteRate } from '@liquality/wallet-core/dist/src/utils/quotes'
 import AssetIcon from '../../../components/asset-icon'
+import analytics from '@react-native-firebase/analytics'
+import DeviceInfo from 'react-native-device-info'
 
 const { Clock, DoubleArrowThick } = AppIcons
 
@@ -43,6 +50,9 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
   const ids = useRecoilValue(historyIdsState)
   const activeNetwork = useRecoilValue(networkState)
   const quote = useRecoilValue(swapQuoteState)
+  const optinAnalytics = useRecoilValue(optInAnalyticsState)
+  const wallet = useRecoilValue(walletState)
+  const walletVersion = DeviceInfo.getVersion()
 
   const addTransaction = useRecoilCallback(
     ({ set }) =>
@@ -91,6 +101,31 @@ const SwapReviewScreen: FC<SwapReviewScreenProps> = (props) => {
 
           delete transaction.quote
           delete transaction.fromFundTx._raw */
+
+          if (optinAnalytics?.acceptedDate) {
+            const { activeWalletId, version } = wallet
+            await analytics().logEvent('SwapScreen', {
+              category: 'Swaps',
+              action: 'Swap Initiated',
+              swapFrom: `${fromAsset}`,
+              swapTo: `${toAsset}`,
+              swapProvider: `${transaction.swap.provider}`,
+              fromAmount: fromAmount,
+              toAmount: toAmount,
+              fromAmountFiat: prettyFiatBalance(
+                fromAmount,
+                fiatRates[transaction.swap.from],
+              ),
+              toAmountFiat: prettyFiatBalance(
+                toAmount,
+                fiatRates[transaction.swap.to],
+              ),
+              network: activeNetwork,
+              walletId: activeWalletId,
+              migrationVersion: version,
+              walletVersion,
+            })
+          }
 
           addTransaction(transaction.id, transaction)
 
