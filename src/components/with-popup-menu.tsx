@@ -7,6 +7,9 @@ import { Box, Text } from '../theme'
 import { AppIcons, Images } from '../assets'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { scale, ScaledSheet } from 'react-native-size-matters'
+import analytics from '@react-native-firebase/analytics'
+import { optInAnalyticsState } from '../atoms'
+import { useRecoilValue } from 'recoil'
 
 const { LockIcon, ManageAssetsDarkIcon, Settings } = AppIcons
 
@@ -21,8 +24,16 @@ const WithPopupMenu = (props: Props) => {
   const { navigation } = props
 
   const headerHeight = useHeaderHeight()
+  const optinAnalytics = useRecoilValue(optInAnalyticsState)
 
-  const handleLockPress = () => {
+  const handleLockPress = async () => {
+    if (optinAnalytics?.acceptedDate) {
+      await analytics().logEvent('HamburgerIcon', {
+        category: 'HamburgerIcon',
+        action: 'Click on Lock',
+      })
+    }
+
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
@@ -31,7 +42,13 @@ const WithPopupMenu = (props: Props) => {
     )
   }
 
-  const handleManageAssetsBtnPress = () => {
+  const handleManageAssetsBtnPress = async () => {
+    if (optinAnalytics?.acceptedDate) {
+      await analytics().logEvent('HamburgerIcon', {
+        category: 'HamburgerIcon',
+        action: 'Click on Manage Assets',
+      })
+    }
     navigation.goBack()
     // added setTimeout to avoid back arrow get render
     setTimeout(() => {
@@ -39,7 +56,13 @@ const WithPopupMenu = (props: Props) => {
     }, 0)
   }
 
-  const handleManageAccountBtnPress = () => {
+  const handleManageAccountBtnPress = async () => {
+    if (optinAnalytics?.acceptedDate) {
+      await analytics().logEvent('HamburgerIcon', {
+        category: 'HamburgerIcon',
+        action: 'Click on Manage Accounts',
+      })
+    }
     navigation.goBack()
     // added setTimeout to avoid back arrow get render
     setTimeout(() => {

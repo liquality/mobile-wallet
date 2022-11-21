@@ -22,8 +22,10 @@ import {
 import { restoreWallet } from '../../store/store'
 import { CommonActions } from '@react-navigation/native'
 import { useRecoilValue } from 'recoil'
-import { networkState } from '../../atoms'
+import { networkState, optInAnalyticsState, walletState } from '../../atoms'
 import { Keyboard } from 'react-native'
+import analytics from '@react-native-firebase/analytics'
+import DeviceInfo from 'react-native-device-info'
 
 const { LogoFull, OneWalletAllChains } = AppIcons
 
@@ -46,6 +48,9 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const activeNetwork = useRecoilValue(networkState)
+  const optinAnalytics = useRecoilValue(optInAnalyticsState)
+  const wallet = useRecoilValue(walletState)
+  const walletVersion = DeviceInfo.getVersion()
 
   const onUnlock = async () => {
     if (!passwordInput.value || passwordInput.value.length < PASSWORD_LENGTH) {
@@ -55,6 +60,17 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
         Keyboard.dismiss()
         setLoading(true)
         await restoreWallet(passwordInput.value, activeNetwork)
+        if (optinAnalytics?.acceptedDate) {
+          const { activeWalletId, version } = wallet
+          await analytics().logEvent('UnlockWallet', {
+            category: 'Lock/Unlock',
+            action: 'Wallet Unlocked',
+            network: activeNetwork,
+            walletId: activeWalletId,
+            migrationVersion: version,
+            walletVersion,
+          })
+        }
         setLoading(false)
         navigation.dispatch(
           CommonActions.reset({

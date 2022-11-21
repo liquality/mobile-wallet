@@ -11,7 +11,10 @@ import {
   SendHistoryItem,
   SwapHistoryItem,
 } from '@liquality/wallet-core/dist/src/store/types'
-import { Asset } from '@liquality/wallet-core/dist/src/store/types'
+import {
+  Asset,
+  AccountType as AccountEnum,
+} from '@liquality/wallet-core/dist/src/store/types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 export interface IClientMeta {
@@ -72,6 +75,7 @@ export interface AccountType {
   assets: Record<Asset, AccountType>
   fees?: FeeDetails
   activeNetwork?: Network
+  type: AccountEnum
 }
 export interface NFTAsset {
   length: number

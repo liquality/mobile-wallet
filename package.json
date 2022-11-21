@@ -33,6 +33,8 @@
     "@liquality/wallet-core": "2.0.0",
     "@react-native-clipboard/clipboard": "^1.9.0",
     "@react-native-community/push-notification-ios": "^1.10.1",
+    "@react-native-firebase/analytics": "^16.4.5",
+    "@react-native-firebase/app": "^16.4.5",
     "@react-navigation/bottom-tabs": "^6.2.0",
     "@react-navigation/core": "^6.2.1",
     "@react-navigation/native": "^6.0.8",

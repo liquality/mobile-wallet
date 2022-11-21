@@ -37,6 +37,8 @@ import {
   balanceStateFamily,
   fiatRatesState,
   networkState,
+  optInAnalyticsState,
+  walletState,
 } from '../../../atoms'
 import i18n from 'i18n-js'
 import { AppIcons, Fonts } from '../../../assets'
@@ -48,6 +50,8 @@ import ArrowUp from '../../../assets/icons/arrowUp.svg'
 import { Path, Svg } from 'react-native-svg'
 import SendReviewScreen from './send-review-screen'
 import CombinedChainAssetIcons from '../../../components/ui/CombinedChainAssetIcons'
+import analytics from '@react-native-firebase/analytics'
+import DeviceInfo from 'react-native-device-info'
 
 const { QRCode } = AppIcons
 
@@ -92,6 +96,9 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const [sendBlockFocused, setSendBlockFocused] = useState(false)
   const [sendToBlockFocused, setSendToBlockFocused] = useState(false)
   const [showReviewScreen, setShowReviewScreen] = useState(false)
+  const optinAnalytics = useRecoilValue(optInAnalyticsState)
+  const wallet = useRecoilValue(walletState)
+  const walletVersion = DeviceInfo.getVersion()
 
   const onGetPress = useCallback(() => {
     navigation.navigate('ReceiveScreen', {
@@ -232,6 +239,21 @@ const SendScreen: FC<SendScreenProps> = (props) => {
       })
     }
   }, [amountInNative, code, customFee, errorMessage, onGetPress, onMaxPress])
+
+  useEffect(() => {
+    if (optinAnalytics?.acceptedDate) {
+      const { activeWalletId, version } = wallet
+      analytics().logEvent('SendScreen', {
+        category: 'Send screen',
+        action: 'User on Send screen',
+        label: `${code}`,
+        network: activeNetwork,
+        walletId: activeWalletId,
+        migrationVersion: version,
+        walletVersion,
+      })
+    }
+  }, [activeNetwork, code, optinAnalytics?.acceptedDate, wallet, walletVersion])
 
   useEffect(() => {
     let feeInUnit

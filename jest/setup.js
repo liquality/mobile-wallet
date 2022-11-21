@@ -77,6 +77,12 @@ jest.mock('i18n-js', () => {
   }
 })
 
+jest.mock('@react-native-firebase/analytics', () => ({
+  analytics: jest.fn(() => ({
+    logEvent: jest.fn(),
+  })),
+}))
+
 Object.defineProperty(global.window, 'crypto', {
   getRandomValues: () => '',
 })

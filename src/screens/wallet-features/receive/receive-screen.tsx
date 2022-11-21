@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Alert, Linking, StyleSheet } from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
@@ -15,12 +15,19 @@ import {
 } from '../../../theme'
 import { useRecoilValue } from 'recoil'
 import i18n from 'i18n-js'
-import { addressStateFamily, networkState } from '../../../atoms'
+import {
+  addressStateFamily,
+  networkState,
+  optInAnalyticsState,
+  walletState,
+} from '../../../atoms'
 import { labelTranslateFn, RECEIVE_HEADER_HEIGHT } from '../../../utils'
 import { AppIcons, Fonts } from '../../../assets'
 import { shortenAddress } from '@liquality/wallet-core/dist/src/utils/address'
 import { moderateScale, scale } from 'react-native-size-matters'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import analytics from '@react-native-firebase/analytics'
+import DeviceInfo from 'react-native-device-info'
 
 const { CopyIcon } = AppIcons
 
@@ -33,6 +40,9 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   const { chain, code, id }: AccountType = route.params.assetData!
   const address = useRecoilValue(addressStateFamily(id))
   const activeNetwork = useRecoilValue(networkState)
+  const optinAnalytics = useRecoilValue(optInAnalyticsState)
+  const wallet = useRecoilValue(walletState)
+  const walletVersion = DeviceInfo.getVersion()
 
   const QRCodeSize = moderateScale(100, 0.1)
 
@@ -94,10 +104,40 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
   }, [code, navigation])
 
   const handleCopyAddressPress = async () => {
-    if (!address) Alert.alert(labelTranslateFn('receiveScreen.addressEmpty')!)
-    showCopyToast('copyToast', labelTranslateFn('receiveScreen.copied')!)
-    Clipboard.setString(address)
+    if (!address) {
+      Alert.alert(labelTranslateFn('receiveScreen.addressEmpty')!)
+    } else {
+      if (optinAnalytics?.acceptedDate) {
+        const { activeWalletId, version } = wallet
+        analytics().logEvent('ReceiveCopyAddress', {
+          category: 'Send/Receive',
+          action: 'User copied address',
+          label: `${code} (${chain}) address ${address}`,
+          network: activeNetwork,
+          walletId: activeWalletId,
+          migrationVersion: version,
+          walletVersion,
+        })
+      }
+      showCopyToast('copyToast', labelTranslateFn('receiveScreen.copied')!)
+      Clipboard.setString(address)
+    }
   }
+
+  useEffect(() => {
+    if (optinAnalytics?.acceptedDate) {
+      const { activeWalletId, version } = wallet
+      analytics().logEvent('ReceiveScreen', {
+        category: 'Receive screen',
+        action: 'User on Receive screen',
+        label: `${code}`,
+        network: activeNetwork,
+        walletId: activeWalletId,
+        migrationVersion: version,
+        walletVersion,
+      })
+    }
+  }, [activeNetwork, code, optinAnalytics?.acceptedDate, wallet, walletVersion])
 
   return (
     <Box flex={1} backgroundColor={'mainBackground'}>
