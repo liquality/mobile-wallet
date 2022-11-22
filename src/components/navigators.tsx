@@ -147,6 +147,14 @@ const LiqLogoHeaderLeft = () => {
   )
 }
 
+const WhatsNewHeaderLeft = () => {
+  return (
+    <Box marginLeft={'l'}>
+      <ThemeIcon iconName="OnlyLqLogo" />
+    </Box>
+  )
+}
+
 const AboutScreenRightBtn = (showDoneBtn: boolean) => {
   const navigation = useNavigation<NavigationProp<MainStackParamList>>()
   const theme = useTheme<ThemeType>()
@@ -1133,7 +1141,7 @@ export const StackMainNavigator = () => {
             headerTitleStyle: NORMAL_HEADER,
             headerTitle: '',
             headerRight: CloseButton,
-            headerLeft: LiqLogoHeaderLeft,
+            headerLeft: WhatsNewHeaderLeft,
           }}
         />
         <MainStack.Screen

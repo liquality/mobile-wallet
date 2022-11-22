@@ -411,6 +411,12 @@ export const theme = createTheme({
       fontSize: scale(41),
       lineHeight: scale(1.3 * 41),
     },
+    h2: {
+      fontFamily: Fonts.Regular,
+      fontSize: scale(39),
+      fontWeight: '700',
+      lineHeight: scale(1.3 * 39),
+    },
     h3: {
       fontFamily: Fonts.Regular,
       fontSize: scale(22),

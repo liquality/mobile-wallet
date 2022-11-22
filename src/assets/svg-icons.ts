@@ -196,6 +196,8 @@ import CheckedWhiteBox from '../assets/icons/checkedWhite.svg'
 import FirstMultichainWalletIcon from '../assets/icons/firstWallet.svg'
 import SwapAcrossIcon from '../assets/icons/swapAccross.svg'
 import TransferNFT_Icon from '../assets/icons/transferNFT.svg'
+import ActiveClap from '../assets/icons/activeClap.svg'
+import Clap from '../assets/icons/clap.svg'
 
 export default {
   PendingSwap,
@@ -393,4 +395,6 @@ export default {
   FirstMultichainWalletIcon,
   SwapAcrossIcon,
   TransferNFT_Icon,
+  ActiveClap,
+  Clap,
 }
