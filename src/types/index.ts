@@ -259,6 +259,7 @@ export type MainStackParamList = {
   NftOverviewScreen: StackPayload
   AboutLiqualityDrawer: StackPayload
   Settings: StackPayload
+  WhatNewScreen: StackPayload
 }
 
 export type RootTabParamList = {
