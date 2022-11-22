@@ -544,5 +544,11 @@
   "transferNFTs": "Transfer NFTs",
   "seeAllYourValued": "See all your valued Ethereum, Polygon and Arbitrum  NFT’s in one place. Soon to be followed by Solana. Explore your collections across accounts. Easily send and use marketplaces to connect with.",
   "aboutLiquality": "ABOUT LIQUALITY",
-  "skip": "Skip"
+  "skip": "Skip",
+  "whatsNewVersion": "WHAT’S NEW | V {{version}}",
+  "ledgerIntegration": "Ledger Integration",
+  "ledgerDescription": "Swaps enabled loreum ipsum loreum ipsum oreum ipsum loreum ipsum. Swaps enabled loreum ipsum loreum ipsum oreum ipsum loreum ipsum",
+  "didYouKnow": "Did You Know...",
+  "didYouKnowDesc": "Swaps enabled loreum ipsum loreum ipsum oreum ipsum loreum ipsum.",
+  "issuesFixed": "Issues Fixed"
 }
