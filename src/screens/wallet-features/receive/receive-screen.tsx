@@ -4,7 +4,6 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AccountType, MainStackParamList } from '../../../types'
-import AssetIcon from '../../../components/asset-icon'
 import {
   Text,
   palette,
@@ -28,6 +27,7 @@ import { moderateScale, scale } from 'react-native-size-matters'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import analytics from '@react-native-firebase/analytics'
 import DeviceInfo from 'react-native-device-info'
+import CombinedChainAssetIcons from '../../../components/ui/CombinedChainAssetIcons'
 
 const { CopyIcon } = AppIcons
 
@@ -147,7 +147,11 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
         paddingHorizontal="screenPadding"
         justifyContent={'center'}
         alignItems="center">
-        <AssetIcon chain={chain} asset={code} size={scale(54)} />
+        <CombinedChainAssetIcons
+          chain={chain}
+          code={code}
+          scaleMultiplier={2}
+        />
         <Text
           variant={'addressLabel'}
           color="greyMeta"
@@ -214,16 +218,17 @@ const ReceiveScreen = ({ navigation, route }: ReceiveScreenProps) => {
                   flexDirection={'row'}
                   alignItems="center"
                   justifyContent={'center'}>
-                  <CopyIcon
-                    width={scale(1.3 * 15)}
-                    height={scale(1.3 * 15)}
-                    stroke={palette.white}
-                    style={styles.icon}
-                  />
                   <Text
                     variant={'h6'}
                     color="white"
                     tx="receiveScreen.copyAdd"
+                  />
+                  <CopyIcon
+                    width={scale(1.3 * 15)}
+                    height={scale(1.3 * 15)}
+                    stroke={palette.white}
+                    strokeWidth={1}
+                    style={styles.icon}
                   />
                 </Box>
               }
@@ -254,7 +259,7 @@ const styles = StyleSheet.create({
     fontSize: scale(13),
   },
   icon: {
-    marginRight: 5,
+    marginLeft: 5,
   },
 })
 

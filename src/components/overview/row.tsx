@@ -28,7 +28,6 @@ import { fetchFeesForAsset } from '../../store/store'
 import { FADE_IN_OUT_DURATION } from '../../utils'
 import { AppIcons } from '../../assets'
 import { scale } from 'react-native-size-matters'
-import CombinedChainAssetIcons from '../ui/CombinedChainAssetIcons'
 import RowBackgroundBox from './RowBackgroundBox'
 
 const { MinusSign, PlusSign } = AppIcons
@@ -167,11 +166,7 @@ const Row = (props: RowProps) => {
             </Box>
           )}
           <Box flex={0.1} paddingLeft={'m'}>
-            {isNested ? (
-              <AssetIcon chain={item.chain} size={scale(30)} />
-            ) : (
-              <CombinedChainAssetIcons chain={item.chain} code={item.code} />
-            )}
+            <AssetIcon account={item.name} size={scale(30)} />
           </Box>
           <Box flex={0.5} paddingLeft={'m'}>
             <Text variant={'listText'} color="darkGrey">

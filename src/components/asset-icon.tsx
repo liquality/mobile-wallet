@@ -41,16 +41,26 @@ const {
   Thorchain,
   Uniswap,
   OptimismIcon,
+  EthereumAccountIcon,
+  PolygonAccountIcon,
+  ArbitrumAccountIcon,
+  BitcoinAccountIcon,
+  BSCAccountIcon,
+  RootstockAccountIcon,
+  AvalancheAccountIcon,
+  NearAccountIcon,
+  SolanaAccountIcon,
 } = AppIcons
 
 type AssetIconType = {
   chain?: ChainId
+  account?: string
   asset?: string
   size?: number
   styles?: StyleProp<ViewStyle>
 }
 
-const extractSpecificIcon = {
+const extractSpecificIconForChain = {
   [`${ChainId.Bitcoin}`]: {
     assetName: BitcoinChainIcon,
     viewBoxValue: '',
@@ -99,6 +109,8 @@ const extractSpecificIcon = {
     assetName: OptimismChainIcon,
     viewBoxValue: '',
   },
+}
+const extractSpecificIconForAsset = {
   ETH: {
     assetName: ETHIcon,
     viewBoxValue: '',
@@ -189,12 +201,63 @@ const extractSpecificIcon = {
   },
 }
 
+const extractSpecificIconForAccount = {
+  Arbitrum: {
+    assetName: ArbitrumAccountIcon,
+    viewBoxValue: '',
+  },
+  Avalanche: {
+    assetName: AvalancheAccountIcon,
+    viewBoxValue: '',
+  },
+  Bitcoin: {
+    assetName: BitcoinAccountIcon,
+    viewBoxValue: '',
+  },
+  BNBSmartChain: {
+    assetName: BSCAccountIcon,
+    viewBoxValue: '',
+  },
+  Ethereum: {
+    assetName: EthereumAccountIcon,
+    viewBoxValue: '',
+  },
+  LegacyRootstock: {
+    assetName: RootstockAccountIcon,
+    viewBoxValue: '',
+  },
+  Near: {
+    assetName: NearAccountIcon,
+    viewBoxValue: '',
+  },
+  Polygon: {
+    assetName: PolygonAccountIcon,
+    viewBoxValue: '',
+  },
+  Rootstock: {
+    assetName: RootstockAccountIcon,
+    viewBoxValue: '',
+  },
+  Solana: {
+    assetName: SolanaAccountIcon,
+    viewBoxValue: '',
+  },
+  Terra: {
+    assetName: TerraIcon,
+    viewBoxValue: '',
+  },
+}
+
 const AssetIcon: FC<AssetIconType> = (props) => {
-  const { chain, asset, size = ICON_SIZE, styles } = props
+  const { chain, asset, account, size = ICON_SIZE, styles } = props
+  const canonicalAccountName = account?.replace(/ /g, '').slice(0, -1)
+
   const extractedIcon = chain
-    ? extractSpecificIcon[chain]
+    ? extractSpecificIconForChain[chain]
     : asset
-    ? extractSpecificIcon[asset]
+    ? extractSpecificIconForAsset[asset]
+    : canonicalAccountName
+    ? extractSpecificIconForAccount[canonicalAccountName]
     : null
   if (extractedIcon) {
     const AssetName = extractedIcon.assetName

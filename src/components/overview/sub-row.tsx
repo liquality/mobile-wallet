@@ -24,7 +24,6 @@ import { Box, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
 import { checkImgUrlExists } from '../../utils'
 import { AppIcons } from '../../assets'
-import CombinedChainAssetIcons from '../ui/CombinedChainAssetIcons'
 import RowBackgroundBox from './RowBackgroundBox'
 import Animated, {
   Easing,
@@ -32,6 +31,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
+import AssetIcon from '../asset-icon'
 
 const { ChevronRightIcon: ChevronRight } = AppIcons
 
@@ -222,10 +222,7 @@ const SubRow: FC<SubRowProps> = (props) => {
                   flexDirection="row"
                   paddingLeft={'m'}
                   alignItems={'center'}>
-                  <CombinedChainAssetIcons
-                    chain={item.chain}
-                    code={item.code}
-                  />
+                  <AssetIcon asset={item.code} size={scale(30)} />
                   <Box width={'80%'}>
                     <Text
                       numberOfLines={1}
