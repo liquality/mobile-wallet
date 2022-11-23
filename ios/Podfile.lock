@@ -473,6 +473,8 @@ PODS:
   - react-native-mmkv (2.4.3):
     - MMKV (>= 1.2.13)
     - React-Core
+  - react-native-netinfo (9.3.6):
+    - React-Core
   - react-native-pager-view (5.4.25):
     - React-Core
   - react-native-quick-crypto (0.4.6):
@@ -489,6 +491,8 @@ PODS:
     - React-Core
     - ReactCommon/turbomodule/core
   - react-native-splash-screen (3.3.0):
+    - React-Core
+  - react-native-webview (11.24.0):
     - React-Core
   - React-perflogger (0.68.5)
   - React-RCTActionSheet (0.68.5):
@@ -575,6 +579,8 @@ PODS:
   - RNFS (2.20.0):
     - React-Core
   - RNGestureHandler (2.8.0):
+    - React-Core
+  - RNInAppBrowser (3.7.0):
     - React-Core
   - RNOS (1.2.6):
     - React
@@ -692,11 +698,13 @@ DEPENDENCIES:
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-quick-crypto (from `../node_modules/react-native-quick-crypto`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -717,6 +725,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNInAppBrowser (from `../node_modules/react-native-inappbrowser-reborn`)
   - RNOS (from `../node_modules/react-native-os`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -838,6 +847,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-flipper"
   react-native-mmkv:
     :path: "../node_modules/react-native-mmkv"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
   react-native-quick-crypto:
@@ -848,6 +859,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -888,6 +901,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNInAppBrowser:
+    :path: "../node_modules/react-native-inappbrowser-reborn"
   RNOS:
     :path: "../node_modules/react-native-os"
   RNPermissions:
@@ -977,11 +992,13 @@ SPEC CHECKSUMS:
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-flipper: 7eeb9b59b667dd0619372c7349cf7c78032d1de2
   react-native-mmkv: 1265a348a4711097ba29c8bcefd5971f48220f2b
+  react-native-netinfo: f80db8cac2151405633324cb645c60af098ee461
   react-native-pager-view: da490aa1f902c9a5aeecf0909cc975ad0e92e53e
   react-native-quick-crypto: e7ac378e827bfab02db29092ff204f13adc60c7c
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
+  react-native-webview: 6408bc328e65042d240d0ebd62baa76ffd23b1aa
   React-perflogger: 0458a87ea9a7342079e7a31b0d32b3734fb8415f
   React-RCTActionSheet: 22538001ea2926dea001111dd2846c13a0730bc9
   React-RCTAnimation: 732ce66878d4aa151d56a0d142b1105aa12fd313
@@ -1002,6 +1019,7 @@ SPEC CHECKSUMS:
   RNFBApp: a974e4c5304e2fb1cbde986e8b1f86396a8e87e5
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
+  RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNReanimated: 0ff5e7f619a7524d237848ecb4c47650c4946f71
@@ -1016,6 +1034,6 @@ SPEC CHECKSUMS:
   Yoga: c4d61225a466f250c35c1ee78d2d0b3d41fe661c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 9e2dcd536c823b20e00b93b80b512732245457ca
+PODFILE CHECKSUM: 4a4eee295af1a70fcdfb19b975e8d71aa6da855a
 
 COCOAPODS: 1.11.3
