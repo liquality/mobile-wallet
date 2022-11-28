@@ -807,7 +807,7 @@ export const theme = createTheme({
       backgroundColor: palette.buttonActive,
       padding: 0,
       height: scale(2),
-      width: scale(20),
+      width: scale(16),
     },
     dark: {
       backgroundColor: palette.white,

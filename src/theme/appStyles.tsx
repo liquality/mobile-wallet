@@ -14,8 +14,9 @@ export const GRADIENT_STYLE: ViewStyle = {
 }
 
 export const OVERVIEW_TAB_BAR_STYLE: ViewStyle = {
-  width: scale(70),
+  width: scale(75),
   padding: 0,
+  marginBottom: -5,
   alignItems: 'flex-start',
 }
 

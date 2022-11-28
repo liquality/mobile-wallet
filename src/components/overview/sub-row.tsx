@@ -127,40 +127,55 @@ const SubRow: FC<SubRowProps> = (props) => {
     if (Object.keys(chainSpecificNfts).length > 0) {
       return (
         <Animated.View style={animatedStyle}>
-          <Pressable onPress={handlePressOnRow} style={styles.row}>
+          <Pressable onPress={handlePressOnRow}>
             <Box
-              height={scale(50)}
-              width={scale(3)}
-              style={{ borderLeftColor: parentItem.color, borderLeftWidth: 3 }}
-            />
-            <Box paddingLeft={'m'}>
-              <Box width={10} height={10} />
-            </Box>
-            <Box flex={0.1} paddingLeft={'m'} />
-            <Box flex={0.55} flexDirection="row" paddingLeft="m">
-              <NFTIcon width={scale(25)} height={scale(25)} />
-              <Box width={'80%'} paddingLeft="m">
-                <Text numberOfLines={1} variant={'listText'} color="darkGrey">
-                  NFT <Text color="mediumGrey">|</Text> {numberOfNfts}{' '}
-                </Text>
-              </Box>
-            </Box>
-            <Box
-              flex={0.45}
               flexDirection={'row'}
-              justifyContent="flex-end"
+              justifyContent="space-around"
               alignItems={'center'}
-              paddingLeft={'s'}>
-              <Text
-                variant={'listText'}
-                color="darkGrey"
-                numberOfLines={1}
-                lineHeight={scale(1.5 * 14)}
-                marginRight={'m'}
-                style={{ height: scale(1.2 * 13) }}>
-                See All
-              </Text>
-              <ChevronRight />
+              paddingVertical={'m'}
+              height={ROW_HEIGHT}
+              backgroundColor={
+                borderWidth ? 'selectedBackgroundColor' : 'white'
+              }
+              paddingRight={borderWidth ? 'mxxl' : 's'}
+              onLayout={onLayout}>
+              <Box
+                height={scale(50)}
+                width={scale(3)}
+                style={{
+                  borderLeftColor: parentItem.color,
+                  borderLeftWidth: 3,
+                }}
+              />
+              <Box paddingLeft={'m'}>
+                <Box width={10} height={10} />
+              </Box>
+              <Box flex={0.1} paddingLeft={'m'} />
+              <Box flex={0.55} flexDirection="row" paddingLeft="m">
+                <NFTIcon width={scale(25)} height={scale(25)} />
+                <Box width={'80%'} paddingLeft="m">
+                  <Text numberOfLines={1} variant={'listText'} color="darkGrey">
+                    NFT <Text color="mediumGrey">|</Text> {numberOfNfts}{' '}
+                  </Text>
+                </Box>
+              </Box>
+              <Box
+                flex={0.45}
+                flexDirection={'row'}
+                justifyContent="flex-end"
+                alignItems={'center'}
+                paddingLeft={'s'}>
+                <Text
+                  variant={'listText'}
+                  color="darkGrey"
+                  numberOfLines={1}
+                  lineHeight={scale(1.5 * 14)}
+                  marginRight={'m'}
+                  style={{ height: scale(1.2 * 13) }}>
+                  See All
+                </Text>
+                <ChevronRight />
+              </Box>
             </Box>
           </Pressable>
         </Animated.View>
@@ -250,11 +265,6 @@ const SubRow: FC<SubRowProps> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: scale(70),
-  },
   chevronRow: {
     marginLeft: scale(5),
   },
