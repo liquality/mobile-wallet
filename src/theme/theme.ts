@@ -77,6 +77,7 @@ export const theme = createTheme({
     whiteLightGrey: faceliftPalette.whiteLightGrey,
     consColor: faceliftPalette.slow,
     whiteGrey: faceliftPalette.whiteGrey,
+    medGrey: faceliftPalette.medGrey,
   },
   spacing: {
     vs: scale(2),

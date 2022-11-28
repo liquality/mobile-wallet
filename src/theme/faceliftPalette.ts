@@ -8,6 +8,7 @@ export const faceliftPalette = {
   mediumGrey: '#BFC3C7',
   orangeGrey: '#F9F9F9',
   grey: '#A8AEB7',
+  medGrey: '#9A99A2',
   greyMeta: '#646F85',
   darkGrey: '#3D4767',
   headerBackground: '#313747',

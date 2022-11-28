@@ -479,7 +479,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
         <Box
           flexDirection={'row'}
           paddingHorizontal="l"
-          justifyContent="space-between">
+          justifyContent="center">
           <Pressable>
             <Text
               color={'textButtonFontColor'}
@@ -488,7 +488,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               tx="transferWithinAccs"
             />
           </Pressable>
-          <Text color="darkGrey" fontSize={16} style={styles.textRegular}>
+          <Text color="medGrey" fontSize={16} style={styles.textRegular}>
             {' | '}
           </Text>
           <Pressable onPress={handleCustomPress}>
