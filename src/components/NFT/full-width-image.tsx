@@ -67,8 +67,8 @@ const FullWidthImage: React.FC<FullWidthImageProps> = (props) => {
 const styles = StyleSheet.create({
   oneImageBig: {
     borderRadius: 4,
-    width: Dimensions.get('screen').width - 20,
-    resizeMode: 'contain',
+    width: Dimensions.get('screen').width - 40,
+    //resizeMode: 'contain',
     aspectRatio: 1,
   },
 

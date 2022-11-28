@@ -97,7 +97,7 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
         {iterableNftArray.length === 0 ? (
           <NoNfts />
         ) : (
-          <Box margin={'m'}>
+          <Box paddingHorizontal="xl">
             <NftTabBar
               leftTabText={'nft.tabBarNfts'}
               rightTabText={'nft.tabBarActivity'}

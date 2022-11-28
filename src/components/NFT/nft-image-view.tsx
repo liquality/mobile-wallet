@@ -215,8 +215,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   twoImagesOnRow: {
-    width: Dimensions.get('screen').width / 2.1,
-    height: Dimensions.get('screen').width / 2.1,
+    width: Dimensions.get('screen').width / 2.3,
+    height: Dimensions.get('screen').width / 2.3,
   },
   threeImagesOnRow: {
     width: Dimensions.get('screen').width / 3.3,
