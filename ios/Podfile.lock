@@ -565,11 +565,11 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBAnalytics (16.4.5):
+  - RNFBAnalytics (16.4.6):
     - Firebase/Analytics (= 10.2.0)
     - React-Core
     - RNFBApp
-  - RNFBApp (16.4.5):
+  - RNFBApp (16.4.6):
     - Firebase/CoreOnly (= 10.2.0)
     - React-Core
   - RNFS (2.20.0):
@@ -580,7 +580,7 @@ PODS:
     - React
   - RNPermissions (3.6.1):
     - React-Core
-  - RNReanimated (2.12.0):
+  - RNReanimated (2.13.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -998,13 +998,13 @@ SPEC CHECKSUMS:
   RNCPushNotificationIOS: 87b8d16d3ede4532745e05b03c42cff33a36cc45
   RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
-  RNFBAnalytics: 24d7b1c90720e4166128f4a5190afe3f63d7f52e
-  RNFBApp: a974e4c5304e2fb1cbde986e8b1f86396a8e87e5
+  RNFBAnalytics: 7be58d245091b76071d31bc763a702b13f322b4c
+  RNFBApp: a6a92a67882cde38e6b466a446312de6c6c9b384
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
-  RNReanimated: 0ff5e7f619a7524d237848ecb4c47650c4946f71
+  RNReanimated: b21b362b4b8ca921932e8b1718e88cf3a36f157e
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNShare: a5dc3b9c53ddc73e155b8cd9a94c70c91913c43c
   RNSVG: ecd661f380a07ba690c9c5929c475a44f432d674

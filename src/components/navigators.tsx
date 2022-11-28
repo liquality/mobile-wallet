@@ -552,6 +552,18 @@ export const AppStackNavigator = () => {
             ...appStackScreenNavOptions(),
           }}
         />
+
+        <MainStack.Screen
+          name="ShowAllNftsScreen"
+          component={ShowAllNftsScreen}
+          options={({ navigation, route }: NavigationProps) => ({
+            headerShown: true,
+            headerLeft: () => AppStackHeaderLeft({ navigation, route }),
+            headerRight: () => AppStackHeaderRight({ navigation, route }),
+            ...TabBarOption(labelTranslateFn('tabNFT')!),
+          })}
+        />
+
         <MainStack.Screen
           name="CustomFeeScreen"
           component={CustomFeeScreen}
@@ -699,7 +711,18 @@ export const MainNavigator = () => {
       <Tab.Screen
         name="ShowAllNftsScreen"
         component={ShowAllNftsScreen}
-        options={{ ...TabBarOption(labelTranslateFn('tabNFT')!) }}
+        options={({ navigation, route }: NavigationProps) => ({
+          headerShown: true,
+          headerShadowVisible: false, // applied here
+
+          headerLeft: () => (
+            <Box padding="m">{AppStackHeaderLeft({ navigation, route })}</Box>
+          ),
+          headerRight: () => (
+            <Box padding="m">{AppStackHeaderRight({ navigation, route })}</Box>
+          ),
+          ...TabBarOption(labelTranslateFn('tabNFT')!),
+        })}
       />
       <Tab.Screen
         name="SettingsScreen"

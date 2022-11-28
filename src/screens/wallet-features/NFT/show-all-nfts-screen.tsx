@@ -2,7 +2,7 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import React, { useEffect, useCallback, useState } from 'react'
-import { StyleSheet, ScrollView, Dimensions } from 'react-native'
+import { StyleSheet, ScrollView } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { Fonts } from '../../../assets'
 import { networkState } from '../../../atoms'
@@ -92,8 +92,6 @@ const ShowAllNftsScreen = ({ navigation }: ShowAllNftsScreenProps) => {
             greyText={`${numberOfAccountsWithNfts} ${labelTranslateFn(
               'nft.accounts',
             )}`}
-            width={Dimensions.get('screen').width}
-            height={225}
           />
         </Box>
         {iterableNftArray.length === 0 ? (
