@@ -682,11 +682,13 @@ export const MainNavigator = () => {
         headerTitle: '',
         tabBarStyle: {
           backgroundColor,
+          height: 88,
         },
         tabBarLabelStyle: {
           fontFamily: Fonts.JetBrainsMono,
           fontWeight: '500',
-          fontSize: scale(11),
+          fontSize: scale(10.5),
+          marginTop: scale(-10),
         },
         tabBarActiveTintColor: palette.buttonDefault,
         tabBarInactiveTintColor: palette.nestedColor,

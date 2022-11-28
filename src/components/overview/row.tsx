@@ -166,10 +166,10 @@ const Row = (props: RowProps) => {
             </Box>
           )}
           <Box flex={0.1} paddingLeft={'m'}>
-            <AssetIcon account={item.name} size={scale(30)} />
+            <AssetIcon account={item.name} size={scale(25)} />
           </Box>
           <Box flex={0.5} paddingLeft={'m'}>
-            <Text variant={'listText'} color="darkGrey">
+            <Text variant={'listText'} color="darkGrey" lineHeight={14 * 1.6}>
               {name}
             </Text>
             <Text variant={'subListText'} color="greyMeta">

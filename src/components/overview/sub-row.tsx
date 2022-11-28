@@ -1,5 +1,5 @@
 import React, { FC, Fragment, useCallback, useEffect, useState } from 'react'
-import { Image, LayoutChangeEvent, Pressable, StyleSheet } from 'react-native'
+import { LayoutChangeEvent, Pressable, StyleSheet } from 'react-native'
 import {
   cryptoToFiat,
   formatFiat,
@@ -22,7 +22,6 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { Box, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
-import { checkImgUrlExists } from '../../utils'
 import { AppIcons } from '../../assets'
 import RowBackgroundBox from './RowBackgroundBox'
 import Animated, {
@@ -32,7 +31,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import AssetIcon from '../asset-icon'
-
+import NFTIcon from '../../assets/icons/crypto/nft.svg'
 const { ChevronRightIcon: ChevronRight } = AppIcons
 
 type SubRowProps = {
@@ -56,7 +55,6 @@ const SubRow: FC<SubRowProps> = (props) => {
   const activeNetwork = useRecoilValue(networkState)
   const [chainSpecificNfts, setChainSpecificNfts] = useState({})
   const [accountIdsToSendIn] = useState<string[]>([])
-  const [imgError] = useState<string[]>([])
   const [numberOfNfts, setNumberOfNfts] = useState<number>()
   const [borderWidth, setBorderWidth] = useState(0)
   const [rowWidth, setRowWidth] = useState(0)
@@ -127,7 +125,6 @@ const SubRow: FC<SubRowProps> = (props) => {
 
   const renderNFTRow = () => {
     if (Object.keys(chainSpecificNfts).length > 0) {
-      let firstNftItem = chainSpecificNfts[Object.keys(chainSpecificNfts)[0]][0]
       return (
         <Animated.View style={animatedStyle}>
           <Pressable onPress={handlePressOnRow} style={styles.row}>
@@ -141,14 +138,7 @@ const SubRow: FC<SubRowProps> = (props) => {
             </Box>
             <Box flex={0.1} paddingLeft={'m'} />
             <Box flex={0.55} flexDirection="row" paddingLeft="m">
-              <Image
-                source={checkImgUrlExists(
-                  firstNftItem.image_original_url,
-                  imgError,
-                )}
-                style={styles.nftImg}
-                onError={() => imgError.push(firstNftItem.image_original_url)}
-              />
+              <NFTIcon width={scale(25)} height={scale(25)} />
               <Box width={'80%'} paddingLeft="m">
                 <Text numberOfLines={1} variant={'listText'} color="darkGrey">
                   NFT <Text color="mediumGrey">|</Text> {numberOfNfts}{' '}
@@ -222,8 +212,8 @@ const SubRow: FC<SubRowProps> = (props) => {
                   flexDirection="row"
                   paddingLeft={'m'}
                   alignItems={'center'}>
-                  <AssetIcon asset={item.code} size={scale(30)} />
-                  <Box width={'80%'}>
+                  <AssetIcon asset={item.code} size={scale(25)} />
+                  <Box width={'80%'} paddingLeft="m">
                     <Text
                       numberOfLines={1}
                       variant={'listText'}
@@ -264,13 +254,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: scale(70),
-  },
-  nftImg: {
-    marginLeft: scale(3),
-    marginRight: scale(5),
-    width: scale(25),
-    height: scale(25),
-    borderRadius: 4,
   },
   chevronRow: {
     marginLeft: scale(5),

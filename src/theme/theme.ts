@@ -457,13 +457,13 @@ export const theme = createTheme({
     listText: {
       fontFamily: Fonts.Regular,
       fontSize: scale(14),
-      fontWeight: '500',
+      letterSpacing: 0.5,
     },
     subListText: {
       fontFamily: Fonts.Regular,
       fontSize: scale(13),
-      fontWeight: '400',
       lineHeight: scale(17),
+      letterSpacing: 0.5,
     },
     subListBoldText: {
       fontFamily: Fonts.Regular,
@@ -492,6 +492,7 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
       fontWeight: '400',
+      letterSpacing: 0.75,
     },
     outline: {
       color: 'white',
@@ -648,7 +649,9 @@ export const theme = createTheme({
       justifyContent: 'center',
       alignItems: 'center',
       paddingHorizontal: 's',
+      paddingVertical: 's',
       borderRadius: 2,
+      width: scale(66),
       height: 20,
     },
   },
