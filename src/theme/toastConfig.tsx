@@ -180,7 +180,7 @@ export const toastConfig: ToastConfig = {
         borderRadius={scale(10)}
         padding={'l'}
         backgroundColor={'sectionTitleColor'}>
-        <DangerIcon />
+        <DangerIcon style={{ marginTop: scale(5) }} />
         <Box flexDirection={'row'} flexWrap={'wrap'} paddingHorizontal={'mxxl'}>
           {getMessage()}
         </Box>
@@ -211,6 +211,7 @@ export const showSendToast = (toastType: ToastType, props: SendToastProps) => {
   Toast.show({
     type: toastType,
     autoHide: false,
+    topOffset: 60,
     props,
   })
 }

@@ -29,7 +29,7 @@ export const faceliftPalette = {
   lightText: '#3D4767',
   darkText: '#EEEEEE',
   red: '#E40000',
-  switchActiveColor: '#9D4DFA',
+  switchActiveColor: '#7700D5',
   switchInactiveColor: '#E7E7E7',
   switchInactiveBorderColor: '#94939B',
   yellow: '#FBFF4A',

@@ -193,7 +193,10 @@ export const theme = createTheme({
     tertiaryButtonLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '400',
-      fontSize: 12,
+      fontSize: 14,
+      lineHeight: scale(1.3 * 14),
+      height: scale(14),
+      letterSpacing: 0.75,
       color: 'activeLink',
     },
     amount: {
@@ -649,11 +652,9 @@ export const theme = createTheme({
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: 's',
-      paddingVertical: 's',
       borderRadius: 2,
       width: scale(66),
-      height: 20,
+      height: 30,
     },
   },
   roundButtonVariants: {

@@ -965,7 +965,7 @@ export const StackMainNavigator = () => {
             title: labelTranslateFn('assetScreen.swap') || '',
             headerTitleStyle: NORMAL_HEADER,
             headerStyle: { backgroundColor },
-            headerLeft: undefined,
+            headerLeft: StackMainNavigatorHeaderLeft,
             headerRight: SwapHeaderRight,
           })}
         />

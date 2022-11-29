@@ -17,7 +17,7 @@ interface CustomSwitchProps {
 export const CustomSwitch: FC<CustomSwitchProps> = (props) => {
   const {
     width,
-    height = 28,
+    height = 32,
     firstItemValue,
     secondItemValue,
     firstItemPress,
@@ -29,7 +29,7 @@ export const CustomSwitch: FC<CustomSwitchProps> = (props) => {
     <Box
       flexDirection={'row'}
       alignItems="center"
-      height={scale(height)}
+      height={scale(height - 2)}
       borderWidth={scale(1)}
       borderRadius={scale(15)}
       borderColor={'activeButton'}
@@ -52,8 +52,8 @@ export const CustomSwitch: FC<CustomSwitchProps> = (props) => {
           justifyContent={'center'}
           alignItems="center"
           height={'100%'}
-          borderTopRightRadius={scale(15)}
-          borderBottomRightRadius={scale(15)}
+          borderTopRightRadius={scale(50)}
+          borderBottomRightRadius={scale(50)}
           backgroundColor={secondItemValue ? 'activeButton' : 'transparent'}
           width={'50%'}>
           {SecondItemElement}
