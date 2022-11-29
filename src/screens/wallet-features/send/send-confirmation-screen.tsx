@@ -144,7 +144,12 @@ const ConfirmationComponent: React.FC<SendConfirmationScreenProps> = React.memo(
           {getBackgroundBox(scale(135))}
           <Box flexDirection={'row'} alignItems={'flex-end'}>
             <CombinedChainAssetIcons
-              chain={getAsset(activeNetwork, historyItem.from).chain}
+              account={
+                getChain(
+                  activeNetwork,
+                  getAsset(activeNetwork, historyItem.from).chain,
+                ).name
+              }
               code={historyItem.from}
               scaleMultiplier={2}
             />

@@ -17,6 +17,8 @@ import AssetRow from './asset-row'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { SCREEN_HEIGHT } from '../utils'
 import { AppIcons } from '../assets'
+import { NavigationProp, useNavigation } from '@react-navigation/core'
+import { MainStackParamList } from '../types'
 
 const horizontalContentHeight = 60
 const { ChevronLeft } = AppIcons
@@ -54,7 +56,7 @@ const EmptyComponent = () => {
 }
 
 const AssetManagement: FC<AssetManagementProps> = (props) => {
-  const { enabledAssets, accounts, selectedAsset, onClose } = props
+  const { enabledAssets, accounts, selectedAsset } = props
   const [data, setData] = useState<IconAsset[]>([])
   const [assets, setAssets] = useState<CustomAsset[]>([])
   const [mainAssets, setMainAssets] = useState<CustomAsset[]>([])
@@ -64,9 +66,14 @@ const AssetManagement: FC<AssetManagementProps> = (props) => {
   const [showSearchBox, setShowSearchBox] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const { BuyCryptoCloseDark, SearchIcon } = AppIcons
+  const navigation = useNavigation<NavigationProp<MainStackParamList>>()
 
   const showModal = () => {
     setModalVisible(true)
+  }
+
+  const onClose = () => {
+    navigation.goBack()
   }
 
   useEffect(() => {
@@ -221,13 +228,17 @@ const AssetManagement: FC<AssetManagementProps> = (props) => {
           justifyContent={'space-between'}
           alignItems={'center'}
           height={scale(50)}>
-          <TouchableWithoutFeedback onPress={onClose}>
-            <ChevronLeft width={scale(10)} height={scale(10)} />
+          <TouchableWithoutFeedback onPress={onClose} style={{ width: 15 }}>
+            <ChevronLeft width={scale(14)} height={scale(14)} />
           </TouchableWithoutFeedback>
           <Text
             style={[
               HEADER_TITLE_STYLE,
-              { lineHeight: scale(1.6 * 16), height: scale(1.3 * 16) },
+              {
+                lineHeight: scale(1.6 * 16),
+                height: scale(1.3 * 16),
+                textTransform: 'uppercase',
+              },
             ]}
             tx="manageAssets"
           />

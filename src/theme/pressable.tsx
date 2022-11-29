@@ -85,7 +85,12 @@ export const Pressable: FC<Props> = (props) => {
   const textStyle =
     buttonSize === 'full' ? APP_BUTTON_TEXT_STYLE : APP_HALF_BUTTON_TEXT_STYLE
 
-  const borderColor = disabled ? faceliftPalette.grey : faceliftPalette.white
+  const borderColor =
+    disabled === undefined
+      ? faceliftPalette.active
+      : disabled
+      ? faceliftPalette.grey
+      : faceliftPalette.white
 
   return (
     <BaseButton

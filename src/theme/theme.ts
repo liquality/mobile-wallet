@@ -77,6 +77,7 @@ export const theme = createTheme({
     whiteLightGrey: faceliftPalette.whiteLightGrey,
     consColor: faceliftPalette.slow,
     whiteGrey: faceliftPalette.whiteGrey,
+    medGrey: faceliftPalette.medGrey,
   },
   spacing: {
     vs: scale(2),
@@ -192,7 +193,10 @@ export const theme = createTheme({
     tertiaryButtonLabel: {
       fontFamily: Fonts.Regular,
       fontWeight: '400',
-      fontSize: 12,
+      fontSize: 14,
+      lineHeight: scale(1.3 * 14),
+      height: scale(14),
+      letterSpacing: 0.75,
       color: 'activeLink',
     },
     amount: {
@@ -463,13 +467,13 @@ export const theme = createTheme({
     listText: {
       fontFamily: Fonts.Regular,
       fontSize: scale(14),
-      fontWeight: '500',
+      letterSpacing: 0.5,
     },
     subListText: {
       fontFamily: Fonts.Regular,
       fontSize: scale(13),
-      fontWeight: '400',
       lineHeight: scale(17),
+      letterSpacing: 0.5,
     },
     subListBoldText: {
       fontFamily: Fonts.Regular,
@@ -498,6 +502,7 @@ export const theme = createTheme({
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
       fontWeight: '400',
+      letterSpacing: 0.75,
     },
     outline: {
       color: 'white',
@@ -653,9 +658,9 @@ export const theme = createTheme({
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: 's',
       borderRadius: 2,
-      height: 20,
+      width: scale(66),
+      height: 30,
     },
   },
   roundButtonVariants: {
@@ -810,7 +815,7 @@ export const theme = createTheme({
       backgroundColor: palette.buttonActive,
       padding: 0,
       height: scale(2),
-      width: scale(20),
+      width: scale(16),
     },
     dark: {
       backgroundColor: palette.white,

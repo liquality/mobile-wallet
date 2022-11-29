@@ -1,5 +1,5 @@
 import React, { FC, Fragment, useCallback, useEffect, useState } from 'react'
-import { Image, LayoutChangeEvent, Pressable, StyleSheet } from 'react-native'
+import { LayoutChangeEvent, Pressable, StyleSheet } from 'react-native'
 import {
   cryptoToFiat,
   formatFiat,
@@ -22,9 +22,7 @@ import { setupWallet } from '@liquality/wallet-core'
 import defaultOptions from '@liquality/wallet-core/dist/src/walletOptions/defaultOptions'
 import { Box, Text } from '../../theme'
 import { scale } from 'react-native-size-matters'
-import { checkImgUrlExists } from '../../utils'
 import { AppIcons } from '../../assets'
-import CombinedChainAssetIcons from '../ui/CombinedChainAssetIcons'
 import RowBackgroundBox from './RowBackgroundBox'
 import Animated, {
   Easing,
@@ -32,7 +30,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-
+import AssetIcon from '../asset-icon'
+import NFTIcon from '../../assets/icons/crypto/nft.svg'
 const { ChevronRightIcon: ChevronRight } = AppIcons
 
 type SubRowProps = {
@@ -56,7 +55,6 @@ const SubRow: FC<SubRowProps> = (props) => {
   const activeNetwork = useRecoilValue(networkState)
   const [chainSpecificNfts, setChainSpecificNfts] = useState({})
   const [accountIdsToSendIn] = useState<string[]>([])
-  const [imgError] = useState<string[]>([])
   const [numberOfNfts, setNumberOfNfts] = useState<number>()
   const [borderWidth, setBorderWidth] = useState(0)
   const [rowWidth, setRowWidth] = useState(0)
@@ -127,50 +125,57 @@ const SubRow: FC<SubRowProps> = (props) => {
 
   const renderNFTRow = () => {
     if (Object.keys(chainSpecificNfts).length > 0) {
-      let firstNftItem = chainSpecificNfts[Object.keys(chainSpecificNfts)[0]][0]
       return (
         <Animated.View style={animatedStyle}>
-          <Pressable onPress={handlePressOnRow} style={styles.row}>
+          <Pressable onPress={handlePressOnRow}>
             <Box
-              height={scale(50)}
-              width={scale(3)}
-              style={{ borderLeftColor: parentItem.color, borderLeftWidth: 3 }}
-            />
-            <Box paddingLeft={'m'}>
-              <Box width={10} height={10} />
-            </Box>
-            <Box flex={0.1} paddingLeft={'m'} />
-            <Box flex={0.55} flexDirection="row" paddingLeft="m">
-              <Image
-                source={checkImgUrlExists(
-                  firstNftItem.image_original_url,
-                  imgError,
-                )}
-                style={styles.nftImg}
-                onError={() => imgError.push(firstNftItem.image_original_url)}
-              />
-              <Box width={'80%'} paddingLeft="m">
-                <Text numberOfLines={1} variant={'listText'} color="darkGrey">
-                  NFT <Text color="mediumGrey">|</Text> {numberOfNfts}{' '}
-                </Text>
-              </Box>
-            </Box>
-            <Box
-              flex={0.45}
               flexDirection={'row'}
-              justifyContent="flex-end"
+              justifyContent="space-around"
               alignItems={'center'}
-              paddingLeft={'s'}>
-              <Text
-                variant={'listText'}
-                color="darkGrey"
-                numberOfLines={1}
-                lineHeight={scale(1.5 * 14)}
-                marginRight={'m'}
-                style={{ height: scale(1.2 * 13) }}>
-                See All
-              </Text>
-              <ChevronRight />
+              paddingVertical={'m'}
+              height={ROW_HEIGHT}
+              backgroundColor={
+                borderWidth ? 'selectedBackgroundColor' : 'white'
+              }
+              paddingRight={borderWidth ? 'mxxl' : 's'}
+              onLayout={onLayout}>
+              <Box
+                height={scale(50)}
+                width={scale(3)}
+                style={{
+                  borderLeftColor: parentItem.color,
+                  borderLeftWidth: 3,
+                }}
+              />
+              <Box paddingLeft={'m'}>
+                <Box width={10} height={10} />
+              </Box>
+              <Box flex={0.1} paddingLeft={'m'} />
+              <Box flex={0.55} flexDirection="row" paddingLeft="m">
+                <NFTIcon width={scale(25)} height={scale(25)} />
+                <Box width={'80%'} paddingLeft="m">
+                  <Text numberOfLines={1} variant={'listText'} color="darkGrey">
+                    NFT <Text color="mediumGrey">|</Text> {numberOfNfts}{' '}
+                  </Text>
+                </Box>
+              </Box>
+              <Box
+                flex={0.45}
+                flexDirection={'row'}
+                justifyContent="flex-end"
+                alignItems={'center'}
+                paddingLeft={'s'}>
+                <Text
+                  variant={'listText'}
+                  color="darkGrey"
+                  numberOfLines={1}
+                  lineHeight={scale(1.5 * 14)}
+                  marginRight={'m'}
+                  style={{ height: scale(1.2 * 13) }}>
+                  See All
+                </Text>
+                <ChevronRight />
+              </Box>
             </Box>
           </Pressable>
         </Animated.View>
@@ -222,11 +227,8 @@ const SubRow: FC<SubRowProps> = (props) => {
                   flexDirection="row"
                   paddingLeft={'m'}
                   alignItems={'center'}>
-                  <CombinedChainAssetIcons
-                    chain={item.chain}
-                    code={item.code}
-                  />
-                  <Box width={'80%'}>
+                  <AssetIcon asset={item.code} size={scale(25)} />
+                  <Box width={'80%'} paddingLeft="m">
                     <Text
                       numberOfLines={1}
                       variant={'listText'}
@@ -263,18 +265,6 @@ const SubRow: FC<SubRowProps> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: scale(70),
-  },
-  nftImg: {
-    marginLeft: scale(3),
-    marginRight: scale(5),
-    width: scale(25),
-    height: scale(25),
-    borderRadius: 4,
-  },
   chevronRow: {
     marginLeft: scale(5),
   },

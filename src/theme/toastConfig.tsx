@@ -12,6 +12,7 @@ import CloseIcon from '../assets/icons/close.svg'
 import { Pressable } from 'react-native'
 
 const { CopySuccessTick } = AppIcons
+
 export const toastConfig: ToastConfig = {
   copyToast: ({ text1 }) => (
     <Box
@@ -173,25 +174,24 @@ export const toastConfig: ToastConfig = {
 
     return (
       <Box
+        flexDirection={'row'}
+        justifyContent={'space-around'}
         width={'90%'}
         borderRadius={scale(10)}
-        justifyContent="space-between"
         padding={'l'}
         backgroundColor={'sectionTitleColor'}>
+        <DangerIcon style={{ marginTop: scale(5) }} />
+        <Box flexDirection={'row'} flexWrap={'wrap'} paddingHorizontal={'mxxl'}>
+          {getMessage()}
+        </Box>
         <Box flexDirection={'row'} justifyContent={'flex-end'}>
           <Pressable onPress={handleToastHide}>
-            <CloseIcon stroke={faceliftPalette.white} />
+            <CloseIcon
+              width={scale(10)}
+              height={scale(10)}
+              stroke={faceliftPalette.white}
+            />
           </Pressable>
-        </Box>
-        <Box flexDirection={'row'} alignItems={'flex-start'} marginTop={'m'}>
-          <DangerIcon />
-          <Box
-            flexDirection={'row'}
-            flexWrap={'wrap'}
-            alignItems={'center'}
-            marginLeft={'m'}>
-            {getMessage()}
-          </Box>
         </Box>
       </Box>
     )
@@ -211,6 +211,7 @@ export const showSendToast = (toastType: ToastType, props: SendToastProps) => {
   Toast.show({
     type: toastType,
     autoHide: false,
+    topOffset: 60,
     props,
   })
 }

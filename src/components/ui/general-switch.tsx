@@ -34,7 +34,9 @@ const GeneralSwitch = (props: GeneralSwitchProps) => {
       circleInActiveColor={faceliftPalette.switchInactiveColor}
       circleBorderActiveColor={faceliftPalette.switchActiveColor}
       circleBorderInactiveColor={faceliftPalette.switchInactiveBorderColor}
-      switchWidthMultiplier={2}
+      switchRightPx={3.5}
+      switchLeftPx={3.5}
+      switchWidthMultiplier={1.5}
       containerStyle={{ ...borderColorStyle, borderWidth }}
     />
   )

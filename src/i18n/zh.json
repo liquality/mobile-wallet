@@ -106,9 +106,9 @@
   "assetManagementScreen": {},
   "assetScreen": {
     "loadingAsset": "Loading asset screen...",
-    "send": "Send",
-    "swap": "Swap",
-    "receive": "Receive",
+    "send": "SEND",
+    "swap": "SWAP",
+    "receive": "RECEIVE",
     "activity": "ACTIVITY",
     "sendCode": "SEND {{code}}",
     "receiveCode": "RECEIVE {{code}}"
@@ -341,9 +341,9 @@
     "by_token": "By Token (A to Z)"
   },
   "summaryBlockComp": {
-    "selectAssetSend": "Select asset for Send",
-    "selectAssetReceive": "Select asset for Receive",
-    "selectAssetSwap": "Select asset for Swap",
+    "selectAssetSend": "SELECT ASSET FOR SEND",
+    "selectAssetReceive": "SELECT ASSET FOR RECEIVE",
+    "selectAssetSwap": "SELECT ASSET FOR SWAP",
     "asset": " ASSET",
     "assets": " ASSETS",
     "send": "Send",

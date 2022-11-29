@@ -14,8 +14,9 @@ export const GRADIENT_STYLE: ViewStyle = {
 }
 
 export const OVERVIEW_TAB_BAR_STYLE: ViewStyle = {
-  width: scale(70),
+  width: scale(75),
   padding: 0,
+  marginBottom: -5,
   alignItems: 'flex-start',
 }
 
@@ -45,12 +46,16 @@ export const APP_HALF_BUTTON_STYLE: ViewStyle = {
 export const APP_BUTTON_TEXT_STYLE: TextStyle = {
   fontFamily: Fonts.Regular,
   fontSize: scale(15),
+  lineHeight: scale(1.6 * 15),
+  height: scale(1.3 * 15),
   letterSpacing: 0.5,
 }
 
 export const APP_HALF_BUTTON_TEXT_STYLE: TextStyle = {
   ...APP_BUTTON_TEXT_STYLE,
   fontSize: scale(13),
+  lineHeight: scale(1.6 * 13),
+  height: scale(1.3 * 13),
   letterSpacing: 0.5,
 }
 

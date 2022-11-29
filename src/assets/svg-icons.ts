@@ -26,6 +26,21 @@ import PwethIcon from '../assets/icons/crypto/pweth.svg'
 import ArbitrumIcon from '../assets/icons/crypto/arbeth.svg'
 import AvalancheIcon from '../assets/icons/crypto/avax.svg'
 import SolanaIcon from '../assets/icons/crypto/sol.svg'
+import AvalancheAccountIcon from '../assets/icons/crypto/avalanche_account.svg'
+import SolanaAccountIcon from '../assets/icons/crypto/arbitrum_account.svg'
+import AvalanceAccountIcon from '../assets/icons/crypto/avalanche_account.svg'
+import ArbitrumAccountIcon from '../assets/icons/crypto/arbitrum_account.svg'
+import BitcoinAccountIcon from '../assets/icons/crypto/bitcoin_account.svg'
+import BSCAccountIcon from '../assets/icons/crypto/bsc_account.svg'
+import DAIAccountIcon from '../assets/icons/crypto/dai_account.svg'
+import EthereumAccountIcon from '../assets/icons/crypto/ethereum_account.svg'
+import NearAccountIcon from '../assets/icons/crypto/near_account.svg'
+import OptimismAccountIcon from '../assets/icons/crypto/optimism_account.svg'
+import PolygonAccountIcon from '../assets/icons/crypto/polygon_account.svg'
+import RootstockAccountIcon from '../assets/icons/crypto/rootstack_account.svg'
+import USDCAccountIcon from '../assets/icons/crypto/usdc_account.svg'
+import USDTAccountIcon from '../assets/icons/crypto/usdt_account.svg'
+
 import BlankIcon from '../assets/icons/crypto/blank.svg'
 import UserCog from '../assets/icons/user-cog.svg'
 import SwapCheck from '../assets/icons/rightTick.svg'
@@ -395,6 +410,20 @@ export default {
   FirstMultichainWalletIcon,
   SwapAcrossIcon,
   TransferNFT_Icon,
+  AvalancheAccountIcon,
+  SolanaAccountIcon,
+  AvalanceAccountIcon,
+  ArbitrumAccountIcon,
+  BitcoinAccountIcon,
+  BSCAccountIcon,
+  DAIAccountIcon,
+  EthereumAccountIcon,
+  NearAccountIcon,
+  OptimismAccountIcon,
+  PolygonAccountIcon,
+  RootstockAccountIcon,
+  USDCAccountIcon,
+  USDTAccountIcon,
   ActiveClap,
   Clap,
 }

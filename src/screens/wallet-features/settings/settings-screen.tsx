@@ -159,7 +159,7 @@ const SettingsScreen = ({ route, navigation }: SettingsScreenProps) => {
             tx="settingsScreen.networks"
           />
           <CustomSwitch
-            width={150}
+            width={160}
             firstItemValue={isMainnet}
             firstItemPress={() => handNetworkPress(Network.Mainnet)}
             firstItemElement={
