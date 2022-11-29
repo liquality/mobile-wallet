@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
-import { Pressable, StyleSheet } from 'react-native'
+import { LayoutChangeEvent, Pressable, StyleSheet } from 'react-native'
 import { ChainId, getAsset, getChain } from '@liquality/cryptoassets'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import {
@@ -100,6 +100,8 @@ const SendScreen: FC<SendScreenProps> = (props) => {
   const optinAnalytics = useRecoilValue(optInAnalyticsState)
   const wallet = useRecoilValue(walletState)
   const walletVersion = DeviceInfo.getVersion()
+  const [viewWidth, setViewWidth] = useState<number>()
+  const [viewHeight, setViewHeight] = useState<number>()
 
   const onGetPress = useCallback(() => {
     navigation.navigate('ReceiveScreen', {
@@ -316,9 +318,14 @@ const SendScreen: FC<SendScreenProps> = (props) => {
     setShowReviewScreen(false)
   }
 
+  const onLayout = (evt: LayoutChangeEvent) => {
+    setViewWidth(evt.nativeEvent.layout.width)
+    setViewHeight(evt.nativeEvent.layout.height)
+  }
   const getBackgroundBox = () => {
-    const width = 355
-    const height = 200
+    if (!viewWidth || !viewWidth) return null
+    const width = viewWidth
+    const height = viewHeight
     const flatRadius = 30
     return (
       <Box
@@ -352,7 +359,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
           <QrCodeScanner chain={chain} onClose={handleCameraModalClose} />
         )}
         <Box marginBottom={'m'}>
-          <Box paddingVertical="xl" paddingHorizontal="l">
+          <Box paddingVertical="xl" paddingHorizontal="l" onLayout={onLayout}>
             {getBackgroundBox()}
             <Box
               flexDirection="row"
