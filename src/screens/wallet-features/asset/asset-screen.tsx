@@ -339,7 +339,8 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
               <Box
                 borderBottomWidth={2}
                 borderBottomColor={'activeLink'}
-                width={scale(15)}
+                width={scale(16)}
+                marginTop={'s'}
               />
             </Box>
             <Box

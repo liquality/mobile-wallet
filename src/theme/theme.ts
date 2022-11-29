@@ -501,8 +501,8 @@ export const theme = createTheme({
     tabLabel: {
       fontFamily: Fonts.Regular,
       fontSize: scale(15),
-      fontWeight: '400',
       letterSpacing: 0.75,
+      textTransform: 'capitalize',
     },
     outline: {
       color: 'white',
