@@ -101,6 +101,7 @@ import AccountDetailScreen from '../screens/wallet-features/asset/account-detail
 import AssetIcon from './asset-icon'
 import AboutLiqualityDrawer from './about-liquality-drawer'
 import { useTheme } from '@shopify/restyle'
+import WhatNewScreen from '../screens/wallet-features/settings/whatNewScreen'
 
 const {
   NetworkActiveDot,
@@ -141,6 +142,14 @@ const screenNavOptions: NativeStackNavigationOptions = {
 const LiqLogoHeaderLeft = () => {
   return (
     <Box marginLeft={'onboardingHeaderPadding'}>
+      <ThemeIcon iconName="OnlyLqLogo" />
+    </Box>
+  )
+}
+
+const WhatsNewHeaderLeft = () => {
+  return (
+    <Box marginLeft={'l'}>
       <ThemeIcon iconName="OnlyLqLogo" />
     </Box>
   )
@@ -1120,6 +1129,21 @@ export const StackMainNavigator = () => {
             headerTitle: labelTranslateFn('activityFilter')!,
             headerLeft: CloseButton,
             headerRight: ActivityFilterScreenHeaderRight,
+          }}
+        />
+        <MainStack.Screen
+          name="WhatNewScreen"
+          component={WhatNewScreen}
+          options={{
+            presentation: 'fullScreenModal',
+            ...screenNavOptions,
+            headerStyle: {
+              backgroundColor,
+            },
+            headerTitleStyle: NORMAL_HEADER,
+            headerTitle: '',
+            headerRight: CloseButton,
+            headerLeft: WhatsNewHeaderLeft,
           }}
         />
         <MainStack.Screen

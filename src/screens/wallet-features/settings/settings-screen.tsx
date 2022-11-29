@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import {
   Alert,
   Linking,
@@ -13,7 +13,6 @@ import {
   CustomRootState,
   MainStackParamList,
 } from '../../../types'
-import WhatsNew from '../../../components/ui/whats-new'
 import { downloadWalletLogs, labelTranslateFn } from '../../../utils'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import {
@@ -55,7 +54,6 @@ const SettingsScreen = ({ route, navigation }: SettingsScreenProps) => {
   const [analytics, setAnalytics] = useRecoilState(optInAnalyticsState)
   const [activeNetwork, setActiveNetwork] = useRecoilState(networkState)
   const [theme, setTheme] = useRecoilState(themeMode)
-  const [isWhatsNewVisible, setIsWhatsNewVisible] = useState(false)
   const [lang, setLangSelected] = useRecoilState(langSelected)
 
   const toggleAnalyticsOptin = () => {
@@ -110,6 +108,10 @@ const SettingsScreen = ({ route, navigation }: SettingsScreenProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [lang],
   )
+
+  const onWhatNewPress = () => {
+    navigation.navigate('WhatNewScreen', {})
+  }
 
   const handleDownload = useCallback(() => {
     const walletStateDownload: Partial<CustomRootState> = { ...walletStateCopy }
@@ -294,9 +296,7 @@ const SettingsScreen = ({ route, navigation }: SettingsScreenProps) => {
           <Text variant={'listText'} color={'greyMeta'}>
             {i18n.t('settingsScreen.version', { version })}
           </Text>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => setIsWhatsNewVisible(true)}>
+          <TouchableOpacity activeOpacity={0.7} onPress={onWhatNewPress}>
             <Text
               variant={'listText'}
               color={'defaultButton'}
@@ -304,7 +304,6 @@ const SettingsScreen = ({ route, navigation }: SettingsScreenProps) => {
             />
           </TouchableOpacity>
         </Box>
-        {isWhatsNewVisible && <WhatsNew onAction={setIsWhatsNewVisible} />}
       </ScrollView>
     </Box>
   )
