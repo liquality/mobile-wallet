@@ -333,3 +333,9 @@ export const bridgesTile: Array<SwapProviderRowProp> = [
     feeStructure: ['Additional aggregator fees', 'Slippage (up to 3%)'],
   },
 ]
+
+export const issuesFixed = [
+  'Hop transaction status',
+  'UX validation prevents the user from making a swap',
+  'Thornchain swaps minimum transaction value and slippage',
+]
