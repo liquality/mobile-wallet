@@ -26,6 +26,7 @@ import {
   showSendToast,
   Text,
   TextInput,
+  theme,
 } from '../../../theme'
 import { getSendFee } from '@liquality/wallet-core/dist/src/utils/fees'
 import { fetchFeesForAsset } from '../../../store/store'
@@ -49,9 +50,9 @@ import ChevronRight from '../../../assets/icons/chevronRight.svg'
 import ArrowUp from '../../../assets/icons/arrowUp.svg'
 import { Path, Svg } from 'react-native-svg'
 import SendReviewScreen from './send-review-screen'
-import CombinedChainAssetIcons from '../../../components/ui/CombinedChainAssetIcons'
 import analytics from '@react-native-firebase/analytics'
 import DeviceInfo from 'react-native-device-info'
+import ChainOverAssetIcon from '../../../components/ui/chain-over-asset-icon'
 
 const { QRCode } = AppIcons
 
@@ -373,7 +374,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                     marginLeft="s"
                   />
                 </Box>
-                <Box flexDirection="row" alignItems="center">
+                <Box flexDirection="row" alignItems="center" paddingRight={'m'}>
                   <TextInput
                     style={styles.sendInput}
                     keyboardType={'numeric'}
@@ -390,7 +391,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
                     returnKeyType="done"
                     cursorColor={faceliftPalette.active}
                   />
-                  <CombinedChainAssetIcons
+                  <ChainOverAssetIcon
                     chain={getAsset(activeNetwork, code).chain}
                     code={code}
                   />
@@ -444,7 +445,7 @@ const SendScreen: FC<SendScreenProps> = (props) => {
             </Pressable>
           </Box>
           <Box
-            marginTop={'xl'}
+            marginTop={'s'}
             paddingVertical="xl"
             paddingHorizontal="l"
             backgroundColor={
@@ -527,11 +528,12 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               new BigNumber(amountInput.value).gt(0) &&
               addressInput.value.length > 0
             }
-            appendChildren={false}>
+            appendChildren>
             <Box alignItems={'center'} justifyContent={'center'}>
               <ArrowUp
                 width={scale(11)}
                 height={scale(13)}
+                strokeWidth={0.5}
                 stroke={
                   !errorMessage.msg &&
                   new BigNumber(amountInput.value).gt(0) &&
@@ -543,14 +545,17 @@ const SendScreen: FC<SendScreenProps> = (props) => {
               />
             </Box>
           </Button>
-          <Button
-            type="secondary"
-            variant="l"
-            label={{ tx: 'common.cancel' }}
-            onPress={navigation.goBack}
-            isBorderless={true}
-            isActive={true}
-          />
+          <Pressable onPress={navigation.goBack}>
+            <Text
+              variant={'mainButtonLabel'}
+              style={{
+                textAlign: 'center',
+                color: theme.colors.defaultButton,
+                paddingBottom: theme.spacing.mxxl,
+              }}>
+              Cancel
+            </Text>
+          </Pressable>
         </ButtonFooter>
       </Box>
       {showReviewScreen && (
@@ -574,7 +579,8 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: scale(39),
     width: '80%',
-    height: scale(39),
+    lineHeight: scale(1.3 * 39),
+    height: scale(19),
   },
   sendToInput: {
     fontFamily: Fonts.Regular,
@@ -590,7 +596,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   buttonIcon: {
-    marginRight: scale(5),
+    marginLeft: scale(5),
     marginBottom: scale(5),
   },
 })

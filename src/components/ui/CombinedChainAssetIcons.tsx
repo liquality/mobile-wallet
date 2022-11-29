@@ -6,18 +6,20 @@ import { ChainId } from '@chainify/types'
 
 type CombinedChainAssetIconsProps = {
   code: string
-  chain: ChainId
+  chain?: ChainId
+  account?: string
   scaleMultiplier?: number
 }
 const CombinedChainAssetIcons = (props: CombinedChainAssetIconsProps) => {
-  const { code, chain, scaleMultiplier = 1 } = props
+  const { code, chain, account, scaleMultiplier = 1 } = props
   return (
     <Box flexDirection={'row'} alignItems={'flex-end'}>
-      <AssetIcon asset={code} size={scale(scaleMultiplier * 30)} />
+      {chain ? <AssetIcon chain={chain} size={scale(24)} /> : null}
+      {account ? <AssetIcon account={account} size={scale(24)} /> : null}
       <AssetIcon
-        chain={chain}
-        size={scale(scaleMultiplier * 15)}
-        styles={{ left: -10 * scaleMultiplier }}
+        asset={code}
+        size={scale(24)}
+        styles={{ left: -7 * scaleMultiplier }}
       />
     </Box>
   )

@@ -137,7 +137,8 @@ const SubRow: FC<SubRowProps> = (props) => {
               backgroundColor={
                 borderWidth ? 'selectedBackgroundColor' : 'white'
               }
-              paddingRight={borderWidth ? 'mxxl' : 's'}
+              paddingHorizontal={'l'}
+              paddingRight={borderWidth ? 'mxxl' : 'l'}
               onLayout={onLayout}>
               <Box
                 height={scale(50)}
@@ -208,7 +209,8 @@ const SubRow: FC<SubRowProps> = (props) => {
                 backgroundColor={
                   borderWidth ? 'selectedBackgroundColor' : 'white'
                 }
-                paddingRight={borderWidth ? 'mxxl' : 's'}
+                paddingHorizontal={'l'}
+                paddingRight={borderWidth ? 'mxxl' : 'l'}
                 onLayout={onLayout}>
                 {borderWidth ? (
                   <RowBackgroundBox width={rowWidth} height={rowHeight} />

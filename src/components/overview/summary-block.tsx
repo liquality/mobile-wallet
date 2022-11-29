@@ -12,11 +12,7 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios'
 import { Box, Text, Card } from '../../theme'
 import * as React from 'react'
 import { OverviewProps } from '../../screens/wallet-features/home/overview-screen'
-import {
-  GRADIENT_BACKGROUND_HEIGHT,
-  labelTranslateFn,
-  SCREEN_WIDTH,
-} from '../../utils'
+import { labelTranslateFn, SCREEN_WIDTH } from '../../utils'
 import { AppIcons } from '../../assets'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
@@ -104,13 +100,14 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
   }, [])
 
   return (
-    <Card
-      variant={'headerCard'}
-      paddingHorizontal="xl"
-      height={GRADIENT_BACKGROUND_HEIGHT}>
-      <Box justifyContent="center" flex={0.6}>
+    <Card variant={'headerCard'} paddingHorizontal="xl" paddingBottom={'sxxl'}>
+      <Box
+        justifyContent="center"
+        // flex={0.6}
+        paddingTop={'mxxl'}
+        paddingBottom={'lxxl'}>
         <Text color={'darkGrey'} variant="totalAsset">
-          $ {totalFiatBalance}
+          ${totalFiatBalance}
         </Text>
         <Text variant="totalAsset" color={'nestedColor'}>
           {totalAssets}
@@ -119,7 +116,7 @@ const SummaryBlock: FC<SummaryBlockProps> = (props) => {
             : `${labelTranslateFn('summaryBlockComp.assets')}`}
         </Text>
       </Box>
-      <Box flex={0.4}>
+      <Box>
         <Box flexDirection={'row'} justifyContent="space-evenly">
           {appFeatures.map((item, index) => (
             <Box key={index} alignItems={'center'} width={SCREEN_WIDTH / 4.1}>

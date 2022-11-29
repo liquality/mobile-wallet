@@ -775,10 +775,10 @@ const CloseButtonLight = () => {
 const AssetScreenHeaderTitle = (navProps: NavigationProps) => {
   const { route } = navProps
   return (
-    <Box flexDirection={'row'} alignItems={'center'} paddingVertical={'s'}>
+    <Box flexDirection={'row'} alignItems={'center'}>
       <Box
         borderLeftWidth={3}
-        height={scale(1.3 * 16)}
+        height={scale(16)}
         style={{
           borderLeftColor: route.params.assetData?.color,
         }}

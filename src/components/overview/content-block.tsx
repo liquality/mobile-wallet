@@ -123,7 +123,7 @@ const ContentBlock = () => {
 
   const renderTabBar = (props: RenderTabBar) => (
     // Redline because of theme issue with TabBar props
-    <Box>
+    <Box paddingHorizontal={'l'}>
       <TabBar
         {...props}
         renderLabel={({ route, focused }) => (
@@ -133,7 +133,7 @@ const ContentBlock = () => {
             {route.title}
           </Text>
         )}
-        tabStyle={OVERVIEW_TAB_BAR_STYLE}
+        tabStyle={[OVERVIEW_TAB_BAR_STYLE, { width: scale(65) }]}
         variant="light"
         style={OVERVIEW_TAB_STYLE}
       />

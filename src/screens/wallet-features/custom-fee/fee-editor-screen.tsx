@@ -14,6 +14,7 @@ import {
   TabView,
 } from 'react-native-tab-view'
 import {
+  Dimensions,
   Modal,
   Pressable,
   SafeAreaView,
@@ -255,8 +256,8 @@ const StandardRoute = ({
                 }}>
                 <Box
                   backgroundColor={backgroundColor}
-                  padding="l"
-                  width={scale(108)}
+                  padding="m"
+                  width={scale(Dimensions.get('screen').width / 3 - 30)}
                   height={scale(274)}
                   borderRadius={3}>
                   {feeLabel === FeeLabel.Slow ? (
@@ -268,7 +269,13 @@ const StandardRoute = ({
                   )}
                   <Text
                     variant="gasIndicatorLabel"
-                    color="slowColor"
+                    color={
+                      feeLabel === FeeLabel.Slow
+                        ? 'slowColor'
+                        : feeLabel === FeeLabel.Average
+                        ? 'averageColor'
+                        : 'fastColor'
+                    }
                     marginTop="xl">
                     {feeLabel.toUpperCase()}
                   </Text>
@@ -804,7 +811,10 @@ const FeeEditorScreen = ({
             </Pressable>
             <Box flexDirection="row" alignItems={'center'}>
               <AssetIcon size={scale(1.45 * 16)} asset={selectedAsset} />
-              <Text variant={'headerTitle'} marginLeft={'s'}>
+              <Text
+                variant={'headerTitle'}
+                marginLeft={'m'}
+                textTransform={'uppercase'}>
                 {labelTranslateFn('common.networkSpeed')}
               </Text>
             </Box>

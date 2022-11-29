@@ -18,21 +18,19 @@ import { BigNumber } from '@liquality/types'
 import { Text, Box, Card, faceliftPalette } from '../../../theme'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
+  accountInfoStateFamily,
   activityFilterState,
   addressStateFamily,
   assetScreenPopupMenuVisible,
   balanceStateFamily,
   fiatRatesState,
-  networkState,
   statusFilterBtnState,
   swapPairState,
   totalFiatBalanceState,
   transFilterBtnState,
 } from '../../../atoms'
-import { getAsset } from '@liquality/cryptoassets'
 import I18n from 'i18n-js'
 import {
-  ASSET_SCREEN_HEIGHT,
   downloadAssetAcitivity,
   labelTranslateFn,
   SCREEN_WIDTH,
@@ -68,7 +66,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
   const balance = useRecoilValue(
     balanceStateFamily({ asset: code, assetId: id }),
   )
-  const activeNetwork = useRecoilValue(networkState)
+  const accountInfo = useRecoilValue(accountInfoStateFamily(id))
   const [isAssetScreenPopupMenuVisible, setAssetScreenPopuMenuVisible] =
     useRecoilState(assetScreenPopupMenuVisible)
   const totalFiatBalance = useRecoilValue(totalFiatBalanceState)
@@ -271,14 +269,11 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
           </Box>
         )}
         <Box flex={1}>
-          <Card
-            variant={'headerCard'}
-            paddingHorizontal="xl"
-            height={ASSET_SCREEN_HEIGHT}>
-            <Box justifyContent="center" flex={0.6} paddingTop="l">
+          <Card variant={'headerCard'} paddingHorizontal="xl">
+            <Box justifyContent="center" paddingTop={'sxxl'}>
               <Box flexDirection={'row'} alignItems={'center'}>
                 <CombinedChainAssetIcons
-                  chain={getAsset(activeNetwork, code).chain}
+                  account={accountInfo.name}
                   code={code}
                 />
                 <Text variant={'addressLabel'} color={'greyMeta'}>
@@ -306,7 +301,7 @@ const AssetScreen = ({ route, navigation }: AssetScreenProps) => {
                 </Pressable>
               </Box>
             </Box>
-            <Box flex={0.4} marginTop="l">
+            <Box marginTop={'lxxl'} marginBottom={'mxxl'}>
               <Box flexDirection={'row'} justifyContent="space-evenly">
                 {appFeatures.map((item, index) => (
                   <Box

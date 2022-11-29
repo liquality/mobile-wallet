@@ -63,7 +63,7 @@ export const theme = createTheme({
     transGrey: faceliftPalette.transGrey,
     greyBackground: faceliftPalette.greyBackground,
     blockBackgroundColor: faceliftPalette.orangeGrey,
-    slowColor: faceliftPalette.fast,
+    slowColor: faceliftPalette.slow,
     averageColor: faceliftPalette.average,
     fastColor: faceliftPalette.fast,
     selectedBackgroundColor: faceliftPalette.selectedBackground,
@@ -85,6 +85,7 @@ export const theme = createTheme({
     m: scale(10),
     l: scale(15),
     xl: scale(20),
+    sxxl: scale(25),
     mxxl: scale(30),
     lxxl: scale(45),
     xxl: scale(50),
@@ -424,7 +425,6 @@ export const theme = createTheme({
     h3: {
       fontFamily: Fonts.Regular,
       fontSize: scale(22),
-      fontWeight: '500',
     },
     h4: {
       fontFamily: Fonts.Regular,
@@ -465,7 +465,7 @@ export const theme = createTheme({
       fontWeight: '400',
     },
     listText: {
-      fontFamily: Fonts.Regular,
+      fontFamily: Fonts.Medium,
       fontSize: scale(14),
       letterSpacing: 0.5,
     },

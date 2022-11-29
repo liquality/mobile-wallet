@@ -3,6 +3,7 @@ import { scale } from 'react-native-size-matters'
 import { Fonts } from '../assets'
 import { ONBOARDING_PADDING, SCREEN_WIDTH } from '../utils'
 import { faceliftPalette } from './faceliftPalette'
+import { theme } from './theme'
 
 export const FLEX_1: ViewStyle = {
   flex: 1,
@@ -40,7 +41,8 @@ export const APP_BUTTON_STYLE: ViewStyle = {
 export const APP_HALF_BUTTON_STYLE: ViewStyle = {
   ...APP_BUTTON_STYLE,
   height: scale(36),
-  width: '50%',
+  width: 'auto',
+  paddingHorizontal: theme.spacing.sxxl,
 }
 
 export const APP_BUTTON_TEXT_STYLE: TextStyle = {

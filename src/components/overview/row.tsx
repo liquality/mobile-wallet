@@ -132,7 +132,8 @@ const Row = (props: RowProps) => {
               ? 'greyBackground'
               : 'white'
           }
-          paddingRight={borderWidth ? 'mxxl' : 's'}
+          paddingHorizontal={'l'}
+          paddingRight={borderWidth ? 'mxxl' : 'l'}
           onLayout={onLayout}>
           {borderWidth ? (
             <RowBackgroundBox width={rowWidth} height={rowHeight} />
