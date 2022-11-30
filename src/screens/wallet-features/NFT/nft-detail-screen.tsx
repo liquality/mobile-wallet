@@ -135,17 +135,17 @@ const styles = StyleSheet.create({
   drawerContainer: { paddingHorizontal: 35, paddingVertical: 20 },
 
   overviewBlock: {
-    justifyContent: 'center',
     width: '100%',
     height: 225,
   },
 
   shortLine: { padding: 3 },
   headerContainer: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
 
   image: {
+    marginTop: scale(80),
     width: Dimensions.get('screen').width,
     resizeMode: 'contain',
     aspectRatio: 1,
